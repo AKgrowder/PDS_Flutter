@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:archit_s_application1/presentation/home/home.dart';
-import 'package:archit_s_application1/presentation/view_details_screen/view_details_screen.dart';
 import 'package:flutter/material.dart';
 
 // import 'package:growder/presentation/Buy_Screen/Buy_screen.dart';
@@ -9,9 +8,6 @@ import 'package:flutter/material.dart';
 
 import '../connection_status/connection_status_singleton.dart';
 import '../core/utils/image_constant.dart';
-import '../presentation/room_members/room_members_screen.dart';
-import '../presentation/rooms/rooms_screen.dart';
-import '../presentation/view_comments/view_comments_screen.dart';
 // import 'package:growder/presentation/save_screen/save_Screen.dart';
 
 class BottombarPage extends StatefulWidget {
@@ -33,11 +29,16 @@ class _BottombarPageState extends State<BottombarPage> {
 
   List widgetOptions = [
     HomeScreen(),
-    ViewDetailsScreen(),
-    ViewCommentScreen(),
-    // BuyScreen(),
-    RoomMembersScreen(),
-    RoomsScreen()
+    SizedBox(),
+    SizedBox(),
+    SizedBox(),
+    SizedBox(),
+    SizedBox(),
+    // ViewDetailsScreen(),
+    // ViewCommentScreen(),
+    // // BuyScreen(),
+    // RoomMembersScreen(),
+    // RoomsScreen()
   ];
   late StreamSubscription _connectionChangeStream;
 
