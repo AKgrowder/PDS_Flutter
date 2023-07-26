@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:archit_s_application1/core/app_export.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_state.dart';
+import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../API/Model/HomeScreenModel/PublicRoomModel.dart';
 import '../../core/utils/color_constant.dart';
+import '../../dialogs/create_room_dilog.dart';
 import '../add_threads/add_threads.dart';
 import '../view_comments/view_comments_screen.dart';
 
@@ -18,6 +20,7 @@ class HomeScreen extends StatefulWidget {
 int selectedIndex = 0;
 int? isselectedimage = -1;
 List? image = [];
+dynamic _CallBackCheck;
 PublicRoomModel? PublicRoomModelData;
 List<String> aa = [
   "Baluran Wild The Savvanah Baluran Wild The \nSavvanah",
@@ -91,6 +94,13 @@ class _HomeScreenState extends State<HomeScreen> {
               PublicRoomModelData = state.PublicRoomData;
             }
           }, builder: (context, state) {
+            if (_CallBackCheck != null) {
+              print(
+                  "back_back_back_back_back_back_back_back_back_back_back_back_back_back_");
+              setState(() {});
+              // records.removeAt(index);
+              // records.insert(index, _data);
+            }
             if (state is FetchAllPublicRoomLoadedState) {
               return SingleChildScrollView(
                 child: Column(
@@ -174,20 +184,32 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    Container(
-                      height: 50,
-                      width: width / 1.2,
-                      decoration: BoxDecoration(
-                          color: Color(0XFFED1C25),
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Center(
-                        child: Text(
-                          "Create Forum",
-                          style: TextStyle(
-                            fontFamily: 'outfit',
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                    GestureDetector(
+                      onTap: () {
+                        // CreateForamScreen
+
+                        //          showDialog(
+                        //   context: context,
+                        //   builder: (BuildContext context) {
+                        //     return CreateRoomScreen();
+                        //   },
+                        // );
+                      },
+                      child: Container(
+                        height: 50,
+                        width: width / 1.2,
+                        decoration: BoxDecoration(
+                            color: Color(0XFFED1C25),
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Center(
+                          child: Text(
+                            "Create Forum",
+                            style: TextStyle(
+                              fontFamily: 'outfit',
+                              fontSize: 15,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -372,11 +394,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AddThreadsScreen(),
-                                  ));
+                              Add_Threads();
                             },
                             child: Text(
                               "+ Add Threads",
@@ -702,13 +720,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          // 
-                                          Navigator.push(
-                                              context,
+                                          //
+                                          // Navigator.push(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //       builder: (context) =>
+                                          //           ViewCommentScreen(Room_ID:   "${PublicRoomModelData?.object?[index].uid ?? ""}",),
+                                          //     ));
+                                          Navigator.push(context,
                                               MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ViewCommentScreen(),
-                                              ));
+                                                  builder: (context) {
+                                            return MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider(
+                                                  create: (context) =>
+                                                      senMSGCubit(),
+                                                ),
+                                              ],
+                                              child: ViewCommentScreen(
+                                                Room_ID:
+                                                    "${PublicRoomModelData?.object?[index].uid ?? ""}",
+                                              ),
+                                            );
+                                          }));
                                         },
                                         child: Padding(
                                           padding: const EdgeInsets.only(
@@ -1264,5 +1298,13 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           })),
     );
+  }
+
+  Add_Threads() async {
+    _CallBackCheck = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AddThreadsScreen(),
+        ));
   }
 }
