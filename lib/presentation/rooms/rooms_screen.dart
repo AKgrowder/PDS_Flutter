@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/size_utils.dart';
-import '../../dilogs/assigh_adminn_dilog..dart';
-import '../../dilogs/invite_dilog.dart';
+import '../../dialogs/assigh_adminn_dilog..dart';
+import '../../dialogs/invite_dilog.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
 import '../home/home.dart';
