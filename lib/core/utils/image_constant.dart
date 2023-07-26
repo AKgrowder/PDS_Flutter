@@ -113,5 +113,28 @@ class ImageConstant {
   static String homeimage = 'assets/images/Frame 47726.png';
 
   static String loader = 'assets/images/loader.gif';
+  static String setting_share = 'assets/images/🦆 icon _share android_.png';
+  static String setting_delete = 'assets/images/Frame (1).png';
+  static String setting_power = 'assets/images/Group (2).png';
+  static String setting_profile = 'assets/images/Group 73 (3).png';
+  static String setting_lock = 'assets/images/Group 11258 (5).png';
+  static String setting_star = 'assets/images/Star.png';
+  static String setting_shouteprofile = 'assets/images/Vector (22).png';
+  static String setting_save = 'assets/images/Vector (23).png';
+  static String setting_tadu = 'assets/images/Vector (24).png';
+  static String setting_settingimage = 'assets/images/Vector (25).png';
+  static String setting_phone = 'assets/images/Vector (26).png';
+
+  //----------------------------------------------------------------------
+  static String plusn = 'assets/images/Group 1171274865.png';
+  static String rupeen = 'assets/images/Group 1171274866.png';
+  static String rightn = 'assets/images/Group 1171274867.png';
+  static String arrowwn = 'assets/images/Group 1171274868.png';
+  static String crossn = 'assets/images/Group 1171274869.png';
+  static String bluerightn = 'assets/images/Group 1171274870.png';
+  static String deleten = 'assets/images/Group 1171274871.png';
+  static String notn = 'assets/images/Group 1171274872.png';
+
+   
 
 }

@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 
 import '../connection_status/connection_status_singleton.dart';
 import '../core/utils/image_constant.dart';
+import '../presentation/notifications/notification_screen.dart';
+import '../presentation/settings/setting_screen.dart';
 // import 'package:growder/presentation/save_screen/save_Screen.dart';
 
 class BottombarPage extends StatefulWidget {
@@ -31,8 +33,8 @@ class _BottombarPageState extends State<BottombarPage> {
     HomeScreen(),
     SizedBox(),
     SizedBox(),
-    SizedBox(),
-    SizedBox(),
+    NotificationsScreen(),
+    SettingScreen(),
     SizedBox(),
     // ViewDetailsScreen(),
     // ViewCommentScreen(),

@@ -10,6 +10,12 @@ class CreateForamScreen extends StatefulWidget {
   State<CreateForamScreen> createState() => _CreateForamScreenState();
 }
 
+  TextEditingController name = TextEditingController();
+  
+  TextEditingController profile = TextEditingController();
+  TextEditingController uplopdfile = TextEditingController();
+
+
 class _CreateForamScreenState extends State<CreateForamScreen> {
   @override
   Widget build(BuildContext context) {
@@ -82,7 +88,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                       borderRadius: BorderRadius.circular(5)),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextField(
+                    child: TextField(controller: name,
                       cursorColor: Colors.grey,
                       decoration: InputDecoration(
                         hintText: 'Enter name',
@@ -113,7 +119,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                       borderRadius: BorderRadius.circular(5)),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextField(
+                    child: TextField(controller: profile,
                       cursorColor: Colors.grey,
                       decoration: InputDecoration(
                         hintText: 'Job Profile',
@@ -150,7 +156,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                               bottomLeft: Radius.circular(5))),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: TextField(
+                        child: TextField(controller: uplopdfile,
                           cursorColor: Colors.grey,
                           decoration: InputDecoration(
                             hintText: 'Upload File',
