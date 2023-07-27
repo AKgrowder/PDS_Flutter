@@ -6,7 +6,7 @@ class Config {
   static const String CreateRoom = "api/createRoom";
 
   static const String SendMSG = "api/addMessageInRoom";
-
+ static const String coomment = "api/fetchInbox";
 
 
 }
