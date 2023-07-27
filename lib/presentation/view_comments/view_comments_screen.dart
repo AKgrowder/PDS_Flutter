@@ -10,8 +10,9 @@ import '../home/home.dart';
 
 class ViewCommentScreen extends StatefulWidget {
   final Room_ID;
+  final Title;
 
-  const ViewCommentScreen({required this.Room_ID});
+  const ViewCommentScreen({required this.Room_ID,required this.Title});
 
   @override
   State<ViewCommentScreen> createState() => _ViewCommentScreenState();
@@ -76,24 +77,24 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                               mainAxisAlignment:
-                                  MainAxisAlignment.spaceAround,
+                                  MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 4.0),
+                                  padding: const EdgeInsets.only(top: 5.5,right: 5),
                                   child: CircleAvatar(
                                     backgroundColor: Colors.black,
                                     maxRadius: 4,
                                   ),
                                 ),
                                 Text(
-                                  "Baluran Wild The Savvanah Baluran Wild The\n Savvanah",
+                                 "${widget.Title}",
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontFamily: 'outfit',
-                                    fontSize: 13,
+                                    fontSize: 15,
                                     color: Colors.black,
-                                    fontWeight: FontWeight.w400,
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
                                 /*   GestureDetector(
