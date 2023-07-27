@@ -4,7 +4,7 @@ import 'package:http/http.dart';
 class ApiServices {
   var baseURL = "";
   UpdateBaseURL() async {
-    baseURL = "https://71b1-2405-201-200b-a0cf-8f74-41a0-82ea-8bf.ngrok.io/";
+    baseURL = "http://192.168.29.100:9052/";
     print(baseURL);
   }
 
