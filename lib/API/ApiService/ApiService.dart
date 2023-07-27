@@ -13,13 +13,13 @@ class ApiServices {
     Map<String, dynamic> params,
   ) async {
     UpdateBaseURL();
-     final headers1 = {
+    final headers1 = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer '
     };
     print("API =>******${baseURL + APIurl}");
     final response = await post(Uri.parse(baseURL + APIurl),
-         headers: headers1,  body: json.encode(params));
+        headers: headers1, body: json.encode(params));
 
     return response;
   }
@@ -36,18 +36,19 @@ class ApiServices {
     return response;
   }
 
-
   Future<Response> postApiCalla(
     String APIurl,
   ) async {
     UpdateBaseURL();
-     final headers1 = {
+    final headers1 = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer '
     };
     print("API =>******${baseURL + APIurl}");
-    final response = await post(Uri.parse(baseURL + APIurl),
-         headers: headers1,);
+    final response = await post(
+      Uri.parse(baseURL + APIurl),
+      headers: headers1,
+    );
 
     return response;
   }
