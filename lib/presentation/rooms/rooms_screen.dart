@@ -604,7 +604,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                   },
                                   child: Container(
                                     height: 40,
-                                    width: width / 2.43,
+                                    width: width / 2.48,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.only(
                                         bottomRight: Radius.circular(4),

@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 
 import '../connection_status/connection_status_singleton.dart';
 import '../core/utils/image_constant.dart';
+import '../presentation/history_screen/history_screen.dart';
 import '../presentation/notifications/notification_screen.dart';
+import '../presentation/rooms/rooms_screen.dart';
 import '../presentation/settings/setting_screen.dart';
 // import 'package:growder/presentation/save_screen/save_Screen.dart';
 
@@ -31,11 +33,11 @@ class _BottombarPageState extends State<BottombarPage> {
 
   List widgetOptions = [
     HomeScreen(),
-    SizedBox(),
-    SizedBox(),
+    RoomsScreen(),
+    HistoryScreen(),
     NotificationsScreen(),
     SettingScreen(),
-    SizedBox(),
+   
     // ViewDetailsScreen(),
     // ViewCommentScreen(),
     // // BuyScreen(),
