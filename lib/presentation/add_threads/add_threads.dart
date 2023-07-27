@@ -95,10 +95,11 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                     ),
                   ),
                 ),
-                Center(
+                Padding(
+                  padding: const EdgeInsets.only(left: 15,right: 15),
                   child: Container(
-                    height: 230,
-                    width: width / 1.1,
+                    height: 210,
+                    // width: width / 1.1,
                     decoration: BoxDecoration(
                       color: Color(0XFFEFEFEF),
                       border:
@@ -118,7 +119,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                                   left: 0.5, right: 0.5),
                               child: Container(
                                 height: 50,
-                                width: width / 1.11,
+                                width: width - 33,
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                     color: Colors.grey.shade300,
@@ -126,43 +127,48 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      CustomImageView(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                     
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 15),
+                                      child: CustomImageView(
                                         imagePath: ImageConstant.boldimage,
                                         height: 20,
                                       ),
-                                      CustomImageView(
-                                        imagePath:
-                                            ImageConstant.italicimage,
-                                        height: 15,
-                                      ),
-                                      CustomImageView(
-                                        imagePath: ImageConstant.abimage,
-                                        height: 30,
-                                      ),
-                                      CustomImageView(
-                                        imagePath: ImageConstant.h1image,
-                                        height: 15,
-                                      ),
-                                      CustomImageView(
-                                        imagePath: ImageConstant.lineimage,
-                                        height: 25,
-                                      ),
-                                      CustomImageView(
-                                        imagePath: ImageConstant.imageline,
-                                        height: 20,
-                                      ),
-                                      CustomImageView(
+                                    ),
+                                    Spacer(),
+                                    CustomImageView(
+                                      imagePath:
+                                          ImageConstant.italicimage,
+                                      height: 15,
+                                    ),Spacer(),
+                                    CustomImageView(
+                                      imagePath: ImageConstant.abimage,
+                                      height: 30,
+                                    ),Spacer(),
+                                    CustomImageView(
+                                      imagePath: ImageConstant.h1image,
+                                      height: 15,
+                                    ),Spacer(),
+                                    CustomImageView(
+                                      imagePath: ImageConstant.lineimage,
+                                      height: 25,
+                                    ),Spacer(),
+                                    CustomImageView(
+                                      imagePath: ImageConstant.imageline,
+                                      height: 20,
+                                    ),Spacer(),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 15),
+                                      child: CustomImageView(
                                         imagePath: ImageConstant.pinimage,
                                         height: 20,
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -186,32 +192,35 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                 SizedBox(
                   height: 10,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    var params = {
-                      "roomQuestion": RoomTitleController.text,
-                      "description": "",
-                      "roomType": "PUBLIC"
-                    };
-
-                    BlocProvider.of<CreatPublicRoomCubit>(context)
-                        .CreatPublicRoomAPI(params);
-                  },
-                  child: Center(
-                    child: Container(
-                      height: 50,
-                      width: width / 1.2,
-                      decoration: BoxDecoration(
-                          color: Color(0XFFED1C25),
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Center(
-                        child: Text(
-                          "Create Forum",
-                          style: TextStyle(
-                            fontFamily: 'outfit',
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.only(left: 30,right: 15),
+                  child: GestureDetector(
+                    onTap: () {
+                      var params = {
+                        "roomQuestion": RoomTitleController.text,
+                        "description": "",
+                        "roomType": "PUBLIC"
+                      };
+                
+                      BlocProvider.of<CreatPublicRoomCubit>(context)
+                          .CreatPublicRoomAPI(params);
+                    },
+                    child: Center(
+                      child: Container(
+                        height: 50,
+                        // width: width / 1.2,
+                        decoration: BoxDecoration(
+                            color: Color(0XFFED1C25),
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Center(
+                          child: Text(
+                            "Create Forum",
+                            style: TextStyle(
+                              fontFamily: 'outfit',
+                              fontSize: 15,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),

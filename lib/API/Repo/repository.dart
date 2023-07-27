@@ -4,11 +4,10 @@ import '../Const/const.dart';
 import '../Model/AddThread/CreateRoom_Model.dart';
 import '../Model/HomeScreenModel/PublicRoomModel.dart';
 import '../Model/SendMSG/SendMSG_Model.dart';
+import '../Model/coment/coment_model.dart';
 
 class Repository {
   ApiServices apiServices = ApiServices();
-  
-  
 
   Future<PublicRoomModel> FetchAllPublicRoom() async {
     final response = await apiServices.getApiCall(Config.FetchAllPublicRoom);
@@ -22,7 +21,8 @@ class Repository {
     }
   }
 
-  Future<CreatPublicRoomModel> CreatPublicRoom(Map<String, String> params) async {
+  Future<CreatPublicRoomModel> CreatPublicRoom(
+      Map<String, String> params) async {
     final response = await apiServices.postApiCall(Config.CreateRoom, params);
     var jsonString = json.decode(response.body);
     print(jsonString);
@@ -34,8 +34,9 @@ class Repository {
     }
   }
 
-    Future<sendMSGModel> SendMSG(String Room_ID,String MSG) async {
-    final response = await apiServices.postApiCalla("${Config.SendMSG}/${Room_ID}/${MSG}");
+  Future<sendMSGModel> SendMSG(String Room_ID, String MSG) async {
+    final response =
+        await apiServices.postApiCalla("${Config.SendMSG}/${Room_ID}/${MSG}");
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
@@ -43,6 +44,20 @@ class Repository {
         return sendMSGModel.fromJson(jsonString);
       default:
         return sendMSGModel.fromJson(jsonString);
+    }
+  }
+
+  Future<ComentApiClass> commentApi(
+      String Room_ID, String pageNumber, String pageCount) async {
+    final response = await apiServices
+        .getApiCall("${Config.coomment}/${Room_ID}/${pageNumber}/${pageCount}");
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return ComentApiClass.fromJson(jsonString);
+      default:
+        return ComentApiClass.fromJson(jsonString);
     }
   }
 }
