@@ -1,12 +1,12 @@
+import 'package:archit_s_application1/core/app_export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:archit_s_application1/core/app_export.dart';
+
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_state.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../API/Model/HomeScreenModel/PublicRoomModel.dart';
 import '../../core/utils/color_constant.dart';
-import '../../dialogs/create_room_dilog.dart';
 import '../add_threads/add_threads.dart';
 import '../view_comments/view_comments_screen.dart';
 
@@ -106,63 +106,107 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   children: [
                     SizedBox(height: 30),
+                    CustomImageView(
+                      imagePath: ImageConstant.pdslogo,
+                      height: 40,
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 35, right: 35),
                       child: Row(
                         children: [
                           CustomImageView(
                             imagePath: ImageConstant.imgRectangle39829,
-                            height: getSize(
-                              80,
-                            ),
-                            width: getSize(
-                              80,
-                            ),
+                            height: getSize(80),
+                            width: getSize(80),
                             radius: BorderRadius.circular(
-                              getHorizontalSize(
-                                65,
-                              ),
+                              getHorizontalSize(65),
                             ),
                             alignment: Alignment.center,
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              // mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            child: Row(
                               children: [
-                                Text(
-                                  "Good Morning !",
-                                  style: TextStyle(
-                                      fontFamily: 'outfit',
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey),
-                                ),
-                                Text(
-                                  "User ID",
-                                  style: TextStyle(
-                                    fontFamily: 'outfit',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Row(
+                                Column(
+                                  // mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    CircleAvatar(
-                                      backgroundColor: Colors.green,
-                                      maxRadius: 5,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
                                     Text(
-                                      "Active",
+                                      "User ID",
                                       style: TextStyle(
-                                          fontFamily: 'outfit',
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey),
+                                        fontFamily: 'outfit',
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        CircleAvatar(
+                                          backgroundColor: Colors.green,
+                                          maxRadius: 5,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          "Active",
+                                          style: TextStyle(
+                                              fontFamily: 'outfit',
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.grey),
+                                        ),
+                                        SizedBox(
+                                          width: width / 8,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Container(
+                                      height: 40,
+                                      width: width / 3,
+                                      decoration: BoxDecoration(
+                                          color: Color(0XFFED1C25),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Center(
+                                        child: Text(
+                                          "Create Forum",
+                                          style: TextStyle(
+                                            fontFamily: 'outfit',
+                                            fontSize: 15,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: Container(
+                                        height: 40,
+                                        width: width / 3,
+                                        decoration: BoxDecoration(
+                                            color: Color(0XFFFFD9DA),
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            border: Border.all(
+                                                color: Color(0XFFED1C25))),
+                                        child: Center(
+                                          child: Text(
+                                            "Become an Expert",
+                                            style: TextStyle(
+                                              fontFamily: 'outfit',
+                                              fontSize: 15,
+                                              color: Color(0XFFED1C25),
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -181,61 +225,57 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 180,
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        // CreateForamScreen
 
-                        //          showDialog(
-                        //   context: context,
-                        //   builder: (BuildContext context) {
-                        //     return CreateRoomScreen();
-                        //   },
-                        // );
-                      },
-                      child: Container(
-                        height: 50,
-                        width: width / 1.2,
-                        decoration: BoxDecoration(
-                            color: Color(0XFFED1C25),
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Center(
-                          child: Text(
-                            "Create Forum",
-                            style: TextStyle(
-                              fontFamily: 'outfit',
-                              fontSize: 15,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      height: 50,
-                      width: width / 1.2,
-                      decoration: BoxDecoration(
-                          color: Color(0XFFFFD9DA),
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(color: Color(0XFFED1C25))),
-                      child: Center(
-                        child: Text(
-                          "Become an Expert",
-                          style: TextStyle(
-                            fontFamily: 'outfit',
-                            fontSize: 15,
-                            color: Color(0XFFED1C25),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
+                    // CreateForamScreen
+
+                    //          showDialog(
+                    //   context: context,
+                    //   builder: (BuildContext context) {
+                    //     return CreateRoomScreen();
+                    //   },
+                    // );
+
+                    // child: Container(
+                    //   height: 50,
+                    //   width: width / 3,
+                    //   decoration: BoxDecoration(
+                    //       color: Color(0XFFED1C25),
+                    //       borderRadius: BorderRadius.circular(5)),
+                    //   child: Center(
+                    //     child: Text(
+                    //       "Create Forum",
+                    //       style: TextStyle(
+                    //         fontFamily: 'outfit',
+                    //         fontSize: 15,
+                    //         color: Colors.white,
+                    //         fontWeight: FontWeight.bold,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+
+                    // SizedBox(
+                    //   height: 20,
+                    // ),
+                    // Container(
+                    //   height: 50,
+                    //   width: width / 3,
+                    //   decoration: BoxDecoration(
+                    //       color: Color(0XFFFFD9DA),
+                    //       borderRadius: BorderRadius.circular(5),
+                    //       border: Border.all(color: Color(0XFFED1C25))),
+                    //   child: Center(
+                    //     child: Text(
+                    //       "Become an Expert",
+                    //       style: TextStyle(
+                    //         fontFamily: 'outfit',
+                    //         fontSize: 15,
+                    //         color: Color(0XFFED1C25),
+                    //         fontWeight: FontWeight.bold,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     // SizedBox(
                     //   height: 20,
                     // ),
@@ -445,15 +485,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                             SizedBox(
                                               width: 3,
                                             ),
-                                            Text(
-                                              "${PublicRoomModelData?.object?[index].roomQuestion}",
-                                              maxLines: 2,
-                                              textScaleFactor: 1.0,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
-                                                  fontFamily: "outfit",
-                                                  fontSize: 14),
+                                            Container(
+                                              width: width / 1.4,
+                                              child: Text(
+                                                "${PublicRoomModelData?.object?[index].roomQuestion}",
+                                                maxLines: 2,
+                                                textScaleFactor: 1.0,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    color: Colors.black,
+                                                    fontFamily: "outfit",
+                                                    fontSize: 14),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -518,7 +563,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ],
                                               child: ViewCommentScreen(
                                                 Room_ID:
-                                                    "${PublicRoomModelData?.object?[index].uid ?? ""}", Title: "${PublicRoomModelData?.object?[index].roomQuestion ?? ""}",
+                                                    "${PublicRoomModelData?.object?[index].uid ?? ""}",
+                                                Title:
+                                                    "${PublicRoomModelData?.object?[index].roomQuestion ?? ""}",
                                               ),
                                             );
                                           }));

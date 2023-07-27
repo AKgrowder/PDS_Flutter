@@ -27,7 +27,7 @@ class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
           color: Colors.grey,
         ),
         title: Text(
-          "View details",
+          "View detailS",
           style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.black,

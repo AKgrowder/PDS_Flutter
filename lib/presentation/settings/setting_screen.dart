@@ -1,4 +1,4 @@
-import 'package:archit_s_application1/presentation/home/home.dart';
+import 'package:archit_s_application1/presentation/notifications/notification_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/utils/image_constant.dart';
@@ -142,7 +142,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => HomeScreen(),
+                                builder: (context) =>  NotificationsScreen(),
                               ));
 
                           break;
@@ -150,35 +150,35 @@ class _SettingScreenState extends State<SettingScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomeScreen()));
+                                  builder: (context) => NotificationsScreen()));
 
                           break;
                         case 2:
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => HomeScreen(),
+                                builder: (context) => NotificationsScreen(),
                               ));
                           break;
                         case 3:
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => HomeScreen(),
+                                builder: (context) => NotificationsScreen(),
                               ));
                           break;
                         case 4:
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomeScreen()));
+                                  builder: (context) => NotificationsScreen()));
 
                           break;
                         case 5:
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HomeScreen()),
+                                builder: (context) => NotificationsScreen()),
                           );
 
                           break;
@@ -186,7 +186,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomeScreen()
+                                  builder: (context) => NotificationsScreen()
 
                                   // AddDeliveryAddressScreen();
                                   ));
@@ -203,14 +203,14 @@ class _SettingScreenState extends State<SettingScreen> {
                         case 8:
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return HomeScreen();
+                            return NotificationsScreen();
                           }));
 
                           break;
                         case 9:
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return HomeScreen();
+                            return NotificationsScreen();
                           }));
 
                           break;
@@ -225,7 +225,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           break; */
                         case 10:
                           showDialog(
-                              context: context, builder: (_) => HomeScreen());
+                              context: context, builder: (_) => NotificationsScreen());
                           /*  SnackBar snackBar = SnackBar(
                             content: Text("No Rate US Screen"),
                             backgroundColor: ColorConstant.orangeA700,
@@ -236,12 +236,12 @@ class _SettingScreenState extends State<SettingScreen> {
                           break;
                         case 11:
                           showDialog(
-                              context: context, builder: (_) => HomeScreen());
+                              context: context, builder: (_) => NotificationsScreen());
 
                           break;
                         case 12:
                           showDialog(
-                              context: context, builder: (_) => HomeScreen());
+                              context: context, builder: (_) => NotificationsScreen());
 
                           break;
 
