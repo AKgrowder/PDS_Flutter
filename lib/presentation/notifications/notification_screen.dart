@@ -31,49 +31,49 @@ var arrNotiyTypeList = [
 Map userData = {
   "userData": [
     {
-      "image": "assets/images/Group 1171274865.png",
+      "image": "assets/images/plus.png",
       "title": "Invitation Received!",
       "text": "You have a invite from User 1 , so connect with him/her now.",
       "datetime": "Today | 03:30 PM  !",
     },
     {
-      "image": "assets/images/Group 1171274866.png",
+      "image": "assets/images/rupeee.png",
       "title": "Payment!",
       "text": "Woah! You recieved the payment.",
       "datetime": "01, June, 2023 | 10:12 AM",
     },
     {
-      "image": "assets/images/Group 1171274867.png",
+      "image": "assets/images/rightorange.png",
       "title": "Rooms Start!",
       "text": "User 1 sent a new update on xx Rooms, check now.",
       "datetime": "19, May, 2023 | 08:25 AM",
     },
     {
-      "image": "assets/images/Group 1171274868.png",
+      "image": "assets/images/swap.png",
       "title": "Removal/ Switch!",
       "text": "You are Removed/Switched by User 1 , connect with other users.",
       "datetime": "Yesterday | 12:15 PM",
     },
     {
-      "image": "assets/images/Group 1171274869.png",
+      "image": "assets/images/cross.png",
       "title": "Exit of Member!",
       "text": "A Member exited form the xyz room/Rooms.",
       "datetime": "01, June, 2023 | 10:12 AM",
     },
     {
-      "image": "assets/images/Group 1171274870.png",
+      "image": "assets/images/blueright.png",
       "title": "Rooms Closed!",
       "text": "Woah! xx Rooms is closed by User 1, connect with other users.",
       "datetime": "Today | 03:30 PM",
     },
     {
-      "image": "assets/images/Group 1171274871.png",
+      "image": "assets/images/deleten.png",
       "title": "Room/Rooms Deletion!",
       "text": "You have a invite from User 1 , so connect with him/her now.",
       "datetime": "19, May, 2023 | 08:25 AM",
     },
     {
-      "image": "assets/images/Group 1171274872.png",
+      "image": "assets/images/notn.png",
       "title": "New Update!",
       "text": "User 1 sent a new update on xx Rooms, check now.",
       "datetime": "19, May, 2023 | 08:25 AM",
@@ -190,92 +190,69 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               ],
             ),
           ),
-          ListView.builder(
+          SizedBox(
+            height: 20,
+          ),
+          ListView.separated(
             physics: NeverScrollableScrollPhysics(),
             itemCount: 8,
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      height: 90,
-                      width: width / 1.2,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10.0, left: 10),
-                            child: Image.asset(
-                              userData["userData"][index]["image"],
-                              height: 60,
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 15, left: 15),
-                                child: Text(
-                                  userData["userData"][index]["title"],
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                      fontFamily: "outfit",
-                                      fontSize: 15),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 5.0, left: 15),
-                                child: Container(
-                                    // color: Colors.amber,
-                                    height: 30,
-                                    width: width / 2,
-                                    child: Text(
-                                      userData["userData"][index]["text"],
-                                      style: TextStyle(
-                                          // overflow: TextOverflow.ellipsis,
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black,
-                                          fontFamily: "outfit",
-                                          fontSize: 13),
-                                    )),
-                              ),
-                              Row(
-                                // crossAxisAlignment: CrossAxisAlignment.end,mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  // SizedBox(width: 120,),
-
-                                  Container(
-                                    child: Text(
-                                      userData["userData"][index]["datetime"],
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey,
-                                          fontFamily: "outfit",
-                                          fontSize: 13),
-                                    ),
-                                  ),
-                                ],
-                              )
-                              
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
+              return Container(
+                margin: EdgeInsets.only(left: 20, right: 20),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.all(Radius.circular(15))),
+                child: ListTile(
+                  contentPadding: EdgeInsets.only(top: 10, left: 10, bottom: 5),
+                  leading: Image.asset(
+                    userData["userData"][index]["image"],
                   ),
-                ],
+                  title: Text(
+                    userData["userData"][index]["title"],
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontFamily: "outfit",
+                        fontSize: 15),
+                  ),
+                  subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          // width: width / 1.3,
+                          child: Text(
+                            userData["userData"][index]["text"],
+                            style: TextStyle(
+                                // overflow: TextOverflow.ellipsis,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black,
+                                fontFamily: "outfit",
+                                fontSize: 13),
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Text(
+                                userData["userData"][index]["datetime"],
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey,
+                                    fontFamily: "outfit",
+                                    fontSize: 13),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ]),
+                ),
               );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return Padding(padding: EdgeInsets.only(top: 10));
             },
           )
         ]),
