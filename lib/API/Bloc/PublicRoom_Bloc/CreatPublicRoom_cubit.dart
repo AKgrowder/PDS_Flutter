@@ -10,6 +10,7 @@ class CreatPublicRoomCubit extends Cubit<CreatPublicRoomState> {
       emit(CreatPublicRoomLoadingState());
       CreatPublicRoomModel PublicRModel = await Repository().CreatPublicRoom(params);
       if (PublicRModel.success == true) {
+        
         emit(CreatPublicRoomLoadedState(PublicRModel));
       }else{
         emit(CreatPublicRoomErrorState('No Data Found!'));

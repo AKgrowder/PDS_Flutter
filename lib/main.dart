@@ -16,6 +16,7 @@ void main() {
 
   ///Please update theme as per your need if required.
   ThemeHelper().changeTheme('primary');
+  
   runApp(MyApp());
 }
 
