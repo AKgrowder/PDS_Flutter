@@ -1,5 +1,4 @@
 import 'package:archit_s_application1/API/Model/coment/coment_model.dart';
-import 'package:archit_s_application1/core/utils/size_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,7 +8,6 @@ import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
-import '../home/home.dart';
 
 class ViewCommentScreen extends StatefulWidget {
   final Room_ID;
@@ -181,7 +179,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                     ),
                                   ),
                                   Text(
-                                    "6 Comments",
+                                    "${modelData?.object?.messageOutputList?.content?.length != null ? modelData?.object?.messageOutputList?.content?.length : '0'} Comments",
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontFamily: 'outfit',
@@ -222,25 +220,52 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                               // color: Colors.red,
                               child: Row(
                                 children: [
-                                  Container(
-                                    height: 50,
-                                    width: width - 90,
-                                    decoration: BoxDecoration(
-                                        color: Color(0xFFF5F5F5),
-                                        borderRadius:
-                                            BorderRadius.circular(25)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 15, right: 10),
-                                      child: TextField(
-                                        controller: Add_Comment,
-                                        cursorColor: Colors.grey,
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          hintText: "Add Comment",
+                                  Stack(
+                                    children: [
+                                      Container(
+                                        height: 50,
+                                        width: width - 90,
+                                        decoration: BoxDecoration(
+                                            color: Color(0xFFF5F5F5),
+                                            borderRadius:
+                                                BorderRadius.circular(25)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 45, right: 10),
+                                          child: TextField(
+                                            controller: Add_Comment,
+                                            cursorColor: Colors.grey,
+                                            decoration: InputDecoration(
+                                              border: InputBorder.none,
+                                              hintText: "Add Comment",
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image.asset(
+                                          "assets/images/ic_outline-emoji-emotions.png",
+                                          height: 30,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 250.0, top: 8),
+                                        child: Image.asset(
+                                          "assets/images/paperclip-2.png",
+                                          height: 30,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 285.0, top: 12),
+                                        child: Image.asset(
+                                          "assets/images/Vector (12).png",
+                                          height: 22,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   GestureDetector(
                                     onTap: () {
