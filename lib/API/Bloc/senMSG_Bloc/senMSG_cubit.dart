@@ -6,16 +6,22 @@ import '../../Repo/repository.dart';
 
 class senMSGCubit extends Cubit<senMSGState> {
   senMSGCubit() : super(senMSGInitialState()) {}
+  String currentPage = '0';
+  String record = '10';
+  List<String> dataList = [];
   Future<void> senMSGAPI(String Room_ID, String MSG) async {
     try {
       emit(senMSGLoadingState());
       sendMSGModel PublicRModel = await Repository().SendMSG(Room_ID, MSG);
       if (PublicRModel.success == true) {
+        print('staus Get');
         emit(senMSGLoadedState(PublicRModel));
+        coomentPage(Room_ID);
       } else {
         emit(senMSGErrorState('No Data Found!'));
       }
     } catch (e) {
+      print('senMSGApi-$e');
       emit(senMSGErrorState(e.toString()));
     }
   }
@@ -26,15 +32,17 @@ class senMSGCubit extends Cubit<senMSGState> {
     print('roomId-$Room_ID');
     try {
       emit(senMSGLoadingState());
-      ComentApiClass comentApiClass =
-          await Repository().commentApi(Room_ID, '0', '10');
-     
+      ComentApiModel comentApiClass =
+          await Repository().commentApi(Room_ID, currentPage, record);
+
       if (comentApiClass.success == true) {
         print("comentApiClass.sucuess-");
         emit(ComentApiState(comentApiClass));
+      } else {
+        emit(senMSGErrorState('No Data Found!'));
       }
     } catch (e) {
-      print('erorro-${e.toString()}');
+      print('Catthceroor-${e.toString()}');
       emit(senMSGErrorState(e.toString()));
     }
   }

@@ -1,12 +1,8 @@
- 
-class Config { 
+class Config {
+  static const String FetchAllPublicRoom = "guest/api/fetchAllPublicRoom";
 
-  static const String FetchAllPublicRoom = "api/fetchAllPublicRoom";
+  static const String CreateRoom = "guest/api/createRoom";
 
-  static const String CreateRoom = "api/createRoom";
-
-  static const String SendMSG = "api/addMessageInRoom";
- static const String coomment = "api/fetchInbox";
-
-
+  static const String SendMSG = "guest/api/addMessageInRoom";
+  static const String coomment = "guest/api/fetchInbox";
 }
