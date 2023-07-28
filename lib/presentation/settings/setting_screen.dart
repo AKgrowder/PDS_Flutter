@@ -1,9 +1,10 @@
-import 'package:archit_s_application1/presentation/notifications/notification_screen.dart';
+import 'package:archit_s_application1/presentation/rooms/rooms_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/size_utils.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
+import '../experts/experts_screen.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen();
@@ -142,7 +143,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>  NotificationsScreen(),
+                                builder: (context) =>  RoomsScreen(),
                               ));
 
                           break;
@@ -150,35 +151,35 @@ class _SettingScreenState extends State<SettingScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => NotificationsScreen()));
+                                  builder: (context) => RoomsScreen()));
 
                           break;
                         case 2:
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => NotificationsScreen(),
+                                builder: (context) => ExpertsScreen(),
                               ));
                           break;
                         case 3:
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => NotificationsScreen(),
+                                builder: (context) => RoomsScreen(),
                               ));
                           break;
                         case 4:
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => NotificationsScreen()));
+                                  builder: (context) => RoomsScreen()));
 
                           break;
                         case 5:
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => NotificationsScreen()),
+                                builder: (context) => RoomsScreen()),
                           );
 
                           break;
@@ -186,7 +187,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => NotificationsScreen()
+                                  builder: (context) => RoomsScreen()
 
                                   // AddDeliveryAddressScreen();
                                   ));
@@ -203,14 +204,14 @@ class _SettingScreenState extends State<SettingScreen> {
                         case 8:
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return NotificationsScreen();
+                            return RoomsScreen();
                           }));
 
                           break;
                         case 9:
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return NotificationsScreen();
+                            return RoomsScreen();
                           }));
 
                           break;
@@ -225,7 +226,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           break; */
                         case 10:
                           showDialog(
-                              context: context, builder: (_) => NotificationsScreen());
+                              context: context, builder: (_) => RoomsScreen());
                           /*  SnackBar snackBar = SnackBar(
                             content: Text("No Rate US Screen"),
                             backgroundColor: ColorConstant.orangeA700,
@@ -236,12 +237,12 @@ class _SettingScreenState extends State<SettingScreen> {
                           break;
                         case 11:
                           showDialog(
-                              context: context, builder: (_) => NotificationsScreen());
+                              context: context, builder: (_) => RoomsScreen());
 
                           break;
                         case 12:
                           showDialog(
-                              context: context, builder: (_) => NotificationsScreen());
+                              context: context, builder: (_) => RoomsScreen());
 
                           break;
 

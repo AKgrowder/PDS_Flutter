@@ -10,6 +10,23 @@ class HistoryDetailsScren extends StatefulWidget {
   State<HistoryDetailsScren> createState() => _HistoryDetailsScrenState();
 }
 
+List<String> payment = [
+  "Payment Status",
+  "Payment Time",
+  "Transaction ID",
+  "Payment Method ",
+  "Transfer Charges ",
+  "Amount",
+];
+List<String> status = [
+  "Success",
+  "4th Feb. 2023  0:00 pm",
+  "#123456",
+  "2",
+  "UPI - GPAY",
+  "16,000",
+];
+
 class _HistoryDetailsScrenState extends State<HistoryDetailsScren> {
   @override
   Widget build(BuildContext context) {
@@ -35,11 +52,11 @@ class _HistoryDetailsScrenState extends State<HistoryDetailsScren> {
               color: Colors.black,
               fontFamily: "outfit",
               fontSize: 20),
-        ),  
+        ),
       ),
-      body: Column(children: [
+      body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(
-          padding: const EdgeInsets.only(top: 30.0,right: 20,left: 20),
+          padding: const EdgeInsets.only(top: 30.0, right: 20, left: 20),
           child: Container(
             height: height / 6.5,
             width: width / 1.1,
@@ -136,10 +153,104 @@ class _HistoryDetailsScrenState extends State<HistoryDetailsScren> {
                       ),
                     ),
                   ),
-                   
                 ]),
           ),
         ),
+        SizedBox(
+          height: 20,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 5.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                // color: Colors.amber,
+                height: 300,
+                width: width / 3,
+                child: ListView.builder(
+                  itemCount: 6,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Row(
+                      children: [SizedBox(height: 35,),
+                        Text(
+                          payment[index],
+                          style: TextStyle(
+                            fontFamily: 'outfit',
+                            fontSize: 15,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              Container(
+                // color: Colors.amber,
+                height: 300,
+                width: width / 2.5,
+                child: ListView.builder(
+                  itemCount: 6,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Row(
+                      children: [SizedBox(height: 35,),
+                        Text(
+                          status[index],
+                          style: TextStyle(
+                            fontFamily: 'outfit',
+                            fontSize: 15,
+                            color:index==0? Colors.green:Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        )
+        // Row(
+        //   children: [
+        //     Container(
+        //       color: Colors.amber,
+        //       height: height / 2,
+        //       width: 150,
+        //       child: Column(
+        //         crossAxisAlignment: CrossAxisAlignment.start,
+        //         children: [
+        //           Text("Payment Status"),
+        //           Text("Payment Time"),
+        //           Text("Transaction ID"),
+        //           Text("Payment Method"),
+        //           Text("Transfer Charges"),
+        //           Text("Amount")
+        //         ],
+        //       ),
+        //     ),
+        //     Container(
+        //       color: Colors.amber,
+        //       height: height / 2,
+        //       width: 150,
+        //       child: Column(
+        //         crossAxisAlignment: CrossAxisAlignment.start,
+        //         children: [
+        //           Text("Payment Status"),
+        //           Text("Payment Time"),
+        //           Text("Transaction ID"),
+        //           Text("Payment Method"),
+        //           Text("Transfer Charges"),
+        //           Text("Amount")
+        //         ],
+        //       ),
+        //     ),
+        //   ],
+        // )
       ]),
     );
   }

@@ -73,7 +73,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
               children: [
                 Center(
                   child: Container(
-                    height: 340,
+                    height: 345,
                     width: width / 1.25,
                     decoration: BoxDecoration(
                       color: Colors.white,

@@ -1,8 +1,6 @@
-import 'package:archit_s_application1/core/utils/size_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_state.dart';
 import '../../core/utils/color_constant.dart';
@@ -96,84 +94,76 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 15,right: 15),
+                  padding: const EdgeInsets.only(left: 15, right: 15),
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            topRight: Radius.circular(8))),
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CustomImageView(
+                            imagePath: ImageConstant.boldimage,
+                            height: 20,
+                          ),
+                        ),
+                        Spacer(),
+                        CustomImageView(
+                          imagePath: ImageConstant.italicimage,
+                          height: 15,
+                        ),
+                        Spacer(),
+                        CustomImageView(
+                          imagePath: ImageConstant.abimage,
+                          height: 30,
+                        ),
+                        Spacer(),
+                        CustomImageView(
+                          imagePath: ImageConstant.h1image,
+                          height: 15,
+                        ),
+                        Spacer(),
+                        CustomImageView(
+                          imagePath: ImageConstant.lineimage,
+                          height: 25,
+                        ),
+                        Spacer(),
+                        CustomImageView(
+                          imagePath: ImageConstant.imageline,
+                          height: 20,
+                        ),
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CustomImageView(
+                            imagePath: ImageConstant.pinimage,
+                            height: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 15, top: 0),
                   child: Container(
                     height: 210,
                     // width: width / 1.1,
                     decoration: BoxDecoration(
                       color: Color(0XFFEFEFEF),
-                      border:
-                          Border.all(color: Colors.grey.shade300, width: 1),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
+                      border: Border.all(color: Colors.grey.shade300, width: 1),
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(8),
+                          bottomRight: Radius.circular(8)),
                     ),
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 0.5, right: 0.5),
-                              child: Container(
-                                height: 50,
-                                width: width - 33,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey.shade300,
-                                  ),
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                     
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 15),
-                                      child: CustomImageView(
-                                        imagePath: ImageConstant.boldimage,
-                                        height: 20,
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    CustomImageView(
-                                      imagePath:
-                                          ImageConstant.italicimage,
-                                      height: 15,
-                                    ),Spacer(),
-                                    CustomImageView(
-                                      imagePath: ImageConstant.abimage,
-                                      height: 30,
-                                    ),Spacer(),
-                                    CustomImageView(
-                                      imagePath: ImageConstant.h1image,
-                                      height: 15,
-                                    ),Spacer(),
-                                    CustomImageView(
-                                      imagePath: ImageConstant.lineimage,
-                                      height: 25,
-                                    ),Spacer(),
-                                    CustomImageView(
-                                      imagePath: ImageConstant.imageline,
-                                      height: 20,
-                                    ),Spacer(),
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 15),
-                                      child: CustomImageView(
-                                        imagePath: ImageConstant.pinimage,
-                                        height: 20,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextField(
@@ -193,7 +183,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                   height: 10,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 30,right: 15),
+                  padding: const EdgeInsets.only(left: 30, right: 15),
                   child: GestureDetector(
                     onTap: () {
                       var params = {
@@ -201,7 +191,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                         "description": "",
                         "roomType": "PUBLIC"
                       };
-                
+
                       BlocProvider.of<CreatPublicRoomCubit>(context)
                           .CreatPublicRoomAPI(params);
                     },
