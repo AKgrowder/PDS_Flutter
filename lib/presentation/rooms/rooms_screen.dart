@@ -136,15 +136,15 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceAround,
                                   children: [
                                     CustomImageView(
                                       imagePath: ImageConstant.messageimage,
                                       height: 15,
                                     ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
+                                    // SizedBox(
+                                    //   width: 10,
+                                    // ),
                                     Text(
                                       "Consultancy Stage",
                                       style: TextStyle(
@@ -153,7 +153,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                           fontFamily: "outfit",
                                           fontSize: 14),
                                     ),
-                                    Spacer(),
+                                    // Spacer(),
+                                    // SizedBox(width: 10,),
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
@@ -215,9 +216,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             ),
                                       //------------------------------------------
                                     ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
+                                    // SizedBox(
+                                    //   width: 10,
+                                    // ),
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
@@ -289,15 +290,15 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceAround,
                                   children: [
                                     CustomImageView(
                                       imagePath: ImageConstant.editimage,
                                       height: 15,
                                     ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
+                                    // SizedBox(
+                                    //   width: 10,
+                                    // ),
                                     Text(
                                       "Designing Stage",
                                       style: TextStyle(
@@ -306,7 +307,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                           fontFamily: "outfit",
                                           fontSize: 14),
                                     ),
-                                    Spacer(),
+                                    // Spacer(),
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
@@ -367,9 +368,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             ),
                                       //------------------------------------------
                                     ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
+                                    // SizedBox(
+                                    //   width: 10,
+                                    // ),
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
@@ -576,7 +577,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                               children: [
                                 Container(
                                   height: 40,
-                                  width: width / 2.43,
+                                  width: width/2.48,
                                   decoration: BoxDecoration(
                                       // color: Color(0XFF9B9B9B),
                                       color: Color(0xFFED1C25),
@@ -604,7 +605,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                   },
                                   child: Container(
                                     height: 40,
-                                    width: width / 2.48,
+                                    width: width/2.48,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.only(
                                         bottomRight: Radius.circular(4),

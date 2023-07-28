@@ -177,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           "Create Forum",
                                           style: TextStyle(
                                             fontFamily: 'outfit',
-                                            fontSize: 15,
+                                            fontSize: 13,
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -200,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             "Become an Expert",
                                             style: TextStyle(
                                               fontFamily: 'outfit',
-                                              fontSize: 15,
+                                              fontSize: 13,
                                               color: Color(0XFFED1C25),
                                               fontWeight: FontWeight.bold,
                                             ),
