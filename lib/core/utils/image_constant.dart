@@ -112,7 +112,7 @@ class ImageConstant {
   // ----------------
 
   static String register = 'assets/images/register.png';
-  static String homeimage = 'assets/images/Frame 47726.png';
+  static String homeimage = 'assets/images/homeimage.png';
 
   static String loader = 'assets/images/loader.gif';
   static String setting_share = 'assets/images/shereimage.png';
@@ -136,6 +136,8 @@ class ImageConstant {
   static String bluerightn = 'assets/images/blueright.png';
   static String deleten = 'assets/images/deleten.png';
   static String notn = 'assets/images/notn.png';
+  static String searchimagee = 'assets/images/search.png';
+  static String filterimage = 'assets/images/filter.png';
 
    
 
