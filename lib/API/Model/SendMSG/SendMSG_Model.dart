@@ -24,16 +24,16 @@ class sendMSGModel {
 }
 
 class Object {
-  Null? id;
+  int? id;
   String? createdAt;
   Null? createdBy;
   Null? status;
   Null? isActive;
-  Null? uid;
+  String? uid;
   String? modifiedAt;
   Null? modifiedBy;
-  Null? message;
-  Null? messageType;
+  String? message;
+  String? messageType;
 
   Object(
       {this.id,

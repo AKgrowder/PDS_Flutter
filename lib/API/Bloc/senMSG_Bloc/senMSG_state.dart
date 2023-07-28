@@ -16,12 +16,12 @@ class senMSGLoadedState extends senMSGState {
 class senMSGErrorState extends senMSGState {
   final String error;
   senMSGErrorState(this.error);
+  String get propsError => error;
 }
 
 class ComentApiState extends senMSGState {
-  final ComentApiClass comentApiClass;
+  final ComentApiModel comentApiClass;
 
   ComentApiState(this.comentApiClass);
-
-  ComentApiClass get props => comentApiClass;
+ 
 }

@@ -38,7 +38,7 @@ class Repository {
     final response =
         await apiServices.postApiCalla("${Config.SendMSG}/${Room_ID}/${MSG}");
     var jsonString = json.decode(response.body);
-    print(jsonString);
+    print('jsonString$jsonString');
     switch (response.statusCode) {
       case 200:
         return sendMSGModel.fromJson(jsonString);
@@ -47,7 +47,7 @@ class Repository {
     }
   }
 
-  Future<ComentApiClass> commentApi(
+  Future<ComentApiModel> commentApi(
       String Room_ID, String pageNumber, String pageCount) async {
     final response = await apiServices
         .getApiCall("${Config.coomment}/${Room_ID}/${pageNumber}/${pageCount}");
@@ -55,9 +55,9 @@ class Repository {
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
-        return ComentApiClass.fromJson(jsonString);
+        return ComentApiModel.fromJson(jsonString);
       default:
-        return ComentApiClass.fromJson(jsonString);
+        return ComentApiModel.fromJson(jsonString);
     }
   }
 }

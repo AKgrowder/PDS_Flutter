@@ -1,11 +1,11 @@
-class ComentApiClass {
+class ComentApiModel {
   String? message;
   Object? object;
   bool? success;
 
-  ComentApiClass({this.message, this.object, this.success});
+  ComentApiModel({this.message, this.object, this.success});
 
-  ComentApiClass.fromJson(Map<String, dynamic> json) {
+  ComentApiModel.fromJson(Map<String, dynamic> json) {
     print('jsone Check data-$json');
     message = json['message'];
     object =
@@ -32,6 +32,8 @@ class Object {
   Object({this.roomUid, this.roomQuestion, this.messageOutputList});
 
   Object.fromJson(Map<String, dynamic> json) {
+    print('OBJECT`$json');
+
     roomUid = json['roomUid'];
     roomQuestion = json['roomQuestion'];
     messageOutputList = json['messageOutputList'] != null
