@@ -57,11 +57,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllPublicRoom();
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllPublicRoom();
+
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return SafeArea(
