@@ -37,8 +37,7 @@ class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 50.0),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, 
-        children: [
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Align(
             alignment: Alignment.center,
             child: Container(
@@ -79,7 +78,8 @@ class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
                     child: GestureDetector(
                       onTap: () {},
                       child: CustomImageView(
-                        svgPath: ImageConstant.imgCamera,color: Colors.black,
+                        svgPath: ImageConstant.imgCamera,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -88,16 +88,19 @@ class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left:36.0,top: 10),
+            padding: const EdgeInsets.only(left: 36.0, top: 10),
             child: Text(
               "User ID",
               style: TextStyle(
-                  fontWeight: FontWeight. w600,
+                  fontWeight: FontWeight.w600,
                   color: Colors.black,
                   fontFamily: "outfit",
                   fontSize: 15),
             ),
-          ),SizedBox(height: 5,),
+          ),
+          SizedBox(
+            height: 5,
+          ),
           Center(
             child: Container(
               height: 50,
@@ -119,16 +122,19 @@ class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left:36.0,top: 20),
+            padding: const EdgeInsets.only(left: 36.0, top: 20),
             child: Text(
               "Your Name",
               style: TextStyle(
-                  fontWeight: FontWeight. w600,
+                  fontWeight: FontWeight.w600,
                   color: Colors.black,
                   fontFamily: "outfit",
                   fontSize: 15),
             ),
-          ),SizedBox(height: 5,),
+          ),
+          SizedBox(
+            height: 5,
+          ),
           Center(
             child: Container(
               height: 50,
@@ -148,17 +154,21 @@ class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
                 ),
               ),
             ),
-          ),Padding(
-            padding: const EdgeInsets.only(left:36.0,top: 20),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 36.0, top: 20),
             child: Text(
               "Email",
               style: TextStyle(
-                  fontWeight: FontWeight. w600,
+                  fontWeight: FontWeight.w600,
                   color: Colors.black,
                   fontFamily: "outfit",
                   fontSize: 15),
             ),
-          ),SizedBox(height: 5,),
+          ),
+          SizedBox(
+            height: 5,
+          ),
           Center(
             child: Container(
               height: 50,
@@ -178,17 +188,21 @@ class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
                 ),
               ),
             ),
-          ),Padding(
-            padding: const EdgeInsets.only(left:36.0,top: 20),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 36.0, top: 20),
             child: Text(
               "Contact no.",
               style: TextStyle(
-                  fontWeight: FontWeight. w600,
+                  fontWeight: FontWeight.w600,
                   color: Colors.black,
                   fontFamily: "outfit",
                   fontSize: 15),
             ),
-          ),SizedBox(height: 5,),
+          ),
+          SizedBox(
+            height: 5,
+          ),
           Center(
             child: Container(
               height: 50,

@@ -1,4 +1,5 @@
 import 'package:archit_s_application1/API/Model/coment/coment_model.dart';
+import 'package:archit_s_application1/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -269,9 +270,14 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      BlocProvider.of<senMSGCubit>(context)
-                                          .senMSGAPI(
-                                              widget.Room_ID, Add_Comment.text);
+                                      print("Add comment button");
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  RegisterCreateAccountScreen()));
+                                      // BlocProvider.of<senMSGCubit>(context)
+                                      //     .senMSGAPI(
+                                      //         widget.Room_ID, Add_Comment.text);
                                     },
                                     child: Container(
                                       height: 50,
