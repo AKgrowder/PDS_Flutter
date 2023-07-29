@@ -58,7 +58,7 @@ class Object {
     modifiedBy = json['modifiedBy'];
     message = json['message'];
     messageType = json['messageType'];
-  }
+} 
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

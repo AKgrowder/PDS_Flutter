@@ -6,14 +6,13 @@ import 'package:flutter/material.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
 
 class SplashScreen extends StatelessWidget {
-
   int GetTimeSplash = 0;
 
   void startTimer(BuildContext context) {
     Timer(
       Duration(seconds: 2),
       () {
-        // chcekToken(context);
+        chcekToken(context);
       },
     );
   }
@@ -55,8 +54,7 @@ class SplashScreen extends StatelessWidget {
   chcekToken(BuildContext context) async {
     Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (context) => RegisterCreateAccountScreen()),
+      MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()),
     );
   }
 }

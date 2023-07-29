@@ -9,7 +9,8 @@ dependencies:
   cached_network_image:  
   flutter_svg: 
   flutter_svg_provider:  
-  intl:  
+  intl:
+  shared_preferences:   
   pinput:  
   flutter_bloc:
   image_picker:  

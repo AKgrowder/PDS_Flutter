@@ -1,3 +1,4 @@
+import 'package:archit_s_application1/API/Bloc/auth/register_Block.dart';
 import 'package:archit_s_application1/theme/theme_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +17,7 @@ void main() {
 
   ///Please update theme as per your need if required.
   ThemeHelper().changeTheme('primary');
-  
+
   runApp(MyApp());
 }
 
@@ -29,8 +30,8 @@ class MyApp extends StatelessWidget {
         ),
         title: 'archit_s_application1',
         debugShowCheckedModeBanner: false,
-        // initialRoute: AppRoutes.splashScreen,
-        // routes: AppRoutes.routes,
+        //  initialRoute: AppRoutes.splashScreen,
+        //  routes: AppRoutes.routes,
         home: MultiBlocProvider(
           providers: [
             BlocProvider<FetchAllPublicRoomCubit>(
@@ -42,7 +43,9 @@ class MyApp extends StatelessWidget {
             BlocProvider<senMSGCubit>(
               create: (context) => senMSGCubit(),
             ),
-            
+            BlocProvider<RegisterCubit>(
+              create: (context) => RegisterCubit(),
+            ),
           ],
           child: BottombarPage(buttomIndex: 0),
         )
