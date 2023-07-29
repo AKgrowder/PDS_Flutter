@@ -1,11 +1,11 @@
 class ImageConstant {
   static String imgInfo = 'assets/images/img_info.svg';
 
- 
   static String unselectedimgVector = 'assets/images/Vector (10).png';
   static String tomcruse = 'assets/images/Ellipse 3942 (1).png';
   static String bag = 'assets/images/iconoir_shopping-bag-alt.png';
-  static String experts = 'assets/images/pexels-tima-miroshnichenko-5452201 2 (1).png';
+  static String experts =
+      'assets/images/pexels-tima-miroshnichenko-5452201 2 (1).png';
 
   static String imgArrowleft = 'assets/images/img_arrowleft.svg';
 
@@ -57,7 +57,8 @@ class ImageConstant {
   static String lineimage = 'assets/images/Group 1171274844.png';
   static String imageline = 'assets/images/ada.png';
   static String pinimage = 'assets/images/aaaa.png';
-  static String viewdetailsimage = 'assets/images/pexels-tima-miroshnichenko-5452201 2 (2).png';
+  static String viewdetailsimage =
+      'assets/images/pexels-tima-miroshnichenko-5452201 2 (2).png';
   static String selectedimage = 'assets/images/seleg.png';
   static String selectedpin = 'assets/images/Vector (18).png';
   static String mobileman = 'assets/images/Rectangle 39874.png';
@@ -72,14 +73,14 @@ class ImageConstant {
   static String closeimage = 'assets/images/Group 145.png';
   static String popupimage = 'assets/images/Group 1171274821.png';
   static String infoimage = 'assets/images/Vector (20).png';
-  static String arrowleftimage = 'assets/images/material-symbols_info-outline-rounded.png';
- 
+  static String arrowleftimage =
+      'assets/images/material-symbols_info-outline-rounded.png';
 
   static String imgCamera = 'assets/images/img_camera.svg';
   static String pagenotfound = 'assets/images/image 8655.png';
   static String nointernetimage = 'assets/images/image 8654.png';
   static String copyimage = 'assets/images/Vector (21).png';
-  static String  addimage= 'assets/images/Group 1171274819.png';
+  static String addimage = 'assets/images/Group 1171274819.png';
 
   static String imgIcoutlinephotocamera =
       'assets/images/img_icoutlinephotocamera.svg';
@@ -113,7 +114,7 @@ class ImageConstant {
 
   static String register = 'assets/images/register.png';
   static String homeimage = 'assets/images/homeimage.png';
-
+//---------------------------setting_screen_images-------------------------------------------------
   static String loader = 'assets/images/loader.gif';
   static String setting_share = 'assets/images/shereimage.png';
   static String setting_delete = 'assets/images/deleteimages.png';
@@ -127,7 +128,7 @@ class ImageConstant {
   static String setting_settingimage = 'assets/images/settingimagge.png';
   static String setting_phone = 'assets/images/phoneimage.png';
 
-  //----------------------------------------------------------------------
+  //------------------------------defult_images----------------------------------------
   static String plusn = 'assets/images/plus.png';
   static String rupeen = 'assets/images/rupeee.png';
   static String rightn = 'assets/images/rightorange.png';
@@ -136,9 +137,16 @@ class ImageConstant {
   static String bluerightn = 'assets/images/blueright.png';
   static String deleten = 'assets/images/deleten.png';
   static String notn = 'assets/images/notn.png';
+  //----------------expert_screen_images------------------------------------------
   static String searchimagee = 'assets/images/search.png';
   static String filterimage = 'assets/images/filter.png';
-
-   
-
+  static String roundrupee = 'assets/images/roundrupeee.png';
+  static String timeimage = 'assets/images/ic_round-access-time.png';
+  static String starimage = 'assets/images/material-symbols_star-rounded.png';
+  static String expert2 =
+      'assets/images/pexels-tima-miroshnichenko-5452201 2 (3).png';
+  static String expert3 =
+      'assets/images/pexels-tima-miroshnichenko-5452201 2 (4).png';
+  static String expert4 =
+      'assets/images/pexels-tima-miroshnichenko-5452201 2 (5).png';
 }
