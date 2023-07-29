@@ -1,4 +1,8 @@
 import 'dart:convert';
+import 'package:archit_s_application1/API/Model/authModel/loginModel.dart';
+import 'package:archit_s_application1/API/Model/authModel/registerModel.dart';
+import 'package:archit_s_application1/API/Model/otpmodel/otpmodel.dart';
+
 import '../ApiService/ApiService.dart';
 import '../Const/const.dart';
 import '../Model/AddThread/CreateRoom_Model.dart';
@@ -21,6 +25,18 @@ class Repository {
     }
   }
 
+  // Future<CreatPublicRoomModel> loginApi() async {
+  //   final response = await apiServices.postApiCall();
+  //   var jsonString = json.decode(response.body);
+  //   print(jsonString);
+  //   switch (response.statusCode) {
+  //     case 200:
+  //       return CreatPublicRoomModel.fromJson(jsonString);
+  //     default:
+  //       return CreatPublicRoomModel.fromJson(jsonString);
+  //   }
+  // }
+
   Future<CreatPublicRoomModel> CreatPublicRoom(
       Map<String, String> params) async {
     final response = await apiServices.postApiCall(Config.CreateRoom, params);
@@ -31,6 +47,43 @@ class Repository {
         return CreatPublicRoomModel.fromJson(jsonString);
       default:
         return CreatPublicRoomModel.fromJson(jsonString);
+    }
+  }
+
+  Future<LoginModel> loginApi(Map<String, String> params) async {
+    final response = await apiServices.postApiCall(Config.loginApi, params);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return LoginModel.fromJson(jsonString);
+      default:
+        return LoginModel.fromJson(jsonString);
+    }
+  }
+
+  Future<RegisterClass> registerApi(Map<String, String> params) async {
+    final response = await apiServices.postApiCall(Config.registerApi, params);
+    var jsonString = json.decode(response.body);
+    print('jsonString-$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return RegisterClass.fromJson(jsonString);
+      default:
+        return RegisterClass.fromJson(jsonString);
+    }
+  }
+
+  Future<OtpModel> otpModel(String userNumber) async {
+    final response =
+        await apiServices.getApiCall('${Config.otpApi}/999999/${userNumber}');
+    var jsonString = json.decode(response.body);
+    print('jsonString-$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return OtpModel.fromJson(jsonString);
+      default:
+        return OtpModel.fromJson(jsonString);
     }
   }
 

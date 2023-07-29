@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_state.dart';
 import '../../core/utils/color_constant.dart';
@@ -185,6 +184,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                 padding: const EdgeInsets.only(left: 30, right: 15),
                 child: GestureDetector(
                   onTap: () {
+                    
                     var params = {
                       "roomQuestion": RoomTitleController.text,
                       "description": "",
