@@ -1,9 +1,10 @@
+import 'package:archit_s_application1/dialogs/create_room_dilog.dart';
+import 'package:archit_s_application1/dilogs/invite_dilog.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/size_utils.dart';
 import '../../dialogs/assigh_adminn_dilog..dart';
-import '../../dialogs/invite_dilog.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
 import '../home/home.dart';
@@ -506,28 +507,39 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                       ],
                                     ),
                                   ),
-                                  Container(
-                                    width: 140,
-                                    height: 22.51,
-                                    decoration: ShapeDecoration(
-                                      color: Color(0xFFFFD9DA),
-                                      shape: RoundedRectangleBorder(
-                                        side: BorderSide(
-                                          width: 1,
-                                          color: Color(0xFFED1C25),
+                                  GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return InviteDilogScreen();
+                                        },
+                                      );
+                                    },
+                                    child: Container(
+                                      width: 140,
+                                      height: 22.51,
+                                      decoration: ShapeDecoration(
+                                        color: Color(0xFFFFD9DA),
+                                        shape: RoundedRectangleBorder(
+                                          side: BorderSide(
+                                            width: 1,
+                                            color: Color(0xFFED1C25),
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(50),
                                         ),
-                                        borderRadius: BorderRadius.circular(50),
                                       ),
+                                      child: Center(
+                                          child: Text(
+                                        "Invite User",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            color: Color(0xFFED1C25),
+                                            fontFamily: "outfit",
+                                            fontSize: 13),
+                                      )),
                                     ),
-                                    child: Center(
-                                        child: Text(
-                                      "Invite User",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: Color(0xFFED1C25),
-                                          fontFamily: "outfit",
-                                          fontSize: 13),
-                                    )),
                                   )
                                 ],
                               ),
@@ -577,7 +589,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                               children: [
                                 Container(
                                   height: 40,
-                                  width: width/2.48,
+                                  width: width / 2.48,
                                   decoration: BoxDecoration(
                                       // color: Color(0XFF9B9B9B),
                                       color: Color(0xFFED1C25),
@@ -605,7 +617,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                   },
                                   child: Container(
                                     height: 40,
-                                    width: width/2.48,
+                                    width: width / 2.48,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.only(
                                         bottomRight: Radius.circular(4),
@@ -666,7 +678,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return InviteDilogScreen();
+                    return CreateRoomScreen();
                   },
                 );
               },
