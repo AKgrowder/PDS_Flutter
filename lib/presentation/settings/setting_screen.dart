@@ -5,6 +5,7 @@ import '../../core/utils/image_constant.dart';
 import '../../core/utils/size_utils.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../experts/experts_screen.dart';
+import '../experts_details_screen/experts_details_screen.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen();
@@ -143,7 +144,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>  RoomsScreen(),
+                                builder: (context) =>  ExpertsDetailsScreen(),
                               ));
 
                           break;

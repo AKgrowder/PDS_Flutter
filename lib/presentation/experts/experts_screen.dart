@@ -12,7 +12,7 @@ class ExpertsScreen extends StatefulWidget {
   State<ExpertsScreen> createState() => _ExpertsScreenState();
 }
 
-var selecteoneArray = -1;
+var selecteoneArray;
 Map userData = {
   "userData": [
     {
@@ -149,10 +149,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                     return GestureDetector(
                       onTap: () {
                         setState(() {
-                          _containerColor =
-                              _containerColor == Colors.transparent
-                                  ? Colors.red
-                                  : Colors.transparent;
+                          _containerColor = index;
                         });
                       },
                       child: Padding(
@@ -160,10 +157,10 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                         child: Container(
                             decoration: BoxDecoration(
                               border: Border.all(
-                                  color: _containerColor == Colors.transparent
+                                  color: _containerColor == index
                                       ? Colors.red
                                       : Colors.transparent),
-                              color: _containerColor == Colors.transparent
+                              color: _containerColor == index
                                   ? Color(0xFFFFE7E7)
                                   : Colors.transparent,
                               borderRadius: BorderRadius.all(
@@ -175,11 +172,20 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                               children: [
                                 Stack(
                                   children: [
-                                    Container(
-                                      child: Image.asset(
-                                        userData["userData"][index]["image"],
-                                      ),
-                                    ),
+                                    // Container(
+                                    //   child: Image.asset(
+                                    //     userData["userData"][index]["image"],
+                                    //   ),
+                                    // ),
+                                    index == 1
+                                        ? CustomImageView(
+                                            imagePath: ImageConstant.expert2,
+                                            radius: BorderRadius.circular(10),
+                                          )
+                                        : CustomImageView(
+                                            imagePath: ImageConstant.experts,
+                                            radius: BorderRadius.circular(10),
+                                          ),
                                     index == 1
                                         ? Padding(
                                             padding: const EdgeInsets.all(8.0),
