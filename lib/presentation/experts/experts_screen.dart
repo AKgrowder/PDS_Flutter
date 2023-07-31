@@ -1,5 +1,6 @@
 import 'package:archit_s_application1/core/utils/image_constant.dart';
 import 'package:archit_s_application1/core/utils/size_utils.dart';
+import 'package:archit_s_application1/dilogs/invite_dilog.dart';
 import 'package:archit_s_application1/widgets/custom_image_view.dart';
 import 'package:flutter/material.dart';
 
@@ -373,36 +374,41 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                   height: 17.2,
                                 ),
                                 index == 1 || index == 0
-                                    ? Container(
-                                        height: 30,
-                                        width: width,
-                                        decoration: BoxDecoration(
-                                          color: Color(0xFFED1C25),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10)),
+                                    ? GestureDetector(onTap: () {
+                                       showDialog(
+                              context: context, builder: (_) => InviteDilogScreen());
+                                    },
+                                      child: Container(
+                                          height: 30,
+                                          width: width,
+                                          decoration: BoxDecoration(
+                                            color: Color(0xFFED1C25),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                          ),
+                                          child: Center(
+                                            child: index == 1
+                                                ? Text(
+                                                    "invite sent",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.white,
+                                                        fontFamily: "outfit",
+                                                        fontSize: 15),
+                                                  )
+                                                : Text(
+                                                    "invite",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.white,
+                                                        fontFamily: "outfit",
+                                                        fontSize: 15),
+                                                  ),
+                                          ),
                                         ),
-                                        child: Center(
-                                          child: index == 1
-                                              ? Text(
-                                                  "invite sent",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Colors.white,
-                                                      fontFamily: "outfit",
-                                                      fontSize: 15),
-                                                )
-                                              : Text(
-                                                  "invite",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Colors.white,
-                                                      fontFamily: "outfit",
-                                                      fontSize: 15),
-                                                ),
-                                        ),
-                                      )
+                                    )
                                     : Container(
                                         height: 30,
                                         width: width,
@@ -458,7 +464,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                                           FontWeight.w300),
                                                 )
                                         ]),
-                                      )
+                                      ),
                               ],
                             )),
                       ),
