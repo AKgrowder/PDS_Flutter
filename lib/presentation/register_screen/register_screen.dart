@@ -2,12 +2,15 @@ import 'package:archit_s_application1/API/Bloc/auth/login_Block.dart';
 import 'package:archit_s_application1/API/Bloc/auth/login_state.dart';
 import 'package:archit_s_application1/core/app_export.dart';
 import 'package:archit_s_application1/core/utils/color_constant.dart';
+import 'package:archit_s_application1/core/utils/sharedPreferences.dart';
+import 'package:archit_s_application1/presentation/home/home.dart';
 import 'package:archit_s_application1/presentation/otp_verification_screen/otp_verification_screen.dart';
 import 'package:archit_s_application1/widgets/custom_elevated_button.dart';
 import 'package:archit_s_application1/widgets/custom_outlined_button.dart';
 import 'package:archit_s_application1/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../forget_password_screen/forget_password_screen.dart';
 
@@ -67,12 +70,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 );
               }
               if (state is LoginLoadedState) {
+                getDataStroe(
+                  state.loginModel.object!.uuid.toString(),
+                  state.loginModel.object!.jwt.toString(),
+                  // state.loginModel.object!.verified.toString(),
+                );
                 SnackBar snackBar = SnackBar(
                   content: Text(state.loginModel.message ?? ""),
                   backgroundColor: ColorConstant.primary_color,
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
+                print(
+                    'check Status--${state.loginModel.object!.verified.toString()}');
+                if (state.loginModel.object!.verified.toString() == true) {
+                  print('this condison is calling');
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => HomeScreen()));
+                } else {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => OtpVerificationScreen(flowCheck: 'login',)));
+                }
                 // Navigator.push(context,MaterialPageRoute(builder: (context)=> HomeScreen()));
               }
             },
@@ -297,7 +314,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 var dataPassing = {
                                   "username": emailAndMobileController.text,
                                   "password": passwordoneController.text,
-                                  "module": "EMPLOYEE"
+                                  "module": "SUPER_ADMIN"
                                 };
                                 print('dataPassing-$dataPassing');
                                 BlocProvider.of<LoginCubit>(context)
@@ -395,5 +412,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     );
+  }
+
+  getDataStroe(
+    String userId,
+    String jwt,
+  ) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(PreferencesKey.loginUserID, userId);
+    prefs.setString(PreferencesKey.loginJwt, jwt);
+    // prefs.setString(PreferencesKey.loginVerify, verify);
+    print('userId-$userId');
+    print('jwt-$jwt');
+    // print('verify-$verify');
   }
 }
