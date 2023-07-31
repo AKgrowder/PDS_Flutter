@@ -79,9 +79,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     },
                   ),
                 ),
-                Container(
+                Container( 
                   width: 1,
-                  color: Colors.black12,
+                  color: Colors.black,
                 ),
                 Expanded(
                   child: GestureDetector(
