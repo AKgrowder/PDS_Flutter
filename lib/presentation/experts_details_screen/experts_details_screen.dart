@@ -297,32 +297,143 @@ class _ExpertsDetailsScreenState extends State<ExpertsDetailsScreen> {
           ),
           Center(
             child: Container(
-              height: height / 2,
+              height: height,
               width: width / 1.2,
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(10)),
-              child: Column(children: [
-                RatingBar.builder(
-                  initialRating: userRating != null ? userRating : 5,
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  allowHalfRating: true,
-                  itemSize: getSize(50),
-                  itemCount: 5,
-                  itemPadding: getPadding(left: 5, right: 5),
-                  itemBuilder: (context, _) => const Icon(
-                    Icons.star,
-                    color: Color(0xFFED1C25),
-                  ),
-                  onRatingUpdate: (rating) {
-                    rateStar = rating;
-                    print(rating);
-                  },
-                ),
-              ]),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RatingBar.builder(
+                      initialRating: userRating != null ? userRating : 5,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemSize: getSize(60),
+                      itemCount: 5,
+                      itemPadding: getPadding(left: 6, right: 6),
+                      itemBuilder: (context, _) => const Icon(
+                        Icons.star_rounded,
+                        color: Color(0xFFED1C25),
+                      ),
+                      onRatingUpdate: (rating) {
+                        rateStar = rating;
+                        print(rating);
+                      },
+                    ),
+                    Divider(
+                      color: Colors.grey,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text(
+                        "20+Reviws",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontFamily: "outfit",
+                            fontSize: 15),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.grey,
+                    ),
+                    ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: 8,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CustomImageView(
+                                    imagePath: ImageConstant.expertdetailimage,
+                                    height: 55,
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 35.0),
+                                          child: RatingBar.builder(
+                                            initialRating: userRating != null
+                                                ? userRating
+                                                : 5,
+                                            minRating: 1,
+                                            direction: Axis.horizontal,
+                                            allowHalfRating: true,
+                                            itemSize: getSize(25),
+                                            itemCount: 5,
+                                            itemPadding:
+                                                getPadding(left: 0, right: 0),
+                                            itemBuilder: (context, _) =>
+                                                const Icon(
+                                              Icons.star_rounded,
+                                              color: Color(0xFFED1C25),
+                                            ),
+                                            onRatingUpdate: (rating) {
+                                              rateStar = rating;
+                                              print(rating);
+                                            },
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(left:20.0),
+                                          child: Text(
+                                            "06/06/2023",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.grey,
+                                                fontFamily: "outfit",
+                                                fontSize: 15),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      "Name",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: "outfit",
+                                          fontSize: 15),
+                                    ),
+                                    Container(
+                                      height: 30,
+                                      width: 250,
+                                      child: Text(
+                                        "Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum....",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.grey,
+                                            fontFamily: "outfit",
+                                            fontSize: 13),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              color: Colors.grey,
+                            )
+                          ],
+                        );
+                      },
+                    )
+                  ]),
             ),
-          )
+          ),
         ]),
       ),
     );
