@@ -278,7 +278,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                         checkGuestUser();
                                       } else {
                                         SnackBar snackBar = SnackBar(
-                                          content: Text('Enter A Comment'),
+                                          content: Text('Please Enter Comment'),
                                           backgroundColor:
                                               ColorConstant.primary_color,
                                         );
@@ -527,13 +527,21 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
 
     if (UserLogin_ID != null) {
       print("user login Mood");
-      BlocProvider.of<senMSGCubit>(context)
-          .senMSGAPI(widget.Room_ID, Add_Comment.text);
-      Add_Comment.text = '';
+      if (Add_Comment.text.isNotEmpty) {
+        BlocProvider.of<senMSGCubit>(context)
+            .senMSGAPI(widget.Room_ID, Add_Comment.text);
+        Add_Comment.text = '';
+      } else {
+        SnackBar snackBar = SnackBar(
+          content: Text('Please Enter Comment'),
+          backgroundColor: ColorConstant.primary_color,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
     } else {
       print("User guest Mood on");
-      // Navigator.of(context).push(MaterialPageRoute(
-      //     builder: (context) => RegisterCreateAccountScreen()));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => RegisterCreateAccountScreen()));
     }
   }
 }

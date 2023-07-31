@@ -25,6 +25,7 @@ int selectedIndex = 0;
 int? isselectedimage = -1;
 List? image = [];
 dynamic _CallBackCheck;
+String? User_Name;
 PublicRoomModel? PublicRoomModelData;
 List<String> aa = [
   "Baluran Wild The Savvanah Baluran Wild The \nSavvanah",
@@ -60,6 +61,7 @@ List<String> commentss = [
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    saveUserProfile();
     BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllPublicRoom();
 
     super.initState();
@@ -132,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "User ID",
+                                      User_Name != null ? "${User_Name}" : "User ID",
                                       style: TextStyle(
                                         fontFamily: 'outfit',
                                         fontSize: 18,
@@ -834,5 +836,15 @@ class _HomeScreenState extends State<HomeScreen> {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => RegisterCreateAccountScreen()));
     }
+  }
+
+  saveUserProfile() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // prefs.getString(PreferencesKey.ProfileUserName);
+    User_Name = prefs.getString(PreferencesKey.ProfileName);
+    // prefs.getString(PreferencesKey.ProfileEmail);
+    // prefs.getString(PreferencesKey.ProfileModule);
+    // prefs.getString(PreferencesKey.ProfileMobileNo);
   }
 }

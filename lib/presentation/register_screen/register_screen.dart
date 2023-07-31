@@ -1,10 +1,6 @@
-import 'package:archit_s_application1/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
-import 'package:archit_s_application1/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:archit_s_application1/API/Bloc/auth/login_Block.dart';
 import 'package:archit_s_application1/API/Bloc/auth/login_state.dart';
 import 'package:archit_s_application1/API/Bloc/auth/otp_block.dart';
-import 'package:archit_s_application1/API/Bloc/auth/register_Block.dart';
-import 'package:archit_s_application1/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:archit_s_application1/core/app_export.dart';
 import 'package:archit_s_application1/core/utils/color_constant.dart';
 import 'package:archit_s_application1/core/utils/sharedPreferences.dart';
@@ -21,17 +17,17 @@ import '../../API/Model/authModel/getUserDetailsMdoel.dart';
 import '../../API/Model/authModel/loginModel.dart';
 import '../forget_password_screen/forget_password_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  LoginScreen({Key? key})
+class RegisterScreen extends StatefulWidget {
+  RegisterScreen({Key? key})
       : super(
           key: key,
         );
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController mobilenumberController = TextEditingController();
 
   TextEditingController passwordoneController = TextEditingController();
@@ -42,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   LoginModel? loginModelData;
-  GetUserDataModel? getUserDataModelData;
+    GetUserDataModel? getUserDataModelData;
 
   bool Show_Password = true;
   bool isPhone = false;
@@ -80,66 +76,35 @@ class _LoginScreenState extends State<LoginScreen> {
               }
               if (state is LoginLoadedState) {
                 loginModelData = state.loginModel;
-                // if (state.loginModel.object?.verified == false) {
                 BlocProvider.of<LoginCubit>(context).getUserDetails(
                     state.loginModel.object?.uuid.toString() ?? "");
-                // }
+
                 if (state.loginModel.object?.verified == true) {
                   getDataStroe(
                     state.loginModel.object?.uuid.toString() ?? "",
                     state.loginModel.object?.jwt.toString() ?? "",
                     // state.loginModel.object!.verified.toString(),
                   );
-                  //  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  //   return MultiBlocProvider(providers: [
-                  //     BlocProvider<FetchAllPublicRoomCubit>(
-                  //       create: (context) => FetchAllPublicRoomCubit(),
-                  //     ),
-                  //     BlocProvider<CreatPublicRoomCubit>(
-                  //       create: (context) => CreatPublicRoomCubit(),
-                  //     ),
-                  //     BlocProvider<senMSGCubit>(
-                  //       create: (context) => senMSGCubit(),
-                  //     ),
-                  //     BlocProvider<RegisterCubit>(
-                  //       create: (context) => RegisterCubit(),
-                  //     ),
-                  //   ], child: HomeScreen());
-                  // }));
                 }
 
-                SnackBar snackBar = SnackBar(
-                  content: Text(state.loginModel.message ?? ""),
-                  backgroundColor: ColorConstant.primary_color,
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                // SnackBar snackBar = SnackBar(
+                //   content: Text(state.loginModel.message ?? ""),
+                //   backgroundColor: ColorConstant.primary_color,
+                // );
+                // ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 print(
                     'check Status--${state.loginModel.object!.verified.toString()}');
 
                 // Navigator.push(context,MaterialPageRoute(builder: (context)=> HomeScreen()));
               }
               if (state is GetUserLoadedState) {
-                getUserDataModelData = state.getUserDataModel;
-                saveUserProfile();
+                   getUserDataModelData = state.getUserDataModel;
+                // saveUserProfile();
                 print("Get Profile");
                 if (loginModelData?.object?.verified == true) {
                   print('this condison is calling');
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return MultiBlocProvider(providers: [
-                      BlocProvider<FetchAllPublicRoomCubit>(
-                        create: (context) => FetchAllPublicRoomCubit(),
-                      ),
-                      BlocProvider<CreatPublicRoomCubit>(
-                        create: (context) => CreatPublicRoomCubit(),
-                      ),
-                      BlocProvider<senMSGCubit>(
-                        create: (context) => senMSGCubit(),
-                      ),
-                      BlocProvider<RegisterCubit>(
-                        create: (context) => RegisterCubit(),
-                      ),
-                    ], child: BottombarPage(buttomIndex: 0));
-                  }));
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (context) => HomeScreen()));
                 } else {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return MultiBlocProvider(
@@ -491,18 +456,4 @@ class _LoginScreenState extends State<LoginScreen> {
     // print('verify-$verify');
   }
 
-  saveUserProfile() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    prefs.setString(PreferencesKey.ProfileUserName,
-        "${getUserDataModelData?.object?.userName}");
-    prefs.setString(PreferencesKey.ProfileName,
-        "${getUserDataModelData?.object?.name}");
-    prefs.setString(PreferencesKey.ProfileEmail,
-        "${getUserDataModelData?.object?.email}");
-    prefs.setString(PreferencesKey.ProfileModule,
-        "${getUserDataModelData?.object?.module}");
-    prefs.setString(PreferencesKey.ProfileMobileNo,
-        "${getUserDataModelData?.object?.mobileNo}");
-  }
 }
