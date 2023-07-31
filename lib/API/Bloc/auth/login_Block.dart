@@ -16,7 +16,7 @@ class LoginCubit extends Cubit<LoginState> {
         emit(LoginErrorState(registerClassData.message.toString()));
       }
     } catch (e) {
-      print('registerScreen-${e.toString()}');
+      print('LoginScreen-${e.toString()}');
       emit(LoginErrorState(e.toString()));
     }
   }
@@ -33,7 +33,7 @@ class LoginCubit extends Cubit<LoginState> {
         emit(LoginErrorState(getUserDataModel.message.toString()));
       }
     } catch (e) {
-      print('registerScreen-${e.toString()}');
+      print('LoginScreen-${e.toString()}');
       emit(LoginErrorState(e.toString()));
     }
   }
