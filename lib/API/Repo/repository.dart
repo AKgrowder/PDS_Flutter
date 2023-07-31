@@ -53,7 +53,7 @@ class Repository {
   Future<LoginModel> loginApi(Map<String, String> params) async {
     final response = await apiServices.postApiCall(Config.loginApi, params);
     var jsonString = json.decode(response.body);
-    print(jsonString);
+    print('jsonString-$jsonString');
     switch (response.statusCode) {
       case 200:
         return LoginModel.fromJson(jsonString);
