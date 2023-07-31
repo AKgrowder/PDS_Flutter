@@ -2,11 +2,13 @@ import 'package:archit_s_application1/API/Model/coment/coment_model.dart';
 import 'package:archit_s_application1/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_state.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
+import '../../core/utils/sharedPreferences.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
 
@@ -271,13 +273,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   GestureDetector(
                                     onTap: () {
                                       print("Add comment button");
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RegisterCreateAccountScreen()));
-                                      // BlocProvider.of<senMSGCubit>(context)
-                                      //     .senMSGAPI(
-                                      //         widget.Room_ID, Add_Comment.text);
+                                      checkGuestUser();
                                     },
                                     child: Container(
                                       height: 50,
@@ -512,234 +508,20 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
             ),
           );
         }));
+  }
 
-    /*  BlocBuilder<senMSGCubit, senMSGState>(
-                        builder: (context, state) {
-                      print('builder can build ');
-                      if (state is senMSGLoadingState) {
-                        Center(
-                          child: Container(
-                            margin: EdgeInsets.only(bottom: 100),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.asset(ImageConstant.loader,
-                                  fit: BoxFit.cover, height: 100.0, width: 100),
-                            ),
-                          ),
-                        );
-                      }
-                      if (state is senMSGErrorState) {
-                        String getError = state.error;
-                        print("getEroor$getError");
-                        // SnackBar snackBar = SnackBar(
-                        //   content: Text(state.error),
-                        //   backgroundColor: ColorConstant.primary_color,
-                        // );
-                        // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      }
-                      if (state is ComentApiState) {
-                        print('staet is ComentApiState');
-                         modelData = state.comentApiClass;
+  checkGuestUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
 
-                         // if (modelData?.object!.messageOutputList != null) {
-                        //   for (int i = 0;
-                        //       i <
-                        //           modelData?.object?.messageOutputList?.content?
-                        //               .length;
-                        //       i++) {
-                        //     print(
-                        //         'lengthChehc-${modelData.object!.messageOutputList!.content!.length}');
-                        //     print(
-                        //         'list data print-${modelData.object!.messageOutputList!.content![i].message.toString()}');
-                        //     comentMessage.add(modelData
-                        //         .object!.messageOutputList!.content![i].message
-                        //         .toString());
-                        //   }
-                        // }
-                        print('getThis method');
-                        return modelData?.object?.messageOutputList != null
-                            ? ListView.builder(
-                                itemCount: modelData?.object?.messageOutputList?.content?.length,
-                                shrinkWrap: true,
-                                // physics: NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        /* horizontal: 35, vertical: 5 */),
-                                    child: GestureDetector(
-                                      onTap: () {},
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10, right: 3),
-                                                child: CustomImageView(
-                                                  imagePath:
-                                                      ImageConstant.tomcruse,
-                                                  height: 20,
-                                                ),
-                                              ),
-                                              Text(
-                                                "tom_cruse",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Colors.black,
-                                                    fontFamily: "outfit",
-                                                    fontSize: 14),
-                                              ),
-                                             /*  Spacer(), */
-                                            /*   Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 10),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      if (image?.contains(
-                                                              index) ??
-                                                          false) {
-                                                        image?.remove(index);
-                                                      } else {
-                                                        image?.add(index);
-                                                      }
-                                                    });
-                                                  },
-                                                  child: (image?.contains(
-                                                              index) ??
-                                                          false)
-                                                      ? CustomImageView(
-                                                          imagePath:
-                                                              ImageConstant.pin,
-                                                          height: 17,
-                                                        )
-                                                      : CustomImageView(
-                                                          imagePath:
-                                                              ImageConstant
-                                                                  .selectedpin,
-                                                          height: 17,
-                                                        ),
-                                                ),
-                                              ), */
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          /* index == 2
-                                          ? Padding(
-                                              padding: const EdgeInsets.only(
-                                                left: 8.0,
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  CustomImageView(
-                                                    imagePath: ImageConstant
-                                                        .viewcommentimage,
-                                                    height: 60,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  CustomImageView(
-                                                    imagePath:
-                                                        ImageConstant.mobileman,
-                                                    height: 60,
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          : SizedBox(), */
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 8.0,
-                                                    top: 5,
-                                                    bottom: 10),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 2.0,
-                                                              top: 5),
-                                                      // child: CircleAvatar(
-                                                      //     backgroundColor: Colors.black,
-                                                      //     maxRadius: 3),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 3,
-                                                    ),
-                                                    Container(
-                                                      height: 45,
-                                                      width: width / 1.3,
-                                                      // color: Colors.amber,
-                                                      child: Text(
-                                                        modelData?.object?.messageOutputList?.content?[index].message ?? "",
-                                                        maxLines: 3,
-                                                        textScaleFactor: 1.0,
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.grey,
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 12),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              Text(
-                                                "10th March 2023 2:23 PM",
-                                                maxLines: 3,
-                                                textScaleFactor: 1.0,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.grey,
-                                                    fontFamily: "outfit",
-                                                    fontSize: 12),
-                                              ),
-                                            ],
-                                          ),
-                                          Divider(
-                                            color: const Color.fromARGB(
-                                                117, 0, 0, 0),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                })
-                            : SizedBox();
-                      }
-                      return Container(
-                        height: 200,
-                        width: 200,
-                        color: Colors.amber,
-                      );
-                    }),
-              
-         */
+    if (UserLogin_ID != null) {
+      print("user login Mood");
+      BlocProvider.of<senMSGCubit>(context)
+          .senMSGAPI(widget.Room_ID, Add_Comment.text);
+    } else {
+      print("User guest Mood on");
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => RegisterCreateAccountScreen()));
+    }
   }
 }
