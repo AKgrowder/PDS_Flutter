@@ -1,5 +1,5 @@
 import 'package:archit_s_application1/core/app_export.dart';
-import 'package:archit_s_application1/presentation/register_screen/register_screen.dart';
+import 'package:archit_s_application1/presentation/Login_Screen/Login_Screen.dart';
 import 'package:archit_s_application1/widgets/custom_elevated_button.dart';
 import 'package:archit_s_application1/widgets/custom_outlined_button.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +36,7 @@ class _RegisterCreateAccountScreenState extends State<RegisterCreateAccountScree
                 top: 61,
               ),
               child: Text(
-                "Welcome to  consultant app",
+                "Welcome to consultant app",
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.left,
                 style: TextThemeHelper.titleLarge22,
@@ -86,7 +86,7 @@ class _RegisterCreateAccountScreenState extends State<RegisterCreateAccountScree
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => RegisterScreen()),
+                        builder: (context) => LoginScreen()),
                   );
                 },
                 text: "Log In",

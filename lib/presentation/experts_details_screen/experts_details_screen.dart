@@ -1,3 +1,4 @@
+import 'package:archit_s_application1/presentation/experts_details_screen/review_scren.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -281,13 +282,17 @@ class _ExpertsDetailsScreenState extends State<ExpertsDetailsScreen> {
                       fontFamily: "outfit",
                       fontSize: 18),
                 ),
-                Text(
-                  "+ Add Rateing Reviw",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFFED1C25),
-                      fontFamily: "outfit",
-                      fontSize: 15),
+                GestureDetector(onTap: () {
+                  Navigator.push(context,  MaterialPageRoute(builder:  (context) => RateingScreen(),));
+                },
+                  child: Text(
+                    "+ Add Rateing Reviw",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFFED1C25),
+                        fontFamily: "outfit",
+                        fontSize: 15),
+                  ),
                 ),
               ],
             ),
@@ -295,10 +300,11 @@ class _ExpertsDetailsScreenState extends State<ExpertsDetailsScreen> {
           SizedBox(
             height: 10,
           ),
-          Center(
+          Padding(
+            padding: const EdgeInsets.only(left: 35,right: 35,top: 10),
             child: Container(
-              height: height,
-              width: width / 1.2,
+              // height: height,
+              // width: width / 1.2,
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(10)),
@@ -340,7 +346,7 @@ class _ExpertsDetailsScreenState extends State<ExpertsDetailsScreen> {
                     ),
                     ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: 8,
+                      itemCount: 4,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         return Column(
