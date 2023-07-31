@@ -106,7 +106,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                           OtpVerificationScreen(
                                             phonNumber:
                                                 contectnumberController.text,
-                                            flowCheck: 'createAccount',
+                                            flowCheck: 'Rgister',
                                           )),
                                 );
                               }

@@ -1,5 +1,6 @@
 import 'package:archit_s_application1/API/Bloc/auth/login_Block.dart';
 import 'package:archit_s_application1/API/Bloc/auth/login_state.dart';
+import 'package:archit_s_application1/API/Bloc/auth/otp_block.dart';
 import 'package:archit_s_application1/core/app_export.dart';
 import 'package:archit_s_application1/core/utils/color_constant.dart';
 import 'package:archit_s_application1/core/utils/sharedPreferences.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../API/Model/authModel/loginModel.dart';
 import '../forget_password_screen/forget_password_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -34,7 +36,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController passwordController = TextEditingController();
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  LoginModel? loginModelData;
   bool Show_Password = true;
   bool isPhone = false;
 
@@ -70,27 +72,49 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 );
               }
               if (state is LoginLoadedState) {
-                getDataStroe(
-                  state.loginModel.object!.uuid.toString(),
-                  state.loginModel.object!.jwt.toString(),
-                  // state.loginModel.object!.verified.toString(),
-                );
-                SnackBar snackBar = SnackBar(
-                  content: Text(state.loginModel.message ?? ""),
-                  backgroundColor: ColorConstant.primary_color,
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                loginModelData = state.loginModel;
+                BlocProvider.of<LoginCubit>(context).getUserDetails(
+                    state.loginModel.object?.uuid.toString() ?? "");
+
+                if (state.loginModel.object?.verified == true) {
+                  getDataStroe(
+                    state.loginModel.object?.uuid.toString() ?? "",
+                    state.loginModel.object?.jwt.toString() ?? "",
+                    // state.loginModel.object!.verified.toString(),
+                  );
+                }
+
+                // SnackBar snackBar = SnackBar(
+                //   content: Text(state.loginModel.message ?? ""),
+                //   backgroundColor: ColorConstant.primary_color,
+                // );
+                // ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 print(
                     'check Status--${state.loginModel.object!.verified.toString()}');
-                if (state.loginModel.object!.verified.toString() == true) {
+
+                // Navigator.push(context,MaterialPageRoute(builder: (context)=> HomeScreen()));
+              }
+              if (state is GetUserLoadedState) {
+                print("Get Profile");
+                if (loginModelData?.object?.verified.toString() == true) {
                   print('this condison is calling');
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => HomeScreen()));
                 } else {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => OtpVerificationScreen(flowCheck: 'login',)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return MultiBlocProvider(
+                        providers: [
+                          BlocProvider<OtpCubit>(
+                            create: (context) => OtpCubit(),
+                          )
+                        ],
+                        child: OtpVerificationScreen(
+                          flowCheck: 'login',
+                          phonNumber: state.getUserDataModel.object?.mobileNo,
+                          userId: loginModelData?.object?.uuid.toString(),
+                        ));
+                  }));
                 }
-                // Navigator.push(context,MaterialPageRoute(builder: (context)=> HomeScreen()));
               }
             },
             builder: (context, state) {
@@ -314,7 +338,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 var dataPassing = {
                                   "username": emailAndMobileController.text,
                                   "password": passwordoneController.text,
-                                  "module": "SUPER_ADMIN"
+                                  "module": "EMPLOYEE"
                                 };
                                 print('dataPassing-$dataPassing');
                                 BlocProvider.of<LoginCubit>(context)

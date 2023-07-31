@@ -21,7 +21,9 @@ import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 class OtpVerificationScreen extends StatefulWidget {
   String? phonNumber;
   String? flowCheck;
-  OtpVerificationScreen({Key? key, this.phonNumber, this.flowCheck})
+  String? userId;
+  OtpVerificationScreen(
+      {Key? key, this.phonNumber, this.flowCheck, this.userId})
       : super(key: key);
 
   @override
@@ -62,7 +64,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   @override
   void initState() {
     super.initState();
-    print('i want to number screen-${widget.phonNumber}');
+    
   }
 
   @override
@@ -94,7 +96,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           body: BlocProvider<OtpCubit>(
             create: (context) => OtpCubit(),
             child: BlocConsumer<OtpCubit, OtpState>(
-              listener: (context, state) {
+              listener: (context, state)async {
                 if (state is OtpErrorState) {
                   print("error");
                   SnackBar snackBar = SnackBar(
@@ -103,6 +105,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
+
                 if (state is OtpLoadingState) {
                   print("loading");
                   Center(
@@ -132,7 +135,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       ),
                       BlocProvider<senMSGCubit>(
                         create: (context) => senMSGCubit(),
-                      ),
+                      ),  
                       BlocProvider<RegisterCubit>(
                         create: (context) => RegisterCubit(),
                       ),
@@ -140,6 +143,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   }));
                   // Navigator.push(context,MaterialPageRoute(builder: (context)=> HomeScreen()));
                 }
+                
               },
               builder: (context, state) {
                 return Container(
@@ -213,25 +217,25 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                               print('vhbghghg');
-                                      BlocProvider.of<OtpCubit>(context)
-                                          .OtpApi(widget.phonNumber.toString());
+                              print('vhbghghg');
+                              BlocProvider.of<OtpCubit>(context)
+                                  .OtpApi(widget.phonNumber.toString());
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(top: 20),
-                              child: Container( 
-                                height: height / 16, 
+                              child: Container(
+                                height: height / 16,
                                 width: width,
                                 decoration: BoxDecoration(
                                   color: Color(0XFFED1C25),
-                                  borderRadius: BorderRadiusStyle.roundedBorder6,
-                                  
+                                  borderRadius:
+                                      BorderRadiusStyle.roundedBorder6,
                                 ),
                                 child: Center(
-                                  child: Text("Verify OTP", 
+                                  child: Text("Verify OTP",
                                       textAlign: TextAlign.center,
-                                      style: TextThemeHelper
-                                          .titleMediumOnPrimary),
+                                      style:
+                                          TextThemeHelper.titleMediumOnPrimary),
                                 ),
                               ),
                             ),
