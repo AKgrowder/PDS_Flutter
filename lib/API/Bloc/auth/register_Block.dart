@@ -18,7 +18,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         emit(RegisterErrorState(registerClassData.message.toString()));
       }
     } catch (e) {
-      print('registerScreen-${e.toString()}');
+      print('LoginScreen-${e.toString()}');
       emit(RegisterErrorState(e.toString()));
     }
   }

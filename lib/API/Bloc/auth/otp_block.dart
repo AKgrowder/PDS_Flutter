@@ -16,7 +16,7 @@ class OtpCubit extends Cubit<OtpState> {
         emit(OtpErrorState(otpModel.message.toString()));
       }
     } catch (e) {
-      print('registerScreen-${e.toString()}');
+      print('LoginScreen-${e.toString()}');
       emit(OtpErrorState(e.toString()));
     }
   }
