@@ -1,3 +1,4 @@
+import 'package:archit_s_application1/API/Model/authModel/getUserDetailsMdoel.dart';
 import 'package:archit_s_application1/API/Model/authModel/loginModel.dart';
 
 abstract class LoginState {}
@@ -12,6 +13,11 @@ class LoginLoadedState extends LoginState {
 }
 
 class LoginErrorState extends LoginState {
-  final String error;
+  final String error; 
   LoginErrorState(this.error);
+}
+
+class GetUserLoadedState extends LoginState {
+  final GetUserDataModel getUserDataModel;
+  GetUserLoadedState(this.getUserDataModel);
 }
