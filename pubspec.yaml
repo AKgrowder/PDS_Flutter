@@ -15,6 +15,7 @@ dependencies:
   flutter_bloc:
   image_picker:  
   connectivity: 
+  flutter_rating_bar:  
 dev_dependencies: 
   flutter_test: 
     sdk: flutter
