@@ -2,13 +2,16 @@ import 'package:archit_s_application1/core/app_export.dart';
 import 'package:archit_s_application1/presentation/experts/experts_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_state.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../API/Model/HomeScreenModel/PublicRoomModel.dart';
 import '../../core/utils/color_constant.dart';
+import '../../core/utils/sharedPreferences.dart';
 import '../add_threads/add_threads.dart';
+import '../register_create_account_screen/register_create_account_screen.dart';
 import '../view_comments/view_comments_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -816,10 +819,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Add_Threads() async {
-    _CallBackCheck = await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AddThreadsScreen(),
-        ));
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
+
+    if (UserLogin_ID != null) {
+      print("user login Mood");
+      _CallBackCheck = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AddThreadsScreen(),
+          ));
+    } else {
+      print("User guest Mood on");
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => RegisterCreateAccountScreen()));
+    }
   }
 }
