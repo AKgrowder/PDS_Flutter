@@ -5,9 +5,8 @@ class Config {
   static const String loginApi = "auth/auth/authenticate";
   static const String registerApi = "user/api/signup";
   static const String otpApi = "auth/auth/verifyOTP";
-
-
-
   static const String SendMSG = "guest/api/addMessageInRoom";
   static const String coomment = "guest/api/fetchInbox";
+  static const String getUserDetails = "auth/auth/getMasterUserByUUID";
+
 }
