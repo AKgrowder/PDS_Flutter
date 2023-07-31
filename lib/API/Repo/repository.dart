@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:archit_s_application1/API/Model/authModel/getUserDetailsMdoel.dart';
 import 'package:archit_s_application1/API/Model/authModel/loginModel.dart';
 import 'package:archit_s_application1/API/Model/authModel/registerModel.dart';
 import 'package:archit_s_application1/API/Model/otpmodel/otpmodel.dart';
@@ -84,6 +85,19 @@ class Repository {
         return OtpModel.fromJson(jsonString);
       default:
         return OtpModel.fromJson(jsonString);
+    }
+  }
+
+  Future<GetUserDataModel> getUsrApi(String userId) async {
+    final response =
+        await apiServices.getApiCall('${Config.getUserDetails}/${userId}');
+    var jsonString = json.decode(response.body);
+    print('jsonString-$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return GetUserDataModel.fromJson(jsonString);
+      default:
+        return GetUserDataModel.fromJson(jsonString);
     }
   }
 

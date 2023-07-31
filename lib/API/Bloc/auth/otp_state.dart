@@ -1,3 +1,4 @@
+import 'package:archit_s_application1/API/Model/authModel/getUserDetailsMdoel.dart';
 import 'package:archit_s_application1/API/Model/otpmodel/otpmodel.dart';
 
 abstract class OtpState {}
@@ -15,3 +16,5 @@ class OtpErrorState extends OtpState {
   final String error;
   OtpErrorState(this.error);
 }
+
+
