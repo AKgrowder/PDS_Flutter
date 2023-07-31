@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:archit_s_application1/API/Bloc/auth/login_Block.dart';
 import 'package:archit_s_application1/API/Bloc/auth/otp_block.dart';
 import 'package:archit_s_application1/API/Bloc/auth/otp_state.dart';
 import 'package:archit_s_application1/core/app_export.dart';
@@ -11,11 +12,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as fs;
 import 'package:pinput/pinput.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import '../../API/Bloc/auth/register_Block.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
+import '../../core/utils/sharedPreferences.dart';
+import '../Login_Screen/Login_Screen.dart';
 
 // ignore_for_file: must_be_immutable
 class OtpVerificationScreen extends StatefulWidget {
@@ -64,7 +68,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   @override
   void initState() {
     super.initState();
-    
   }
 
   @override
@@ -96,7 +99,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           body: BlocProvider<OtpCubit>(
             create: (context) => OtpCubit(),
             child: BlocConsumer<OtpCubit, OtpState>(
-              listener: (context, state)async {
+              listener: (context, state) async {
                 if (state is OtpErrorState) {
                   print("error");
                   SnackBar snackBar = SnackBar(
@@ -125,25 +128,39 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     backgroundColor: ColorConstant.primary_color,
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return MultiBlocProvider(providers: [
-                      BlocProvider<FetchAllPublicRoomCubit>(
-                        create: (context) => FetchAllPublicRoomCubit(),
-                      ),
-                      BlocProvider<CreatPublicRoomCubit>(
-                        create: (context) => CreatPublicRoomCubit(),
-                      ),
-                      BlocProvider<senMSGCubit>(
-                        create: (context) => senMSGCubit(),
-                      ),  
-                      BlocProvider<RegisterCubit>(
-                        create: (context) => RegisterCubit(),
-                      ),
-                    ], child: HomeScreen());
-                  }));
-                  // Navigator.push(context,MaterialPageRoute(builder: (context)=> HomeScreen()));
+                   print('wiget flowcheck-${widget.flowCheck}');     
+                  if (widget.flowCheck == "Rgister") {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return MultiBlocProvider(providers: [
+                        BlocProvider<LoginCubit>(
+                          create: (context) => LoginCubit(),
+                        )
+                      ], child: LoginScreen());
+                    }));
+                  
+                  } else {
+                     
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return MultiBlocProvider(providers: [
+                        BlocProvider<FetchAllPublicRoomCubit>(
+                          create: (context) =>   FetchAllPublicRoomCubit(),
+                        ),
+                        BlocProvider<CreatPublicRoomCubit>(
+                          create: (context) => CreatPublicRoomCubit(),
+                        ),
+                        BlocProvider<senMSGCubit>(
+                          create: (context) => senMSGCubit(),
+                        ),
+                        BlocProvider<RegisterCubit>(
+                          create: (context) => RegisterCubit(),
+                        ),
+                      ], child: HomeScreen());
+                    }));
+                   
+                  }
                 }
-                
               },
               builder: (context, state) {
                 return Container(
@@ -294,5 +311,18 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   /// to navigate back to the previous screen.
   onTapArrowleft(BuildContext context) {
     Navigator.pop(context);
+  }
+
+    getDataStroe(
+    String userId,
+    String jwt,
+  ) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(PreferencesKey.loginUserID, userId);
+    prefs.setString(PreferencesKey.loginJwt, jwt);
+    // prefs.setString(PreferencesKey.loginVerify, verify);
+    print('userId-$userId');
+    print('jwt-$jwt');
+    // print('verify-$verify');
   }
 }

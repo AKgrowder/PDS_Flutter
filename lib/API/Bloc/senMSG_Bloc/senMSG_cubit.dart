@@ -8,7 +8,7 @@ import '../../Repo/repository.dart';
 class senMSGCubit extends Cubit<senMSGState> {
   senMSGCubit() : super(senMSGInitialState()) {}
   String currentPage = '0';
-  String record = '10';
+  String record = '100';
   List<String> dataList = [];
   Future<void> senMSGAPI(String Room_ID, String MSG) async {
     try {
