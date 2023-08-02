@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
           ],
           child: BottombarPage(buttomIndex: 0),
         )
-        // BottombarPage(buttomIndex: 0),
+        //BottombarPage(buttomIndex: 0),
         );
   }
 }

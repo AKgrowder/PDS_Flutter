@@ -8,33 +8,30 @@ import '../create_account_screen/create_account_screen.dart';
 
 class RegisterCreateAccountScreen extends StatefulWidget {
   @override
-  State<RegisterCreateAccountScreen> createState() => _RegisterCreateAccountScreenState();
+  State<RegisterCreateAccountScreen> createState() =>
+      _RegisterCreateAccountScreenState();
 }
 
-class _RegisterCreateAccountScreenState extends State<RegisterCreateAccountScreen> {
+class _RegisterCreateAccountScreenState
+    extends State<RegisterCreateAccountScreen> {
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
-      body: SizedBox(
-        width: double.maxFinite,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              height: height / 2.5,
-              width: width,
-              // color: Colors.cyan,
-              child: CustomImageView(
-                imagePath: ImageConstant.register,
-              ),
+      body: Column(
+        children: [
+          Container(
+            width: _width,
+            child: CustomImageView(
+              imagePath: ImageConstant.register,
+              fit: BoxFit.fill,
             ),
-            Padding(
-              padding: getPadding(
-                top: 61,
-              ),
+          ),
+          Container(
+            height: 40,
+            child: Center(
               child: Text(
                 "Welcome to consultant app",
                 overflow: TextOverflow.ellipsis,
@@ -42,66 +39,66 @@ class _RegisterCreateAccountScreenState extends State<RegisterCreateAccountScree
                 style: TextThemeHelper.titleLarge22,
               ),
             ),
-            Container( 
-              width: getHorizontalSize(
-                200,
-              ),
-              margin: getMargin(
-                top: 7,
-              ),
-              child: Text(
-                "Create a New Account or\n Register Now",
-                // maxLines: 2,
-                // overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: TextThemeHelper.bodyMediumBlack90015,
-              ),
-            ),
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30, bottom: 15),
-              child: CustomElevatedButton( 
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CreateAccountScreen()),
-                  );
-                },
-                text: "Create Account",
-                buttonStyle: ButtonThemeHelper.outlineOrangeA7000c.copyWith(
-                    fixedSize: MaterialStateProperty.all<Size>(Size(
-                  double.maxFinite,
-                  getVerticalSize(
-                    50,
-                  ),
-                ))),
-                buttonTextStyle: TextThemeHelper.titleMediumOnPrimary,
+          ),
+          Container(
+            child: Text("Create a New Account or "),
+          ),
+          Container(
+            child: Text("register Now"),
+          ),
+          Spacer(),
+          Container(
+            height: 100,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CreateAccountScreen()),
+              );
+            },
+            child: Padding(
+              padding: EdgeInsets.only(left: 30, right: 30, bottom: 30),
+              child: Container(
+                alignment: Alignment.center,
+                height: _height * 0.055,
+                width: _width,
+                decoration: BoxDecoration(
+                  color: Color(0xffED1C25),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Text(
+                  'Create Account',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30, bottom: 30),
-              child: CustomOutlinedButton(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => LoginScreen()),
-                  );
-                },
-                text: "Log In",
-                buttonStyle: ButtonThemeHelper.outlinePrimary.copyWith(
-                    fixedSize: MaterialStateProperty.all<Size>(Size(
-                  double.maxFinite,
-                  getVerticalSize(
-                    50,
-                  ),
-                ))),
-                buttonTextStyle: TextThemeHelper.titleMediumPrimarySemiBold,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+              );
+            },
+            child: Padding(
+              padding: EdgeInsets.only(left: 30, right: 30, bottom: 30),
+              child: Container(
+                alignment: Alignment.center,
+                height: _height * 0.055,
+                width: _width,
+                decoration: BoxDecoration(
+                    color: Color(0xffFFD9DA),
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: Color(0xffED1C25))),
+                child: Text(
+                  'Log In',
+                  style: TextStyle(color: Color(0xffED1C25)),
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
