@@ -15,6 +15,8 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
       appBar: AppBar(
@@ -53,7 +55,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 Expanded(
                   child: GestureDetector(
                     child: Container(
-                      height: getVerticalSize(50),
+                      height: 50,
                       color: arrNotiyTypeList[0].isSelected
                           ? Color(0xFFED1C25)
                           : Theme.of(context).brightness == Brightness.light
@@ -66,7 +68,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   color: arrNotiyTypeList[0].isSelected
                                       ? Colors.white
                                       : Colors.black,
-                                  fontSize: getFontSize(18),
+                                  fontSize: 18,
                                   fontFamily: 'Outfit',
                                   fontWeight: FontWeight.bold))),
                     ),
@@ -79,14 +81,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     },
                   ),
                 ),
-                Container( 
+                Container(
                   width: 1,
                   color: Colors.black,
                 ),
                 Expanded(
                   child: GestureDetector(
                     child: Container(
-                        height: getVerticalSize(50),
+                        height: 50,
                         color: arrNotiyTypeList[1].isSelected
                             ? Color(0xFFED1C25)
                             : Theme.of(context).brightness == Brightness.light
@@ -102,7 +104,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                       color: arrNotiyTypeList[1].isSelected
                                           ? Colors.white
                                           : Colors.black,
-                                      fontSize: getFontSize(18),
+                                      fontSize: 18,
                                       fontFamily: 'Outfit',
                                       fontWeight: FontWeight.bold)),
                               Spacer(),
@@ -125,8 +127,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 Expanded(
                   child: GestureDetector(
                     child: Container(
-                        width: double.maxFinite,
-                        height: getVerticalSize(50),
+                        height: 50,
                         alignment: Alignment.center,
                         color: arrNotiyTypeList[2].isSelected
                             ? Color(0xFFED1C25)
@@ -143,7 +144,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                       color: arrNotiyTypeList[2].isSelected
                                           ? Colors.white
                                           : Colors.black,
-                                      fontSize: getFontSize(18),
+                                      fontSize: 18,
                                       fontFamily: 'Outfit',
                                       fontWeight: FontWeight.bold)),
                               Spacer(),
@@ -175,8 +176,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Container(
-                  height: height / 4.8,
-                  width: width / 1.1,
+                  height: _height / 4.8,
+                  width: _width / 1.1,
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.all(
@@ -297,7 +298,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                               height: 35,
-                              width: width / 3,
+                              width: _width / 3,
                               decoration: BoxDecoration(
                                   color: Color(0xFFFFD9DA),
                                   borderRadius:

@@ -10,7 +10,7 @@ dependencies:
   flutter_svg: 
   flutter_svg_provider:  
   intl:
-  shared_preferences:   
+  shared_preferences: 
   pinput:  
   flutter_bloc:
   image_picker:  

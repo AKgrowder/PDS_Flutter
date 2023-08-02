@@ -50,12 +50,8 @@ class _ExpertsDetailsScreenState extends State<ExpertsDetailsScreen> {
           Align(
             alignment: Alignment.center,
             child: Container(
-              height: getSize(
-                130,
-              ),
-              width: getSize(
-                130,
-              ),
+              height: 130,
+              width: 130,
               margin: getMargin(
                 top: 22,
               ),
