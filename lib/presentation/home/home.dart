@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllPublicRoom();
 
-   var _height = MediaQuery.of(context).size.height;
+    var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
@@ -134,7 +134,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      User_Name != null ? "${User_Name}" : "User ID",
+                                      User_Name != null
+                                          ? "${User_Name}"
+                                          : "User ID",
                                       style: TextStyle(
                                         fontFamily: 'outfit',
                                         fontSize: 18,
@@ -462,7 +464,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             onTap: () {},
                             child: Container(
                               // height: demo.contains(index) ? null: height / 16,
-                              width: _width / 1.2,
+                              width: _width,
                               decoration: BoxDecoration(
                                   border: Border.all(
                                       color: const Color(0XFFD9D9D9), width: 2),
@@ -555,13 +557,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                           )),
                                       Padding(
                                         padding: const EdgeInsets.only(left: 5),
-                                        child: Text(
-                                          "${PublicRoomModelData?.object?[index].uid}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w800,
-                                              color: Colors.black,
-                                              fontFamily: "outfit",
-                                              fontSize: 14),
+                                        child: Container(
+                                          width: _width / 1.4,
+                                          child: Text(
+                                            "${PublicRoomModelData?.object?[index].uid}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w800,
+                                                color: Colors.black,
+                                                fontFamily: "outfit",
+                                                fontSize: 14),
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -622,13 +627,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Padding(
                                         padding:
                                             const EdgeInsets.only(left: 30.0),
-                                        child: Text(
-                                          "${PublicRoomModelData?.object?[index].message?.messageCount ?? "0"} Comments",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.grey,
-                                              fontFamily: "outfit",
-                                              fontSize: 15),
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          width: _width /3,
+                                          child: Text(
+                                            "${PublicRoomModelData?.object?[index].message?.messageCount ?? "0"} Comments",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.grey,
+                                                fontFamily: "outfit",
+                                                fontSize: 15),
+                                          ),
                                         ),
                                       ),
                                     ],
