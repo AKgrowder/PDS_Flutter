@@ -40,8 +40,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
+     var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
+ 
     return SafeArea(
       child: Scaffold(
         // backgroundColor: theme.colorScheme.onPrimary,
@@ -52,161 +53,198 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: 30,
-                    right: 30,
-                    bottom: 19,
-                  ),
-                  child: BlocProvider<RegisterCubit>(
-                      create: (context) => RegisterCubit(),
-                      child: BlocConsumer<RegisterCubit, RegisterState>(
-                        listener: (context, state) {
-                          if (state is RegisterErrorState) {
-                            print("error");
-                            SnackBar snackBar = SnackBar(
-                              content: Text(state.error),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          }
-                          if (state is RegisterLoadingState) {
-                            print("loading");
-                            Center(
-                              child: Container(
-                                margin: EdgeInsets.only(bottom: 100),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Image.asset(ImageConstant.loader,
-                                      fit: BoxFit.cover,
-                                      height: 100.0,
-                                      width: 100),
-                                ),
-                              ),
-                            );
-                          }
-                          if (state is RegisterLoadedState) {
-                            dataSet(state.registerClass.success);
-                            SnackBar snackBar = SnackBar(
-                              content: Text(state.registerClass.message ?? ""),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => OtpVerificationScreen(
-                                        phonNumber:
-                                            contectnumberController.text,
-                                        flowCheck: 'Rgister',
-                                      )),
-                            );
-                          }
-                        },
-                        builder: (context, state) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              CustomImageView(
-                                imagePath: ImageConstant.imgImage248,
-                                height: 37,
-                                alignment: Alignment.center,
-                              ),
-                              Container(
-                                alignment: Alignment.center,
-                                height: 70,
-                                child: Text(
-                                  "Create Account",
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.left,
-                                  style: theme.textTheme.titleLarge,
-                                ),
-                              ),
-                              Container(
-                                height: _height / 15,
-                                width: _width / 1,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFFFE7E7),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5))),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: 15.0,
-                                    left: 10,
+                 Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.only(
+                      top: 37,
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        left: 30,
+                        right: 30,
+                        bottom: 19,
+                      ),
+                      child: BlocProvider<RegisterCubit>(
+                          create: (context) => RegisterCubit(),
+                          child: BlocConsumer<RegisterCubit, RegisterState>(
+                            listener: (context, state) {
+                              if (state is RegisterErrorState) {
+                                print("error");
+                                SnackBar snackBar = SnackBar(
+                                  content: Text(state.error),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              }
+                              if (state is RegisterLoadingState) {
+                                print("loading");
+                                Center(
+                                  child: Container(
+                                    margin: EdgeInsets.only(bottom: 100),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.asset(ImageConstant.loader,
+                                          fit: BoxFit.cover,
+                                          height: 100.0,
+                                          width: 100),
+                                    ),
                                   ),
-                                  child: Text(
-                                    "Personal Details",
-                                    style: TextStyle(
-                                        fontFamily: 'outfit',
-                                        fontWeight: FontWeight.w500),
+                                );
+                              }
+                              if (state is RegisterLoadedState) {
+                                dataSet(state.registerClass.success);
+                                SnackBar snackBar = SnackBar(
+                                  content:
+                                      Text(state.registerClass.message ?? ""),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          OtpVerificationScreen(
+                                            phonNumber:
+                                                contectnumberController.text,
+                                            flowCheck: 'Rgister',
+                                          )),
+                                );
+                              }
+                            },
+                            builder: (context, state) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  CustomImageView(
+                                    imagePath: ImageConstant.imgImage248,
+                                    height: 37,
+                                    width: 140,
+                                    alignment: Alignment.center,
                                   ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.center,
-                                child: Container(
-                                  height: 130,
-                                  width: 130,
-                                  margin: EdgeInsets.only(
-                                    top: 20,
-                                  ),
-                                  child: Stack(
-                                    alignment: Alignment.bottomRight,
-                                    children: [
-                                      CustomImageView(
-                                        imagePath:
-                                            ImageConstant.imgRectangle39829,
-                                        height: 130,
-                                        width: 130,
-                                        radius: BorderRadius.circular(65),
-                                        alignment: Alignment.center,
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 60, bottom: 25),
+                                      child: Text(
+                                        "Create Account",
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontFamily: 'outfit',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          pickImage();
-                                        },
-                                        child: Container(
-                                          height: 50,
-                                          width: 30,
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              // color: Colors.red,
-                                              shape: BoxShape.circle),
-                                          child: CustomImageView(
-                                              svgPath: ImageConstant.imgCamera),
-                                          // child: CustomIconButton(
-                                          //   height: 33,
-                                          //   width: 33,
-                                          //   alignment: Alignment.bottomRight,
-                                          //   child: GestureDetector(
-                                          //     onTap: () {
-                                          //       pickImage();
-                                          //     },
-                                          //     child: CustomImageView(
-                                          //       svgPath: ImageConstant.imgCamera,
-                                          //     ),
-                                          //   ),
-                                          // ),
-                                        ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: height / 15,
+                                    width: width / 1,
+                                    decoration: BoxDecoration(
+                                        color: Color(0xFFFFE7E7),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5))),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 15.0,
+                                        left: 10,
                                       ),
-
-                                      // CustomIconButton(
-                                      //   height: 33,+-----+-
-                                      //   width: 33,
-                                      //   alignment: Alignment.bottomRight,
-                                      //   child: GestureDetector(
-                                      //     onTap: () {
-                                      //       pickImage();
-                                      //     },
-                                      //     child: CustomImageView(
-                                      //       svgPath: ImageConstant.imgCamera,
-                                      //     ),
-                                      //   ),
-                                      // ),
-                                    ],
+                                      child: Text(
+                                        "Personal Details",
+                                        style: TextStyle(
+                                            fontFamily: 'outfit',
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      height: 130,
+                                      width: 130,
+                                      margin: EdgeInsets.only(
+                                        top: 22,
+                                      ),
+                                      child: Stack(
+                                        alignment: Alignment.bottomRight,
+                                        children: [
+                                          CustomImageView(
+                                            imagePath:
+                                                ImageConstant.imgRectangle39829,
+                                            height: 130,
+                                            width: 130,
+                                            radius: BorderRadius.circular(65),
+                                            alignment: Alignment.center,
+                                          ),
+                                          CustomIconButton(
+                                            height: 33,
+                                            width: 33,
+                                            padding: EdgeInsets.all(
+                                              8,
+                                            ),
+                                            alignment: Alignment.bottomRight,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                pickImage();
+                                              },
+                                              child: CustomImageView(
+                                                svgPath:
+                                                    ImageConstant.imgCamera,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      top: 18,
+                                    ),
+                                    child: Text(
+                                      "User ID",
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                  ),
+                                  CustomTextFormField(
+                                    // focusNode: FocusNode(),
+                                    // autofocus: true,
+                                    controller: enteruseridController,
+                                    margin: EdgeInsets.only(
+                                      top: 4,
+                                    ),
+                                    contentPadding: EdgeInsets.only(
+                                      left: 12,
+                                      top: 14,
+                                      right: 12,
+                                      bottom: 14,
+                                    ),
+                                    textStyle: TextStyle(fontFamily: 'outfit'),
+                                    hintText: "Enter User ID",
+                                    hintStyle: TextStyle(
+                                        fontFamily: 'outfit', fontSize: 15),
+                                    textInputAction: TextInputAction.next,
+                                    filled: true,
+                                    // fillColor: appTheme.gray100,
+                                  ),
+                                  Padding(
+                                    padding: getPadding(
+                                      top: 20,
+                                    ),
+                                    child: Text(
+                                      "Your Name",
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.left,
+                                      style: theme.textTheme.bodyLarge,
+                                    ),
+ 
                                   ),
                                 ),
                               ),

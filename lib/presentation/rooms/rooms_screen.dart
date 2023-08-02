@@ -22,8 +22,11 @@ List? close = [];
 List? closee = [];
 
 class _RoomsScreenState extends State<RoomsScreen> {
+  
   @override
   Widget build(BuildContext context) {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     Object? index;
     int selectedIndex = 0;
     return Scaffold(
@@ -59,7 +62,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                       onTap: () {},
                       child: Container(
                         // height: demo.contains(index) ? null: height / 16,
-                        width: width / 1.2,
+                        width: _width / 1.2,
                         decoration: BoxDecoration(
                             border: Border.all(
                                 color: const Color(0XFFED1C25), width: 1),
@@ -589,7 +592,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                               children: [
                                 Container(
                                   height: 40,
-                                  width: width / 2.48,
+                                  width: _width / 2.48,
                                   decoration: BoxDecoration(
                                       // color: Color(0XFF9B9B9B),
                                       color: Color(0xFFED1C25),
@@ -617,7 +620,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                   },
                                   child: Container(
                                     height: 40,
-                                    width: width / 2.48,
+                                    width: _width / 2.48,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.only(
                                         bottomRight: Radius.circular(4),

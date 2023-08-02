@@ -9,7 +9,6 @@ import 'package:archit_s_application1/core/app_export.dart';
 import 'package:archit_s_application1/core/utils/color_constant.dart';
 import 'package:archit_s_application1/core/utils/sharedPreferences.dart';
 import 'package:archit_s_application1/custom_bottom_bar/custom_bottom_bar.dart';
-import 'package:archit_s_application1/presentation/home/home.dart';
 import 'package:archit_s_application1/presentation/otp_verification_screen/otp_verification_screen.dart';
 import 'package:archit_s_application1/widgets/custom_elevated_button.dart';
 import 'package:archit_s_application1/widgets/custom_outlined_button.dart';
@@ -50,6 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
         backgroundColor: theme.colorScheme.onPrimary,
@@ -91,23 +92,26 @@ class _LoginScreenState extends State<LoginScreen> {
                     state.loginModel.object?.jwt.toString() ?? "",
                     // state.loginModel.object!.verified.toString(),
                   );
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return MultiBlocProvider(providers: [
-                      BlocProvider<FetchAllPublicRoomCubit>(
-                        create: (context) => FetchAllPublicRoomCubit(),
-                      ),
-                      BlocProvider<CreatPublicRoomCubit>(
-                        create: (context) => CreatPublicRoomCubit(),
-                      ),
-                      BlocProvider<senMSGCubit>(
-                        create: (context) => senMSGCubit(),
-                      ),
-                      BlocProvider<RegisterCubit>(
-                        create: (context) => RegisterCubit(),
-                      ),
-                    ], child: BottombarPage(buttomIndex: 0,));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return MultiBlocProvider(
+                        providers: [
+                          BlocProvider<FetchAllPublicRoomCubit>(
+                            create: (context) => FetchAllPublicRoomCubit(),
+                          ),
+                          BlocProvider<CreatPublicRoomCubit>(
+                            create: (context) => CreatPublicRoomCubit(),
+                          ),
+                          BlocProvider<senMSGCubit>(
+                            create: (context) => senMSGCubit(),
+                          ),
+                          BlocProvider<RegisterCubit>(
+                            create: (context) => RegisterCubit(),
+                          ),
+                        ],
+                        child: BottombarPage(
+                          buttomIndex: 0,
+                        ));
                   }));
- 
                 }
 
                 SnackBar snackBar = SnackBar(
@@ -127,21 +131,24 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (loginModelData?.object?.verified == true) {
                   print('this condison is calling');
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return MultiBlocProvider(providers: [
-                      BlocProvider<FetchAllPublicRoomCubit>(
-                        create: (context) => FetchAllPublicRoomCubit(),
-                      ),
-                      BlocProvider<CreatPublicRoomCubit>(
-                        create: (context) => CreatPublicRoomCubit(),
-                      ),
-                      BlocProvider<senMSGCubit>(
-                        create: (context) => senMSGCubit(),
-                      ),
-                      BlocProvider<RegisterCubit>(
-                        create: (context) => RegisterCubit(),
-                      ),
-                     ], child: BottombarPage(buttomIndex: 0,));
- 
+                    return MultiBlocProvider(
+                        providers: [
+                          BlocProvider<FetchAllPublicRoomCubit>(
+                            create: (context) => FetchAllPublicRoomCubit(),
+                          ),
+                          BlocProvider<CreatPublicRoomCubit>(
+                            create: (context) => CreatPublicRoomCubit(),
+                          ),
+                          BlocProvider<senMSGCubit>(
+                            create: (context) => senMSGCubit(),
+                          ),
+                          BlocProvider<RegisterCubit>(
+                            create: (context) => RegisterCubit(),
+                          ),
+                        ],
+                        child: BottombarPage(
+                          buttomIndex: 0,
+                        ));
                   }));
                 } else {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -165,56 +172,49 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Form(
                   key: _formKey,
                   child: SizedBox(
-                    width: double.maxFinite,
+                    // width: double.maxFinite,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: getVerticalSize(
-                            348,
-                          ),
-                          width: double.maxFinite,
+                          height: 348,
+                          // width: double.maxFinite,
                           child: Stack(
                             alignment: Alignment.bottomCenter,
                             children: [
                               CustomImageView(
                                 imagePath: ImageConstant.imgRectangle19250,
-                                height: getVerticalSize(
-                                  348,
-                                ),
-                                width: getHorizontalSize(
-                                  414,
-                                ),
+                                height: 348,
+                                width: 414,
                                 alignment: Alignment.center,
                               ),
                               CustomImageView(
                                 svgPath: ImageConstant.imgGroup,
-                                height: getVerticalSize(
-                                  242,
-                                ),
-                                width: getHorizontalSize(
-                                  337,
-                                ),
+                                height: 242,
+                                width: 337,
                                 alignment: Alignment.bottomCenter,
                               ),
                             ],
                           ),
                         ),
                         Padding(
-                          padding: getPadding(
+                          padding: EdgeInsets.only(
                             top: 39,
                           ),
                           child: Text(
                             "Log In",
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.left,
-                            style: TextThemeHelper.titleLarge22,
+                            style: TextStyle(
+                                fontFamily: 'outfit',
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Padding(
-                            padding: getPadding(
+                            padding: EdgeInsets.only(
                               left: 30,
                               top: 41,
                             ),
@@ -222,7 +222,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               "UserName",
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.left,
-                              style: theme.textTheme.bodyLarge,
+                              style: TextStyle(
+                                  fontFamily: 'outfit',
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400),
                             ),
                           ),
                         ),
@@ -254,28 +257,31 @@ class _LoginScreenState extends State<LoginScreen> {
                           maxLength: isPhone == true ? 10 : 30,
                           // focusNode: FocusNode(),
                           controller: emailAndMobileController,
-                          margin: getMargin(
+                          margin: EdgeInsets.only(
                             left: 30,
                             right: 30,
                           ),
-                          contentPadding: getPadding(
+                          contentPadding: EdgeInsets.only(
                             left: 12,
                             top: 14,
                             right: 12,
                             bottom: 14,
                           ),
-                          textStyle: theme.textTheme.titleMedium!,
+                          // textStyle: theme.textTheme.titleMedium!,
                           hintText: "UserName",
-                          hintStyle: theme.textTheme.titleMedium!,
+                          hintStyle: TextStyle(
+                              fontFamily: 'outfit',
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400),
                           textInputAction: TextInputAction.next,
                           textInputType: TextInputType.emailAddress,
                           filled: true,
-                          fillColor: appTheme.gray100,
+                          // fillColor: appTheme.gray100,
                         ),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Padding(
-                            padding: getPadding(
+                            padding: EdgeInsets.only(
                               left: 30,
                               top: 19,
                             ),
@@ -283,7 +289,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               "Password",
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.left,
-                              style: theme.textTheme.bodyLarge,
+                              style: TextStyle(
+                                  fontFamily: 'outfit',
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400),
                             ),
                           ),
                         ),
@@ -304,22 +313,25 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           controller: passwordoneController,
                           // textInputType: TextInputType. number,
-                          margin: getMargin(
+                          margin: EdgeInsets.only(
                             left: 30,
                             top: 5,
                             right: 30,
                           ),
-                          contentPadding: getPadding(
+                          contentPadding: EdgeInsets.only(
                             left: 20,
                             top: 14,
                             bottom: 14,
                           ),
-                          textStyle: theme.textTheme.titleMedium!,
+                          // textStyle: theme.textTheme.titleMedium!,
                           hintText: "Password",
-                          hintStyle: theme.textTheme.titleMedium!,
+                          hintStyle: TextStyle(
+                              fontFamily: 'outfit',
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400),
                           textInputType: TextInputType.emailAddress,
                           suffix: Container(
-                            margin: getMargin(
+                            margin: EdgeInsets.only(
                               left: 30,
                               top: 15,
                               right: 15,
@@ -341,11 +353,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                             ),
                           ),
-                          suffixConstraints: BoxConstraints(
-                            maxHeight: getVerticalSize(
-                              50,
-                            ),
-                          ),
+                          suffixConstraints: BoxConstraints(maxHeight: 50),
                           obscureText: Show_Password ? true : false,
                           filled: true,
                           fillColor: appTheme.gray100,
@@ -353,7 +361,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Padding(
-                            padding: getPadding(
+                            padding: EdgeInsets.only(
                               left: 30,
                               top: 13,
                             ),
@@ -367,7 +375,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 "Forget Password?",
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
-                                style: theme.textTheme.titleSmall,
+                                // style: theme.textTheme.titleSmall,
+                                style: TextStyle(
+                                    fontFamily: 'outfit',
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xFFED1C25)),
                               ),
                             ),
                           ),
@@ -391,19 +404,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             text: "Log In",
                             buttonStyle: ButtonThemeHelper.outlineOrangeA7000c
                                 .copyWith(
-                                    fixedSize:
-                                        MaterialStateProperty.all<Size>(Size(
-                              double.maxFinite,
-                              getVerticalSize(
-                                50,
-                              ),
-                            ))),
-                            buttonTextStyle:
-                                TextThemeHelper.titleMediumOnPrimary,
+                                    fixedSize: MaterialStateProperty.all<Size>(
+                                        Size(double.infinity, 50))),
+                            // buttonTextStyle:
+                            //     TextThemeHelper.titleMediumOnPrimary,
                           ),
                         ),
                         Padding(
-                          padding: getPadding(
+                          padding: EdgeInsets.only(
                             top: 25,
                             bottom: 5,
                           ),
@@ -414,9 +422,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   text: "Connect with us at  ",
                                   style: TextStyle(
                                     color: appTheme.black900,
-                                    fontSize: getFontSize(
-                                      14,
-                                    ),
+                                    fontSize: 14,
                                     fontFamily: 'Outfit',
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -425,9 +431,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   text: "Support",
                                   style: TextStyle(
                                     color: theme.colorScheme.primary,
-                                    fontSize: getFontSize(
-                                      14,
-                                    ),
+                                    fontSize: 14,
                                     fontFamily: 'Outfit',
                                     fontWeight: FontWeight.w500,
                                     decoration: TextDecoration.underline,
@@ -442,32 +446,30 @@ class _LoginScreenState extends State<LoginScreen> {
                           padding: const EdgeInsets.only(
                               left: 30, right: 30, top: 10),
                           child: CustomOutlinedButton(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        OtpVerificationScreen()),
-                              );
-                            },
-                            text: "Log In With OTP",
-                            margin: getMargin(
-                              left: 30,
-                              right: 30,
-                              bottom: 51,
-                            ),
-                            buttonStyle: ButtonThemeHelper.outlinePrimaryTL6
-                                .copyWith(
-                                    fixedSize:
-                                        MaterialStateProperty.all<Size>(Size(
-                              double.maxFinite,
-                              getVerticalSize(
-                                50,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          OtpVerificationScreen()),
+                                );
+                              },
+                              text: "Log In With OTP",
+                              margin: EdgeInsets.only(
+                                left: 30,
+                                right: 30,
+                                bottom: 51,
                               ),
-                            ))),
-                            buttonTextStyle:
-                                TextThemeHelper.titleMediumPrimarySemiBold,
-                          ),
+                              buttonStyle: ButtonThemeHelper.outlinePrimaryTL6
+                                  .copyWith(
+                                      fixedSize:
+                                          MaterialStateProperty.all<Size>(
+                                              Size(double.maxFinite, 50))),
+                              buttonTextStyle: TextStyle(
+                                  color: Color(0xFFED1C25),
+                                  fontFamily: 'outfit',
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold)),
                         ),
                       ],
                     ),
@@ -499,10 +501,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
     prefs.setString(PreferencesKey.ProfileUserName,
         "${getUserDataModelData?.object?.userName}");
-    prefs.setString(PreferencesKey.ProfileName,
-        "${getUserDataModelData?.object?.name}");
-    prefs.setString(PreferencesKey.ProfileEmail,
-        "${getUserDataModelData?.object?.email}");
+    prefs.setString(
+        PreferencesKey.ProfileName, "${getUserDataModelData?.object?.name}");
+    prefs.setString(
+        PreferencesKey.ProfileEmail, "${getUserDataModelData?.object?.email}");
     prefs.setString(PreferencesKey.ProfileModule,
         "${getUserDataModelData?.object?.module}");
     prefs.setString(PreferencesKey.ProfileMobileNo,

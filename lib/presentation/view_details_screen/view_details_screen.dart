@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/utils/image_constant.dart';
-import '../../core/utils/size_utils.dart';
+// import '../../core/utils/size_utils.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_icon_button.dart';
 import '../../widgets/custom_image_view.dart';
@@ -16,6 +16,8 @@ class ViewDetailsScreen extends StatefulWidget {
 class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
       appBar: AppBar(
@@ -27,7 +29,7 @@ class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
           color: Colors.grey,
         ),
         title: Text(
-          "View detailS",
+          "View details",
           style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.black,
@@ -41,39 +43,22 @@ class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
           Align(
             alignment: Alignment.center,
             child: Container(
-              height: getSize(
-                130,
-              ),
-              width: getSize(
-                130,
-              ),
-              margin: getMargin(
-                top: 22,
-              ),
+              height: _height / 8,
+              width: _width / 3.7,
               child: Stack(
                 alignment: Alignment.bottomRight,
                 children: [
                   CustomImageView(
                     imagePath: ImageConstant.viewdetailsimage,
-                    height: getSize(
-                      130,
-                    ),
-                    width: getSize(
-                      130,
-                    ),
-                    radius: BorderRadius.circular(
-                      getHorizontalSize(
-                        65,
-                      ),
-                    ),
+                    height: 130,
+                    width: 130,
+                    radius: BorderRadius.circular(65),
                     alignment: Alignment.center,
                   ),
                   CustomIconButton(
                     height: 33,
                     width: 33,
-                    padding: getPadding(
-                      all: 8,
-                    ),
+                    
                     alignment: Alignment.bottomRight,
                     child: GestureDetector(
                       onTap: () {},
@@ -104,7 +89,7 @@ class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
           Center(
             child: Container(
               height: 50,
-              width: width / 1.2,
+              width: _width / 1.2,
               decoration: BoxDecoration(
                   color: Color(0xFFF6F6F6),
                   borderRadius: BorderRadius.circular(10)),
@@ -138,7 +123,7 @@ class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
           Center(
             child: Container(
               height: 50,
-              width: width / 1.2,
+              width: _width / 1.2,
               decoration: BoxDecoration(
                   color: Color(0xFFF6F6F6),
                   borderRadius: BorderRadius.circular(10)),
@@ -172,7 +157,7 @@ class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
           Center(
             child: Container(
               height: 50,
-              width: width / 1.2,
+              width: _width / 1.2,
               decoration: BoxDecoration(
                   color: Color(0xFFF6F6F6),
                   borderRadius: BorderRadius.circular(10)),
@@ -206,7 +191,7 @@ class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
           Center(
             child: Container(
               height: 50,
-              width: width / 1.2,
+              width: _width / 1.2,
               decoration: BoxDecoration(
                   color: Color(0xFFF6F6F6),
                   borderRadius: BorderRadius.circular(10)),
@@ -222,7 +207,7 @@ class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
                 ),
               ),
             ),
-          ), 
+          ),
         ]),
       ),
     );
