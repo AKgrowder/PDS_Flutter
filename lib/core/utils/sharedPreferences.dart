@@ -6,4 +6,13 @@ class PreferencesKey {
   static const String loginJwt = 'loginjwt';
   static const String loginVerify = 'loginVerify';
 
+  static const String ProfileUserName = 'ProfileUserName';
+  static const String ProfileName = 'ProfileName';
+  static const String ProfileEmail = 'ProfileEmail';
+  static const String ProfileModule = 'ProfileModule';
+  static const String ProfileMobileNo = 'ProfileMobileNo';
+
+  
+
+
 }
