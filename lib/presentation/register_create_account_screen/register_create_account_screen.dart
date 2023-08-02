@@ -30,22 +30,38 @@ class _RegisterCreateAccountScreenState
             ),
           ),
           Container(
+            margin: EdgeInsets.only(top: 5),
             height: 40,
             child: Center(
               child: Text(
                 "Welcome to consultant app",
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.left,
-                style: TextStyle(fontFamily: 'outfit',),
+                style: TextStyle(
+                    fontFamily: 'outfit',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
                 // style: TextThemeHelper.titleLarge22,
               ),
             ),
           ),
           Container(
-            child: Text("Create a New Account or ",style: TextStyle(fontFamily: 'outfit',),),
+            child: Text(
+              "Create a New Account or ",
+              style: TextStyle(
+                  fontFamily: 'outfit',
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15),
+            ),
           ),
           Container(
-            child: Text("register Now",style: TextStyle(fontFamily: 'outfit',),),
+            child: Text(
+              "register Now",
+              style: TextStyle(
+                  fontFamily: 'outfit',
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15),
+            ),
           ),
           Spacer(),
           Container(
@@ -70,7 +86,10 @@ class _RegisterCreateAccountScreenState
                 ),
                 child: Text(
                   'Create Account',
-                  style: TextStyle(color: Colors.white,fontFamily: 'outfit',),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'outfit',
+                  ),
                 ),
               ),
             ),
@@ -94,7 +113,10 @@ class _RegisterCreateAccountScreenState
                     border: Border.all(color: Color(0xffED1C25))),
                 child: Text(
                   'Log In',
-                  style: TextStyle(color: Color(0xffED1C25),fontFamily: 'outfit',),
+                  style: TextStyle(
+                    color: Color(0xffED1C25),
+                    fontFamily: 'outfit',
+                  ),
                 ),
               ),
             ),
