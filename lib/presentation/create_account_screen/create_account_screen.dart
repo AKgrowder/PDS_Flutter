@@ -122,7 +122,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   "Create Account",
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
-                                  style: theme.textTheme.titleLarge,
+                                    style: TextStyle( fontFamily: 'outfit',),
+                                  // style: theme.textTheme.titleLarge,
                                 ),
                               ),
                               Container(
