@@ -75,9 +75,9 @@ class Repository {
     }
   }
 
-  Future<OtpModel> otpModel(String userNumber) async {
+  Future<OtpModel> otpModel(String userNumber,String OTP) async {
     final response =
-        await apiServices.getApiCall('${Config.otpApi}/999999/${userNumber}');
+        await apiServices.getApiCall('${Config.otpApi}/${OTP}/${userNumber}');
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
     switch (response.statusCode) {
