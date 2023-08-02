@@ -37,7 +37,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   @override
   void initState() {
     BlocProvider.of<senMSGCubit>(context).coomentPage(
-      widget.Room_ID,
+      widget.Room_ID,ShowLoader: true
     );
     super.initState();
   }
@@ -81,27 +81,27 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
           }
 
           if (state is senMSGLoadingState) {
-            Center(
-              child: Container(
-                margin: EdgeInsets.only(bottom: 100),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.asset(ImageConstant.loader,
-                      fit: BoxFit.cover, height: 100.0, width: 100),
-                ),
-              ),
-            );
+            // Center(
+            //   child: Container(
+            //     margin: EdgeInsets.only(bottom: 100),
+            //     child: ClipRRect(
+            //       borderRadius: BorderRadius.circular(20),
+            //       child: Image.asset(ImageConstant.loader,
+            //           fit: BoxFit.cover, height: 100.0, width: 100),
+            //     ),
+            //   ),
+            // );
           }
           if (state is senMSGLoadedState) {
             BlocProvider.of<senMSGCubit>(context).coomentPage(
-              widget.Room_ID,
+              widget.Room_ID,ShowLoader: true
             );
           }
           if (state is ComentApiState) {
             modelData = state.comentApiClass;
           }
         }, builder: (context, state) {
-          if (state is ComentApiState) {
+          // if (state is ComentApiState) {
             return Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16),
                 child: Container(
@@ -507,17 +507,17 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                     ]),
                   ),
                 ));
-          }
-          return Center(
-            child: Container(
-              margin: EdgeInsets.only(bottom: 100),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.asset(ImageConstant.loader,
-                    fit: BoxFit.cover, height: 100.0, width: 100),
-              ),
-            ),
-          );
+          // }
+          // return Center(
+          //   child: Container(
+          //     margin: EdgeInsets.only(bottom: 100),
+          //     child: ClipRRect(
+          //       borderRadius: BorderRadius.circular(20),
+          //       child: Image.asset(ImageConstant.loader,
+          //           fit: BoxFit.cover, height: 100.0, width: 100),
+          //     ),
+          //   ),
+          // );
         }));
   }
 
@@ -529,7 +529,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
       print("user login Mood");
       if (Add_Comment.text.isNotEmpty) {
         BlocProvider.of<senMSGCubit>(context)
-            .senMSGAPI(widget.Room_ID, Add_Comment.text);
+            .senMSGAPI(widget.Room_ID, Add_Comment.text,ShowLoader: true);
         Add_Comment.text = '';
       } else {
         SnackBar snackBar = SnackBar(
