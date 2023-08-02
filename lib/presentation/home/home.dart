@@ -71,8 +71,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllPublicRoom();
 
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+   var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
           backgroundColor: theme.colorScheme.onPrimary,
@@ -192,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Container(
                             height: 40,
-                            width: width / 2.5,
+                            width: _width / 2.5,
                             decoration: BoxDecoration(
                                 color: Color(0XFFED1C25),
                                 borderRadius: BorderRadius.circular(5)),
@@ -212,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding: const EdgeInsets.only(left: 10),
                             child: Container(
                               height: 40,
-                              width: width / 2.5,
+                              width: _width / 2.5,
                               decoration: BoxDecoration(
                                   color: Color(0XFFFFD9DA),
                                   borderRadius: BorderRadius.circular(5),
@@ -462,7 +462,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             onTap: () {},
                             child: Container(
                               // height: demo.contains(index) ? null: height / 16,
-                              width: width / 1.2,
+                              width: _width / 1.2,
                               decoration: BoxDecoration(
                                   border: Border.all(
                                       color: const Color(0XFFD9D9D9), width: 2),
@@ -522,7 +522,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               width: 3,
                                             ),
                                             Container(
-                                              width: width / 1.4,
+                                              width: _width / 1.4,
                                               child: Text(
                                                 "${PublicRoomModelData?.object?[index].roomQuestion}",
                                                 maxLines: 2,
@@ -645,7 +645,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Container(
                       height: 50,
-                      width: width / 1.2,
+                      width: _width / 1.2,
                       decoration: BoxDecoration(
                           color: Color(0XFFED1C25),
                           borderRadius: BorderRadius.circular(6)),
@@ -692,7 +692,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Container(
                       height: 240,
-                      width: width / 1.2,
+                      width: _width / 1.2,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         physics: BouncingScrollPhysics(),
@@ -719,7 +719,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: CustomImageView(
                                           imagePath: ImageConstant.experts,
                                           height: 50,
-                                          width: width / 2.8,
+                                          width: _width / 2.8,
                                           radius: BorderRadius.circular(10),
                                         ),
                                       ),

@@ -40,24 +40,26 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+     var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
+ 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: theme.colorScheme.onPrimary,
+        // backgroundColor: theme.colorScheme.onPrimary,
         resizeToAvoidBottomInset: true,
         body: Form(
           key: _formKey,
-          child: SizedBox(
-            width: double.maxFinite,
+          child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Expanded(
+                 Expanded(
                   child: SingleChildScrollView(
-                    padding: getPadding(
+                    padding: EdgeInsets.only(
                       top: 37,
                     ),
                     child: Padding(
-                      padding: getPadding(
+                      padding: EdgeInsets.only(
                         left: 30,
                         right: 30,
                         bottom: 19,
@@ -118,23 +120,23 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 children: [
                                   CustomImageView(
                                     imagePath: ImageConstant.imgImage248,
-                                    height: getVerticalSize(
-                                      37,
-                                    ),
-                                    width: getHorizontalSize(
-                                      140,
-                                    ),
+                                    height: 37,
+                                    width: 140,
                                     alignment: Alignment.center,
                                   ),
                                   Align(
                                     alignment: Alignment.center,
                                     child: Padding(
-                                      padding: getPadding(top: 60, bottom: 25),
+                                      padding:
+                                          EdgeInsets.only(top: 60, bottom: 25),
                                       child: Text(
                                         "Create Account",
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.left,
-                                        style: theme.textTheme.titleLarge,
+                                        style: TextStyle(
+                                            fontFamily: 'outfit',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                   ),
@@ -161,13 +163,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   Align(
                                     alignment: Alignment.center,
                                     child: Container(
-                                      height: getSize(
-                                        130,
-                                      ),
-                                      width: getSize(
-                                        130,
-                                      ),
-                                      margin: getMargin(
+                                      height: 130,
+                                      width: 130,
+                                      margin: EdgeInsets.only(
                                         top: 22,
                                       ),
                                       child: Stack(
@@ -176,24 +174,16 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                           CustomImageView(
                                             imagePath:
                                                 ImageConstant.imgRectangle39829,
-                                            height: getSize(
-                                              130,
-                                            ),
-                                            width: getSize(
-                                              130,
-                                            ),
-                                            radius: BorderRadius.circular(
-                                              getHorizontalSize(
-                                                65,
-                                              ),
-                                            ),
+                                            height: 130,
+                                            width: 130,
+                                            radius: BorderRadius.circular(65),
                                             alignment: Alignment.center,
                                           ),
                                           CustomIconButton(
                                             height: 33,
                                             width: 33,
-                                            padding: getPadding(
-                                              all: 8,
+                                            padding: EdgeInsets.all(
+                                              8,
                                             ),
                                             alignment: Alignment.bottomRight,
                                             child: GestureDetector(
@@ -211,35 +201,38 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: getPadding(
+                                    padding: EdgeInsets.only(
                                       top: 18,
                                     ),
                                     child: Text(
                                       "User ID",
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.left,
-                                      style: theme.textTheme.bodyLarge,
+                                      style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontWeight: FontWeight.w400),
                                     ),
                                   ),
                                   CustomTextFormField(
                                     // focusNode: FocusNode(),
                                     // autofocus: true,
                                     controller: enteruseridController,
-                                    margin: getMargin(
+                                    margin: EdgeInsets.only(
                                       top: 4,
                                     ),
-                                    contentPadding: getPadding(
+                                    contentPadding: EdgeInsets.only(
                                       left: 12,
                                       top: 14,
                                       right: 12,
                                       bottom: 14,
                                     ),
-                                    textStyle: theme.textTheme.titleMedium!,
+                                    textStyle: TextStyle(fontFamily: 'outfit'),
                                     hintText: "Enter User ID",
-                                    hintStyle: theme.textTheme.titleMedium!,
+                                    hintStyle: TextStyle(
+                                        fontFamily: 'outfit', fontSize: 15),
                                     textInputAction: TextInputAction.next,
                                     filled: true,
-                                    fillColor: appTheme.gray100,
+                                    // fillColor: appTheme.gray100,
                                   ),
                                   Padding(
                                     padding: getPadding(
@@ -251,328 +244,385 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                       textAlign: TextAlign.left,
                                       style: theme.textTheme.bodyLarge,
                                     ),
+ 
                                   ),
-                                  CustomTextFormField(
-                                    validator: (value) {
-                                      final RegExp nameRegExp = RegExp(
-                                          r"^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$");
-                                      if (value!.isEmpty) {
-                                        return 'Please Enter Name';
-                                      } else if (!nameRegExp.hasMatch(value)) {
-                                        return 'please Enter vaild name';
-                                      }
-                                      return null;
-                                    },
-                                    // focusNode: FocusNode(),
-                                    // autofocus: true,
-                                    controller: nameController,
-                                    margin: getMargin(
-                                      top: 4,
-                                    ),
-                                    contentPadding: getPadding(
-                                      left: 12,
-                                      top: 14,
-                                      right: 12,
-                                      bottom: 14,
-                                    ),
-                                    textStyle: theme.textTheme.titleMedium!,
-                                    hintText: "Enter name",
-                                    hintStyle: theme.textTheme.titleMedium!,
-                                    textInputAction: TextInputAction.next,
-                                    filled: true,
-                                    fillColor: appTheme.gray100,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  top: 18,
+                                ),
+                                child: Text(
+                                  "User ID",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontFamily: 'outfit',
                                   ),
-                                  Padding(
-                                    padding: getPadding(
-                                      top: 19,
-                                    ),
-                                    child: Text(
-                                      "Email",
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.left,
-                                      style: theme.textTheme.bodyLarge,
-                                    ),
+                                  // style: theme.textTheme.bodyLarge,
+                                ),
+                              ),
+                              CustomTextFormField(
+                                // focusNode: FocusNode(),
+                                // autofocus: true,
+                                controller: enteruseridController,
+                                margin: EdgeInsets.only(
+                                  top: 4,
+                                ),
+                                contentPadding: EdgeInsets.only(
+                                  left: 12,
+                                  top: 14,
+                                  right: 12,
+                                  bottom: 14,
+                                ),
+                                // textStyle: theme.textTheme.titleMedium!,
+                                hintText: "Enter User ID",
+                                // hintStyle: theme.textTheme.titleMedium!,
+                                textInputAction: TextInputAction.next,
+                                filled: true,
+                                fillColor: appTheme.gray100,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  top: 20,
+                                ),
+                                child: Text(
+                                  "Your Name",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontFamily: 'outfit',
                                   ),
-                                  CustomTextFormField(
-                                    validator: (value) {
-                                      final RegExp emailRegExp = RegExp(
-                                          r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
-                                      if (value!.isEmpty) {
-                                        return 'Please Enter Email';
-                                      } else if (!emailRegExp.hasMatch(value)) {
-                                        return 'please Enter vaild Email';
-                                      }
-                                      return null;
-                                    },
-                                    onChanged: (value) {
-                                      print("onchange");
-                                      final RegExp regex = RegExp('[a-zA-Z]');
-                                      if (emailAndMobileController
-                                                  .text ==
-                                              null ||
-                                          emailAndMobileController
-                                              .text.isEmpty ||
-                                          !regex.hasMatch(
-                                              emailAndMobileController.text)) {
-                                        setState(() {
-                                          isPhone = true;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          isPhone = false;
-                                        });
-                                      }
-                                    },
-                                    maxLength: isPhone == true ? 10 : 30,
-                                    // focusNode: FocusNode(),
-                                    controller: emailAndMobileController,
-                                    margin: getMargin(
-                                      left: 0,
-                                      right: 0,
-                                    ),
-                                    contentPadding: getPadding(
-                                      left: 12,
-                                      top: 14,
-                                      right: 12,
-                                      bottom: 14,
-                                    ),
-                                    textStyle: theme.textTheme.titleMedium!,
-                                    hintText: "Email address",
-                                    hintStyle: theme.textTheme.titleMedium!,
-                                    textInputAction: TextInputAction.next,
-                                    textInputType: TextInputType.emailAddress,
-                                    filled: true,
-                                    fillColor: appTheme.gray100,
+                                  // style: theme.textTheme.bodyLarge,
+                                ),
+                              ),
+                              CustomTextFormField(
+                                validator: (value) {
+                                  final RegExp nameRegExp = RegExp(
+                                      r"^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$");
+                                  if (value!.isEmpty) {
+                                    return 'Please Enter Name';
+                                  } else if (!nameRegExp.hasMatch(value)) {
+                                    return 'please Enter vaild name';
+                                  }
+                                  return null;
+                                },
+                                // focusNode: FocusNode(),
+                                // autofocus: true,
+                                controller: nameController,
+                                margin: EdgeInsets.only(
+                                  top: 4,
+                                ),
+                                contentPadding: EdgeInsets.only(
+                                  left: 12,
+                                  top: 14,
+                                  right: 12,
+                                  bottom: 14,
+                                ),
+                                // textStyle: theme.textTheme.titleMedium!,
+                                hintText: "Enter name",
+                                // hintStyle: theme.textTheme.titleMedium!,
+                                textInputAction: TextInputAction.next,
+                                filled: true,
+                                fillColor: appTheme.gray100,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  top: 19,
+                                ),
+                                child: Text(
+                                  "Email",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontFamily: 'outfit',
                                   ),
-                                  Padding(
-                                    padding: getPadding(
-                                      top: 19,
-                                    ),
-                                    child: Text(
-                                      "Contact no.",
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.left,
-                                      style: theme.textTheme.bodyLarge,
-                                    ),
-                                  ),
-                                  CustomTextFormField(
-                                    validator: (value) {
-                                      final RegExp phoneRegExp =
-                                          RegExp(r'^[0-9]{10}$');
+                                ),
+                              ),
+                              CustomTextFormField(
+                                validator: (value) {
+                                  final RegExp emailRegExp = RegExp(
+                                      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
-                                      if (value!.isEmpty) {
-                                        return 'Please Enter phonNumber';
-                                      } else if (!phoneRegExp.hasMatch(value)) {
-                                        return 'please Enter phonNumber';
-                                      }
-                                      return null;
-                                    },
-                                    onChanged: (value) {
-                                      print("onchange");
-                                      final RegExp regex = RegExp('[a-zA-Z]');
-                                      if (contectnumberController
-                                                  .text ==
-                                              null ||
-                                          contectnumberController
-                                              .text.isEmpty ||
-                                          !regex.hasMatch(
-                                              contectnumberController.text)) {
-                                        setState(() {
-                                          isPhonee = true;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          isPhonee = false;
-                                        });
-                                      }
-                                    },
-                                    maxLength: isPhonee == true ? 10 : 30,
-                                    // focusNode: FocusNode(),
-                                    controller: contectnumberController,
-                                    margin: getMargin(
-                                      left: 0,
-                                      right: 0,
-                                    ),
-                                    contentPadding: getPadding(
-                                      left: 12,
-                                      top: 14,
-                                      right: 12,
-                                      bottom: 14,
-                                    ),
-                                    textStyle: theme.textTheme.titleMedium!,
-                                    hintText: "Contact no.",
-                                    hintStyle: theme.textTheme.titleMedium!,
-                                    textInputAction: TextInputAction.next,
-                                    textInputType: TextInputType.emailAddress,
-                                    filled: true,
-                                    fillColor: appTheme.gray100,
-                                  ),
-                                  Padding(
-                                    padding: getPadding(
-                                      top: 19,
-                                    ),
-                                    child: Text(
-                                      "Set Password",
-                                      overflow: TextOverflow.ellipsis,
-                                      // textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                          fontFamily: "outfit",
-                                          fontSize: 14),
-                                    ),
-                                  ),
-                                  CustomTextFormField(
-                                    // focusNode: FocusNode(),
-                                    // autofocus: true,
-                                    validator: (value) {
-                                      final RegExp passwordRegExp = RegExp(
-                                          r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+                                  if (value!.isEmpty) {
+                                    return 'Please Enter Email';
+                                  } else if (!emailRegExp.hasMatch(value)) {
+                                    return 'please Enter vaild Email';
+                                  }
+                                  return null;
+                                },
+                                onChanged: (value) {
+                                  print("onchange");
+                                  final RegExp regex = RegExp('[a-zA-Z]');
+                                  if (emailAndMobileController.text == null ||
+                                      emailAndMobileController.text.isEmpty ||
+                                      !regex.hasMatch(
+                                          emailAndMobileController.text)) {
+                                    setState(() {
+                                      isPhone = true;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      isPhone = false;
+                                    });
+                                  }
+                                },
+                                maxLength: isPhone == true ? 10 : 30,
+                                // focusNode: FocusNode(),
+                                controller: emailAndMobileController,
+                                margin: EdgeInsets.only(
+                                  left: 0,
+                                  right: 0,
+                                ),
+                                contentPadding: EdgeInsets.only(
+                                  left: 12,
+                                  top: 14,
+                                  right: 12,
+                                  bottom: 14,
+                                ),
+                                // textStyle: theme.textTheme.titleMedium!,
+                                hintText: "Email address",
+                                // hintStyle: theme.textTheme.titleMedium!,
+                                textInputAction: TextInputAction.next,
+                                textInputType: TextInputType.emailAddress,
+                                filled: true,
+                                fillColor: appTheme.gray100,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  top: 19,
+                                ),
+                                child: Text(
+                                  "Contact no.",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  // style: theme.textTheme.bodyLarge,
+                                ),
+                              ),
+                              CustomTextFormField(
+                                validator: (value) {
+                                  final RegExp phoneRegExp =
+                                      RegExp(r'^[0-9]{10}$');
 
-                                      if (value!.isEmpty) {
-                                        return 'Please Enter Password';
-                                      } else if (!passwordRegExp
-                                          .hasMatch(value)) {
-                                        return 'please Enter Password';
-                                      }
-                                      return null;
-                                    },
-                                    controller: passwordController,
-                                    margin: getMargin(
-                                      top: 5,
-                                    ),
-                                    contentPadding: getPadding(
-                                      left: 20,
-                                      top: 14,
-                                      bottom: 14,
-                                    ),
-                                    textStyle: theme.textTheme.titleMedium!,
-                                    hintText: "Password",
-                                    hintStyle: theme.textTheme.titleMedium!,
-                                    textInputType:
-                                        TextInputType.visiblePassword,
-                                    suffix: Container(
-                                      margin: getMargin(
-                                        left: 30,
-                                        top: 15,
-                                        right: 15,
-                                        bottom: 15,
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            Show_Password = !Show_Password;
-                                          });
-                                        },
-                                        child: Show_Password
-                                            ? CustomImageView(
-                                                svgPath: ImageConstant.imgEye,
-                                              )
-                                            : Icon(
-                                                Icons.remove_red_eye_sharp,
-                                                color: Colors.grey,
-                                              ),
-                                      ),
-                                    ),
-                                    suffixConstraints: BoxConstraints(
-                                      maxHeight: getVerticalSize(
-                                        50,
-                                      ),
-                                    ),
-                                    obscureText: Show_Password ? true : false,
-                                    filled: true,
-                                    fillColor: appTheme.gray100,
+                                  if (value!.isEmpty) {
+                                    return 'Please Enter phonNumber';
+                                  } else if (!phoneRegExp.hasMatch(value)) {
+                                    return 'please Enter phonNumber';
+                                  }
+                                  return null;
+                                },
+                                onChanged: (value) {
+                                  print("onchange");
+                                  final RegExp regex = RegExp('[a-zA-Z]');
+                                  if (contectnumberController.text == null ||
+                                      contectnumberController.text.isEmpty ||
+                                      !regex.hasMatch(
+                                          contectnumberController.text)) {
+                                    setState(() {
+                                      isPhonee = true;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      isPhonee = false;
+                                    });
+                                  }
+                                },
+                                maxLength: isPhonee == true ? 10 : 30,
+                                // focusNode: FocusNode(),
+                                controller: contectnumberController,
+                                margin: EdgeInsets.only(
+                                  left: 0,
+                                  right: 0,
+                                ),
+                                contentPadding: EdgeInsets.only(
+                                  left: 12,
+                                  top: 14,
+                                  right: 12,
+                                  bottom: 14,
+                                ),
+                                // textStyle: theme.textTheme.titleMedium!,
+                                hintText: "Contact no.",
+                                // hintStyle: theme.textTheme.titleMedium!,
+                                textInputAction: TextInputAction.next,
+                                textInputType: TextInputType.emailAddress,
+                                filled: true,
+                                fillColor: appTheme.gray100,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  top: 19,
+                                ),
+                                child: Text(
+                                  "Set Password",
+                                  overflow: TextOverflow.ellipsis,
+                                  // textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                      fontFamily: "outfit",
+                                      fontSize: 14),
+                                ),
+                              ),
+                              CustomTextFormField(
+                                // focusNode: FocusNode(),
+                                // autofocus: true,
+                                validator: (value) {
+                                  final RegExp passwordRegExp = RegExp(
+                                      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+
+                                  if (value!.isEmpty) {
+                                    return 'Please Enter Password';
+                                  } else if (!passwordRegExp.hasMatch(value)) {
+                                    return 'please Enter Password';
+                                  }
+                                  return null;
+                                },
+                                controller: passwordController,
+                                margin: EdgeInsets.only(
+                                  top: 5,
+                                ),
+                                contentPadding: EdgeInsets.only(
+                                  left: 20,
+                                  top: 14,
+                                  bottom: 14,
+                                ),
+                                // textStyle: theme.textTheme.titleMedium!,
+                                hintText: "Password",
+                                // hintStyle: theme.textTheme.titleMedium!,
+                                textInputType: TextInputType.visiblePassword,
+                                suffix: Container(
+                                  margin: EdgeInsets.only(
+                                    left: 30,
+                                    top: 15,
+                                    right: 15,
+                                    bottom: 15,
                                   ),
-                                  CustomElevatedButton(
+                                  child: GestureDetector(
                                     onTap: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        var datapPassing = {
-                                          "name": nameController.text,
-                                          "userName": nameController.text,
-                                          "email":
-                                              emailAndMobileController.text,
-                                          "mobileNo":
-                                              contectnumberController.text,
-                                          "password": passwordController.text,
-                                          "module": "EMPLOYEE"
-                                        };
-                                        print('dataoassing-$datapPassing');
-                                        BlocProvider.of<RegisterCubit>(context)
-                                            .registerApi(datapPassing);
-                                      }
+                                      setState(() {
+                                        Show_Password = !Show_Password;
+                                      });
                                     },
-                                    text: "Submit",
-                                    margin: getMargin(
-                                      top: 18,
-                                    ),
-                                    buttonStyle: ButtonThemeHelper
-                                        .outlineOrangeA7000c
-                                        .copyWith(
-                                            fixedSize:
-                                                MaterialStateProperty.all<Size>(
-                                                    Size(
-                                      double.maxFinite,
-                                      getVerticalSize(
-                                        50,
-                                      ),
-                                    ))),
-                                    buttonTextStyle:
-                                        TextThemeHelper.titleMediumOnPrimary,
+                                    child: Show_Password
+                                        ? CustomImageView(
+                                            svgPath: ImageConstant.imgEye,
+                                          )
+                                        : Icon(
+                                            Icons.remove_red_eye_sharp,
+                                            color: Colors.grey,
+                                          ),
                                   ),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Container(
-                                      width: getHorizontalSize(
-                                        330,
-                                      ),
-                                      margin: getMargin(
-                                        left: 11,
-                                        top: 16,
-                                        right: 11,
-                                      ),
-                                      child: RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text:
-                                                  "By Submitting you are agreeing to ",
-                                              style: TextStyle(
-                                                color: appTheme.black900,
-                                                fontSize: getFontSize(
-                                                  14,
-                                                ),
-                                                fontFamily: 'Outfit',
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                            TextSpan(
-                                              text:
-                                                  "Terms & Conditions  Privacy & Policy  of PDS Terms",
-                                              style: TextStyle(
-                                                color:
-                                                    theme.colorScheme.primary,
-                                                fontSize: getFontSize(
-                                                  14,
-                                                ),
-                                                fontFamily: 'Outfit',
-                                                fontWeight: FontWeight.w500,
-                                                decoration:
-                                                    TextDecoration.underline,
-                                              ),
-                                            ),
-                                          ],
+                                ),
+                                suffixConstraints:
+                                    BoxConstraints(maxHeight: 50),
+                                obscureText: Show_Password ? true : false,
+                                filled: true,
+                                fillColor: appTheme.gray100,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    var datapPassing = {
+                                      "name": nameController.text,
+                                      "userName": nameController.text,
+                                      "email": emailAndMobileController.text,
+                                      "mobileNo": contectnumberController.text,
+                                      "password": passwordController.text,
+                                      "module": "EMPLOYEE"
+                                    };
+                                    print('dataoassing-$datapPassing');
+                                    BlocProvider.of<RegisterCubit>(context)
+                                        .registerApi(datapPassing);
+                                  }
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.only(top: 15),
+                                  height: 60,
+                                  width: _width,
+                                  decoration: BoxDecoration(
+                                      color: Color(0xffED1C25),
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: Text(
+                                    'Submit',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                              // CustomElevatedButton(
+                              //   onTap: () {
+                              //     if (_formKey.currentState!.validate()) {
+                              //       var datapPassing = {
+                              //         "name": nameController.text,
+                              //         "userName": nameController.text,
+                              //         "email": emailAndMobileController.text,
+                              //         "mobileNo": contectnumberController.text,
+                              //         "password": passwordController.text,
+                              //         "module": "EMPLOYEE"
+                              //       };
+                              //       print('dataoassing-$datapPassing');
+                              //       BlocProvider.of<RegisterCubit>(context)
+                              //           .registerApi(datapPassing);
+                              //     }
+                              //   },
+                              //   text: "Submit",
+                              //   margin: EdgeInsets.only(
+                              //     top: 18,
+                              //   ),
+                              //   buttonStyle: ButtonThemeHelper
+                              //       .outlineOrangeA7000c
+                              //       .copyWith(
+                              //           fixedSize:
+                              //               MaterialStateProperty.all<Size>(
+                              //                   Size(double.maxFinite, 50))),
+                              //   buttonTextStyle:
+                              //       TextThemeHelper.titleMediumOnPrimary,
+                              // ),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Container(
+                                  width: 330,
+                                  margin: EdgeInsets.only(
+                                    left: 11,
+                                    top: 16,
+                                    right: 11,
+                                  ),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text:
+                                              "By Submitting you are agreeing to ",
+                                          style: TextStyle(
+                                            color: appTheme.black900,
+                                            fontSize: 14,
+                                            fontFamily: 'Outfit',
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
-                                        textAlign: TextAlign.center,
-                                      ),
+                                        TextSpan(
+                                          text:
+                                              "Terms & Conditions  Privacy & Policy  of PDS Terms",
+                                          style: TextStyle(
+                                            color: theme.colorScheme.primary,
+                                            fontSize: 14,
+                                            fontFamily: 'Outfit',
+                                            fontWeight: FontWeight.w500,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                ],
-                              );
-                            },
-                          )),
-                    ),
-                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      )),
                 ),
               ],
             ),

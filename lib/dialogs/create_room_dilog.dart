@@ -46,16 +46,16 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return Center(
       child: Material(
         color: Color.fromARGB(0, 255, 255, 255),
         child: ScaleTransition(
           scale: scaleAnimation,
           child: Container(
-            height: height / 2,
-            width: width / 1.17,
+            height: _height / 2,
+            width: _width / 1.17,
             decoration: ShapeDecoration(
               // color: Colors.black,
 
@@ -68,7 +68,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                 Center(
                   child: Container(
                     height: 350,
-                    width: width / 1.2,
+                    width: _width / 1.2,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -119,7 +119,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                         Center(
                           child: Container(
                             height: 40,
-                            width: width / 1.3,
+                            width: _width / 1.3,
                             decoration: BoxDecoration(
                                 color: Colors.transparent,
                                 border: Border.all(color: Colors.grey.shade300),
@@ -152,7 +152,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                         Center(
                           child: Container(
                             height: 80,
-                            width: width / 1.3,
+                            width: _width / 1.3,
                             decoration: BoxDecoration(
                                 color: Colors.transparent,
                                 border: Border.all(color: Colors.grey.shade300),
@@ -180,7 +180,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                                 onTap: () => Navigator.pop(context),
                                 child: Container(
                                   height: 43,
-                                  width: width / 3,
+                                  width: _width / 3,
                                   decoration: BoxDecoration(
                                       color: Colors.transparent,
                                       border: Border.all(
@@ -200,7 +200,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                               ),
                               Container(
                                 height: 43,
-                                width: width / 3,
+                                width: _width / 3,
                                 decoration: BoxDecoration(
                                     color: Color(0xFFED1C25),
                                     borderRadius: BorderRadius.circular(10)),

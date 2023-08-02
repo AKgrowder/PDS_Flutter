@@ -6,12 +6,10 @@ import 'package:archit_s_application1/API/Bloc/auth/otp_state.dart';
 import 'package:archit_s_application1/core/app_export.dart';
 import 'package:archit_s_application1/core/utils/color_constant.dart';
 import 'package:archit_s_application1/custom_bottom_bar/custom_bottom_bar.dart';
-import 'package:archit_s_application1/presentation/home/home.dart';
 import 'package:archit_s_application1/widgets/app_bar/appbar_image.dart';
 import 'package:archit_s_application1/widgets/app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart' as fs;
 import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -73,8 +71,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return SafeArea(
         child: WillPopScope(
       onWillPop: () async => await false,
@@ -82,20 +80,21 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           backgroundColor: theme.colorScheme.onPrimary,
           resizeToAvoidBottomInset: false,
           appBar: CustomAppBar(
-              height: getVerticalSize(83),
+              height: 83,
               leadingWidth: 54,
               leading: AppbarImage(
-                  height: getVerticalSize(23),
-                  width: getHorizontalSize(24),
+                  height: 23,
+                  width: 24,
                   svgPath: ImageConstant.imgArrowleft,
-                  margin: getMargin(left: 20, top: 19, bottom: 13, right: 15),
+                  margin:
+                      EdgeInsets.only(left: 20, top: 19, bottom: 13, right: 15),
                   onTap: () {
                     onTapArrowleft(context);
                   }),
               centerTitle: true,
               title: AppbarImage(
-                  height: getVerticalSize(37),
-                  width: getHorizontalSize(140),
+                  height: 37,
+                  width: 140,
                   imagePath: ImageConstant.imgImage248)),
           body: BlocProvider<OtpCubit>(
             create: (context) => OtpCubit(),
@@ -129,7 +128,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     backgroundColor: ColorConstant.primary_color,
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                   print('wiget flowcheck-${widget.flowCheck}');     
+                  print('wiget flowcheck-${widget.flowCheck}');
                   if (widget.flowCheck == "Rgister") {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
@@ -139,14 +138,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         )
                       ], child: LoginScreen());
                     }));
-                  
                   } else {
-                     
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return MultiBlocProvider(providers: [
                         BlocProvider<FetchAllPublicRoomCubit>(
-                          create: (context) =>   FetchAllPublicRoomCubit(),
+                          create: (context) => FetchAllPublicRoomCubit(),
                         ),
                         BlocProvider<CreatPublicRoomCubit>(
                           create: (context) => CreatPublicRoomCubit(),
@@ -159,24 +156,26 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         ),
                       ], child: BottombarPage(buttomIndex: 0));
                     }));
-                   
                   }
                 }
               },
               builder: (context, state) {
                 return Container(
-                    width: double.maxFinite,
-                    padding:
-                        getPadding(left: 15, top: 38, right: 15, bottom: 38),
+                    // width: double.maxFinite,
+                    padding: EdgeInsets.only(
+                        left: 15, top: 38, right: 15, bottom: 38),
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text("OTP Verification",
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.left,
-                              style: theme.textTheme.titleLarge),
+                              style: TextStyle(
+                                  fontFamily: 'outfit',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400)),
                           Padding(
-                              padding: getPadding(top: 4),
+                              padding: EdgeInsets.only(top: 4),
                               child: RichText(
                                   text: TextSpan(children: [
                                     TextSpan(
@@ -184,14 +183,14 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                             "One time Password to be sent to ",
                                         style: TextStyle(
                                             color: appTheme.gray50001,
-                                            fontSize: getFontSize(16),
+                                            fontSize: 16,
                                             fontFamily: 'Outfit',
                                             fontWeight: FontWeight.w400)),
                                     TextSpan(
                                         text: widget.phonNumber,
                                         style: TextStyle(
                                             color: appTheme.gray50001,
-                                            fontSize: getFontSize(16),
+                                            fontSize: 16,
                                             fontFamily: 'Outfit',
                                             fontWeight: FontWeight.w400))
                                   ]),
@@ -199,13 +198,14 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           Align(
                               alignment: Alignment.centerLeft,
                               child: Padding(
-                                  padding: getPadding(left: 14, top: 33),
+                                  padding: EdgeInsets.only(left: 14, top: 33),
                                   child: Text("Enter OTP",
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.left,
-                                      style: theme.textTheme.bodyLarge))),
+                                      style: TextStyle(fontFamily: 'outfit',)
+                                      ))),
                           Padding(
-                            padding: getPadding(
+                            padding: EdgeInsets.only(
                               top: 11,
                             ),
                             child: Pinput(
@@ -242,8 +242,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             child: Padding(
                               padding: const EdgeInsets.only(top: 20),
                               child: Container(
-                                height: height / 16,
-                                width: width,
+                                height: _height / 16,
+                                width: _width,
                                 decoration: BoxDecoration(
                                   color: Color(0XFFED1C25),
                                   borderRadius:
@@ -252,14 +252,17 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                 child: Center(
                                   child: Text("Verify OTP",
                                       textAlign: TextAlign.center,
-                                      style:
-                                          TextThemeHelper.titleMediumOnPrimary),
+                                      style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold)),
                                 ),
                               ),
                             ),
                           ),
                           Padding(
-                            padding: getPadding(top: 19, bottom: 5),
+                            padding: EdgeInsets.only(top: 19, bottom: 5),
                             child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -268,7 +271,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                       style: TextStyle(
                                           // color: ColorConstant.black90066,
                                           color: Colors.grey,
-                                          fontSize: getFontSize(16),
+                                          fontSize: 16,
                                           fontFamily: 'Outfit',
                                           fontWeight: FontWeight.w500)),
                                   GestureDetector(
@@ -291,7 +294,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                                     : Colors
                                                         .white /* ColorConstant.black90066 */
                                                 : Colors.red,
-                                            fontSize: getFontSize(16),
+                                            fontSize: 16,
                                             fontFamily: 'Outfit',
                                             fontWeight: FontWeight.w500,
                                             decoration:
@@ -314,7 +317,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     Navigator.pop(context);
   }
 
-    getDataStroe(
+  getDataStroe(
     String userId,
     String jwt,
   ) async {

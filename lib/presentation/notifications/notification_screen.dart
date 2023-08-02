@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/utils/size_utils.dart';
 import '../../theme/theme_helper.dart';
 import 'notification_demo.dart';
 
@@ -84,6 +83,8 @@ Map userData = {
 class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   Widget build(BuildContext context) {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
       appBar: AppBar(
@@ -118,7 +119,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 Expanded(
                   child: GestureDetector(
                     child: Container(
-                      height: getVerticalSize(50),
+                      height: 50,
                       decoration: BoxDecoration(
                         color: arrNotiyTypeList[0].isSelected
                             ? Color(0xFFED1C25)
@@ -132,7 +133,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                   color: arrNotiyTypeList[0].isSelected
                                       ? Colors.white
                                       : Colors.black,
-                                  fontSize: getFontSize(18),
+                                  fontSize: 18,
                                   fontFamily: 'Outfit',
                                   fontWeight: FontWeight.bold))),
                     ),
@@ -152,8 +153,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 Expanded(
                   child: GestureDetector(
                     child: Container(
-                        width: double.maxFinite,
-                        height: getVerticalSize(50),
+                       
+                        height: 50,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: arrNotiyTypeList[2].isSelected
@@ -171,7 +172,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                       color: arrNotiyTypeList[0].isSelected
                                           ? Colors.black
                                           : Colors.white,
-                                      fontSize: getFontSize(18),
+                                      fontSize:18,
                                       fontFamily: 'Outfit',
                                       fontWeight: FontWeight.bold)),
                               Spacer(),
