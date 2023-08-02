@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/utils/size_utils.dart';
 import '../../theme/theme_helper.dart';
 
 class HistoryDetailsScren extends StatefulWidget {
@@ -30,6 +29,8 @@ List<String> status = [
 class _HistoryDetailsScrenState extends State<HistoryDetailsScren> {
   @override
   Widget build(BuildContext context) {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
       appBar: AppBar(
@@ -58,8 +59,8 @@ class _HistoryDetailsScrenState extends State<HistoryDetailsScren> {
         Padding(
           padding: const EdgeInsets.only(top: 30.0, right: 20, left: 20),
           child: Container(
-            height: height / 6.5,
-            width: width / 1.1,
+            height: _height / 6.5,
+            width: _width / 1.1,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.all(
@@ -167,7 +168,7 @@ class _HistoryDetailsScrenState extends State<HistoryDetailsScren> {
               Container(
                 // color: Colors.amber,
                 height: 300,
-                width: width / 3,
+                width: _width / 3,
                 child: ListView.builder(
                   itemCount: 6,
                   shrinkWrap: true,
@@ -191,7 +192,7 @@ class _HistoryDetailsScrenState extends State<HistoryDetailsScren> {
               Container(
                 // color: Colors.amber,
                 height: 300,
-                width: width / 2.5,
+                width: _width / 2.5,
                 child: ListView.builder(
                   itemCount: 6,
                   shrinkWrap: true,

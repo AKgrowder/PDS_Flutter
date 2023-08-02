@@ -40,6 +40,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
         backgroundColor: theme.colorScheme.onPrimary,
@@ -53,11 +55,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               children: [
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: getPadding(
+                    padding: EdgeInsets.only(
                       top: 37,
                     ),
                     child: Padding(
-                      padding: getPadding(
+                      padding: EdgeInsets.only(
                         left: 30,
                         right: 30,
                         bottom: 19,
@@ -118,23 +120,23 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 children: [
                                   CustomImageView(
                                     imagePath: ImageConstant.imgImage248,
-                                    height: getVerticalSize(
-                                      37,
-                                    ),
-                                    width: getHorizontalSize(
-                                      140,
-                                    ),
+                                    height: 37,
+                                    width: 140,
                                     alignment: Alignment.center,
                                   ),
                                   Align(
                                     alignment: Alignment.center,
                                     child: Padding(
-                                      padding: getPadding(top: 60, bottom: 25),
+                                      padding:
+                                          EdgeInsets.only(top: 60, bottom: 25),
                                       child: Text(
                                         "Create Account",
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.left,
-                                        style: theme.textTheme.titleLarge,
+                                        style: TextStyle(
+                                            fontFamily: 'outfit',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                   ),
@@ -161,13 +163,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   Align(
                                     alignment: Alignment.center,
                                     child: Container(
-                                      height: getSize(
-                                        130,
-                                      ),
-                                      width: getSize(
-                                        130,
-                                      ),
-                                      margin: getMargin(
+                                      height: 130,
+                                      width: 130,
+                                      margin: EdgeInsets.only(
                                         top: 22,
                                       ),
                                       child: Stack(
@@ -176,24 +174,16 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                           CustomImageView(
                                             imagePath:
                                                 ImageConstant.imgRectangle39829,
-                                            height: getSize(
-                                              130,
-                                            ),
-                                            width: getSize(
-                                              130,
-                                            ),
-                                            radius: BorderRadius.circular(
-                                              getHorizontalSize(
-                                                65,
-                                              ),
-                                            ),
+                                            height: 130,
+                                            width: 130,
+                                            radius: BorderRadius.circular(65),
                                             alignment: Alignment.center,
                                           ),
                                           CustomIconButton(
                                             height: 33,
                                             width: 33,
-                                            padding: getPadding(
-                                              all: 8,
+                                            padding: EdgeInsets.all(
+                                              8,
                                             ),
                                             alignment: Alignment.bottomRight,
                                             child: GestureDetector(
@@ -211,35 +201,38 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: getPadding(
+                                    padding: EdgeInsets.only(
                                       top: 18,
                                     ),
                                     child: Text(
                                       "User ID",
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.left,
-                                      style: theme.textTheme.bodyLarge,
+                                      style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontWeight: FontWeight.w400),
                                     ),
                                   ),
                                   CustomTextFormField(
                                     // focusNode: FocusNode(),
                                     // autofocus: true,
                                     controller: enteruseridController,
-                                    margin: getMargin(
+                                    margin: EdgeInsets.only(
                                       top: 4,
                                     ),
-                                    contentPadding: getPadding(
+                                    contentPadding: EdgeInsets.only(
                                       left: 12,
                                       top: 14,
                                       right: 12,
                                       bottom: 14,
                                     ),
-                                    textStyle: theme.textTheme.titleMedium!,
+                                    textStyle: TextStyle(fontFamily: 'outfit'),
                                     hintText: "Enter User ID",
-                                    hintStyle: theme.textTheme.titleMedium!,
+                                    hintStyle: TextStyle(
+                                        fontFamily: 'outfit', fontSize: 15),
                                     textInputAction: TextInputAction.next,
                                     filled: true,
-                                    fillColor: appTheme.gray100,
+                                    // fillColor: appTheme.gray100,
                                   ),
                                   Padding(
                                     padding: getPadding(
