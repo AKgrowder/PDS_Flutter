@@ -29,13 +29,14 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
             backgroundColor: theme.colorScheme.onPrimary,
             resizeToAvoidBottomInset: false,
             appBar: CustomAppBar(
-                height: getVerticalSize(89),
+                height: 89,
                 leadingWidth: 54,
                 leading: AppbarImage(
-                    height: getVerticalSize(23),
-                    width: getHorizontalSize(24),
+                    height: 23,
+                    width: 24,
                     svgPath: ImageConstant.imgArrowleft,
-                    margin: getMargin(left: 30, top: 13, bottom: 19, right: 5),
+                    margin: EdgeInsets.only(
+                        left: 30, top: 13, bottom: 19, right: 5),
                     onTap: () {
                       onTapArrowleft1(context);
                     }),
@@ -43,86 +44,108 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 title: Text("Forget Password",
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
-                    style: theme.textTheme.titleLarge)),
+                    style: TextStyle(
+                        fontFamily: 'outfit',
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black))),
             body: Form(
                 key: _formKey,
                 child: Container(
                     width: double.maxFinite,
-                    padding: getPadding(left: 30, right: 30),
+                    padding: EdgeInsets.only(left: 30, right: 30),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Center(
                             child: Text(
-                                "OTP will be sent to Registered Mobile Number",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.left,
-                                style: TextThemeHelper.bodyMediumBlack900),
+                              "OTP will be sent to Registered Mobile Number",
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontFamily: 'outfit',
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey),
+                              // style: TextThemeHelper.bodyMediumBlack900
+                            ),
                           ),
                           Padding(
-                              padding: getPadding(top: 35),
-                              child: Text("Enter Registered Mobile Number",
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.left,
-                                  style: theme.textTheme.bodyLarge)),
+                              padding: EdgeInsets.only(top: 35),
+                              child: Text(
+                                "Enter Registered Mobile Number",
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontFamily: 'outfit',
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black),
+                              )),
                           CustomTextFormField(
-                      onChanged: (value) {
-                        print("onchange");
-                        final RegExp regex = RegExp('[a-zA-Z]');
-                        if (contectnumberController.text == null ||
-                            contectnumberController.text.isEmpty ||
-                            !regex.hasMatch(contectnumberController.text)) {
-                          setState(() {
-                            isPhonee = true;
-                          });
-                        } else {
-                          setState(() {
-                            isPhonee = false;
-                          });
-                        }
-                      },
-                      maxLength: isPhonee== true ? 10 : 30,
-                      // focusNode: FocusNode(),
-                      controller: contectnumberController,
-                       margin: getMargin(
-                      left: 0,
-          
-                      right: 0,
-                    ),
-                    contentPadding: getPadding(
-                      left: 12,
-                      top: 14,
-                      right: 12,
-                      bottom: 14,
-                    ),
-                    textStyle: theme.textTheme.titleMedium!,
-                    hintText: "Contact no.",
-                    hintStyle: theme.textTheme.titleMedium!,
-                    textInputAction: TextInputAction.next,
-                    textInputType: TextInputType.emailAddress,
-                    filled: true,
-                    fillColor: appTheme.gray100,
-                    ),
+                            onChanged: (value) {
+                              print("onchange");
+                              final RegExp regex = RegExp('[a-zA-Z]');
+                              if (contectnumberController.text == null ||
+                                  contectnumberController.text.isEmpty ||
+                                  !regex
+                                      .hasMatch(contectnumberController.text)) {
+                                setState(() {
+                                  isPhonee = true;
+                                });
+                              } else {
+                                setState(() {
+                                  isPhonee = false;
+                                });
+                              }
+                            },
+                            maxLength: isPhonee == true ? 10 : 30,
+                            // focusNode: FocusNode(),
+                            controller: contectnumberController,
+                            margin: EdgeInsets.only(
+                              left: 0,
+                              right: 0,
+                            ),
+                            contentPadding: EdgeInsets.only(
+                              left: 12,
+                              top: 14,
+                              right: 12,
+                              bottom: 14,
+                            ),
+                            // textStyle: theme.textTheme.titleMedium!,
+                            hintText: "Enter Mobile Number",
+                            hintStyle: TextStyle(
+                              fontFamily: 'outfit',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            textInputAction: TextInputAction.next,
+                            textInputType: TextInputType.emailAddress,
+                            filled: true,
+                            fillColor: appTheme.gray100,
+                          ),
                           CustomElevatedButton(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          ChangePasswordScreen(),
-                                    ));
-                              },
-                              text: "Send OTP",
-                              margin: getMargin(top: 51, bottom: 5),
-                              buttonStyle: ButtonThemeHelper.outlineOrangeA7000c
-                                  .copyWith(
-                                      fixedSize:
-                                          MaterialStateProperty.all<Size>(Size(
-                                              double.maxFinite,
-                                              getVerticalSize(50)))),
-                              buttonTextStyle:
-                                  TextThemeHelper.titleMediumOnPrimary)
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ChangePasswordScreen(),
+                                  ));
+                            },
+                            text: "Send OTP",
+                            margin: EdgeInsets.only(top: 51, bottom: 5),
+                            buttonStyle: ButtonThemeHelper.outlineOrangeA7000c
+                                .copyWith(
+                                    fixedSize: MaterialStateProperty.all<Size>(
+                                        Size(double.infinity, 50))),
+                            buttonTextStyle: TextStyle(
+                                fontFamily: 'outfit',
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          )
                         ])))));
   }
 

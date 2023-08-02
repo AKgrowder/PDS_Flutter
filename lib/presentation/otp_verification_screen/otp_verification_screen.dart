@@ -172,8 +172,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                   fontFamily: 'outfit',
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400)),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold)),
                           Padding(
                               padding: EdgeInsets.only(top: 4),
                               child: RichText(
@@ -202,8 +202,10 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                   child: Text("Enter OTP",
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.left,
-                                      style: TextStyle(fontFamily: 'outfit',)
-                                      ))),
+                                      style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500)))),
                           Padding(
                             padding: EdgeInsets.only(
                               top: 11,
@@ -237,7 +239,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             onTap: () {
                               print('vhbghghg');
                               BlocProvider.of<OtpCubit>(context)
-                                  .OtpApi(widget.phonNumber.toString());
+                                  .OtpApi(OTPController.text,widget.phonNumber.toString());
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(top: 20),
