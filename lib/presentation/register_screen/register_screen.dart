@@ -140,25 +140,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             alignment: Alignment.bottomCenter,
                             children: [
                               CustomImageView(
-                                imagePath: ImageConstant.imgRectangle19250,
+                                imagePath: ImageConstant.register,
                                 height: getVerticalSize(
                                   348,
                                 ),
                                 width: getHorizontalSize(
                                   414,
                                 ),
-                                alignment: Alignment.center,
+                               fit: BoxFit.fill,
                               ),
-                              CustomImageView(
-                                svgPath: ImageConstant.imgGroup,
-                                height: getVerticalSize(
-                                  242,
-                                ),
-                                width: getHorizontalSize(
-                                  337,
-                                ),
-                                alignment: Alignment.bottomCenter,
-                              ),
+                             
                             ],
                           ),
                         ),

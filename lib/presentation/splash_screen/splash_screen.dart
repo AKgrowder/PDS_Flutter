@@ -23,28 +23,23 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     startTimer(context);
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
         backgroundColor: appTheme.deepOrange5001,
         body: Container(
-          width: double.maxFinite,
-          padding: getPadding(
-            left: 44,
-            right: 44,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CustomImageView(
+          width: _width,
+          // color: Colors.red[100],
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(50.0),
+              child: CustomImageView(
                 imagePath: ImageConstant.imgImage248,
-                height: getVerticalSize(
-                  86,
-                ),
-                width: getHorizontalSize(
-                  325,
-                ),
+                // height: _height / 10,
+                // width:_width 
               ),
-            ],
+            ),
           ),
         ),
       ),

@@ -20,8 +20,7 @@ class AppRoutes {
   static const String forgetPasswordScreen = '/forget_password_screen';
 
   static const String createAccountScreen = '/create_account_screen';
-
-  static const String appNavigationScreen = '/app_navigation_screen';
+ 
 
   static Map<String, WidgetBuilder> routes = {
     splashScreen: (context) => SplashScreen(),
@@ -29,7 +28,6 @@ class AppRoutes {
     registerScreen: (context) => LoginScreen(),
     otpVerificationScreen: (context) => OtpVerificationScreen(),
     forgetPasswordScreen: (context) => ForgetPasswordScreen(),
-    createAccountScreen: (context) => CreateAccountScreen(),
-    appNavigationScreen: (context) => AppNavigationScreen()
+    createAccountScreen: (context) => CreateAccountScreen(), 
   };
 }
