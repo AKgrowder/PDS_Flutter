@@ -29,6 +29,9 @@ class _RegisterCreateAccountScreenState
               fit: BoxFit.fill,
             ),
           ),
+          SizedBox(
+            height: 30,
+          ),
           Container(
             margin: EdgeInsets.only(top: 5),
             height: 40,
@@ -40,7 +43,7 @@ class _RegisterCreateAccountScreenState
                 style: TextStyle(
                     fontFamily: 'outfit',
                     fontWeight: FontWeight.bold,
-                    fontSize: 20),
+                    fontSize: 23),
                 // style: TextThemeHelper.titleLarge22,
               ),
             ),
@@ -51,6 +54,7 @@ class _RegisterCreateAccountScreenState
               style: TextStyle(
                   fontFamily: 'outfit',
                   fontWeight: FontWeight.w400,
+                  color: Colors.grey,
                   fontSize: 15),
             ),
           ),
@@ -60,6 +64,7 @@ class _RegisterCreateAccountScreenState
               style: TextStyle(
                   fontFamily: 'outfit',
                   fontWeight: FontWeight.w400,
+                  color: Colors.grey,
                   fontSize: 15),
             ),
           ),
@@ -88,7 +93,7 @@ class _RegisterCreateAccountScreenState
                   'Create Account',
                   style: TextStyle(
                     color: Colors.white,
-                    fontFamily: 'outfit',
+                    fontFamily: 'outfit',fontSize: 15,fontWeight: FontWeight.bold
                   ),
                 ),
               ),
@@ -114,9 +119,9 @@ class _RegisterCreateAccountScreenState
                 child: Text(
                   'Log In',
                   style: TextStyle(
-                    color: Color(0xffED1C25),
-                    fontFamily: 'outfit',
-                  ),
+                      color: Color(0xffED1C25),
+                      fontFamily: 'outfit',fontSize: 15,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),

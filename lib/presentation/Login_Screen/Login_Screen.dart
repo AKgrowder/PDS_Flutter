@@ -208,13 +208,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               top: 41,
                             ),
                             child: Text(
-                              "UserName",
+                              "Email / Mobile number",
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                   fontFamily: 'outfit',
                                   fontSize: 15,
-                                  fontWeight: FontWeight.w400),
+                                  fontWeight: FontWeight.w500),
                             ),
                           ),
                         ),
@@ -257,7 +257,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             bottom: 14,
                           ),
                           // textStyle: theme.textTheme.titleMedium!,
-                          hintText: "UserName",
+                          hintText: "Email / Mobile number",
                           hintStyle: TextStyle(
                               fontFamily: 'outfit',
                               fontSize: 15,
@@ -281,7 +281,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: TextStyle(
                                   fontFamily: 'outfit',
                                   fontSize: 15,
-                                  fontWeight: FontWeight.w400),
+                                  fontWeight: FontWeight.w500),
                             ),
                           ),
                         ),
