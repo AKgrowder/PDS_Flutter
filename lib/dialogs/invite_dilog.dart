@@ -46,16 +46,16 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+   var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return Center(
       child: Material(
         color: Color.fromARGB(0, 255, 255, 255),
         child: ScaleTransition(
           scale: scaleAnimation,
           child: Container(
-            height: height / 2,
-            width: width / 1.17,
+            height: _height / 2,
+            width: _width / 1.17,
             decoration: ShapeDecoration(
               // color: Colors.black,
 
@@ -68,7 +68,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                 Center(
                   child: Container(
                     height: 270,
-                    width: width / 1.25,
+                    width: _width / 1.25,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -121,7 +121,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                         Center(
                           child: Container(
                             height: 40,
-                            width: width / 1.45,
+                            width: _width / 1.45,
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey),
                                 borderRadius: BorderRadius.circular(5)),
@@ -147,7 +147,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                               onTap: () => Navigator.pop(context),
                               child: Container(
                                 height: 43,
-                                width: width / 3.5,
+                                width: _width / 3.5,
                                 decoration: BoxDecoration(
                                     color: Colors.transparent,
                                     border:
@@ -167,7 +167,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                             ),
                             Container(
                               height: 43,
-                              width: width / 3.5,
+                              width: _width / 3.5,
                               decoration: BoxDecoration(
                                   color: Color(0xFFED1C25),
                                   borderRadius: BorderRadius.circular(10)),

@@ -1,7 +1,6 @@
 import 'package:archit_s_application1/presentation/history_screen/history_details_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../../core/utils/size_utils.dart';
 import '../../theme/theme_helper.dart';
 import '../notifications/notification_screen.dart';
 
@@ -25,7 +24,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         elevation: 0,
         leading: GestureDetector(
           onTap: () {
-            Navigator.pop(context);
+             
           },
           child: Icon(
             Icons.arrow_back,
