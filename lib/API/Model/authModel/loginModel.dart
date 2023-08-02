@@ -28,15 +28,23 @@ class Object {
   String? uuid;
   String? module;
   bool? active;
+  bool? approved;
   bool? verified;
 
-  Object({this.jwt, this.uuid, this.module, this.active, this.verified});
+  Object(
+      {this.jwt,
+      this.uuid,
+      this.module,
+      this.active,
+      this.approved,
+      this.verified});
 
   Object.fromJson(Map<String, dynamic> json) {
     jwt = json['jwt'];
     uuid = json['uuid'];
     module = json['module'];
     active = json['active'];
+    approved = json['approved'];
     verified = json['verified'];
   }
 
@@ -46,6 +54,7 @@ class Object {
     data['uuid'] = this.uuid;
     data['module'] = this.module;
     data['active'] = this.active;
+    data['approved'] = this.approved;
     data['verified'] = this.verified;
     return data;
   }
