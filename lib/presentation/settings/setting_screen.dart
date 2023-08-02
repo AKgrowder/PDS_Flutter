@@ -82,6 +82,9 @@ class _SettingScreenState extends State<SettingScreen> {
 
   @override
   Widget build(BuildContext context) {
+     var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
+
     return SafeArea(
       child: Scaffold(
         appBar: CustomAppBar(
@@ -89,7 +92,7 @@ class _SettingScreenState extends State<SettingScreen> {
             leadingWidth: 74,
             centerTitle: true,
             title: Container(
-                height: getVerticalSize(50.58),
+                height: 50.58,
                 // width: getHorizontalSize(139),
                 child: Stack(alignment: Alignment.bottomCenter, children: [
                   Align(
@@ -129,7 +132,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           ))
                 ]))),
         body: Container(
-            height: height - 100,
+            height: _height - 100,
             color: Colors.white.withOpacity(0.2),
             // color: Theme.of(context).brightness == Brightness.light
             // ? Color(0XFF161616)
@@ -268,7 +271,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         children: [
                           Container(
                             height: 60,
-                            width: width,
+                            width: _width,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 // color: ColorConstant.CategoriesBackColor,
