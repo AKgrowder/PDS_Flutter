@@ -1,7 +1,5 @@
 import 'package:archit_s_application1/core/app_export.dart';
 import 'package:archit_s_application1/presentation/Login_Screen/Login_Screen.dart';
-import 'package:archit_s_application1/widgets/custom_elevated_button.dart';
-import 'package:archit_s_application1/widgets/custom_outlined_button.dart';
 import 'package:flutter/material.dart';
 
 import '../create_account_screen/create_account_screen.dart';
@@ -23,7 +21,9 @@ class _RegisterCreateAccountScreenState
       body: Column(
         children: [
           Container(
+            // height: _height /2.5/,
             width: _width,
+            // color: Colors.red,
             child: CustomImageView(
               imagePath: ImageConstant.register,
               fit: BoxFit.fill,
@@ -36,15 +36,16 @@ class _RegisterCreateAccountScreenState
                 "Welcome to consultant app",
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.left,
-                style: TextThemeHelper.titleLarge22,
+                style: TextStyle(fontFamily: 'outfit',),
+                // style: TextThemeHelper.titleLarge22,
               ),
             ),
           ),
           Container(
-            child: Text("Create a New Account or "),
+            child: Text("Create a New Account or ",style: TextStyle(fontFamily: 'outfit',),),
           ),
           Container(
-            child: Text("register Now"),
+            child: Text("register Now",style: TextStyle(fontFamily: 'outfit',),),
           ),
           Spacer(),
           Container(
@@ -69,7 +70,7 @@ class _RegisterCreateAccountScreenState
                 ),
                 child: Text(
                   'Create Account',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white,fontFamily: 'outfit',),
                 ),
               ),
             ),
@@ -93,7 +94,7 @@ class _RegisterCreateAccountScreenState
                     border: Border.all(color: Color(0xffED1C25))),
                 child: Text(
                   'Log In',
-                  style: TextStyle(color: Color(0xffED1C25)),
+                  style: TextStyle(color: Color(0xffED1C25),fontFamily: 'outfit',),
                 ),
               ),
             ),

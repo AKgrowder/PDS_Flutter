@@ -1,4 +1,4 @@
-import 'package:archit_s_application1/core/utils/size_utils.dart';
+// import 'package:archit_s_application1/core/utils/size_utils.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/utils/image_constant.dart';
@@ -51,6 +51,8 @@ Map userData = {
 class _RoomMembersScreenState extends State<RoomMembersScreen> {
   @override
   Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
       appBar: AppBar(
@@ -75,8 +77,8 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
           children: [
             Center(
               child: Container(
-                height: height / 9,
-                width: width / 1.2,
+                height: _height / 9,
+                width: _width / 1.2,
                 decoration: BoxDecoration(
                   color: Color(0xFFFFE7E7),
                   borderRadius: BorderRadius.circular(10),
@@ -186,8 +188,8 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                 return Padding(
                   padding: const EdgeInsets.only(left: 35, right: 35, top: 20),
                   child: Container(
-                    height: height / 12,
-                    width: width / 1.2,
+                    height: _height / 12,
+                    width: _width / 1.2,
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(10),
@@ -252,7 +254,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
-          Radius.circular(getSize(20)),
+          Radius.circular(20),
         ),
       ),
       position: RelativeRect.fromLTRB(
