@@ -9,7 +9,6 @@ class ImageConstant {
 
   static String imgArrowleft = 'assets/images/img_arrowleft.svg';
 
-  static String imgRectangle19250 = 'assets/images/img_rectangle19250.png';
 
   static String imgClose = 'assets/images/img_close.svg';
   static String imgright = 'assets/images/Group 1171274794 (6).png';
@@ -39,7 +38,7 @@ class ImageConstant {
 
   static String imgSend = 'assets/images/img_send.svg';
 
-  static String imgGroup = 'assets/images/img_group.svg';
+  static String LoginImage = 'assets/images/LoginImage.png';
 
   static String imgBookmark = 'assets/images/img_bookmark.svg';
 
