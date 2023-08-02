@@ -46,28 +46,15 @@ class _BottombarPageState extends State<BottombarPage> {
     // // BuyScreen(),
     // RoomMembersScreen(),
     // RoomsScreen()
-  ];
-  String? userId;
-  getDataStroe() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    userId = prefs
-        .getString(
-          PreferencesKey.loginUserID,
-        )
-        ;
-    print('THIS METHODCHECL DATA-$userId');
-    setState(() {
-      
-    });
-  }
+  ]; 
+   
 
   late StreamSubscription _connectionChangeStream;
 
   bool isOffline = false;
   @override
   initState() {
-    super.initState();
-    getDataStroe();
+    super.initState(); 
     ConnectionStatusSingleton connectionStatus =
         ConnectionStatusSingleton.getInstance();
     _connectionChangeStream =
@@ -83,7 +70,6 @@ class _BottombarPageState extends State<BottombarPage> {
 
   @override
   Widget build(BuildContext context) {
-    
     return (isOffline)
         ? Text("NOt Connected")
         : WillPopScope(
@@ -165,19 +151,11 @@ class _BottombarPageState extends State<BottombarPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          print('userId1-$userId');
-                            if (userId != null) {
+                          
                             setState(() {
                               selectedIndex = 1;
                             });
-                          } else {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      RegisterCreateAccountScreen(),
-                                ));
-                          }
+                          
                         },
                         child: Container(
                           height: 65,
@@ -241,19 +219,11 @@ class _BottombarPageState extends State<BottombarPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          print('userId2-$userId');
-                          if (userId != null) {
+                          
                             setState(() {
                               selectedIndex = 2;
                             });
-                          } else {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      RegisterCreateAccountScreen(),
-                                ));
-                          }
+                         
                         },
                         child: Container(
                           height: 65,
@@ -315,19 +285,12 @@ class _BottombarPageState extends State<BottombarPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          print('userId3-$userId');
-                          if (userId != null) {
+                           
                             setState(() {
                               selectedIndex = 3;
                             });
-                          } else {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      RegisterCreateAccountScreen(),
-                                ));
-                          }
+                         
+                          
                         },
                         child: Container(
                           height: 65,
@@ -389,20 +352,11 @@ class _BottombarPageState extends State<BottombarPage> {
                       // / ------------------------------------------------------------------
                       GestureDetector(
                         onTap: () {
-                          print('userId4-$userId');
-                          if (userId != null) {
+                           
                             setState(() {
                               selectedIndex = 4;
                             });
-                          } else {
-                            print('else4');
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      RegisterCreateAccountScreen(),
-                                ));
-                          }
+                          
                         },
                         child: Container(
                           height: 65,
