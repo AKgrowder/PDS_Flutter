@@ -179,22 +179,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           height: 348,
                           // width: double.maxFinite,
-                          child: Stack(
-                            alignment: Alignment.bottomCenter,
-                            children: [
-                              CustomImageView(
-                                imagePath: ImageConstant.imgRectangle19250,
-                                height: 348,
-                                width: 414,
-                                alignment: Alignment.center,
-                              ),
-                              CustomImageView(
-                                svgPath: ImageConstant.imgGroup,
-                                height: 242,
-                                width: 337,
-                                alignment: Alignment.bottomCenter,
-                              ),
-                            ],
+                          child: CustomImageView(
+                            imagePath: ImageConstant.LoginImage,
+                            height: 348,
+                            width: 414,
+                            alignment: Alignment.center,
                           ),
                         ),
                         Padding(
