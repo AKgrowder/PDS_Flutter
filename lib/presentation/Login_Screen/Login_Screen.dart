@@ -8,6 +8,7 @@ import 'package:archit_s_application1/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:archit_s_application1/core/app_export.dart';
 import 'package:archit_s_application1/core/utils/color_constant.dart';
 import 'package:archit_s_application1/core/utils/sharedPreferences.dart';
+import 'package:archit_s_application1/custom_bottom_bar/custom_bottom_bar.dart';
 import 'package:archit_s_application1/presentation/home/home.dart';
 import 'package:archit_s_application1/presentation/otp_verification_screen/otp_verification_screen.dart';
 import 'package:archit_s_application1/widgets/custom_elevated_button.dart';
@@ -101,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       BlocProvider<RegisterCubit>(
                         create: (context) => RegisterCubit(),
                       ),
-                    ], child: HomeScreen());
+                    ], child: BottombarPage(buttomIndex: 0,));
                   }));
                 }
 
@@ -133,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       BlocProvider<RegisterCubit>(
                         create: (context) => RegisterCubit(),
                       ),
-                    ], child: HomeScreen());
+                    ], child: BottombarPage(buttomIndex: 0,));
                   }));
                 } else {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
