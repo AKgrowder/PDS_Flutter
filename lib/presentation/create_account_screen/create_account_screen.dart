@@ -122,7 +122,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   "Create Account",
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
-                                    style: TextStyle( fontFamily: 'outfit',),
+                                  style: TextStyle(
+                                      fontFamily: 'outfit',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
                                   // style: theme.textTheme.titleLarge,
                                 ),
                               ),
@@ -142,7 +145,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     "Personal Details",
                                     style: TextStyle(
                                         fontFamily: 'outfit',
-                                        fontWeight: FontWeight.w500),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15),
                                   ),
                                 ),
                               ),
@@ -221,6 +225,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: 'outfit',
+                                    fontWeight: FontWeight.bold,
                                   ),
                                   // style: theme.textTheme.bodyLarge,
                                 ),
@@ -255,6 +260,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: 'outfit',
+                                    fontWeight: FontWeight.bold,
                                   ),
 
                                   // style: theme.textTheme.bodyLarge,
@@ -300,6 +306,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: 'outfit',
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
@@ -360,6 +367,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   "Contact no.",
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'outfit',
+                                  ),
                                   // style: theme.textTheme.bodyLarge,
                                 ),
                               ),
@@ -509,7 +520,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                       borderRadius: BorderRadius.circular(5)),
                                   child: Text(
                                     'Submit',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600),
                                   ),
                                 ),
                               ),
@@ -543,13 +556,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               //       TextThemeHelper.titleMediumOnPrimary,
                               // ),
                               Align(
-                                alignment: Alignment.center,
+                                // alignment: Alignment.center,
                                 child: Container(
-                                  width: 330,
+                                  // width: 330,
                                   margin: EdgeInsets.only(
-                                    left: 11,
+                                    left: 10,
                                     top: 16,
-                                    right: 11,
+                                    right: 10,
                                   ),
                                   child: RichText(
                                     text: TextSpan(
