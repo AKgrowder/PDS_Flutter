@@ -33,6 +33,7 @@ class _BottombarPageState extends State<BottombarPage> {
   int selectedIndex = 0;
   var IsGuestUserEnabled;
   var GetTimeSplash;
+  var UserLogin_ID;
 
   List widgetOptions = [
     HomeScreen(),
@@ -46,15 +47,15 @@ class _BottombarPageState extends State<BottombarPage> {
     // // BuyScreen(),
     // RoomMembersScreen(),
     // RoomsScreen()
-  ]; 
-   
+  ];
 
   late StreamSubscription _connectionChangeStream;
 
   bool isOffline = false;
   @override
   initState() {
-    super.initState(); 
+    super.initState();
+    checkGuestUser();
     ConnectionStatusSingleton connectionStatus =
         ConnectionStatusSingleton.getInstance();
     _connectionChangeStream =
@@ -151,11 +152,13 @@ class _BottombarPageState extends State<BottombarPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          
-                            setState(() {
+                          setState(() {
+                             if (UserLogin_ID != null) {
                               selectedIndex = 1;
-                            });
-                          
+                            } else {
+                              NaviRegisterScreen();
+                            }
+                          });
                         },
                         child: Container(
                           height: 65,
@@ -219,11 +222,13 @@ class _BottombarPageState extends State<BottombarPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          
-                            setState(() {
+                          setState(() {
+                             if (UserLogin_ID != null) {
                               selectedIndex = 2;
-                            });
-                         
+                            } else {
+                              NaviRegisterScreen();
+                            }
+                          });
                         },
                         child: Container(
                           height: 65,
@@ -285,12 +290,13 @@ class _BottombarPageState extends State<BottombarPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                           
-                            setState(() {
+                          setState(() {
+                             if (UserLogin_ID != null) {
                               selectedIndex = 3;
-                            });
-                         
-                          
+                            } else {
+                              NaviRegisterScreen();
+                            }
+                          });
                         },
                         child: Container(
                           height: 65,
@@ -352,11 +358,13 @@ class _BottombarPageState extends State<BottombarPage> {
                       // / ------------------------------------------------------------------
                       GestureDetector(
                         onTap: () {
-                           
-                            setState(() {
+                          setState(() {
+                           if (UserLogin_ID != null) {
                               selectedIndex = 4;
-                            });
-                          
+                            } else {
+                              NaviRegisterScreen();
+                            }
+                          });
                         },
                         child: Container(
                           height: 65,
@@ -429,5 +437,15 @@ class _BottombarPageState extends State<BottombarPage> {
               body: widgetOptions[selectedIndex],
             ),
           );
+  }
+
+  checkGuestUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
+  }
+
+  NaviRegisterScreen() {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
   }
 }

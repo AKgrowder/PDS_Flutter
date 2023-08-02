@@ -4,8 +4,6 @@ import 'package:archit_s_application1/core/app_export.dart';
 import 'package:archit_s_application1/core/utils/color_constant.dart';
 import 'package:archit_s_application1/core/utils/sharedPreferences.dart';
 import 'package:archit_s_application1/presentation/otp_verification_screen/otp_verification_screen.dart';
-import 'package:archit_s_application1/widgets/custom_elevated_button.dart';
-import 'package:archit_s_application1/widgets/custom_icon_button.dart';
 import 'package:archit_s_application1/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -138,7 +136,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                         BorderRadius.all(Radius.circular(5))),
                                 child: Padding(
                                   padding: const EdgeInsets.only(
-                                    top: 15.0,
+                                    top: 20.0,
                                     left: 10,
                                   ),
                                   child: Text(
@@ -181,7 +179,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                               // color: Colors.red,
                                               shape: BoxShape.circle),
                                           child: CustomImageView(
-                                              svgPath: ImageConstant.imgCamera),
+                                            svgPath: ImageConstant.imgCamera,
+                                            alignment: Alignment.center,
+                                          ),
                                           // child: CustomIconButton(
                                           //   height: 33,
                                           //   width: 33,
@@ -225,7 +225,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: 'outfit',
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                   // style: theme.textTheme.bodyLarge,
                                 ),
@@ -260,7 +260,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: 'outfit',
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w500,
                                   ),
 
                                   // style: theme.textTheme.bodyLarge,
@@ -306,7 +306,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: 'outfit',
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ),
@@ -368,7 +368,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w500,
                                     fontFamily: 'outfit',
                                   ),
                                   // style: theme.textTheme.bodyLarge,
@@ -432,7 +432,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   overflow: TextOverflow.ellipsis,
                                   // textAlign: TextAlign.left,
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w500,
                                       color: Colors.black,
                                       fontFamily: "outfit",
                                       fontSize: 14),
@@ -513,7 +513,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 child: Container(
                                   alignment: Alignment.center,
                                   margin: EdgeInsets.only(top: 15),
-                                  height: 60,
+                                  height: 50,
                                   width: _width,
                                   decoration: BoxDecoration(
                                       color: Color(0xffED1C25),
@@ -521,7 +521,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   child: Text(
                                     'Submit',
                                     style: TextStyle(
-                                        color: Colors.white,
+                                        color: Colors.white,fontFamily: 'outfit',
                                         fontWeight: FontWeight.w600),
                                   ),
                                 ),
