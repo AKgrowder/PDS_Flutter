@@ -11,6 +11,7 @@ import '../../API/Model/HomeScreenModel/PublicRoomModel.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../add_threads/add_threads.dart';
+import '../create_foram/create_foram_screen.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
 import '../view_comments/view_comments_screen.dart';
 
@@ -114,10 +115,10 @@ class _HomeScreenState extends State<HomeScreen> {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    SizedBox(height: 30),
+                    SizedBox(height: 20),
 
                     Padding(
-                      padding: const EdgeInsets.only(left: 35, right: 35),
+                      padding: const EdgeInsets.only(left: 16, right: 16),
                       child: Row(
                         children: [
                           CustomImageView(
@@ -170,9 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           CustomImageView(
                             imagePath: ImageConstant.imgRectangle39829,
                             height: 50,
-                            radius: BorderRadius.circular(
-                              getHorizontalSize(65),
-                            ),
+                            radius: BorderRadius.circular(65),
                             alignment: Alignment.center,
                           ),
                         ],
@@ -181,241 +180,86 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    Container(
-                      child: CustomImageView(
-                        imagePath: ImageConstant.homeimage,
-                        height: 180,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16, right: 16),
+                      child: Container(
+                        child: CustomImageView(
+                          imagePath: ImageConstant.homeimage,
+                          // height: 180,
+                        ),
                       ),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.only(left: 35, top: 20, bottom: 20),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 40,
-                            width: _width / 2.5,
-                            decoration: BoxDecoration(
-                                color: Color(0XFFED1C25),
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Center(
-                              child: Text(
-                                "Create Forum",
-                                style: TextStyle(
-                                  fontFamily: 'outfit',
-                                  fontSize: 13,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Container(
-                              height: 40,
-                              width: _width / 2.5,
-                              decoration: BoxDecoration(
-                                  color: Color(0XFFFFD9DA),
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(color: Color(0XFFED1C25))),
-                              child: Center(
-                                child: Text(
-                                  "Become an Expert",
-                                  style: TextStyle(
-                                    fontFamily: 'outfit',
-                                    fontSize: 13,
-                                    color: Color(0XFFED1C25),
-                                    fontWeight: FontWeight.bold,
+                      padding: const EdgeInsets.only(
+                          left: 16, top: 20, right: 16, bottom: 20),
+                      child: Container(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CreateForamScreen(),
+                                      ));
+                                },
+                                child: Container(
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                      color: Color(0XFFED1C25),
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: Container(
+                                    width: _width / 2.5,
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "Create Forum",
+                                        style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontSize: 13,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    color: Color(0XFFFFD9DA),
+                                    borderRadius: BorderRadius.circular(5),
+                                    border:
+                                        Border.all(color: Color(0XFFED1C25))),
+                                child: Center(
+                                  child: Text(
+                                    "Become an Expert",
+                                    style: TextStyle(
+                                      fontFamily: 'outfit',
+                                      fontSize: 13,
+                                      color: Color(0XFFED1C25),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
 
-                    // CreateForamScreen
-
-                    //          showDialog(
-                    //   context: context,
-                    //   builder: (BuildContext context) {
-                    //     return CreateRoomScreen();
-                    //   },
-                    // );
-
-                    // child: Container(
-                    //   height: 50,
-                    //   width: width / 3,
-                    //   decoration: BoxDecoration(
-                    //       color: Color(0XFFED1C25),
-                    //       borderRadius: BorderRadius.circular(5)),
-                    //   child: Center(
-                    //     child: Text(
-                    //       "Create Forum",
-                    //       style: TextStyle(
-                    //         fontFamily: 'outfit',
-                    //         fontSize: 15,
-                    //         color: Colors.white,
-                    //         fontWeight: FontWeight.bold,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-
-                    // SizedBox(
-                    //   height: 20,
-                    // ),
-                    // Container(
-                    //   height: 50,
-                    //   width: width / 3,
-                    //   decoration: BoxDecoration(
-                    //       color: Color(0XFFFFD9DA),
-                    //       borderRadius: BorderRadius.circular(5),
-                    //       border: Border.all(color: Color(0XFFED1C25))),
-                    //   child: Center(
-                    //     child: Text(
-                    //       "Become an Expert",
-                    //       style: TextStyle(
-                    //         fontFamily: 'outfit',
-                    //         fontSize: 15,
-                    //         color: Color(0XFFED1C25),
-                    //         fontWeight: FontWeight.bold,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    // SizedBox(
-                    //   height: 20,
-                    // ),
-                    // ListView.builder(
-                    //   itemCount: 1,
-                    //   physics: BouncingScrollPhysics(),
-                    //   shrinkWrap: true,
-                    //   itemBuilder: (context, index) {
-                    //     return Padding(
-                    //       padding: const EdgeInsets.all(30.0),
-                    //       child: Container(
-                    //         // height: demo.contains(index) ? null: height / 16,
-
-                    //         width: width / 1.2,
-                    //         decoration: BoxDecoration(
-                    //             border: Border.all(
-                    //                 color: Color(0XFFD9D9D9), width: 2),
-                    //             borderRadius: BorderRadius.circular(5)),
-                    //         child: Column(
-                    //           crossAxisAlignment: CrossAxisAlignment.start,
-                    //           children: [
-                    //             Text(
-                    //               " Your Thread",
-                    //               style: TextStyle(
-                    //                   fontWeight: FontWeight.bold,
-                    //                   color: Colors.black,
-                    //                   fontFamily: "outfit",
-                    //                   fontSize: 25),
-                    //             ),
-                    //             Row(
-                    //               mainAxisAlignment:
-                    //                   MainAxisAlignment.spaceBetween,
-                    //               children: [
-                    //                 Padding(
-                    //                   padding: EdgeInsets.only(
-                    //                       left: 8.0, top: 10, bottom: 10),
-                    //                   child: Row(
-                    //                     mainAxisAlignment:
-                    //                         MainAxisAlignment.spaceBetween,
-                    //                     crossAxisAlignment:
-                    //                         CrossAxisAlignment.start,
-                    //                     children: [
-                    //                       Padding(
-                    //                         padding: const EdgeInsets.only(
-                    //                             left: 2.0, top: 5),
-                    //                         child: CircleAvatar(
-                    //                             backgroundColor: Colors.black,
-                    //                             maxRadius: 3),
-                    //                       ),
-                    //                       SizedBox(
-                    //                         width: 3,
-                    //                       ),
-                    //                       Text(
-                    //                         "Your Thread",
-                    //                         maxLines: 2,
-                    //                         textScaleFactor: 1.0,
-                    //                         style: TextStyle(
-                    //                             fontWeight: FontWeight.bold,
-                    //                             color: Colors.black,
-                    //                             fontFamily: "outfit",
-                    //                             fontSize: 14),
-                    //                       ),
-                    //                       // CustomImageView(
-                    //                       //   imagePath:
-                    //                       //       ImageConstant.unselectedimgVector,
-                    //                       //   height: 20,
-                    //                       // ),
-                    //                     ],
-                    //                   ),
-                    //                 ),
-                    //               ],
-                    //             ),
-                    //             Row(
-                    //               crossAxisAlignment: CrossAxisAlignment.start,
-                    //               mainAxisAlignment: MainAxisAlignment.start,
-                    //               children: [
-                    //                 Padding(
-                    //                   padding: const EdgeInsets.only(left: 10),
-                    //                   child: CustomImageView(
-                    //                     imagePath: ImageConstant.tomcruse,
-                    //                     height: 20,
-                    //                   ),
-                    //                 ),
-                    //                 Text(
-                    //                   "Your Thread",
-                    //                   style: TextStyle(
-                    //                       fontWeight: FontWeight.w400,
-                    //                       color: Colors.black,
-                    //                       fontFamily: "outfit",
-                    //                       fontSize: 14),
-                    //                 ),
-                    //               ],
-                    //             ),
-                    //             Padding(
-                    //               padding: const EdgeInsets.only(left: 8.0),
-                    //               child: Text(
-                    //                 "Your Thread",
-                    //                 style: TextStyle(
-                    //                     fontWeight: FontWeight.w400,
-                    //                     color: Colors.grey,
-                    //                     fontFamily: "outfit",
-                    //                     fontSize: 12),
-                    //               ),
-                    //             ),
-                    //             Divider(
-                    //               color: Colors.black,
-                    //             ),
-                    //             Row(
-                    //               mainAxisAlignment: MainAxisAlignment.end,
-                    //               children: [
-                    //                 Padding(
-                    //                   padding:
-                    //                       const EdgeInsets.only(right: 10.0),
-                    //                   child: Text(
-                    //                     "2078 Comments",
-                    //                     style: TextStyle(
-                    //                         fontWeight: FontWeight.w400,
-                    //                         color: Colors.grey,
-                    //                         fontFamily: "outfit",
-                    //                         fontSize: 15),
-                    //                   ),
-                    //                 ),
-                    //               ],
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ),
-                    //     );
-                    //   },
-                    // ),
                     Padding(
                       padding:
                           const EdgeInsets.only(top: 0.0, right: 35, left: 35),
@@ -587,8 +431,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     color: Colors.black,
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
                                     children: [
                                       GestureDetector(
                                         onTap: () {
@@ -612,8 +454,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           }));
                                         },
                                         child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 30.0),
+                                          padding:
+                                              const EdgeInsets.only(left: 10),
                                           child: Text(
                                             "Add New Comment",
                                             style: TextStyle(
@@ -624,25 +466,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 30.0),
+                                      Spacer(),
+                                      Flexible(
+                                        flex: 3,
                                         child: Container(
-                                          alignment: Alignment.center,
-                                          width: _width /3,
+                                          //  height: 50,
+                                          alignment: Alignment.centerRight,
+                                          // width: 150,
+                                          // color: Colors.amber,
                                           child: Text(
                                             "${PublicRoomModelData?.object?[index].message?.messageCount ?? "0"} Comments",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w400,
                                                 color: Colors.grey,
                                                 fontFamily: "outfit",
-                                                fontSize: 15),
+                                                fontSize: 13),
                                           ),
                                         ),
                                       ),
+                                     
                                     ],
-                                  ),
-                                ],
+                                  ), ],
                               ),
                             ),
                           ),
