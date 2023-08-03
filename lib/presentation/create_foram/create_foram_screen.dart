@@ -10,11 +10,10 @@ class CreateForamScreen extends StatefulWidget {
   State<CreateForamScreen> createState() => _CreateForamScreenState();
 }
 
-  TextEditingController name = TextEditingController();
-  
-  TextEditingController profile = TextEditingController();
-  TextEditingController uplopdfile = TextEditingController();
+TextEditingController name = TextEditingController();
 
+TextEditingController profile = TextEditingController();
+TextEditingController uplopdfile = TextEditingController();
 
 class _CreateForamScreenState extends State<CreateForamScreen> {
   @override
@@ -22,9 +21,14 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
       appBar: AppBar(
-        leading: Icon(
-          Icons.arrow_back,
-          color: Colors.black,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
         ),
         centerTitle: true,
         elevation: 0,
@@ -88,7 +92,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                       borderRadius: BorderRadius.circular(5)),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextField(controller: name,
+                    child: TextField(
+                      controller: name,
                       cursorColor: Colors.grey,
                       decoration: InputDecoration(
                         hintText: 'Enter name',
@@ -119,7 +124,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                       borderRadius: BorderRadius.circular(5)),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextField(controller: profile,
+                    child: TextField(
+                      controller: profile,
                       cursorColor: Colors.grey,
                       decoration: InputDecoration(
                         hintText: 'Job Profile',
@@ -156,7 +162,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                               bottomLeft: Radius.circular(5))),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: TextField(controller: uplopdfile,
+                        child: TextField(
+                          controller: uplopdfile,
                           cursorColor: Colors.grey,
                           decoration: InputDecoration(
                             hintText: 'Upload File',
@@ -192,7 +199,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 35.0, right: 35.0, top: 10),
+                padding:
+                    const EdgeInsets.only(left: 35.0, right: 35.0, top: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

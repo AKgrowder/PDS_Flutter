@@ -1,4 +1,5 @@
 import 'package:archit_s_application1/API/Model/coment/coment_model.dart';
+import 'package:archit_s_application1/core/utils/size_utils.dart';
 import 'package:archit_s_application1/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,8 +44,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return Scaffold(
         backgroundColor: theme.colorScheme.onPrimary,
         appBar: AppBar(
@@ -126,14 +127,19 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                       maxRadius: 4,
                                     ),
                                   ),
-                                  Text(
-                                    "${widget.Title}",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontFamily: 'outfit',
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700,
+                                  Container(
+                                    width: _width / 1.2,
+                                    // color: Colors.amber,
+                                    child: Text(
+                                      "${widget.Title}",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        fontFamily: 'outfit',
+                                        fontSize: 15,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                   ),
                                   /*   GestureDetector(
@@ -213,102 +219,192 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                           //     ],
                           //   ),
                           // ),
-                          Container(
-                            height: 60,
-                            width: width,
-                            // color: Colors.red,
-                            child: Row(
-                              children: [
-                                Stack(
-                                  children: [
-                                    Container(
-                                      height: 50,
-                                      width: width - 90,
-                                      decoration: BoxDecoration(
-                                          color: Color(0xFFF5F5F5),
-                                          borderRadius:
-                                              BorderRadius.circular(25)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 45, right: 10),
-                                        child: TextField(
-                                          controller: Add_Comment,
-                                          cursorColor: Colors.grey,
-                                          decoration: InputDecoration(
-                                            border: InputBorder.none,
-                                            hintText: "Add Comment",
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 50,
-                                      width: width - 90,
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Image.asset(
-                                              "assets/images/ic_outline-emoji-emotions.png",
-                                              height: 30,
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Image.asset(
-                                            "assets/images/paperclip-2.png",
-                                            height: 30,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Image.asset(
-                                              "assets/images/Vector (12).png",
-                                              height: 22,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    print(
-                                        "Add comment button-${Add_Comment.text}");
-                                    if (Add_Comment.text.isNotEmpty) {
-                                      checkGuestUser();
-                                    } else {
-                                      SnackBar snackBar = SnackBar(
-                                        content: Text('Please Enter Comment'),
-                                        backgroundColor:
-                                            ColorConstant.primary_color,
-                                      );
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(snackBar);
-                                    }
-                                  },
-                                  child: Container(
-                                    height: 50,
-                                    // width: 50,
-                                    decoration: BoxDecoration(
-                                        color: Color(0xFFED1C25),
-                                        borderRadius:
-                                            BorderRadius.circular(25)),
-                                    child: Image.asset(
-                                      "assets/images/Vector (13).png",
-                                      color: Colors.white,
-                                    ),
+                          //-----------------------------------------------------------
+                          // Container(
+                          //   height: 60,
+                          //   width: width,
+                          //   // color: Colors.red,
+                          //   child: Row(
+                          //     children: [
+                          //       Stack(
+                          //         children: [
+                          //           Container(
+                          //             height: 50,
+                          //             width: width - 90,
+                          //             decoration: BoxDecoration(
+                          //                 color: Color(0xFFF5F5F5),
+                          //                 borderRadius:
+                          //                     BorderRadius.circular(25)),
+                          //             child: Padding(
+                          //               padding: const EdgeInsets.only(
+                          //                   left: 45, right: 10),
+                          //               child: TextField(
+                          //                 controller: Add_Comment,
+                          //                 cursorColor: Colors.grey,
+                          //                 decoration: InputDecoration(
+                          //                   border: InputBorder.none,
+                          //                   hintText: "Add Comment",
+                          //                 ),
+                          //               ),
+                          //             ),
+                          //           ),
+                          //           Container(
+                          //             height: 50,
+                          //             width: width - 90,
+                          //             child: Row(
+                          //               children: [
+                          //                 Padding(
+                          //                   padding: const EdgeInsets.all(8.0),
+                          //                   child: Image.asset(
+                          //                     "assets/images/ic_outline-emoji-emotions.png",
+                          //                     height: 30,
+                          //                   ),
+                          //                 ),
+                          //                 Spacer(),
+                          //                 Image.asset(
+                          //                   "assets/images/paperclip-2.png",
+                          //                   height: 30,
+                          //                 ),
+                          //                 Padding(
+                          //                   padding: const EdgeInsets.all(8.0),
+                          //                   child: Image.asset(
+                          //                     "assets/images/Vector (12).png",
+                          //                     height: 22,
+                          //                   ),
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     GestureDetector(
+                          //       onTap: () {
+                          //         print(
+                          //             "Add comment button-${Add_Comment.text}");
+                          //         if (Add_Comment.text.isNotEmpty) {
+                          //           checkGuestUser();
+                          //         } else {
+                          //           SnackBar snackBar = SnackBar(
+                          //             content: Text('Please Enter Comment'),
+                          //             backgroundColor:
+                          //                 ColorConstant.primary_color,
+                          //           );
+                          //           ScaffoldMessenger.of(context)
+                          //               .showSnackBar(snackBar);
+                          //         }
+                          //       },
+                          //       child: Container(
+                          //         height: 50,
+                          //         // width: 50,
+                          //         decoration: BoxDecoration(
+                          //             color: Color(0xFFED1C25),
+                          //             borderRadius:
+                          //                 BorderRadius.circular(25)),
+                          //         child: Image.asset(
+                          //           "assets/images/Vector (13).png",
+                          //           color: Colors.white,
+                          //         ),
 
-                                    // width: width - 95,
+                          //         // width: width - 95,
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
+                          // ),
+                          Row(
+                            children: [
+                              Container(
+                                height: 50,
+                                width: _width - 90,
+                                decoration: BoxDecoration(
+                                    color: Color(0xFFF5F5F5),
+                                    borderRadius: BorderRadius.circular(25)),
+                                child: Row(children: [
+                                  SizedBox(
+                                    width: 10,
                                   ),
+                                  Image.asset(
+                                    "assets/images/ic_outline-emoji-emotions.png",
+                                    height: 30,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Container(
+                                    height: 40,
+                                    width: width / 2.1,
+                                    // color: Colors.amber,
+                                    child: TextField(
+                                      controller: Add_Comment,
+                                      cursorColor: Colors.grey,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: "Add Comment",
+                                      ),
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Image.asset(
+                                    "assets/images/paperclip-2.png",
+                                    height: 30,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Image.asset(
+                                    "assets/images/Vector (12).png",
+                                    height: 22,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                ]),
+                                // child: TextField(
+                                //   controller: Add_Comment,
+                                //   cursorColor: Colors.grey,
+                                //   decoration: InputDecoration(
+                                //     border: InputBorder.none,
+                                //     hintText: "Add Comment",
+                                //   ),
+                                // ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  print(
+                                      "Add comment button-${Add_Comment.text}");
+                                  if (Add_Comment.text.isNotEmpty) {
+                                    checkGuestUser();
+                                  } else {
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text('Please Enter Comment'),
+                                      backgroundColor:
+                                          ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }
+                                },
+                                child: Container(
+                                  height: 50,
+                                  // width: 50,
+                                  decoration: BoxDecoration(
+                                      color: Color(0xFFED1C25),
+                                      borderRadius: BorderRadius.circular(25)),
+                                  child: Image.asset(
+                                    "assets/images/Vector (13).png",
+                                    color: Colors.white,
+                                  ),
+
+                                  // width: width - 95,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
                     Container(
-                      height: height / 1.4,
+                      height: _height / 1.4,
                       // color: Colors.red[200],
                       child: Padding(
                         padding: const EdgeInsets.only(top: 15),
@@ -442,7 +538,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                     ),
                                                     Container(
                                                       height: 45,
-                                                      width: width / 1.3,
+                                                      width: _width / 1.3,
                                                       // color: Colors.amber,
                                                       child: Text(
                                                         modelData
@@ -524,11 +620,16 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
             .senMSGAPI(widget.Room_ID, Add_Comment.text, ShowLoader: true);
         Add_Comment.text = '';
       } else {
-        SnackBar snackBar = SnackBar(
-          content: Text('Please Enter Comment'),
-          backgroundColor: ColorConstant.primary_color,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        if (UserLogin_ID != null) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => RegisterCreateAccountScreen()));
+        } else {
+          SnackBar snackBar = SnackBar(
+            content: Text('Please Enter Comment'),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
       }
     } else {
       print("User guest Mood on");
