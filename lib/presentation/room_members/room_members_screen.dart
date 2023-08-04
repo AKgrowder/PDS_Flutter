@@ -56,9 +56,14 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
       appBar: AppBar(
-        leading: Icon(
-          Icons.arrow_back,
-          color: Colors.black,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
         ),
         centerTitle: true,
         elevation: 0,
@@ -215,17 +220,21 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                 fontSize: 15),
                           ),
                           Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: GestureDetector(
-                              onTapDown: (TapDownDetails details) {
-                                _showPopupMenu(details.globalPosition, context);
-                              },
-                              child: Container(
-                                child: CustomImageView(
-                                  imagePath: ImageConstant.popupimage,
-                                  height: 20,
-                                  fit: BoxFit.fill,
+                          GestureDetector(
+                            onTapDown: (details) {
+                              _showPopupMenu(details.globalPosition, context);
+                            },
+                            child: Container(
+                              height: 50,
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Container(
+                                  child: CustomImageView(
+                                    imagePath: ImageConstant.popupimage,
+                                    height: 20,
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
                               ),
                             ),
