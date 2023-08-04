@@ -5,7 +5,6 @@ import 'package:archit_s_application1/presentation/Login_Screen/Login_Screen.dar
 import 'package:archit_s_application1/presentation/otp_verification_screen/otp_verification_screen.dart';
 import 'package:archit_s_application1/presentation/forget_password_screen/forget_password_screen.dart';
 import 'package:archit_s_application1/presentation/create_account_screen/create_account_screen.dart';
-import 'package:archit_s_application1/presentation/app_navigation_screen/app_navigation_screen.dart';
 
 class AppRoutes {
   static const String splashScreen = '/splash_screen';
