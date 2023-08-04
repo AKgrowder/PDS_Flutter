@@ -15,8 +15,8 @@ class ThreadsScreen extends StatefulWidget {
 class _ThreadsScreenState extends State<ThreadsScreen> {
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
       appBar: AppBar(
@@ -59,7 +59,7 @@ class _ThreadsScreenState extends State<ThreadsScreen> {
                   onTap: () {},
                   child: Container(
                     // height: demo.contains(index) ? null: height / 16,
-                    width: width / 1.2,
+                    width: _width / 1.2,
                     decoration: BoxDecoration(
                         border: Border.all(
                             color: const Color(0XFFD9D9D9), width: 2),

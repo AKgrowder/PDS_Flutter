@@ -6,6 +6,7 @@ import 'package:archit_s_application1/core/utils/sharedPreferences.dart';
 import 'package:archit_s_application1/presentation/otp_verification_screen/otp_verification_screen.dart';
 import 'package:archit_s_application1/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -243,11 +244,24 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   right: 12,
                                   bottom: 14,
                                 ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please Enter User Id';
+                                  } else if (!RegExp(r'^[a-zA-Z0-9._]+$')
+                                      .hasMatch(value)) {
+                                    return 'Input cannot contains prohibited special characters';
+                                  } else if (value.length < 1 ||
+                                      value.length > 50) {
+                                    return 'userId length is between 1 and 50 characters';
+                                  }
+                                  return null;
+                                },
                                 // textStyle: theme.textTheme.titleMedium!,
                                 hintText: "Enter User ID",
                                 // hintStyle: theme.textTheme.titleMedium!,
                                 textInputAction: TextInputAction.next,
                                 filled: true,
+                                 maxLength: 50,
                                 fillColor: appTheme.gray100,
                               ),
                               Padding(
@@ -273,8 +287,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   if (value!.isEmpty) {
                                     return 'Please Enter Name';
                                   } else if (!nameRegExp.hasMatch(value)) {
-                                    return 'please Enter vaild name';
+                                    return 'Input cannot contains prohibited special characters';
+                                  } else if (value.length < 1 ||
+                                      value.length > 50) {
+                                    return 'username length is between 1 and 50 characters';
+                                  } else if (value.contains('..')) {
+                                    return 'username does not contain is correct';
                                   }
+
                                   return null;
                                 },
                                 // focusNode: FocusNode(),
@@ -439,6 +459,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 ),
                               ),
                               CustomTextFormField(
+                                maxLength: 50,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.deny(
+                                      RegExp(r'\s')),
+                                ],
                                 // focusNode: FocusNode(),
                                 // autofocus: true,
                                 validator: (value) {
@@ -499,7 +524,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   if (_formKey.currentState!.validate()) {
                                     var datapPassing = {
                                       "name": nameController.text,
-                                      "userName": nameController.text,
+                                      "userName": enteruseridController.text,
                                       "email": emailAndMobileController.text,
                                       "mobileNo": contectnumberController.text,
                                       "password": passwordController.text,
@@ -521,7 +546,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   child: Text(
                                     'Submit',
                                     style: TextStyle(
-                                        color: Colors.white,fontFamily: 'outfit',
+                                        color: Colors.white,
+                                        fontFamily: 'outfit',
                                         fontWeight: FontWeight.w600),
                                   ),
                                 ),

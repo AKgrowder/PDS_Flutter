@@ -1,11 +1,16 @@
+import 'package:archit_s_application1/presentation/change_password_screen/change_password_screen.dart';
+import 'package:archit_s_application1/presentation/experts_details_screen/experts_details_screen.dart';
+import 'package:archit_s_application1/presentation/forget_password_screen/forget_password_screen.dart';
+import 'package:archit_s_application1/presentation/room_members/room_members_screen.dart';
 import 'package:archit_s_application1/presentation/rooms/rooms_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/utils/image_constant.dart';
-import '../../core/utils/size_utils.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../experts/experts_screen.dart';
-import '../experts_details_screen/experts_details_screen.dart';
+import '../my account/my_account_screen.dart';
+import '../rooms/room_details_screen.dart';
+import '../view_details_screen/view_public_forum_screen.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen();
@@ -98,7 +103,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   Align(
                       alignment: Alignment.topCenter,
                       child: Padding(
-                          padding: getPadding(left: 21, right: 22, bottom: 24),
+                          padding: EdgeInsets.only(left: 21, right: 22, bottom: 24),
                           child: Text(
                             'My Account',
                             textScaleFactor: 1.0,
@@ -111,7 +116,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       : Align(
                           alignment: Alignment.bottomCenter,
                           child: Padding(
-                            padding: getPadding(top: 22),
+                            padding: EdgeInsets.only(top: 22),
                             child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -119,13 +124,13 @@ class _SettingScreenState extends State<SettingScreen> {
                                       textScaleFactor: 1.0,
                                       style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: getFontSize(18),
+                                          fontSize: 18,
                                           fontFamily: 'Outfit',
                                           fontWeight: FontWeight.w400)),
                                   Text("Approved",
                                       style: TextStyle(
                                           color: Colors.green,
-                                          fontSize: getFontSize(18),
+                                          fontSize: 18,
                                           fontFamily: 'Outfit',
                                           fontWeight: FontWeight.w400))
                                 ]),
@@ -147,7 +152,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>  ExpertsDetailsScreen(),
+                                builder: (context) =>  MyAccountScreen(),
                               ));
 
                           break;
@@ -169,21 +174,21 @@ class _SettingScreenState extends State<SettingScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => RoomsScreen(),
+                                builder: (context) => RoomMembersScreen(),
                               ));
                           break;
                         case 4:
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => RoomsScreen()));
+                                  builder: (context) => ForgetPasswordScreen()));
 
                           break;
                         case 5:
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => RoomsScreen()),
+                                builder: (context) => ChangePasswordScreen()),
                           );
 
                           break;
@@ -191,7 +196,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => RoomsScreen()
+                                  builder: (context) => ViewDetailsScreen()
 
                                   // AddDeliveryAddressScreen();
                                   ));
@@ -204,18 +209,23 @@ class _SettingScreenState extends State<SettingScreen> {
 
                           break; */
                         case 7:
+
+
+
+
+
                           break;
                         case 8:
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return RoomsScreen();
+                            return RoomDetailScreen();
                           }));
 
                           break;
                         case 9:
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return RoomsScreen();
+                            return ExpertsDetailsScreen();
                           }));
 
                           break;

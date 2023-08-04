@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../../core/utils/image_constant.dart';
-import '../../core/utils/size_utils.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_icon_button.dart';
 import '../../widgets/custom_image_view.dart';
@@ -21,6 +20,8 @@ double? rateStar = 5.0;
 class _ExpertsDetailsScreenState extends State<ExpertsDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
       appBar: AppBar(
@@ -52,7 +53,7 @@ class _ExpertsDetailsScreenState extends State<ExpertsDetailsScreen> {
             child: Container(
               height: 130,
               width: 130,
-              margin: getMargin(
+              margin: EdgeInsets.only(
                 top: 22,
               ),
               child: Stack(
@@ -60,24 +61,18 @@ class _ExpertsDetailsScreenState extends State<ExpertsDetailsScreen> {
                 children: [
                   CustomImageView(
                     imagePath: ImageConstant.experts,
-                    height: getSize(
-                      130,
-                    ),
-                    width: getSize(
-                      130,
-                    ),
+                    height: 130,
+                    width: 130,
                     radius: BorderRadius.circular(
-                      getHorizontalSize(
-                        65,
-                      ),
+                      65
                     ),
                     alignment: Alignment.center,
                   ),
                   CustomIconButton(
                     height: 33,
                     width: 33,
-                    padding: getPadding(
-                      all: 8,
+                    padding: EdgeInsets.all(
+                       8,
                     ),
                     alignment: Alignment.bottomRight,
                     child: GestureDetector(
@@ -109,7 +104,7 @@ class _ExpertsDetailsScreenState extends State<ExpertsDetailsScreen> {
           Center(
             child: Container(
               height: 50,
-              width: width / 1.2,
+              width: _width / 1.2,
               decoration: BoxDecoration(
                   color: Color(0xFFF6F6F6),
                   borderRadius: BorderRadius.circular(10)),
@@ -143,7 +138,7 @@ class _ExpertsDetailsScreenState extends State<ExpertsDetailsScreen> {
           Center(
             child: Container(
               height: 50,
-              width: width / 1.2,
+              width: _width / 1.2,
               decoration: BoxDecoration(
                   color: Color(0xFFF6F6F6),
                   borderRadius: BorderRadius.circular(10)),
@@ -177,7 +172,7 @@ class _ExpertsDetailsScreenState extends State<ExpertsDetailsScreen> {
           Center(
             child: Container(
               height: 50,
-              width: width / 1.2,
+              width: _width / 1.2,
               decoration: BoxDecoration(
                   color: Color(0xFFF6F6F6),
                   borderRadius: BorderRadius.circular(10)),
@@ -210,8 +205,8 @@ class _ExpertsDetailsScreenState extends State<ExpertsDetailsScreen> {
           ),
           Center(
             child: Container(
-              height: height / 5,
-              width: width / 1.2,
+              height: _height / 5,
+              width: _width / 1.2,
               decoration: BoxDecoration(
                   color: Color(0xFFF6F6F6),
                   borderRadius: BorderRadius.circular(10)),
@@ -245,7 +240,7 @@ class _ExpertsDetailsScreenState extends State<ExpertsDetailsScreen> {
           Center(
             child: Container(
               height: 50,
-              width: width / 1.2,
+              width: _width / 1.2,
               decoration: BoxDecoration(
                   color: Color(0xFFF6F6F6),
                   borderRadius: BorderRadius.circular(10)),
@@ -312,9 +307,9 @@ class _ExpertsDetailsScreenState extends State<ExpertsDetailsScreen> {
                       minRating: 1,
                       direction: Axis.horizontal,
                       allowHalfRating: true,
-                      itemSize: getSize(60),
+                      itemSize: 50,
                       itemCount: 5,
-                      itemPadding: getPadding(left: 6, right: 6),
+                      itemPadding: EdgeInsets.only(left: 6, right: 6),
                       itemBuilder: (context, _) => const Icon(
                         Icons.star_rounded,
                         color: Color(0xFFED1C25),
@@ -373,10 +368,10 @@ class _ExpertsDetailsScreenState extends State<ExpertsDetailsScreen> {
                                             minRating: 1,
                                             direction: Axis.horizontal,
                                             allowHalfRating: true,
-                                            itemSize: getSize(25),
+                                            itemSize:25,
                                             itemCount: 5,
                                             itemPadding:
-                                                getPadding(left: 0, right: 0),
+                                                EdgeInsets.only(left: 0, right: 0),
                                             itemBuilder: (context, _) =>
                                                 const Icon(
                                               Icons.star_rounded,

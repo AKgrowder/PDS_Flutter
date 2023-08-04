@@ -1,5 +1,6 @@
 import 'package:archit_s_application1/core/app_export.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // ignore: must_be_immutable
 class CustomTextFormField extends StatefulWidget {
@@ -31,7 +32,7 @@ class CustomTextFormField extends StatefulWidget {
     this.focusedBorderDecoration,
     this.disabledBorderDecoration,
     this.validator, 
-    this.maxLength,
+    this.maxLength,this.inputFormatters,
     this
     .onChanged
   }) : super(
@@ -41,8 +42,7 @@ class CustomTextFormField extends StatefulWidget {
   final Alignment? alignment;
   final double? width; 
   void Function(String)? onChanged;
-  final EdgeInsetsGeometry? margin;
-
+  final EdgeInsetsGeometry? margin; 
   final TextEditingController? controller;
 
   final FocusNode? focusNode;
@@ -87,6 +87,7 @@ class CustomTextFormField extends StatefulWidget {
   final InputBorder? disabledBorderDecoration;
 
   final FormFieldValidator<String>? validator;
+    List<TextInputFormatter>? inputFormatters;
   int? maxLength;
 
   @override
@@ -110,6 +111,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         child: TextFormField(onChanged:widget. onChanged,
           maxLength: widget.maxLength  ,
           controller: widget.controller,
+          
+          inputFormatters: widget.inputFormatters,
+          // inputFormatters: [FilteringTextInputFormatter.deny(
+          //            RegExp(r'\s')),],
           focusNode: widget.focusNode,
           autofocus: widget.autofocus!,
           style: widget.textStyle,
@@ -124,7 +129,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
   InputDecoration get decoration => InputDecoration(
         hintText: widget.hintText ?? "",
-        hintStyle: widget.hintStyle,
+        hintStyle: widget.hintStyle, 
         prefixIcon: widget.prefix,counterText: "",
         prefixIconConstraints: widget.prefixConstraints,
         suffixIcon: widget.suffix,
