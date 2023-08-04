@@ -1,6 +1,13 @@
+import 'package:archit_s_application1/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
+import 'package:archit_s_application1/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
+import 'package:archit_s_application1/API/Bloc/auth/register_Block.dart';
+import 'package:archit_s_application1/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:archit_s_application1/core/app_export.dart';
+import 'package:archit_s_application1/custom_bottom_bar/custom_bottom_bar.dart';
 import 'package:archit_s_application1/presentation/Login_Screen/Login_Screen.dart';
+import 'package:archit_s_application1/widgets/app_bar/appbar_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../create_account_screen/create_account_screen.dart';
 
@@ -20,14 +27,48 @@ class _RegisterCreateAccountScreenState
       backgroundColor: theme.colorScheme.onPrimary,
       body: Column(
         children: [
-          Container(
-            // height: _height /2.5/,
-            width: _width,
-            // color: Colors.red,
-            child: CustomImageView(
-              imagePath: ImageConstant.register,
-              fit: BoxFit.fill,
-            ),
+          Stack(
+            children: [
+              Container(
+                // height: _height /2.5/,
+                width: _width,
+                // color: Colors.red,
+                child: CustomImageView(
+                  imagePath: ImageConstant.register,
+                  fit: BoxFit.fill,
+                ),
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                child: AppbarImage(
+                    height: 23,
+                    width: 24,
+                    svgPath: ImageConstant.imgArrowleft,
+                    margin: EdgeInsets.only(
+                      left: 20,
+                      top: 50,
+                    ),
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return MultiBlocProvider(providers: [
+                          BlocProvider<FetchAllPublicRoomCubit>(
+                            create: (context) => FetchAllPublicRoomCubit(),
+                          ),
+                          BlocProvider<CreatPublicRoomCubit>(
+                            create: (context) => CreatPublicRoomCubit(),
+                          ),
+                          BlocProvider<senMSGCubit>(
+                            create: (context) => senMSGCubit(),
+                          ),
+                          BlocProvider<RegisterCubit>(
+                            create: (context) => RegisterCubit(),
+                          ),
+                        ], child: BottombarPage(buttomIndex: 0));
+                      }));
+                    }),
+              ),
+            ],
           ),
           SizedBox(
             height: 30,
@@ -92,9 +133,10 @@ class _RegisterCreateAccountScreenState
                 child: Text(
                   'Create Account',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'outfit',fontSize: 15,fontWeight: FontWeight.bold
-                  ),
+                      color: Colors.white,
+                      fontFamily: 'outfit',
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -120,7 +162,8 @@ class _RegisterCreateAccountScreenState
                   'Log In',
                   style: TextStyle(
                       color: Color(0xffED1C25),
-                      fontFamily: 'outfit',fontSize: 15,
+                      fontFamily: 'outfit',
+                      fontSize: 15,
                       fontWeight: FontWeight.bold),
                 ),
               ),
