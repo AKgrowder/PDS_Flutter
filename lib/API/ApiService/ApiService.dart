@@ -77,8 +77,9 @@ class ApiServices {
     return response;
   }
 
-   multipartFile(String APIurl, String token, Map<String, dynamic> params,
+  multipartFile(String APIurl, String token, Map<String, dynamic> params,
       String file, String fileName) async {
+    await UpdateBaseURL();
     print('fileApi-$file');
     print('fileName-$fileName');
     print('token-$token');
@@ -100,17 +101,15 @@ class ApiServices {
     }
 
     if (fileName != "" && fileName != null) {
-
       response.files
           .add(await http.MultipartFile.fromPath('document', fileName));
-
     }
     print('checkdataher');
     var res = await response.send();
     print('responce stauscode-${res.statusCode.toString()}');
 
     var respond = await http.Response.fromStream(res);
-   
+
     return respond;
   }
 }
