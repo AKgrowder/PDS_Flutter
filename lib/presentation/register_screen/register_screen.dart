@@ -191,7 +191,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           onChanged: (value) {
                             print("onchange");
                             final RegExp regex = RegExp('[a-zA-Z]');
-                            if (emailAndMobileController.text == null ||
+                            if (emailAndMobileController.text == "" ||
                                 emailAndMobileController.text.isEmpty ||
                                 !regex
                                     .hasMatch(emailAndMobileController.text)) {

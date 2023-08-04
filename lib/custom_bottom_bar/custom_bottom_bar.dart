@@ -85,7 +85,7 @@ class _BottombarPageState extends State<BottombarPage> {
                 color: Theme.of(context).brightness == Brightness.light
                     ? Color(0xFFFFFFFF)
                     : Color(0xFF0D0D0D),
-                height: 80,
+                height: 70,
                 shape: const CircularNotchedRectangle(),
                 child: Padding(
                   padding: EdgeInsets.only(top: 17, bottom: 0),
@@ -105,7 +105,7 @@ class _BottombarPageState extends State<BottombarPage> {
                               Theme.of(context).brightness == Brightness.light
                                   ? Color(0xFFFFFFFF)
                                   : Color(0xFF0D0D0D),
-                          height: 65,
+                          height: 55,
                           width: 40,
                           child: Column(
                             children: [
@@ -144,8 +144,8 @@ class _BottombarPageState extends State<BottombarPage> {
                                           ],
                                         ),
                                       ),
-                              ),
-                              Spacer(),
+                              ), 
+                              // Spacer(),
                             ],
                           ),
                         ),
@@ -231,7 +231,7 @@ class _BottombarPageState extends State<BottombarPage> {
                           });
                         },
                         child: Container(
-                          height: 65,
+                          height: 60,
                           width: 40,
                           // color: Colors.white,
                           color:
@@ -349,7 +349,7 @@ class _BottombarPageState extends State<BottombarPage> {
                                           ),
                                         ),
                                 ),
-                              ),
+                              ), 
                               Spacer(),
                             ],
                           ),

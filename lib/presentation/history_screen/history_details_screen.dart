@@ -161,7 +161,7 @@ class _HistoryDetailsScrenState extends State<HistoryDetailsScren> {
           height: 20,
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 5.0),
+          padding: const EdgeInsets.only(left: 10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -174,7 +174,10 @@ class _HistoryDetailsScrenState extends State<HistoryDetailsScren> {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     return Row(
-                      children: [SizedBox(height: 35,),
+                      children: [
+                        SizedBox(
+                          height: 35,
+                        ),
                         Text(
                           payment[index],
                           style: TextStyle(
@@ -198,13 +201,16 @@ class _HistoryDetailsScrenState extends State<HistoryDetailsScren> {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     return Row(
-                      children: [SizedBox(height: 35,),
+                      children: [
+                        SizedBox(
+                          height: 35,
+                        ),
                         Text(
                           status[index],
                           style: TextStyle(
                             fontFamily: 'outfit',
                             fontSize: 15,
-                            color:index==0? Colors.green:Colors.black,
+                            color: index == 0 ? Colors.green : Colors.black,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

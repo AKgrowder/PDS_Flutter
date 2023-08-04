@@ -374,11 +374,14 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                   height: 17.2,
                                 ),
                                 index == 1 || index == 0
-                                    ? GestureDetector(onTap: () {
-                                       showDialog(
-                              context: context, builder: (_) => InviteDilogScreen());
-                                    },
-                                      child: Container(
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                                  InviteDilogScreen());
+                                        },
+                                        child: Container(
                                           height: 30,
                                           width: width,
                                           decoration: BoxDecoration(
@@ -408,7 +411,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                                   ),
                                           ),
                                         ),
-                                    )
+                                      )
                                     : Container(
                                         height: 30,
                                         width: width,

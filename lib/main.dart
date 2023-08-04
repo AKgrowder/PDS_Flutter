@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
+import 'API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import 'API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'custom_bottom_bar/custom_bottom_bar.dart';
@@ -46,6 +47,11 @@ class MyApp extends StatelessWidget {
             BlocProvider<RegisterCubit>(
               create: (context) => RegisterCubit(),
             ),
+            BlocProvider<GetAllPrivateRoomCubit>(
+              create: (context) => GetAllPrivateRoomCubit(),
+            ),
+
+            
           ],
           child: BottombarPage(buttomIndex: 0),
         )

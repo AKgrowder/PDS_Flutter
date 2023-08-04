@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-import '../../core/utils/size_utils.dart';
 import '../../theme/theme_helper.dart';
 import 'experts_details_screen.dart';
 
@@ -15,6 +14,8 @@ class RateingScreen extends StatefulWidget {
 class _RateingScreenState extends State<RateingScreen> {
   @override
   Widget build(BuildContext context) {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
       appBar: AppBar(
@@ -58,7 +59,7 @@ class _RateingScreenState extends State<RateingScreen> {
               ),
               Container(
                 height: 70,
-                width: width / 1.2,
+                width: _width / 1.2,
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey.shade300),
                     borderRadius: BorderRadius.circular(5)),
@@ -68,9 +69,9 @@ class _RateingScreenState extends State<RateingScreen> {
                     minRating: 1,
                     direction: Axis.horizontal,
                     allowHalfRating: true,
-                    itemSize: getSize(65),
+                    itemSize: 50,
                     itemCount: 5,
-                    itemPadding: getPadding(left: 0, right: 0),
+                    itemPadding: EdgeInsets.only(left: 0, right: 0),
                     itemBuilder: (context, _) => const Icon(
                       Icons.star_rounded,
                       color: Color(0xFFED1C25),
@@ -91,8 +92,8 @@ class _RateingScreenState extends State<RateingScreen> {
                     fontSize: 20),
               ),
               Container(
-                height: height / 6,
-                width: width / 1.2,
+                height: _height / 6,
+                width: _width / 1.2,
                 decoration: BoxDecoration(
                     // color: Color(0xFFF6F6F6),
                     border: Border.all(color: Colors.grey.shade300),
@@ -111,21 +112,26 @@ class _RateingScreenState extends State<RateingScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Container(
-                    height: 40,
-                    width: 120,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Center(
-                      child: Text(
-                        "Cancel",
-                        style: TextStyle(
-                          fontFamily: 'outfit',
-                          fontSize: 15,
-                          color: Color(0xFFED1C25),
-                          fontWeight: FontWeight.bold,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      height: 40,
+                      width: 120,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Center(
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(
+                            fontFamily: 'outfit',
+                            fontSize: 15,
+                            color: Color(0xFFED1C25),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
