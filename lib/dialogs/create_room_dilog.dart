@@ -79,7 +79,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
       }
       if (state is CreateRoomLoadedState) {
         print("Create Room Done ----" + "${state.PublicRoomData.message}");
-        // Navigator.pop(context);
+        Navigator.pop(context);
       }
     }, builder: (context, state) {
       return Center(
