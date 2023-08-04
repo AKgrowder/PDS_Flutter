@@ -17,8 +17,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../../API/Model/authModel/getUserDetailsMdoel.dart';
 import '../../API/Model/authModel/loginModel.dart';
+import '../../widgets/app_bar/appbar_image.dart';
 import '../forget_password_screen/forget_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -107,6 +109,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           BlocProvider<RegisterCubit>(
                             create: (context) => RegisterCubit(),
                           ),
+                          BlocProvider<GetAllPrivateRoomCubit>(
+                            create: (context) => GetAllPrivateRoomCubit(),
+                          ),
                         ],
                         child: BottombarPage(
                           buttomIndex: 0,
@@ -129,6 +134,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 saveUserProfile();
                 print("Get Profile");
                 if (loginModelData?.object?.verified == true) {
+                  getDataStroe(
+                    loginModelData?.object?.uuid.toString() ?? "",
+                    loginModelData?.object?.jwt.toString() ?? "",
+                    // state.loginModel.object!.verified.toString(),
+                  );
                   print('this condison is calling');
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return MultiBlocProvider(
@@ -144,6 +154,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           BlocProvider<RegisterCubit>(
                             create: (context) => RegisterCubit(),
+                          ),
+                          BlocProvider<GetAllPrivateRoomCubit>(
+                            create: (context) => GetAllPrivateRoomCubit(),
                           ),
                         ],
                         child: BottombarPage(
@@ -179,11 +192,30 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           height: 348,
                           // width: double.maxFinite,
-                          child: CustomImageView(
-                            imagePath: ImageConstant.LoginImage,
-                            height: 348,
-                            width: 414,
-                            alignment: Alignment.center,
+                          child: Stack(
+                            children: [
+                           CustomImageView(
+                             imagePath: ImageConstant.LoginImage,
+                             height: 348,
+                             width: 414,
+                             alignment: Alignment.center,
+                           ),
+                           Container(
+                             alignment: Alignment.topLeft,
+                             child: AppbarImage(
+                                 height: 23,
+                                 width: 24,
+                                 svgPath: ImageConstant.imgArrowleft,
+                                 margin: EdgeInsets.only(
+                                     left: 20,
+                                     top: 19,
+                                     bottom: 13,
+                                     right: 15),
+                                 onTap: () {
+                                   Navigator.pop(context);
+                                 }),
+                           ),
+                            ],
                           ),
                         ),
                         Padding(

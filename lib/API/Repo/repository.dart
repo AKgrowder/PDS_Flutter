@@ -7,6 +7,8 @@ import 'package:archit_s_application1/API/Model/otpmodel/otpmodel.dart';
 import '../ApiService/ApiService.dart';
 import '../Const/const.dart';
 import '../Model/AddThread/CreateRoom_Model.dart';
+import '../Model/CreateRoomModel/CreateRoom_Model.dart';
+import '../Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
 import '../Model/HomeScreenModel/PublicRoomModel.dart';
 import '../Model/SendMSG/SendMSG_Model.dart';
 import '../Model/coment/coment_model.dart';
@@ -75,7 +77,7 @@ class Repository {
     }
   }
 
-  Future<OtpModel> otpModel(String userNumber,String OTP) async {
+  Future<OtpModel> otpModel(String userNumber, String OTP) async {
     final response =
         await apiServices.getApiCall('${Config.otpApi}/${OTP}/${userNumber}');
     var jsonString = json.decode(response.body);
@@ -125,6 +127,50 @@ class Repository {
         return ComentApiModel.fromJson(jsonString);
       default:
         return ComentApiModel.fromJson(jsonString);
+    }
+  }
+
+  Future<GetAllPrivateRoomModel> GetAllPrivateRoom() async {
+    final response = await apiServices.getApiCallWithToken("${Config.FetchMyRoom}");
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return GetAllPrivateRoomModel.fromJson(jsonString);
+      default:
+        return GetAllPrivateRoomModel.fromJson(jsonString);
+    }
+  }
+
+
+    Future<CreateRoomModel> CreateRoomAPI(
+      Map<String, String> params) async {
+    final response = await apiServices.postApiCall(Config.createRoom, params);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return CreateRoomModel.fromJson(jsonString);
+      default:
+        return CreateRoomModel.fromJson(jsonString);
+    }
+  }
+
+    Future<CreateForm> creatFourm(
+    String token,
+    Map<String, dynamic> params,
+    String file,
+    String fileName,
+  ) async {
+    final response = await apiServices.multipartFile(
+        Config.company, token, params, file,fileName);
+    var jsonString = json.decode(response.body);
+    print('jsonString-$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return CreateForm.fromJson(jsonString);
+      default:
+        return CreateForm.fromJson(jsonString);
     }
   }
 }
