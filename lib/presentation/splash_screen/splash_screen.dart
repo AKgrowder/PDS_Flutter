@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../register_create_account_screen/register_create_account_screen.dart';
 
+// ignore: must_be_immutable
 class SplashScreen extends StatelessWidget {
   int GetTimeSplash = 0;
 
@@ -17,14 +18,13 @@ class SplashScreen extends StatelessWidget {
     );
   }
 
-  @override
-  void initState() {}
+ 
 
   @override
   Widget build(BuildContext context) {
     startTimer(context);
     double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
+    // double _height = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
         backgroundColor: appTheme.deepOrange5001,

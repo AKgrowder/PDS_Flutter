@@ -126,54 +126,85 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 40,
                           ),
                           Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Column(
-                                  // mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      User_Name != null
-                                          ? "${User_Name}"
-                                          : "User ID",
-                                      style: TextStyle(
-                                        fontFamily: 'outfit',
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
+                          User_Name != null
+                              ? Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Column(
+                                        // mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            User_Name != null
+                                                ? "${User_Name}"
+                                                : "User ID",
+                                            style: TextStyle(
+                                              fontFamily: 'outfit',
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              CircleAvatar(
+                                                backgroundColor: Colors.green,
+                                                maxRadius: 4,
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                "Active",
+                                                style: TextStyle(
+                                                    fontFamily: 'outfit',
+                                                    fontSize: 10,
+                                                    fontWeight: FontWeight.w300,
+                                                    color: Colors.grey),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (User_Name != null) {
+                                        print("user login Mood");
+                                      } else {
+                                        print("User guest Mood on");
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RegisterCreateAccountScreen()));
+                                      }
+                                    },
+                                    child: Container(
+                                      child: Text(
+                                        "Login",
+                                        style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontSize: 18,
+                                          color: Color(0XFFED1C25),
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
-                                    Row(
-                                      children: [
-                                        CircleAvatar(
-                                          backgroundColor: Colors.green,
-                                          maxRadius: 4,
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(
-                                          "Active",
-                                          style: TextStyle(
-                                              fontFamily: 'outfit',
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w300,
-                                              color: Colors.grey),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          CustomImageView(
-                            imagePath: ImageConstant.imgRectangle39829,
-                            height: 50,
-                            radius: BorderRadius.circular(65),
-                            alignment: Alignment.center,
-                          ),
+                          User_Name != null
+                              ? CustomImageView(
+                                  imagePath: ImageConstant.imgRectangle39829,
+                                  height: 50,
+                                  radius: BorderRadius.circular(65),
+                                  alignment: Alignment.center,
+                                )
+                              : Container()
                         ],
                       ),
                     ),
@@ -200,29 +231,53 @@ class _HomeScreenState extends State<HomeScreen> {
                               flex: 2,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            CreateForamScreen(),
-                                      ));
+                                  if (User_Name != null) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              CreateForamScreen(),
+                                        ));
+                                  } else {
+                                    print("User guest Mood on");
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                RegisterCreateAccountScreen()));
+                                  }
                                 },
-                                child: Container(
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                      color: Color(0XFFED1C25),
-                                      borderRadius: BorderRadius.circular(5)),
+                                child: GestureDetector(
+                                  onTap: () {
+                                       Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider<CreatFourmCubit>(
+                                            create: (context) =>
+                                                CreatFourmCubit(),
+                                          ),
+                                        ],
+                                        child: CreateForamScreen()
+                                        );
+                                  }));
+                                  },
                                   child: Container(
-                                    width: _width / 2.5,
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "Create Forum",
-                                        style: TextStyle(
-                                          fontFamily: 'outfit',
-                                          fontSize: 13,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        color: Color(0XFFED1C25),
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Container(
+                                      width: _width / 2.5,
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          "Create Forum",
+                                          style: TextStyle(
+                                            fontFamily: 'outfit',
+                                            fontSize: 13,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -262,7 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     Padding(
                       padding:
-                          const EdgeInsets.only(top: 0.0, right: 35, left: 35),
+                          const EdgeInsets.only(top: 0.0, right: 16, left: 16),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -302,10 +357,28 @@ class _HomeScreenState extends State<HomeScreen> {
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 35, vertical: 5),
+                          padding: const EdgeInsets.only(left: 16,right: 16,bottom: 10),
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                               Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider(
+                                                  create: (context) =>
+                                                      senMSGCubit(),
+                                                ),
+                                              ],
+                                              child: ViewCommentScreen(
+                                                Room_ID:
+                                                    "${PublicRoomModelData?.object?[index].uid ?? ""}",
+                                                Title:
+                                                    "${PublicRoomModelData?.object?[index].roomQuestion ?? ""}",
+                                              ),
+                                            );
+                                          }));
+                            },
                             child: Container(
                               // height: demo.contains(index) ? null: height / 16,
                               width: _width,
@@ -334,7 +407,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Padding(
                                         padding: const EdgeInsets.only(left: 5),
                                         child: Text(
-                                          "Tom_cruze",
+                                        User_Name != null
+                                          ? "${User_Name}"
+                                          : "Tom_cruze",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w800,
                                               color: Colors.black,
@@ -430,7 +505,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Divider(
                                     color: Colors.black,
                                   ),
-                                  Row(
+                                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       GestureDetector(
                                         onTap: () {
@@ -453,40 +528,39 @@ class _HomeScreenState extends State<HomeScreen> {
                                             );
                                           }));
                                         },
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
-                                          child: Text(
-                                            "Add New Comment",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.black,
-                                                fontFamily: "outfit",
-                                                fontSize: 15),
-                                          ),
+                                        child: Text(
+                                          "Add New Comment",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.black,
+                                              fontFamily: "outfit",
+                                              fontSize: 15),
                                         ),
                                       ),
-                                      Spacer(),
+                                      // Spacer(),
                                       Flexible(
-                                        flex: 3,
-                                        child: Container(
-                                          //  height: 50,
-                                          alignment: Alignment.centerRight,
-                                          // width: 150,
-                                          // color: Colors.amber,
-                                          child: Text(
-                                            "${PublicRoomModelData?.object?[index].message?.messageCount ?? "0"} Comments",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.grey,
-                                                fontFamily: "outfit",
-                                                fontSize: 13),
+                                        flex: 0,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(right: 5),
+                                          child: Container(
+                                            //  height: 50,
+                                            alignment: Alignment.centerRight,
+                                            // width: 150,
+                                            // color: Colors.amber,
+                                            child: Text(
+                                              "${PublicRoomModelData?.object?[index].message?.messageCount ?? "0"} Comments",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.grey,
+                                                  fontFamily: "outfit",
+                                                  fontSize: 13),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                     
                                     ],
-                                  ), ],
+                                  ),
+                                ],
                               ),
                             ),
                           ),

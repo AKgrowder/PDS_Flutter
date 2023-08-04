@@ -9,4 +9,8 @@ class Config {
   static const String coomment = "guest/api/fetchInbox";
   static const String getUserDetails = "auth/auth/getMasterUserByUUID";
 
+  static const String company = "user/api/addUserProfile";
+
+  static const String FetchMyRoom = "user/api/fetchMyRoom";
+  static const String createRoom = "user/api/createRoom";
 }
