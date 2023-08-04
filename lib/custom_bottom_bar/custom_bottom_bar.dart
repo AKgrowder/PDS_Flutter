@@ -144,8 +144,8 @@ class _BottombarPageState extends State<BottombarPage> {
                                           ],
                                         ),
                                       ),
-                              ),
-                              Spacer(),
+                              ), 
+                              // Spacer(),
                             ],
                           ),
                         ),
@@ -231,7 +231,7 @@ class _BottombarPageState extends State<BottombarPage> {
                           });
                         },
                         child: Container(
-                          height: 65,
+                          height: 60,
                           width: 40,
                           // color: Colors.white,
                           color:
@@ -349,7 +349,7 @@ class _BottombarPageState extends State<BottombarPage> {
                                           ),
                                         ),
                                 ),
-                              ),
+                              ), 
                               Spacer(),
                             ],
                           ),

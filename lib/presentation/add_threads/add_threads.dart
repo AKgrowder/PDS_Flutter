@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_state.dart';
 import '../../core/utils/color_constant.dart';
@@ -14,8 +15,39 @@ class AddThreadsScreen extends StatefulWidget {
   State<AddThreadsScreen> createState() => _AddThreadsScreenState();
 }
 
+enum TextMode {
+  normal,
+  bold,
+  italic,
+  lineThrough
+  
+  
+  // link,  <- I'm not sure what you want to have happen with this one
+}
+
+const normalStyle = TextStyle();
+const boldStyle = TextStyle(fontWeight: FontWeight.bold);
+const italicStyle = TextStyle(fontStyle: FontStyle.italic);
+const linethrough = TextStyle(decoration: TextDecoration.lineThrough);
+ 
+
+// Helper method
+TextStyle getStyle(TextMode? mode) {
+  switch(mode) {
+    case TextMode.bold: return boldStyle;
+    case TextMode.italic: return italicStyle;
+    case TextMode.lineThrough: return linethrough;
+     
+    default: return normalStyle;
+  }
+}
 class _AddThreadsScreenState extends State<AddThreadsScreen> {
   TextEditingController RoomTitleController = TextEditingController();
+
+
+  TextMode? currentmode;
+  
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,20 +138,34 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: CustomImageView(
-                          imagePath: ImageConstant.boldimage,
-                          height: 20,
+                        child: GestureDetector(onTap: () => setState(() => currentmode = TextMode.bold),
+                          child: CustomImageView(
+                            imagePath: ImageConstant.boldimage,
+                            height: 20,
+                          ),
                         ),
                       ),
                       Spacer(),
-                      CustomImageView(
-                        imagePath: ImageConstant.italicimage,
-                        height: 15,
+                      GestureDetector(onTap: () {
+                        setState(() {
+                          currentmode=TextMode.italic;
+                        });
+                      },
+                        child: CustomImageView(
+                          imagePath: ImageConstant.italicimage,
+                          height: 15,
+                        ),
                       ),
                       Spacer(),
-                      CustomImageView(
-                        imagePath: ImageConstant.abimage,
-                        height: 30,
+                      GestureDetector(onTap: () {
+                        setState(() {
+                          currentmode=TextMode. lineThrough;
+                        });
+                      },
+                        child: CustomImageView(
+                          imagePath: ImageConstant.abimage,
+                          height: 30,
+                        ),
                       ),
                       Spacer(),
                       CustomImageView(
@@ -170,8 +216,8 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                           maxLines: 6,
                           decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Add Description....'),
-                        ),
+                              hintText: 'Add Description....'),style: TextStyle().merge( getStyle(currentmode)) 
+                        )
                       ),
                     ],
                   ),

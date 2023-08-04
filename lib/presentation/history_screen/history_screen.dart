@@ -60,7 +60,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 ? Colors.white
                                 : Colors.black,
                         child: Center(
-                            child: Text("All",
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [Spacer(),
+                              Text(
+                                "All",
                                 textScaleFactor: 1.0,
                                 style: TextStyle(
                                     color: arrNotiyTypeList[0].isSelected
@@ -68,7 +72,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                         : Colors.black,
                                     fontSize: 18,
                                     fontFamily: 'Outfit',
-                                    fontWeight: FontWeight.bold))),
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Spacer(),
+                              Container(
+                                width: 1,
+                                color: Colors.grey.shade300,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                       onTap: () {
                         setState(() {
@@ -79,10 +92,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       },
                     ),
                   ),
-                  Container(
-                    width: 1,
-                    color: Colors.black,
-                  ),
+                   
                   Expanded(
                     child: GestureDetector(
                       child: Container(
@@ -92,22 +102,26 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               : Theme.of(context).brightness == Brightness.light
                                   ? Colors.white
                                   : Colors.black,
-                          child: Center(
-                            child: Row(
-                              children: [
-                                Spacer(),
-                                Text("Ongoing ",
-                                    textScaleFactor: 1.0,
-                                    style: TextStyle(
-                                        color: arrNotiyTypeList[1].isSelected
-                                            ? Colors.white
-                                            : Colors.black,
-                                        fontSize: 18,
-                                        fontFamily: 'Outfit',
-                                        fontWeight: FontWeight.bold)),
-                                Spacer(),
-                              ],
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Spacer(),
+                              Text("Ongoing ",
+                                  textScaleFactor: 1.0,
+                                  style: TextStyle(
+                                      color: arrNotiyTypeList[1].isSelected
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontSize: 18,
+                                      fontFamily: 'Outfit',
+                                      fontWeight: FontWeight.bold)),
+                              Spacer(),
+                              Container(
+                                color: Colors.grey.shade300,
+                                width: 1,
+                              )
+                              // Spacer(),
+                            ],
                           )),
                       onTap: () {
                         setState(() {
@@ -284,10 +298,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               child: Text(
                                 "Payment Details",
                                 style: TextStyle(
-                              fontFamily: 'outfit',
-                              fontSize: 15,
-                              color: Color(0xFFED1C25),
-                              fontWeight: FontWeight.w500,
+                                  fontFamily: 'outfit',
+                                  fontSize: 15,
+                                  color: Color(0xFFED1C25),
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),

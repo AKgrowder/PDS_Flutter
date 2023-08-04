@@ -332,7 +332,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   ),
                                   Container(
                                     height: 40,
-                                    width: width / 2.1,
+                                    width: _width / 2.1,
                                     // color: Colors.amber,
                                     child: TextField(
                                       controller: Add_Comment,

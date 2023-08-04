@@ -126,8 +126,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             : Colors.white,
                         // border: Border.all(color: Colors.grey)
                       ),
-                      child: Center(
-                          child: Text("All",
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Spacer(),
+                          Text("All",
                               textScaleFactor: 1.0,
                               style: TextStyle(
                                   color: arrNotiyTypeList[0].isSelected
@@ -135,7 +138,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                       : Colors.black,
                                   fontSize: 18,
                                   fontFamily: 'Outfit',
-                                  fontWeight: FontWeight.bold))),
+                                  fontWeight: FontWeight.bold)),
+                          Spacer(),
+                          Container(
+                            width: 1,
+                            color: Colors.grey.shade300,
+                          ),
+                        ],
+                      ),
                     ),
                     onTap: () {
                       setState(() {
@@ -146,14 +156,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     },
                   ),
                 ),
-                Container(
-                  width: 1,
-                  color: Colors.black12,
-                ),
                 Expanded(
                   child: GestureDetector(
                     child: Container(
-                       
                         height: 50,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
@@ -172,7 +177,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                       color: arrNotiyTypeList[0].isSelected
                                           ? Colors.black
                                           : Colors.white,
-                                      fontSize:18,
+                                      fontSize: 18,
                                       fontFamily: 'Outfit',
                                       fontWeight: FontWeight.bold)),
                               Spacer(),
