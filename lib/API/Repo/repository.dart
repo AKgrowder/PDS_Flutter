@@ -6,6 +6,7 @@ import 'package:archit_s_application1/API/Model/authModel/getUserDetailsMdoel.da
 import 'package:archit_s_application1/API/Model/authModel/loginModel.dart';
 import 'package:archit_s_application1/API/Model/authModel/registerModel.dart';
 import 'package:archit_s_application1/API/Model/otpmodel/otpmodel.dart';
+import '../Model/FatchAllMembers/fatchallmembers_model.dart';
 import '../Model/InvitationModel/Invitation_Model.dart';
 import '../ApiService/ApiService.dart';
 import '../Const/const.dart';
