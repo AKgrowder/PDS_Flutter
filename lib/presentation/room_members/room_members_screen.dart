@@ -1,12 +1,21 @@
 // import 'package:archit_s_application1/core/utils/size_utils.dart';
+// ignore_for_file: must_be_immutable
+
+import 'package:archit_s_application1/API/Bloc/Fatch_all_members/fatch_all_members_cubit.dart';
+import 'package:archit_s_application1/API/Bloc/Fatch_all_members/fatch_all_members_state.dart';
+import 'package:archit_s_application1/API/Model/FatchAllMembers/fatchallmembers_model.dart';
+import 'package:archit_s_application1/core/utils/color_constant.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
 
 class RoomMembersScreen extends StatefulWidget {
-  const RoomMembersScreen({Key? key}) : super(key: key);
+  String room_Id;
+  RoomMembersScreen({Key? key, required this.room_Id}) : super(key: key);
 
   @override
   State<RoomMembersScreen> createState() => _RoomMembersScreenState();
@@ -37,18 +46,16 @@ Map userData = {
     },
   ],
 };
-
-// final List infoBank = [
-//   "assets/images/Ellipse 6 (1).png",
-//   "assets/images/Ellipse 6 (2).png",
-//   "assets/images/Ellipse 6 (3).png",
-//   "assets/images/Ellipse 6 (4).png",
-//   "assets/images/Ellipse 6 (5).png",
-//   "assets/images/Ellipse 6 (6).png",
-//   "assets/images/Ellipse 6 (7).png",
-// ];
+FatchAllMembersModel? _data;
 
 class _RoomMembersScreenState extends State<RoomMembersScreen> {
+  @override
+  void initState() {
+    BlocProvider.of<FatchAllMembersCubit>(context)
+        .FatchAllMembersAPI("${widget.room_Id}");
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
@@ -78,175 +85,217 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Center(
-              child: Container(
-                height: _height / 9,
-                width: _width / 1.2,
-                decoration: BoxDecoration(
-                  color: Color(0xFFFFE7E7),
-                  borderRadius: BorderRadius.circular(10),
+        child: BlocConsumer<FatchAllMembersCubit, FatchAllMembersState>(
+          listener: (context, state) {
+            if (state is FatchAllMembersErrorState) {
+              SnackBar snackBar = SnackBar(
+                content: Text(state.error),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+
+            if (state is FatchAllMembersLoadingState) {
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 100),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(ImageConstant.loader,
+                        fit: BoxFit.cover, height: 100.0, width: 100),
+                  ),
                 ),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Room Name",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontFamily: "outfit",
-                                  fontSize: 15),
-                            ),
-                            Container(
-                              width: 99,
-                              height: 28.87,
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    left: 0,
-                                    top: 0,
-                                    child: Container(
-                                      width: 28.88,
-                                      height: 28.87,
-                                      child: CustomImageView(
-                                        imagePath: ImageConstant.expertone,
-                                        height: 30,
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    left: 22.56,
-                                    top: 0,
-                                    child: Container(
-                                      width: 28.88,
-                                      height: 28.87,
-                                      child: CustomImageView(
-                                        imagePath: ImageConstant.experttwo,
-                                        height: 30,
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    left: 45.12,
-                                    top: 0,
-                                    child: Container(
-                                      width: 28.88,
-                                      height: 28.87,
-                                      child: CustomImageView(
-                                        imagePath: ImageConstant.expertthree,
-                                        height: 30,
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    left: 78,
-                                    top: 7,
-                                    child: SizedBox(
-                                      width: 21,
-                                      height: 16,
-                                      child: Text(
-                                        '+5',
-                                        style: TextStyle(
-                                          color: Color(0xFF2A2A2A),
-                                          fontSize: 12,
-                                          fontFamily: 'Outfit',
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          "Description of the problem/Topic to be discussed here......lorem ipsum.....",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black,
-                              fontFamily: "outfit",
-                              fontSize: 13),
-                        ),
-                      ),
-                    ]),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            ListView.builder(
-              physics: BouncingScrollPhysics(),
-              itemCount: 7,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 35, right: 35, top: 20),
+              );
+            }
+            if (state is FatchAllMembersLoadedState) {
+              _data = state.FatchAllMembersData;
+              print("@@@@@@@@@@@@@@@@@@${_data?.object?.length}");
+              setState(() {});
+            }
+          },
+          builder: (context, state) {
+            return Column(
+              children: [
+                Center(
                   child: Container(
-                    height: _height / 12,
+                    height: _height / 9,
                     width: _width / 1.2,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
+                      color: Color(0xFFFFE7E7),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset(
-                            userData["userData"][index]["image"],
-                            height: 50,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "User ID",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                fontFamily: "outfit",
-                                fontSize: 15),
-                          ),
-                          Spacer(),
-                          GestureDetector(
-                            onTapDown: (details) {
-                              _showPopupMenu(details.globalPosition, context);
-                            },
-                            child: Container(
-                              height: 50,
-                              color: Colors.white,
-                              child: Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Container(
-                                  child: CustomImageView(
-                                    imagePath: ImageConstant.popupimage,
-                                    height: 20,
-                                    fit: BoxFit.fill,
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Room Name",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                      fontFamily: "outfit",
+                                      fontSize: 15),
+                                ),
+                                Container(
+                                  width: 99,
+                                  height: 28.87,
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        left: 0,
+                                        top: 0,
+                                        child: Container(
+                                          width: 28.88,
+                                          height: 28.87,
+                                          child: CustomImageView(
+                                            imagePath: ImageConstant.expertone,
+                                            height: 30,
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 22.56,
+                                        top: 0,
+                                        child: Container(
+                                          width: 28.88,
+                                          height: 28.87,
+                                          child: CustomImageView(
+                                            imagePath: ImageConstant.experttwo,
+                                            height: 30,
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 45.12,
+                                        top: 0,
+                                        child: Container(
+                                          width: 28.88,
+                                          height: 28.87,
+                                          child: CustomImageView(
+                                            imagePath:
+                                                ImageConstant.expertthree,
+                                            height: 30,
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 78,
+                                        top: 7,
+                                        child: SizedBox(
+                                          width: 21,
+                                          height: 16,
+                                          child: Text(
+                                            '+5',
+                                            style: TextStyle(
+                                              color: Color(0xFF2A2A2A),
+                                              fontSize: 12,
+                                              fontFamily: 'Outfit',
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          )
-                        ],
-                      ),
-                    ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text(
+                              "Description of the problem/Topic to be discussed here......lorem ipsum.....",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black,
+                                  fontFamily: "outfit",
+                                  fontSize: 13),
+                            ),
+                          ),
+                        ]),
                   ),
-                );
-              },
-            ),
-          ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  itemCount: _data?.object?.length,
+               
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding:
+                          const EdgeInsets.only(left: 35, right: 35, top: 20),
+                      child: Container(
+                        height: _height / 12,
+                        width: _width / 1.2,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              CachedNetworkImage(
+                                  imageUrl:
+                                      "${_data?.object?[index].userProfilePic}",
+                                  placeholder: (context, url) => Container(
+                                        width: 50,
+                                        height: 50,
+                                        color: Colors.grey,
+                                      ),
+                                  errorWidget: (context, url, error) =>
+                                      Image.asset(
+                                          "assets/images/Ellipse 6 (1).png")),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "${_data?.object?[index].fullName ?? ""}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontFamily: "outfit",
+                                    fontSize: 15),
+                              ),
+                              Spacer(),
+                              GestureDetector(
+                                onTapDown: (details) {
+                                  _showPopupMenu(
+                                      details.globalPosition, context);
+                                },
+                                child: Container(
+                                  height: 50,
+                                  color: Colors.white,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: Container(
+                                      child: CustomImageView(
+                                        imagePath: ImageConstant.popupimage,
+                                        height: 20,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                )
+              ],
+            );
+          },
         ),
       ),
     );

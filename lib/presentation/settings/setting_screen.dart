@@ -174,7 +174,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => RoomMembersScreen(),
+                                builder: (context) => RoomMembersScreen(room_Id: ""),
                               ));
                           break;
                         case 4:
