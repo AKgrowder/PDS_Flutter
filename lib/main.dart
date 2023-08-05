@@ -50,8 +50,6 @@ class MyApp extends StatelessWidget {
             BlocProvider<GetAllPrivateRoomCubit>(
               create: (context) => GetAllPrivateRoomCubit(),
             ),
-
-            
           ],
           child: BottombarPage(buttomIndex: 0),
         )

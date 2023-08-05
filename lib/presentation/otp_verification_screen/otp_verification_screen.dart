@@ -153,9 +153,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           BlocProvider<RegisterCubit>(
                             create: (context) => RegisterCubit(),
                           ),
-                                             BlocProvider<GetAllPrivateRoomCubit>(
-                          create: (context) => GetAllPrivateRoomCubit(),
-                        ),
+                          BlocProvider<GetAllPrivateRoomCubit>(
+                            create: (context) => GetAllPrivateRoomCubit(),
+                          ),
                         ], child: BottombarPage(buttomIndex: 0));
                       }));
                     }
