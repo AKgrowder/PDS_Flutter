@@ -9,6 +9,7 @@ import 'package:archit_s_application1/widgets/app_bar/appbar_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../create_account_screen/create_account_screen.dart';
 
 class RegisterCreateAccountScreen extends StatefulWidget {
@@ -63,6 +64,9 @@ class _RegisterCreateAccountScreenState
                           ),
                           BlocProvider<RegisterCubit>(
                             create: (context) => RegisterCubit(),
+                          ),
+                          BlocProvider<GetAllPrivateRoomCubit>(
+                            create: (context) => GetAllPrivateRoomCubit(),
                           ),
                         ], child: BottombarPage(buttomIndex: 0));
                       }));

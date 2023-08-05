@@ -98,9 +98,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
                       child: Column(children: [
                         ListView.builder(
                           // itemCount: aa.length,
-                          itemCount: (image?.contains(index) ?? false)
+                          itemCount: PublicRoomData?.object?.length, /* (image?.contains(index) ?? false)
                               ? aa.length
-                              : aa.length,
+                              : aa.length, */
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
@@ -132,7 +132,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              "09/06/2023",
+                                              "Create Date",
                                               maxLines: 2,
                                               textScaleFactor: 1.0,
                                               style: TextStyle(
@@ -168,7 +168,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             padding:
                                                 const EdgeInsets.only(left: 10),
                                             child: Text(
-                                              "Rooms Name",
+                                              "${PublicRoomData?.object?[index].roomQuestion}",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black,
