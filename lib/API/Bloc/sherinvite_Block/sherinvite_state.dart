@@ -1,0 +1,17 @@
+import 'package:archit_s_application1/API/Model/sherInviteModel/sherinviteModel.dart';
+
+abstract class SherInviteState {}
+
+class SherInviteLoadingState extends SherInviteState {}
+
+class SherInviteInitialState extends SherInviteState {}
+
+class SherInviteLoadedState extends SherInviteState {
+  final SherInvite sherInvite;
+  SherInviteLoadedState(this.sherInvite);
+}
+
+class SherInviteErrorState extends SherInviteState {
+  final String error;
+  SherInviteErrorState(this.error);
+}

@@ -356,7 +356,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                     uplopdfile.text, filepath.toString());
                           } else {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please Company Name'),
+                              content: Text('Please Enter Company Name'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
