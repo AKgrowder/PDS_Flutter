@@ -20,7 +20,7 @@ class CreatFourmCubit extends Cubit<CreatFourmState> {
       if (createForm.success == true) {
         emit(CreatFourmLoadedState(createForm));
       } else {
-        emit(CreatFourmErrorState('No Data Found!'));
+        emit(CreatFourmErrorState(createForm.message.toString()));
       }
     } catch (e) {
       emit(CreatFourmErrorState(e.toString()));

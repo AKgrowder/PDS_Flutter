@@ -261,7 +261,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 // hintStyle: theme.textTheme.titleMedium!,
                                 textInputAction: TextInputAction.next,
                                 filled: true,
-                                 maxLength: 50,
+                                maxLength: 50,
                                 fillColor: appTheme.gray100,
                               ),
                               Padding(
@@ -397,12 +397,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               CustomTextFormField(
                                 validator: (value) {
                                   final RegExp phoneRegExp =
-                                      RegExp(r'^[0-9]{10}$');
+                                      RegExp(r'^(?!0+$)[0-9]{10}$');
 
                                   if (value!.isEmpty) {
                                     return 'Please Enter phonNumber';
                                   } else if (!phoneRegExp.hasMatch(value)) {
-                                    return 'please Enter phonNumber';
+                                    return 'Invalid phone number.';
                                   }
                                   return null;
                                 },
