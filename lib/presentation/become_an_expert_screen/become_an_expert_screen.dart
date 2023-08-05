@@ -125,10 +125,13 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                 expertiseData.isNotEmpty ? expertiseData[0] : null;
           }
           if (state is AddExportLoadedState) {
+            print('sdhfhsd');
             SnackBar snackBar = SnackBar(
               content: Text(state.addExpertProfile.message.toString()),
               backgroundColor: ColorConstant.primary_color,
             );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            Navigator.pop(context);
           }
         },
         builder: (context, state) {
@@ -426,7 +429,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                               await SharedPreferences.getInstance();
                           String? userid =
                               await prefs.getString(PreferencesKey.loginUserID);
-                              print("userid-$userid");
+                          print("userid-$userid");
                           if (jobprofileController.text != null &&
                               jobprofileController.text != "") {
                             if (feesController.text != null &&
