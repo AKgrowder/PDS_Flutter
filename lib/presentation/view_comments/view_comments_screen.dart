@@ -62,7 +62,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
             ),
           ),
           title: Text(
-            "View details",
+            "View Comments",
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
