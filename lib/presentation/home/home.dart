@@ -1,4 +1,5 @@
 import 'package:archit_s_application1/core/app_export.dart';
+import 'package:archit_s_application1/presentation/become_an_expert_screen/become_an_expert_screen.dart';
 import 'package:archit_s_application1/presentation/experts/experts_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -291,21 +292,25 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             Expanded(
                               flex: 2,
-                              child: Container(
-                                height: 40,
-                                decoration: BoxDecoration(
-                                    color: Color(0XFFFFD9DA),
-                                    borderRadius: BorderRadius.circular(5),
-                                    border:
-                                        Border.all(color: Color(0XFFED1C25))),
-                                child: Center(
-                                  child: Text(
-                                    "Become an Expert",
-                                    style: TextStyle(
-                                      fontFamily: 'outfit',
-                                      fontSize: 13,
-                                      color: Color(0XFFED1C25),
-                                      fontWeight: FontWeight.bold,
+                              child: GestureDetector(onTap: () {
+                                Navigator.push(context,  MaterialPageRoute(builder:  (context) => BecomeExpertScreen(),));
+                              },
+                                child: Container(
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                      color: Color(0XFFFFD9DA),
+                                      borderRadius: BorderRadius.circular(5),
+                                      border:
+                                          Border.all(color: Color(0XFFED1C25))),
+                                  child: Center(
+                                    child: Text(
+                                      "Become an Expert",
+                                      style: TextStyle(
+                                        fontFamily: 'outfit',
+                                        fontSize: 13,
+                                        color: Color(0XFFED1C25),
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),
