@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart'; 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
 import '../../Repo/repository.dart';
 import 'GetAllPrivateRoom_state.dart';
@@ -20,4 +20,6 @@ class GetAllPrivateRoomCubit extends Cubit<GetAllPrivateRoomState> {
       emit(GetAllPrivateRoomErrorState(e.toString()));
     }
   }
+
+  
 }

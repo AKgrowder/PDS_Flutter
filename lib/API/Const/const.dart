@@ -13,4 +13,10 @@ class Config {
 
   static const String FetchMyRoom = "user/api/fetchMyRoom";
   static const String createRoom = "user/api/createRoom";
+  static const String inviteUser = "user/api/inviteUserToRoom";
+  static const String fetchExprtise = "user/api/fetchExprtise";
+  static const String addExport = "user/addExpertProfile";
+  static const String Invitations = "user/api/getRoomInvitations";
+  static const String fetchallmembers = "user/api/fetchAllMembers/";
 }
+
