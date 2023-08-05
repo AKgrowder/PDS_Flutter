@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_state.dart';
+import '../../API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import '../../API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
@@ -312,18 +313,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                       },
                                       child: GestureDetector(
                                         onTap: () {
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                  builder: (context) {
-                                            return MultiBlocProvider(
-                                                providers: [
-                                                  BlocProvider<CreatFourmCubit>(
-                                                    create: (context) =>
-                                                        CreatFourmCubit(),
-                                                  ),
-                                                ],
-                                                child: CreateForamScreen());
-                                          }));
+CreateForum();
+
+                                          // Navigator.push(context,
+                                          //     MaterialPageRoute(
+                                          //         builder: (context) {
+                                          //   return MultiBlocProvider(
+                                          //       providers: [
+                                          //         BlocProvider<CreatFourmCubit>(
+                                          //           create: (context) =>
+                                          //               CreatFourmCubit(),
+                                          //         ),
+                                          //       ],
+                                          //       child: CreateForamScreen());
+                                          // }));
                                         },
                                         child: Container(
                                           height: 50,
@@ -357,12 +360,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     flex: 2,
                                     child: GestureDetector(
                                       onTap: () {
-                                        Navigator.push(
+becomeAnExport();
+
+                                        /* Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   BecomeExpertScreen(),
-                                            ));
+                                            )); */
                                       },
                                       child: Container(
                                         height: 50,
@@ -855,6 +860,46 @@ class _HomeScreenState extends State<HomeScreen> {
       print("User guest Mood on");
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => RegisterCreateAccountScreen()));
+    }
+  }
+
+    becomeAnExport() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
+
+    if (UserLogin_ID == null) {
+      print("user login Mood");
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => RegisterCreateAccountScreen()));
+    } else {
+      print('no login');
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return MultiBlocProvider(providers: [
+          BlocProvider<FetchExprtiseRoomCubit>(
+            create: (context) => FetchExprtiseRoomCubit(),
+          ),
+        ], child: BecomeExpertScreen());
+      }));
+    }
+  }
+
+  CreateForum() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
+
+    if (UserLogin_ID == null) {
+      print("user login Mood");
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => RegisterCreateAccountScreen()));
+    } else {
+      print('no login');
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return MultiBlocProvider(providers: [
+          BlocProvider<CreatFourmCubit>(
+            create: (context) => CreatFourmCubit(),
+          ),
+        ], child: CreateForamScreen());
+      }));
     }
   }
 
