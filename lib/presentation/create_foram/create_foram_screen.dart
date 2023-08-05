@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:archit_s_application1/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
+import 'package:archit_s_application1/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import 'package:archit_s_application1/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:archit_s_application1/API/Bloc/auth/register_Block.dart';
 import 'package:archit_s_application1/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
@@ -40,8 +41,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
-    double _height= MediaQuery.of(context).size.height;
-    
+    double _height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
       appBar: AppBar(
@@ -94,23 +95,25 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                 content: Text(state.createForm.message ?? ""),
                 backgroundColor: ColorConstant.primary_color,
               );
-               Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return MultiBlocProvider(providers: [
-                          BlocProvider<FetchAllPublicRoomCubit>(
-                            create: (context) => FetchAllPublicRoomCubit(),
-                          ),
-                          BlocProvider<CreatPublicRoomCubit>(
-                            create: (context) => CreatPublicRoomCubit(),
-                          ),
-                          BlocProvider<senMSGCubit>(
-                            create: (context) => senMSGCubit(),
-                          ),
-                          BlocProvider<RegisterCubit>(
-                            create: (context) => RegisterCubit(),
-                          ),
-                        ], child: BottombarPage(buttomIndex: 0));
-                      }));
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return MultiBlocProvider(providers: [
+                  BlocProvider<FetchAllPublicRoomCubit>(
+                    create: (context) => FetchAllPublicRoomCubit(),
+                  ),
+                  BlocProvider<CreatPublicRoomCubit>(
+                    create: (context) => CreatPublicRoomCubit(),
+                  ),
+                  BlocProvider<senMSGCubit>(
+                    create: (context) => senMSGCubit(),
+                  ),
+                  BlocProvider<RegisterCubit>(
+                    create: (context) => RegisterCubit(),
+                  ),
+                  BlocProvider<GetAllPrivateRoomCubit>(
+                    create: (context) => GetAllPrivateRoomCubit(),
+                  ),
+                ], child: BottombarPage(buttomIndex: 0));
+              }));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
               print('check Status--${state.createForm.success}');
             }
@@ -232,7 +235,6 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
-                              height: 50,
                               width: _width / 1.65,
                               decoration: BoxDecoration(
                                   color: Color(0XFFF6F6F6),
@@ -243,12 +245,15 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: TextFormField(
                                   readOnly: true,
+                                  maxLines: null,
                                   controller: uplopdfile,
                                   cursorColor: Colors.grey,
                                   decoration: InputDecoration(
                                     hintText: 'Upload File',
                                     border: InputBorder.none,
                                   ),
+                                  style: TextStyle(
+                                      overflow: TextOverflow.ellipsis),
                                 ),
                               ),
                             ),
@@ -256,11 +261,9 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                               onTap: () async {
                                 filepath = await prepareTestPdf(0);
                                 setState(() {
-                                uplopdfile.text = dopcument.toString();
-                                  
+                                  uplopdfile.text = dopcument.toString();
                                 });
                                 print('filepath-${uplopdfile.text}');
-                               
                               },
                               child: Container(
                                 height: 50,
@@ -526,8 +529,10 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
         print("Done file size B");
         switch (Index) {
           case 1:
-            dopcument = file1.name;
-            setState(() {});
+            setState(() {
+              uplopdfile.text = file1.name;
+              dopcument = file1.name;
+            });
             break;
           default:
         }
@@ -537,10 +542,9 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
         print("Done file size KB");
         switch (Index) {
           case 0:
-           
             setState(() {
               uplopdfile.text = file1.name;
-               dopcument = file1.name;
+              dopcument = file1.name;
             });
             print('filenamecheckdocmenut-${dopcument}');
 
@@ -582,8 +586,10 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
 
           switch (Index) {
             case 1:
-              dopcument = file1.name;
-              setState(() {});
+              setState(() {
+                uplopdfile.text = file1.name;
+                dopcument = file1.name;
+              });
               break;
 
             default:
