@@ -84,16 +84,20 @@ class _LoginScreenState extends State<LoginScreen> {
               }
               if (state is LoginLoadedState) {
                 loginModelData = state.loginModel;
-                // if (state.loginModel.object?.verified == false) {
-                BlocProvider.of<LoginCubit>(context).getUserDetails(
-                    state.loginModel.object?.uuid.toString() ?? "");
-                // }
+                if (state.loginModel.object?.verified == false) {
+                  BlocProvider.of<LoginCubit>(context).getUserDetails(
+                      state.loginModel.object?.uuid.toString() ?? "");
+                }
                 if (state.loginModel.object?.verified == true) {
+                  BlocProvider.of<LoginCubit>(context).getUserDetails(
+                      state.loginModel.object?.uuid.toString() ?? "");
                   getDataStroe(
-                    state.loginModel.object?.uuid.toString() ?? "",
-                    state.loginModel.object?.jwt.toString() ?? "",
-                    // state.loginModel.object!.verified.toString(),
-                  );
+                      state.loginModel.object?.uuid.toString() ?? "",
+                      state.loginModel.object?.jwt.toString() ?? "",
+                      loginModelData?.object?.module.toString() ?? ""
+
+                      // state.loginModel.object!.verified.toString(),
+                      );
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return MultiBlocProvider(
                         providers: [
@@ -135,10 +139,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 print("Get Profile");
                 if (loginModelData?.object?.verified == true) {
                   getDataStroe(
-                    loginModelData?.object?.uuid.toString() ?? "",
-                    loginModelData?.object?.jwt.toString() ?? "",
-                    // state.loginModel.object!.verified.toString(),
-                  );
+                      loginModelData?.object?.uuid.toString() ?? "",
+                      loginModelData?.object?.jwt.toString() ?? "",
+                      loginModelData?.object?.module.toString() ?? ""
+                      // state.loginModel.object!.verified.toString(),
+                      );
                   print('this condison is calling');
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return MultiBlocProvider(
@@ -194,27 +199,27 @@ class _LoginScreenState extends State<LoginScreen> {
                           // width: double.maxFinite,
                           child: Stack(
                             children: [
-                           CustomImageView(
-                             imagePath: ImageConstant.LoginImage,
-                             height: 348,
-                             width: 414,
-                             alignment: Alignment.center,
-                           ),
-                           Container(
-                             alignment: Alignment.topLeft,
-                             child: AppbarImage(
-                                 height: 23,
-                                 width: 24,
-                                 svgPath: ImageConstant.imgArrowleft,
-                                 margin: EdgeInsets.only(
-                                     left: 20,
-                                     top: 19,
-                                     bottom: 13,
-                                     right: 15),
-                                 onTap: () {
-                                   Navigator.pop(context);
-                                 }),
-                           ),
+                              CustomImageView(
+                                imagePath: ImageConstant.LoginImage,
+                                height: 348,
+                                width: 414,
+                                alignment: Alignment.center,
+                              ),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: AppbarImage(
+                                    height: 23,
+                                    width: 24,
+                                    svgPath: ImageConstant.imgArrowleft,
+                                    margin: EdgeInsets.only(
+                                        left: 20,
+                                        top: 19,
+                                        bottom: 13,
+                                        right: 15),
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    }),
+                              ),
                             ],
                           ),
                         ),
@@ -414,8 +419,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (_formKey.currentState!.validate()) {
                                 var dataPassing = {
                                   "username": emailAndMobileController.text,
-                                  "password": passwordoneController.text,
-                                  "module": "EMPLOYEE"
+                                  "password": passwordoneController.text
                                 };
                                 print('dataPassing-$dataPassing');
                                 BlocProvider.of<LoginCubit>(context)
@@ -504,13 +508,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  getDataStroe(
-    String userId,
-    String jwt,
-  ) async {
+  getDataStroe(String userId, String jwt, String user_Module) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKey.loginUserID, userId);
     prefs.setString(PreferencesKey.loginJwt, jwt);
+    prefs.setString(PreferencesKey.module, user_Module);
     // prefs.setString(PreferencesKey.loginVerify, verify);
     print('userId-$userId');
     print('jwt-$jwt');
