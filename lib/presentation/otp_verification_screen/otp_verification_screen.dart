@@ -123,7 +123,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   }
                   if (state is OtpLoadedState) {
                     SnackBar snackBar = SnackBar(
-                      content: Text(state.otpModel.message ?? ""),
+                      content: Text('Register Create successfully'),
                       backgroundColor: ColorConstant.primary_color,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -131,11 +131,15 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     if (widget.flowCheck == "Rgister") {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return MultiBlocProvider(providers: [
-                          BlocProvider<LoginCubit>(
-                            create: (context) => LoginCubit(),
-                          )
-                        ], child: LoginScreen());
+                        return MultiBlocProvider(
+                            providers: [
+                              BlocProvider<LoginCubit>(
+                                create: (context) => LoginCubit(),
+                              )
+                            ],
+                            child: LoginScreen(
+                              flwtoGet: 'Register Create successfully',
+                            ));
                       }));
                     } else {
                       Navigator.push(context,

@@ -14,6 +14,7 @@ import 'package:archit_s_application1/widgets/custom_elevated_button.dart';
 import 'package:archit_s_application1/widgets/custom_outlined_button.dart';
 import 'package:archit_s_application1/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -381,7 +382,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           suffixConstraints: BoxConstraints(maxHeight: 50),
                           obscureText: Show_Password ? true : false,
+                          maxLength: 30,
                           filled: true,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                          ],
                           fillColor: appTheme.gray100,
                         ),
                         Align(
