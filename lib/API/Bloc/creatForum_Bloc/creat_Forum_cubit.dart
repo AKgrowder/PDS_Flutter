@@ -7,7 +7,6 @@ import '../../Model/creat_form/creat_form_Model.dart';
 class CreatFourmCubit extends Cubit<CreatFourmState> {
   CreatFourmCubit() : super(CreatFourmInitialState()) {}
   Future<void> CreatFourm(
-    String token,
     Map<String, dynamic> params,
     String file,
     String fileName,
@@ -16,7 +15,7 @@ class CreatFourmCubit extends Cubit<CreatFourmState> {
     try {
       emit(CreatFourmLoadingState());
       CreateForm createForm =
-          await Repository().creatFourm(token, params, file,fileName);
+          await Repository().creatFourm( params, file,fileName);
       if (createForm.success == true) {
         emit(CreatFourmLoadedState(createForm));
       } else {

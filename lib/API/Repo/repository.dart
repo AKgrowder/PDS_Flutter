@@ -1,20 +1,24 @@
 import 'dart:convert';
+
 import 'package:archit_s_application1/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:archit_s_application1/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
-import 'package:archit_s_application1/API/Model/sherInviteModel/sherinviteModel.dart';
 import 'package:archit_s_application1/API/Model/authModel/getUserDetailsMdoel.dart';
 import 'package:archit_s_application1/API/Model/authModel/loginModel.dart';
 import 'package:archit_s_application1/API/Model/authModel/registerModel.dart';
 import 'package:archit_s_application1/API/Model/otpmodel/otpmodel.dart';
-import '../Model/FatchAllMembers/fatchallmembers_model.dart';
-import '../Model/InvitationModel/Invitation_Model.dart';
+import 'package:archit_s_application1/API/Model/sherInviteModel/sherinviteModel.dart';
+
 import '../ApiService/ApiService.dart';
 import '../Const/const.dart';
 import '../Model/AddThread/CreateRoom_Model.dart';
 import '../Model/CreateRoomModel/CreateRoom_Model.dart';
+import '../Model/Edit_room_model/edit_room_model.dart';
+import '../Model/FatchAllMembers/fatchallmembers_model.dart';
 import '../Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
 import '../Model/HomeScreenModel/PublicRoomModel.dart';
+import '../Model/InvitationModel/Invitation_Model.dart';
 import '../Model/SendMSG/SendMSG_Model.dart';
+import '../Model/acceptRejectInvitaionModel/acceptRejectInvitaion.dart';
 import '../Model/coment/coment_model.dart';
 import '../Model/creat_form/creat_form_Model.dart';
 
@@ -225,13 +229,12 @@ class Repository {
   }
 
   Future<CreateForm> creatFourm(
-    String token,
     Map<String, dynamic> params,
     String file,
     String fileName,
   ) async {
     final response = await apiServices.multipartFile(
-        Config.company, token, params, file, fileName);
+        Config.company,  params, file, fileName);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
     switch (response.statusCode) {
@@ -240,8 +243,37 @@ class Repository {
       default:
         return CreateForm.fromJson(jsonString);
     }
+    
   }
+
+  Future<EditRoomModel>   EditroomAPI(Map<String, dynamic> param,String roomuId) async {
+    final response = await apiServices.postApiCall('${Config.editroom}/${roomuId}',param);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return EditRoomModel.fromJson(jsonString);
+      default:
+        return EditRoomModel.fromJson(jsonString);
+    }
+  }
+   Future<AcceptRejectInvitationModel> acceptRejectInvitationAPI(bool status, String roomLink) async {
+    final response = await apiServices.getApiCallWithToken('${Config.acceptRejectInvitationAPI}/${status}/${roomLink}');
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return AcceptRejectInvitationModel.fromJson(jsonString);
+      default:
+        return AcceptRejectInvitationModel.fromJson(jsonString);
+    }
+  }
+
 }
+
+
+
+
 
 // var headers = {
 //   'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc1ZlcmlmaWVkIjp0cnVlLCJtb2R1bGUiOiJFTVBMT1lFRSIsImlzQWN0aXZlIjp0cnVlLCJ1dWlkIjoiODYwMWViNTItNzk4NS00MWU3LTgwOTAtYmMyMjQ0MjkwZjkzIiwidXNlcm5hbWUiOiJBTiIsInN1YiI6IkFOIiwiaWF0IjoxNjkxMTUyODIxLCJleHAiOjE2OTIyMzI4MjF9.AjSlFxHlTU9opgsyXaqVh_sMQuv7f-fKGmIGle6879MD-OAGTNcPN5r9ZW8Go1124YE2BbSrc1Lj5GuspgilWg'
