@@ -1,6 +1,7 @@
 import 'package:archit_s_application1/presentation/change_password_screen/change_password_screen.dart';
 import 'package:archit_s_application1/presentation/experts_details_screen/experts_details_screen.dart';
 import 'package:archit_s_application1/presentation/forget_password_screen/forget_password_screen.dart';
+import 'package:archit_s_application1/presentation/room_members/room_members_screen.dart';
 import 'package:archit_s_application1/presentation/rooms/rooms_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -156,10 +157,10 @@ class _SettingScreenState extends State<SettingScreen> {
 
                           break;
                         case 1:
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => RoomsScreen()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RoomsScreen()));
 
                           break;
                         case 2:
@@ -170,11 +171,11 @@ class _SettingScreenState extends State<SettingScreen> {
                               ));
                           break;
                         case 3:
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //       builder: (context) => RoomMembersScreen(room_Id: ""),
-                          //     ));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RoomMembersScreen(room_Id: ""),
+                              ));
                           break;
                         case 4:
                           Navigator.push(

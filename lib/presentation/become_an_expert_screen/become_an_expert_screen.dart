@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_text_form_field.dart';
+import '../my account/my_account_screen.dart';
 
 class BecomeExpertScreen extends StatefulWidget {
   const BecomeExpertScreen({Key? key}) : super(key: key);
@@ -345,7 +346,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
-                            height: 50,
+                            // height: 50,
                             width: _width / 1.6,
                             decoration: BoxDecoration(
                                 color: Color(0XFFF6F6F6),

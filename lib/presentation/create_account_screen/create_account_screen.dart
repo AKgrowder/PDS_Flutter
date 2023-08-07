@@ -314,7 +314,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 // hintStyle: theme.textTheme.titleMedium!,
                                 textInputAction: TextInputAction.next,
                                 filled: true,
-                                  maxLength: 50,
                                 fillColor: appTheme.gray100,
                               ),
                               Padding(
@@ -359,7 +358,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     });
                                   }
                                 },
-                                maxLength: isPhone == true ? 10 : 50,
+                                maxLength: isPhone == true ? 10 : 30,
                                 // focusNode: FocusNode(),
                                 controller: emailAndMobileController,
                                 margin: EdgeInsets.only(
@@ -378,9 +377,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 textInputAction: TextInputAction.next,
                                 textInputType: TextInputType.emailAddress,
                                 filled: true,
-                                
-                                   
-                                
                                 fillColor: appTheme.gray100,
                               ),
                               Padding(
@@ -393,7 +389,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    
                                     fontFamily: 'outfit',
                                   ),
                                   // style: theme.textTheme.bodyLarge,
