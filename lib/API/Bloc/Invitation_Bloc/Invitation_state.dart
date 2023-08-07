@@ -1,4 +1,5 @@
- 
+import 'package:archit_s_application1/API/Model/acceptRejectInvitaionModel/acceptRejectInvitaion.dart';
+
 import '../../Model/InvitationModel/Invitation_Model.dart';
 
 abstract class InvitationState {}
@@ -15,4 +16,9 @@ class InvitationLoadedState extends InvitationState {
 class InvitationErrorState extends InvitationState {
   final String error;
   InvitationErrorState(this.error);
+}
+
+class AcceptRejectInvitationModelLoadedState extends InvitationState {
+  final AcceptRejectInvitationModel acceptRejectInvitationModel;
+  AcceptRejectInvitationModelLoadedState(this.acceptRejectInvitationModel);
 }
