@@ -13,7 +13,7 @@ class CreatPublicRoomCubit extends Cubit<CreatPublicRoomState> {
       if (PublicRModel.success == true) {
         emit(CreatPublicRoomLoadedState(PublicRModel));
       } else {
-        emit(CreatPublicRoomErrorState('No Data Found!'));
+        emit(CreatPublicRoomErrorState(PublicRModel.message.toString()));
       }
     } catch (e) {
       emit(CreatPublicRoomErrorState(e.toString()));
