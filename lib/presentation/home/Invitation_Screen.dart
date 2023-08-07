@@ -33,6 +33,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    GetData();
     // var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
 
@@ -92,7 +93,8 @@ class _InvitationScreenState extends State<InvitationScreen> {
           if (state is InvitationLoadedState) {
             InvitationRoomData = state.InvitationRoomData;
             print(InvitationRoomData?.message);
-            if (InvitationRoomData?.object?.length == 0) {
+            if (InvitationRoomData?.object?.length == null ||
+                InvitationRoomData?.object?.length == 0) {
               Show_NoData_Image = true;
             } else {
               Show_NoData_Image = false;
@@ -106,10 +108,11 @@ class _InvitationScreenState extends State<InvitationScreen> {
               backgroundColor: ColorConstant.primary_color,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            BlocProvider.of<InvitationCubit>(context).InvitationAPI();
           }
         }, builder: (context, state) {
           if (state is InvitationLoadedState) {
-       return     Show_NoData_Image == false
+            return Show_NoData_Image == false
                 ? SingleChildScrollView(
                     child: ListView.builder(
                       // itemCount: aa.length,
@@ -403,11 +406,17 @@ class _InvitationScreenState extends State<InvitationScreen> {
                       },
                     ),
                   )
-                : Container(
-                    height: 250,
-                    width: 300,
-                    color: Colors.red[200],
-                  );
+                : Center(
+                  child: Text(
+                    "No Invitations For Now",
+                    style: TextStyle(
+                      fontFamily: 'outfit',
+                      fontSize: 20,
+                      color: Color(0XFFED1C25),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                );
           }
           return Center(
             child: Container(
