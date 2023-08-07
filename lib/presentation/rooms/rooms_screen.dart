@@ -1,9 +1,10 @@
+import 'package:archit_s_application1/API/Bloc/Edit_room_bloc/edit_room_cubit.dart';
 import 'package:archit_s_application1/dialogs/create_room_dilog.dart';
+import 'package:archit_s_application1/dialogs/edit_dilog.dart';
 import 'package:archit_s_application1/dilogs/invite_dilog.dart';
 import 'package:archit_s_application1/presentation/view_comments/view_comments_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/CreateRoom_Bloc/CreateRoom_cubit.dart';
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
@@ -13,11 +14,9 @@ import '../../API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import '../../API/Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
-import '../../core/utils/sharedPreferences.dart';
 import '../../dialogs/assigh_adminn_dilog..dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
-import '../home/home.dart';
 
 class RoomsScreen extends StatefulWidget {
   const RoomsScreen({Key? key}) : super(key: key);
@@ -37,13 +36,17 @@ class _RoomsScreenState extends State<RoomsScreen> {
   @override
   void initState() {
     Show_NoData_Image = true;
-    BlocProvider.of<GetAllPrivateRoomCubit>(context).GetAllPrivateRoomAPI();
-    setState(() {});
+
     super.initState();
+  }
+
+  apiDataSet() {
+    BlocProvider.of<GetAllPrivateRoomCubit>(context).GetAllPrivateRoomAPI();
   }
 
   @override
   Widget build(BuildContext context) {
+    apiDataSet();
     // var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     Object? index;
@@ -141,19 +144,57 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                               "${PublicRoomData?.object?[index].createdDate}",
                                               maxLines: 2,
                                               textScaleFactor: 1.0,
-                                              style: TextStyle(  
+                                              style: TextStyle(
                                                   fontWeight: FontWeight.w500,
                                                   color: Colors.grey,
                                                   fontFamily: "outfit",
                                                   fontSize: 14),
                                             ),
                                             Spacer(),
+                                            //-------------------------------------
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   right: 35.0),
-                                              child: CustomImageView(
-                                                imagePath: ImageConstant.pen,
-                                                height: 15,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      print(
+                                                          'uid print-${PublicRoomData?.object?[index].uid}');
+                                                      return MultiBlocProvider(
+                                                          providers: [
+                                                            BlocProvider<
+                                                                EditroomCubit>(
+                                                              create: (context) =>
+                                                                  EditroomCubit(),
+                                                            )
+                                                          ],
+                                                          child:
+                                                              EditDilogScreen(
+                                                            parentName:
+                                                                PublicRoomData
+                                                                    ?.object?[
+                                                                        index]
+                                                                    .roomQuestion,
+                                                            uid: PublicRoomData
+                                                                ?.object?[index]
+                                                                .uid
+                                                                .toString(),
+                                                          ));
+                                                    },
+                                                  );
+                                                  // editProfile(PublicRoomData?.object?[index].uid.toString());
+                                                  // showDialog(
+                                                  //     context: context,
+                                                  //     builder: (_) =>
+                                                  //         EditDilogScreen());
+                                                },
+                                                child: CustomImageView(
+                                                  imagePath: ImageConstant.pen,
+                                                  height: 15,
+                                                ),
                                               ),
                                             ),
                                             CustomImageView(
@@ -670,7 +711,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                         'uid print-${PublicRoomData?.object?[index].uid}');
                                                     return MultiBlocProvider(
                                                         providers: [
-                                                          BlocProvider<SherInviteCubit>(
+                                                          BlocProvider<
+                                                              SherInviteCubit>(
                                                             create: (_) =>
                                                                 SherInviteCubit(),
                                                           ),
@@ -758,113 +800,101 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                               ),
                                             )
                                           : SizedBox(),
-                                                               
+
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                                  Expanded(
-                                                    flex: 2,
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        Navigator.push(context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) {
-                                                          return MultiBlocProvider(
-                                                            providers: [
-                                                              BlocProvider(
-                                                                  create: (context) =>
-                                                                      senMSGCubit())
-                                                            ],
-                                                            child:
-                                                                ViewCommentScreen(
-                                                              Room_ID:
-                                                                  "${PublicRoomData?.object?[index].uid ?? ""}",
-                                                              Title:
-                                                                  "${PublicRoomData?.object?[index].roomQuestion ?? ""}",
-                                                            ),
-                                                          );
-                                                        }));
-                                                      },
-                                                      child: Container(
-                                                        height: 40,
-                                                        width: _width / 2.48,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                // color: Color(0XFF9B9B9B),
-                                                                color: Color(
-                                                                    0xFFED1C25),
-                                                                borderRadius: BorderRadius.only(
-                                                                    bottomLeft:
-                                                                        Radius.circular(
-                                                                            4))),
-                                                        child: Center(
-                                                          child: Text(
-                                                            "Chat",
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: Colors
-                                                                    .white,
-                                                                fontFamily:
-                                                                    "outfit",
-                                                                fontSize: 15),
-                                                          ),
-                                                        ),
-                                                      ),
+                                          Expanded(
+                                            flex: 2,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return MultiBlocProvider(
+                                                    providers: [
+                                                      BlocProvider(
+                                                          create: (context) =>
+                                                              senMSGCubit())
+                                                    ],
+                                                    child: ViewCommentScreen(
+                                                      Room_ID:
+                                                          "${PublicRoomData?.object?[index].uid ?? ""}",
+                                                      Title:
+                                                          "${PublicRoomData?.object?[index].roomQuestion ?? ""}",
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 1,
-                                                  ),
-                                                  Expanded(
-                                                    flex: 2,
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return AssignAdminScreenn();
-                                                          },
-                                                        );
-                                                      },
-                                                      child: Container(
-                                                        height: 40,
-                                                        width: _width / 2.48,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.only(
-                                                            bottomRight:
+                                                  );
+                                                }));
+                                              },
+                                              child: Container(
+                                                height: 40,
+                                                width: _width / 2.48,
+                                                decoration: BoxDecoration(
+                                                    // color: Color(0XFF9B9B9B),
+                                                    color: Color(0xFFED1C25),
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                            bottomLeft:
                                                                 Radius.circular(
-                                                                    4),
-                                                          ),
-                                                          color:
-                                                              Color(0XFF9B9B9B),
-                                                        ),
-                                                        child: Center(
-                                                          child: Text(
-                                                            "Select Expert",
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: Colors
-                                                                    .white,
-                                                                fontFamily:
-                                                                    "outfit",
-                                                                fontSize: 15),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
+                                                                    4))),
+                                                child: Center(
+                                                  child: Text(
+                                                    "Chat",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.white,
+                                                        fontFamily: "outfit",
+                                                        fontSize: 15),
                                                   ),
-                                                ],
+                                                ),
                                               ),
-                                            
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 1,
+                                          ),
+                                          Expanded(
+                                            flex: 2,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AssignAdminScreenn();
+                                                  },
+                                                );
+                                              },
+                                              child: Container(
+                                                height: 40,
+                                                width: _width / 2.48,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    bottomRight:
+                                                        Radius.circular(4),
+                                                  ),
+                                                  color: Color(0XFF9B9B9B),
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    "Select Expert",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.white,
+                                                        fontFamily: "outfit",
+                                                        fontSize: 15),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
                                       // Container(
                                       //   color: Colors.amber,
                                       //   child: Stack(
@@ -964,4 +994,28 @@ class _RoomsScreenState extends State<RoomsScreen> {
       ),
     );
   }
+
+  // editProfile(String? roomId) {
+  //   print('roomId -$roomId');
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => ScaffoldMessenger(
+  //       child: Builder(
+  //         builder: (context) => Scaffold(
+  //           backgroundColor: Colors.transparent,
+  //           body: MultiBlocProvider(
+  //             providers: [
+  //               BlocProvider<EditroomCubit>(
+  //                 create: (context) => EditroomCubit(),
+  //               ),
+  //             ],
+  //             child: EditDilogScreen(
+  //               uid: roomId,
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 }

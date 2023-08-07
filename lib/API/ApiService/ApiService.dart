@@ -77,17 +77,16 @@ class ApiServices {
     return response;
   }
 
-  multipartFile(String APIurl, String token, Map<String, dynamic> params,
-      String file, String fileName) async {
+  multipartFile(String APIurl, Map<String, dynamic> params, String file,
+      String fileName) async {
     await UpdateBaseURL();
     print('fileApi-$file');
     print('fileName-$fileName');
-    print('token-$token');
     print('token-$params');
 
     var headers1 = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${token}'
+      'Authorization': 'Bearer ${Token}'
     };
     //http://192.168.29.100:8081/user/api/addUserProfile;
     print("API =>******${baseURL + APIurl}");

@@ -14,6 +14,7 @@ import 'package:archit_s_application1/widgets/custom_elevated_button.dart';
 import 'package:archit_s_application1/widgets/custom_outlined_button.dart';
 import 'package:archit_s_application1/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -280,7 +281,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               });
                             }
                           },
-                          maxLength: isPhone == true ? 10 : 30,
+                          maxLength: isPhone == true ? 10 : 50,
                           // focusNode: FocusNode(),
                           controller: emailAndMobileController,
                           margin: EdgeInsets.only(
@@ -302,6 +303,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           textInputAction: TextInputAction.next,
                           textInputType: TextInputType.emailAddress,
                           filled: true,
+                           inputFormatters: [
+                            FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                          ],
                           // fillColor: appTheme.gray100,
                         ),
                         Align(
@@ -381,7 +385,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           suffixConstraints: BoxConstraints(maxHeight: 50),
                           obscureText: Show_Password ? true : false,
-                          filled: true,
+                          filled: true,maxLength: 30,inputFormatters: [
+                                  FilteringTextInputFormatter.deny(
+                                      RegExp(r'\s')),
+                                ],
                           fillColor: appTheme.gray100,
                         ),
                         Align(
