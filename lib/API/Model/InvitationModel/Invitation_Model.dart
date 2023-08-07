@@ -31,7 +31,7 @@ class Object {
   String? companyName;
   String? roomName;
   Null? roomMembers;
-  String? invitationLink;
+  Null? invitationLink;
   bool? isJoined;
   String? roomQuestion;
   String? description;
