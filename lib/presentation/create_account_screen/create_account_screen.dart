@@ -261,7 +261,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 // hintStyle: theme.textTheme.titleMedium!,
                                 textInputAction: TextInputAction.next,
                                 filled: true,
-                                maxLength: 50,
+                                maxLength: 50,inputFormatters: [
+                                  FilteringTextInputFormatter.deny(
+                                      RegExp(r'\s')),
+                                ],
                                 fillColor: appTheme.gray100,
                               ),
                               Padding(
@@ -269,7 +272,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   top: 20,
                                 ),
                                 child: Text(
-                                  "Your Name",
+                                  "User Name",
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
@@ -288,7 +291,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     return 'Please Enter Name';
                                   } else if (!nameRegExp.hasMatch(value)) {
                                     return 'Input cannot contains prohibited special characters';
-                                  } else if (value.length < 1 ||
+                                  } else if (value.length <= 3 ||
                                       value.length > 50) {
                                     return 'username length is between 1 and 50 characters';
                                   } else if (value.contains('..')) {
@@ -314,7 +317,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 // hintStyle: theme.textTheme.titleMedium!,
                                 textInputAction: TextInputAction.next,
                                 filled: true,
-                                fillColor: appTheme.gray100,
+                                fillColor: appTheme.gray100,maxLength: 50,
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
@@ -358,7 +361,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     });
                                   }
                                 },
-                                maxLength: isPhone == true ? 10 : 30,
+                                maxLength: isPhone == true ? 10 : 50,
                                 // focusNode: FocusNode(),
                                 controller: emailAndMobileController,
                                 margin: EdgeInsets.only(
@@ -422,7 +425,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     });
                                   }
                                 },
-                                maxLength: isPhonee == true ? 10 : 30,
+                                maxLength: isPhonee == true ? 10 : 50,
                                 // focusNode: FocusNode(),
                                 controller: contectnumberController,
                                 margin: EdgeInsets.only(
@@ -517,6 +520,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     BoxConstraints(maxHeight: 50),
                                 obscureText: Show_Password ? true : false,
                                 filled: true,
+                                
                                 fillColor: appTheme.gray100,
                               ),
                               GestureDetector(

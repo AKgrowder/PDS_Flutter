@@ -18,5 +18,7 @@ class Config {
   static const String addExport = "user/addExpertProfile";
   static const String Invitations = "user/api/getRoomInvitations";
   static const String fetchallmembers = "user/api/fetchAllMembers/";
+  static const String editroom = "user/api/updateRoom";
+    static const String acceptRejectInvitationAPI = "user/api/acceptRejectInvitation";
 }
 
