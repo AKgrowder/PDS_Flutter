@@ -57,8 +57,10 @@ class Repository {
         return FetchExprtise.fromJson(jsonString);
     }
   }
+
   Future<FatchAllMembersModel> FatchAllMembersAPI(String Roomuid) async {
-    final response = await apiServices.getApiCallWithToken("${Config.fetchallmembers}${Roomuid}");
+    final response = await apiServices
+        .getApiCallWithToken("${Config.fetchallmembers}${Roomuid}");
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -70,7 +72,7 @@ class Repository {
   }
 
   Future<AddExpertProfile> addEXpertAPiCaling(params) async {
-    final response = await apiServices.postApiCall(Config.addExport,params);
+    final response = await apiServices.postApiCall(Config.addExport, params);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
@@ -80,6 +82,7 @@ class Repository {
         return AddExpertProfile.fromJson(jsonString);
     }
   }
+
   Future<InvitationModel> InvitationModelAPI() async {
     final response = await apiServices.getApiCallWithToken(Config.Invitations);
     print(response);
@@ -91,6 +94,7 @@ class Repository {
         return InvitationModel.fromJson(jsonString);
     }
   }
+
 //http://192.168.29.100:8081/user/addExpertProfile
 //http://192.168.29.100:8081/user/addExpertProfile
   Future<CreatPublicRoomModel> CreatPublicRoom(
@@ -183,7 +187,7 @@ class Repository {
     }
   }
 
-  Future<GetAllPrivateRoomModel> GetAllPrivateRoom() async {
+  GetAllPrivateRoom() async {
     final response =
         await apiServices.getApiCallWithToken("${Config.FetchMyRoom}");
     print(response);
@@ -192,7 +196,8 @@ class Repository {
       case 200:
         return GetAllPrivateRoomModel.fromJson(jsonString);
       default:
-        return GetAllPrivateRoomModel.fromJson(jsonString);
+        print('GetAllPrviteRoomresponceelse-${response.body}');
+        return response.body;
     }
   }
 
