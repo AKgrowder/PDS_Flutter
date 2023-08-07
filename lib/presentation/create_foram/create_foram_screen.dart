@@ -17,7 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../core/utils/size_utils.dart';
 import '../../theme/theme_helper.dart';
 
 class CreateForamScreen extends StatefulWidget {
@@ -352,7 +351,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                               'jobProfile': profile.text,
                             };
                             BlocProvider.of<CreatFourmCubit>(context)
-                                .CreatFourm(jwtToken.toString(), params,
+                                .CreatFourm(params,
                                     uplopdfile.text, filepath.toString());
                           } else {
                             SnackBar snackBar = SnackBar(

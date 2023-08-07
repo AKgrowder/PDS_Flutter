@@ -12,7 +12,7 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
       if (PublicRModel.success == true) {
         emit(FetchAllPublicRoomLoadedState(PublicRModel));
       }else{
-        emit(FetchAllPublicRoomErrorState('No Data Found!'));
+        emit(FetchAllPublicRoomErrorState(PublicRModel.message.toString()));
       }
     } catch (e) {
       emit(FetchAllPublicRoomErrorState(e.toString()));
