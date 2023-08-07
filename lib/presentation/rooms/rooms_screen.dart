@@ -38,7 +38,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
   void initState() {
     Show_NoData_Image = true;
     BlocProvider.of<GetAllPrivateRoomCubit>(context).GetAllPrivateRoomAPI();
-    setState(() {});
+    // setState(() {});
     super.initState();
   }
 
@@ -70,6 +70,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
               print("Show Image");
               Show_NoData_Image = true;
             } else {
+              print('state.error-${state.error}');
+              print('else Part ');
               SnackBar snackBar = SnackBar(
                 content: Text(state.error),
                 backgroundColor: ColorConstant.primary_color,
@@ -141,7 +143,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                               "${PublicRoomData?.object?[index].createdDate}",
                                               maxLines: 2,
                                               textScaleFactor: 1.0,
-                                              style: TextStyle(  
+                                              style: TextStyle(
                                                   fontWeight: FontWeight.w500,
                                                   color: Colors.grey,
                                                   fontFamily: "outfit",
@@ -587,130 +589,133 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 10.0, right: 10),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              width: 99,
-                                              height: 28.87,
-                                              child: Stack(
-                                                children: [
-                                                  Positioned(
-                                                    left: 0,
-                                                    top: 0,
-                                                    child: Container(
-                                                      width: 28.88,
-                                                      height: 28.87,
-                                                      child: CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .expertone,
-                                                        height: 30,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    left: 22.56,
-                                                    top: 0,
-                                                    child: Container(
-                                                      width: 28.88,
-                                                      height: 28.87,
-                                                      child: CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .experttwo,
-                                                        height: 30,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    left: 45.12,
-                                                    top: 0,
-                                                    child: Container(
-                                                      width: 28.88,
-                                                      height: 28.87,
-                                                      child: CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .expertthree,
-                                                        height: 30,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    left: 78,
-                                                    top: 7,
-                                                    child: SizedBox(
-                                                      width: 21,
-                                                      height: 16,
-                                                      child: Text(
-                                                        '+5',
-                                                        style: TextStyle(
-                                                          color:
-                                                              Color(0xFF2A2A2A),
-                                                          fontSize: 12,
-                                                          fontFamily: 'Outfit',
-                                                          fontWeight:
-                                                              FontWeight.w400,
+                                      GestureDetector(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 10.0, right: 10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                width: 99,
+                                                height: 28.87,
+                                                child: Stack(
+                                                  children: [
+                                                    Positioned(
+                                                      left: 0,
+                                                      top: 0,
+                                                      child: Container(
+                                                        width: 28.88,
+                                                        height: 28.87,
+                                                        child: CustomImageView(
+                                                          imagePath: ImageConstant
+                                                              .expertone,
+                                                          height: 30,
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    print(
-                                                        'uid print-${PublicRoomData?.object?[index].uid}');
-                                                    return MultiBlocProvider(
-                                                        providers: [
-                                                          BlocProvider<SherInviteCubit>(
-                                                            create: (_) =>
-                                                                SherInviteCubit(),
-                                                          ),
-                                                        ],
-                                                        child:
-                                                            InviteDilogScreen(
-                                                          Room_UUID:
-                                                              "${PublicRoomData?.object?[index].uid}",
-                                                        ));
-                                                  },
-                                                );
-                                              },
-                                              child: Container(
-                                                width: 140,
-                                                height: 22.51,
-                                                decoration: ShapeDecoration(
-                                                  color: Color(0xFFFFD9DA),
-                                                  shape: RoundedRectangleBorder(
-                                                    side: BorderSide(
-                                                      width: 1,
-                                                      color: Color(0xFFED1C25),
+                                                    Positioned(
+                                                      left: 22.56,
+                                                      top: 0,
+                                                      child: Container(
+                                                        width: 28.88,
+                                                        height: 28.87,
+                                                        child: CustomImageView(
+                                                          imagePath: ImageConstant
+                                                              .experttwo,
+                                                          height: 30,
+                                                        ),
+                                                      ),
                                                     ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50),
-                                                  ),
+                                                    Positioned(
+                                                      left: 45.12,
+                                                      top: 0,
+                                                      child: Container(
+                                                        width: 28.88,
+                                                        height: 28.87,
+                                                        child: CustomImageView(
+                                                          imagePath: ImageConstant
+                                                              .expertthree,
+                                                          height: 30,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Positioned(
+                                                      left: 78,
+                                                      top: 7,
+                                                      child: SizedBox(
+                                                        width: 21,
+                                                        height: 16,
+                                                        child: Text(
+                                                          '+5',
+                                                          style: TextStyle(
+                                                            color:
+                                                                Color(0xFF2A2A2A),
+                                                            fontSize: 12,
+                                                            fontFamily: 'Outfit',
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                                child: Center(
-                                                    child: Text(
-                                                  "Invite User",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Color(0xFFED1C25),
-                                                      fontFamily: "outfit",
-                                                      fontSize: 13),
-                                                )),
                                               ),
-                                            )
-                                          ],
+                                              GestureDetector(
+                                                onTap: () {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      print(
+                                                          'uid print-${PublicRoomData?.object?[index].uid}');
+                                                      return MultiBlocProvider(
+                                                          providers: [
+                                                            BlocProvider<
+                                                                SherInviteCubit>(
+                                                              create: (_) =>
+                                                                  SherInviteCubit(),
+                                                            ),
+                                                          ],
+                                                          child:
+                                                              InviteDilogScreen(
+                                                            Room_UUID:
+                                                                "${PublicRoomData?.object?[index].uid}",
+                                                          ));
+                                                    },
+                                                  );
+                                                },
+                                                child: Container(
+                                                  width: 140,
+                                                  height: 22.51,
+                                                  decoration: ShapeDecoration(
+                                                    color: Color(0xFFFFD9DA),
+                                                    shape: RoundedRectangleBorder(
+                                                      side: BorderSide(
+                                                        width: 1,
+                                                        color: Color(0xFFED1C25),
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                    ),
+                                                  ),
+                                                  child: Center(
+                                                      child: Text(
+                                                    "Invite User",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Color(0xFFED1C25),
+                                                        fontFamily: "outfit",
+                                                        fontSize: 13),
+                                                  )),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                       index == 1 || index == 2 || index == 3
@@ -758,113 +763,101 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                               ),
                                             )
                                           : SizedBox(),
-                                                               
+
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                                  Expanded(
-                                                    flex: 2,
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        Navigator.push(context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) {
-                                                          return MultiBlocProvider(
-                                                            providers: [
-                                                              BlocProvider(
-                                                                  create: (context) =>
-                                                                      senMSGCubit())
-                                                            ],
-                                                            child:
-                                                                ViewCommentScreen(
-                                                              Room_ID:
-                                                                  "${PublicRoomData?.object?[index].uid ?? ""}",
-                                                              Title:
-                                                                  "${PublicRoomData?.object?[index].roomQuestion ?? ""}",
-                                                            ),
-                                                          );
-                                                        }));
-                                                      },
-                                                      child: Container(
-                                                        height: 40,
-                                                        width: _width / 2.48,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                // color: Color(0XFF9B9B9B),
-                                                                color: Color(
-                                                                    0xFFED1C25),
-                                                                borderRadius: BorderRadius.only(
-                                                                    bottomLeft:
-                                                                        Radius.circular(
-                                                                            4))),
-                                                        child: Center(
-                                                          child: Text(
-                                                            "Chat",
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: Colors
-                                                                    .white,
-                                                                fontFamily:
-                                                                    "outfit",
-                                                                fontSize: 15),
-                                                          ),
-                                                        ),
-                                                      ),
+                                          Expanded(
+                                            flex: 2,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return MultiBlocProvider(
+                                                    providers: [
+                                                      BlocProvider(
+                                                          create: (context) =>
+                                                              senMSGCubit())
+                                                    ],
+                                                    child: ViewCommentScreen(
+                                                      Room_ID:
+                                                          "${PublicRoomData?.object?[index].uid ?? ""}",
+                                                      Title:
+                                                          "${PublicRoomData?.object?[index].roomQuestion ?? ""}",
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 1,
-                                                  ),
-                                                  Expanded(
-                                                    flex: 2,
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return AssignAdminScreenn();
-                                                          },
-                                                        );
-                                                      },
-                                                      child: Container(
-                                                        height: 40,
-                                                        width: _width / 2.48,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.only(
-                                                            bottomRight:
+                                                  );
+                                                }));
+                                              },
+                                              child: Container(
+                                                height: 40,
+                                                width: _width / 2.48,
+                                                decoration: BoxDecoration(
+                                                    // color: Color(0XFF9B9B9B),
+                                                    color: Color(0xFFED1C25),
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                            bottomLeft:
                                                                 Radius.circular(
-                                                                    4),
-                                                          ),
-                                                          color:
-                                                              Color(0XFF9B9B9B),
-                                                        ),
-                                                        child: Center(
-                                                          child: Text(
-                                                            "Select Expert",
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: Colors
-                                                                    .white,
-                                                                fontFamily:
-                                                                    "outfit",
-                                                                fontSize: 15),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
+                                                                    4))),
+                                                child: Center(
+                                                  child: Text(
+                                                    "Chat",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.white,
+                                                        fontFamily: "outfit",
+                                                        fontSize: 15),
                                                   ),
-                                                ],
+                                                ),
                                               ),
-                                            
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 1,
+                                          ),
+                                          Expanded(
+                                            flex: 2,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AssignAdminScreenn();
+                                                  },
+                                                );
+                                              },
+                                              child: Container(
+                                                height: 40,
+                                                width: _width / 2.48,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    bottomRight:
+                                                        Radius.circular(4),
+                                                  ),
+                                                  color: Color(0XFF9B9B9B),
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    "Select Expert",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.white,
+                                                        fontFamily: "outfit",
+                                                        fontSize: 15),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
                                       // Container(
                                       //   color: Colors.amber,
                                       //   child: Stack(

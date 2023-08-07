@@ -46,9 +46,9 @@ Map userData = {
     },
   ],
 };
-FatchAllMembersModel? _data;
 
 class _RoomMembersScreenState extends State<RoomMembersScreen> {
+  FatchAllMembersModel? _data;
   @override
   void initState() {
     BlocProvider.of<FatchAllMembersCubit>(context)
@@ -114,186 +114,200 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
             }
           },
           builder: (context, state) {
-            return Column(
-              children: [
-                Center(
-                  child: Container(
-                    height: _height / 9,
-                    width: _width / 1.2,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFFFE7E7),
-                      borderRadius: BorderRadius.circular(10),
+            if (state is FatchAllMembersLoadedState) {
+              return Column(
+                children: [
+                  Center(
+                    child: Container(
+                      height: _height / 9,
+                      width: _width / 1.2,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFE7E7),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Room Name",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontFamily: "outfit",
+                                        fontSize: 15),
+                                  ),
+                                  Container(
+                                    width: 99,
+                                    height: 28.87,
+                                    child: Stack(
+                                      children: [
+                                        Positioned(
+                                          left: 0,
+                                          top: 0,
+                                          child: Container(
+                                            width: 28.88,
+                                            height: 28.87,
+                                            child: CustomImageView(
+                                              imagePath:
+                                                  ImageConstant.expertone,
+                                              height: 30,
+                                            ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          left: 22.56,
+                                          top: 0,
+                                          child: Container(
+                                            width: 28.88,
+                                            height: 28.87,
+                                            child: CustomImageView(
+                                              imagePath:
+                                                  ImageConstant.experttwo,
+                                              height: 30,
+                                            ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          left: 45.12,
+                                          top: 0,
+                                          child: Container(
+                                            width: 28.88,
+                                            height: 28.87,
+                                            child: CustomImageView(
+                                              imagePath:
+                                                  ImageConstant.expertthree,
+                                              height: 30,
+                                            ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          left: 78,
+                                          top: 7,
+                                          child: SizedBox(
+                                            width: 21,
+                                            height: 16,
+                                            child: Text(
+                                              '+5',
+                                              style: TextStyle(
+                                                color: Color(0xFF2A2A2A),
+                                                fontSize: 12,
+                                                fontFamily: 'Outfit',
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                "Description of the problem/Topic to be discussed here......lorem ipsum.....",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black,
+                                    fontFamily: "outfit",
+                                    fontSize: 13),
+                              ),
+                            ),
+                          ]),
                     ),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    itemCount: _data?.object?.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding:
+                            const EdgeInsets.only(left: 35, right: 35, top: 20),
+                        child: Container(
+                          height: _height / 12,
+                          width: _width / 1.2,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
+                                CachedNetworkImage(
+                                    imageUrl:
+                                        "${_data?.object?[index].userProfilePic}",
+                                    placeholder: (context, url) => Container(
+                                          width: 50,
+                                          height: 50,
+                                          color: Colors.grey,
+                                        ),
+                                    errorWidget: (context, url, error) =>
+                                        Image.asset(
+                                            "assets/images/Ellipse 6 (1).png")),
+                                SizedBox(
+                                  width: 10,
+                                ),
                                 Text(
-                                  "Room Name",
+                                  "${_data?.object?[index].fullName ?? ""}",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
                                       fontFamily: "outfit",
                                       fontSize: 15),
                                 ),
-                                Container(
-                                  width: 99,
-                                  height: 28.87,
-                                  child: Stack(
-                                    children: [
-                                      Positioned(
-                                        left: 0,
-                                        top: 0,
-                                        child: Container(
-                                          width: 28.88,
-                                          height: 28.87,
-                                          child: CustomImageView(
-                                            imagePath: ImageConstant.expertone,
-                                            height: 30,
-                                          ),
+                                Spacer(),
+                                GestureDetector(
+                                  onTapDown: (details) {
+                                    _showPopupMenu(
+                                        details.globalPosition, context);
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    color: Colors.white,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(15.0),
+                                      child: Container(
+                                        child: CustomImageView(
+                                          imagePath: ImageConstant.popupimage,
+                                          height: 20,
+                                          fit: BoxFit.fill,
                                         ),
-                                      ),
-                                      Positioned(
-                                        left: 22.56,
-                                        top: 0,
-                                        child: Container(
-                                          width: 28.88,
-                                          height: 28.87,
-                                          child: CustomImageView(
-                                            imagePath: ImageConstant.experttwo,
-                                            height: 30,
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        left: 45.12,
-                                        top: 0,
-                                        child: Container(
-                                          width: 28.88,
-                                          height: 28.87,
-                                          child: CustomImageView(
-                                            imagePath:
-                                                ImageConstant.expertthree,
-                                            height: 30,
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        left: 78,
-                                        top: 7,
-                                        child: SizedBox(
-                                          width: 21,
-                                          height: 16,
-                                          child: Text(
-                                            '+5',
-                                            style: TextStyle(
-                                              color: Color(0xFF2A2A2A),
-                                              fontSize: 12,
-                                              fontFamily: 'Outfit',
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Text(
-                              "Description of the problem/Topic to be discussed here......lorem ipsum.....",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black,
-                                  fontFamily: "outfit",
-                                  fontSize: 13),
-                            ),
-                          ),
-                        ]),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: _data?.object?.length,
-               
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding:
-                          const EdgeInsets.only(left: 35, right: 35, top: 20),
-                      child: Container(
-                        height: _height / 12,
-                        width: _width / 1.2,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              CachedNetworkImage(
-                                  imageUrl:
-                                      "${_data?.object?[index].userProfilePic}",
-                                  placeholder: (context, url) => Container(
-                                        width: 50,
-                                        height: 50,
-                                        color: Colors.grey,
-                                      ),
-                                  errorWidget: (context, url, error) =>
-                                      Image.asset(
-                                          "assets/images/Ellipse 6 (1).png")),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "${_data?.object?[index].fullName ?? ""}",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                    fontFamily: "outfit",
-                                    fontSize: 15),
-                              ),
-                              Spacer(),
-                              GestureDetector(
-                                onTapDown: (details) {
-                                  _showPopupMenu(
-                                      details.globalPosition, context);
-                                },
-                                child: Container(
-                                  height: 50,
-                                  color: Colors.white,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: Container(
-                                      child: CustomImageView(
-                                        imagePath: ImageConstant.popupimage,
-                                        height: 20,
-                                        fit: BoxFit.fill,
                                       ),
                                     ),
                                   ),
-                                ),
-                              )
-                            ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                )
-              ],
+                      );
+                    },
+                  )
+                ],
+              );
+            }
+            return Center(
+              child: Container(
+                margin: EdgeInsets.only(bottom: 100),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(ImageConstant.loader,
+                      fit: BoxFit.cover, height: 100.0, width: 100),
+                ),
+              ),
             );
           },
         ),
