@@ -20,7 +20,7 @@ class senMSGCubit extends Cubit<senMSGState> {
         emit(senMSGLoadedState(PublicRModel));
         coomentPage(Room_ID);
       } else {
-        emit(senMSGErrorState('No Data Found!'));
+        emit(senMSGErrorState(PublicRModel.message.toString()));
       }
     } catch (e) {
       print('senMSGApi-$e');

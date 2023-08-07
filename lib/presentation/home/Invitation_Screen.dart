@@ -1,20 +1,12 @@
-import 'package:archit_s_application1/dialogs/create_room_dilog.dart';
-import 'package:archit_s_application1/dilogs/invite_dilog.dart';
-import 'package:archit_s_application1/presentation/view_comments/view_comments_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../API/Bloc/CreateRoom_Bloc/CreateRoom_cubit.dart';
 import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../../API/Bloc/Invitation_Bloc/Invitation_state.dart';
-import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
-import '../../API/Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
 import '../../API/Model/InvitationModel/Invitation_Model.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
-import '../../dialogs/assigh_adminn_dilog..dart';
 import '../../theme/theme_helper.dart';
-import '../../widgets/custom_image_view.dart';
 
 class InvitationScreen extends StatefulWidget {
   const InvitationScreen({Key? key}) : super(key: key);
@@ -23,10 +15,6 @@ class InvitationScreen extends StatefulWidget {
   State<InvitationScreen> createState() => _InvitationScreenState();
 }
 
-List? image = [];
-List? imagee = [];
-List? close = [];
-List? closee = [];
 InvitationModel? InvitationRoomData;
 
 class _InvitationScreenState extends State<InvitationScreen> {
@@ -34,10 +22,13 @@ class _InvitationScreenState extends State<InvitationScreen> {
   @override
   void initState() {
     Show_NoData_Image = true;
+    GetData();
 
-    BlocProvider.of<InvitationCubit>(context).InvitationAPI();
-    setState(() {});
     super.initState();
+  }
+
+  GetData() async {
+    await BlocProvider.of<InvitationCubit>(context).InvitationAPI();
   }
 
   @override
@@ -101,22 +92,23 @@ class _InvitationScreenState extends State<InvitationScreen> {
             Show_NoData_Image = false;
             InvitationRoomData = state.InvitationRoomData;
             print(InvitationRoomData?.message);
+            // setState(() {});
           }
         }, builder: (context, state) {
-          return SingleChildScrollView(
-            child: Column(children: [
-              ListView.builder(
+          if (state is InvitationLoadedState) {
+            return SingleChildScrollView(
+              child: ListView.builder(
                 // itemCount: aa.length,
                 itemCount: InvitationRoomData?.object?.length,
                 /* (image?.contains(index) ?? false)
-                          ? aa.length
-                          : aa.length, */
+                        ? aa.length
+                        : aa.length, */
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 35, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 35, vertical: 5),
                     child: GestureDetector(
                       onTap: () {},
                       child: Container(
@@ -131,10 +123,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
                           children: [
                             Padding(
                               padding: EdgeInsets.only(
-                                  left: 8.0,
-                                  top: 10,
-                                  right: 10,
-                                  bottom: 10),
+                                  left: 8.0, top: 10, right: 10, bottom: 10),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -203,87 +192,86 @@ class _InvitationScreenState extends State<InvitationScreen> {
                             SizedBox(
                               height: 20,
                             ),
-                           /*  Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 10.0, right: 10),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    width: 99,
-                                    height: 28.87,
-                                    child: Stack(
-                                      children: [
-                                        Positioned(
-                                          left: 0,
-                                          top: 0,
-                                          child: Container(
-                                            width: 28.88,
-                                            height: 28.87,
-                                            child: CustomImageView(
-                                              imagePath:
-                                                  ImageConstant.expertone,
-                                              height: 30,
+                            /*  Padding(
+                            padding: const EdgeInsets.only(
+                                left: 10.0, right: 10),
+                            child: Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width: 99,
+                                  height: 28.87,
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        left: 0,
+                                        top: 0,
+                                        child: Container(
+                                          width: 28.88,
+                                          height: 28.87,
+                                          child: CustomImageView(
+                                            imagePath:
+                                                ImageConstant.expertone,
+                                            height: 30,
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 22.56,
+                                        top: 0,
+                                        child: Container(
+                                          width: 28.88,
+                                          height: 28.87,
+                                          child: CustomImageView(
+                                            imagePath:
+                                                ImageConstant.experttwo,
+                                            height: 30,
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 45.12,
+                                        top: 0,
+                                        child: Container(
+                                          width: 28.88,
+                                          height: 28.87,
+                                          child: CustomImageView(
+                                            imagePath:
+                                                ImageConstant.expertthree,
+                                            height: 30,
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 78,
+                                        top: 7,
+                                        child: SizedBox(
+                                          width: 21,
+                                          height: 16,
+                                          child: Text(
+                                            '+5',
+                                            style: TextStyle(
+                                              color: Color(0xFF2A2A2A),
+                                              fontSize: 12,
+                                              fontFamily: 'Outfit',
+                                              fontWeight: FontWeight.w400,
                                             ),
                                           ),
                                         ),
-                                        Positioned(
-                                          left: 22.56,
-                                          top: 0,
-                                          child: Container(
-                                            width: 28.88,
-                                            height: 28.87,
-                                            child: CustomImageView(
-                                              imagePath:
-                                                  ImageConstant.experttwo,
-                                              height: 30,
-                                            ),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          left: 45.12,
-                                          top: 0,
-                                          child: Container(
-                                            width: 28.88,
-                                            height: 28.87,
-                                            child: CustomImageView(
-                                              imagePath:
-                                                  ImageConstant.expertthree,
-                                              height: 30,
-                                            ),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          left: 78,
-                                          top: 7,
-                                          child: SizedBox(
-                                            width: 21,
-                                            height: 16,
-                                            child: Text(
-                                              '+5',
-                                              style: TextStyle(
-                                                color: Color(0xFF2A2A2A),
-                                                fontSize: 12,
-                                                fontFamily: 'Outfit',
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            */
+                          ),
+                          */
                             SizedBox(
                               height: 20,
                             ),
                             Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
                                   flex: 2,
@@ -296,8 +284,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
                                           // color: Color(0XFF9B9B9B),
                                           color: Color(0XFF9B9B9B),
                                           borderRadius: BorderRadius.only(
-                                              bottomLeft:
-                                                  Radius.circular(4))),
+                                              bottomLeft: Radius.circular(4))),
                                       child: Center(
                                         child: Text(
                                           "Reject",
@@ -373,7 +360,17 @@ class _InvitationScreenState extends State<InvitationScreen> {
                   );
                 },
               ),
-            ]),
+            );
+          }
+          return Center(
+            child: Container(
+              margin: EdgeInsets.only(bottom: 100),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.asset(ImageConstant.loader,
+                    fit: BoxFit.cover, height: 100.0, width: 100),
+              ),
+            ),
           );
         }));
   }
