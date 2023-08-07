@@ -8,12 +8,11 @@ class FatchAllMembersCubit extends Cubit<FatchAllMembersState> {
   Future<void> FatchAllMembersAPI(String Roomuid) async {
     try {
       emit(FatchAllMembersLoadingState());
-      FatchAllMembersModel PublicRModel =
-          await Repository().FatchAllMembersAPI(Roomuid);
+      FatchAllMembersModel PublicRModel = await Repository().FatchAllMembersAPI(Roomuid);
       if (PublicRModel.success == true) {
         emit(FatchAllMembersLoadedState(PublicRModel));
       } else {
-        emit(FatchAllMembersErrorState('No Data Found!'));
+        emit(FatchAllMembersErrorState(PublicRModel.message.toString()));
       }
     } catch (e) {
       emit(FatchAllMembersErrorState(e.toString()));
