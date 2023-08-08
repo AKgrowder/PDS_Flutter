@@ -24,6 +24,7 @@ import '../register_create_account_screen/register_create_account_screen.dart';
 import '../rooms/rooms_screen.dart';
 import '../view_comments/view_comments_screen.dart';
 import 'Invitation_Screen.dart';
+import 'PublicRoom.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -313,7 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       },
                                       child: GestureDetector(
                                         onTap: () {
-CreateForum();
+                                          CreateForum();
 
                                           // Navigator.push(context,
                                           //     MaterialPageRoute(
@@ -360,7 +361,7 @@ CreateForum();
                                     flex: 2,
                                     child: GestureDetector(
                                       onTap: () {
-becomeAnExport();
+                                        becomeAnExport();
 
                                         /* Navigator.push(
                                             context,
@@ -410,21 +411,22 @@ becomeAnExport();
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        User_Mood != "EXPERT"
-                            ?   GestureDetector(
-                            onTap: () {
-                              Add_Threads();
-                            },
-                            child: Text(
-                              "+ Add Threads",
-                              style: TextStyle(
-                                fontFamily: 'outfit',
-                                fontSize: 15,
-                                color: Color(0XFFED1C25),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ): SizedBox(),
+                          User_Mood != "EXPERT"
+                              ? GestureDetector(
+                                  onTap: () {
+                                    Add_Threads();
+                                  },
+                                  child: Text(
+                                    "+ Add Threads",
+                                    style: TextStyle(
+                                      fontFamily: 'outfit',
+                                      fontSize: 15,
+                                      color: Color(0XFFED1C25),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                )
+                              : SizedBox(),
                         ],
                       ),
                     ),
@@ -432,7 +434,9 @@ becomeAnExport();
                       height: 10,
                     ),
                     ListView.builder(
-                      itemCount: PublicRoomModelData?.object?.length,
+                      itemCount: PublicRoomModelData!.object!.length > 5 
+                          ? 5
+                          : PublicRoomModelData?.object?.length,
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
@@ -651,21 +655,27 @@ becomeAnExport();
                     SizedBox(
                       height: 10,
                     ),
-                    Container(
-                      height: 50,
-                      width: _width / 1.2,
-                      decoration: BoxDecoration(
-                          color: Color(0XFFED1C25),
-                          borderRadius: BorderRadius.circular(6)),
-                      child: Center(
-                          child: Text(
-                        "View More",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white,
-                            fontFamily: "outfit",
-                            fontSize: 16),
-                      )),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => PublicRoomList(PublicRoomModelData: PublicRoomModelData,)));
+                      },
+                      child: Container(
+                        height: 50,
+                        width: _width / 1.2,
+                        decoration: BoxDecoration(
+                            color: Color(0XFFED1C25),
+                            borderRadius: BorderRadius.circular(6)),
+                        child: Center(
+                            child: Text(
+                          "View More",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white,
+                              fontFamily: "outfit",
+                              fontSize: 16),
+                        )),
+                      ),
                     ),
                     SizedBox(
                       height: 10,
@@ -863,7 +873,7 @@ becomeAnExport();
     }
   }
 
-    becomeAnExport() async {
+  becomeAnExport() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
 
