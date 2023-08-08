@@ -87,12 +87,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           }
                           if (state is RegisterLoadedState) {
                             dataSet(state.registerClass.success);
-                            SnackBar snackBar = SnackBar(
-                              content: Text(state.registerClass.message ?? ""),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
+                            // SnackBar snackBar = SnackBar(
+                            //   content: Text(''),
+                            //   backgroundColor: ColorConstant.primary_color,
+                            // );
+                            // ScaffoldMessenger.of(context)
+                            //     .showSnackBar(snackBar);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -261,7 +261,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 // hintStyle: theme.textTheme.titleMedium!,
                                 textInputAction: TextInputAction.next,
                                 filled: true,
-                                maxLength: 50,inputFormatters: [
+                                maxLength: 50,
+                                inputFormatters: [
                                   FilteringTextInputFormatter.deny(
                                       RegExp(r'\s')),
                                 ],
@@ -285,8 +286,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               ),
                               CustomTextFormField(
                                 validator: (value) {
-                                  final RegExp nameRegExp = RegExp(
-                                      r"^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$");
+                                    RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                                   if (value!.isEmpty) {
                                     return 'Please Enter Name';
                                   } else if (!nameRegExp.hasMatch(value)) {
@@ -317,7 +317,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 // hintStyle: theme.textTheme.titleMedium!,
                                 textInputAction: TextInputAction.next,
                                 filled: true,
-                                fillColor: appTheme.gray100,maxLength: 50,
+                                fillColor: appTheme.gray100, maxLength: 50,
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
@@ -387,7 +387,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   top: 19,
                                 ),
                                 child: Text(
-                                  "Contact no.",
+                                  "Mobile Number",
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
@@ -403,9 +403,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                       RegExp(r'^(?!0+$)[0-9]{10}$');
 
                                   if (value!.isEmpty) {
-                                    return 'Please Enter phonNumber';
+                                    return 'Please Enter Mobile Number';
                                   } else if (!phoneRegExp.hasMatch(value)) {
-                                    return 'Invalid phone number.';
+                                    return 'Invalid Mobile Number';
                                   }
                                   return null;
                                 },
@@ -520,7 +520,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     BoxConstraints(maxHeight: 50),
                                 obscureText: Show_Password ? true : false,
                                 filled: true,
-                                
+
                                 fillColor: appTheme.gray100,
                               ),
                               GestureDetector(
