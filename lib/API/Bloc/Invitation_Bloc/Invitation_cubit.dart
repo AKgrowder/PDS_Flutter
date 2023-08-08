@@ -17,7 +17,7 @@ class InvitationCubit extends Cubit<InvitationState> {
         emit(InvitationErrorState('${PublicRModel.message}'));
       }
     } catch (e) {
-      print('errorstate-$e');
+      // print('errorstate-$e');
       emit(InvitationErrorState(e.toString()));
     }
   }

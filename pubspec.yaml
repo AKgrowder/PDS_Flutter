@@ -17,6 +17,7 @@ dependencies:
   connectivity: 
   flutter_rating_bar:  
   file_picker: 
+  flutter_quill:
 dev_dependencies: 
   flutter_test: 
     sdk: flutter
