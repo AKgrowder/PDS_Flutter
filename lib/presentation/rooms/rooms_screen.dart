@@ -51,6 +51,7 @@ method();
 
   @override
   Widget build(BuildContext context) {
+    method();
     // method();
     var _width = MediaQuery.of(context).size.width;
     Object? index;
