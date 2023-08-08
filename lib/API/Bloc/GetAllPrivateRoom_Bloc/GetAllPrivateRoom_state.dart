@@ -1,5 +1,4 @@
- 
- 
+import 'package:archit_s_application1/API/Model/delete_room_model/Delete_room_model.dart';
 import 'package:archit_s_application1/API/Model/sherInviteModel/sherinviteModel.dart';
 
 import '../../Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
@@ -19,7 +18,13 @@ class GetAllPrivateRoomErrorState extends GetAllPrivateRoomState {
   final String error;
   GetAllPrivateRoomErrorState(this.error);
 }
+
 class SherInviteLoadedState extends GetAllPrivateRoomState {
   final SherInvite sherInvite;
   SherInviteLoadedState(this.sherInvite);
+}
+
+class DeleteRoomLoadedState extends GetAllPrivateRoomState {
+  final DeleteRoomModel DeleteRoom;
+  DeleteRoomLoadedState(this.DeleteRoom);
 }

@@ -41,12 +41,13 @@ class _RoomsScreenState extends State<RoomsScreen> {
     // BlocProvider.of<GetAllPrivateRoomCubit>(context).GetAllPrivateRoomAPI();
 
     // BlocProvider.of<GetAllPrivateRoomCubit>(context).GetAllPrivateRoomAPI();
-method();
+    method();
     super.initState();
   }
 
   method() async {
-   await BlocProvider.of<GetAllPrivateRoomCubit>(context).GetAllPrivateRoomAPI();
+    await BlocProvider.of<GetAllPrivateRoomCubit>(context)
+        .GetAllPrivateRoomAPI();
   }
 
   @override
@@ -101,8 +102,15 @@ method();
           if (state is GetAllPrivateRoomLoadedState) {
             Show_NoData_Image = false;
             PublicRoomData = state.PublicRoomData;
-            method();
+
             print(PublicRoomData?.message);
+          }
+          if (state is DeleteRoomLoadedState) {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.DeleteRoom.success.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
         }, builder: (context, state) {
           return Show_NoData_Image == false
@@ -209,6 +217,8 @@ method();
                                                   context: context,
                                                   builder:
                                                       (BuildContext context) {
+                                                    print(
+                                                        'uid print-${PublicRoomData?.object?[index].uid}');
                                                     return MultiBlocProvider(
                                                         providers: [
                                                           BlocProvider<
@@ -221,7 +231,8 @@ method();
                                                             DeleteDilogScreen(
                                                           userId: PublicRoomData
                                                               ?.object?[index]
-                                                              .uid,
+                                                              .uid
+                                                              .toString(),
                                                         ));
                                                   },
                                                 );
