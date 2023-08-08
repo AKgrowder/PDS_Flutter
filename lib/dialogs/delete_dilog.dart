@@ -104,7 +104,7 @@ class DeleteDilogScreenState extends State<DeleteDilogScreen>
                   children: [
                     Center(
                       child: Container(
-                        height: 270,
+                        height: 200,
                         width: _width / 1.25,
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -142,11 +142,18 @@ class DeleteDilogScreenState extends State<DeleteDilogScreen>
                             Divider(
                               color: Colors.grey,
                             ),
+                            SizedBox(height: 10,),
+                            Center(
+                                child: Text(
+                              "Are You Sure You Want To Delete This Room",
+                              style: TextStyle(
+                                fontFamily: 'outfit',
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )),
                             SizedBox(
-                              height: 5,
-                            ),
-                            SizedBox(
-                              height: 30,
+                              height: 50,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
