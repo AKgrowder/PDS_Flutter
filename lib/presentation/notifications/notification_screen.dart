@@ -110,96 +110,151 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           SizedBox(
             height: 10,
           ),
-          Container(
+         Container(
             decoration:
                 BoxDecoration(border: Border.all(color: Colors.grey.shade200)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      child: Container(
+                        height: 50,
                         color: arrNotiyTypeList[0].isSelected
                             ? Color(0xFFED1C25)
-                            : Colors.white,
-                        // border: Border.all(color: Colors.grey)
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Spacer(),
-                          Text("All",
-                              textScaleFactor: 1.0,
-                              style: TextStyle(
-                                  color: arrNotiyTypeList[0].isSelected
-                                      ? Colors.white
-                                      : Colors.black,
-                                  fontSize: 18,
-                                  fontFamily: 'Outfit',
-                                  fontWeight: FontWeight.bold)),
-                          Spacer(),
-                          Container(
-                            width: 1,
-                            color: Colors.grey.shade300,
-                          ),
-                        ],
-                      ),
-                    ),
-                    onTap: () {
-                      setState(() {
-                        updateType();
-                        arrNotiyTypeList[0].isSelected = true;
-                        print("abcd");
-                      });
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: GestureDetector(
-                    child: Container(
-                        height: 50,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: arrNotiyTypeList[2].isSelected
-                              ? Color(0xFFED1C25)
-                              : Colors.white,
-                          // border: Border.all(color: Colors.grey)
-                        ),
+                            : Theme.of(context).brightness == Brightness.light
+                                ? Colors.white
+                                : Colors.black,
                         child: Center(
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [Spacer(),
+                              Text(
+                                "All",
+                                textScaleFactor: 1.0,
+                                style: TextStyle(
+                                    color: arrNotiyTypeList[0].isSelected
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontSize: 18,
+                                    fontFamily: 'Outfit',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Spacer(),
+                              Container(
+                                width: 1,
+                                color: Colors.grey.shade300,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      onTap: () {  
+                        setState(() {
+                          updateType();
+                          arrNotiyTypeList[0].isSelected = true;
+                          print("abcd");
+                        });
+                      },
+                    ),
+                  ),
+                   
+                  Expanded(
+                    child: GestureDetector(
+                      child: Container(
+                          height: 50,
+                          color: arrNotiyTypeList[1].isSelected
+                              ? Color(0xFFED1C25)
+                              : Theme.of(context).brightness == Brightness.light
+                                  ? Colors.white
+                                  : Colors.black,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Spacer(),
+                              Spacer(),
                               Text("Chat ",
                                   textScaleFactor: 1.0,
                                   style: TextStyle(
-                                      color: arrNotiyTypeList[0].isSelected
-                                          ? Colors.black
-                                          : Colors.white,
+                                      color: arrNotiyTypeList[1].isSelected
+                                          ? Colors.white
+                                          : Colors.black,
                                       fontSize: 18,
                                       fontFamily: 'Outfit',
                                       fontWeight: FontWeight.bold)),
                               Spacer(),
+                              Container(
+                                color: Colors.grey.shade300,
+                                width: 1,
+                              )
+                              // Spacer(),
                             ],
-                          ),
-                        )),
-                    onTap: () {
-                      setState(() {
-                        updateType();
-                        arrNotiyTypeList[2].isSelected = true;
-                      });
-                      print("abcd");
-                    },
+                          )),
+                      onTap: () {
+                        setState(() {
+                          updateType();
+                          arrNotiyTypeList[1].isSelected = true;
+                          print("abcd");
+                        });
+                      },
+                    ),
                   ),
-                ),
-              ],
+                  Container(
+                    height: 1,
+                    color: Colors.black12,
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      child: Container(
+                          height: 50,
+                          alignment: Alignment.center,
+                          color: arrNotiyTypeList[2].isSelected
+                              ? Color(0xFFED1C25)
+                              : Theme.of(context).brightness == Brightness.light
+                                  ? Colors.white
+                                  : Colors.black,
+                          child: Center(
+                            child: Row(
+                              children: [
+                                const Spacer(),
+                                Text("Payment ",
+                                    textScaleFactor: 1.0,
+                                    style: TextStyle(
+                                        color: arrNotiyTypeList[2].isSelected
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontSize: 18,
+                                        fontFamily: 'Outfit',
+                                        fontWeight: FontWeight.bold)),
+                                Spacer(),
+                              ],
+                            ),
+                          )),
+                      onTap: () {
+                        setState(() {
+                          updateType();
+                          arrNotiyTypeList[2].isSelected = true;
+                        });
+                        print("abcd");
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           SizedBox(
             height: 20,
           ),
-          ListView.separated(
+
+
+
+
+          
+        arrNotiyTypeList[0].isSelected == true?  ListView.separated(
             physics: NeverScrollableScrollPhysics(),
             itemCount: 8,
             shrinkWrap: true,
@@ -260,7 +315,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             separatorBuilder: (BuildContext context, int index) {
               return Padding(padding: EdgeInsets.only(top: 10));
             },
-          )
+          ):SizedBox(),
         ]),
       ),
     );

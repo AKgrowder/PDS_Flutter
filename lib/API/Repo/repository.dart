@@ -21,6 +21,7 @@ import '../Model/SendMSG/SendMSG_Model.dart';
 import '../Model/acceptRejectInvitaionModel/acceptRejectInvitaion.dart';
 import '../Model/coment/coment_model.dart';
 import '../Model/creat_form/creat_form_Model.dart';
+import '../Model/delete_room_model/Delete_room_model.dart';
 
 class Repository {
   ApiServices apiServices = ApiServices();
@@ -266,6 +267,19 @@ class Repository {
         return AcceptRejectInvitationModel.fromJson(jsonString);
       default:
         return AcceptRejectInvitationModel.fromJson(jsonString);
+    }
+  }
+
+   Future<DeleteRoomModel> DeleteRoomApi(String roomuId) async {
+    final response =
+        await apiServices.getApiCallWithToken("${Config.DeleteRoom}/${roomuId}");
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return DeleteRoomModel.fromJson(jsonString);
+      default:
+        return DeleteRoomModel.fromJson(jsonString);
     }
   }
 
