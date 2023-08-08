@@ -44,7 +44,6 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     roomName.clear();
     DescriptionText.clear();
 
@@ -78,7 +77,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
         );
       }
       if (state is CreateRoomLoadedState) {
-        print("Create Room Done ----" + "${state.PublicRoomData.message}");
+        // print("Create Room Done ----" + "${state.PublicRoomData.message}");
         Navigator.pop(context);
       }
     }, builder: (context, state) {

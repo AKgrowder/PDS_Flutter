@@ -1,3 +1,4 @@
+import 'package:archit_s_application1/API/Bloc/DeleteRoom_bloc/Delete_room_cubit.dart';
 import 'package:archit_s_application1/API/Bloc/Edit_room_bloc/edit_room_cubit.dart';
 import 'package:archit_s_application1/dialogs/create_room_dilog.dart';
 import 'package:archit_s_application1/dialogs/edit_dilog.dart';
@@ -15,6 +16,7 @@ import '../../API/Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
 import '../../dialogs/assigh_adminn_dilog..dart';
+import '../../dialogs/delete_dilog.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
 
@@ -36,18 +38,20 @@ class _RoomsScreenState extends State<RoomsScreen> {
   @override
   void initState() {
     Show_NoData_Image = true;
+    // BlocProvider.of<GetAllPrivateRoomCubit>(context).GetAllPrivateRoomAPI();
 
+    // BlocProvider.of<GetAllPrivateRoomCubit>(context).GetAllPrivateRoomAPI();
+method();
     super.initState();
   }
 
-  apiDataSet() {
-    BlocProvider.of<GetAllPrivateRoomCubit>(context).GetAllPrivateRoomAPI();
+  method() async {
+   await BlocProvider.of<GetAllPrivateRoomCubit>(context).GetAllPrivateRoomAPI();
   }
 
   @override
   Widget build(BuildContext context) {
-    apiDataSet();
-    // var _height = MediaQuery.of(context).size.height;
+    // method();
     var _width = MediaQuery.of(context).size.width;
     Object? index;
     // int selectedIndex = 0;
@@ -96,6 +100,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
           if (state is GetAllPrivateRoomLoadedState) {
             Show_NoData_Image = false;
             PublicRoomData = state.PublicRoomData;
+            method();
             print(PublicRoomData?.message);
           }
         }, builder: (context, state) {
@@ -197,10 +202,34 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                 ),
                                               ),
                                             ),
-                                            CustomImageView(
-                                              imagePath: ImageConstant.delete,
-                                              height: 20,
-                                              color: Colors.black,
+                                            GestureDetector(
+                                              onTap: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return MultiBlocProvider(
+                                                        providers: [
+                                                          BlocProvider<
+                                                              DeleteRoomCubit>(
+                                                            create: (context) =>
+                                                                DeleteRoomCubit(),
+                                                          )
+                                                        ],
+                                                        child:
+                                                            DeleteDilogScreen(
+                                                          userId: PublicRoomData
+                                                              ?.object?[index]
+                                                              .uid,
+                                                        ));
+                                                  },
+                                                );
+                                              },
+                                              child: CustomImageView(
+                                                imagePath: ImageConstant.delete,
+                                                height: 20,
+                                                color: Colors.black,
+                                              ),
                                             ),
                                           ],
                                         ),
