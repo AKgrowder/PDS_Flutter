@@ -246,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               top: 41,
                             ),
                             child: Text(
-                              "Email / Mobile number",
+                              "User Name",
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.left,
                               style: TextStyle(
@@ -258,11 +258,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         CustomTextFormField(
                           validator: (value) {
-                            final RegExp nameRegExp = RegExp(
-                                r"^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$");
+                            RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                             if (value!.isEmpty) {
                               return 'Please Enter Name';
+                            } else if (!nameRegExp.hasMatch(value)) {
+                              return 'Input cannot contains prohibited special characters';
+                            } else if (value.length <= 3 || value.length > 50) {
+                              return 'username length is between 1 and 50 characters';
+                            } else if (value.contains('..')) {
+                              return 'username does not contain is correct';
                             }
+
                             return null;
                           },
                           onChanged: (value) {
@@ -295,7 +301,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             bottom: 14,
                           ),
                           // textStyle: theme.textTheme.titleMedium!,
-                          hintText: "Email / Mobile number",
+                          hintText: "User Name",
                           hintStyle: TextStyle(
                               fontFamily: 'outfit',
                               fontSize: 15,
@@ -303,7 +309,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           textInputAction: TextInputAction.next,
                           textInputType: TextInputType.emailAddress,
                           filled: true,
-                           inputFormatters: [
+                          inputFormatters: [
                             FilteringTextInputFormatter.deny(RegExp(r'\s')),
                           ],
                           // fillColor: appTheme.gray100,
@@ -385,10 +391,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           suffixConstraints: BoxConstraints(maxHeight: 50),
                           obscureText: Show_Password ? true : false,
-                          filled: true,maxLength: 30,inputFormatters: [
-                                  FilteringTextInputFormatter.deny(
-                                      RegExp(r'\s')),
-                                ],
+                          filled: true,
+                          maxLength: 30,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                          ],
                           fillColor: appTheme.gray100,
                         ),
                         Align(

@@ -74,244 +74,248 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-    return SafeArea(
-        child: Scaffold(
-            backgroundColor: theme.colorScheme.onPrimary,
-            resizeToAvoidBottomInset: false,
-            appBar: CustomAppBar(
-                height: 83,
-                leadingWidth: 54,
-                leading: AppbarImage(
-                    height: 23,
-                    width: 24,
-                    svgPath: ImageConstant.imgArrowleft,
-                    margin: EdgeInsets.only(
-                        left: 20, top: 19, bottom: 13, right: 15),
-                    onTap: () {
-                      onTapArrowleft(context);
-                    }),
-                centerTitle: true,
-                title: AppbarImage(
-                    height: 37,
-                    width: 140,
-                    imagePath: ImageConstant.imgImage248)),
-            body: BlocProvider<OtpCubit>(
-              create: (context) => OtpCubit(),
-              child: BlocConsumer<OtpCubit, OtpState>(
-                listener: (context, state) async {
-                  if (state is OtpErrorState) {
-                    print("error");
-                    SnackBar snackBar = SnackBar(
-                      content: Text(state.error),
-                      backgroundColor: ColorConstant.primary_color,
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }
-
-                  if (state is OtpLoadingState) {
-                    print("loading");
-                    Center(
-                      child: Container(
-                        margin: EdgeInsets.only(bottom: 100),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.asset(ImageConstant.loader,
-                              fit: BoxFit.cover, height: 100.0, width: 100),
-                        ),
-                      ),
-                    );
-                  }
-                  if (state is OtpLoadedState) {
-                    SnackBar snackBar = SnackBar(
-                      content: Text(state.otpModel.message ?? ""),
-                      backgroundColor: ColorConstant.primary_color,
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    print('wiget flowcheck-${widget.flowCheck}');
-                    if (widget.flowCheck == "Rgister") {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return MultiBlocProvider(providers: [
-                          BlocProvider<LoginCubit>(
-                            create: (context) => LoginCubit(),
-                          )
-                        ], child: LoginScreen());
-                      }));
-                    } else {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return MultiBlocProvider(providers: [
-                          BlocProvider<FetchAllPublicRoomCubit>(
-                            create: (context) => FetchAllPublicRoomCubit(),
-                          ),
-                          BlocProvider<CreatPublicRoomCubit>(
-                            create: (context) => CreatPublicRoomCubit(),
-                          ),
-                          BlocProvider<senMSGCubit>(
-                            create: (context) => senMSGCubit(),
-                          ),
-                          BlocProvider<RegisterCubit>(
-                            create: (context) => RegisterCubit(),
-                          ),
-                          BlocProvider<GetAllPrivateRoomCubit>(
-                            create: (context) => GetAllPrivateRoomCubit(),
-                          ),
-                        ], child: BottombarPage(buttomIndex: 0));
-                      }));
+    return WillPopScope(
+      onWillPop: () async => await false,
+      child: SafeArea(
+          child: Scaffold(
+              backgroundColor: theme.colorScheme.onPrimary,
+              resizeToAvoidBottomInset: false,
+              appBar: CustomAppBar(
+                  height: 83,
+                  leadingWidth: 54,
+                  // leading: AppbarImage(
+                  //     height: 23,
+                  //     width: 24,
+                  //     svgPath: ImageConstant.imgArrowleft,
+                  //     margin: EdgeInsets.only(
+                  //         left: 20, top: 19, bottom: 13, right: 15),
+                  //     onTap: () {
+                  //       onTapArrowleft(context);
+                  //     }),
+                  centerTitle: true,
+                  title: AppbarImage(
+                      height: 37,
+                      width: 140,
+                      imagePath: ImageConstant.imgImage248)),
+              body: BlocProvider<OtpCubit>(
+                create: (context) => OtpCubit(),
+                child: BlocConsumer<OtpCubit, OtpState>(
+                  listener: (context, state) async {
+                    if (state is OtpErrorState) {
+                      print("error");
+                      SnackBar snackBar = SnackBar(
+                        content: Text(state.error),
+                        backgroundColor: ColorConstant.primary_color,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
-                  }
-                },
-                builder: (context, state) {
-                  return Container(
-                      // width: double.maxFinite,
-                      padding: EdgeInsets.only(
-                          left: 15, top: 38, right: 15, bottom: 38),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("OTP Verification",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontFamily: 'outfit',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold)),
-                            Padding(
-                                padding: EdgeInsets.only(top: 4),
-                                child: RichText(
-                                    text: TextSpan(children: [
-                                      TextSpan(
-                                          text:
-                                              "One time Password to be sent to ",
-                                          style: TextStyle(
-                                              color: appTheme.gray50001,
-                                              fontSize: 16,
-                                              fontFamily: 'Outfit',
-                                              fontWeight: FontWeight.w400)),
-                                      TextSpan(
-                                          text: widget.phonNumber,
-                                          style: TextStyle(
-                                              color: appTheme.gray50001,
-                                              fontSize: 16,
-                                              fontFamily: 'Outfit',
-                                              fontWeight: FontWeight.w400))
-                                    ]),
-                                    textAlign: TextAlign.left)),
-                            Align(
-                                alignment: Alignment.centerLeft,
-                                child: Padding(
-                                    padding: EdgeInsets.only(left: 14, top: 33),
-                                    child: Text("Enter OTP",
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                            fontFamily: 'outfit',
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500)))),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                top: 11,
-                              ),
-                              child: Pinput(
-                                length: 6,
-                                controller: OTPController,
-                                defaultPinTheme: PinTheme(
-                                  width: 50,
-                                  height: 56,
-                                  margin: EdgeInsets.all(2),
-                                  textStyle: TextStyle(
+
+                    if (state is OtpLoadingState) {
+                      print("loading");
+                      Center(
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: 100),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(ImageConstant.loader,
+                                fit: BoxFit.cover, height: 100.0, width: 100),
+                          ),
+                        ),
+                      );
+                    }
+                    if (state is OtpLoadedState) {
+                      SnackBar snackBar = SnackBar(
+                        content: Text('Register create successfully'),
+                        backgroundColor: ColorConstant.primary_color,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      print('wiget flowcheck-${widget.flowCheck}');
+                      if (widget.flowCheck == "Rgister") {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return MultiBlocProvider(providers: [
+                            BlocProvider<LoginCubit>(
+                              create: (context) => LoginCubit(),
+                            )
+                          ], child: LoginScreen());
+                        }));
+                      } else {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return MultiBlocProvider(providers: [
+                            BlocProvider<FetchAllPublicRoomCubit>(
+                              create: (context) => FetchAllPublicRoomCubit(),
+                            ),
+                            BlocProvider<CreatPublicRoomCubit>(
+                              create: (context) => CreatPublicRoomCubit(),
+                            ),
+                            BlocProvider<senMSGCubit>(
+                              create: (context) => senMSGCubit(),
+                            ),
+                            BlocProvider<RegisterCubit>(
+                              create: (context) => RegisterCubit(),
+                            ),
+                            BlocProvider<GetAllPrivateRoomCubit>(
+                              create: (context) => GetAllPrivateRoomCubit(),
+                            ),
+                          ], child: BottombarPage(buttomIndex: 0));
+                        }));
+                      }
+                    }
+                  },
+                  builder: (context, state) {
+                    return Container(
+                        // width: double.maxFinite,
+                        padding: EdgeInsets.only(
+                            left: 15, top: 38, right: 15, bottom: 38),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text("OTP Verification",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      fontFamily: 'outfit',
                                       fontSize: 20,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.w500),
-                                  decoration: BoxDecoration(
-                                    // color: ColorConstant.gray100,
-                                    color: Colors.grey.shade100,
-                                    border: Border.all(
-                                        color:
-                                            Color.fromRGBO(234, 239, 243, 1)),
-                                    borderRadius: BorderRadius.circular(10),
+                                      fontWeight: FontWeight.bold)),
+                              Padding(
+                                  padding: EdgeInsets.only(top: 4),
+                                  child: RichText(
+                                      text: TextSpan(children: [
+                                        TextSpan(
+                                            text:
+                                                "One time Password to be sent to ",
+                                            style: TextStyle(
+                                                color: appTheme.gray50001,
+                                                fontSize: 16,
+                                                fontFamily: 'Outfit',
+                                                fontWeight: FontWeight.w400)),
+                                        TextSpan(
+                                            text: widget.phonNumber,
+                                            style: TextStyle(
+                                                color: appTheme.gray50001,
+                                                fontSize: 16,
+                                                fontFamily: 'Outfit',
+                                                fontWeight: FontWeight.w400))
+                                      ]),
+                                      textAlign: TextAlign.left)),
+                              Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                      padding:
+                                          EdgeInsets.only(left: 14, top: 33),
+                                      child: Text("Enter OTP",
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                              fontFamily: 'outfit',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500)))),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  top: 11,
+                                ),
+                                child: Pinput(
+                                  length: 6,
+                                  controller: OTPController,
+                                  defaultPinTheme: PinTheme(
+                                    width: 50,
+                                    height: 56,
+                                    margin: EdgeInsets.all(2),
+                                    textStyle: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w500),
+                                    decoration: BoxDecoration(
+                                      // color: ColorConstant.gray100,
+                                      color: Colors.grey.shade100,
+                                      border: Border.all(
+                                          color:
+                                              Color.fromRGBO(234, 239, 243, 1)),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  pinputAutovalidateMode:
+                                      PinputAutovalidateMode.onSubmit,
+                                  showCursor: true,
+                                  onCompleted: (pin) => print(pin),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  print('vhbghghg');
+                                  BlocProvider.of<OtpCubit>(context).OtpApi(
+                                      OTPController.text,
+                                      widget.phonNumber.toString());
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 20),
+                                  child: Container(
+                                    height: _height / 16,
+                                    width: _width,
+                                    decoration: BoxDecoration(
+                                      color: Color(0XFFED1C25),
+                                      borderRadius:
+                                          BorderRadiusStyle.roundedBorder6,
+                                    ),
+                                    child: Center(
+                                      child: Text("Verify OTP",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontFamily: 'outfit',
+                                              color: Colors.white,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold)),
+                                    ),
                                   ),
                                 ),
-                                pinputAutovalidateMode:
-                                    PinputAutovalidateMode.onSubmit,
-                                showCursor: true,
-                                onCompleted: (pin) => print(pin),
                               ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                print('vhbghghg');
-                                BlocProvider.of<OtpCubit>(context).OtpApi(
-                                    OTPController.text,
-                                    widget.phonNumber.toString());
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 20),
-                                child: Container(
-                                  height: _height / 16,
-                                  width: _width,
-                                  decoration: BoxDecoration(
-                                    color: Color(0XFFED1C25),
-                                    borderRadius:
-                                        BorderRadiusStyle.roundedBorder6,
-                                  ),
-                                  child: Center(
-                                    child: Text("Verify OTP",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontFamily: 'outfit',
-                                            color: Colors.white,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold)),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 19, bottom: 5),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text("Valid for ${_timerText} minutes",
-                                        textScaleFactor: 1.0,
-                                        style: TextStyle(
-                                            // color: ColorConstant.black90066,
-                                            color: Colors.grey,
-                                            fontSize: 16,
-                                            fontFamily: 'Outfit',
-                                            fontWeight: FontWeight.w500)),
-                                    GestureDetector(
-                                      onTap: () {
-                                        if (_secondsRemaining == GetTime ||
-                                            _secondsRemaining == 0) {
-                                          _startTimer();
-                                        }
-                                      },
-                                      child: Text("Resend",
+                              Padding(
+                                padding: EdgeInsets.only(top: 19, bottom: 5),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("Valid for ${_timerText} minutes",
                                           textScaleFactor: 1.0,
                                           style: TextStyle(
-                                              color: (_secondsRemaining !=
-                                                          GetTime &&
-                                                      _secondsRemaining != 0)
-                                                  ? Theme.of(context)
-                                                              .brightness ==
-                                                          Brightness.light
-                                                      ? Colors.black
-                                                      : Colors
-                                                          .white /* ColorConstant.black90066 */
-                                                  : Colors.red,
+                                              // color: ColorConstant.black90066,
+                                              color: Colors.grey,
                                               fontSize: 16,
                                               fontFamily: 'Outfit',
-                                              fontWeight: FontWeight.w500,
-                                              decoration:
-                                                  TextDecoration.underline)),
-                                    ),
-                                  ]),
-                            )
-                          ]));
-                },
-              ),
-            )));
+                                              fontWeight: FontWeight.w500)),
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (_secondsRemaining == GetTime ||
+                                              _secondsRemaining == 0) {
+                                            _startTimer();
+                                          }
+                                        },
+                                        child: Text("Resend",
+                                            textScaleFactor: 1.0,
+                                            style: TextStyle(
+                                                color: (_secondsRemaining !=
+                                                            GetTime &&
+                                                        _secondsRemaining != 0)
+                                                    ? Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.light
+                                                        ? Colors.black
+                                                        : Colors
+                                                            .white /* ColorConstant.black90066 */
+                                                    : Colors.red,
+                                                fontSize: 16,
+                                                fontFamily: 'Outfit',
+                                                fontWeight: FontWeight.w500,
+                                                decoration:
+                                                    TextDecoration.underline)),
+                                      ),
+                                    ]),
+                              )
+                            ]));
+                  },
+                ),
+              ))),
+    );
   }
 
   /// Navigates back to the previous screen.

@@ -47,7 +47,7 @@ TextStyle getStyle(TextMode? mode) {
 class _AddThreadsScreenState extends State<AddThreadsScreen> {
   TextEditingController controller = TextEditingController();
   TextEditingController RoomTitleController = TextEditingController();
- String description = 'My great package';
+  String description = 'My great package';
   TextMode? currentmode;
 
   @override
@@ -102,6 +102,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                 );
               }
               if (state is CreatPublicRoomLoadedState) {
+                print('CreatPublicRoomLoadedState');
                 SnackBar snackBar = SnackBar(
                   content: Text(state.PublicRoomData.message ?? ""),
                   backgroundColor: ColorConstant.primary_color,
@@ -256,9 +257,16 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                           "description": "",
                           "roomType": "PUBLIC"
                         };
-
-                        BlocProvider.of<CreatPublicRoomCubit>(context)
-                            .CreatPublicRoomAPI(params);
+                        if (RoomTitleController.text.isNotEmpty) {
+                          BlocProvider.of<CreatPublicRoomCubit>(context)
+                              .CreatPublicRoomAPI(params);
+                        } else {
+                          SnackBar snackBar = SnackBar(
+                            content: Text('Please right Description'),
+                            backgroundColor: ColorConstant.primary_color,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        }
                       },
                       child: Center(
                         child: Container(
