@@ -1,6 +1,6 @@
 import 'package:archit_s_application1/API/Model/coment/coment_model.dart';
-import 'package:archit_s_application1/core/utils/size_utils.dart';
 import 'package:archit_s_application1/presentation/register_create_account_screen/register_create_account_screen.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -323,9 +323,13 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   SizedBox(
                                     width: 10,
                                   ),
-                                  Image.asset(
-                                    "assets/images/ic_outline-emoji-emotions.png",
-                                    height: 30,
+                                  GestureDetector(onTap: () {
+                                    buildSticker();
+                                  },
+                                    child: Image.asset(
+                                      "assets/images/ic_outline-emoji-emotions.png",
+                                      height: 30,
+                                    ),
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -591,7 +595,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 })
                             : SizedBox(),
                       ),
-                    ),
+                    ), 
                   ]),
                 ),
               ));
@@ -608,7 +612,15 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
           // );
         }));
   }
-
+ Widget buildSticker() {
+    return EmojiPicker( 
+  
+  onEmojiSelected: (emoji, category) {
+    print(emoji);
+     
+  },
+    );
+  }
   checkGuestUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
