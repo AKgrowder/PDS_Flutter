@@ -146,9 +146,9 @@ class ImageConstant {
   static String timeimage = 'assets/images/ic_round-access-time.png';
   static String starimage = 'assets/images/material-symbols_star-rounded.png';
   static String expert2 =
-      'assets/images/pexels-tima-miroshnichenko-5452201 2 (3).png';
+      'assets/images/expert3.png';
   static String expert3 =
-      'assets/images/pexels-tima-miroshnichenko-5452201 2 (4).png';
+      'assets/images/expert4.png';
   static String expert4 =
-      'assets/images/pexels-tima-miroshnichenko-5452201 2 (5).png';
+      'assets/images/expert5.png';
 }
