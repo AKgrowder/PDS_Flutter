@@ -15,9 +15,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
+import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import '../../API/Bloc/auth/register_Block.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
+import '../../API/Model/authModel/loginModel.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../Login_Screen/Login_Screen.dart';
 
@@ -26,8 +28,11 @@ class OtpVerificationScreen extends StatefulWidget {
   String? phonNumber;
   String? flowCheck;
   String? userId;
+  LoginModel? loginModelData;
+ 
+
   OtpVerificationScreen(
-      {Key? key, this.phonNumber, this.flowCheck, this.userId})
+      {Key? key, this.phonNumber, this.flowCheck, this.userId, this.loginModelData})
       : super(key: key);
 
   @override
@@ -67,6 +72,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
   @override
   void initState() {
+    print(widget.loginModelData?.object);
     super.initState();
   }
 
@@ -140,6 +146,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           ], child: LoginScreen());
                         }));
                       } else {
+                        getDataStroe(
+                     widget.loginModelData?.object?.uuid.toString() ?? "",
+                      widget.loginModelData?.object?.jwt.toString() ?? "",
+                      widget.loginModelData?.object?.module.toString() ?? ""
+                      // state.loginModel.object!.verified.toString(),
+                      );
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return MultiBlocProvider(providers: [
@@ -158,6 +170,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             BlocProvider<GetAllPrivateRoomCubit>(
                               create: (context) => GetAllPrivateRoomCubit(),
                             ),
+                            BlocProvider< InvitationCubit>(
+              create: (context) =>  InvitationCubit(),
+            ),
                           ], child: BottombarPage(buttomIndex: 0));
                         }));
                       }
@@ -326,13 +341,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     Navigator.pop(context);
   }
 
-  getDataStroe(
-    String userId,
-    String jwt,
-  ) async {
+  getDataStroe(String userId, String jwt, String user_Module) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKey.loginUserID, userId);
     prefs.setString(PreferencesKey.loginJwt, jwt);
+    prefs.setString(PreferencesKey.module, user_Module);
     // prefs.setString(PreferencesKey.loginVerify, verify);
     print('userId-$userId');
     print('jwt-$jwt');

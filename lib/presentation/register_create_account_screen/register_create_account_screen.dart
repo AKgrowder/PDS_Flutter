@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
+import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../create_account_screen/create_account_screen.dart';
 
 class RegisterCreateAccountScreen extends StatefulWidget {
@@ -68,6 +69,9 @@ class _RegisterCreateAccountScreenState
                           BlocProvider<GetAllPrivateRoomCubit>(
                             create: (context) => GetAllPrivateRoomCubit(),
                           ),
+                          BlocProvider< InvitationCubit>(
+              create: (context) =>  InvitationCubit(),
+            ),
                         ], child: BottombarPage(buttomIndex: 0));
                       }));
                     }),
@@ -105,7 +109,7 @@ class _RegisterCreateAccountScreenState
           ),
           Container(
             child: Text(
-              "register Now",
+              "Login Now",
               style: TextStyle(
                   fontFamily: 'outfit',
                   fontWeight: FontWeight.w400,
