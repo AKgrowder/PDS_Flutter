@@ -56,6 +56,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
     method();
     // method();
     var _width = MediaQuery.of(context).size.width;
+    var _height = MediaQuery.of(context).size.height;
+
     Object? index;
     // int selectedIndex = 0;
     return Scaffold(
@@ -1013,9 +1015,15 @@ class _RoomsScreenState extends State<RoomsScreen> {
                   )
                 : Stack(
                     children: [
-                      Container(
-                        child: Image.asset('assets/images/no_room_720.png'),
-                        // color: Colors.red,
+                      Center(
+                        child: Container(
+                          height: _height / 2.5,
+
+                          child: CustomImageView(
+                            imagePath: ImageConstant.noRoom,
+                          ),
+                          // color: Colors.red,
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(18.0),
