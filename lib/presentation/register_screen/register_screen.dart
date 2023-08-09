@@ -83,6 +83,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   getDataStroe(
                     state.loginModel.object?.uuid.toString() ?? "",
                     state.loginModel.object?.jwt.toString() ?? "",
+                     state.loginModel.object?.module.toString() ?? ""
                     // state.loginModel.object!.verified.toString(),
                   );
                 }
@@ -434,13 +435,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  getDataStroe(
-    String userId,
-    String jwt,
-  ) async {
+ getDataStroe(String userId, String jwt, String user_Module) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKey.loginUserID, userId);
     prefs.setString(PreferencesKey.loginJwt, jwt);
+    prefs.setString(PreferencesKey.module, user_Module);
     // prefs.setString(PreferencesKey.loginVerify, verify);
     print('userId-$userId');
     print('jwt-$jwt');
