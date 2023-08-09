@@ -108,7 +108,9 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   Widget get textFormFieldWidget => Container(
         width: widget.width ?? double.maxFinite,
         margin: widget.margin,
-        child: TextFormField(onChanged:widget. onChanged,
+        child: TextFormField(
+          
+          onChanged:widget. onChanged,
           maxLength: widget.maxLength  ,
           controller: widget.controller,
           

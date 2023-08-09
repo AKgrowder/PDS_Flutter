@@ -1,3 +1,4 @@
+import 'package:archit_s_application1/API/Model/delete_room_model/Delete_room_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
 import '../../Repo/repository.dart';
@@ -21,5 +22,18 @@ class GetAllPrivateRoomCubit extends Cubit<GetAllPrivateRoomState> {
     }
   }
 
-  
+  Future<void> DeleteRoomm(String roomuId) async {
+    try {
+      emit(GetAllPrivateRoomLoadingState());
+      DeleteRoomModel GetAllPrivateRoom =
+          await Repository().DeleteRoomApi(roomuId);
+      if (GetAllPrivateRoom.success == true) {
+        emit(DeleteRoomLoadedState(GetAllPrivateRoom));
+      } else {
+        emit(GetAllPrivateRoomErrorState(GetAllPrivateRoom.message.toString()));
+      }
+    } catch (e) {
+      emit(GetAllPrivateRoomErrorState(e.toString()));
+    }
+  }
 }
