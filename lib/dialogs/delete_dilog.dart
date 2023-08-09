@@ -4,6 +4,8 @@ import '../core/utils/image_constant.dart';
 import '../widgets/custom_image_view.dart';
 
 class DeleteDilogScreen extends StatefulWidget {
+  String? userId;
+  DeleteDilogScreen({ this.userId});
   @override
   State<StatefulWidget> createState() => DeleteDilogScreenState();
 }
