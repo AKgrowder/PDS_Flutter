@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_state.dart';
@@ -24,10 +25,32 @@ enum TextMode {
   // link,  <- I'm not sure what you want to have happen with this one
 }
 
+bullettext(BuildContext context) {
+  return Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      Text(
+        "•", // Unicode bullet character
+        style: TextStyle(fontSize: 20),
+      ),
+      SizedBox(width: 8), // Add spacing between bullet and text
+      Flexible(
+        child: Text(
+          " ",
+          style: TextStyle(
+            fontSize: 16,
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
 const normalStyle = TextStyle();
 const boldStyle = TextStyle(fontWeight: FontWeight.bold);
 const italicStyle = TextStyle(fontStyle: FontStyle.italic);
 const linethrough = TextStyle(decoration: TextDecoration.lineThrough);
+bool value = false;
 
 // Helper method
 TextStyle getStyle(TextMode? mode) {
@@ -46,7 +69,7 @@ TextStyle getStyle(TextMode? mode) {
 
 class _AddThreadsScreenState extends State<AddThreadsScreen> {
   TextEditingController controller = TextEditingController();
-  TextEditingController RoomTitleController = TextEditingController();
+  TextEditingController _RoomTitleController = TextEditingController();
   String description = 'My great package';
   TextMode? currentmode;
 
@@ -194,9 +217,12 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                             height: 15,
                           ),
                           Spacer(),
-                          CustomImageView(
-                            imagePath: ImageConstant.lineimage,
-                            height: 25,
+                          GestureDetector(
+                            onTap: doteFunction,
+                            child: CustomImageView(
+                              imagePath: ImageConstant.lineimage,
+                              height: 25,
+                            ),
                           ),
                           Spacer(),
                           CustomImageView(
@@ -233,7 +259,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                           Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextField(
-                                  controller: RoomTitleController,
+                                  controller: _RoomTitleController,
                                   cursorColor: Colors.grey,
                                   maxLines: 6,
                                   decoration: InputDecoration(
@@ -253,11 +279,11 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                     child: GestureDetector(
                       onTap: () {
                         var params = {
-                          "roomQuestion": RoomTitleController.text,
+                          "roomQuestion": _RoomTitleController.text,
                           "description": "",
                           "roomType": "PUBLIC"
                         };
-                        if (RoomTitleController.text.isNotEmpty) {
+                        if (_RoomTitleController.text.isNotEmpty) {
                           BlocProvider.of<CreatPublicRoomCubit>(context)
                               .CreatPublicRoomAPI(params);
                         } else {
@@ -293,5 +319,36 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                 ],
               );
             })));
+  }
+
+  doteFunction() {
+    print('this dsdtasd');
+    final testData = ["Example1", "Example2", "Example3", "Example100"];
+    value = true;
+    final _markDownData =
+        testData.map((x) => "- $x\n").reduce((x, y) => "$x$y");
+    return Container(
+        height: 100,
+        width: 100,
+        color: Colors.amber,
+        margin: EdgeInsets.all(40.0),
+        child: Markdown(data: _markDownData));
+  }
+}
+
+class Demo extends StatelessWidget {
+  final testData = ["Example1", "Example2", "Example3", "Example100"];
+
+  @override
+  Widget build(BuildContext context) {
+    print('halo bayu');
+    final _markDownData =
+        testData.map((x) => "- $x\n").reduce((x, y) => "$x$y");
+
+    return MaterialApp(
+        home: Scaffold(
+      body: Container(
+          margin: EdgeInsets.all(40.0), child: Markdown(data: _markDownData)),
+    ));
   }
 }

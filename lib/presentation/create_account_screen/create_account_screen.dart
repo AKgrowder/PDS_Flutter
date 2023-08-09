@@ -292,7 +292,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     return 'Please Enter Name';
                                   } else if (!nameRegExp.hasMatch(value)) {
                                     return 'Input cannot contains prohibited special characters';
-                                  } else if (value.length <= 3 ||
+                                  } else if (value.length <= 0 ||
                                       value.length > 50) {
                                     return 'username length is between 1 and 50 characters';
                                   } else if (value.contains('..')) {

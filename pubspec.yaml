@@ -15,7 +15,10 @@ dependencies:
   flutter_bloc:
   image_picker:  
   connectivity: 
-  flutter_rating_bar:  
+  flutter_rating_bar: 
+  emoji_picker_flutter:  
+  # keyboard_emoji_picker: ^1.0.3
+  flutter_markdown:
   file_picker: 
   
 dev_dependencies: 

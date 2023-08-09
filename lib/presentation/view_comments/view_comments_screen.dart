@@ -1,7 +1,9 @@
 import 'package:archit_s_application1/API/Model/coment/coment_model.dart';
 import 'package:archit_s_application1/presentation/register_create_account_screen/register_create_account_screen.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+ 
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
@@ -322,9 +324,12 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   SizedBox(
                                     width: 10,
                                   ),
-                                  GestureDetector(onTap: () {
-                                    // buildSticker();
-                                  },
+                                  GestureDetector(
+                                    onTap: () {
+                                      // buildSticker();
+                                      // buildSticker();
+                                      // KeyboardEmojiPicker().pickEmoji();
+                                    },
                                     child: Image.asset(
                                       "assets/images/ic_outline-emoji-emotions.png",
                                       height: 30,
@@ -594,7 +599,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 })
                             : SizedBox(),
                       ),
-                    ), 
+                    ),
                   ]),
                 ),
               ));
@@ -612,11 +617,11 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
         }));
   }
 //  Widget buildSticker() {
-//     return EmojiPicker( 
-  
+//     return EmojiPicker(
+
 //   onEmojiSelected: (emoji, category) {
 //     print(emoji);
-     
+
 //   },
 //     );
 //   }
@@ -648,4 +653,17 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
           builder: (context) => RegisterCreateAccountScreen()));
     }
   }
+
+  // Widget buildSticker() {
+  //   return EmojiPicker(
+  //     // rows: 3,
+  //     // columns: 7,
+  //     // buttonMode: ButtonMode.MATERIAL,
+  //     // recommendKeywords: ["racing", "horse"],
+  //     // numRecommended: 10,
+  //     onEmojiSelected: (emoji, category) {
+  //       print(emoji);
+  //     },
+  //   );
+  // }
 }
