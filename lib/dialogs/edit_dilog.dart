@@ -3,14 +3,13 @@ import 'package:archit_s_application1/API/Bloc/Edit_room_bloc/edit_room_cubit.da
 import 'package:archit_s_application1/core/utils/color_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../core/utils/image_constant.dart';
 import '../widgets/custom_image_view.dart';
 
 class EditDilogScreen extends StatefulWidget {
   String? uid;
   String? parentName;
-  EditDilogScreen({this.uid,this.parentName});
+  EditDilogScreen({this.uid, this.parentName});
   @override
   State<StatefulWidget> createState() => EditDilogScreenState();
 }
@@ -92,11 +91,6 @@ class EditDilogScreenState extends State<EditDilogScreen>
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   Navigator.pop(context);
-                  // SnackBar snackBar = SnackBar(
-                  //   content: Text(state.editRoom.message.toString()),
-                  //   backgroundColor: ColorConstant.primary_color,
-                  // );
-                  // ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
                 if (state is EditroomErrorState) {
                   SnackBar snackBar = SnackBar(

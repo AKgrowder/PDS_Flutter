@@ -286,12 +286,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               ),
                               CustomTextFormField(
                                 validator: (value) {
-                                    RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                                  RegExp nameRegExp =
+                                      RegExp(r"^[a-zA-Z0-9\s'@]+$");
                                   if (value!.isEmpty) {
                                     return 'Please Enter Name';
                                   } else if (!nameRegExp.hasMatch(value)) {
                                     return 'Input cannot contains prohibited special characters';
-                                  } else if (value.length <= 3 ||
+                                  } else if (value.length <= 0 ||
                                       value.length > 50) {
                                     return 'username length is between 1 and 50 characters';
                                   } else if (value.contains('..')) {
@@ -439,7 +440,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   bottom: 14,
                                 ),
                                 // textStyle: theme.textTheme.titleMedium!,
-                                hintText: "Contact no.",
+                                hintText: "Mobile Number",
                                 // hintStyle: theme.textTheme.titleMedium!,
                                 textInputAction: TextInputAction.next,
                                 textInputType: TextInputType.emailAddress,
@@ -527,8 +528,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 onTap: () {
                                   if (_formKey.currentState!.validate()) {
                                     var datapPassing = {
-                                      "name": nameController.text,
-                                      "userName": enteruseridController.text,
+                                      "name": enteruseridController.text,
+                                      "userName": nameController.text,
                                       "email": emailAndMobileController.text,
                                       "mobileNo": contectnumberController.text,
                                       "password": passwordController.text,
