@@ -395,7 +395,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   ? Container(
                       height: 100,
                       width: 100,
-                      color: Colors.red,
+                      // color: Colors.red,
                     )
                   : SizedBox(),
               arrNotiyTypeList[2].isSelected == true

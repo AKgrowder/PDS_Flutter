@@ -139,14 +139,16 @@ class ImageConstant {
   static String notn = 'assets/images/notn.png';
   //----------------expert_screen_images------------------------------------------
   static String searchimagee = 'assets/images/search.png';
+  static String noRoom = 'assets/images/no_room_720.png';
+
   static String filterimage = 'assets/images/filter.png';
   static String roundrupee = 'assets/images/roundrupeee.png';
   static String timeimage = 'assets/images/ic_round-access-time.png';
   static String starimage = 'assets/images/material-symbols_star-rounded.png';
   static String expert2 =
-      'assets/images/pexels-tima-miroshnichenko-5452201 2 (3).png';
+      'assets/images/expert3.png';
   static String expert3 =
-      'assets/images/pexels-tima-miroshnichenko-5452201 2 (4).png';
+      'assets/images/expert4.png';
   static String expert4 =
-      'assets/images/pexels-tima-miroshnichenko-5452201 2 (5).png';
+      'assets/images/expert5.png';
 }

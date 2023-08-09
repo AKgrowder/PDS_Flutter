@@ -1,4 +1,3 @@
-import 'dart:html';
 
 import 'package:archit_s_application1/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'package:archit_s_application1/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
@@ -482,7 +481,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     text: "Support",
                                     style: TextStyle(
                                       color: theme.colorScheme.primary,
-                                     PaintWorkletGlobalScope fontSize: 14,
+                                      fontSize: 14,
                                       fontFamily: 'Outfit',
                                       fontWeight: FontWeight.w500,
                                       decoration: TextDecoration.underline,
