@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../../theme/theme_helper.dart';
 
 class CreateForamScreen extends StatefulWidget {
@@ -111,6 +112,9 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                   BlocProvider<GetAllPrivateRoomCubit>(
                     create: (context) => GetAllPrivateRoomCubit(),
                   ),
+                  BlocProvider< InvitationCubit>(
+              create: (context) =>  InvitationCubit(),
+            ),
                 ], child: BottombarPage(buttomIndex: 0));
               }));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
