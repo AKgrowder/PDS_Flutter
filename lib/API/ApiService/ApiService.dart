@@ -8,7 +8,7 @@ class ApiServices {
   var baseURL = "";
   var Token = "";
   UpdateBaseURL() async {
-    baseURL = "http://192.168.29.102:8081/";
+    baseURL = "http://192.168.29.100:8081/";
     print(baseURL);
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
