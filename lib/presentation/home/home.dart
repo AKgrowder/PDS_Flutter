@@ -118,13 +118,6 @@ class _HomeScreenState extends State<HomeScreen> {
               PublicRoomModelData = state.PublicRoomData;
             }
           }, builder: (context, state) {
-            if (_CallBackCheck != null) {
-              print(
-                  "back_back_back_back_back_back_back_back_back_back_back_back_back_back_");
-              setState(() {});
-              // records.removeAt(index);
-              // records.insert(index, _data);
-            }
             if (state is FetchAllPublicRoomLoadedState) {
               return SingleChildScrollView(
                 child: Column(
@@ -187,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: GestureDetector(
                                     onTap: () {
-                                      if (User_Name != null) {
+                                      if (User_ID != null) {
                                         print("user login Mood");
                                       } else {
                                         print("User guest Mood on");
@@ -237,73 +230,33 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: const EdgeInsets.only(
                           left: 16, top: 20, right: 16, bottom: 20),
                       child: Container(
-                        child: User_Mood == "EXPERT"
-                            ? Container(
-                                color: Colors.lightGreen,
-                                height: 50,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    if (User_ID != null) {
-                                      /*  Navigator.push(
+                        child: User_Mood == "COMPANY"
+                            ? SizedBox()
+                            : User_Mood == "EXPERT"
+                                ? Container(
+                                    // color: Colors.lightGreen,
+                                    height: 50,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        if (User_ID != null) {
+                                          /*  Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 RoomsScreen(),
                                           )); */
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) {
-                                        return MultiBlocProvider(providers: [
-                                          BlocProvider<InvitationCubit>(
-                                            create: (context) =>
-                                                InvitationCubit(),
-                                          ),
-                                        ], child: InvitationScreen());
-                                      }));
-                                    } else {
-                                      print("User guest Mood on");
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RegisterCreateAccountScreen()));
-                                    }
-                                  },
-                                  child: Container(
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        color: Color(0XFFED1C25),
-                                        borderRadius: BorderRadius.circular(5)),
-                                    child: Container(
-                                      // width: _width / 2.5,
-                                      child: Align(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          "Invitations",
-                                          style: TextStyle(
-                                            fontFamily: 'outfit',
-                                            fontSize: 13,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        if (User_Name != null) {
-                                          Navigator.push(
-                                              context,
+                                          Navigator.push(context,
                                               MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CreateForamScreen(),
-                                              ));
+                                                  builder: (context) {
+                                            return MultiBlocProvider(
+                                                providers: [
+                                                  BlocProvider<InvitationCubit>(
+                                                    create: (context) =>
+                                                        InvitationCubit(),
+                                                  ),
+                                                ],
+                                                child: InvitationScreen());
+                                          }));
                                         } else {
                                           print("User guest Mood on");
                                           Navigator.of(context).push(
@@ -312,39 +265,126 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       RegisterCreateAccountScreen()));
                                         }
                                       },
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          CreateForum();
-
-                                          // Navigator.push(context,
-                                          //     MaterialPageRoute(
-                                          //         builder: (context) {
-                                          //   return MultiBlocProvider(
-                                          //       providers: [
-                                          //         BlocProvider<CreatFourmCubit>(
-                                          //           create: (context) =>
-                                          //               CreatFourmCubit(),
-                                          //         ),
-                                          //       ],
-                                          //       child: CreateForamScreen());
-                                          // }));
-                                        },
+                                      child: Container(
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                            color: Color(0XFFED1C25),
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
                                         child: Container(
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                              color: Color(0XFFED1C25),
-                                              borderRadius:
-                                                  BorderRadius.circular(5)),
+                                          // width: _width / 2.5,
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              "Invitations",
+                                              style: TextStyle(
+                                                fontFamily: 'outfit',
+                                                fontSize: 13,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            if (User_Name != null) {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CreateForamScreen(),
+                                                  ));
+                                            } else {
+                                              print("User guest Mood on");
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          RegisterCreateAccountScreen()));
+                                            }
+                                          },
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              CreateForum();
+
+                                              // Navigator.push(context,
+                                              //     MaterialPageRoute(
+                                              //         builder: (context) {
+                                              //   return MultiBlocProvider(
+                                              //       providers: [
+                                              //         BlocProvider<CreatFourmCubit>(
+                                              //           create: (context) =>
+                                              //               CreatFourmCubit(),
+                                              //         ),
+                                              //       ],
+                                              //       child: CreateForamScreen());
+                                              // }));
+                                            },
+                                            child: Container(
+                                              height: 50,
+                                              decoration: BoxDecoration(
+                                                  color: Color(0XFFED1C25),
+                                                  borderRadius:
+                                                      BorderRadius.circular(5)),
+                                              child: Container(
+                                                width: _width / 2.5,
+                                                child: Align(
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                    "Create Forum",
+                                                    style: TextStyle(
+                                                      fontFamily: 'outfit',
+                                                      fontSize: 13,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            becomeAnExport();
+
+                                            /* Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BecomeExpertScreen(),
+                                            )); */
+                                          },
                                           child: Container(
-                                            width: _width / 2.5,
-                                            child: Align(
-                                              alignment: Alignment.center,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                                color: Color(0XFFFFD9DA),
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                border: Border.all(
+                                                    color: Color(0XFFED1C25))),
+                                            child: Center(
                                               child: Text(
-                                                "Create Forum",
+                                                "Become an Expert",
                                                 style: TextStyle(
                                                   fontFamily: 'outfit',
                                                   fontSize: 13,
-                                                  color: Colors.white,
+                                                  color: Color(0XFFED1C25),
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -352,48 +392,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        becomeAnExport();
-
-                                        /* Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BecomeExpertScreen(),
-                                            )); */
-                                      },
-                                      child: Container(
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                            color: Color(0XFFFFD9DA),
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            border: Border.all(
-                                                color: Color(0XFFED1C25))),
-                                        child: Center(
-                                          child: Text(
-                                            "Become an Expert",
-                                            style: TextStyle(
-                                              fontFamily: 'outfit',
-                                              fontSize: 13,
-                                              color: Color(0XFFED1C25),
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
                       ),
                     ),
                     Padding(
@@ -434,7 +434,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 10,
                     ),
                     ListView.builder(
-                      itemCount: PublicRoomModelData!.object!.length > 5 
+                      itemCount: PublicRoomModelData!.object!.length > 5
                           ? 5
                           : PublicRoomModelData?.object?.length,
                       shrinkWrap: true,
@@ -658,7 +658,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => PublicRoomList(PublicRoomModelData: PublicRoomModelData,)));
+                            builder: (context) => PublicRoomList(
+                                  PublicRoomModelData: PublicRoomModelData,
+                                )));
                       },
                       child: Container(
                         height: 50,
