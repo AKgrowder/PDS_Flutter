@@ -1,3 +1,4 @@
+import 'package:archit_s_application1/API/Model/checkUserStatusModel/chekuserStausModel.dart';
 import 'package:archit_s_application1/API/Model/delete_room_model/Delete_room_model.dart';
 import 'package:archit_s_application1/API/Model/sherInviteModel/sherinviteModel.dart';
 
@@ -28,3 +29,9 @@ class DeleteRoomLoadedState extends GetAllPrivateRoomState {
   final DeleteRoomModel DeleteRoom;
   DeleteRoomLoadedState(this.DeleteRoom);
 }
+
+class CheckuserLoadedState extends GetAllPrivateRoomState {
+  final CheckUserStausModel checkUserStausModel;
+  CheckuserLoadedState(this.checkUserStausModel);
+}
+

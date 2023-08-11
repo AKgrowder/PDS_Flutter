@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:archit_s_application1/API/Bloc/Edit_room_bloc/Edit_room_state.dart';
 import 'package:archit_s_application1/API/Bloc/Edit_room_bloc/edit_room_cubit.dart';
 import 'package:archit_s_application1/core/utils/color_constant.dart';
@@ -46,7 +48,6 @@ class EditDilogScreenState extends State<EditDilogScreen>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     RateUSController.clear();
     super.dispose();
   }
@@ -64,8 +65,6 @@ class EditDilogScreenState extends State<EditDilogScreen>
             height: _height / 2,
             width: _width / 1.17,
             decoration: ShapeDecoration(
-              // color: Colors.black,
-
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
               ),

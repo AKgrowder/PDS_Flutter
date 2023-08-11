@@ -1,5 +1,3 @@
-
-  
 import '../../Model/delete_room_model/Delete_room_model.dart';
 
 abstract class DeleteRoomState {}
