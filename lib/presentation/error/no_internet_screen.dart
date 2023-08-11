@@ -15,6 +15,8 @@ class NoInternetScreen extends StatefulWidget {
 class _NoInternetScreenState extends State<NoInternetScreen> {
   @override
   Widget build(BuildContext context) {
+      var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
       body: Column(
@@ -58,7 +60,7 @@ class _NoInternetScreenState extends State<NoInternetScreen> {
               onTap: () {},
               child: Container(
                 height: 50,
-                width: width / 2,
+                width: _width / 2,
                 decoration: BoxDecoration(
                     color: Color(0xFFED1C25),
                     borderRadius: BorderRadius.all(Radius.circular(5))),
