@@ -16,8 +16,8 @@ class FetchAllPublicRoomLoadedState extends FetchAllPublicRoomState {
 }
 
 class FetchAllExpertsLoadedState extends FetchAllPublicRoomState {
-  final FetchAllExpertsModel PublicRoomData;
- FetchAllExpertsLoadedState(this.PublicRoomData);
+  final FetchAllExpertsModel FetchAllExpertsData;
+ FetchAllExpertsLoadedState(this.FetchAllExpertsData);
 }
 
 class FetchAllPublicRoomErrorState extends FetchAllPublicRoomState {

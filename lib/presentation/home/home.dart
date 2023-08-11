@@ -11,6 +11,7 @@ import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_state.dart';
 import '../../API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import '../../API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
+import '../../API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import '../../API/Model/HomeScreenModel/PublicRoomModel.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
@@ -37,6 +38,7 @@ String? User_Mood;
 String? User_ID;
 
 PublicRoomModel? PublicRoomModelData;
+FetchAllExpertsModel? FetchAllExpertsData;
 List<String> aa = [
   "Baluran Wild The Savvanah Baluran Wild The \nSavvanah",
   "Baluran Wild The Savvanah Baluran Wild The \nSavvanah",
@@ -72,7 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     saveUserProfile();
-    BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllPublicRoom();
+    // BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllPublicRoom();
+    // BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllExpertsAPI();
 
     super.initState();
   }
@@ -80,6 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllPublicRoom();
+    BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllExpertsAPI();
 
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
@@ -111,6 +115,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
             if (state is FetchAllPublicRoomLoadedState) {
               PublicRoomModelData = state.PublicRoomData;
+            }
+
+            if (state is FetchAllExpertsLoadedState) {
+              FetchAllExpertsData = state.FetchAllExpertsData;
+              print(FetchAllExpertsData?.message);
             }
           }, builder: (context, state) {
             if (state is FetchAllPublicRoomLoadedState) {
@@ -429,7 +438,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 10,
                     ),
                     ListView.builder(
-                      itemCount: PublicRoomModelData!.object!.length > 5
+                      itemCount: (PublicRoomModelData?.object?.length ?? 0) > 5
                           ? 5
                           : PublicRoomModelData?.object?.length,
                       shrinkWrap: true,
@@ -716,7 +725,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               physics: BouncingScrollPhysics(),
-                              itemCount: 8,
+                              itemCount:
+                                  (FetchAllExpertsData?.object?.length ?? 0) > 5
+                                      ? 5
+                                      : FetchAllExpertsData?.object?.length,
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
                                 return Padding(
@@ -767,7 +779,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           Colors.red,
                                                       maxRadius: 5,
                                                     ),
-                                                    Text( 
+                                                    Text(
                                                       "Online",
                                                       style: TextStyle(
                                                           fontWeight:
@@ -786,7 +798,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Expert 1",
+                                              "${FetchAllExpertsData?.object?[index].userName}",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black,
@@ -816,7 +828,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Text(
-                                                "Expertise in....",
+                                              "${FetchAllExpertsData?.object?[index].expertise?[0].expertiseName}",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w300,
                                                     color: Colors.grey.shade700,

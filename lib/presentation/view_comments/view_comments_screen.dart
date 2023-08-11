@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:archit_s_application1/API/Model/coment/coment_model.dart';
 import 'package:archit_s_application1/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
@@ -8,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_state.dart';
+import '../../API/Repo/socket.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
@@ -17,8 +20,10 @@ import '../../widgets/custom_image_view.dart';
 class ViewCommentScreen extends StatefulWidget {
   final Room_ID;
   final Title;
+  String? Screen_name;
 
-  const ViewCommentScreen({required this.Room_ID, required this.Title});
+  ViewCommentScreen(
+      {required this.Room_ID, required this.Title, this.Screen_name});
 
   @override
   State<ViewCommentScreen> createState() => _ViewCommentScreenState();
@@ -41,14 +46,25 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   void initState() {
     BlocProvider.of<senMSGCubit>(context)
         .coomentPage(widget.Room_ID, ShowLoader: true);
+    // if (widget.Screen_name == "RoomChat") {
+    // }
+    stompClient.activate();
     super.initState();
   }
- _onBackspacePressed() {
+
+  //  @override
+  // void dispose() {
+  //  stompClient.deactivate();
+  //   super.dispose();
+  // }
+
+  _onBackspacePressed() {
     Add_Comment
       ..text = Add_Comment.text.characters.toString()
       ..selection = TextSelection.fromPosition(
           TextPosition(offset: Add_Comment.text.length));
   }
+
   @override
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
@@ -390,7 +406,16 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   print(
                                       "Add comment button-${Add_Comment.text}");
                                   if (Add_Comment.text.isNotEmpty) {
-                                    checkGuestUser();
+                                    // checkGuestUser();
+                                    stompClient.send(
+                                      destination:
+                                          'user/app/sendMessage/${widget.Room_ID}',
+                                      body: json.encode({
+                                        "message": "${Add_Comment.text}",
+                                        "messageType": "TEXT",
+                                        "roomUid": "${widget.Room_ID}"
+                                      }),
+                                    );
                                   } else {
                                     SnackBar snackBar = SnackBar(
                                       content: Text('Please Enter Comment'),
@@ -422,14 +447,14 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                             child: SizedBox(
                                 height: 250,
                                 child: EmojiPicker(
-                                  textEditingController:Add_Comment,
+                                  textEditingController: Add_Comment,
                                   onBackspacePressed: _onBackspacePressed,
                                   config: Config(
                                     columns: 7,
                                     // Issue: https://github.com/flutter/flutter/issues/28894
                                     emojiSizeMax: 32 *
                                         (foundation.defaultTargetPlatform ==
-                                                TargetPlatform. iOS
+                                                TargetPlatform.iOS
                                             ? 1.30
                                             : 1.0),
                                     verticalSpacing: 0,
