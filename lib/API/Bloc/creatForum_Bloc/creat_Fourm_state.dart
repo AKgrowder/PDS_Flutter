@@ -1,5 +1,5 @@
+import 'package:archit_s_application1/API/Model/createDocumentModel/createDocumentModel.dart';
 
- 
 import '../../Model/creat_form/creat_form_Model.dart';
 
 abstract class CreatFourmState {}
@@ -16,4 +16,9 @@ class CreatFourmLoadedState extends CreatFourmState {
 class CreatFourmErrorState extends CreatFourmState {
   final String error;
   CreatFourmErrorState(this.error);
+}
+
+class ChooseDocumeentLoadedState extends CreatFourmState {
+  final ChooseDocument chooseDocument;
+  ChooseDocumeentLoadedState(this.chooseDocument);
 }

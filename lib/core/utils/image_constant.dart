@@ -145,6 +145,8 @@ class ImageConstant {
   static String roundrupee = 'assets/images/roundrupeee.png';
   static String timeimage = 'assets/images/ic_round-access-time.png';
   static String starimage = 'assets/images/material-symbols_star-rounded.png';
+  static String noInternetConnection= 'assets/images/noInternet.png';
+
   static String expert2 =
       'assets/images/expert3.png';
   static String expert3 =
