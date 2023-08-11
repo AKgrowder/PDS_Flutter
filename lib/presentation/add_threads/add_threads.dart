@@ -140,7 +140,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
-                      "Description",
+                      "Thread",
                       style: TextStyle(
                         fontFamily: 'outfit',
                         fontSize: 15,
@@ -264,7 +264,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                                   maxLines: 6,
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
-                                      hintText: 'Add Description....'),
+                                      hintText: 'Add Thread....'),
                                   style: TextStyle()
                                       .merge(getStyle(currentmode)))),
                         ],
