@@ -18,21 +18,15 @@ class AppDecoration {
 
 class BorderRadiusStyle {
   static BorderRadius roundedBorder6 = BorderRadius.circular(
-    getHorizontalSize(
-      6,
-    ),
+    6
   );
 
   static BorderRadius circleBorder65 = BorderRadius.circular(
-    getHorizontalSize(
-      65,
-    ),
+  65,
   );
 
   static BorderRadius roundedBorder30 = BorderRadius.circular(
-    getHorizontalSize(
-      30,
-    ),
+   30,
   );
 }
 

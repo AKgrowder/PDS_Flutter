@@ -5,6 +5,7 @@ import 'package:archit_s_application1/API/Bloc/sherinvite_Block/sherinvite_state
 import 'package:archit_s_application1/core/utils/color_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import '../core/utils/image_constant.dart';
 import '../widgets/custom_image_view.dart';
@@ -85,7 +86,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          Navigator.pop(context);
+         SmartDialog.dismiss();
         }
       },
       builder: (context, state) {
@@ -136,7 +137,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                       ),
                                     ),
                                     GestureDetector(
-                                      onTap: () => Navigator.pop(context),
+                                      onTap: () => SmartDialog.dismiss(),
                                       child: CustomImageView(
                                         imagePath: ImageConstant.closeimage,
                                         height: 40,
@@ -203,7 +204,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   GestureDetector(
-                                    onTap: () => Navigator.pop(context),
+                                    onTap: () => SmartDialog.dismiss(),
                                     child: Container(
                                       height: 43,
                                       width: width / 3.5,

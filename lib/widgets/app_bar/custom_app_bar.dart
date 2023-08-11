@@ -1,8 +1,9 @@
-import 'package:archit_s_application1/core/app_export.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  Size size = WidgetsBinding.instance.window.physicalSize /
+    WidgetsBinding.instance.window.devicePixelRatio;
   CustomAppBar({
     Key? key,
     required this.height,
@@ -11,11 +12,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.title,
     this.centerTitle,
     this.actions,
+    
   }) : super(
           key: key,
         );
 
   double height;
+  
 
   double? leadingWidth;
 

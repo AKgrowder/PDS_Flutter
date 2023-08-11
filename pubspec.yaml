@@ -16,7 +16,8 @@ dependencies:
   image_picker:  
   connectivity: 
   flutter_rating_bar: 
-  emoji_picker_flutter:  
+  emoji_picker_flutter: 
+  flutter_smart_dialog:  
   # keyboard_emoji_picker: ^1.0.3
   flutter_markdown:
   file_picker: 

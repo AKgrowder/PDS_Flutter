@@ -143,9 +143,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         border: widget.defaultBorderDecoration ??
             OutlineInputBorder(
               borderRadius: BorderRadius.circular(
-                getHorizontalSize(
-                  6.00,
-                ),
+                6,
               ),
               borderSide: BorderSide(
                 color: appTheme.gray200,
@@ -155,9 +153,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         enabledBorder: widget.enabledBorderDecoration ??
             OutlineInputBorder(
               borderRadius: BorderRadius.circular(
-                getHorizontalSize(
-                  6.00,
-                ),
+                6
               ),
               borderSide: BorderSide(
                 color: appTheme.gray200,
@@ -167,9 +163,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         focusedBorder: widget.focusedBorderDecoration ??
             OutlineInputBorder(
               borderRadius: BorderRadius.circular(
-                getHorizontalSize(
-                  6.00,
-                ),
+               6
               ),
               borderSide: BorderSide(
                 color: appTheme.gray200,
@@ -179,9 +173,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         disabledBorder: widget.disabledBorderDecoration ??
             OutlineInputBorder(
               borderRadius: BorderRadius.circular(
-                getHorizontalSize(
-                  6.00,
-                ),
+               6
               ),
               borderSide: BorderSide(
                 color: appTheme.gray200,
@@ -195,17 +187,13 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 extension TextFormFieldStyleHelper on CustomTextFormField {
   static OutlineInputBorder get fillDeeporange5001 => OutlineInputBorder(
         borderRadius: BorderRadius.circular(
-          getHorizontalSize(
-            6.00,
-          ),
+         6
         ),
         borderSide: BorderSide.none,
       );
   static OutlineInputBorder get outlineBluegray50 => OutlineInputBorder(
         borderRadius: BorderRadius.circular(
-          getHorizontalSize(
-            12.00,
-          ),
+        12
         ),
         borderSide: BorderSide(
           color: appTheme.blueGray50,
