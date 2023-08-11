@@ -23,4 +23,6 @@ class Config {
       "user/api/acceptRejectInvitation";
   static const String DeleteRoom = "user/api/deleteRoom";
   static const String checkUserActive = "user/api/isForumCreated";
+  static const String uploadfile = 'user/api/uploadFIle';
+  static const String fetchAllExperts = "user/api/fetchAllExperts";
 }

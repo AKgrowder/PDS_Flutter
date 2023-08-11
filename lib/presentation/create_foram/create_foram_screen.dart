@@ -112,13 +112,20 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                   BlocProvider<GetAllPrivateRoomCubit>(
                     create: (context) => GetAllPrivateRoomCubit(),
                   ),
-                  BlocProvider< InvitationCubit>(
-              create: (context) =>  InvitationCubit(),
-            ),
+                  BlocProvider<InvitationCubit>(
+                    create: (context) => InvitationCubit(),
+                  ),
                 ], child: BottombarPage(buttomIndex: 0));
               }));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
               print('check Status--${state.createForm.success}');
+            }
+            if (state is ChooseDocumeentLoadedState) {
+              SnackBar snackBar = SnackBar(
+                content: Text(state.chooseDocument.success.toString()),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
           },
           builder: (context, state) {
@@ -127,7 +134,6 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                 key: _formKey,
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    // mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SizedBox(
                         height: 20,
@@ -234,10 +240,11 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 35.0),
-                        child: Row( 
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Container(height: 50,
+                            Container(
+                              height: 50,
                               width: _width / 1.65,
                               decoration: BoxDecoration(
                                   color: Color(0XFFF6F6F6),
@@ -355,8 +362,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                               'jobProfile': profile.text,
                             };
                             BlocProvider.of<CreatFourmCubit>(context)
-                                .CreatFourm(params,
-                                    uplopdfile.text, filepath.toString());
+                                .CreatFourm(params, uplopdfile.text,
+                                    filepath.toString());
                           } else {
                             SnackBar snackBar = SnackBar(
                               content: Text('Please Enter Company Name'),
@@ -483,6 +490,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
           );
         } else {
           getFileSize(file.path!, 1, result.files.first, Index);
+         
           return file.path!;
         }
 
@@ -555,9 +563,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
           default:
         }
         print('filenamecheckKB-${file1.path}');
-
-        // BlocProvider.of<DocumentUploadCubit>(context)
-        //     .documentUpload(file1.path!, );
+          BlocProvider.of<CreatFourmCubit>(context)
+            .chooseDocumentprofile(dopcument.toString(), file1.path!);
         break;
       case 2:
         if (value2 > finalFileSize) {
@@ -576,7 +583,6 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                     Navigator.of(ctx).pop();
                   },
                   child: Container(
-                    // color: Colors.green,
                     padding: const EdgeInsets.all(10),
                     child: const Text("Okay"),
                   ),
@@ -598,9 +604,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             default:
           }
           print('filecheckPath-${file1.path}');
-          // BlocProvider.of<DocumentUploadCubit>(context).documentUpload(
-          //   file1.path!,
-          // );
+          BlocProvider.of<CreatFourmCubit>(context)
+              .chooseDocumentprofile(dopcument.toString(), file1.path!);
         }
 
         break;
