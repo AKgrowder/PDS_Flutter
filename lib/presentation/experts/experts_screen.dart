@@ -42,6 +42,8 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
   var _containerColor;
   @override
   Widget build(BuildContext context) {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
       appBar: AppBar(
@@ -383,7 +385,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                         },
                                         child: Container(
                                           height: 30,
-                                          width: width,
+                                          width: _width,
                                           decoration: BoxDecoration(
                                             color: Color(0xFFED1C25),
                                             borderRadius: BorderRadius.all(

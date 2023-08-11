@@ -1,5 +1,4 @@
 import 'package:archit_s_application1/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
-import 'package:archit_s_application1/API/Bloc/auth/register_Block.dart';
 import 'package:archit_s_application1/core/app_export.dart';
 import 'package:archit_s_application1/presentation/become_an_expert_screen/become_an_expert_screen.dart';
 import 'package:archit_s_application1/presentation/experts/experts_screen.dart';
@@ -10,18 +9,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_state.dart';
 import '../../API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
-import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
-import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import '../../API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../API/Model/HomeScreenModel/PublicRoomModel.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
-import '../../custom_bottom_bar/custom_bottom_bar.dart';
 import '../add_threads/add_threads.dart';
 import '../create_foram/create_foram_screen.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
-import '../rooms/rooms_screen.dart';
 import '../view_comments/view_comments_screen.dart';
 import 'Invitation_Screen.dart';
 import 'PublicRoom.dart';
@@ -772,7 +767,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           Colors.red,
                                                       maxRadius: 5,
                                                     ),
-                                                    Text(
+                                                    Text( 
                                                       "Online",
                                                       style: TextStyle(
                                                           fontWeight:
