@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import '../core/utils/image_constant.dart';
 import '../widgets/custom_image_view.dart';
@@ -60,7 +61,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
         child: ScaleTransition(
           scale: scaleAnimation,
           child: Container(
-            height: _height / 2,
+            height: _height / 1.5,
             width: _width / 1.17,
             decoration: ShapeDecoration(
               // color: Colors.black,
@@ -73,7 +74,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
               children: [
                 Center(
                   child: Container(
-                    height: 345,
+                    height: 400,
                     width: _width / 1.25,
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -97,7 +98,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                                 ),
                               ),
                               GestureDetector(
-                                onTap: () => Navigator.pop(context),
+                                onTap: () => SmartDialog.dismiss(),
                                 child: CustomImageView(
                                   imagePath: ImageConstant.closeimage,
                                   height: 40,

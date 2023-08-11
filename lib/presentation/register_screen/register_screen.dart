@@ -4,7 +4,6 @@ import 'package:archit_s_application1/API/Bloc/auth/otp_block.dart';
 import 'package:archit_s_application1/core/app_export.dart';
 import 'package:archit_s_application1/core/utils/color_constant.dart';
 import 'package:archit_s_application1/core/utils/sharedPreferences.dart';
-import 'package:archit_s_application1/presentation/home/home.dart';
 import 'package:archit_s_application1/presentation/otp_verification_screen/otp_verification_screen.dart';
 import 'package:archit_s_application1/widgets/custom_elevated_button.dart';
 import 'package:archit_s_application1/widgets/custom_outlined_button.dart';
@@ -133,21 +132,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: getVerticalSize(
-                            348,
-                          ),
+                          height: 348,
                           width: double.maxFinite,
                           child: Stack(
                             alignment: Alignment.bottomCenter,
                             children: [
                               CustomImageView(
                                 imagePath: ImageConstant.register,
-                                height: getVerticalSize(
-                                  348,
-                                ),
-                                width: getHorizontalSize(
-                                  414,
-                                ),
+                                height: 348,
+                                width: 414,
                                fit: BoxFit.fill,
                               ),
                              
@@ -155,7 +148,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ),
                         Padding(
-                          padding: getPadding(
+                          padding: EdgeInsets.only(
                             top: 39,
                           ),
                           child: Text(
@@ -168,7 +161,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Padding(
-                            padding: getPadding(
+                            padding: EdgeInsets.only(
                               left: 30,
                               top: 41,
                             ),
@@ -208,11 +201,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           maxLength: isPhone == true ? 10 : 30,
                           // focusNode: FocusNode(),
                           controller: emailAndMobileController,
-                          margin: getMargin(
+                          margin: EdgeInsets.only(
                             left: 30,
                             right: 30,
                           ),
-                          contentPadding: getPadding(
+                          contentPadding: EdgeInsets.only(
                             left: 12,
                             top: 14,
                             right: 12,
@@ -229,7 +222,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Padding(
-                            padding: getPadding(
+                            padding: EdgeInsets.only(
                               left: 30,
                               top: 19,
                             ),
@@ -258,12 +251,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                           controller: passwordoneController,
                           // textInputType: TextInputType. number,
-                          margin: getMargin(
+                          margin: EdgeInsets.only(
                             left: 30,
                             top: 5,
                             right: 30,
                           ),
-                          contentPadding: getPadding(
+                          contentPadding: EdgeInsets.only(
                             left: 20,
                             top: 14,
                             bottom: 14,
@@ -273,7 +266,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           hintStyle: theme.textTheme.titleMedium!,
                           textInputType: TextInputType.emailAddress,
                           suffix: Container(
-                            margin: getMargin(
+                            margin: EdgeInsets.only(
                               left: 30,
                               top: 15,
                               right: 15,
@@ -296,9 +289,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                           suffixConstraints: BoxConstraints(
-                            maxHeight: getVerticalSize(
-                              50,
-                            ),
+                            maxHeight: 50
                           ),
                           obscureText: Show_Password ? true : false,
                           filled: true,
@@ -307,7 +298,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Padding(
-                            padding: getPadding(
+                            padding: EdgeInsets.only(
                               left: 30,
                               top: 13,
                             ),
@@ -348,16 +339,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     fixedSize:
                                         MaterialStateProperty.all<Size>(Size(
                               double.maxFinite,
-                              getVerticalSize(
-                                50,
-                              ),
+                              50,
                             ))),
                             buttonTextStyle:
                                 TextThemeHelper.titleMediumOnPrimary,
                           ),
                         ),
                         Padding(
-                          padding: getPadding(
+                          padding: EdgeInsets.only(
                             top: 25,
                             bottom: 5,
                           ),
@@ -368,9 +357,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   text: "Connect with us at  ",
                                   style: TextStyle(
                                     color: appTheme.black900,
-                                    fontSize: getFontSize(
-                                      14,
-                                    ),
+                                    fontSize: 14,
                                     fontFamily: 'Outfit',
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -379,9 +366,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   text: "Support",
                                   style: TextStyle(
                                     color: theme.colorScheme.primary,
-                                    fontSize: getFontSize(
-                                      14,
-                                    ),
+                                    fontSize: 14,
                                     fontFamily: 'Outfit',
                                     fontWeight: FontWeight.w500,
                                     decoration: TextDecoration.underline,
@@ -405,7 +390,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               );
                             },
                             text: "Log In With OTP",
-                            margin: getMargin(
+                            margin: EdgeInsets.only(
                               left: 30,
                               right: 30,
                               bottom: 51,
@@ -415,9 +400,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     fixedSize:
                                         MaterialStateProperty.all<Size>(Size(
                               double.maxFinite,
-                              getVerticalSize(
-                                50,
-                              ),
+                             50,
                             ))),
                             buttonTextStyle:
                                 TextThemeHelper.titleMediumPrimarySemiBold,

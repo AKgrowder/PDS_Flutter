@@ -8,9 +8,7 @@ class TextThemeHelper {
       );
   static get bodySmallGray500 => theme.textTheme.bodySmall!.copyWith(
         color: appTheme.gray500,
-        fontSize: getFontSize(
-          12,
-        ),
+        fontSize: 12,
         fontWeight: FontWeight.w400,
       );
   static get titleMediumPrimary => theme.textTheme.titleMedium!.copyWith(
@@ -21,9 +19,7 @@ class TextThemeHelper {
       );
   static get bodySmallPrimary => theme.textTheme.bodySmall!.copyWith(
         color: theme.colorScheme.primary,
-        fontSize: getFontSize(
-          12,
-        ),
+        fontSize:12,
         fontWeight: FontWeight.w400,
       );
   static get titleMediumPrimarySemiBold =>
@@ -32,9 +28,7 @@ class TextThemeHelper {
         fontWeight: FontWeight.w600,
       );
   static get titleLarge22 => theme.textTheme.titleLarge!.copyWith(
-        fontSize: getFontSize(
-          22,
-        ),
+        fontSize: 22,
       );
   static get bodyMediumOnPrimary => theme.textTheme.bodyMedium!.copyWith(
         color: theme.colorScheme.onPrimary,
@@ -48,24 +42,18 @@ class TextThemeHelper {
       );
   static get bodyMediumBlack90015 => theme.textTheme.bodyMedium!.copyWith(
         color: appTheme.black900.withOpacity(0.5),
-        fontSize: getFontSize(
-          15,
-        ),
+        fontSize: 15,
       );
   static get bodyMediumGray600 => theme.textTheme.bodyMedium!.copyWith(
         color: appTheme.gray600,
-        fontSize: getFontSize(
-          15,
-        ),
+        fontSize: 15,
       );
   static get titleSmallBlack900 => theme.textTheme.titleSmall!.copyWith(
         color: appTheme.black900,
       );
   static get titleMediumBlack900 => theme.textTheme.titleMedium!.copyWith(
         color: appTheme.black900,
-        fontSize: getFontSize(
-          17,
-        ),
+        fontSize: 17,
         fontWeight: FontWeight.w600,
       );
   static get bodyMediumBlack900 => theme.textTheme.bodyMedium!.copyWith(
@@ -80,14 +68,10 @@ class TextThemeHelper {
       );
   static get bodySmallBlack9008 => theme.textTheme.bodySmall!.copyWith(
         color: appTheme.black900,
-        fontSize: getFontSize(
-          8,
-        ),
+        fontSize: 8,
       );
   static get titleLargeMedium => theme.textTheme.titleLarge!.copyWith(
-        fontSize: getFontSize(
-          22,
-        ),
+        fontSize: 22,
         fontWeight: FontWeight.w500,
       );
   static get bodyLargeBlack900 => theme.textTheme.bodyLarge!.copyWith(

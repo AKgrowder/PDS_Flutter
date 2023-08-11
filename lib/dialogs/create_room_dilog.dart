@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+
 import '../API/Bloc/CreateRoom_Bloc/CreateRoom_cubit.dart';
 import '../API/Bloc/CreateRoom_Bloc/CreateRoom_state.dart';
 import '../core/utils/color_constant.dart';
@@ -75,7 +77,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
         );
       }
       if (state is CreateRoomLoadedState) {
-        Navigator.pop(context);
+        SmartDialog.dismiss();
       }
     }, builder: (context, state) {
       return Center(
@@ -121,7 +123,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () => Navigator.pop(context),
+                                  onTap: () => SmartDialog.dismiss(),
                                   child: CustomImageView(
                                     imagePath: ImageConstant.closeimage,
                                     height: 40,
@@ -211,7 +213,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 GestureDetector(
-                                  onTap: () => Navigator.pop(context),
+                                  onTap: () => SmartDialog.dismiss(),
                                   child: Container(
                                     height: 43,
                                     width: _width / 3,

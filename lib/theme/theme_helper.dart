@@ -75,49 +75,37 @@ class ThemeHelper {
       textTheme: TextTheme(
         bodyMedium: TextStyle(
           color: appTheme.black900,
-          fontSize: getFontSize(
-            14,
-          ),
+          fontSize: 14,
           fontFamily: 'Outfit',
           fontWeight: FontWeight.w400,
         ),
         bodySmall: TextStyle(
           color: appTheme.gray60001,
-          fontSize: getFontSize(
-            10,
-          ),
+          fontSize: 10,
           fontFamily: 'Outfit',
           fontWeight: FontWeight.w300,
         ),
         titleMedium: TextStyle(
           color: appTheme.gray50002,
-          fontSize: getFontSize(
-            16,
-          ),
+          fontSize: 15,
           fontFamily: 'Outfit',
           fontWeight: FontWeight.w500,
         ),
         bodyLarge: TextStyle(
           color: appTheme.black900,
-          fontSize: getFontSize(
-            16,
-          ),
+          fontSize: 16,
           fontFamily: 'Outfit',
           fontWeight: FontWeight.w400,
         ),
         titleSmall: TextStyle(
           color: colorScheme.primary,
-          fontSize: getFontSize(
-            14,
-          ),
+          fontSize: 14,
           fontFamily: 'Outfit',
           fontWeight: FontWeight.w500,
         ),
         titleLarge: TextStyle(
           color: appTheme.black900,
-          fontSize: getFontSize(
-            20,
-          ),
+          fontSize: 20,
           fontFamily: 'Outfit',
           fontWeight: FontWeight.w600,
         ),

@@ -5,6 +5,8 @@ import 'package:archit_s_application1/API/Bloc/Edit_room_bloc/edit_room_cubit.da
 import 'package:archit_s_application1/core/utils/color_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+
 import '../core/utils/image_constant.dart';
 import '../widgets/custom_image_view.dart';
 
@@ -89,7 +91,7 @@ class EditDilogScreenState extends State<EditDilogScreen>
                     backgroundColor: ColorConstant.primary_color,
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  Navigator.pop(context);
+                  SmartDialog.dismiss();
                 }
                 if (state is EditroomErrorState) {
                   SnackBar snackBar = SnackBar(
@@ -130,7 +132,7 @@ class EditDilogScreenState extends State<EditDilogScreen>
                                     ),
                                   ),
                                   GestureDetector(
-                                    onTap: () => Navigator.pop(context),
+                                    onTap: () => SmartDialog.dismiss(),
                                     child: CustomImageView(
                                       imagePath: ImageConstant.closeimage,
                                       height: 40,
@@ -184,7 +186,7 @@ class EditDilogScreenState extends State<EditDilogScreen>
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 GestureDetector(
-                                  onTap: () => Navigator.pop(context),
+                                  onTap: () => SmartDialog.dismiss(),
                                   child: Container(
                                     height: 43,
                                     width: _width / 3.5,
