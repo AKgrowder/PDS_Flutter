@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../API/Bloc/CreateRoom_Bloc/CreateRoom_cubit.dart';
 import '../API/Bloc/CreateRoom_Bloc/CreateRoom_state.dart';
 import '../core/utils/color_constant.dart';
@@ -25,9 +24,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
   var GetTimeSplash;
   @override
   void initState() {
-    // setUserRating();
     super.initState();
-
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 450));
     scaleAnimation =
@@ -57,6 +54,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
     return BlocConsumer<CreateRoomCubit, CreateRoomState>(
         listener: (context, state) async {
       if (state is CreateRoomErrorState) {
+        print('CreateRoomErrorState');
         SnackBar snackBar = SnackBar(
           content: Text(state.error),
           backgroundColor: ColorConstant.primary_color,
@@ -77,7 +75,6 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
         );
       }
       if (state is CreateRoomLoadedState) {
-        // print("Create Room Done ----" + "${state.PublicRoomData.message}");
         Navigator.pop(context);
       }
     }, builder: (context, state) {

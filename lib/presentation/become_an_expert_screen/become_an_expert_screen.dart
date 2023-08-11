@@ -200,7 +200,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                         // hintStyle: theme.textTheme.titleMedium!,
                         textInputAction: TextInputAction.next,
                         filled: true,
-                        maxLength: 50,
+                        maxLength: 100,
                         fillColor: appTheme.gray100,
                       ),
                       Padding(
@@ -360,7 +360,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 controller: uplopdfile,
                                 cursorColor: Colors.grey,
                                 decoration: InputDecoration(
-                                  hintText: 'Upload File',
+                                  hintText: 'Upload Image',
                                   border: InputBorder.none,
                                 ),
                                 style:
