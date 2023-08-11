@@ -32,7 +32,9 @@ class _RegisterCreateAccountScreenState
           Stack(
             children: [
               Container(
-                // height: _height /2.5/,
+                //-----------------------------
+                height: _height /2.5,
+                //----------------------------
                 width: _width,
                 // color: Colors.red,
                 child: CustomImageView(

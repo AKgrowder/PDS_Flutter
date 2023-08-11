@@ -200,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               },
               builder: (context, state) {
-                return SingleChildScrollView(
+                return SingleChildScrollView( 
                   child: Form(
                     key: _formKey,
                     child: SizedBox(

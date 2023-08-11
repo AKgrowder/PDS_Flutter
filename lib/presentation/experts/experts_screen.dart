@@ -416,7 +416,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                       )
                                     : Container(
                                         height: 30,
-                                        width: width,
+                                        width: _width,
                                         decoration: BoxDecoration(
                                             color: Colors.white,
                                             border: Border.all(
