@@ -379,58 +379,91 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
             SizedBox(
               height: 5,
             ),
-            Center(
-              child: Container(
-                height: 50,
-                width: _width / 1.2,
-                decoration: BoxDecoration(
-                    color: Color(0xFFF6F6F6),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 15.0, left: 10),
-                  child: Text(
-                    "00:00-00:00",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        color: Colors.grey.shade700,
-                        fontFamily: "outfit",
-                        fontSize: 15),
-                  ),
-                ),
-              ),
-            ),
             Padding(
-              padding: const EdgeInsets.only(left: 36.0, top: 20),
-              child: Text(
-                "Working Hours",
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                    fontFamily: "outfit",
-                    fontSize: 15),
-              ),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Center(
-              child: Container(
-                height: 50,
-                width: _width / 1.2,
-                decoration: BoxDecoration(
-                    color: Color(0xFFF6F6F6),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 15.0, left: 10),
-                  child: Text(
-                    "00:00-00:00",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        color: Colors.grey.shade700,
-                        fontFamily: "outfit",
-                        fontSize: 15),
+              padding: const EdgeInsets.only(left: 30.0, right: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    height: 50,
+                    width: 130,
+                    decoration: BoxDecoration(
+                        color: Color(0xFFF6F6F6),
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 0.0, left: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text(
+                            "00:00",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey.shade700,
+                                fontFamily: "outfit",
+                                fontSize: 15),
+                          ),
+                          Container(
+                            width: 1,
+                            height: 30,
+                            color: Colors.grey,
+                          ),
+                          Text(
+                            "AM",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey.shade700,
+                                fontFamily: "outfit",
+                                fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                  Text(
+                    "TO",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'outfit'),
+                  ),
+                  Container(
+                    height: 50,
+                    width: 130,
+                    decoration: BoxDecoration(
+                        color: Color(0xFFF6F6F6),
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 0.0, left: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text(
+                            "00:00",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey.shade700,
+                                fontFamily: "outfit",
+                                fontSize: 15),
+                          ),
+                          Container(
+                            width: 1,
+                            height: 30,
+                            color: Colors.grey,
+                          ),
+                          Text(
+                            "AM",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey.shade700,
+                                fontFamily: "outfit",
+                                fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -459,7 +492,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                             topLeft: Radius.circular(5),
                             bottomLeft: Radius.circular(5))),
                     child: Padding(
-                        padding: const EdgeInsets.only(top:13.0,left: 10),
+                        padding: const EdgeInsets.only(top: 13.0, left: 10),
                         child: Text(
                           "xxx.jpg",
                           style: TextStyle(

@@ -178,7 +178,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
           Column(
             children: [
-              ListView.builder(
+             arrNotiyTypeList[0].isSelected == true?  ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: 2,
                 shrinkWrap: true,
@@ -314,7 +314,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     ),
                   );
                 },
-              ),
+              ):SizedBox(),
             ],
           )
         ]),
