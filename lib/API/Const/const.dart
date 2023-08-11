@@ -22,4 +22,5 @@ class Config {
   static const String acceptRejectInvitationAPI =
       "user/api/acceptRejectInvitation";
   static const String DeleteRoom = "user/api/deleteRoom";
+  static const String checkUserActive = "user/api/isForumCreated";
 }

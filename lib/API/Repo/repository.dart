@@ -5,6 +5,7 @@ import 'package:archit_s_application1/API/Model/FetchExprtiseModel/fetchExprtise
 import 'package:archit_s_application1/API/Model/authModel/getUserDetailsMdoel.dart';
 import 'package:archit_s_application1/API/Model/authModel/loginModel.dart';
 import 'package:archit_s_application1/API/Model/authModel/registerModel.dart';
+import 'package:archit_s_application1/API/Model/checkUserStatusModel/chekuserStausModel.dart';
 import 'package:archit_s_application1/API/Model/otpmodel/otpmodel.dart';
 import 'package:archit_s_application1/API/Model/sherInviteModel/sherinviteModel.dart';
 
@@ -23,6 +24,7 @@ import '../Model/coment/coment_model.dart';
 import '../Model/creat_form/creat_form_Model.dart';
 import '../Model/delete_room_model/Delete_room_model.dart';
 
+import '../Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 class Repository {
   ApiServices apiServices = ApiServices();
 
@@ -62,8 +64,10 @@ class Repository {
         return FetchExprtise.fromJson(jsonString);
     }
   }
+
   Future<FatchAllMembersModel> FatchAllMembersAPI(String Roomuid) async {
-    final response = await apiServices.getApiCallWithToken("${Config.fetchallmembers}${Roomuid}");
+    final response = await apiServices
+        .getApiCallWithToken("${Config.fetchallmembers}${Roomuid}");
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -75,7 +79,7 @@ class Repository {
   }
 
   Future<AddExpertProfile> addEXpertAPiCaling(params) async {
-    final response = await apiServices.postApiCall(Config.addExport,params);
+    final response = await apiServices.postApiCall(Config.addExport, params);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
@@ -85,6 +89,7 @@ class Repository {
         return AddExpertProfile.fromJson(jsonString);
     }
   }
+
   Future<InvitationModel> InvitationModelAPI() async {
     final response = await apiServices.getApiCallWithToken(Config.Invitations);
     print(response);
@@ -96,6 +101,7 @@ class Repository {
         return InvitationModel.fromJson(jsonString);
     }
   }
+
 //http://192.168.29.100:8081/user/addExpertProfile
 //http://192.168.29.100:8081/user/addExpertProfile
   Future<CreatPublicRoomModel> CreatPublicRoom(
@@ -234,8 +240,8 @@ class Repository {
     String file,
     String fileName,
   ) async {
-    final response = await apiServices.multipartFile(
-        Config.company,  params, file, fileName);
+    final response =
+        await apiServices.multipartFile(Config.company, params, file, fileName);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
     switch (response.statusCode) {
@@ -244,11 +250,24 @@ class Repository {
       default:
         return CreateForm.fromJson(jsonString);
     }
-    
   }
 
-  Future<EditRoomModel>   EditroomAPI(Map<String, dynamic> param,String roomuId) async {
-    final response = await apiServices.postApiCall('${Config.editroom}/${roomuId}',param);
+  Future<FetchAllExpertsModel> FetchAllExpertsAPI() async {
+    final response = await apiServices.getApiCall(Config.FetchAllPublicRoom);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return FetchAllExpertsModel.fromJson(jsonString);
+      default:
+        return FetchAllExpertsModel.fromJson(jsonString);
+    }
+  }
+
+  Future<EditRoomModel> EditroomAPI(
+      Map<String, dynamic> param, String roomuId) async {
+    final response =
+        await apiServices.postApiCall('${Config.editroom}/${roomuId}', param);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
@@ -258,8 +277,11 @@ class Repository {
         return EditRoomModel.fromJson(jsonString);
     }
   }
-   Future<AcceptRejectInvitationModel> acceptRejectInvitationAPI(bool status, String roomLink) async {
-    final response = await apiServices.getApiCallWithToken('${Config.acceptRejectInvitationAPI}/${status}/${roomLink}');
+
+  Future<AcceptRejectInvitationModel> acceptRejectInvitationAPI(
+      bool status, String roomLink) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.acceptRejectInvitationAPI}/${status}/${roomLink}');
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -270,19 +292,31 @@ class Repository {
     }
   }
 
-   Future<DeleteRoomModel> DeleteRoomApi(String roomuId) async {
+  Future<DeleteRoomModel> DeleteRoomApi(String roomuId) async {
+    final response = await apiServices
+        .getApiCallWithToken("${Config.DeleteRoom}/${roomuId}");
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return DeleteRoomModel.fromJson(jsonString);
+      default:
+        return DeleteRoomModel.fromJson(jsonString);
+    }
+  }
+
+  Future<CheckUserStausModel> checkUserActive() async {
     final response =
-        await apiServices.getApiCallWithToken("${Config.DeleteRoom}/${roomuId}");
+        await apiServices.getApiCallWithToken("${Config.checkUserActive}");
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
-        return DeleteRoomModel.fromJson(jsonString);
+        return CheckUserStausModel.fromJson(jsonString);
       default:
-        return DeleteRoomModel.fromJson(jsonString);
+        return CheckUserStausModel.fromJson(jsonString);
     }
   }
-
 }
 
 
