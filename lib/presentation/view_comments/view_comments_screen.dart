@@ -1,9 +1,9 @@
 import 'package:archit_s_application1/API/Model/coment/coment_model.dart';
 import 'package:archit_s_application1/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
- 
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
@@ -33,16 +33,22 @@ List<String> commentslist = [
 
 class _ViewCommentScreenState extends State<ViewCommentScreen> {
   Object? get index => null;
+  bool emojiShowing = false;
   ComentApiModel? modelData;
   TextEditingController Add_Comment = TextEditingController();
-
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     BlocProvider.of<senMSGCubit>(context)
         .coomentPage(widget.Room_ID, ShowLoader: true);
     super.initState();
   }
-
+ _onBackspacePressed() {
+    Add_Comment
+      ..text = Add_Comment.text.characters.toString()
+      ..selection = TextSelection.fromPosition(
+          TextPosition(offset: Add_Comment.text.length));
+  }
   @override
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
@@ -326,6 +332,9 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
+                                      setState(() {
+                                        emojiShowing = !emojiShowing;
+                                      });
                                       // buildSticker();
                                       // buildSticker();
                                       // KeyboardEmojiPicker().pickEmoji();
@@ -407,6 +416,51 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 ),
                               ),
                             ],
+                          ),
+                          Offstage(
+                            offstage: !emojiShowing,
+                            child: SizedBox(
+                                height: 250,
+                                child: EmojiPicker(
+                                  textEditingController:Add_Comment,
+                                  onBackspacePressed: _onBackspacePressed,
+                                  config: Config(
+                                    columns: 7,
+                                    // Issue: https://github.com/flutter/flutter/issues/28894
+                                    emojiSizeMax: 32 *
+                                        (foundation.defaultTargetPlatform ==
+                                                TargetPlatform. iOS
+                                            ? 1.30
+                                            : 1.0),
+                                    verticalSpacing: 0,
+                                    horizontalSpacing: 0,
+                                    gridPadding: EdgeInsets.zero,
+                                    initCategory: Category.RECENT,
+                                    bgColor: const Color(0xFFF2F2F2),
+                                    indicatorColor: Colors.blue,
+                                    iconColor: Colors.grey,
+                                    iconColorSelected: Colors.blue,
+                                    backspaceColor: Colors.blue,
+                                    skinToneDialogBgColor: Colors.white,
+                                    skinToneIndicatorColor: Colors.grey,
+                                    enableSkinTones: true,
+                                    recentTabBehavior: RecentTabBehavior.RECENT,
+                                    recentsLimit: 28,
+                                    replaceEmojiOnLimitExceed: false,
+                                    noRecents: const Text(
+                                      'No Recents',
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.black26),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    loadingIndicator: const SizedBox.shrink(),
+                                    tabIndicatorAnimDuration:
+                                        kTabScrollDuration,
+                                    categoryIcons: const CategoryIcons(),
+                                    buttonMode: ButtonMode.MATERIAL,
+                                    checkPlatformCompatibility: true,
+                                  ),
+                                )),
                           ),
                         ],
                       ),
@@ -616,15 +670,30 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
           // );
         }));
   }
-//  Widget buildSticker() {
-//     return EmojiPicker(
 
-//   onEmojiSelected: (emoji, category) {
-//     print(emoji);
+  Widget buildSticker() {
+    return EmojiPicker(
+      key: _formKey,
+      textEditingController: Add_Comment,
+      config: Config(
+        columns: 7,
+        // Issue: https://github.com/flutter/flutter/issues/28894
+        emojiSizeMax: 32 *
+            (foundation.defaultTargetPlatform == TargetPlatform.iOS
+                ? 1.30
+                : 1.0),
+      ),
+      // rows: 3,
+      // columns: 7,
+      // buttonMode: ButtonMode.MATERIAL,
+      // recommendKeywords: ["racing", "horse"],
+      // numRecommended: 10,
+      onEmojiSelected: (emoji, category) {
+        print(emoji);
+      },
+    );
+  }
 
-//   },
-//     );
-//   }
   checkGuestUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);

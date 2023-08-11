@@ -1,4 +1,3 @@
-
 import 'package:archit_s_application1/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'package:archit_s_application1/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:archit_s_application1/API/Bloc/auth/login_Block.dart';
@@ -57,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return WillPopScope(
-      onWillPop: ()async =>await false ,
+      onWillPop: () async => await false,
       child: SafeArea(
         child: Scaffold(
           backgroundColor: theme.colorScheme.onPrimary,
@@ -100,10 +99,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         state.loginModel.object?.uuid.toString() ?? "",
                         state.loginModel.object?.jwt.toString() ?? "",
                         loginModelData?.object?.module.toString() ?? ""
-    
+
                         // state.loginModel.object!.verified.toString(),
                         );
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
                       return MultiBlocProvider(
                           providers: [
                             BlocProvider<FetchAllPublicRoomCubit>(
@@ -130,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ));
                     }));
                   }
-    
+
                   SnackBar snackBar = SnackBar(
                     content: Text(state.loginModel.message ?? ""),
                     backgroundColor: ColorConstant.primary_color,
@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   print(
                       'check Status--${state.loginModel.object!.verified.toString()}');
-    
+
                   // Navigator.push(context,MaterialPageRoute(builder: (context)=> HomeScreen()));
                 }
                 if (state is GetUserLoadedState) {
@@ -153,7 +153,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         // state.loginModel.object!.verified.toString(),
                         );
                     print('this condison is calling');
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
                       return MultiBlocProvider(
                           providers: [
                             BlocProvider<FetchAllPublicRoomCubit>(
@@ -180,7 +181,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ));
                     }));
                   } else {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
                       return MultiBlocProvider(
                           providers: [
                             BlocProvider<OtpCubit>(
@@ -269,17 +271,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           CustomTextFormField(
                             validator: (value) {
-                              RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                              RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");  
                               if (value!.isEmpty) {
                                 return 'Please Enter Name';
                               } else if (!nameRegExp.hasMatch(value)) {
                                 return 'Input cannot contains prohibited special characters';
-                              } else if (value.length <= 0 || value.length > 50) {
-                                return 'username length is between 1 and 50 characters';
+                              } else if (value.length <= 0 ||
+                                  value.length > 50) {
+                                return 'Minimum length required';
                               } else if (value.contains('..')) {
                                 return 'username does not contain is correct';
                               }
-    
+
                               return null;
                             },
                             onChanged: (value) {
@@ -287,8 +290,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               final RegExp regex = RegExp('[a-zA-Z]');
                               if (emailAndMobileController.text == null ||
                                   emailAndMobileController.text.isEmpty ||
-                                  !regex
-                                      .hasMatch(emailAndMobileController.text)) {
+                                  !regex.hasMatch(
+                                      emailAndMobileController.text)) {
                                 setState(() {
                                   isPhone = true;
                                 });
@@ -346,11 +349,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           CustomTextFormField(
                             // focusNode: FocusNode(),
                             // autofocus: true,
-    
+
                             validator: (value) {
                               final RegExp passwordRegExp = RegExp(
                                   r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
-    
+
                               if (value!.isEmpty) {
                                 return 'Please Enter Password';
                               } else if (!passwordRegExp.hasMatch(value)) {
@@ -454,8 +457,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               text: "Log In",
                               buttonStyle: ButtonThemeHelper.outlineOrangeA7000c
                                   .copyWith(
-                                      fixedSize: MaterialStateProperty.all<Size>(
-                                          Size(double.infinity, 50))),
+                                      fixedSize:
+                                          MaterialStateProperty.all<Size>(
+                                              Size(double.infinity, 50))),
                               // buttonTextStyle:
                               //     TextThemeHelper.titleMediumOnPrimary,
                             ),

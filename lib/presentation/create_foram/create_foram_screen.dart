@@ -234,10 +234,10 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 35.0),
-                        child: Row(
+                        child: Row( 
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Container(
+                            Container(height: 50,
                               width: _width / 1.65,
                               decoration: BoxDecoration(
                                   color: Color(0XFFF6F6F6),
@@ -248,7 +248,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: TextFormField(
                                   readOnly: true,
-                                  maxLines: null,
+                                  // maxLines: null,
                                   controller: uplopdfile,
                                   cursorColor: Colors.grey,
                                   decoration: InputDecoration(
