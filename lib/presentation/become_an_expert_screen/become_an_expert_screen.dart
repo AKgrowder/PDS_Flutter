@@ -8,6 +8,7 @@ import 'package:archit_s_application1/core/utils/color_constant.dart';
 import 'package:archit_s_application1/core/utils/sharedPreferences.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,12 +42,6 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   // String selctedexpertiseData = "";
 
   @override
-  void initState() {
-    super.initState();
-
-    BlocProvider.of<FetchExprtiseRoomCubit>(context).fetchExprties();
-  }
-
   List<String> working_houres = [
     'MORNING("9:00 AM", "12:00 PM"),',
     'AFTERNOON("1:00 PM", "5:00 PM"),',
@@ -56,12 +51,49 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   TextEditingController jobprofileController = TextEditingController();
   TextEditingController feesController = TextEditingController();
   TextEditingController uplopdfile = TextEditingController();
+  // TextEditingController _startTimeController = TextEditingController();
+  // TextEditingController _endTimeController = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TimeOfDay _startTime = TimeOfDay.now();
+  TimeOfDay _endTime = TimeOfDay.now();
+
+  Future<void> _selectStartTime(BuildContext context) async {
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: _startTime,
+    );
+
+    if (pickedTime != null && pickedTime != _startTime) {
+      setState(() {
+        _startTime = pickedTime;
+      });
+    }
+  }
+
+  Future<void> _selectEndTime(BuildContext context) async {
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: _endTime,
+    );
+
+    if (pickedTime != null && pickedTime != _endTime) {
+      setState(() {
+        _endTime = pickedTime;
+      });
+    }
+  }
+
+  void initState() {
+    super.initState();
+
+    BlocProvider.of<FetchExprtiseRoomCubit>(context).fetchExprties();
+  }
 
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
       appBar: AppBar(
@@ -289,7 +321,15 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           right: 12,
                           bottom: 14,
                         ),
-                        validator: (value) {},
+
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'^[0-9]+.?[0-9]*'))
+                        ],
+                        textInputType: TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+
                         // textStyle: theme.textTheme.titleMedium!,
                         hintText: "Price / hr",
                         // hintStyle: theme.textTheme.titleMedium!,
@@ -313,35 +353,171 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           // style: theme.textTheme.bodyLarge,
                         ),
                       ),
-                      Container(
-                        height: 50,
-                        width: _width,
-                        decoration: BoxDecoration(color: Color(0xffEFEFEF)),
-                        child: DropdownButtonHideUnderline(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 12),
-                            child: DropdownButton<String>(
-                              value: selectedWorkingHoures,
-                              onChanged: (String? newValue) {
-                                // When the user selects an option from the dropdown.
-                                if (newValue != null) {
-                                  selectedWorkingHoures = newValue;
-                                  // Refresh the UI to reflect the selected item.
-                                  setState(() {});
-                                }
-                              },
-                              items: working_houres
-                                  .map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value.toLowerCase()),
-                                );
-                              }).toList(),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              _selectStartTime(context);
+                            },
+                            child: Container(
+                              height: 50,
+                              width: 140,
+                              decoration: BoxDecoration(
+                                  color: Color(0xffF6F6F6),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                      padding: EdgeInsets.only(left: 10),
+                                      child: Text(
+                                        _startTime.format(context),
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Color(0xff989898)),
+                                      )),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 10, bottom: 6),
+                                    child: VerticalDivider(
+                                      thickness: 2,
+                                      color: Color(0xff989898),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text('AM',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Color(0xff989898))),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
+                          Text('To'),
+                          GestureDetector(
+                            onTap: () {
+                              _selectEndTime(context);
+                            },
+                            child: Container(
+                              height: 50,
+                              width: 140,
+                              decoration: BoxDecoration(
+                                  color: Color(0xffF6F6F6),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                      padding: EdgeInsets.only(left: 10),
+                                      child: Text(
+                                        _endTime.format(context),
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Color(0xff989898)),
+                                      )),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 10, bottom: 6),
+                                    child: VerticalDivider(
+                                      thickness: 2,
+                                      color: Color(0xff989898),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text('PM',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Color(0xff989898))),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //   children: [
+                      //     Flexible(
+                      //       child: Container(
+                      //          height: 70,
+                      //         // width: 150, // Adjust the w
+                      //         child: TextField(
+                      //           controller: _startTimeController,
+                      //           readOnly: true,
+                      //           onTap: () =>
+                      //               _selectTime(context, _startTimeController),
+                      //           decoration: InputDecoration(
+                      //               filled: true,
+                      //               fillColor: Color(0xffF6F6F6),
+                      //               border: OutlineInputBorder(),
+                      //               suffix: Container(
+                      //                 height: 50,
+                      //                 width: 2,
+                      //                 margin: EdgeInsets.only(right: 30,top: 30,),
+                      //                 color: Colors.amber,
+                      //               )
+                      //               //  suffixIcon: Icon(Icons.access_time),
+                      //               ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     SizedBox(width: 10),
+                      //     Flexible(
+                      //       child: TextField(
+                      //         controller: _endTimeController,
+                      //         readOnly: true,
+                      //         onTap: () =>
+                      //             _selectTime(context, _endTimeController),
+                      //         decoration: InputDecoration(
+                      //           // filled: true,
+                      //           fillColor: Color(0xffF6F6F6),
+                      //           border: OutlineInputBorder(),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      // Container(
+                      //   height: 50,
+                      //   width: _width,
+                      //   decoration: BoxDecoration(color: Color(0xffEFEFEF)),
+                      //   child: DropdownButtonHideUnderline(
+                      //     child: Padding(
+                      //       padding: const EdgeInsets.only(left: 12),
+                      //       child: DropdownButton<String>(
+                      //         value: selectedWorkingHoures,
+                      //         onChanged: (String? newValue) {
+                      //           // When the user selects an option from the dropdown.
+                      //           if (newValue != null) {
+                      //             selectedWorkingHoures = newValue;
+                      //             // Refresh the UI to reflect the selected item.
+                      //             setState(() {});
+                      //           }
+                      //         },
+                      //         items: working_houres
+                      //             .map<DropdownMenuItem<String>>(
+                      //                 (String value) {
+                      //           return DropdownMenuItem<String>(
+                      //             value: value,
+                      //             child: Text(value.toLowerCase()),
+                      //           );
+                      //         }).toList(),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       SizedBox(
                         height: 10,
                       ),
@@ -371,7 +547,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 readOnly: true,
                                 // maxLines: null,
                                 controller: uplopdfile,
-                                cursorColor: Colors.grey,
+                                cursorColor: const Color.fromARGB(255, 8, 8, 8),
                                 decoration: InputDecoration(
                                   hintText: 'Upload Image',
                                   border: InputBorder.none,
