@@ -752,9 +752,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               child: CustomImageView(
                                                 imagePath:
                                                     ImageConstant.experts,
-                                                height: 50,
-                                                width: _width / 2.8,
-                                                radius:
+                                                height: 50, 
+                                                width: _width /2.7,
+                                                radius: 
                                                     BorderRadius.circular(10),
                                               ),
                                             ),

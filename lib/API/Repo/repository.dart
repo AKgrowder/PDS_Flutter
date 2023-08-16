@@ -277,8 +277,8 @@ class Repository {
   }
 
   Future<FetchAllExpertsModel> FetchAllExpertsAPI({context}) async {
-    final response = await apiServices.getApiCall(Config.fetchAllExperts,
-        context: context);
+    final response =
+        await apiServices.getApiCall(Config.fetchAllExperts, context: context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
@@ -348,8 +348,7 @@ class Repository {
     }
   }
 
-  chooseProfileFile(String file, String fileName,
-      {params}) async {
+  chooseProfileFile(String file, String fileName, {params}) async {
     final response = await apiServices.multipartFile(
         "${Config.uploadfile}", file, fileName,
         apiName: 'create forum', params: params);
@@ -362,8 +361,6 @@ class Repository {
         return ChooseDocument.fromJson(jsonString);
     }
   }
-  
-
 }
 
 
