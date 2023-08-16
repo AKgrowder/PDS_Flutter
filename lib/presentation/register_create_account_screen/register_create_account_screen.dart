@@ -33,7 +33,7 @@ class _RegisterCreateAccountScreenState
             children: [
               Container(
                 //-----------------------------
-                height: _height /2.5,
+                height: _height / 2.5,
                 //----------------------------
                 width: _width,
                 // color: Colors.red,
@@ -71,9 +71,9 @@ class _RegisterCreateAccountScreenState
                           BlocProvider<GetAllPrivateRoomCubit>(
                             create: (context) => GetAllPrivateRoomCubit(),
                           ),
-                          BlocProvider< InvitationCubit>(
-              create: (context) =>  InvitationCubit(),
-            ),
+                          BlocProvider<InvitationCubit>(
+                            create: (context) => InvitationCubit(),
+                          ),
                         ], child: BottombarPage(buttomIndex: 0));
                       }));
                     }),
