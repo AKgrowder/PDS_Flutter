@@ -1,12 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:archit_s_application1/API/Model/coment/coment_model.dart';
+import 'package:archit_s_application1/API/Model/socketModel/socket_Model.dart';
 import 'package:archit_s_application1/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stomp_dart_client/stomp_frame.dart';
 
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_state.dart';
@@ -16,6 +20,9 @@ import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
+
+ImagePicker picker = ImagePicker();
+XFile? pickedImageFile;
 
 class ViewCommentScreen extends StatefulWidget {
   final Room_ID;
@@ -37,8 +44,12 @@ List<String> commentslist = [
 ];
 
 class _ViewCommentScreenState extends State<ViewCommentScreen> {
-  Object? get index => null;
+  // Object? get index => null;
   bool emojiShowing = false;
+  bool addmsg = false;
+  var Token = "";
+  var UserCode = "";
+
   ComentApiModel? modelData;
   TextEditingController Add_Comment = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -48,6 +59,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
         .coomentPage(widget.Room_ID, ShowLoader: true);
     // if (widget.Screen_name == "RoomChat") {
     // }
+    getToken();
     stompClient.activate();
     super.initState();
   }
@@ -377,16 +389,26 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                     ),
                                   ),
                                   Spacer(),
-                                  Image.asset(
-                                    "assets/images/paperclip-2.png",
-                                    height: 30,
+                                  GestureDetector(
+                                    onTap: () {
+                                      pickProfileImage();
+                                    },
+                                    child: Image.asset(
+                                      "assets/images/paperclip-2.png",
+                                      height: 30,
+                                    ),
                                   ),
                                   SizedBox(
                                     width: 10,
                                   ),
-                                  Image.asset(
-                                    "assets/images/Vector (12).png",
-                                    height: 22,
+                                  GestureDetector(
+                                    onTap: () {
+                                      camerapicker();
+                                    },
+                                    child: Image.asset(
+                                      "assets/images/Vector (12).png",
+                                      height: 22,
+                                    ),
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -403,17 +425,81 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  print(
-                                      "Add comment button-${Add_Comment.text}");
                                   if (Add_Comment.text.isNotEmpty) {
-                                    // checkGuestUser();
+                                    checkGuestUser();
+                                    Room_ID_stomp = "${widget.Room_ID}";
+                                    stompClient.subscribe(
+                                      destination:
+                                          "/topic/getMessage/${widget.Room_ID}",
+                                      callback: (StompFrame frame) {
+                                        Map<String, dynamic> jsonString =
+                                            json.decode(frame.body ?? "");
+
+                                        if (addmsg == false) {
+                                          print(
+                                              "please1-${modelData?.object?.messageOutputList?.content?.length}");
+
+                                          Content content = Content.fromJson(
+                                              jsonString['object']);
+                                          print(
+                                              "fdhjmfdhjsfghdsfg -${content.message}");
+                                          modelData?.object?.messageOutputList
+                                              ?.content
+                                              ?.add(content);
+
+                                          setState(() {
+                                            addmsg = true;
+                                          });
+                                        }
+
+                                        print(
+                                            "please2-${modelData?.object?.messageOutputList?.content?.length}");
+                                        // print(
+                                        //     'lofifgnfgn-=${jsonString['object']}');
+                                        //     var data = jsonString['object'];
+
+                                        // Content content = Content.fromJson(
+                                        //     json.decode(jsonString['object']));
+                                        // print('content -${content.uid}');
+
+                                        // modelData?.object?.messageOutputList?.content?.add(content);
+                                        // var getDataa =
+                                        //     socketModel.fromJson(jsonString);
+                                        // print(getDataa);
+
+                                        // modelData
+                                        //     ?.object?.messageOutputList?.content
+                                        //     ?.add(modelData!
+                                        //         .object!
+                                        //         .messageOutputList!
+                                        //         .content!
+                                        //         .last);
+
+                                        // print(
+                                        //     'getDataa.object${getDataa.object}');
+
+                                        // // var aa = getDataa.object as Content;
+                                        // // print(aa);
+
+                                        // // print(
+                                        // //     "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&${modelData?.object?.messageOutputList?.content?.length}");
+                                        // modelData
+                                        //     ?.object?.messageOutputList?.content
+                                        //     ?.add(getDataa.object as Content);
+                                        // print(
+                                        //     "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&${modelData?.object?.messageOutputList?.content?.length}");
+
+                                        // Process the received message
+                                      },
+                                    );
                                     stompClient.send(
                                       destination:
-                                          'user/app/sendMessage/${widget.Room_ID}',
+                                          "/sendMessage/${widget.Room_ID}",
                                       body: json.encode({
                                         "message": "${Add_Comment.text}",
                                         "messageType": "TEXT",
-                                        "roomUid": "${widget.Room_ID}"
+                                        "roomUid": "${widget.Room_ID}",
+                                        "userCode": "${UserCode}"
                                       }),
                                     );
                                   } else {
@@ -656,7 +742,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                 MainAxisAlignment.end,
                                             children: [
                                               Text(
-                                                "10th March 2023 2:23 PM",
+                                                "Date",
                                                 maxLines: 3,
                                                 textScaleFactor: 1.0,
                                                 style: TextStyle(
@@ -726,9 +812,16 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     if (UserLogin_ID != null) {
       print("user login Mood");
       if (Add_Comment.text.isNotEmpty) {
-        BlocProvider.of<senMSGCubit>(context)
-            .senMSGAPI(widget.Room_ID, Add_Comment.text, ShowLoader: true);
-        Add_Comment.text = '';
+        // BlocProvider.of<senMSGCubit>(context)
+        //     .senMSGAPI(widget.Room_ID, Add_Comment.text, ShowLoader: true);
+
+        // BlocProvider.of<senMSGCubit>(context)
+        //         .coomentPage(widget.Room_ID, ShowLoader: true);
+
+        setState(() {
+          addmsg = false;
+          Add_Comment.text = '';
+        });
       } else {
         if (UserLogin_ID != null) {
           Navigator.of(context).push(MaterialPageRoute(
@@ -760,4 +853,18 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   //     },
   //   );
   // }
+
+  getToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    Token = prefs.getString(PreferencesKey.loginJwt) ?? "";
+    UserCode = prefs.getString(PreferencesKey.loginUserID) ?? "";
+  }
+
+  Future<void> camerapicker() async {
+    pickedImageFile = await picker.pickImage(source: ImageSource.camera);
+  }
+
+  Future<void> pickProfileImage() async {
+    pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
+  }
 }

@@ -20,7 +20,8 @@ enum TextMode {
   normal,
   bold,
   italic,
-  lineThrough
+  lineThrough,
+  bullet,
 
   // link,  <- I'm not sure what you want to have happen with this one
 }
@@ -53,25 +54,26 @@ const linethrough = TextStyle(decoration: TextDecoration.lineThrough);
 bool value = false;
 
 // Helper method
-TextStyle getStyle(TextMode? mode) {
-  switch (mode) {
-    case TextMode.bold:
-      return boldStyle;
-    case TextMode.italic:
-      return italicStyle;
-    case TextMode.lineThrough:
-      return linethrough;
-
-    default:
-      return normalStyle;
-  }
-}
 
 class _AddThreadsScreenState extends State<AddThreadsScreen> {
   TextEditingController controller = TextEditingController();
   TextEditingController _RoomTitleController = TextEditingController();
   String description = 'My great package';
   TextMode? currentmode;
+  List<String> items = [];
+  TextStyle getStyle(TextMode? mode) {
+    switch (mode) {
+      case TextMode.bold:
+        print('datalistCheck-${items}');
+        return boldStyle;
+      case TextMode.italic:
+        return italicStyle;
+      case TextMode.lineThrough:
+        return linethrough;
+      default:
+        return normalStyle;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -258,7 +260,8 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                         children: [
                           Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: TextField(
+                              child: TextFormField(
+                                  keyboardType: TextInputType.multiline,
                                   controller: _RoomTitleController,
                                   cursorColor: Colors.grey,
                                   maxLines: 6,

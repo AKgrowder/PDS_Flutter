@@ -92,9 +92,8 @@ class ApiServices {
     }
   }
 
-  multipartFile(
-      String APIurl,  String file, String fileName,
-      {String? apiName,Map<String, dynamic>? params}) async {
+  multipartFile(String APIurl, String fileName, String file,
+      {String? apiName, Map<String, dynamic>? params}) async {
     await UpdateBaseURL();
     print('fileApi-$file');
     print('fileName-$fileName');
@@ -104,22 +103,24 @@ class ApiServices {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${Token}'
     };
-    //http://192.168.29.100:8081/user/api/addUserProfile;
     print("API =>******${baseURL + APIurl}");
     final response =
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
     response.headers.addAll(headers1);
     if (params != null) {
       if (apiName != 'create forum') {
+        response.fields["document"] = params['document'] ?? "";
         response.fields["companyName"] = params['companyName'] ?? "";
         response.fields["jobProfile"] = params['jobProfile'] ?? "";
+        print('params-$params');
       }
     }
 
-    if (fileName != "" && fileName != null) {
-      response.files
-          .add(await http.MultipartFile.fromPath('document', fileName));
+    if (apiName == 'create forum') {
+      print('this is the get');
+      response.files.add(await http.MultipartFile.fromPath('document', file));
     }
+
     print('checkdataher');
     var res = await response.send();
     print('responce stauscode-${res.statusCode.toString()}');
