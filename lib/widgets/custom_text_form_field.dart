@@ -179,6 +179,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                 color: appTheme.gray200,
                 width: 1,
               ),
+
             ),
       );
 }
