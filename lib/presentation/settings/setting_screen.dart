@@ -142,7 +142,7 @@ class _SettingScreenState extends State<SettingScreen> {
             // color: Theme.of(context).brightness == Brightness.light
             // ? Color(0XFF161616)
             // : Color(0XFF1D1D1D),
-            child: ListView.builder(
+            child: ListView.builder(physics: BouncingScrollPhysics(),
                 itemCount: 12,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
