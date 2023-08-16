@@ -183,10 +183,10 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
-                            controller: name,
+                            controller: name,maxLength: 50,
                             cursorColor: Colors.grey,
                             decoration: InputDecoration(
-                              hintText: 'Enter name',
+                              hintText: 'Enter name',counterText: '',
                               border: InputBorder.none,
                             ),
                           ),
@@ -214,12 +214,12 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             color: Color(0XFFF6F6F6),
                             borderRadius: BorderRadius.circular(5)),
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
+                          padding: const EdgeInsets.only(left:8.0),
+                          child: TextFormField(maxLength: 50,
                             controller: profile,
                             cursorColor: Colors.grey,
                             decoration: InputDecoration(
-                              hintText: 'Job Profile',
+                              hintText: 'Job Profile',counterText: '',
                               border: InputBorder.none,
                             ),
                           ),
@@ -260,7 +260,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                 controller: uplopdfile,
                                 cursorColor: Colors.grey,
                                 decoration: InputDecoration(
-                                  hintText: 'Upload File',
+                                  hintText: 'Upload Image',
                                   border: InputBorder.none,
                                 ),
                                 style:
