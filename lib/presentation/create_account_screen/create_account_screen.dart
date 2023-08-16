@@ -32,7 +32,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   TextEditingController emailAndMobileController = TextEditingController();
   TextEditingController contectnumberController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-    ImagePickerController _imagePickerController = ImagePickerController();
+   // ImagePickerController _imagePickerController = ImagePickerController();
   TextEditingController phoneNumberController = TextEditingController();
   Country selectedCountry = CountryPickerUtils.getCountryByPhoneCode('91');
 
@@ -263,7 +263,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     return 'userId length is between 1 and 50 characters';
                                   }
                                   return null;
-                                },  ``
+                                },  
                                 // textStyle: theme.textTheme.titleMedium!,
                                 hintText: "Enter User ID",
                                 // hintStyle: theme.textTheme.titleMedium!,
