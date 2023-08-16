@@ -62,7 +62,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         child: Center(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: [Spacer(),
+                            children: [
+                              Spacer(),
                               Text(
                                 "All",
                                 textScaleFactor: 1.0,
@@ -92,7 +93,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       },
                     ),
                   ),
-                   
                   Expanded(
                     child: GestureDetector(
                       child: Container(
@@ -178,143 +178,153 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
           Column(
             children: [
-             arrNotiyTypeList[0].isSelected == true?  ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: 2,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.only(left: 13, right: 13, top: 5),
-                    // height: 175,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Color(0xff989898))),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "06/06/2023, 00:00",
-                                style: TextStyle(
-                                  fontFamily: 'outfit',
-                                  fontSize: 15,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              Spacer(),
-                              index % 2 != 1
-                                  ? CircleAvatar(
-                                      backgroundColor: Colors.green,
-                                      maxRadius: 5,
-                                    )
-                                  : CircleAvatar(
-                                      backgroundColor: Colors.red,
-                                      maxRadius: 5,
+              arrNotiyTypeList[0].isSelected == true
+                  ? Container(
+                      height: _height / 1.35, 
+                      child: ListView.builder(
+                        // physics: NeverScrollableScrollPhysics(),
+                        itemCount: 2,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin:
+                                EdgeInsets.only(left: 13, right: 13, top: 5),
+                            // height: 175,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Color(0xff989898))),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "06/06/2023, 00:00",
+                                        style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontSize: 15,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      index % 2 != 1
+                                          ? CircleAvatar(
+                                              backgroundColor: Colors.green,
+                                              maxRadius: 5,
+                                            )
+                                          : CircleAvatar(
+                                              backgroundColor: Colors.red,
+                                              maxRadius: 5,
+                                            ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      index % 2 != 1
+                                          ? Text('Ongoing')
+                                          : Text('Closed'),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    "Company Name",
+                                    style: TextStyle(
+                                      fontFamily: 'outfit',
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
                                     ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              index % 2 != 1 ? Text('Ongoing') : Text('Closed'),
-                              SizedBox(
-                                width: 20,
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "Company Name",
-                            style: TextStyle(
-                              fontFamily: 'outfit',
-                              fontSize: 15,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "Product Name",
-                            style: TextStyle(
-                              fontFamily: 'outfit',
-                              fontSize: 15,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "Expert user ID",
-                            style: TextStyle(
-                              fontFamily: 'outfit',
-                              fontSize: 15,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "Address specific packaging challenges....",
-                            style: TextStyle(
-                              fontFamily: 'outfit',
-                              fontSize: 15,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => HistoryDetailsScren(),
-                                  ));
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 50,
-                              width: 170,
-                              decoration: BoxDecoration(
-                                  color: Color(0xFFFFD9DA),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
-                                  border: Border.all(color: Color(0xFFED1C25))),
-                              child: Text(
-                                "Payment Details",
-                                style: TextStyle(
-                                  fontFamily: 'outfit',
-                                  fontSize: 15,
-                                  color: Color(0xFFED1C25),
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    "Product Name",
+                                    style: TextStyle(
+                                      fontFamily: 'outfit',
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    "Expert user ID",
+                                    style: TextStyle(
+                                      fontFamily: 'outfit',
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    "Address specific packaging challenges....",
+                                    style: TextStyle(
+                                      fontFamily: 'outfit',
+                                      fontSize: 15,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                HistoryDetailsScren(),
+                                          ));
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 50,
+                                      width: 170,
+                                      decoration: BoxDecoration(
+                                          color: Color(0xFFFFD9DA),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
+                                          border: Border.all(
+                                              color: Color(0xFFED1C25))),
+                                      child: Text(
+                                        "Payment Details",
+                                        style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontSize: 15,
+                                          color: Color(0xFFED1C25),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 13,
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 13,
-                          ),
-                        ],
+                          );
+                        },
                       ),
-                    ),
-                  );
-                },
-              ):SizedBox(),
+                    )
+                  : SizedBox(),
             ],
           )
         ]),

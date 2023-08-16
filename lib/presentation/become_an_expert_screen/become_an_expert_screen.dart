@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 
-// import 'package:file_picker/file_picker.dart';
 import 'package:archit_s_application1/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import 'package:archit_s_application1/API/Bloc/FetchExprtise_Bloc/fetchExprtise_state.dart';
 import 'package:archit_s_application1/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
@@ -184,6 +183,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                       CustomTextFormField(
                         // focusNode: FocusNode(),
                         // autofocus: true,
+
                         controller: jobprofileController,
                         margin: EdgeInsets.only(
                           top: 4,
@@ -194,7 +194,20 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           right: 12,
                           bottom: 14,
                         ),
-                        validator: (value) {},
+                        validator: (value) {
+                          RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                          if (value!.isEmpty) {
+                            return 'Please Enter Name';
+                          } else if (!nameRegExp.hasMatch(value)) {
+                            return 'Input cannot contains prohibited special characters';
+                          } else if (value.length <= 0 || value.length > 50) {
+                            return 'Minimum length required';
+                          } else if (value.contains('..')) {
+                            return 'username does not contain is correct';
+                          }
+
+                          return null;
+                        },
                         // textStyle: theme.textTheme.titleMedium!,
                         hintText: "Job Profile",
                         // hintStyle: theme.textTheme.titleMedium!,
@@ -431,6 +444,14 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           print("userid-$userid");
                           if (jobprofileController.text != null &&
                               jobprofileController.text != "") {
+                            if (jobprofileController.text.length <= 4) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please field full job profile'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            }
                             if (feesController.text != null &&
                                 feesController.text != "") {
                               dynamic params = {
