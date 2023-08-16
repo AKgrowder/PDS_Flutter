@@ -32,7 +32,6 @@ List? image = [];
 List? imagee = [];
 List? close = [];
 List? closee = [];
-
 GetAllPrivateRoomModel? PublicRoomData;
 
 class _RoomsScreenState extends State<RoomsScreen> {
