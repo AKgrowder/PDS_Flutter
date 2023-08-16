@@ -566,7 +566,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: Container(
                                           width: _width / 1.4,
                                           child: Text(
-                                            "${PublicRoomModelData?.object?[index].uid}",
+                                            "${PublicRoomModelData?.object?[index].message?.userName}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w800,
                                                 color: Colors.black,
@@ -608,6 +608,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         senMSGCubit())
                                               ],
                                               child: ViewCommentScreen(
+                                               
                                                 Room_ID:
                                                     "${PublicRoomModelData?.object?[index].uid ?? ""}",
                                                 Title:

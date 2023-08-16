@@ -30,7 +30,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   TextEditingController emailAndMobileController = TextEditingController();
   TextEditingController contectnumberController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-   // ImagePickerController _imagePickerController = ImagePickerController();
+  // ImagePickerController _imagePickerController = ImagePickerController();
   TextEditingController phoneNumberController = TextEditingController();
   Country selectedCountry = CountryPickerUtils.getCountryByPhoneCode('91');
 
@@ -249,7 +249,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   right: 12,
                                   bottom: 14,
                                 ),
-                               validator: (value) {
+                                validator: (value) {
                                   RegExp nameRegExp =
                                       RegExp(r"^[a-zA-Z0-9\s'@]+$");
                                   if (value!.isEmpty) {
@@ -261,7 +261,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     return 'userId length is between 1 and 50 characters';
                                   }
                                   return null;
-                                },  
+                                },
                                 // textStyle: theme.textTheme.titleMedium!,
                                 hintText: "Enter User ID",
                                 // hintStyle: theme.textTheme.titleMedium!,
@@ -404,54 +404,86 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   // style: theme.textTheme.bodyLarge,
                                 ),
                               ),
-                              CustomTextFormField(
-                                validator: (value) {
-                                  final RegExp phoneRegExp =
-                                      RegExp(r'^(?!0+$)[0-9]{10}$');
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 45,
+                                    width: 45,
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.shade300,
+                                        borderRadius: BorderRadius.circular(6)),
+                                    child: Center(
+                                        child: Text(
+                                      "+91",
+                                      style: TextStyle(
+                                          // fontFamily: 'outfit',
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Container(
+                                    width: _width / 1.4,
+                                    child: CustomTextFormField(
+                                      validator: (value) {
+                                        final RegExp phoneRegExp =
+                                            RegExp(r'^(?!0+$)[0-9]{10}$');
 
-                                  if (value!.isEmpty) {
-                                    return 'Please Enter Mobile Number';
-                                  } else if (!phoneRegExp.hasMatch(value)) {
-                                    return 'Invalid Mobile Number';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (value) {
-                                  print("onchange");
-                                  final RegExp regex = RegExp('[a-zA-Z]');
-                                  if (contectnumberController.text == null ||
-                                      contectnumberController.text.isEmpty ||
-                                      !regex.hasMatch(
-                                          contectnumberController.text)) {
-                                    setState(() {
-                                      isPhonee = true;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      isPhonee = false;
-                                    });
-                                  }
-                                },
-                                maxLength: isPhonee == true ? 10 : 50,
-                                // focusNode: FocusNode(),
-                                controller: contectnumberController,
-                                margin: EdgeInsets.only(
-                                  left: 0,
-                                  right: 0,
-                                ),
-                                contentPadding: EdgeInsets.only(
-                                  left: 12,
-                                  top: 14,
-                                  right: 12,
-                                  bottom: 14,
-                                ),
-                                // textStyle: theme.textTheme.titleMedium!,
-                                hintText: "Mobile Number",
-                                // hintStyle: theme.textTheme.titleMedium!,
-                                textInputAction: TextInputAction.next,
-                                textInputType: TextInputType.emailAddress,
-                                filled: true,
-                                fillColor: appTheme.gray100,
+                                        if (value!.isEmpty) {
+                                          return 'Please Enter Mobile Number';
+                                        } else if (!phoneRegExp
+                                            .hasMatch(value)) {
+                                          return 'Invalid Mobile Number';
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (value) {
+                                        print("onchange");
+                                        final RegExp regex = RegExp('[a-zA-Z]');
+                                        if (contectnumberController
+                                                    .text ==
+                                                null ||
+                                            contectnumberController
+                                                .text.isEmpty ||
+                                            !regex.hasMatch(
+                                                contectnumberController.text)) {
+                                          setState(() {
+                                            isPhonee = true;
+                                          });
+                                        } else {
+                                          setState(() {
+                                            isPhonee = false;
+                                          });
+                                        }
+                                      },
+                                      maxLength: isPhonee == true ? 10 : 50,
+                                      // focusNode: FocusNode(),
+                                      controller: contectnumberController,
+                                      margin: EdgeInsets.only(
+                                        left: 0,
+                                        right: 0,
+                                      ),
+                                      contentPadding: EdgeInsets.only(
+                                        left: 12,
+                                        top: 14,
+                                        right: 12,
+                                        bottom: 14,
+                                      ),
+                                      // textStyle: theme.textTheme.titleMedium!,
+                                      hintText: "Mobile Number",
+                                      // hintStyle: theme.textTheme.titleMedium!,
+                                      filled: true,
+                                      fillColor: appTheme.gray100,
+                                      textInputAction: TextInputAction.next,
+                                      textInputType: TextInputType.number,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                               // Container(child: CustomPhoneNumber(
                               //         country: selectedCountry,
@@ -462,7 +494,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               //           // });
                               //         },
                               //       ),
-                                    // ),
+                              // ),
                               Padding(
                                 padding: EdgeInsets.only(
                                   top: 19,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../core/utils/image_constant.dart';
 import '../widgets/custom_image_view.dart';
@@ -9,6 +10,7 @@ class InviteDilogScreen extends StatefulWidget {
 }
 
 TextEditingController RateUSController = TextEditingController();
+TextEditingController controllerr = TextEditingController();
 
 class _InviteDilogScreenState extends State<InviteDilogScreen>
     with SingleTickerProviderStateMixin {
@@ -46,7 +48,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
 
   @override
   Widget build(BuildContext context) {
-   var _height = MediaQuery.of(context).size.height;
+    var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Center(
       child: Material(
@@ -130,6 +132,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                   const EdgeInsets.only(top: 8.0, left: 10),
                               child: TextField(
                                 cursorColor: Colors.grey,
+                                controller: controllerr,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: 'Email'),
@@ -194,9 +197,22 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                           padding: const EdgeInsets.only(left: 10.0),
                           child: Row(
                             children: [
-                              CustomImageView(
-                                imagePath: ImageConstant.copyimage,
-                                height: 20,
+                              GestureDetector(
+                                onTap: () {
+                                  Clipboard.setData(new ClipboardData(
+                                          text: controllerr.text))
+                                      .then((_) {
+                                    controllerr.clear();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Copied to your clipboard !')));
+                                  });
+                                },
+                                child: CustomImageView(
+                                  imagePath: ImageConstant.copyimage,
+                                  height: 20,
+                                ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),

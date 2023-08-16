@@ -158,12 +158,12 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                                       Border.all(color: Colors.grey.shade300),
                                   borderRadius: BorderRadius.circular(10)),
                               child: Padding(
-                                padding: EdgeInsets.only(top: 10.0, left: 10),
-                                child: TextField(
-                                  controller: roomName,
+                                padding: const EdgeInsets.only(left:8.0),
+                                child: TextField( maxLength: 50, 
+                                  controller: roomName,   
                                   cursorColor: Colors.grey,
-                                  decoration: InputDecoration(
-                                    hintText: 'Room Name',
+                                  decoration: InputDecoration( 
+                                    hintText: 'Room Name',counterText: "",
                                     border: InputBorder.none,
                                   ),
                                 ),
@@ -196,11 +196,11 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                                 padding: EdgeInsets.only(top: 0.0, left: 10),
                                 child: TextField(
                                   controller: DescriptionText,
-                                  maxLines: 5,
+                                  maxLines: 5,maxLength: 500,
                                   cursorColor: Colors.grey,
                                   decoration: InputDecoration(
                                     hintText:
-                                        'Describe your problem or topic here..',
+                                        'Describe your problem or topic here..',counterText: "",
                                     border: InputBorder.none,
                                   ),
                                 ),
