@@ -56,8 +56,9 @@ class CreatFourmCubit extends Cubit<CreatFourmState> {
         file,
         fileName,
       );
+      print('createFormDataCheck-${createForm.message}');
       if (createForm.success == true) {
-        print('createForm-----${createForm.object}');
+        print('createFormdataGet-----${createForm.object}');
         emit(ChooseDocumeentLoadedState(createForm));
       } else {
         emit(CreatFourmErrorState(createForm.message.toString()));

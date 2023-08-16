@@ -1,6 +1,5 @@
 class Config {
   static const String FetchAllPublicRoom = "guest/api/fetchAllPublicRoom";
-
   static const String CreateRoom = "guest/api/createRoom";
   static const String loginApi = "auth/auth/authenticate";
   static const String registerApi = "user/api/signup";
@@ -8,9 +7,7 @@ class Config {
   static const String SendMSG = "guest/api/addMessageInRoom";
   static const String coomment = "guest/api/fetchInbox";
   static const String getUserDetails = "auth/auth/getMasterUserByUUID";
-
   static const String company = "user/api/addUserProfile";
-
   static const String FetchMyRoom = "user/api/fetchMyRoom";
   static const String createRoom = "user/api/createRoom";
   static const String inviteUser = "user/api/inviteUserToRoom";
