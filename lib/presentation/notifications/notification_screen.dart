@@ -175,26 +175,113 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             BlocProvider.of<InvitationCubit>(context).InvitationAPI();
           }
         }, builder: (context, state) {
-          return SingleChildScrollView(
-            child: Column(children: [
-              SizedBox(
-                height: 10,
-              ),
-              Container(
+          return Column(children: [
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade200)),
+              child: Container(
                 decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade200)),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          child: Container(
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        child: Container(
+                          height: 50,
+                          color: arrNotiyTypeList[0].isSelected
+                              ? Color(0xFFED1C25)
+                              : Theme.of(context).brightness == Brightness.light
+                                  ? Colors.white
+                                  : Colors.black,
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Spacer(),
+                                Text(
+                                  "All",
+                                  textScaleFactor: 1.0,
+                                  style: TextStyle(
+                                      color: arrNotiyTypeList[0].isSelected
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontSize: 18,
+                                      fontFamily: 'Outfit',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Spacer(),
+                                Container(
+                                  width: 1,
+                                  color: Colors.grey.shade300,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            updateType();
+                            arrNotiyTypeList[0].isSelected = true;
+                            print("abcd");
+                          });
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        child: Container(
                             height: 50,
-                            color: arrNotiyTypeList[0].isSelected
+                            color: arrNotiyTypeList[1].isSelected
+                                ? Color(0xFFED1C25)
+                                : Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? Colors.white
+                                    : Colors.black,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Spacer(),
+                                Text("Chat ",
+                                    textScaleFactor: 1.0,
+                                    style: TextStyle(
+                                        color: arrNotiyTypeList[1].isSelected
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontSize: 18,
+                                        fontFamily: 'Outfit',
+                                        fontWeight: FontWeight.bold)),
+                                Spacer(),
+                                Container(
+                                  color: Colors.grey.shade300,
+                                  width: 1,
+                                )
+                                // Spacer(),
+                              ],
+                            )),
+                        onTap: () {
+                          setState(() {
+                            updateType();
+                            arrNotiyTypeList[1].isSelected = true;
+                            print("abcd");
+                          });
+                        },
+                      ),
+                    ),
+                    Container(
+                      height: 1,
+                      color: Colors.black12,
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        child: Container(
+                            height: 50,
+                            alignment: Alignment.center,
+                            color: arrNotiyTypeList[2].isSelected
                                 ? Color(0xFFED1C25)
                                 : Theme.of(context).brightness ==
                                         Brightness.light
@@ -202,130 +289,42 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                     : Colors.black,
                             child: Center(
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Spacer(),
-                                  Text(
-                                    "All",
-                                    textScaleFactor: 1.0,
-                                    style: TextStyle(
-                                        color: arrNotiyTypeList[0].isSelected
-                                            ? Colors.white
-                                            : Colors.black,
-                                        fontSize: 18,
-                                        fontFamily: 'Outfit',
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Spacer(),
-                                  Container(
-                                    width: 1,
-                                    color: Colors.grey.shade300,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          onTap: () {
-                            setState(() {
-                              updateType();
-                              arrNotiyTypeList[0].isSelected = true;
-                              print("abcd");
-                            });
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          child: Container(
-                              height: 50,
-                              color: arrNotiyTypeList[1].isSelected
-                                  ? Color(0xFFED1C25)
-                                  : Theme.of(context).brightness ==
-                                          Brightness.light
-                                      ? Colors.white
-                                      : Colors.black,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Spacer(),
-                                  Text("Chat ",
+                                  const Spacer(),
+                                  Text("Invitations",
                                       textScaleFactor: 1.0,
                                       style: TextStyle(
-                                          color: arrNotiyTypeList[1].isSelected
+                                          color: arrNotiyTypeList[2].isSelected
                                               ? Colors.white
                                               : Colors.black,
                                           fontSize: 18,
                                           fontFamily: 'Outfit',
                                           fontWeight: FontWeight.bold)),
                                   Spacer(),
-                                  Container(
-                                    color: Colors.grey.shade300,
-                                    width: 1,
-                                  )
-                                  // Spacer(),
                                 ],
-                              )),
-                          onTap: () {
-                            setState(() {
-                              updateType();
-                              arrNotiyTypeList[1].isSelected = true;
-                              print("abcd");
-                            });
-                          },
-                        ),
+                              ),
+                            )),
+                        onTap: () {
+                          setState(() {
+                            updateType();
+                            arrNotiyTypeList[2].isSelected = true;
+                          });
+                          print("abcd");
+                        },
                       ),
-                      Container(
-                        height: 1,
-                        color: Colors.black12,
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          child: Container(
-                              height: 50,
-                              alignment: Alignment.center,
-                              color: arrNotiyTypeList[2].isSelected
-                                  ? Color(0xFFED1C25)
-                                  : Theme.of(context).brightness ==
-                                          Brightness.light
-                                      ? Colors.white
-                                      : Colors.black,
-                              child: Center(
-                                child: Row(
-                                  children: [
-                                    const Spacer(),
-                                    Text("Invitations",
-                                        textScaleFactor: 1.0,
-                                        style: TextStyle(
-                                            color:
-                                                arrNotiyTypeList[2].isSelected
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                            fontSize: 18,
-                                            fontFamily: 'Outfit',
-                                            fontWeight: FontWeight.bold)),
-                                    Spacer(),
-                                  ],
-                                ),
-                              )),
-                          onTap: () {
-                            setState(() {
-                              updateType();
-                              arrNotiyTypeList[2].isSelected = true;
-                            });
-                            print("abcd");
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
-              arrNotiyTypeList[0].isSelected == true
-                  ? ListView.separated(
-                      physics: NeverScrollableScrollPhysics(),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            arrNotiyTypeList[0].isSelected == true
+                ? Container(
+                    height: _height / 1.44,
+                    child: ListView.separated(
+                      physics: BouncingScrollPhysics(),
                       itemCount: 8,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
@@ -389,285 +388,278 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       separatorBuilder: (BuildContext context, int index) {
                         return Padding(padding: EdgeInsets.only(top: 10));
                       },
-                    )
-                  : SizedBox(),
-              arrNotiyTypeList[1].isSelected == true
-                  ? Container(
-                      height: 100,
-                      width: 100,
-                      // color: Colors.red,
-                    )
-                  : SizedBox(),
-              arrNotiyTypeList[2].isSelected == true
-                  ? Container(
-                      child: state is InvitationLoadedState
-                          ? Show_NoData_Image == false
-                              ? SingleChildScrollView(
-                                  child: ListView.builder(
-                                    // itemCount: aa.length,
-                                    itemCount:
-                                        InvitationRoomData?.object?.length,
-                                    /* (image?.contains(index) ?? false)
-                        ? aa.length
-                        : aa.length, */
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 35, vertical: 5),
-                                        child: GestureDetector(
-                                          onTap: () {},
-                                          child: Container(
-                                            // height: demo.contains(index) ? null: height / 16,
-                                            width: _width / 1.2,
-                                            decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color:
-                                                        const Color(0XFFED1C25),
-                                                    width: 1),
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 8.0,
-                                                      top: 10,
-                                                      right: 10,
-                                                      bottom: 10),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        "Create Date",
-                                                        maxLines: 2,
-                                                        textScaleFactor: 1.0,
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color: Colors.grey,
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 14),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 10),
-                                                      child: Text(
-                                                        "${InvitationRoomData?.object?[index].companyName}",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.black,
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 14),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 10),
-                                                      child: Text(
-                                                        "${InvitationRoomData?.object?[index].roomQuestion}",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.black,
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 14),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 8.0),
-                                                  child: Text(
-                                                    "${InvitationRoomData?.object?[index].description}",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.black
-                                                            .withOpacity(0.5),
-                                                        fontFamily: "outfit",
-                                                        fontSize: 14),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 20,
-                                                ),
-                                                SizedBox(
-                                                  height: 20,
-                                                ),
-                                                Row(
+                    ),
+                  )
+                : SizedBox(),
+            arrNotiyTypeList[1].isSelected == true
+                ? Container(
+                    height: 100,
+                    width: 100,
+                    // color: Colors.red,
+                  )
+                : SizedBox(),
+            arrNotiyTypeList[2].isSelected == true
+                ? Container(
+                    child: state is InvitationLoadedState
+                        ? Show_NoData_Image == false
+                            ? SingleChildScrollView(
+                                child: ListView.builder(
+                                  // itemCount: aa.length,
+                                  itemCount: InvitationRoomData?.object?.length,
+                                  /* (image?.contains(index) ?? false)
+                      ? aa.length
+                      : aa.length, */
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 35, vertical: 5),
+                                      child: GestureDetector(
+                                        onTap: () {},
+                                        child: Container(
+                                          // height: demo.contains(index) ? null: height / 16,
+                                          width: _width / 1.2,
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color:
+                                                      const Color(0XFFED1C25),
+                                                  width: 1),
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 8.0,
+                                                    top: 10,
+                                                    right: 10,
+                                                    bottom: 10),
+                                                child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
-                                                    Expanded(
-                                                      flex: 2,
-                                                      child: GestureDetector(
-                                                        onTap: () {
-                                                          print(
-                                                              'chek data get-${InvitationRoomData?.object?[index].invitationLink.toString()}');
-                                                          BlocProvider.of<
-                                                                      InvitationCubit>(
-                                                                  context)
-                                                              .GetRoomInvitations(
-                                                                  false,
-                                                                  InvitationRoomData
-                                                                          ?.object?[
-                                                                              index]
-                                                                          .invitationLink
-                                                                          .toString() ??
-                                                                      "");
-                                                        },
-                                                        child: Container(
-                                                          height: 40,
-                                                          width: _width / 2.48,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                  // color: Color(0XFF9B9B9B),
-                                                                  color: Color(
-                                                                      0XFF9B9B9B),
-                                                                  borderRadius:
-                                                                      BorderRadius.only(
-                                                                          bottomLeft:
-                                                                              Radius.circular(4))),
-                                                          child: Center(
-                                                            child: Text(
-                                                              "Reject",
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontFamily:
-                                                                      "outfit",
-                                                                  fontSize: 15),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 1,
-                                                    ),
-                                                    Expanded(
-                                                      flex: 2,
-                                                      child: GestureDetector(
-                                                        onTap: () {
-                                                          BlocProvider.of<
-                                                                      InvitationCubit>(
-                                                                  context)
-                                                              .GetRoomInvitations(
-                                                                  true,
-                                                                  InvitationRoomData
-                                                                          ?.object?[
-                                                                              index]
-                                                                          .invitationLink
-                                                                          .toString() ??
-                                                                      "");
-                                                        },
-                                                        child: Container(
-                                                          height: 40,
-                                                          width: _width / 2.48,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .only(
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          4),
-                                                            ),
-                                                            color: Color(
-                                                                0xFFED1C25),
-                                                          ),
-                                                          child: Center(
-                                                            child: Text(
-                                                              "Accept",
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontFamily:
-                                                                      "outfit",
-                                                                  fontSize: 15),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
+                                                    Text(
+                                                      "Create Date",
+                                                      maxLines: 2,
+                                                      textScaleFactor: 1.0,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: Colors.grey,
+                                                          fontFamily: "outfit",
+                                                          fontSize: 14),
                                                     ),
                                                   ],
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10),
+                                                    child: Text(
+                                                      "${InvitationRoomData?.object?[index].companyName}",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black,
+                                                          fontFamily: "outfit",
+                                                          fontSize: 14),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10),
+                                                    child: Text(
+                                                      "${InvitationRoomData?.object?[index].roomQuestion}",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black,
+                                                          fontFamily: "outfit",
+                                                          fontSize: 14),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 8.0),
+                                                child: Text(
+                                                  "${InvitationRoomData?.object?[index].description}",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: Colors.black
+                                                          .withOpacity(0.5),
+                                                      fontFamily: "outfit",
+                                                      fontSize: 14),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Expanded(
+                                                    flex: 2,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        print(
+                                                            'chek data get-${InvitationRoomData?.object?[index].invitationLink.toString()}');
+                                                        BlocProvider.of<
+                                                                    InvitationCubit>(
+                                                                context)
+                                                            .GetRoomInvitations(
+                                                                false,
+                                                                InvitationRoomData
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .invitationLink
+                                                                        .toString() ??
+                                                                    "");
+                                                      },
+                                                      child: Container(
+                                                        height: 40,
+                                                        width: _width / 2.48,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                                // color: Color(0XFF9B9B9B),
+                                                                color: Color(
+                                                                    0XFF9B9B9B),
+                                                                borderRadius: BorderRadius.only(
+                                                                    bottomLeft:
+                                                                        Radius.circular(
+                                                                            4))),
+                                                        child: Center(
+                                                          child: Text(
+                                                            "Reject",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: Colors
+                                                                    .white,
+                                                                fontFamily:
+                                                                    "outfit",
+                                                                fontSize: 15),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 1,
+                                                  ),
+                                                  Expanded(
+                                                    flex: 2,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        BlocProvider.of<
+                                                                    InvitationCubit>(
+                                                                context)
+                                                            .GetRoomInvitations(
+                                                                true,
+                                                                InvitationRoomData
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .invitationLink
+                                                                        .toString() ??
+                                                                    "");
+                                                      },
+                                                      child: Container(
+                                                        height: 40,
+                                                        width: _width / 2.48,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    4),
+                                                          ),
+                                                          color:
+                                                              Color(0xFFED1C25),
+                                                        ),
+                                                        child: Center(
+                                                          child: Text(
+                                                            "Accept",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: Colors
+                                                                    .white,
+                                                                fontFamily:
+                                                                    "outfit",
+                                                                fontSize: 15),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      );
-                                    },
-                                  ),
-                                )
-                              : Center(
-                                  child: Text(
-                                    "No Invitations For Now",
-                                    style: TextStyle(
-                                      fontFamily: 'outfit',
-                                      fontSize: 20,
-                                      color: Color(0XFFED1C25),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                )
-                          : Center(
-                              child: Container(
-                                margin: EdgeInsets.only(bottom: 100),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Image.asset(ImageConstant.loader,
-                                      fit: BoxFit.cover,
-                                      height: 100.0,
-                                      width: 100),
+                                      ),
+                                    );
+                                  },
                                 ),
+                              )
+                            : Center(
+                                child: Text(
+                                  "No Invitations For Now",
+                                  style: TextStyle(
+                                    fontFamily: 'outfit',
+                                    fontSize: 20,
+                                    color: Color(0XFFED1C25),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              )
+                        : Center(
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: 100),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.asset(ImageConstant.loader,
+                                    fit: BoxFit.cover,
+                                    height: 100.0,
+                                    width: 100),
                               ),
-                            ))
-                  : SizedBox()
-            ]),
-          );
+                            ),
+                          ))
+                : SizedBox()
+          ]);
         }));
   }
 

@@ -1,10 +1,10 @@
 import 'package:archit_s_application1/core/utils/image_constant.dart';
-import 'package:archit_s_application1/core/utils/size_utils.dart';
 import 'package:archit_s_application1/dilogs/invite_dilog.dart';
 import 'package:archit_s_application1/widgets/custom_image_view.dart';
 import 'package:flutter/material.dart';
 
 import '../../theme/theme_helper.dart';
+import '../home/home.dart';
 
 class ExpertsScreen extends StatefulWidget {
   const ExpertsScreen({Key? key}) : super(key: key);
@@ -147,7 +147,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                     crossAxisSpacing: 0,
                     crossAxisCount: 2,
                   ),
-                  itemCount: 4,
+                  itemCount: FetchAllExpertsData?.object?.length,
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
                       onTap: () {
@@ -261,7 +261,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                 Row(
                                   children: [
                                     Text(
-                                      experts[index],
+                                      "${FetchAllExpertsData?.object?[index].userName}",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black,
@@ -293,7 +293,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                         width: 5,
                                       ),
                                       Text(
-                                        "Expertise in....",
+                                        "${FetchAllExpertsData?.object?[index].expertise?[0].expertiseName}",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             color: Colors.grey,
@@ -316,7 +316,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                         width: 5,
                                       ),
                                       Text(
-                                        "10:00 AM - 8:00 PM",
+                                        "${FetchAllExpertsData?.object?[index].workingHours}",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             color: Colors.black,
@@ -326,6 +326,9 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                     ],
                                   ),
                                 ),
+
+                             
+
                                 Padding(
                                   padding:
                                       const EdgeInsets.only(left: 7, top: 5),
@@ -339,7 +342,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                         width: 5,
                                       ),
                                       Text(
-                                        "₹1600 /hr",
+                                        "₹${FetchAllExpertsData?.object?[index].fees}",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             color: Colors.black,

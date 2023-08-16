@@ -18,7 +18,9 @@ dependencies:
   flutter_rating_bar:
   emoji_picker_flutter: 
   flutter_smart_dialog:
+  country_pickers:  
   stomp_dart_client:
+   
   # keyboard_emoji_picker: ^1.0.3
   flutter_markdown:
   file_picker: 

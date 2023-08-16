@@ -273,10 +273,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             validator: (value) {
                               RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");  
                               if (value!.isEmpty) {
-                                return 'Please Enter Name';
+                                return 'Please Enter UserName';
                               } else if (!nameRegExp.hasMatch(value)) {
                                 return 'Input cannot contains prohibited special characters';
-                              } else if (value.length <= 0 ||
+                              } else if (value.length <= 4 ||
                                   value.length > 50) {
                                 return 'Minimum length required';
                               } else if (value.contains('..')) {
@@ -350,6 +350,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             // focusNode: FocusNode(),
                             // autofocus: true,
 
+                           
                             validator: (value) {
                               final RegExp passwordRegExp = RegExp(
                                   r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
@@ -357,7 +358,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (value!.isEmpty) {
                                 return 'Please Enter Password';
                               } else if (!passwordRegExp.hasMatch(value)) {
-                                return 'please Enter Password';
+                                return 'Password should contain at least 1 uppercase, 1 lowercase, 1 digit, 1  special character and be at least 8 characters long';
                               }
                               return null;
                             },

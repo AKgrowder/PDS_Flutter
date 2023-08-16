@@ -4,38 +4,65 @@ import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
+var Room_ID_stomp = "";
+
 /// late StompClient stompClient;
 void onConnect(StompFrame frame) {
   stompClient.subscribe(
-    destination: '/topic/messages',
-    callback: (frame) {
-      List<dynamic>? result = json.decode(frame.body!);
-      print(result);
+    destination: "/topic/getMessage/${Room_ID_stomp}",
+    // "user/topic/messages",
+    //  'user/topic/getMessage/${Room_ID}',
+    callback: (StompFrame frame) {
+      print('Received message AA-: ${frame.body}');
+      // Process the received message
     },
   );
+//   stompClient.subscribe(
+//     destination: '/topic/messages',
+//     callback: (frame) {
+//       List<dynamic>? result = json.decode(frame.body!);
+//       print(result);
+//     },
+//   );
 
-  Timer.periodic(Duration(seconds: 1), (_) {
-    stompClient.send(
-      destination: '/chat',
-      body: json.encode({'a': 123}),
+  Timer.periodic(Duration(seconds: 5), (_) {
+    print("Call Send++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    stompClient.subscribe(
+      destination: "/topic/getMessage/${Room_ID_stomp}",
+      // "user/topic/messages",
+      //  'user/topic/getMessage/${Room_ID}',
+      callback: (StompFrame frame) {
+        print('Received message AA-: ${frame.body}');
+        // Process the received message
+      },
     );
-    //  stompClient.send(
-    //             destination: '/chat',
-    //             body: 'Hello STOMP server!',
-    //           );
+    // stompClient.send(
+    //   destination: "/chat",
+    //   // 'user/app/sendMessage/${Room_ID}',
+    //   body: json.encode({
+    //     "message": "Archit 1",
+    //     "messageType": "asd",
+    //     "roomUid": "${Room_ID}"
+    //   }),
+    // );
   });
 }
 
 final stompClient = StompClient(
   config: StompConfig(
-    url: 'ws://1eda-2405-201-200b-a0cf-1873-7431-8217-e7b0.ngrok.io/user/pdsChat',
+    url: 'ws://192.168.29.100:8081/user/pdsChat',
+
     onConnect: onConnect,
     beforeConnect: () async {
       print('waiting to connect...');
-      await Future.delayed(Duration(milliseconds: 200));
+      await Future.delayed(Duration(
+        milliseconds: 200,
+      ));
       print('connecting...');
     },
-    onWebSocketError: (dynamic error) => print(error.toString()),
+    onWebSocketError: (dynamic error) => print(
+      error.toString(),
+    ),
     // stompConnectHeaders: {'Authorization': 'Bearer yourToken'},
     // webSocketConnectHeaders: {'Authorization': 'Bearer yourToken'},
   ),
