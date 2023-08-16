@@ -2,19 +2,19 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:archit_s_application1/API/Model/coment/coment_model.dart';
-import 'package:archit_s_application1/API/Model/socketModel/socket_Model.dart';
 import 'package:archit_s_application1/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_state.dart';
-import '../../API/Repo/socket.dart';
+import '../../API/ApiService/socket.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
@@ -28,6 +28,7 @@ class ViewCommentScreen extends StatefulWidget {
   final Room_ID;
   final Title;
   String? Screen_name;
+  DateTime nowTime = DateTime.now();
 
   ViewCommentScreen(
       {required this.Room_ID, required this.Title, this.Screen_name});
@@ -42,6 +43,9 @@ List<String> commentslist = [
   "Lectus scelerisque vulputate tortor pellentesque ac. Fringilla cras ut facilisis amet imperdiet vitae etiam pellentesque pellentesque. Pellentesq",
   "Lectus scelerisque vulputate tortor pellentesque ac. Fringilla cras ut facilisis amet imperdiet vitae etiam pellentesque pellentesque. Pellentesq",
 ];
+DateTime now = DateTime.now();
+
+String formattedDate = DateFormat('dd-MM-yyyy').format(now);
 
 class _ViewCommentScreenState extends State<ViewCommentScreen> {
   // Object? get index => null;
@@ -209,7 +213,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "10th March 2023",
+                                  "${formattedDate}",
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontFamily: 'outfit',
@@ -613,7 +617,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                 ),
                                               ),
                                               Text(
-                                                "tom_cruse",
+                                                "${modelData?.object?.messageOutputList?.content?[index].userName}",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w400,
                                                     color: Colors.black,

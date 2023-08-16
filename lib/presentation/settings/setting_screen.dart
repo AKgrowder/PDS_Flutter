@@ -1,8 +1,6 @@
 import 'package:archit_s_application1/presentation/change_password_screen/change_password_screen.dart';
 import 'package:archit_s_application1/presentation/experts_details_screen/experts_details_screen.dart';
-import 'package:archit_s_application1/presentation/forget_password_screen/forget_password_screen.dart';
 import 'package:archit_s_application1/presentation/room_members/room_members_screen.dart';
-import 'package:archit_s_application1/presentation/rooms/rooms_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/utils/image_constant.dart';
@@ -157,10 +155,10 @@ class _SettingScreenState extends State<SettingScreen> {
 
                           break;
                         case 1:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RoomsScreen()));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => RoomsScreen()));
 
                           break;
                         case 2:
@@ -178,10 +176,10 @@ class _SettingScreenState extends State<SettingScreen> {
                               ));
                           break;
                         case 4:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ForgetPasswordScreen()));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => ForgetPasswordScreen()));
 
                           break;
                         case 5:
@@ -239,8 +237,8 @@ class _SettingScreenState extends State<SettingScreen> {
 
                           break; */
                         case 10:
-                          showDialog(
-                              context: context, builder: (_) => RoomsScreen());
+                          // showDialog(
+                          //     context: context, builder: (_) => RoomsScreen());
                           /*  SnackBar snackBar = SnackBar(
                             content: Text("No Rate US Screen"),
                             backgroundColor: ColorConstant.orangeA700,
@@ -250,13 +248,13 @@ class _SettingScreenState extends State<SettingScreen> {
 
                           break;
                         case 11:
-                          showDialog(
-                              context: context, builder: (_) => RoomsScreen());
+                          // showDialog(
+                          //     context: context, builder: (_) => RoomsScreen());
 
                           break;
                         case 12:
-                          showDialog(
-                              context: context, builder: (_) => RoomsScreen());
+                          // showDialog(
+                          //     context: context, builder: (_) => RoomsScreen());
 
                           break;
 
