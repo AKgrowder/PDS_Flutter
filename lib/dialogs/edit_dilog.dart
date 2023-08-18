@@ -5,7 +5,6 @@ import 'package:archit_s_application1/API/Bloc/Edit_room_bloc/edit_room_cubit.da
 import 'package:archit_s_application1/core/utils/color_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import '../core/utils/image_constant.dart';
 import '../widgets/custom_image_view.dart';
@@ -91,7 +90,7 @@ class EditDilogScreenState extends State<EditDilogScreen>
                     backgroundColor: ColorConstant.primary_color,
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  SmartDialog.dismiss();
+                  Navigator.pop(context);
                 }
                 if (state is EditroomErrorState) {
                   SnackBar snackBar = SnackBar(
@@ -132,7 +131,7 @@ class EditDilogScreenState extends State<EditDilogScreen>
                                     ),
                                   ),
                                   GestureDetector(
-                                    onTap: () => SmartDialog.dismiss(),
+                                    onTap: () => Navigator.pop(context),
                                     child: CustomImageView(
                                       imagePath: ImageConstant.closeimage,
                                       height: 40,
@@ -161,20 +160,21 @@ class EditDilogScreenState extends State<EditDilogScreen>
                             ),
                             Center(
                               child: Container(
-                                height: 40,
+                                // height: 40,
                                 width: _width / 1.45,
                                 decoration: BoxDecoration(
                                     border: Border.all(color: Colors.grey),
                                     borderRadius: BorderRadius.circular(5)),
                                 child: Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 8.0, left: 10),
+                                  padding: const EdgeInsets.only(left: 10),
                                   child: TextField(
+                                    maxLength: 30,
                                     cursorColor: Colors.grey,
                                     controller: editroom,
                                     decoration: InputDecoration(
+                                        counterText: '',
                                         border: InputBorder.none,
-                                        hintText: 'Email'),
+                                        hintText: 'Edit'),
                                   ),
                                 ),
                               ),
@@ -186,7 +186,7 @@ class EditDilogScreenState extends State<EditDilogScreen>
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 GestureDetector(
-                                  onTap: () => SmartDialog.dismiss(),
+                                  onTap: () => Navigator.pop(context),
                                   child: Container(
                                     height: 43,
                                     width: _width / 3.5,

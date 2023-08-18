@@ -98,7 +98,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                                 ),
                               ),
                               GestureDetector(
-                                onTap: () => SmartDialog.dismiss(),
+                                onTap: () => Navigator.pop(context),
                                 child: CustomImageView(
                                   imagePath: ImageConstant.closeimage,
                                   height: 40,
