@@ -281,21 +281,37 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                     padding: const EdgeInsets.only(left: 30, right: 15),
                     child: GestureDetector(
                       onTap: () {
-                        var params = {
-                          "roomQuestion": _RoomTitleController.text,
-                          "description": "",
-                          "roomType": "PUBLIC"
-                        };
-                        if (_RoomTitleController.text.isNotEmpty) {
-                          BlocProvider.of<CreatPublicRoomCubit>(context)
-                              .CreatPublicRoomAPI(params);
-                        } else {
+                        if (_RoomTitleController.text == null ||
+                            _RoomTitleController.text == '') {
+                          print('condison1');
                           SnackBar snackBar = SnackBar(
                             content: Text('Please right Description'),
                             backgroundColor: ColorConstant.primary_color,
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else if (_RoomTitleController.text.trim().isEmpty ||
+                            _RoomTitleController.text.trim() == '') {
+                          print('condison1');
+
+                          SnackBar snackBar = SnackBar(
+                            content:
+                                Text('Description can\'t be just blank spaces'),
+                            backgroundColor: ColorConstant.primary_color,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else if (_RoomTitleController.text != null ||
+                            _RoomTitleController.text != '') {
+                          print('condison3');
+
+                          var params = {
+                            "roomQuestion": _RoomTitleController.text,
+                            "description": _RoomTitleController.text,
+                            "roomType": "PUBLIC"
+                          };
+                          BlocProvider.of<CreatPublicRoomCubit>(context)
+                              .CreatPublicRoomAPI(params);
                         }
+                        // }
                       },
                       child: Center(
                         child: Container(

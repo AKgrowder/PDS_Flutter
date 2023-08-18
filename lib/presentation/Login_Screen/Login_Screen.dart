@@ -200,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               },
               builder: (context, state) {
-                return SingleChildScrollView( 
+                return SingleChildScrollView(
                   child: Form(
                     key: _formKey,
                     child: SizedBox(
@@ -271,12 +271,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           CustomTextFormField(
                             validator: (value) {
-                              RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");  
+                              RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                               if (value!.isEmpty) {
-                                return 'Please Enter UserName';
+                                return 'Please Enter Name';
+                              } else if (value.trim().isEmpty) {
+                                return 'Name can\'t be just blank spaces';
                               } else if (!nameRegExp.hasMatch(value)) {
                                 return 'Input cannot contains prohibited special characters';
-                              } else if (value.length <= 4 ||
+                              } else if (value.length <= 3 ||
                                   value.length > 50) {
                                 return 'Minimum length required';
                               } else if (value.contains('..')) {
@@ -323,9 +325,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             textInputAction: TextInputAction.next,
                             textInputType: TextInputType.emailAddress,
                             filled: true,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                            ],
+
                             // fillColor: appTheme.gray100,
                           ),
                           Align(
@@ -349,17 +349,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           CustomTextFormField(
                             // focusNode: FocusNode(),
                             // autofocus: true,
-
-                           
+                            inputFormatters: [
+                              FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                            ],
+                            errorMaxLines: 2,
                             validator: (value) {
-                              final RegExp passwordRegExp = RegExp(
-                                  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+                              String pattern =
+                                  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$%^&*(),.?":{}|<>])[A-Za-z0-9!@#\$%^&*(),.?":{}|<>]{8,}$';
 
                               if (value!.isEmpty) {
                                 return 'Please Enter Password';
-                              } else if (!passwordRegExp.hasMatch(value)) {
-                                return 'Password should contain at least 1 uppercase, 1 lowercase, 1 digit, 1  special character and be at least 8 characters long';
                               }
+
+                              if (!RegExp(pattern).hasMatch(value)) {
+                                return 'Password should contain at least 1 uppercase, 1 lowercase, 1 digit, 1 special character and be at least 8 characters long';
+                              }
+
                               return null;
                             },
                             controller: passwordoneController,
@@ -408,9 +413,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             obscureText: Show_Password ? true : false,
                             filled: true,
                             maxLength: 30,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                            ],
+
                             fillColor: appTheme.gray100,
                           ),
                           Align(

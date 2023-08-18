@@ -15,6 +15,7 @@ import 'package:archit_s_application1/core/utils/sharedPreferences.dart';
 import 'package:archit_s_application1/custom_bottom_bar/custom_bottom_bar.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,6 +40,14 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
   String? dopcument;
   String? filepath;
   ChooseDocument? chooseDocument;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    dopcument = 'Upload Image';
+  }
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
@@ -181,12 +190,16 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             color: Color(0XFFF6F6F6),
                             borderRadius: BorderRadius.circular(5)),
                         child: Padding(
-                          padding: const EdgeInsets.only(left:5.0),
+                          padding: const EdgeInsets.only(left: 5.0),
                           child: TextFormField(
-                            controller: name,maxLength: 50,
+                            controller: name,
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(50),
+                            ],
                             cursorColor: Colors.grey,
                             decoration: InputDecoration(
-                              hintText: 'Enter name',counterText: '',
+                              hintText: 'Enter name',
+                              counterText: '',
                               border: InputBorder.none,
                             ),
                           ),
@@ -214,12 +227,17 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             color: Color(0XFFF6F6F6),
                             borderRadius: BorderRadius.circular(5)),
                         child: Padding(
-                          padding: const EdgeInsets.only(left:8.0),
-                          child: TextFormField(maxLength: 50,
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: TextFormField(
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(50),
+                            ],
+                            
                             controller: profile,
                             cursorColor: Colors.grey,
                             decoration: InputDecoration(
-                              hintText: 'Job Profile',counterText: '',
+                              hintText: 'Job Profile',
+                              counterText: '',
                               border: InputBorder.none,
                             ),
                           ),
@@ -245,29 +263,22 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
-                            height: 50,
-                            width: _width / 1.65,
-                            decoration: BoxDecoration(
-                                color: Color(0XFFF6F6F6),
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(5),
-                                    bottomLeft: Radius.circular(5))),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextFormField(
-                                readOnly: true,
-                                // maxLines: null,
-                                controller: uplopdfile,
-                                cursorColor: Colors.grey,
-                                decoration: InputDecoration(
-                                  hintText: 'Upload Image',
-                                  border: InputBorder.none,
+                              height: 50,
+                              width: _width / 1.6,
+                              decoration: BoxDecoration(
+                                  color: Color(0XFFF6F6F6),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(5),
+                                      bottomLeft: Radius.circular(5))),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 15, left: 20),
+                                child: Text(
+                                  '${dopcument.toString()}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontSize: 16),
                                 ),
-                                style:
-                                    TextStyle(overflow: TextOverflow.ellipsis),
-                              ),
-                            ),
-                          ),
+                              )),
                           GestureDetector(
                             onTap: () async {
                               filepath = await prepareTestPdf(0);
@@ -332,27 +343,57 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        if (name.text != null && name.text != "") {
-                          if (profile.text != null && profile.text != "") {
-                            if (uplopdfile.text != null &&
-                                uplopdfile.text != "") {
-                            } else {
-                              SnackBar snackBar = SnackBar(
-                                content: Text('Please upload Document'),
-                                backgroundColor: ColorConstant.primary_color,
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            }
-                          } else {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please Profile Name'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          }
-                          print('vaildate');
+                        print(name.text.length);
+                        if (name.text == null || name.text == '') {
+                          SnackBar snackBar = SnackBar(
+                            content: Text('Please Enter Company Name '),
+                            backgroundColor: ColorConstant.primary_color,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else if (name.text.trim().isEmpty ||
+                            name.text.trim() == '') {
+                          SnackBar snackBar = SnackBar(
+                            content: Text(
+                                'Company Name can\'t be just blank spaces '),
+                            backgroundColor: ColorConstant.primary_color,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else if (name.text.toString().length <= 3 ||
+                            name.text.toString().length > 50) {
+                          SnackBar snackBar = SnackBar(
+                            content: Text('please fill full Company name '),
+                            backgroundColor: ColorConstant.primary_color,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else if (profile.text == null || profile.text == '') {
+                          SnackBar snackBar = SnackBar(
+                            content: Text('Please Enter job profile '),
+                            backgroundColor: ColorConstant.primary_color,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else if (profile.text.trim().isEmpty ||
+                            profile.text.trim() == '') {
+                          SnackBar snackBar = SnackBar(
+                            content: Text(
+                                'job profile can\'t be just blank spaces '),
+                            backgroundColor: ColorConstant.primary_color,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else if (profile.text.toString().length <= 3 ||
+                            profile.text.toString().length > 50) {
+                          SnackBar snackBar = SnackBar(
+                            content: Text('please fill full job profile'),
+                            backgroundColor: ColorConstant.primary_color,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else if (dopcument == 'Upload Image') {
+                          print('upolded imah');
+                          SnackBar snackBar = SnackBar(
+                            content: Text('Please Upload Image'),
+                            backgroundColor: ColorConstant.primary_color,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else {
                           final SharedPreferences prefs =
                               await SharedPreferences.getInstance();
                           String? jwtToken =
@@ -366,13 +407,36 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                           print('button-$params');
                           BlocProvider.of<CreatFourmCubit>(context).CreatFourm(
                               params, uplopdfile.text, filepath.toString());
-                        } else {
-                          SnackBar snackBar = SnackBar(
-                            content: Text('Please Enter Company Name'),
-                            backgroundColor: ColorConstant.primary_color,
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
+                        // if (name.text != null && name.text != "") {
+                        //   if (profile.text != null && profile.text != "") {
+                        //     if (uplopdfile.text != null &&
+                        //         uplopdfile.text != "") {
+                        //     } else {
+                        //       SnackBar snackBar = SnackBar(
+                        //         content: Text('Please upload Document'),
+                        //         backgroundColor: ColorConstant.primary_color,
+                        //       );
+                        //       ScaffoldMessenger.of(context)
+                        //           .showSnackBar(snackBar);
+                        //     }
+                        //   } else {
+                        //     SnackBar snackBar = SnackBar(
+                        //       content: Text('Please Profile Name'),
+                        //       backgroundColor: ColorConstant.primary_color,
+                        //     );
+                        //     ScaffoldMessenger.of(context)
+                        //         .showSnackBar(snackBar);
+                        //   }
+                        //   print('vaildate');
+
+                        // } else {
+                        //   SnackBar snackBar = SnackBar(
+                        //     content: Text('Please Enter Company Name'),
+                        //     backgroundColor: ColorConstant.primary_color,
+                        //   );
+                        //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        // }
                       },
                       child: Center(
                         child: Container(
