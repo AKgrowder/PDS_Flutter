@@ -144,8 +144,18 @@ class _BottombarPageState extends State<BottombarPage> {
                                           ],
                                         ),
                                       ),
-                              ), 
-                              // Spacer(),
+                              ),
+                              Spacer(),
+                              selectedIndex != 0
+                                  ? Container()
+                                  : Container(
+                                      height: 5,
+                                      width: 30,
+                                      decoration: BoxDecoration(
+                                          color: Color(0XFFED1C25),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
                             ],
                           ),
                         ),
@@ -153,7 +163,7 @@ class _BottombarPageState extends State<BottombarPage> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                             if (UserLogin_ID != null) {
+                            if (UserLogin_ID != null) {
                               selectedIndex = 1;
                             } else {
                               NaviRegisterScreen();
@@ -215,7 +225,17 @@ class _BottombarPageState extends State<BottombarPage> {
                                           ),
                                         ),
                                 ),
-                              ),
+                              ),Spacer(),
+                              selectedIndex != 1
+                                  ? Container()
+                                  : Container(
+                                      height: 5,
+                                      width: 30,
+                                      decoration: BoxDecoration(
+                                          color: Color(0XFFED1C25),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
                             ],
                           ),
                         ),
@@ -223,7 +243,7 @@ class _BottombarPageState extends State<BottombarPage> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                             if (UserLogin_ID != null) {
+                            if (UserLogin_ID != null) {
                               selectedIndex = 2;
                             } else {
                               NaviRegisterScreen();
@@ -284,6 +304,16 @@ class _BottombarPageState extends State<BottombarPage> {
                                 ),
                               ),
                               Spacer(),
+                              selectedIndex != 2
+                                  ? Container()
+                                  : Container(
+                                      height: 5,
+                                      width: 30,
+                                      decoration: BoxDecoration(
+                                          color: Color(0XFFED1C25),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
                             ],
                           ),
                         ),
@@ -291,7 +321,7 @@ class _BottombarPageState extends State<BottombarPage> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                             if (UserLogin_ID != null) {
+                            if (UserLogin_ID != null) {
                               selectedIndex = 3;
                             } else {
                               NaviRegisterScreen();
@@ -349,8 +379,18 @@ class _BottombarPageState extends State<BottombarPage> {
                                           ),
                                         ),
                                 ),
-                              ), 
+                              ),
                               Spacer(),
+                              selectedIndex != 3
+                                  ? Container()
+                                  : Container(
+                                      height: 5,
+                                      width: 30,
+                                      decoration: BoxDecoration(
+                                          color: Color(0XFFED1C25),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
                             ],
                           ),
                         ),
@@ -359,7 +399,7 @@ class _BottombarPageState extends State<BottombarPage> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                           if (UserLogin_ID != null) {
+                            if (UserLogin_ID != null) {
                               selectedIndex = 4;
                             } else {
                               NaviRegisterScreen();
@@ -426,6 +466,16 @@ class _BottombarPageState extends State<BottombarPage> {
                                 ),
                               ),
                               Spacer(),
+                              selectedIndex != 4
+                                  ? Container()
+                                  : Container(
+                                      height: 5,
+                                      width: 30,
+                                      decoration: BoxDecoration(
+                                          color: Color(0XFFED1C25),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
                             ],
                           ),
                         ),

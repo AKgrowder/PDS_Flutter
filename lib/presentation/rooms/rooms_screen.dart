@@ -158,7 +158,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                             physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
                               print(
-                                  "####################################${PublicRoomData?.object?[index].createdDate}");
+                                  "####################################${PublicRoomData?.object?[index]}");
                               final apiDate = DateTime.parse(PublicRoomData
                                       ?.object?[index].createdDate
                                       .toString() ??

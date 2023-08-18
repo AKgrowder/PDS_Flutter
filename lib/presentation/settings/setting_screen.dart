@@ -1,11 +1,10 @@
-import 'package:archit_s_application1/presentation/change_password_screen/change_password_screen.dart';
 import 'package:archit_s_application1/presentation/experts_details_screen/experts_details_screen.dart';
-import 'package:archit_s_application1/presentation/room_members/room_members_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/utils/image_constant.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../experts/experts_screen.dart';
+import '../forget_password_screen/forget_password_screen.dart';
 import '../my account/my_account_screen.dart';
 import '../rooms/room_details_screen.dart';
 import '../view_details_screen/view_public_forum_screen.dart';
@@ -169,25 +168,25 @@ class _SettingScreenState extends State<SettingScreen> {
                               ));
                           break;
                         case 3:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RoomMembersScreen(room_Id: ""),
-                              ));
-                          break;
-                        case 4:
                           // Navigator.push(
                           //     context,
                           //     MaterialPageRoute(
-                          //         builder: (context) => ForgetPasswordScreen()));
+                          //       builder: (context) => RoomMembersScreen(room_Id: ""),
+                          //     ));
+                          break;
+                        case 4:
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ForgetPasswordScreen()));
 
                           break;
                         case 5:
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ChangePasswordScreen()),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //       builder: (context) => ChangePasswordScreen()),
+                          // );
 
                           break;
                         case 6:
