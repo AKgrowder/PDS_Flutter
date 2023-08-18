@@ -216,7 +216,6 @@
 //   }
 // }
 
-
 class ComentApiModel {
   String? message;
   Object? object;
@@ -245,13 +244,25 @@ class ComentApiModel {
 class Object {
   String? roomUid;
   String? roomQuestion;
+  String? ownerUserName;
+  String? ownerUserUid;
+  String? createdAt;
   MessageOutputList? messageOutputList;
 
-  Object({this.roomUid, this.roomQuestion, this.messageOutputList});
+  Object(
+      {this.roomUid,
+      this.roomQuestion,
+      this.ownerUserName,
+      this.ownerUserUid,
+      this.createdAt,
+      this.messageOutputList});
 
   Object.fromJson(Map<String, dynamic> json) {
     roomUid = json['roomUid'];
     roomQuestion = json['roomQuestion'];
+    ownerUserName = json['ownerUserName'];
+    ownerUserUid = json['ownerUserUid'];
+    createdAt = json['createdAt'];
     messageOutputList = json['messageOutputList'] != null
         ? new MessageOutputList.fromJson(json['messageOutputList'])
         : null;
@@ -261,6 +272,9 @@ class Object {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['roomUid'] = this.roomUid;
     data['roomQuestion'] = this.roomQuestion;
+    data['ownerUserName'] = this.ownerUserName;
+    data['ownerUserUid'] = this.ownerUserUid;
+    data['createdAt'] = this.createdAt;
     if (this.messageOutputList != null) {
       data['messageOutputList'] = this.messageOutputList!.toJson();
     }
@@ -271,8 +285,8 @@ class Object {
 class MessageOutputList {
   List<Content>? content;
   Pageable? pageable;
-  int? totalPages;
   int? totalElements;
+  int? totalPages;
   bool? last;
   int? size;
   int? number;
@@ -284,8 +298,8 @@ class MessageOutputList {
   MessageOutputList(
       {this.content,
       this.pageable,
-      this.totalPages,
       this.totalElements,
+      this.totalPages,
       this.last,
       this.size,
       this.number,
@@ -299,14 +313,13 @@ class MessageOutputList {
       content = <Content>[];
       json['content'].forEach((v) {
         content!.add(new Content.fromJson(v));
-        
       });
     }
     pageable = json['pageable'] != null
         ? new Pageable.fromJson(json['pageable'])
         : null;
-    totalPages = json['totalPages'];
     totalElements = json['totalElements'];
+    totalPages = json['totalPages'];
     last = json['last'];
     size = json['size'];
     number = json['number'];
@@ -324,8 +337,8 @@ class MessageOutputList {
     if (this.pageable != null) {
       data['pageable'] = this.pageable!.toJson();
     }
-    data['totalPages'] = this.totalPages;
     data['totalElements'] = this.totalElements;
+    data['totalPages'] = this.totalPages;
     data['last'] = this.last;
     data['size'] = this.size;
     data['number'] = this.number;
@@ -347,6 +360,7 @@ class Content {
   Null? messageCount;
   String? userCode;
   Null? userProfilePic;
+  String? createdAt;
 
   Content(
       {this.uid,
@@ -355,7 +369,8 @@ class Content {
       this.userName,
       this.messageCount,
       this.userCode,
-      this.userProfilePic});
+      this.userProfilePic,
+      this.createdAt});
 
   Content.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
@@ -365,6 +380,7 @@ class Content {
     messageCount = json['messageCount'];
     userCode = json['userCode'];
     userProfilePic = json['userProfilePic'];
+    createdAt = json['createdAt'];
   }
 
   Map<String, dynamic> toJson() {
@@ -376,6 +392,7 @@ class Content {
     data['messageCount'] = this.messageCount;
     data['userCode'] = this.userCode;
     data['userProfilePic'] = this.userProfilePic;
+    data['createdAt'] = this.createdAt;
     return data;
   }
 }

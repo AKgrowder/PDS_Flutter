@@ -131,7 +131,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     }
                     if (state is OtpLoadedState) {
                       SnackBar snackBar = SnackBar(
-                        content: Text('Register create successfully'),
+                        content: Text('Signup create successfully'),
                         backgroundColor: ColorConstant.primary_color,
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);

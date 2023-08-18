@@ -494,9 +494,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Padding(
                                         padding: const EdgeInsets.only(left: 5),
                                         child: Text(
-                                          User_Name != null
-                                              ? "${User_Name}"
-                                              : "Tom_cruze",
+                                          "${PublicRoomModelData?.object?[index].ownerUserName}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w800,
                                               color: Colors.black,
@@ -608,7 +606,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         senMSGCubit())
                                               ],
                                               child: ViewCommentScreen(
-                                               
                                                 Room_ID:
                                                     "${PublicRoomModelData?.object?[index].uid ?? ""}",
                                                 Title:
@@ -753,9 +750,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               child: CustomImageView(
                                                 imagePath:
                                                     ImageConstant.experts,
-                                                height: 50, 
-                                                width: _width /2.7,
-                                                radius: 
+                                                height: 50,
+                                                width: _width / 2.7,
+                                                radius:
                                                     BorderRadius.circular(10),
                                               ),
                                             ),
@@ -829,7 +826,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Text(
-                                              "${FetchAllExpertsData?.object?[index].expertise?[0].expertiseName}",
+                                                "${FetchAllExpertsData?.object?[index].expertise?[0].expertiseName}",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w300,
                                                     color: Colors.grey.shade700,
