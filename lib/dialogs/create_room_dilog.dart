@@ -74,11 +74,17 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                   fit: BoxFit.cover, height: 100.0, width: 100),
             ),
           ),
-          
         );
       }
       if (state is CreateRoomLoadedState) {
-        SmartDialog.dismiss();
+        print('this is the data get');
+
+        SnackBar snackBar = SnackBar(
+          content: Text(state.PublicRoomData.message.toString()),
+          backgroundColor: ColorConstant.primary_color,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        // Navigator.pop(context);
       }
     }, builder: (context, state) {
       return Center(
@@ -124,10 +130,10 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () => SmartDialog.dismiss(),
+                                  onTap: () => Navigator.pop(context),
                                   child: CustomImageView(
                                     imagePath: ImageConstant.closeimage,
-                                    height: 40,
+                                    // height: 40,
                                   ),
                                 ),
                               ],
@@ -138,7 +144,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                                left: 15.0, top: 5, bottom: 10),
+                                left: 5.0, ),
                             child: Text(
                               "Room Name",
                               style: TextStyle(
@@ -161,10 +167,12 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                               child: Padding(
                                 padding: EdgeInsets.only(top: 10.0, left: 10),
                                 child: TextField(
+                                  maxLines: 50,
                                   controller: roomName,
                                   cursorColor: Colors.grey,
                                   decoration: InputDecoration(
                                     hintText: 'Room Name',
+                                    counterText: '',
                                     border: InputBorder.none,
                                   ),
                                 ),
@@ -214,7 +222,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 GestureDetector(
-                                  onTap: () => SmartDialog.dismiss(),
+                                  onTap: () => Navigator.pop(context),
                                   child: Container(
                                     height: 43,
                                     width: _width / 3,
@@ -239,7 +247,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                                 GestureDetector(
                                   onTap: () {
                                     if (roomName.text == null ||
-                                        roomName.text.isEmpty) {
+                                        roomName.text == '') {
                                       SnackBar snackBar = SnackBar(
                                         content: Text('Please Enter Room Name'),
                                         backgroundColor:
@@ -247,9 +255,18 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                                       );
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(snackBar);
-                                    }
-                                    if (DescriptionText.text == null ||
-                                        DescriptionText.text.isEmpty) {
+                                    } else if (roomName.text.trim().isEmpty ||
+                                        roomName.text.trim() == '') {
+                                      SnackBar snackBar = SnackBar(
+                                        content: Text(
+                                            'Room Name can\'t be just blank spaces'),
+                                        backgroundColor:
+                                            ColorConstant.primary_color,
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    } else if (DescriptionText.text == null ||
+                                        DescriptionText.text == '') {
                                       SnackBar snackBar = SnackBar(
                                         content:
                                             Text('Please Enter Description'),
@@ -258,17 +275,51 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                                       );
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(snackBar);
+                                    } else if (DescriptionText.text
+                                            .trim()
+                                            .isEmpty ||
+                                        DescriptionText.text.trim() == '') {
+                                      SnackBar snackBar = SnackBar(
+                                        content: Text(
+                                            'Description can\'t be just blank spaces'),
+                                        backgroundColor:
+                                            ColorConstant.primary_color,
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    } else {
+                                      var params = {
+                                        "roomQuestion": roomName.text,
+                                        "description": DescriptionText.text,
+                                        "roomType": "PRIVTAE"
+                                      };
+
+                                      print(params);
+
+                                      BlocProvider.of<CreateRoomCubit>(context)
+                                          .CreateRoomAPI(params);
                                     }
-                                    var params = {
-                                      "roomQuestion": roomName.text,
-                                      "description": DescriptionText.text,
-                                      "roomType": "PRIVTAE"
-                                    };
-
-                                    print(params);
-
-                                    BlocProvider.of<CreateRoomCubit>(context)
-                                        .CreateRoomAPI(params);
+                                    // if (roomName.text == null ||
+                                    //     roomName.text.isEmpty) {
+                                    //   SnackBar snackBar = SnackBar(
+                                    //     content: Text('Please Enter Room Name'),
+                                    //     backgroundColor:
+                                    //         ColorConstant.primary_color,
+                                    //   );
+                                    //   ScaffoldMessenger.of(context)
+                                    //       .showSnackBar(snackBar);
+                                    // }
+                                    // if (DescriptionText.text == null ||
+                                    //     DescriptionText.text.isEmpty) {
+                                    //   SnackBar snackBar = SnackBar(
+                                    //     content:
+                                    //         Text('Please Enter Description'),
+                                    //     backgroundColor:
+                                    //         ColorConstant.primary_color,
+                                    //   );
+                                    //   ScaffoldMessenger.of(context)
+                                    //       .showSnackBar(snackBar);
+                                    // }
                                   },
                                   child: Container(
                                     height: 43,

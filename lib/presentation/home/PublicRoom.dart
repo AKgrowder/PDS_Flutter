@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../API/Model/HomeScreenModel/PublicRoomModel.dart';
@@ -24,40 +25,42 @@ class _PublicRoomListState extends State<PublicRoomList> {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
-       appBar: AppBar(
-          backgroundColor: theme.colorScheme.onPrimary,
-          centerTitle: true,
-          elevation: 0,
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(
-              Icons.arrow_back,
-              color: Colors.grey,
-            ),
-          ),
-          title: Text(
-            "Public Room",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontFamily: "outfit",
-                fontSize: 20),
+      appBar: AppBar(
+        backgroundColor: theme.colorScheme.onPrimary,
+        centerTitle: true,
+        elevation: 0,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.arrow_back,
+            color: Colors.grey,
           ),
         ),
+        title: Text(
+          "Public Room",
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              fontFamily: "outfit",
+              fontSize: 20),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Container(
           child: ListView.builder(
-            itemCount:  PublicRoomModelData?.object?.length,
+            itemCount: PublicRoomModelData?.object?.length,
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
+              
               return Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16, bottom: 10),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
                       return MultiBlocProvider(
                         providers: [
                           BlocProvider(
@@ -77,8 +80,8 @@ class _PublicRoomListState extends State<PublicRoomList> {
                     // height: demo.contains(index) ? null: height / 16,
                     width: _width,
                     decoration: BoxDecoration(
-                        border:
-                            Border.all(color: const Color(0XFFD9D9D9), width: 2),
+                        border: Border.all(
+                            color: const Color(0XFFD9D9D9), width: 2),
                         borderRadius: BorderRadius.circular(5)),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +102,7 @@ class _PublicRoomListState extends State<PublicRoomList> {
                             Padding(
                               padding: const EdgeInsets.only(left: 5),
                               child: Text(
-                                "Tom_cruze",
+                                "${PublicRoomModelData?.object?[index].ownerUserName ?? ""}",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w800,
                                     color: Colors.black,
@@ -113,15 +116,16 @@ class _PublicRoomListState extends State<PublicRoomList> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Padding(
-                              padding:
-                                  EdgeInsets.only(left: 8.0, top: 10, bottom: 10),
+                              padding: EdgeInsets.only(
+                                  left: 8.0, top: 10, bottom: 10),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding:
-                                        const EdgeInsets.only(left: 2.0, top: 5),
+                                    padding: const EdgeInsets.only(
+                                        left: 2.0, top: 5),
                                     child: CircleAvatar(
                                         backgroundColor: Colors.black,
                                         maxRadius: 3),
@@ -163,7 +167,7 @@ class _PublicRoomListState extends State<PublicRoomList> {
                               child: Container(
                                 width: _width / 1.4,
                                 child: Text(
-                                  "${PublicRoomModelData?.object?[index].uid}",
+                                  "${PublicRoomModelData?.object?[index].message?.userName ?? ""}",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black,

@@ -26,9 +26,9 @@ class CreatPublicRoomModel {
 class Object {
   int? id;
   String? createdAt;
-  Null? createdBy;
+  int? createdBy;
   Null? status;
-  Null? isActive;
+  bool? isActive;
   String? uid;
   String? modifiedAt;
   Null? modifiedBy;
@@ -105,6 +105,7 @@ class User {
   String? otpExpiryTime;
   int? otpAttempt;
   String? mobileNo;
+  Null? userProfilePic;
 
   User(
       {this.id,
@@ -124,7 +125,8 @@ class User {
       this.userOtp,
       this.otpExpiryTime,
       this.otpAttempt,
-      this.mobileNo});
+      this.mobileNo,
+      this.userProfilePic});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -145,6 +147,7 @@ class User {
     otpExpiryTime = json['otpExpiryTime'];
     otpAttempt = json['otpAttempt'];
     mobileNo = json['mobileNo'];
+    userProfilePic = json['userProfilePic'];
   }
 
   Map<String, dynamic> toJson() {
@@ -167,6 +170,7 @@ class User {
     data['otpExpiryTime'] = this.otpExpiryTime;
     data['otpAttempt'] = this.otpAttempt;
     data['mobileNo'] = this.mobileNo;
+    data['userProfilePic'] = this.userProfilePic;
     return data;
   }
 }

@@ -28,8 +28,7 @@ class ViewCommentScreen extends StatefulWidget {
   final Room_ID;
   final Title;
   String? Screen_name;
-  DateTime nowTime = DateTime.now();
-
+  String? createdDate;
   ViewCommentScreen(
       {required this.Room_ID, required this.Title, this.Screen_name});
 
@@ -67,12 +66,19 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     stompClient.activate();
     super.initState();
   }
+ String formatDateTime(String dateTimeString) {
+  DateTime dateTime = DateTime.parse(dateTimeString);
+  DateFormat formatter = DateFormat('d\'th\' MMMM y');
+  String formattedDate = formatter.format(dateTime);
+  return formattedDate;
+}
 
   //  @override
   // void dispose() {
   //  stompClient.deactivate();
   //   super.dispose();
   // }
+  
 
   _onBackspacePressed() {
     Add_Comment
@@ -83,6 +89,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -438,7 +445,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                       callback: (StompFrame frame) {
                                         Map<String, dynamic> jsonString =
                                             json.decode(frame.body ?? "");
-
+                                           print('jasonSt6ring-$jsonString');             
                                         if (addmsg == false) {
                                           print(
                                               "please1-${modelData?.object?.messageOutputList?.content?.length}");
@@ -592,6 +599,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 shrinkWrap: true,
                                 // physics: NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
+                                  
+                           
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                         /* horizontal: 35, vertical: 5 */),
@@ -746,7 +755,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                 MainAxisAlignment.end,
                                             children: [
                                               Text(
-                                                "Date",
+                                                "${formatDateTime(
+                                      '${modelData?.object?.messageOutputList?.content?[index].createdAt}')}",
                                                 maxLines: 3,
                                                 textScaleFactor: 1.0,
                                                 style: TextStyle(
@@ -754,6 +764,9 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                     color: Colors.grey,
                                                     fontFamily: "outfit",
                                                     fontSize: 12),
+                                              ),
+                                              SizedBox(
+                                                width: 20,
                                               ),
                                             ],
                                           ),
