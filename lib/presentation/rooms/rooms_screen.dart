@@ -5,7 +5,6 @@ import 'package:archit_s_application1/dilogs/invite_dilog.dart';
 import 'package:archit_s_application1/presentation/view_comments/view_comments_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:intl/intl.dart';
 
 import '../../API/Bloc/CreateRoom_Bloc/CreateRoom_cubit.dart';
@@ -213,8 +212,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   right: 35.0),
                                               child: GestureDetector(
                                                 onTap: () {
-                                                  SmartDialog.show(
-                                                    // context: context,
+                                                showDialog(
+                                                    context: context,
                                                     builder:
                                                         (BuildContext context) {
                                                       print(
@@ -255,8 +254,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                SmartDialog.show(
-                                                    // context: context,
+                                                showDialog(
+                                                    context: context,
                                                     builder: (context) {
                                                   return MultiBlocProvider(
                                                     providers: [
@@ -300,8 +299,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                       snackBar);
 
                                                               method();
-                                                              SmartDialog
-                                                                  .dismiss();
+                                                             Navigator.pop(context);
                                                             }
                                                           },
                                                           builder:
@@ -359,8 +357,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                   children: [
                                                                     GestureDetector(
                                                                       onTap: () =>
-                                                                          SmartDialog
-                                                                              .dismiss(),
+                                                                           Navigator.pop(context),
                                                                       child:
                                                                           Container(
                                                                         height:
@@ -974,8 +971,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                               ),
                                               GestureDetector(
                                                 onTap: () {
-                                                  SmartDialog.show(
-                                                    // context: context,
+                                                  showDialog(
+                                                    context: context,
                                                     builder:
                                                         (BuildContext context) {
                                                       print(
@@ -1136,8 +1133,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                               flex: 2,
                                               child: GestureDetector(
                                                 onTap: () {
-                                                  SmartDialog.show(
-                                                    // context: context,
+                                                  showDialog(
+                                                    context: context,
                                                     builder:
                                                         (BuildContext context) {
                                                       return AssignAdminScreenn();
@@ -1277,8 +1274,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
 
   CreatRoom() {
     print('createroom');
-    SmartDialog.showLoading(
-      // context: context,
+    showDialog(
+      context: context,
       builder: (context) => ScaffoldMessenger(
         child: Builder(
           builder: (context) => Scaffold(

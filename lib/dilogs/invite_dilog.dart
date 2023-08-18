@@ -86,7 +86,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-         SmartDialog.dismiss();
+         Navigator.pop(context);
         }
       },
       builder: (context, state) {
@@ -137,7 +137,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                       ),
                                     ),
                                     GestureDetector(
-                                      onTap: () => SmartDialog.dismiss(),
+                                      onTap: () => Navigator.pop(context),
                                       child: CustomImageView(
                                         imagePath: ImageConstant.closeimage,
                                         height: 40,
@@ -204,7 +204,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   GestureDetector(
-                                    onTap: () => SmartDialog.dismiss(),
+                                    onTap: () => Navigator.pop(context),
                                     child: Container(
                                       height: 43,
                                       width: width / 3.5,

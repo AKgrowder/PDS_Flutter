@@ -32,6 +32,7 @@ class CustomTextFormField extends StatefulWidget {
     this.focusedBorderDecoration,
     this.disabledBorderDecoration,
     this.validator, 
+    this.errorMaxLines,
     this.maxLength,this.inputFormatters,
     this
     .onChanged
@@ -89,6 +90,7 @@ class CustomTextFormField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
     List<TextInputFormatter>? inputFormatters;
   int? maxLength;
+  final int? errorMaxLines;
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -139,6 +141,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         fillColor: widget.fillColor,
         filled: widget.filled,
         isDense: true,
+        errorMaxLines: widget.errorMaxLines,
         contentPadding: widget.contentPadding,
         border: widget.defaultBorderDecoration ??
             OutlineInputBorder(

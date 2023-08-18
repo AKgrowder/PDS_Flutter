@@ -90,6 +90,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<FetchExprtiseRoomCubit>(context).fetchExprties();
+    dopcument = 'Upload Image';
   }
 
   @override
@@ -146,19 +147,18 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
           if (state is FetchExprtiseRoomLoadedState) {
             _fetchExprtise = state.fetchExprtise;
             // selctedIndex = state.fetchExprtise.object?[0].expertiseName;
-
-            print('selectedExpertise-$selectedExpertise');
+        
             expertiseData = state.fetchExprtise.object!
                 .map((expertiseJson) => Expertise(
                       expertiseJson.uid.toString(),
                       expertiseJson.expertiseName.toString(),
                     ))
                 .toList();
-            selectedExpertise =
-                expertiseData.isNotEmpty ? expertiseData[0] : null;
+
+            // selectedExpertise =
+            //     expertiseData.isNotEmpty ? expertiseData[0] : null;
           }
           if (state is AddExportLoadedState) {
-            print('sdhfhsd');
             SnackBar snackBar = SnackBar(
               content: Text(state.addExpertProfile.message.toString()),
               backgroundColor: ColorConstant.primary_color,
@@ -274,7 +274,8 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 12),
                             child: DropdownButton<Expertise>(
-                              value: selectedExpertise,
+                                 value: selectedExpertise,
+                                  hint: Text('Please select an option'),
                               onChanged: (Expertise? newValue) {
                                 // When the user selects an option from the dropdown.
                                 if (newValue != null) {
@@ -287,6 +288,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                               },
                               items: expertiseData
                                   .map<DropdownMenuItem<Expertise>>(
+                                    
                                       (Expertise expertise) {
                                 return DropdownMenuItem<Expertise>(
                                   value: expertise,
@@ -563,36 +565,27 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
-                            height: 50,
-                            width: _width / 1.6,
-                            decoration: BoxDecoration(
-                                color: Color(0XFFF6F6F6),
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(5),
-                                    bottomLeft: Radius.circular(5))),
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: TextFormField(
-                                readOnly: true,
-                                // maxLines: null,
-                                controller: uplopdfile,
-                                cursorColor: const Color.fromARGB(255, 8, 8, 8),
-                                decoration: InputDecoration(
-                                  hintText: 'Upload Image',
-                                  border: InputBorder.none,
+                              height: 50,
+                              width: _width / 1.6,
+                              decoration: BoxDecoration(
+                                  color: Color(0XFFF6F6F6),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(5),
+                                      bottomLeft: Radius.circular(5))),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 15, left: 20),
+                                child: Text(
+                                  '${dopcument.toString()}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontSize: 16),
                                 ),
-                                style:
-                                    TextStyle(overflow: TextOverflow.ellipsis),
-                              ),
-                            ),
-                          ),
+                              )),
                           GestureDetector(
                             onTap: () async {
                               filepath = await prepareTestPdf(0);
-                              setState(() {
-                                uplopdfile.text = dopcument.toString();
-                              });
-                              print('asdadf-${uplopdfile.text}');
+                              print(
+                                  'dopcument.toString()${dopcument.toString()}');
                             },
                             child: Container(
                               height: 50,
@@ -649,7 +642,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           print("userid-$userid");
                           if (jobprofileController.text != null &&
                               jobprofileController.text != "") {
-                            if (jobprofileController.text.length <= 4) {
+                            if (jobprofileController.text.length <= 3) {
                               SnackBar snackBar = SnackBar(
                                 content: Text('Please field full job profile'),
                                 backgroundColor: ColorConstant.primary_color,
@@ -660,22 +653,35 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             if (feesController.text != null &&
                                 feesController.text != "") {
                               if (_endTime != null && _startTime != null) {
-                                String time =
-                                    '${_startTime!.format(context).toString().split(" ").first} TO ${_endTime!.format(context).toString().split(" ").first}';
-                                print('sddfsdm,gndfgj$time');
-                                dynamic params = {
-                                  "document": "${uplopdfile.text}",
-                                  "expertUId": [
-                                    "${selectedExpertise?.uid.toString()}"
-                                  ],
-                                  "fees": feesController.text,
-                                  "jobProfile": jobprofileController.text,
-                                  "uid": userid.toString(),
-                                  "workingHours": time.toString(),
-                                };
-                                print('pwarems-$params');
-                                BlocProvider.of<FetchExprtiseRoomCubit>(context)
-                                    .addExpertProfile(params);
+                                print('i want to check data -$dopcument');
+                                if (dopcument == 'Upload Image') {
+                                  print('upolded imah');
+                                  SnackBar snackBar = SnackBar(
+                                    content: Text('Please Upload Image'),
+                                    backgroundColor:
+                                        ColorConstant.primary_color,
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                } else {
+                                  String time =
+                                      '${_startTime!.format(context).toString().split(" ").first} TO ${_endTime!.format(context).toString().split(" ").first}';
+                                  print('sddfsdm,gndfgj$time');
+                                  dynamic params = {
+                                    "document": "${uplopdfile.text}",
+                                    "expertUId": [
+                                      "${selectedExpertise?.uid.toString()}"
+                                    ],
+                                    "fees": feesController.text,
+                                    "jobProfile": jobprofileController.text,
+                                    "uid": userid.toString(),
+                                    "workingHours": time.toString(),
+                                  };
+                                  print('pwarems-$params');
+                                  BlocProvider.of<FetchExprtiseRoomCubit>(
+                                          context)
+                                      .addExpertProfile(params);
+                                }
                               } else {
                                 SnackBar snackBar = SnackBar(
                                   content: Text('Please Selcted Time'),
@@ -860,10 +866,13 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         print("Done file size B");
         switch (Index) {
           case 1:
-            setState(() {
-              uplopdfile.text = file1.name;
-              dopcument = file1.name;
-            });
+            if (file1.name.isNotEmpty || file1.name.toString() == null) {
+              setState(() {
+                uplopdfile.text = file1.name;
+                dopcument = file1.name;
+              });
+            }
+
             break;
           default:
         }
@@ -873,10 +882,12 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         print("Done file size KB");
         switch (Index) {
           case 0:
-            setState(() {
-              uplopdfile.text = file1.name;
-              dopcument = file1.name;
-            });
+            if (file1.name.isNotEmpty || file1.name.toString() == null) {
+              setState(() {
+                uplopdfile.text = file1.name;
+                dopcument = file1.name;
+              });
+            }
             print('filenamecheckdocmenut-${dopcument}');
 
             break;
