@@ -181,7 +181,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             color: Color(0XFFF6F6F6),
                             borderRadius: BorderRadius.circular(5)),
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.only(left:5.0),
                           child: TextFormField(
                             controller: name,maxLength: 50,
                             cursorColor: Colors.grey,
