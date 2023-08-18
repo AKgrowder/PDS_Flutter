@@ -30,7 +30,7 @@ class FetchAllExpertsModel {
 class Object {
   String? uuid;
   String? userName;
-  int? fees;
+  double ? fees;
   String? workingHours;
   String? userEmail;
   List<Expertise>? expertise;

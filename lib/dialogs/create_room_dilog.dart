@@ -74,6 +74,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                   fit: BoxFit.cover, height: 100.0, width: 100),
             ),
           ),
+          
         );
       }
       if (state is CreateRoomLoadedState) {
@@ -158,12 +159,12 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                                       Border.all(color: Colors.grey.shade300),
                                   borderRadius: BorderRadius.circular(10)),
                               child: Padding(
-                                padding: const EdgeInsets.only(left:8.0),
-                                child: TextField( maxLength: 50, 
-                                  controller: roomName,   
+                                padding: EdgeInsets.only(top: 10.0, left: 10),
+                                child: TextField(
+                                  controller: roomName,
                                   cursorColor: Colors.grey,
-                                  decoration: InputDecoration( 
-                                    hintText: 'Room Name',counterText: "",
+                                  decoration: InputDecoration(
+                                    hintText: 'Room Name',
                                     border: InputBorder.none,
                                   ),
                                 ),
@@ -196,11 +197,11 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                                 padding: EdgeInsets.only(top: 0.0, left: 10),
                                 child: TextField(
                                   controller: DescriptionText,
-                                  maxLines: 5,maxLength: 500,
+                                  maxLines: 5,
                                   cursorColor: Colors.grey,
                                   decoration: InputDecoration(
                                     hintText:
-                                        'Describe your problem or topic here..',counterText: "",
+                                        'Describe your problem or topic here..',
                                     border: InputBorder.none,
                                   ),
                                 ),
@@ -237,6 +238,27 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                                 ),
                                 GestureDetector(
                                   onTap: () {
+                                    if (roomName.text == null ||
+                                        roomName.text.isEmpty) {
+                                      SnackBar snackBar = SnackBar(
+                                        content: Text('Please Enter Room Name'),
+                                        backgroundColor:
+                                            ColorConstant.primary_color,
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    }
+                                    if (DescriptionText.text == null ||
+                                        DescriptionText.text.isEmpty) {
+                                      SnackBar snackBar = SnackBar(
+                                        content:
+                                            Text('Please Enter Description'),
+                                        backgroundColor:
+                                            ColorConstant.primary_color,
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    }
                                     var params = {
                                       "roomQuestion": roomName.text,
                                       "description": DescriptionText.text,
