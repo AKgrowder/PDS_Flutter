@@ -51,16 +51,18 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   TextEditingController jobprofileController = TextEditingController();
   TextEditingController feesController = TextEditingController();
   TextEditingController uplopdfile = TextEditingController();
+  TimeOfDay? _startTime;
+  TimeOfDay? _endTime;
   // TextEditingController _startTimeController = TextEditingController();
   // TextEditingController _endTimeController = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TimeOfDay _startTime = TimeOfDay.now();
-  TimeOfDay _endTime = TimeOfDay.now();
-
+  TimeOfDay initialTime = TimeOfDay(hour: 0, minute: 0);
   Future<void> _selectStartTime(BuildContext context) async {
+    TimeOfDay initialTime = TimeOfDay(hour: 0, minute: 0);
+
     final pickedTime = await showTimePicker(
       context: context,
-      initialTime: _startTime,
+      initialTime: initialTime,
     );
 
     if (pickedTime != null && pickedTime != _startTime) {
@@ -71,9 +73,11 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   }
 
   Future<void> _selectEndTime(BuildContext context) async {
+    TimeOfDay initialTime = TimeOfDay(hour: 0, minute: 0);
+
     final pickedTime = await showTimePicker(
       context: context,
-      initialTime: _endTime,
+      initialTime: initialTime,
     );
 
     if (pickedTime != null && pickedTime != _endTime) {
@@ -85,7 +89,6 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
 
   void initState() {
     super.initState();
-
     BlocProvider.of<FetchExprtiseRoomCubit>(context).fetchExprties();
   }
 
@@ -372,15 +375,21 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                               child: Row(
                                 children: [
                                   Padding(
-                                      padding: EdgeInsets.only(left: 10),
+                                      padding: EdgeInsets.only(left: 20),
                                       child: Text(
-                                        _startTime.format(context),
+                                        _startTime != null
+                                            ? _startTime!
+                                                .format(context)
+                                                .toString()
+                                                .split(' ')
+                                                .first
+                                            : '00:00',
                                         style: TextStyle(
                                             fontSize: 16,
                                             color: Color(0xff989898)),
                                       )),
                                   SizedBox(
-                                    width: 10,
+                                    width: 20,
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -391,9 +400,16 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                     ),
                                   ),
                                   SizedBox(
-                                    width: 5,
+                                    width: 10,
                                   ),
-                                  Text('AM',
+                                  Text(
+                                      _startTime != null
+                                          ? _startTime!
+                                              .format(context)
+                                              .toString()
+                                              .split(' ')
+                                              .last
+                                          : 'AM',
                                       style: TextStyle(
                                           fontSize: 16,
                                           color: Color(0xff989898))),
@@ -415,15 +431,21 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                               child: Row(
                                 children: [
                                   Padding(
-                                      padding: EdgeInsets.only(left: 10),
+                                      padding: EdgeInsets.only(left: 20),
                                       child: Text(
-                                        _endTime.format(context),
+                                        _endTime != null
+                                            ? _endTime!
+                                                .format(context)
+                                                .toString()
+                                                .split(" ")
+                                                .first
+                                            : ' 00:00',
                                         style: TextStyle(
                                             fontSize: 16,
                                             color: Color(0xff989898)),
                                       )),
                                   SizedBox(
-                                    width: 10,
+                                    width: 20,
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -436,7 +458,14 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   SizedBox(
                                     width: 5,
                                   ),
-                                  Text('PM',
+                                  Text(
+                                      _endTime != null
+                                          ? _endTime!
+                                              .format(context)
+                                              .toString()
+                                              .split(" ")
+                                              .last
+                                          : 'PM',
                                       style: TextStyle(
                                           fontSize: 16,
                                           color: Color(0xff989898))),
@@ -630,19 +659,31 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             }
                             if (feesController.text != null &&
                                 feesController.text != "") {
-                              dynamic params = {
-                                "document": "${uplopdfile.text}",
-                                "expertUId": [
-                                  "${selectedExpertise?.uid.toString()}"
-                                ],
-                                "fees": feesController.text,
-                                "jobProfile": jobprofileController.text,
-                                "uid": userid.toString(),
-                                "workingHours": "MORNING",
-                              };
-                              print('pwarems-$params');
-                              BlocProvider.of<FetchExprtiseRoomCubit>(context)
-                                  .addExpertProfile(params);
+                              if (_endTime != null && _startTime != null) {
+                                String time =
+                                    '${_startTime!.format(context).toString().split(" ").first} TO ${_endTime!.format(context).toString().split(" ").first}';
+                                print('sddfsdm,gndfgj$time');
+                                dynamic params = {
+                                  "document": "${uplopdfile.text}",
+                                  "expertUId": [
+                                    "${selectedExpertise?.uid.toString()}"
+                                  ],
+                                  "fees": feesController.text,
+                                  "jobProfile": jobprofileController.text,
+                                  "uid": userid.toString(),
+                                  "workingHours": time.toString(),
+                                };
+                                print('pwarems-$params');
+                                BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                                    .addExpertProfile(params);
+                              } else {
+                                SnackBar snackBar = SnackBar(
+                                  content: Text('Please Selcted Time'),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              }
                             } else {
                               SnackBar snackBar = SnackBar(
                                 content: Text('Please Enter Fees'),
