@@ -27,9 +27,10 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(  navigatorObservers: [FlutterSmartDialog.observer],
-      // here
-      builder: FlutterSmartDialog.init(),
+    return MaterialApp(
+        navigatorObservers: [FlutterSmartDialog.observer],
+        // here
+        builder: FlutterSmartDialog.init(),
         theme: ThemeData(
           visualDensity: VisualDensity.standard,
         ),
@@ -54,10 +55,9 @@ class MyApp extends StatelessWidget {
             BlocProvider<GetAllPrivateRoomCubit>(
               create: (context) => GetAllPrivateRoomCubit(),
             ),
-            BlocProvider< InvitationCubit>(
-              create: (context) =>  InvitationCubit(),
+            BlocProvider<InvitationCubit>(
+              create: (context) => InvitationCubit(),
             ),
-           
           ],
           child: BottombarPage(buttomIndex: 0),
         )
