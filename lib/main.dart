@@ -3,7 +3,6 @@ import 'package:archit_s_application1/theme/theme_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import 'API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
@@ -28,9 +27,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        navigatorObservers: [FlutterSmartDialog.observer],
+        // navigatorObservers: [FlutterSmartDialog.observer],
         // here
-        builder: FlutterSmartDialog.init(),
+        // builder: FlutterSmartDialog.init(),
         theme: ThemeData(
           visualDensity: VisualDensity.standard,
         ),
