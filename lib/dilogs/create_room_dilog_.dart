@@ -13,14 +13,13 @@ TextEditingController RateUSController = TextEditingController();
 class _CreateRoomScreenState extends State<CreateRoomScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
- 
+
   late Animation<double> scaleAnimation;
   double? rateStar = 5.0;
   var IsGuestUserEnabled;
   var GetTimeSplash;
   @override
   void initState() {
-    // setUserRating();
     super.initState();
 
     controller =
@@ -39,7 +38,6 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     RateUSController.clear();
     super.dispose();
   }
@@ -57,8 +55,6 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
             height: height / 2,
             width: width / 1.17,
             decoration: ShapeDecoration(
-              // color: Colors.black,
-
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
               ),
