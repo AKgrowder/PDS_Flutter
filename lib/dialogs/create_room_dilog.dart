@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import '../API/Bloc/CreateRoom_Bloc/CreateRoom_cubit.dart';
 import '../API/Bloc/CreateRoom_Bloc/CreateRoom_state.dart';
@@ -133,7 +133,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                                   onTap: () => Navigator.pop(context),
                                   child: CustomImageView(
                                     imagePath: ImageConstant.closeimage,
-                                    // height: 40,
+                                    height: 40,
                                   ),
                                 ),
                               ],
@@ -144,7 +144,8 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                                left: 5.0, ),
+                              left: 5.0,
+                            ),
                             child: Text(
                               "Room Name",
                               style: TextStyle(
@@ -156,24 +157,21 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                             ),
                           ),
                           Center(
-                            child: Container(
-                              height: 40,
-                              width: _width / 1.3,
-                              decoration: BoxDecoration(
-                                  color: Colors.transparent,
-                                  border:
-                                      Border.all(color: Colors.grey.shade300),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Padding(
-                                padding: EdgeInsets.only(top: 10.0, left: 10),
-                                child: TextField(
-                                  maxLines: 50,
-                                  controller: roomName,
-                                  cursorColor: Colors.grey,
-                                  decoration: InputDecoration(
-                                    hintText: 'Room Name',
-                                    counterText: '',
-                                    border: InputBorder.none,
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 10.0, left: 10,right: 20,),
+                              child: TextField(
+                                maxLength: 50,
+                                controller: roomName,
+                                cursorColor: Colors.grey,
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(50)
+                                ],
+                                decoration: InputDecoration(
+                                  hintText: 'Room Name',
+                                  counterText: '',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(color: Color(0xffDBDBDB))
                                   ),
                                 ),
                               ),
