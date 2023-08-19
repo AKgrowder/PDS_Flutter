@@ -518,7 +518,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   FilteringTextInputFormatter.deny(
                                       RegExp(r'\s')),
                                 ],
-                                errorMaxLines: 2,
+                                errorMaxLines: 3,
                                 // focusNode: FocusNode(),
                                 // autofocus: true,
                                 

@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitialState()) {}
   Future<void> loginApidata(
-    Map<String, String> params,
+    Map<String, dynamic> params,
   ) async {
     try {
       emit(LoginLoadingState());
