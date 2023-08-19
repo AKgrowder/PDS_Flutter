@@ -27,25 +27,34 @@ class Object {
   String? jwt;
   String? uuid;
   String? module;
+  bool? signUpStep;
+  String? name;
+  String? mobileNo;
   bool? active;
-  bool? approved;
   bool? verified;
+  bool? approved;
 
   Object(
       {this.jwt,
       this.uuid,
       this.module,
+      this.signUpStep,
+      this.name,
+      this.mobileNo,
       this.active,
-      this.approved,
-      this.verified});
+      this.verified,
+      this.approved});
 
   Object.fromJson(Map<String, dynamic> json) {
     jwt = json['jwt'];
     uuid = json['uuid'];
     module = json['module'];
+    signUpStep = json['signUpStep'];
+    name = json['name'];
+    mobileNo = json['mobileNo'];
     active = json['active'];
-    approved = json['approved'];
     verified = json['verified'];
+    approved = json['approved'];
   }
 
   Map<String, dynamic> toJson() {
@@ -53,9 +62,12 @@ class Object {
     data['jwt'] = this.jwt;
     data['uuid'] = this.uuid;
     data['module'] = this.module;
+    data['signUpStep'] = this.signUpStep;
+    data['name'] = this.name;
+    data['mobileNo'] = this.mobileNo;
     data['active'] = this.active;
-    data['approved'] = this.approved;
     data['verified'] = this.verified;
+    data['approved'] = this.approved;
     return data;
   }
 }

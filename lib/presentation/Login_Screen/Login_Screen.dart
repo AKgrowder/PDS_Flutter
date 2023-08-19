@@ -278,8 +278,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 return 'Name can\'t be just blank spaces';
                               } else if (!nameRegExp.hasMatch(value)) {
                                 return 'Input cannot contains prohibited special characters';
-                              } else if (value.length <= 3 ||
-                                  value.length > 50) {
+                                } else if (value.length <= 3 ||
+                                    value.length > 50) {
                                 return 'Minimum length required';
                               } else if (value.contains('..')) {
                                 return 'username does not contain is correct';
@@ -352,7 +352,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             inputFormatters: [
                               FilteringTextInputFormatter.deny(RegExp(r'\s')),
                             ],
-                            errorMaxLines: 2,
+                            errorMaxLines: 3,
                             validator: (value) {
                               String pattern =
                                   r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$%^&*(),.?":{}|<>])[A-Za-z0-9!@#\$%^&*(),.?":{}|<>]{8,}$';
@@ -449,9 +449,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: CustomElevatedButton(
                               onTap: () {
                                 if (_formKey.currentState!.validate()) {
-                                  var dataPassing = {
+                                  Map<String, dynamic>  dataPassing = {
                                     "username": emailAndMobileController.text,
-                                    "password": passwordoneController.text
+                                    "password": passwordoneController.text,
+                                    "isFromAdmin" : false,
                                   };
                                   print('dataPassing-$dataPassing');
                                   BlocProvider.of<LoginCubit>(context)
