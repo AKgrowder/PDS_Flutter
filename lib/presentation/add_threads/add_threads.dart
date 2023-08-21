@@ -285,7 +285,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                             _RoomTitleController.text == '') {
                           print('condison1');
                           SnackBar snackBar = SnackBar(
-                            content: Text('Please right Description'),
+                            content: Text('Please Enter Description'),
                             backgroundColor: ColorConstant.primary_color,
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);

@@ -400,6 +400,166 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                       ),
                     ),
+                     User_Mood != "EXPERT"
+                        ? Padding(
+                            padding: const EdgeInsets.only(
+                                right: 30.0, left: 30, top: 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Our Extperts",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                      fontFamily: "outfit",
+                                      fontSize: 23),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ExpertsScreen(),
+                                        ));
+                                  },
+                                  child: Icon(
+                                    Icons.arrow_forward,
+                                    size: 30,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : SizedBox(),
+                    User_Mood != "EXPERT"
+                        ? Container(
+                            height: 240,
+                            width: _width / 1.2,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              physics: BouncingScrollPhysics(),
+                              itemCount:
+                                  (FetchAllExpertsData?.object?.length ?? 0) > 5
+                                      ? 5
+                                      : FetchAllExpertsData?.object?.length,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Stack(
+                                          children: [
+                                            Container(
+                                              height: 150,
+                                              child: CustomImageView(
+                                                imagePath:
+                                                    ImageConstant.experts,
+                                                height: 50,
+                                                width: _width / 2.7,
+                                                radius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              top: 7,
+                                              left: 4,
+                                              child: Container(
+                                                width: 70,
+                                                height: 18,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    color: Colors.white),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                      maxRadius: 5,
+                                                    ),
+                                                    Text(
+                                                      "Online",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color:
+                                                              Color(0XFFED1C25),
+                                                          fontFamily: "outfit",
+                                                          fontSize: 15),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${FetchAllExpertsData?.object?[index].userName}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                  fontFamily: "outfit",
+                                                  fontSize: 20),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: CustomImageView(
+                                                imagePath:
+                                                    ImageConstant.imgright,
+                                                height: 15,
+                                                // fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            CustomImageView(
+                                              imagePath: ImageConstant.bag,
+                                              height: 15,
+                                              // fit: BoxFit.fill,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                "${FetchAllExpertsData?.object?[index].expertise?[0].expertiseName}",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w300,
+                                                    color: Colors.grey.shade700,
+                                                    fontFamily: "outfit",
+                                                    fontSize: 15),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        : SizedBox(),
                     Padding(
                       padding:
                           const EdgeInsets.only(top: 0.0, right: 16, left: 16),
@@ -684,166 +844,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    User_Mood != "EXPERT"
-                        ? Padding(
-                            padding: const EdgeInsets.only(
-                                right: 30.0, left: 30, top: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Our Extperts",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                      fontFamily: "outfit",
-                                      fontSize: 25),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ExpertsScreen(),
-                                        ));
-                                  },
-                                  child: Icon(
-                                    Icons.arrow_forward,
-                                    size: 30,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        : SizedBox(),
-                    User_Mood != "EXPERT"
-                        ? Container(
-                            height: 240,
-                            width: _width / 1.2,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              physics: BouncingScrollPhysics(),
-                              itemCount:
-                                  (FetchAllExpertsData?.object?.length ?? 0) > 5
-                                      ? 5
-                                      : FetchAllExpertsData?.object?.length,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    height: 100,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Stack(
-                                          children: [
-                                            Container(
-                                              height: 150,
-                                              child: CustomImageView(
-                                                imagePath:
-                                                    ImageConstant.experts,
-                                                height: 50,
-                                                width: _width / 2.7,
-                                                radius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              top: 7,
-                                              left: 4,
-                                              child: Container(
-                                                width: 70,
-                                                height: 18,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    color: Colors.white),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  children: [
-                                                    CircleAvatar(
-                                                      backgroundColor:
-                                                          Colors.red,
-                                                      maxRadius: 5,
-                                                    ),
-                                                    Text(
-                                                      "Online",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color:
-                                                              Color(0XFFED1C25),
-                                                          fontFamily: "outfit",
-                                                          fontSize: 15),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${FetchAllExpertsData?.object?[index].userName}",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
-                                                  fontFamily: "outfit",
-                                                  fontSize: 20),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: CustomImageView(
-                                                imagePath:
-                                                    ImageConstant.imgright,
-                                                height: 15,
-                                                // fit: BoxFit.fill,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            CustomImageView(
-                                              imagePath: ImageConstant.bag,
-                                              height: 15,
-                                              // fit: BoxFit.fill,
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                "${FetchAllExpertsData?.object?[index].expertise?[0].expertiseName}",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w300,
-                                                    color: Colors.grey.shade700,
-                                                    fontFamily: "outfit",
-                                                    fontSize: 15),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          )
-                        : SizedBox(),
+                   
                   ],
                 ),
               );
