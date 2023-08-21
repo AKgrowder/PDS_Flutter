@@ -1,9 +1,11 @@
+import 'package:archit_s_application1/API/Bloc/CreateRoom_Bloc/CreateRoom_state.dart';
 import 'package:archit_s_application1/API/Bloc/Edit_room_bloc/edit_room_cubit.dart';
 import 'package:archit_s_application1/dialogs/create_room_dilog.dart';
 import 'package:archit_s_application1/dialogs/edit_dilog.dart';
 import 'package:archit_s_application1/dilogs/invite_dilog.dart';
 import 'package:archit_s_application1/presentation/view_comments/view_comments_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -164,7 +166,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                   '');
                               final formattedDate =
                                   DateFormat("dd/MM/yyyy").format(apiDate);
-                                  print('SDFJHFGSDFGHDFGHDFGH-$formattedDate');
+                              print('SDFJHFGSDFGHDFGHDFGH-$formattedDate');
 
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -212,7 +214,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   right: 35.0),
                                               child: GestureDetector(
                                                 onTap: () {
-                                                showDialog(
+                                                  showDialog(
                                                     context: context,
                                                     builder:
                                                         (BuildContext context) {
@@ -257,180 +259,166 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                 showDialog(
                                                     context: context,
                                                     builder: (context) {
-                                                  return MultiBlocProvider(
-                                                    providers: [
-                                                      BlocProvider<
-                                                          GetAllPrivateRoomCubit>(
-                                                        create: (context) =>
-                                                            GetAllPrivateRoomCubit(),
-                                                      ),
-                                                    ],
-                                                    child: Center(
-                                                      child: Container(
-                                                        color: Colors.white,
-                                                        margin: EdgeInsets.only(
-                                                            left: 20,
-                                                            right: 20),
-                                                        height: 200,
-                                                        width: _width,
-                                                        // color: Colors.amber,
-                                                        child: BlocConsumer<
-                                                            GetAllPrivateRoomCubit,
-                                                            GetAllPrivateRoomState>(
-                                                          listener:
-                                                              (context, state) {
-                                                            if (state
-                                                                is DeleteRoomLoadedState) {
-                                                              SnackBar
-                                                                  snackBar =
-                                                                  SnackBar(
-                                                                content: Text(state
-                                                                        .DeleteRoom
-                                                                        .message ??
-                                                                    ""),
-                                                                backgroundColor:
-                                                                    ColorConstant
-                                                                        .primary_color,
-                                                              );
-                                                              ScaffoldMessenger
-                                                                      .of(
+                                                      return MultiBlocProvider(
+                                                        providers: [
+                                                          BlocProvider<
+                                                              GetAllPrivateRoomCubit>(
+                                                            create: (context) =>
+                                                                GetAllPrivateRoomCubit(),
+                                                          ),
+                                                        ],
+                                                        child: Center(
+                                                          child: Container(
+                                                            color: Colors.white,
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                    left: 20,
+                                                                    right: 20),
+                                                            height: 200,
+                                                            width: _width,
+                                                            // color: Colors.amber,
+                                                            child: BlocConsumer<
+                                                                GetAllPrivateRoomCubit,
+                                                                GetAllPrivateRoomState>(
+                                                              listener:
+                                                                  (context,
+                                                                      state) {
+                                                                if (state
+                                                                    is DeleteRoomLoadedState) {
+                                                                  SnackBar
+                                                                      snackBar =
+                                                                      SnackBar(
+                                                                    content: Text(
+                                                                        state.DeleteRoom.message ??
+                                                                            ""),
+                                                                    backgroundColor:
+                                                                        ColorConstant
+                                                                            .primary_color,
+                                                                  );
+                                                                  ScaffoldMessenger.of(
                                                                           context)
-                                                                  .showSnackBar(
-                                                                      snackBar);
+                                                                      .showSnackBar(
+                                                                          snackBar);
 
-                                                              method();
-                                                             Navigator.pop(context);
-                                                            }
-                                                          },
-                                                          builder:
-                                                              (context, state) {
-                                                            return Column(
-                                                              children: [
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
-                                                                Text(
-                                                                  "Delete Room",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'outfit',
-                                                                    fontSize:
-                                                                        20,
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
-                                                                ),
-                                                                Divider(
-                                                                  color: Colors
-                                                                      .grey,
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 5,
-                                                                ),
-                                                                Center(
-                                                                    child: Text(
-                                                                  "Are You Sure You Want To Delete This Room",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'outfit',
-                                                                    fontSize:
-                                                                        15,
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                  ),
-                                                                )),
-                                                                SizedBox(
-                                                                  height: 50,
-                                                                ),
-                                                                Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceEvenly,
+                                                                  method();
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                }
+                                                              },
+                                                              builder: (context,
+                                                                  state) {
+                                                                return Column(
                                                                   children: [
-                                                                    GestureDetector(
-                                                                      onTap: () =>
-                                                                           Navigator.pop(context),
-                                                                      child:
-                                                                          Container(
-                                                                        height:
-                                                                            43,
-                                                                        width: _width /
-                                                                            3.5,
-                                                                        decoration: BoxDecoration(
-                                                                            color:
-                                                                                Colors.transparent,
-                                                                            border: Border.all(color: Colors.grey.shade400),
-                                                                            borderRadius: BorderRadius.circular(10)),
-                                                                        child: Center(
-                                                                            child: Text(
-                                                                          "Cancel",
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontFamily:
-                                                                                'outfit',
-                                                                            fontSize:
-                                                                                15,
-                                                                            color:
-                                                                                Color(0xFFED1C25),
-                                                                            fontWeight:
-                                                                                FontWeight.w400,
-                                                                          ),
-                                                                        )),
+                                                                    SizedBox(
+                                                                      height:
+                                                                          10,
+                                                                    ),
+                                                                    Text(
+                                                                      "Delete Room",
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'outfit',
+                                                                        fontSize:
+                                                                            20,
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
                                                                       ),
                                                                     ),
-                                                                    GestureDetector(
-                                                                      onTap:
-                                                                          () {
-                                                                        BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PublicRoomData!
-                                                                            .object![index]
-                                                                            .uid
-                                                                            .toString());
-                                                                      },
-                                                                      child:
-                                                                          Container(
-                                                                        height:
-                                                                            43,
-                                                                        width: _width /
-                                                                            3.5,
-                                                                        decoration: BoxDecoration(
-                                                                            color:
-                                                                                Color(0xFFED1C25),
-                                                                            borderRadius: BorderRadius.circular(10)),
-                                                                        child: Center(
-                                                                            child: Text(
-                                                                          "Delete",
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontFamily:
-                                                                                'outfit',
-                                                                            fontSize:
-                                                                                15,
-                                                                            color:
-                                                                                Colors.white,
-                                                                            fontWeight:
-                                                                                FontWeight.w400,
-                                                                          ),
-                                                                        )),
+                                                                    Divider(
+                                                                      color: Colors
+                                                                          .grey,
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height: 5,
+                                                                    ),
+                                                                    Center(
+                                                                        child:
+                                                                            Text(
+                                                                      "Are You Sure You Want To Delete This Room",
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'outfit',
+                                                                        fontSize:
+                                                                            15,
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
                                                                       ),
+                                                                    )),
+                                                                    SizedBox(
+                                                                      height:
+                                                                          50,
+                                                                    ),
+                                                                    Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceEvenly,
+                                                                      children: [
+                                                                        GestureDetector(
+                                                                          onTap: () =>
+                                                                              Navigator.pop(context),
+                                                                          child:
+                                                                              Container(
+                                                                            height:
+                                                                                43,
+                                                                            width:
+                                                                                _width / 3.5,
+                                                                            decoration: BoxDecoration(
+                                                                                color: Colors.transparent,
+                                                                                border: Border.all(color: Colors.grey.shade400),
+                                                                                borderRadius: BorderRadius.circular(10)),
+                                                                            child: Center(
+                                                                                child: Text(
+                                                                              "Cancel",
+                                                                              style: TextStyle(
+                                                                                fontFamily: 'outfit',
+                                                                                fontSize: 15,
+                                                                                color: Color(0xFFED1C25),
+                                                                                fontWeight: FontWeight.w400,
+                                                                              ),
+                                                                            )),
+                                                                          ),
+                                                                        ),
+                                                                        GestureDetector(
+                                                                          onTap:
+                                                                              () {
+                                                                            BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PublicRoomData!.object![index].uid.toString());
+                                                                          },
+                                                                          child:
+                                                                              Container(
+                                                                            height:
+                                                                                43,
+                                                                            width:
+                                                                                _width / 3.5,
+                                                                            decoration:
+                                                                                BoxDecoration(color: Color(0xFFED1C25), borderRadius: BorderRadius.circular(10)),
+                                                                            child: Center(
+                                                                                child: Text(
+                                                                              "Delete",
+                                                                              style: TextStyle(
+                                                                                fontFamily: 'outfit',
+                                                                                fontSize: 15,
+                                                                                color: Colors.white,
+                                                                                fontWeight: FontWeight.w400,
+                                                                              ),
+                                                                            )),
+                                                                          ),
+                                                                        ),
+                                                                      ],
                                                                     ),
                                                                   ],
-                                                                ),
-                                                              ],
-                                                            );
-                                                          },
+                                                                );
+                                                              },
+                                                            ),
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ),
-                                                  );
-                                                });
+                                                      );
+                                                    });
                                                 // showDialog(
                                                 //   context: context,
                                                 //   builder:
@@ -1211,7 +1199,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                 create: (context) => CreateRoomCubit(),
                                 child: CreateRoomScreen()),
                           ); */
-                            CreatRoom();
+                            CreatRoom(_height, _width);
                           },
                           child: CustomImageView(
                             imagePath: ImageConstant.addimage,
@@ -1247,7 +1235,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                 create: (context) => CreateRoomCubit(),
                                 child: CreateRoomScreen()),
                           ); */
-                            CreatRoom();
+                            CreatRoom(_height, _width);
                           },
                           child: CustomImageView(
                             imagePath: ImageConstant.addimage,
@@ -1272,26 +1260,351 @@ class _RoomsScreenState extends State<RoomsScreen> {
         }));
   }
 
-  CreatRoom() {
+  CreatRoom(_height, _width) {
+    TextEditingController _roomName = TextEditingController();
+    TextEditingController _DescriptionText = TextEditingController();
     print('createroom');
     showDialog(
-      context: context,
-      builder: (context) => ScaffoldMessenger(
-        child: Builder(
-          builder: (context) => Scaffold(
-            backgroundColor: Colors.transparent,
-            body: MultiBlocProvider(
-              providers: [
-                BlocProvider<CreateRoomCubit>(
-                  create: (context) => CreateRoomCubit(),
+        context: context,
+        builder: (context) {
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider<CreateRoomCubit>(
+                create: (context) => CreateRoomCubit(),
+              ),
+            ],
+            child: Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: Center(
+                child: Material(
+                  color: Color.fromARGB(0, 255, 255, 255),
+                  child: BlocConsumer<CreateRoomCubit, CreateRoomState>(
+                    listener: (context, state) {
+                      if (state is CreateRoomLoadingState) {
+                        Center(
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 100),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset(ImageConstant.loader,
+                                  fit: BoxFit.cover, height: 100.0, width: 100),
+                            ),
+                          ),
+                        );
+                      }
+                      if (state is CreateRoomLoadedState) {
+                        print('this is the data get');
+                        method();
+                        _roomName.clear();
+                        _DescriptionText.clear();
+
+                        SnackBar snackBar = SnackBar(
+                          content: Text(state.PublicRoomData.message ?? ""),
+                          backgroundColor: ColorConstant.primary_color,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        Navigator.pop(context);
+                      }
+                      if (state is CreateRoomErrorState) {
+                        print('CreateRoomErrorState');
+                        SnackBar snackBar = SnackBar(
+                          content: Text(state.error),
+                          backgroundColor: ColorConstant.primary_color,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
+                    },
+                    builder: (context, state) {
+                      return Container(
+                        height: _height / 2,
+                        width: _width / 1.17,
+                        decoration: ShapeDecoration(
+                          // color: Colors.black,
+
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Center(
+                              child: Container(
+                                height: 350,
+                                width: _width / 1.2,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 8.0, left: 20),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "Create Room",
+                                            style: TextStyle(
+                                              fontFamily: 'outfit',
+                                              fontSize: 20,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () => Navigator.pop(context),
+                                            child: CustomImageView(
+                                              imagePath:
+                                                  ImageConstant.closeimage,
+                                              height: 40,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Divider(
+                                      color: Colors.grey,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 5.0,
+                                      ),
+                                      child: Text(
+                                        "Room Name",
+                                        style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontSize: 15,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                          top: 10.0,
+                                          left: 10,
+                                          right: 20,
+                                        ),
+                                        child: TextField(
+                                          maxLength: 50,
+                                          controller: _roomName,
+                                          cursorColor: Colors.grey,
+                                          inputFormatters: [
+                                            LengthLimitingTextInputFormatter(50)
+                                          ],
+                                          decoration: InputDecoration(
+                                            hintText: 'Room Name',
+                                            counterText: '',
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                borderSide: BorderSide(
+                                                    color: Color(0xffDBDBDB))),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 15.0, top: 20, bottom: 10),
+                                      child: Text(
+                                        "Description",
+                                        style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontSize: 15,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Container(
+                                        height: 80,
+                                        width: _width / 1.3,
+                                        decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            border: Border.all(
+                                                color: Colors.grey.shade300),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 0.0, left: 10),
+                                          child: TextField(
+                                            controller: _DescriptionText,
+                                            maxLines: 5,
+                                            cursorColor: Colors.grey,
+                                            decoration: InputDecoration(
+                                              hintText:
+                                                  'Describe your problem or topic here..',
+                                              border: InputBorder.none,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 20.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () => Navigator.pop(context),
+                                            child: Container(
+                                              height: 43,
+                                              width: _width / 3,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.transparent,
+                                                  border: Border.all(
+                                                      color:
+                                                          Colors.grey.shade400),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              child: Center(
+                                                  child: Text(
+                                                "Cancel",
+                                                style: TextStyle(
+                                                  fontFamily: 'outfit',
+                                                  fontSize: 15,
+                                                  color: Color(0xFFED1C25),
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              )),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              if (_roomName.text == null ||
+                                                  _roomName.text == '') {
+                                                SnackBar snackBar = SnackBar(
+                                                  content: Text(
+                                                      'Please Enter Room Name'),
+                                                  backgroundColor: ColorConstant
+                                                      .primary_color,
+                                                );
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(snackBar);
+                                              } else if (_roomName.text
+                                                      .trim()
+                                                      .isEmpty ||
+                                                  _roomName.text.trim() == '') {
+                                                SnackBar snackBar = SnackBar(
+                                                  content: Text(
+                                                      'Room Name can\'t be just blank spaces'),
+                                                  backgroundColor: ColorConstant
+                                                      .primary_color,
+                                                );
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(snackBar);
+                                              } else if (_DescriptionText
+                                                          .text ==
+                                                      null ||
+                                                  _DescriptionText.text == '') {
+                                                SnackBar snackBar = SnackBar(
+                                                  content: Text(
+                                                      'Please Enter Description'),
+                                                  backgroundColor: ColorConstant
+                                                      .primary_color,
+                                                );
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(snackBar);
+                                              } else if (_DescriptionText.text
+                                                      .trim()
+                                                      .isEmpty ||
+                                                  _DescriptionText.text
+                                                          .trim() ==
+                                                      '') {
+                                                SnackBar snackBar = SnackBar(
+                                                  content: Text(
+                                                      'Description can\'t be just blank spaces'),
+                                                  backgroundColor: ColorConstant
+                                                      .primary_color,
+                                                );
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(snackBar);
+                                              } else {
+                                                var params = {
+                                                  "roomQuestion":
+                                                      _roomName.text,
+                                                  "description":
+                                                      _DescriptionText.text,
+                                                  "roomType": "PRIVTAE"
+                                                };
+
+                                                print(params);
+
+                                                BlocProvider.of<
+                                                            CreateRoomCubit>(
+                                                        context)
+                                                    .CreateRoomAPI(params);
+                                              }
+                                              // if (roomName.text == null ||
+                                              //     roomName.text.isEmpty) {
+                                              //   SnackBar snackBar = SnackBar(
+                                              //     content: Text('Please Enter Room Name'),
+                                              //     backgroundColor:
+                                              //         ColorConstant.primary_color,
+                                              //   );
+                                              //   ScaffoldMessenger.of(context)
+                                              //       .showSnackBar(snackBar);
+                                              // }
+                                              // if (DescriptionText.text == null ||
+                                              //     DescriptionText.text.isEmpty) {
+                                              //   SnackBar snackBar = SnackBar(
+                                              //     content:
+                                              //         Text('Please Enter Description'),
+                                              //     backgroundColor:
+                                              //         ColorConstant.primary_color,
+                                              //   );
+                                              //   ScaffoldMessenger.of(context)
+                                              //       .showSnackBar(snackBar);
+                                              // }
+                                            },
+                                            child: Container(
+                                              height: 43,
+                                              width: _width / 3,
+                                              decoration: BoxDecoration(
+                                                  color: Color(0xFFED1C25),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              child: Center(
+                                                  child: Text(
+                                                "Create",
+                                                style: TextStyle(
+                                                  fontFamily: 'outfit',
+                                                  fontSize: 15,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              )),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ],
-              child: CreateRoomScreen(),
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
+        });
   }
 
   // editProfile(String? roomId) {

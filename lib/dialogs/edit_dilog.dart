@@ -5,7 +5,6 @@ import 'package:archit_s_application1/API/Bloc/Edit_room_bloc/edit_room_cubit.da
 import 'package:archit_s_application1/core/utils/color_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../core/utils/image_constant.dart';
 import '../widgets/custom_image_view.dart';
 
@@ -23,7 +22,6 @@ class EditDilogScreenState extends State<EditDilogScreen>
   late Animation<double> scaleAnimation;
   TextEditingController RateUSController = TextEditingController();
   TextEditingController editroom = TextEditingController();
-
   double? rateStar = 5.0;
   var IsGuestUserEnabled;
   var GetTimeSplash;

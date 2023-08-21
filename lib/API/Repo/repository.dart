@@ -125,7 +125,7 @@ class Repository {
   }
 
   Future<LoginModel> loginApi(
-    Map<String, String> params,
+    Map<String, dynamic> params,
   ) async {
     final response = await apiServices.postApiCall(Config.loginApi, params);
     var jsonString = json.decode(response.body);

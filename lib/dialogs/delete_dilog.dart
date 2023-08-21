@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../core/utils/color_constant.dart';
 import '../core/utils/image_constant.dart';
 import '../widgets/custom_image_view.dart';
-
+  
 class DeleteDilogScreen extends StatefulWidget {
   String? userId;
   DeleteDilogScreen({this.userId});

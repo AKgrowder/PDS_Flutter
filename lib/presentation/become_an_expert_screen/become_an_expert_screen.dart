@@ -17,7 +17,7 @@ import '../../theme/theme_helper.dart';
 import '../../widgets/custom_text_form_field.dart';
 
 class BecomeExpertScreen extends StatefulWidget {
-  const BecomeExpertScreen({Key? key}) : super(key: key);
+  const BecomeExpertScreen({Key? key}) : super(key:  key);
 
   @override
   State<BecomeExpertScreen> createState() => _BecomeExpertScreenState();
