@@ -1,18 +1,26 @@
 import 'package:archit_s_application1/API/Bloc/auth/register_Block.dart';
 import 'package:archit_s_application1/theme/theme_helper.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 import 'API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import 'API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
+import 'core/utils/sharedPreferences.dart';
 import 'custom_bottom_bar/custom_bottom_bar.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+  await WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
@@ -20,7 +28,47 @@ void main() {
   ///Please update theme as per your need if required.
   ThemeHelper().changeTheme('primary');
 
+  final fcmToken = await FirebaseMessaging.instance.getToken();
+  print('UUID is------> ${fcmToken}');
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  prefs.setString(PreferencesKey.fcmToken,"${fcmToken}");
+
+  FirebaseMessaging.onBackgroundMessage(_messageHandler);
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+    print("onMessageOpenedApp: $message");
+
+    // if (message.data["navigation"] == "/your_route") {
+    //   int _yourId = int.tryParse(message.data["id"]) ?? 0;
+    //   Navigator.push(
+    //       navigatorKey.currentState.context,
+    //       MaterialPageRoute(
+    //           builder: (context) => YourScreen(
+    //                 yourId: _yourId,
+    //               )));
+    // }
+  });
+
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
+  _firebaseMessaging.requestPermission(
+    sound: true,
+    badge: true,
+    alert: true,
+    provisional: false,
+  );
   runApp(MyApp());
+}
+
+Future<void> _messageHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('background message ${message.notification!.body}');
 }
 
 class MyApp extends StatelessWidget {
