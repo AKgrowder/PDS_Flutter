@@ -435,7 +435,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     User_Mood != "EXPERT"
                         ? Container(
                             height: 240,
-                            width: _width / 1.1,
+                            width: _width / 1.2,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               physics: BouncingScrollPhysics(),
@@ -463,7 +463,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           children: [
                                             Container(
                                               height: 150,
-                                              width: _width / 1.9,
+                                              width: _width / 2.5,
                                               child: CustomImageView(
                                                 imagePath:
                                                     ImageConstant.experts, 
@@ -957,6 +957,9 @@ class _HomeScreenState extends State<HomeScreen> {
     User_Mood = prefs.getString(PreferencesKey.module);
 
     var Token = prefs.getString(PreferencesKey.loginJwt);
+      var FCMToken = prefs.getString(PreferencesKey.fcmToken);
+
+    print("---------------------->> : ${FCMToken}");
     print("User Token :--- " + "${Token}");
     // prefs.getString(PreferencesKey.ProfileEmail);
     // prefs.getString(PreferencesKey.ProfileModule);

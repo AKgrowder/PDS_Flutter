@@ -292,7 +292,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   setState(() {
                                     selectedExpertise = newValue;
                                     print(
-                                        "Selected expertise: ${newValue.uid}");
+                                        "Selectedexpertise: ${newValue.uid}");
                                   });
                                 }
                               },
@@ -678,9 +678,11 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 } else {
                                   String time =
                                       '${_startTime!.format(context).toString().split(" ").first} TO ${_endTime!.format(context).toString().split(" ").first}';
-                                  print('sddfsdm,gndfgj${chooseDocument?.object.toString()}');
+                                  print(
+                                      'sddfsdm,gndfgj${chooseDocument?.object.toString()}');
                                   dynamic params = {
-                                    "document": "${chooseDocument?.object.toString()}",
+                                    "document":
+                                        "${chooseDocument?.object.toString()}",
                                     "expertUId": [
                                       "${selectedExpertise?.uid.toString()}"
                                     ],
@@ -696,7 +698,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 }
                               } else {
                                 SnackBar snackBar = SnackBar(
-                                  content: Text('Please Selcted Time'),
+                                  content: Text('Please Selcte Working Hours'),
                                   backgroundColor: ColorConstant.primary_color,
                                 );
                                 ScaffoldMessenger.of(context)
@@ -705,7 +707,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             } else {
                               print('esle');
                               SnackBar snackBar = SnackBar(
-                                content: Text('Please Selcted Expertise'),
+                                content: Text('Please Selcte Expertise'),
                                 backgroundColor: ColorConstant.primary_color,
                               );
                               ScaffoldMessenger.of(context)

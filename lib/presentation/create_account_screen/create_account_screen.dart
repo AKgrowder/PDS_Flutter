@@ -220,7 +220,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
                           chooseDocument?.object != null
                               ? Container(
-                                  height: 130,
+                                  height: 120,
                                   child: Center(
                                     child: ClipOval(
                                       child: FittedBox(
@@ -239,7 +239,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 )
                               : url != null
                                   ? Container(
-                                      height: 130,
+                                      height: 120,
                                       child: Center(
                                         child: ClipOval(
                                           child: FittedBox(
@@ -677,16 +677,16 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           GestureDetector(
                             onTap: () {
                               if (pickedFile == null) {
-                                  if (url == null || url.toString() == '') {
-                                    SnackBar snackBar = SnackBar(
-                                      content: Text('please select Profile'),
-                                      backgroundColor:
-                                          ColorConstant.primary_color,
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  }
-                                } 
+                                if (url == null || url.toString() == '') {
+                                  SnackBar snackBar = SnackBar(
+                                    content: Text('please select Profile'),
+                                    backgroundColor:
+                                        ColorConstant.primary_color,
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                }
+                              }
                               if (_formKey.currentState!.validate()) {
                                 var datapPassing = {
                                   "name": enteruseridController.text,
@@ -694,7 +694,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   "email": emailAndMobileController.text,
                                   "mobileNo": contectnumberController.text,
                                   "password": passwordController.text,
-                                  "module": "EMPLOYEE"
+                                  "module": "EMPLOYEE",
+                                  "profilePic" : url.toString()
                                 };
                                 print('dataoassing-$datapPassing');
                                 BlocProvider.of<RegisterCubit>(context)
