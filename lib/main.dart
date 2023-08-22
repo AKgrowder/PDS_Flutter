@@ -16,6 +16,13 @@ import 'API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'core/utils/sharedPreferences.dart';
 import 'custom_bottom_bar/custom_bottom_bar.dart';
 
+
+
+Future<void> _messageHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('background message ${message.notification!.body}');
+}
+
 void main() async {
   await WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -26,11 +33,7 @@ void main() async {
   ///Please update theme as per your need if required.
   ThemeHelper().changeTheme('primary');
 
-  final fcmToken = await FirebaseMessaging.instance.getToken();
-  print('UUID is------> ${fcmToken}');
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  prefs.setString(PreferencesKey.fcmToken,"${fcmToken}");
+ 
 
   FirebaseMessaging.onBackgroundMessage(_messageHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
@@ -47,27 +50,25 @@ void main() async {
     // }
   });
 
-  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  // FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
+  // await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+  //   alert: true,
+  //   badge: true,
+  //   sound: true,
+  // );
 
-  _firebaseMessaging.requestPermission(
-    sound: true,
-    badge: true,
-    alert: true,
-    provisional: false,
-  );
+  // _firebaseMessaging.requestPermission(
+  //   sound: true,
+  //   badge: true,
+  //   alert: true,
+  //   provisional: false,
+  // );
+
   runApp(MyApp());
 }
 
-Future<void> _messageHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  print('background message ${message.notification!.body}');
-}
+
 
 class MyApp extends StatelessWidget {
   @override
