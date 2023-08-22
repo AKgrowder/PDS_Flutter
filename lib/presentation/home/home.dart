@@ -400,10 +400,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                       ),
                     ),
-                     User_Mood != "EXPERT"
+                    User_Mood != "EXPERT"
                         ? Padding(
                             padding: const EdgeInsets.only(
-                                right: 30.0, left: 30, top: 0),
+                                right: 20.0, left: 20, top: 0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -435,7 +435,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     User_Mood != "EXPERT"
                         ? Container(
                             height: 240,
-                            width: _width / 1.2,
+                            width: _width / 1.1,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               physics: BouncingScrollPhysics(),
@@ -448,7 +448,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Container(
-                                    height: 100,
+                                    // height: 100,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       border: Border.all(
@@ -463,11 +463,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                           children: [
                                             Container(
                                               height: 150,
+                                              width: _width / 1.9,
                                               child: CustomImageView(
                                                 imagePath:
-                                                    ImageConstant.experts,
-                                                height: 50,
-                                                width: _width / 2.7,
+                                                    ImageConstant.experts, 
+                                                // height: 50,
+                                                // width: _width/1.2,
                                                 radius:
                                                     BorderRadius.circular(10),
                                               ),
@@ -517,7 +518,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black,
                                                   fontFamily: "outfit",
-                                                  fontSize: 20),
+                                                  fontSize: 18),
                                             ),
                                             Padding(
                                               padding:
@@ -660,6 +661,33 @@ class _HomeScreenState extends State<HomeScreen> {
                                               color: Colors.black,
                                               fontFamily: "outfit",
                                               fontSize: 14),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            // if (image?.contains(index) ??
+                                            //     false) {
+                                            //   image?.remove(index);
+                                            // } else {
+                                            //   image?.add(index);
+                                            // }
+                                          },
+                                          child:
+                                              (image?.contains(index) ?? false)
+                                                  ? CustomImageView(
+                                                      imagePath: ImageConstant
+                                                          .selectedimage,
+                                                      height: 17,
+                                                    )
+                                                  : CustomImageView(
+                                                      imagePath: ImageConstant
+                                                          .unselectedimgVector,
+                                                      height: 17,
+                                                    ),
                                         ),
                                       ),
                                     ],
@@ -844,7 +872,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                   
                   ],
                 ),
               );
