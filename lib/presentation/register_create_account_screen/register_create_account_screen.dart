@@ -8,13 +8,11 @@ import 'package:archit_s_application1/presentation/Login_Screen/Login_Screen.dar
 import 'package:archit_s_application1/widgets/app_bar/appbar_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
+import '../create_account_screen/create_account_screen.dart';
 import '../../API/Bloc/auth/login_Block.dart';
 import '../../API/Bloc/device_info_Bloc/device_info_bloc.dart';
-import '../create_account_screen/create_account_screen.dart';
-
 class RegisterCreateAccountScreen extends StatefulWidget {
   @override
   State<RegisterCreateAccountScreen> createState() =>
