@@ -28,6 +28,7 @@ import '../Model/creat_form/creat_form_Model.dart';
 import '../Model/delete_room_model/Delete_room_model.dart';
 
 import '../Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
+import '../Model/deviceInfo/deviceInfo_model.dart';
 
 class Repository {
   ApiServices apiServices = ApiServices();
