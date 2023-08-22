@@ -3,7 +3,9 @@ import 'dart:math';
 
 import 'package:archit_s_application1/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import 'package:archit_s_application1/API/Bloc/FetchExprtise_Bloc/fetchExprtise_state.dart';
+import 'package:archit_s_application1/API/Bloc/creatForum_Bloc/creat_Fourm_state.dart';
 import 'package:archit_s_application1/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
+import 'package:archit_s_application1/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:archit_s_application1/core/utils/color_constant.dart';
 import 'package:archit_s_application1/core/utils/sharedPreferences.dart';
 import 'package:file_picker/file_picker.dart';
@@ -17,7 +19,7 @@ import '../../theme/theme_helper.dart';
 import '../../widgets/custom_text_form_field.dart';
 
 class BecomeExpertScreen extends StatefulWidget {
-  const BecomeExpertScreen({Key? key}) : super(key:  key);
+  const BecomeExpertScreen({Key? key}) : super(key: key);
 
   @override
   State<BecomeExpertScreen> createState() => _BecomeExpertScreenState();
@@ -53,8 +55,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   TextEditingController uplopdfile = TextEditingController();
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
-  // TextEditingController _startTimeController = TextEditingController();
-  // TextEditingController _endTimeController = TextEditingController();
+  ChooseDocument? chooseDocument;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TimeOfDay initialTime = TimeOfDay(hour: 0, minute: 0);
   Future<void> _selectStartTime(BuildContext context) async {
@@ -143,11 +144,20 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
+          if (state is chooseDocumentLoadedextends) {
+            chooseDocument = state.chooseDocumentuploded;
+            print('choosDocumentGetorNot-${chooseDocument?.object}');
+            SnackBar snackBar = SnackBar(
+              content: Text(state.chooseDocumentuploded.message.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
 
           if (state is FetchExprtiseRoomLoadedState) {
             _fetchExprtise = state.fetchExprtise;
             // selctedIndex = state.fetchExprtise.object?[0].expertiseName;
-        
+
             expertiseData = state.fetchExprtise.object!
                 .map((expertiseJson) => Expertise(
                       expertiseJson.uid.toString(),
@@ -274,8 +284,8 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 12),
                             child: DropdownButton<Expertise>(
-                                 value: selectedExpertise,
-                                  hint: Text('Please select an option'),
+                              value: selectedExpertise,
+                              hint: Text('Please select an option'),
                               onChanged: (Expertise? newValue) {
                                 // When the user selects an option from the dropdown.
                                 if (newValue != null) {
@@ -288,7 +298,6 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                               },
                               items: expertiseData
                                   .map<DropdownMenuItem<Expertise>>(
-                                    
                                       (Expertise expertise) {
                                 return DropdownMenuItem<Expertise>(
                                   value: expertise,
@@ -635,6 +644,8 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                       ),
                       GestureDetector(
                         onTap: () async {
+                          print(
+                              'i want to check data -${selectedExpertise?.expertiseName}');
                           final SharedPreferences prefs =
                               await SharedPreferences.getInstance();
                           String? userid =
@@ -644,14 +655,15 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                               jobprofileController.text != "") {
                             if (jobprofileController.text.length <= 3) {
                               SnackBar snackBar = SnackBar(
-                                content: Text('Please field full job profile'),
+                                content: Text('Minimum length required'),
                                 backgroundColor: ColorConstant.primary_color,
                               );
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                             }
-                            if (feesController.text != null &&
-                                feesController.text != "") {
+                            if (selectedExpertise?.expertiseName.toString() !=
+                                null) {
+                              print('this conidison yes');
                               if (_endTime != null && _startTime != null) {
                                 print('i want to check data -$dopcument');
                                 if (dopcument == 'Upload Image') {
@@ -666,9 +678,9 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 } else {
                                   String time =
                                       '${_startTime!.format(context).toString().split(" ").first} TO ${_endTime!.format(context).toString().split(" ").first}';
-                                  print('sddfsdm,gndfgj$time');
+                                  print('sddfsdm,gndfgj${chooseDocument?.object.toString()}');
                                   dynamic params = {
-                                    "document": "${uplopdfile.text}",
+                                    "document": "${chooseDocument?.object.toString()}",
                                     "expertUId": [
                                       "${selectedExpertise?.uid.toString()}"
                                     ],
@@ -691,8 +703,9 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                     .showSnackBar(snackBar);
                               }
                             } else {
+                              print('esle');
                               SnackBar snackBar = SnackBar(
-                                content: Text('Please Enter Fees'),
+                                content: Text('Please Selcted Expertise'),
                                 backgroundColor: ColorConstant.primary_color,
                               );
                               ScaffoldMessenger.of(context)
@@ -876,6 +889,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             break;
           default:
         }
+        print('xfjsdjfjfilenamecheckKB-${file1.path}');
 
         break;
       case 1:
@@ -894,6 +908,9 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
           default:
         }
         print('filenamecheckKB-${file1.path}');
+        BlocProvider.of<FetchExprtiseRoomCubit>(context)
+            .chooseDocumentprofile(dopcument.toString(), file1.path!);
+        setState(() {});
 
         // BlocProvider.of<DocumentUploadCubit>(context)
         //     .documentUpload(file1.path!, );
@@ -937,9 +954,9 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             default:
           }
           print('filecheckPath-${file1.path}');
-          // BlocProvider.of<DocumentUploadCubit>(context).documentUpload(
-          //   file1.path!,
-          // );
+          print('filecheckPath-${file1.path}');
+          BlocProvider.of<FetchExprtiseRoomCubit>(context)
+              .chooseDocumentprofile(dopcument.toString(), file1.path!);
         }
 
         break;

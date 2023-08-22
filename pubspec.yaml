@@ -20,6 +20,11 @@ dependencies:
   flutter_smart_dialog:
   country_pickers:  
   stomp_dart_client:
+  firebase_core : 
+  firebase_messaging: ^14.6.3
+  device_info_plus: ^8.1.0
+  flutter_widget_from_html_core: ^0.10.3
+  flutter_html: ^2.2.1
    
   # keyboard_emoji_picker: ^1.0.3
   flutter_markdown:

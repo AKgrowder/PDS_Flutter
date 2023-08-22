@@ -18,6 +18,8 @@ class ImageConstant {
   static String imgClock = 'assets/images/img_clock.svg';
 
   static String imgRectangle39829 = 'assets/images/img_rectangle39829.png';
+  static String userProfie = 'assets/images/profile.jpg';
+
 
   static String imgReply = 'assets/images/img_reply.svg';
 
