@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:archit_s_application1/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'package:archit_s_application1/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:archit_s_application1/API/Bloc/auth/login_Block.dart';
@@ -13,6 +15,7 @@ import 'package:archit_s_application1/presentation/otp_verification_screen/otp_v
 import 'package:archit_s_application1/widgets/custom_elevated_button.dart';
 import 'package:archit_s_application1/widgets/custom_outlined_button.dart';
 import 'package:archit_s_application1/widgets/custom_text_form_field.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +23,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
+import '../../API/Bloc/device_info_Bloc/device_info_bloc.dart';
 import '../../API/Model/authModel/getUserDetailsMdoel.dart';
 import '../../API/Model/authModel/loginModel.dart';
 import '../../widgets/app_bar/appbar_image.dart';
@@ -50,6 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool Show_Password = true;
   bool isPhone = false;
+  bool saveDeviceInfo = true;
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     BlocProvider.of<LoginCubit>(context).getUserDetails(
                         state.loginModel.object?.uuid.toString() ?? "");
                   }
+
                   if (state.loginModel.object?.verified == true) {
                     BlocProvider.of<LoginCubit>(context).getUserDetails(
                         state.loginModel.object?.uuid.toString() ?? "");
@@ -102,6 +108,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         // state.loginModel.object!.verified.toString(),
                         );
+                    if (saveDeviceInfo == true) {
+                      savePhoneData();
+                    }
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return MultiBlocProvider(
@@ -152,6 +161,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         loginModelData?.object?.module.toString() ?? ""
                         // state.loginModel.object!.verified.toString(),
                         );
+                    if (saveDeviceInfo == true) {
+                      savePhoneData();
+                    }
                     print('this condison is calling');
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
@@ -349,10 +361,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           CustomTextFormField(
                             // focusNode: FocusNode(),
                             // autofocus: true,
+
                             inputFormatters: [
                               FilteringTextInputFormatter.deny(RegExp(r'\s')),
                             ],
                             errorMaxLines: 3,
+
+
+
                             validator: (value) {
                               String pattern =
                                   r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$%^&*(),.?":{}|<>])[A-Za-z0-9!@#\$%^&*(),.?":{}|<>]{8,}$';
@@ -452,7 +468,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Map<String, dynamic>  dataPassing = {
                                     "username": emailAndMobileController.text,
                                     "password": passwordoneController.text,
-                                    "isFromAdmin" : false,
+
+                                    "isFromAdmin": false
+
                                   };
                                   print('dataPassing-$dataPassing');
                                   BlocProvider.of<LoginCubit>(context)
@@ -571,5 +589,43 @@ class _LoginScreenState extends State<LoginScreen> {
         "${getUserDataModelData?.object?.module}");
     prefs.setString(PreferencesKey.ProfileMobileNo,
         "${getUserDataModelData?.object?.mobileNo}");
+  }
+
+  savePhoneData() async {
+    saveDeviceInfo = false;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var deviceTokne = prefs.getString(PreferencesKey.fcmToken);
+
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+
+    var androidMOdel = "";
+    var androidVersion = "";
+    var iosModel = "";
+
+    if (Platform.isAndroid) {
+      androidMOdel = androidInfo.model;
+      androidVersion = androidInfo.version.release;
+    } else if (Platform.isIOS) {
+      iosModel = "${iosInfo.utsname.machine}";
+    }
+
+    var details = {
+      "deviceModel": iosModel == "" ? androidMOdel : iosModel,
+      "deviceType": Platform.isIOS ? "ios" : "Android",
+      "mobileNumber": "${loginModelData?.object?.mobileNo ?? ""}",
+      "module": "${loginModelData?.object?.module ?? ""}",
+      "userId": 0,
+      "uuid": deviceTokne ?? "",
+      "version":
+          iosModel == "" ? androidVersion : Platform.operatingSystemVersion,
+    };
+// DeviceInfo
+
+    await BlocProvider.of<DevicesInfoCubit>(context).DeviceInfo(details);
+
+    print(details);
   }
 }

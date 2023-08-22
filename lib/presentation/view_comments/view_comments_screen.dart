@@ -20,6 +20,7 @@ import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
+import '../home/home.dart';
 
 class ViewCommentScreen extends StatefulWidget {
   final Room_ID;
@@ -397,7 +398,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 decoration: BoxDecoration(
                                     color: Color(0xFFF5F5F5),
                                     borderRadius: BorderRadius.circular(25)),
-                                child: Row(children: [
+                                child: Row(
+                                  children: [
                                   SizedBox(
                                     width: 10,
                                   ),
@@ -440,9 +442,11 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                       "assets/images/paperclip-2.png",
                                       height: 30,
                                     ),
+ 
                                   ),
                                   // SizedBox(
                                   //   width: 10,
+ 
                                   // ),
                                   GestureDetector(
                                     onTap: () {
@@ -453,9 +457,9 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                       height: 22,
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
+                                  // SizedBox(
+                                  //   width: 10,
+                                  // ),
                                 ]),
                                 // child: TextField(
                                 //   controller: Add_Comment,
@@ -665,8 +669,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                     fontFamily: "outfit",
                                                     fontSize: 14),
                                               ),
-                                              /*  Spacer(), */
-                                              /*   Padding(
+                                              Spacer(), 
+                                                 Padding(
                                                 padding: const EdgeInsets.only(
                                                     right: 10),
                                                 child: GestureDetector(
@@ -696,7 +700,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                           height: 17,
                                                         ),
                                                 ),
-                                              ), */
+                                              ), 
                                             ],
                                           ),
                                           SizedBox(

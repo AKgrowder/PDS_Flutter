@@ -1,8 +1,9 @@
 import 'package:archit_s_application1/API/Bloc/CreateRoom_Bloc/CreateRoom_state.dart';
 import 'package:archit_s_application1/API/Bloc/Edit_room_bloc/edit_room_cubit.dart';
-import 'package:archit_s_application1/dialogs/create_room_dilog.dart';
+import 'package:archit_s_application1/API/Bloc/Fatch_all_members/fatch_all_members_cubit.dart';
 import 'package:archit_s_application1/dialogs/edit_dilog.dart';
 import 'package:archit_s_application1/dilogs/invite_dilog.dart';
+import 'package:archit_s_application1/presentation/room_members/room_members_screen.dart';
 import 'package:archit_s_application1/presentation/view_comments/view_comments_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -66,7 +67,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
     var _height = MediaQuery.of(context).size.height;
 
     Object? index;
-    // int selectedIndex = 0;
+
     return Scaffold(
         backgroundColor: theme.colorScheme.onPrimary,
         appBar: AppBar(
@@ -274,7 +275,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                 EdgeInsets.only(
                                                                     left: 20,
                                                                     right: 20),
-                                                            height: 200,
+                                                            height: 250,
                                                             width: _width,
                                                             // color: Colors.amber,
                                                             child: BlocConsumer<
@@ -880,188 +881,212 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             ),
                                           ),
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 10.0, right: 10),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Container(
-                                                width: 99,
-                                                height: 28.87,
-                                                child: Stack(
-                                                  children: [
-                                                    Positioned(
-                                                      left: 0,
-                                                      top: 0,
-                                                      child: Container(
-                                                        width: 28.88,
-                                                        height: 28.87,
-                                                        child: CustomImageView(
-                                                          imagePath:
-                                                              ImageConstant
-                                                                  .expertone,
-                                                          height: 30,
-                                                        ),
-                                                      ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                              builder: (context) {
+                                                return MultiBlocProvider(
+                                                  providers: [
+                                                    BlocProvider(
+                                                      create: (context) =>
+                                                          FatchAllMembersCubit(),
                                                     ),
-                                                    Positioned(
-                                                      left: 22.56,
-                                                      top: 0,
-                                                      child: Container(
-                                                        width: 28.88,
-                                                        height: 28.87,
-                                                        child: CustomImageView(
-                                                          imagePath:
-                                                              ImageConstant
-                                                                  .experttwo,
-                                                          height: 30,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Positioned(
-                                                      left: 45.12,
-                                                      top: 0,
-                                                      child: Container(
-                                                        width: 28.88,
-                                                        height: 28.87,
-                                                        child: CustomImageView(
-                                                          imagePath:
-                                                              ImageConstant
-                                                                  .expertthree,
-                                                          height: 30,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Positioned(
-                                                      left: 78,
-                                                      top: 7,
-                                                      child: SizedBox(
-                                                        width: 21,
-                                                        height: 16,
-                                                        child: Text(
-                                                          '+5',
-                                                          style: TextStyle(
-                                                            color: Color(
-                                                                0xFF2A2A2A),
-                                                            fontSize: 12,
-                                                            fontFamily:
-                                                                'Outfit',
-                                                            fontWeight:
-                                                                FontWeight.w400,
+                                                  ],
+                                                  child: RoomMembersScreen(
+                                                      room_Id: '${PublicRoomData?.object?[index].uid.toString()}'),
+                                                );
+                                              },
+                                            ));
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 10.0, right: 10),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Container(
+                                                  width: 99,
+                                                  height: 28.87,
+                                                  child: Stack(
+                                                    children: [
+                                                      Positioned(
+                                                        left: 0,
+                                                        top: 0,
+                                                        child: Container(
+                                                          width: 28.88,
+                                                          height: 28.87,
+                                                          child:
+                                                              CustomImageView(
+                                                            imagePath:
+                                                                ImageConstant
+                                                                    .expertone,
+                                                            height: 30,
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      print(
-                                                          'uid print-${PublicRoomData?.object?[index].uid}');
-                                                      return MultiBlocProvider(
-                                                          providers: [
-                                                            BlocProvider<
-                                                                SherInviteCubit>(
-                                                              create: (_) =>
-                                                                  SherInviteCubit(),
-                                                            ),
-                                                          ],
+                                                      Positioned(
+                                                        left: 22.56,
+                                                        top: 0,
+                                                        child: Container(
+                                                          width: 28.88,
+                                                          height: 28.87,
                                                           child:
-                                                              InviteDilogScreen(
-                                                            Room_UUID:
-                                                                "${PublicRoomData?.object?[index].uid}",
-                                                          ));
-                                                    },
-                                                  );
-                                                },
-                                                child: Container(
-                                                  width: 140,
-                                                  height: 22.51,
-                                                  decoration: ShapeDecoration(
-                                                    color: Color(0xFFFFD9DA),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      side: BorderSide(
-                                                        width: 1,
-                                                        color:
-                                                            Color(0xFFED1C25),
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              50),
-                                                    ),
-                                                  ),
-                                                  child: Center(
-                                                      child: Text(
-                                                    "Invite User",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            Color(0xFFED1C25),
-                                                        fontFamily: "outfit",
-                                                        fontSize: 13),
-                                                  )),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        index == 1 || index == 2 || index == 3
-                                            ? Divider(color: Colors.grey)
-                                            : SizedBox(),
-
-                                        index == 1 || index == 3
-                                            ? Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Row(
-                                                  children: [
-                                                    CustomImageView(
-                                                      imagePath: ImageConstant
-                                                          .workimage,
-                                                      height: 30,
-                                                    ),
-                                                    Text("Expert 1"),
-                                                    Spacer(),
-                                                    Container(
-                                                      width: 80,
-                                                      height: 20,
-                                                      decoration:
-                                                          ShapeDecoration(
-                                                        color:
-                                                            Color(0xFFED1C25),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      49.46),
+                                                              CustomImageView(
+                                                            imagePath:
+                                                                ImageConstant
+                                                                    .experttwo,
+                                                            height: 30,
+                                                          ),
                                                         ),
                                                       ),
-                                                      child: Center(
+                                                      Positioned(
+                                                        left: 45.12,
+                                                        top: 0,
+                                                        child: Container(
+                                                          width: 28.88,
+                                                          height: 28.87,
+                                                          child:
+                                                              CustomImageView(
+                                                            imagePath:
+                                                                ImageConstant
+                                                                    .expertthree,
+                                                            height: 30,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Positioned(
+                                                        left: 78,
+                                                        top: 7,
+                                                        child: SizedBox(
+                                                          width: 21,
+                                                          height: 16,
                                                           child: Text(
-                                                        "Switch Expert",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: Colors.white,
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 10),
-                                                      )),
-                                                    )
-                                                  ],
+                                                            '+5',
+                                                            style: TextStyle(
+                                                              color: Color(
+                                                                  0xFF2A2A2A),
+                                                              fontSize: 12,
+                                                              fontFamily:
+                                                                  'Outfit',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              )
-                                            : SizedBox(),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        print(
+                                                            'uid print-${PublicRoomData?.object?[index].uid}');
+                                                        return MultiBlocProvider(
+                                                            providers: [
+                                                              BlocProvider<
+                                                                  SherInviteCubit>(
+                                                                create: (_) =>
+                                                                    SherInviteCubit(),
+                                                              ),
+                                                            ],
+                                                            child:
+                                                                InviteDilogScreen(
+                                                              Room_UUID:
+                                                                  "${PublicRoomData?.object?[index].uid}",
+                                                            ));
+                                                      },
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    width: 140,
+                                                    height: 22.51,
+                                                    decoration: ShapeDecoration(
+                                                      color: Color(0xFFFFD9DA),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        side: BorderSide(
+                                                          width: 1,
+                                                          color:
+                                                              Color(0xFFED1C25),
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(50),
+                                                      ),
+                                                    ),
+                                                    child: Center(
+                                                        child: Text(
+                                                      "Invite User",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color:
+                                                              Color(0xFFED1C25),
+                                                          fontFamily: "outfit",
+                                                          fontSize: 13),
+                                                    )),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        // index == 1 || index == 2 || index == 3
+                                        //     ? Divider(color: Colors.grey)
+                                        //     : SizedBox(),
+
+                                        // index == 1 || index == 3
+                                        //     ? Padding(
+                                        //         padding:
+                                        //             const EdgeInsets.all(8.0),
+                                        //         child: Row(
+                                        //           children: [
+                                        //             CustomImageView(
+                                        //               imagePath: ImageConstant
+                                        //                   .workimage,
+                                        //               height: 30,
+                                        //             ),
+                                        //             Text("Expert 1"),
+                                        //             Spacer(),
+                                        //             Container(
+                                        //               width: 80,
+                                        //               height: 20,
+                                        //               decoration:
+                                        //                   ShapeDecoration(
+                                        //                 color:
+                                        //                     Color(0xFFED1C25),
+                                        //                 shape:
+                                        //                     RoundedRectangleBorder(
+                                        //                   borderRadius:
+                                        //                       BorderRadius
+                                        //                           .circular(
+                                        //                               49.46),
+                                        //                 ),
+                                        //               ),
+                                        //               child: Center(
+                                        //                   child: Text(
+                                        //                 "Switch Expert",
+                                        //                 style: TextStyle(
+                                        //                     fontWeight:
+                                        //                         FontWeight.w400,
+                                        //                     color: Colors.white,
+                                        //                     fontFamily:
+                                        //                         "outfit",
+                                        //                     fontSize: 10),
+                                        //               )),
+                                        //             )
+                                        //           ],
+                                        //         ),
+                                        //       )
+                                        //     : SizedBox(),
 
                                         Row(
                                           mainAxisAlignment:
@@ -1330,7 +1355,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                           children: [
                             Center(
                               child: Container(
-                                height: 350,
+                                height: 400,
                                 width: _width / 1.2,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -1442,7 +1467,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   500),
                                             ],
                                             controller: _DescriptionText,
-                                            maxLines: 8,
+                                            maxLines: 5,
+ 
                                             cursorColor: Colors.grey,
                                             decoration: InputDecoration(
                                               hintText:
@@ -1453,147 +1479,141 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                         ),
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 20.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () => Navigator.pop(context),
-                                            child: Container(
-                                              height: 43,
-                                              width: _width / 3,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.transparent,
-                                                  border: Border.all(
-                                                      color:
-                                                          Colors.grey.shade400),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: Center(
-                                                  child: Text(
-                                                "Cancel",
-                                                style: TextStyle(
-                                                  fontFamily: 'outfit',
-                                                  fontSize: 15,
-                                                  color: Color(0xFFED1C25),
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              )),
-                                            ),
+                                    SizedBox(
+                                      height: 30,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () => Navigator.pop(context),
+                                          child: Container(
+                                            height: 43,
+                                            width: _width / 3,
+                                            decoration: BoxDecoration(
+                                                color: Colors.transparent,
+                                                border: Border.all(
+                                                    color:
+                                                        Colors.grey.shade400),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: Center(
+                                                child: Text(
+                                              "Cancel",
+                                              style: TextStyle(
+                                                fontFamily: 'outfit',
+                                                fontSize: 15,
+                                                color: Color(0xFFED1C25),
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            )),
                                           ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              if (_roomName.text == null ||
-                                                  _roomName.text == '') {
-                                                SnackBar snackBar = SnackBar(
-                                                  content: Text(
-                                                      'Please Enter Room Name'),
-                                                  backgroundColor: ColorConstant
-                                                      .primary_color,
-                                                );
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(snackBar);
-                                              } else if (_roomName.text
-                                                      .trim()
-                                                      .isEmpty ||
-                                                  _roomName.text.trim() == '') {
-                                                SnackBar snackBar = SnackBar(
-                                                  content: Text(
-                                                      'Room Name can\'t be just blank spaces'),
-                                                  backgroundColor: ColorConstant
-                                                      .primary_color,
-                                                );
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(snackBar);
-                                              } else if (_DescriptionText
-                                                          .text ==
-                                                      null ||
-                                                  _DescriptionText.text == '') {
-                                                SnackBar snackBar = SnackBar(
-                                                  content: Text(
-                                                      'Please Enter Description'),
-                                                  backgroundColor: ColorConstant
-                                                      .primary_color,
-                                                );
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(snackBar);
-                                              } else if (_DescriptionText.text
-                                                      .trim()
-                                                      .isEmpty ||
-                                                  _DescriptionText.text
-                                                          .trim() ==
-                                                      '') {
-                                                SnackBar snackBar = SnackBar(
-                                                  content: Text(
-                                                      'Description can\'t be just blank spaces'),
-                                                  backgroundColor: ColorConstant
-                                                      .primary_color,
-                                                );
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(snackBar);
-                                              } else {
-                                                var params = {
-                                                  "roomQuestion":
-                                                      _roomName.text,
-                                                  "description":
-                                                      _DescriptionText.text,
-                                                  "roomType": "PRIVTAE"
-                                                };
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            if (_roomName.text == null ||
+                                                _roomName.text == '') {
+                                              SnackBar snackBar = SnackBar(
+                                                content: Text(
+                                                    'Please Enter Room Name'),
+                                                backgroundColor:
+                                                    ColorConstant.primary_color,
+                                              );
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(snackBar);
+                                            } else if (_roomName.text
+                                                    .trim()
+                                                    .isEmpty ||
+                                                _roomName.text.trim() == '') {
+                                              SnackBar snackBar = SnackBar(
+                                                content: Text(
+                                                    'Room Name can\'t be just blank spaces'),
+                                                backgroundColor:
+                                                    ColorConstant.primary_color,
+                                              );
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(snackBar);
+                                            } else if (_DescriptionText.text ==
+                                                    null ||
+                                                _DescriptionText.text == '') {
+                                              SnackBar snackBar = SnackBar(
+                                                content: Text(
+                                                    'Please Enter Description'),
+                                                backgroundColor:
+                                                    ColorConstant.primary_color,
+                                              );
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(snackBar);
+                                            } else if (_DescriptionText.text
+                                                    .trim()
+                                                    .isEmpty ||
+                                                _DescriptionText.text.trim() ==
+                                                    '') {
+                                              SnackBar snackBar = SnackBar(
+                                                content: Text(
+                                                    'Description can\'t be just blank spaces'),
+                                                backgroundColor:
+                                                    ColorConstant.primary_color,
+                                              );
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(snackBar);
+                                            } else {
+                                              var params = {
+                                                "roomQuestion": _roomName.text,
+                                                "description":
+                                                    _DescriptionText.text,
+                                                "roomType": "PRIVTAE"
+                                              };
 
-                                                print(params);
+                                              print(params);
 
-                                                BlocProvider.of<
-                                                            CreateRoomCubit>(
-                                                        context)
-                                                    .CreateRoomAPI(params);
-                                              }
-                                              // if (roomName.text == null ||
-                                              //     roomName.text.isEmpty) {
-                                              //   SnackBar snackBar = SnackBar(
-                                              //     content: Text('Please Enter Room Name'),
-                                              //     backgroundColor:
-                                              //         ColorConstant.primary_color,
-                                              //   );
-                                              //   ScaffoldMessenger.of(context)
-                                              //       .showSnackBar(snackBar);
-                                              // }
-                                              // if (DescriptionText.text == null ||
-                                              //     DescriptionText.text.isEmpty) {
-                                              //   SnackBar snackBar = SnackBar(
-                                              //     content:
-                                              //         Text('Please Enter Description'),
-                                              //     backgroundColor:
-                                              //         ColorConstant.primary_color,
-                                              //   );
-                                              //   ScaffoldMessenger.of(context)
-                                              //       .showSnackBar(snackBar);
-                                              // }
-                                            },
-                                            child: Container(
-                                              height: 43,
-                                              width: _width / 3,
-                                              decoration: BoxDecoration(
-                                                  color: Color(0xFFED1C25),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: Center(
-                                                  child: Text(
-                                                "Create",
-                                                style: TextStyle(
-                                                  fontFamily: 'outfit',
-                                                  fontSize: 15,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              )),
-                                            ),
+                                              BlocProvider.of<CreateRoomCubit>(
+                                                      context)
+                                                  .CreateRoomAPI(params);
+                                            }
+                                            // if (roomName.text == null ||
+                                            //     roomName.text.isEmpty) {
+                                            //   SnackBar snackBar = SnackBar(
+                                            //     content: Text('Please Enter Room Name'),
+                                            //     backgroundColor:
+                                            //         ColorConstant.primary_color,
+                                            //   );
+                                            //   ScaffoldMessenger.of(context)
+                                            //       .showSnackBar(snackBar);
+                                            // }
+                                            // if (DescriptionText.text == null ||
+                                            //     DescriptionText.text.isEmpty) {
+                                            //   SnackBar snackBar = SnackBar(
+                                            //     content:
+                                            //         Text('Please Enter Description'),
+                                            //     backgroundColor:
+                                            //         ColorConstant.primary_color,
+                                            //   );
+                                            //   ScaffoldMessenger.of(context)
+                                            //       .showSnackBar(snackBar);
+                                            // }
+                                          },
+                                          child: Container(
+                                            height: 43,
+                                            width: _width / 3,
+                                            decoration: BoxDecoration(
+                                                color: Color(0xFFED1C25),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: Center(
+                                                child: Text(
+                                              "Create",
+                                              style: TextStyle(
+                                                fontFamily: 'outfit',
+                                                fontSize: 15,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            )),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     )
                                   ],
                                 ),

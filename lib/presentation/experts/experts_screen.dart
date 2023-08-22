@@ -266,7 +266,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black,
                                           fontFamily: "outfit",
-                                          fontSize: 20),
+                                          fontSize: 18),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),

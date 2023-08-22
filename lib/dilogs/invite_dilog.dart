@@ -5,7 +5,6 @@ import 'package:archit_s_application1/API/Bloc/sherinvite_Block/sherinvite_state
 import 'package:archit_s_application1/core/utils/color_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import '../core/utils/image_constant.dart';
 import '../widgets/custom_image_view.dart';
@@ -111,7 +110,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                     children: [
                       Center(
                         child: Container(
-                          height: 270,
+                          height: 280,
                           width: width / 1.25,
                           decoration: BoxDecoration(
                             color: Colors.white,
