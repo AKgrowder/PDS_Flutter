@@ -11,6 +11,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
+import '../../API/Bloc/auth/login_Block.dart';
+import '../../API/Bloc/device_info_Bloc/device_info_bloc.dart';
 import '../create_account_screen/create_account_screen.dart';
 
 class RegisterCreateAccountScreen extends StatefulWidget {

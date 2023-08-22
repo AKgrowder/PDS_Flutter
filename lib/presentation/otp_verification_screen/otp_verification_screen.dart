@@ -147,7 +147,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           return MultiBlocProvider(providers: [
                             BlocProvider<LoginCubit>(
                               create: (context) => LoginCubit(),
-                            )
+                            ),
                             BlocProvider<DevicesInfoCubit>(
                               create: (context) => DevicesInfoCubit(),
                             )

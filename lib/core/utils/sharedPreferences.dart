@@ -14,4 +14,7 @@ class PreferencesKey {
   static const String userPrfoile = 'userPrfoile';
 
   static const String module = 'module';
+  static const String fcmToken = 'fcmToken';
+
+  
 }
