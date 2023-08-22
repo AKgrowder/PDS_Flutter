@@ -11,11 +11,7 @@ class PreferencesKey {
   static const String ProfileEmail = 'ProfileEmail';
   static const String ProfileModule = 'ProfileModule';
   static const String ProfileMobileNo = 'ProfileMobileNo';
+  static const String userPrfoile = 'userPrfoile';
 
   static const String module = 'module';
-
-
-  
-
-
 }
