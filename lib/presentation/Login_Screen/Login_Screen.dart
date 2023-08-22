@@ -16,6 +16,7 @@ import 'package:archit_s_application1/widgets/custom_elevated_button.dart';
 import 'package:archit_s_application1/widgets/custom_outlined_button.dart';
 import 'package:archit_s_application1/widgets/custom_text_form_field.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -290,8 +291,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 return 'Name can\'t be just blank spaces';
                               } else if (!nameRegExp.hasMatch(value)) {
                                 return 'Input cannot contains prohibited special characters';
-                                } else if (value.length <= 3 ||
-                                    value.length > 50) {
+                              } else if (value.length <= 3 ||
+                                  value.length > 50) {
                                 return 'Minimum length required';
                               } else if (value.contains('..')) {
                                 return 'username does not contain is correct';
@@ -366,8 +367,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               FilteringTextInputFormatter.deny(RegExp(r'\s')),
                             ],
                             errorMaxLines: 3,
-
-
 
                             validator: (value) {
                               String pattern =
@@ -465,12 +464,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: CustomElevatedButton(
                               onTap: () {
                                 if (_formKey.currentState!.validate()) {
-                                  Map<String, dynamic>  dataPassing = {
+                                  Map<String, dynamic> dataPassing = {
                                     "username": emailAndMobileController.text,
                                     "password": passwordoneController.text,
-
                                     "isFromAdmin": false
-
                                   };
                                   print('dataPassing-$dataPassing');
                                   BlocProvider.of<LoginCubit>(context)
@@ -592,8 +589,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   savePhoneData() async {
-    saveDeviceInfo = false;
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    print('UUID is------> ${fcmToken}');
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(PreferencesKey.fcmToken, "${fcmToken}");
+
+    saveDeviceInfo = false;
+
     var deviceTokne = prefs.getString(PreferencesKey.fcmToken);
 
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -618,7 +620,7 @@ class _LoginScreenState extends State<LoginScreen> {
       "mobileNumber": "${loginModelData?.object?.mobileNo ?? ""}",
       "module": "${loginModelData?.object?.module ?? ""}",
       "userId": 0,
-      "uuid": deviceTokne ?? "",
+      "fcmToken": deviceTokne ?? "",
       "version":
           iosModel == "" ? androidVersion : Platform.operatingSystemVersion,
     };
