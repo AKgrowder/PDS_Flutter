@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:archit_s_application1/core/utils/internet_utils.dart';
 import 'package:archit_s_application1/presentation/noInterneterror/noInterNetScreen.dart';
@@ -124,6 +125,23 @@ class ApiServices {
     }
 
     print('checkdataher');
+    var res = await response.send();
+    print('responce stauscode-${res.statusCode.toString()}');
+
+    var respond = await http.Response.fromStream(res);
+    print('responsData-${respond.body}');
+    return respond;
+  }
+
+  multipartFileUserprofile(String APIurl, File imageFile) async {
+   await UpdateBaseURL();
+    final response =
+        await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
+      print("API =>******${baseURL + APIurl}");
+    if (imageFile != null) {
+      response.files
+          .add(await http.MultipartFile.fromPath('image', imageFile.path));
+    }
     var res = await response.send();
     print('responce stauscode-${res.statusCode.toString()}');
 

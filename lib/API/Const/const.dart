@@ -21,5 +21,7 @@ class Config {
   static const String DeleteRoom = "user/api/deleteRoom";
   static const String checkUserActive = "user/api/isForumCreated";
   static const String uploadfile = 'user/api/uploadFIle';
+  static const String uploadProfile= 'user/api/uploadProfilePic';
+   static const String addDeviceDetail = "auth/auth/addDeviceDetail";
   static const String fetchAllExperts = "user/api/fetchAllExperts";
 }

@@ -1437,8 +1437,12 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                           padding: EdgeInsets.only(
                                               top: 0.0, left: 10),
                                           child: TextField(
+                                            inputFormatters: [
+                                              LengthLimitingTextInputFormatter(
+                                                  500),
+                                            ],
                                             controller: _DescriptionText,
-                                            maxLines: 5,
+                                            maxLines: 8,
                                             cursorColor: Colors.grey,
                                             decoration: InputDecoration(
                                               hintText:

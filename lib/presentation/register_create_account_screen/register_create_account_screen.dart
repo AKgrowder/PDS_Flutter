@@ -125,10 +125,21 @@ class _RegisterCreateAccountScreenState
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CreateAccountScreen()),
-              );
+              print('this is the data fget');
+               Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return MultiBlocProvider(
+                          providers: [
+                            BlocProvider<RegisterCubit>(
+                              create: (context) => RegisterCubit(),
+                            )
+                          ],
+                          child: CreateAccountScreen());
+                    }));
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => CreateAccountScreen()),
+              // );
             },
             child: Padding(
               padding: EdgeInsets.only(left: 30, right: 30, bottom: 30),
@@ -153,10 +164,18 @@ class _RegisterCreateAccountScreenState
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
-              );
+                Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return MultiBlocProvider(providers: [
+                            BlocProvider<LoginCubit>(
+                              create: (context) => LoginCubit(),
+                            ),
+                             BlocProvider<DevicesInfoCubit>(
+                              create: (context) => DevicesInfoCubit(),
+                            )
+                            
+                          ], child: LoginScreen());
+                        }));
             },
             child: Padding(
               padding: EdgeInsets.only(left: 30, right: 30, bottom: 30),
