@@ -1,4 +1,5 @@
 import 'package:archit_s_application1/API/Model/authModel/registerModel.dart';
+import 'package:archit_s_application1/API/Model/createDocumentModel/createDocumentModel.dart';
 
 abstract class RegisterState {}
 
@@ -14,4 +15,10 @@ class RegisterLoadedState extends RegisterState {
 class RegisterErrorState extends RegisterState {
   final String error;
   RegisterErrorState(this.error);
+}
+
+class chooseDocumentLoadedState extends RegisterState {
+  final ChooseDocument chooseDocumentuploded;
+
+  chooseDocumentLoadedState(this.chooseDocumentuploded);
 }

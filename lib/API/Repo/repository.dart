@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:archit_s_application1/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:archit_s_application1/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
@@ -349,6 +350,7 @@ class Repository {
   }
 
   chooseProfileFile(String file, String fileName, {params}) async {
+    print("apiCaling");
     final response = await apiServices.multipartFile(
         "${Config.uploadfile}", file, fileName,
         apiName: 'create forum', params: params);
@@ -359,6 +361,33 @@ class Repository {
         return ChooseDocument.fromJson(jsonString);
       default:
         return ChooseDocument.fromJson(jsonString);
+    }
+  }
+
+  userProfile(File imageFile) async {
+    final response = await apiServices.multipartFileUserprofile(
+        '${Config.uploadProfile}', imageFile);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return ChooseDocument.fromJson(jsonString);
+      default:
+        return ChooseDocument.fromJson(jsonString);
+    }
+  }
+  Future<DeviceinfoModel> deviceInfoq(
+    Map<String, dynamic> param, 
+  ) async {
+    final response =
+        await apiServices.postApiCall(Config.addDeviceDetail,param);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return DeviceinfoModel.fromJson(jsonString);
+      default:
+        return DeviceinfoModel.fromJson(jsonString);
     }
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import '../core/utils/image_constant.dart';
 import '../widgets/custom_image_view.dart';
@@ -154,7 +153,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                         ),
                         Center(
                           child: Container(
-                            width: 65,
+                            width: 80,
                             height: 23,
                             padding: const EdgeInsets.only(
                                 top: 5, left: 9, right: 8, bottom: 5),

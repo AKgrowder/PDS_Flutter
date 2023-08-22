@@ -20,9 +20,7 @@ import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
-
-ImagePicker picker = ImagePicker();
-XFile? pickedImageFile;
+import '../home/home.dart';
 
 class ViewCommentScreen extends StatefulWidget {
   final Room_ID;
@@ -52,6 +50,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   bool addmsg = false;
   var Token = "";
   var UserCode = "";
+  ImagePicker picker = ImagePicker();
+  XFile? pickedImageFile;
 
   ComentApiModel? modelData;
   TextEditingController Add_Comment = TextEditingController();
@@ -66,19 +66,53 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     stompClient.activate();
     super.initState();
   }
- String formatDateTime(String dateTimeString) {
-  DateTime dateTime = DateTime.parse(dateTimeString);
-  DateFormat formatter = DateFormat('d\'th\' MMMM y');
-  String formattedDate = formatter.format(dateTime);
-  return formattedDate;
-}
+
+  String customFormat(DateTime date) {
+    String day = date.day.toString();
+    String month = _getMonthName(date.month);
+    String year = date.year.toString();
+    String time = DateFormat('h:mm a').format(date);
+
+    String formattedDate = '$day$month $year $time';
+    return formattedDate;
+  }
+
+  String _getMonthName(int month) {
+    switch (month) {
+      case 1:
+        return 'st January';
+      case 2:
+        return 'nd February';
+      case 3:
+        return 'rd March';
+      case 4:
+        return 'th April';
+      case 5:
+        return 'th May';
+      case 6:
+        return 'th June';
+      case 7:
+        return 'th July';
+      case 8:
+        return 'th August';
+      case 9:
+        return 'th September';
+      case 10:
+        return 'th October';
+      case 11:
+        return 'th November';
+      case 12:
+        return 'th December';
+      default:
+        return '';
+    }
+  }
 
   //  @override
   // void dispose() {
   //  stompClient.deactivate();
   //   super.dispose();
   // }
-  
 
   _onBackspacePressed() {
     Add_Comment
@@ -89,7 +123,6 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -365,7 +398,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 decoration: BoxDecoration(
                                     color: Color(0xFFF5F5F5),
                                     borderRadius: BorderRadius.circular(25)),
-                                child: Row(children: [
+                                child: Row(
+                                  children: [
                                   SizedBox(
                                     width: 10,
                                   ),
@@ -384,11 +418,11 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                     ),
                                   ),
                                   SizedBox(
-                                    width: 10,
+                                    width: 5,
                                   ),
                                   Container(
                                     height: 40,
-                                    width: _width / 2.1,
+                                    width: _width / 2.2,
                                     // color: Colors.amber,
                                     child: TextField(
                                       controller: Add_Comment,
@@ -399,7 +433,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                       ),
                                     ),
                                   ),
-                                  Spacer(),
+                                  // Spacer(),
                                   GestureDetector(
                                     onTap: () {
                                       pickProfileImage();
@@ -408,10 +442,12 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                       "assets/images/paperclip-2.png",
                                       height: 30,
                                     ),
+ 
                                   ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
+                                  // SizedBox(
+                                  //   width: 10,
+ 
+                                  // ),
                                   GestureDetector(
                                     onTap: () {
                                       camerapicker();
@@ -421,9 +457,9 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                       height: 22,
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
+                                  // SizedBox(
+                                  //   width: 10,
+                                  // ),
                                 ]),
                                 // child: TextField(
                                 //   controller: Add_Comment,
@@ -445,7 +481,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                       callback: (StompFrame frame) {
                                         Map<String, dynamic> jsonString =
                                             json.decode(frame.body ?? "");
-                                           print('jasonSt6ring-$jsonString');             
+                                        print('jasonSt6ring-$jsonString');
                                         if (addmsg == false) {
                                           print(
                                               "please1-${modelData?.object?.messageOutputList?.content?.length}");
@@ -599,8 +635,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 shrinkWrap: true,
                                 // physics: NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  
-                           
+                                  DateTime parsedDateTime = DateTime.parse(
+                                      '${modelData?.object?.messageOutputList?.content?[index].createdAt}');
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                         /* horizontal: 35, vertical: 5 */),
@@ -633,8 +669,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                     fontFamily: "outfit",
                                                     fontSize: 14),
                                               ),
-                                              /*  Spacer(), */
-                                              /*   Padding(
+                                              Spacer(), 
+                                                 Padding(
                                                 padding: const EdgeInsets.only(
                                                     right: 10),
                                                 child: GestureDetector(
@@ -664,7 +700,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                           height: 17,
                                                         ),
                                                 ),
-                                              ), */
+                                              ), 
                                             ],
                                           ),
                                           SizedBox(
@@ -755,8 +791,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                 MainAxisAlignment.end,
                                             children: [
                                               Text(
-                                                "${formatDateTime(
-                                      '${modelData?.object?.messageOutputList?.content?[index].createdAt}')}",
+                                                customFormat(parsedDateTime),
                                                 maxLines: 3,
                                                 textScaleFactor: 1.0,
                                                 style: TextStyle(
@@ -874,7 +909,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   getToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     Token = prefs.getString(PreferencesKey.loginJwt) ?? "";
-    UserCode = prefs.getString(PreferencesKey.loginUserID) ?? "";
+    UserCode = prefs.getString(PreferencesKey.loginUserID)  ?? "";
   }
 
   Future<void> camerapicker() async {

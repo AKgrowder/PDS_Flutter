@@ -219,6 +219,49 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                         ),
                       ),
                     ),
+                    // CustomTextFormField(
+                    //   validator: (value) {
+                    //     RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                    //     if (value!.isEmpty) {
+                    //       return 'Please Enter Name';
+                    //     } else if (value.trim().isEmpty) {
+                    //       return 'Name can\'t be just blank spaces';
+                    //     } else if (!nameRegExp.hasMatch(value)) {
+                    //       return 'Input cannot contains prohibited special characters';
+                    //     } else if (value.length <= 3 || value.length > 50) {
+                    //       return 'Minimum length required';
+                    //     } else if (value.contains('..')) {
+                    //       return 'username does not contain is correct';
+                    //     }
+
+                    //     return null;
+                    //   },
+
+                    //   maxLength: 50,
+                    //   // focusNode: FocusNode(),
+                    //   controller: profile,
+                    //   margin: EdgeInsets.only(
+                    //     left: 30,
+                    //     right: 30,
+                    //   ),
+                    //   contentPadding: EdgeInsets.only(
+                    //     left: 12,
+                    //     top: 14,
+                    //     right: 12,
+                    //     bottom: 14,
+                    //   ),
+                    //   // textStyle: theme.textTheme.titleMedium!,
+                    //   hintText: "User Name",
+                    //   hintStyle: TextStyle(
+                    //       fontFamily: 'outfit',
+                    //       fontSize: 15,
+                    //       fontWeight: FontWeight.w400),
+                    //   textInputAction: TextInputAction.next,
+                    //   textInputType: TextInputType.emailAddress,
+                    //   filled: true,
+
+                    //   // fillColor: appTheme.gray100,
+                    // ),
                     Center(
                       child: Container(
                         height: 50,
@@ -232,7 +275,6 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             inputFormatters: [
                               LengthLimitingTextInputFormatter(50),
                             ],
-                            
                             controller: profile,
                             cursorColor: Colors.grey,
                             decoration: InputDecoration(

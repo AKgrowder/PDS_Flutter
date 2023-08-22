@@ -1,5 +1,6 @@
 import 'package:archit_s_application1/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:archit_s_application1/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
+import 'package:archit_s_application1/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:archit_s_application1/API/Model/sherInviteModel/sherinviteModel.dart';
 
 abstract class FetchExprtiseRoomState {}
@@ -26,4 +27,10 @@ class FetchExprtiseRoomErrorState extends FetchExprtiseRoomState {
 class SherInviteLoadedState extends FetchExprtiseRoomState {
   final SherInvite sherInvite;
   SherInviteLoadedState(this.sherInvite);
+}
+
+class chooseDocumentLoadedextends extends FetchExprtiseRoomState {
+  final ChooseDocument chooseDocumentuploded;
+
+  chooseDocumentLoadedextends(this.chooseDocumentuploded);
 }

@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import '../../API/Bloc/device_info_Bloc/device_info_bloc.dart';
 import 'package:archit_s_application1/API/Bloc/auth/login_Block.dart';
 import 'package:archit_s_application1/API/Bloc/auth/otp_block.dart';
 import 'package:archit_s_application1/API/Bloc/auth/otp_state.dart';
@@ -9,12 +9,13 @@ import 'package:archit_s_application1/custom_bottom_bar/custom_bottom_bar.dart';
 import 'package:archit_s_application1/widgets/app_bar/appbar_image.dart';
 import 'package:archit_s_application1/widgets/app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
+import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import '../../API/Bloc/auth/register_Block.dart';
@@ -29,10 +30,13 @@ class OtpVerificationScreen extends StatefulWidget {
   String? flowCheck;
   String? userId;
   LoginModel? loginModelData;
- 
 
   OtpVerificationScreen(
-      {Key? key, this.phonNumber, this.flowCheck, this.userId, this.loginModelData})
+      {Key? key,
+      this.phonNumber,
+      this.flowCheck,
+      this.userId,
+      this.loginModelData})
       : super(key: key);
 
   @override
@@ -44,7 +48,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   TextEditingController OTPController = TextEditingController();
   Timer? _timer;
   int GetTime = 0;
-  int _secondsRemaining = 0;
+  int _secondsRemaining = 180;
 
   void _startTimer() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
@@ -59,7 +63,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           //     SetUi();
           //   }
           // });
-          _secondsRemaining = GetTime;
+          _secondsRemaining = 180;
         }
       });
     });
@@ -74,6 +78,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   void initState() {
     print(widget.loginModelData?.object);
     super.initState();
+    _startTimer();
   }
 
   @override
@@ -131,7 +136,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     }
                     if (state is OtpLoadedState) {
                       SnackBar snackBar = SnackBar(
-                        content: Text('Signup create successfully'),
+                        content: Text('Signup successfully'),
                         backgroundColor: ColorConstant.primary_color,
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -143,15 +148,20 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             BlocProvider<LoginCubit>(
                               create: (context) => LoginCubit(),
                             )
+                            BlocProvider<DevicesInfoCubit>(
+                              create: (context) => DevicesInfoCubit(),
+                            )
                           ], child: LoginScreen());
                         }));
                       } else {
                         getDataStroe(
-                     widget.loginModelData?.object?.uuid.toString() ?? "",
-                      widget.loginModelData?.object?.jwt.toString() ?? "",
-                      widget.loginModelData?.object?.module.toString() ?? ""
-                      // state.loginModel.object!.verified.toString(),
-                      );
+                            widget.loginModelData?.object?.uuid.toString() ??
+                                "",
+                            widget.loginModelData?.object?.jwt.toString() ?? "",
+                            widget.loginModelData?.object?.module.toString() ??
+                                ""
+                            // state.loginModel.object!.verified.toString(),
+                            );
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return MultiBlocProvider(providers: [
@@ -170,9 +180,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             BlocProvider<GetAllPrivateRoomCubit>(
                               create: (context) => GetAllPrivateRoomCubit(),
                             ),
-                            BlocProvider< InvitationCubit>(
-              create: (context) =>  InvitationCubit(),
-            ),
+                            BlocProvider<InvitationCubit>(
+                              create: (context) => InvitationCubit(),
+                            ),
                           ], child: BottombarPage(buttomIndex: 0));
                         }));
                       }
@@ -232,6 +242,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                 ),
                                 child: Pinput(
                                   length: 6,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
                                   controller: OTPController,
                                   defaultPinTheme: PinTheme(
                                     width: 50,
@@ -300,10 +313,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                               fontWeight: FontWeight.w500)),
                                       GestureDetector(
                                         onTap: () {
-                                          if (_secondsRemaining == GetTime ||
-                                              _secondsRemaining == 0) {
+                                          
                                             _startTimer();
-                                          }
+                                            
                                         },
                                         child: Text("Resend",
                                             textScaleFactor: 1.0,
@@ -316,7 +328,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                                             Brightness.light
                                                         ? Colors.black
                                                         : Colors
-                                                            .white /* ColorConstant.black90066 */
+                                                            .white  
                                                     : Colors.red,
                                                 fontSize: 16,
                                                 fontFamily: 'Outfit',
