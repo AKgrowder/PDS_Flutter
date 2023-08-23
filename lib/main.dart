@@ -50,20 +50,20 @@ void main() async {
     // }
   });
 
-  // FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  // await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-  //   alert: true,
-  //   badge: true,
-  //   sound: true,
-  // );
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
 
-  // _firebaseMessaging.requestPermission(
-  //   sound: true,
-  //   badge: true,
-  //   alert: true,
-  //   provisional: false,
-  // );
+  _firebaseMessaging.requestPermission(
+    sound: true,
+    badge: true,
+    alert: true,
+    provisional: false,
+  );
 
   runApp(MyApp());
 }
