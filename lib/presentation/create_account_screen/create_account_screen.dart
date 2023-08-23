@@ -76,6 +76,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   @override
   void initState() {
+    _requestPermissions();
     dataGet();
     super.initState();
   }
@@ -706,7 +707,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 };
                                 print('dataPassing-$datapPassing');
                                 BlocProvider.of<RegisterCubit>(context)
-                                    .registerApi(datapPassing);
+                                    .registerApi(datapPassing, context);
                               }
                             },
                             child: Container(
@@ -815,7 +816,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         setState(() {
           pickedImage = File(pickedFile!.path);
         });
-        BlocProvider.of<RegisterCubit>(context).upoldeProfilePic(pickedImage!);
+        BlocProvider.of<RegisterCubit>(context)
+            .upoldeProfilePic(pickedImage!, context);
       }
     } catch (e) {}
   }

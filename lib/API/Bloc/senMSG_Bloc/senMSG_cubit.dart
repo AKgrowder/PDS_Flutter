@@ -11,29 +11,31 @@ class senMSGCubit extends Cubit<senMSGState> {
   String currentPage = '0';
   String record = '300';
   List<String> dataList = [];
-  Future<void> senMSGAPI(String Room_ID, String MSG,{bool ShowLoader = false}) async {
+  Future<void> senMSGAPI(String Room_ID, String MSG, BuildContext context,
+      {bool ShowLoader = false}) async {
+    dynamic PublicRModel;
     try {
       ShowLoader == false ? emit(senMSGLoadingState()) : SizedBox();
-      sendMSGModel PublicRModel = await Repository().SendMSG(Room_ID, MSG);
+      PublicRModel = await Repository().SendMSG(Room_ID, MSG, context);
       if (PublicRModel.success == true) {
         print('staus Get');
         emit(senMSGLoadedState(PublicRModel));
-        coomentPage(Room_ID);
-      } else {
-        emit(senMSGErrorState(PublicRModel.message.toString()));
+        coomentPage(Room_ID,context);
       }
     } catch (e) {
       print('senMSGApi-$e');
-      emit(senMSGErrorState(e.toString()));
+      emit(senMSGErrorState(PublicRModel));
     }
   }
 
-  Future<void> coomentPage(String Room_ID, {bool ShowLoader = true}) async {
+  Future<void> coomentPage(String Room_ID, BuildContext context,
+      {bool ShowLoader = true}) async {
     print('roomId-$Room_ID');
+    dynamic comentApiClass;
     try {
-      ShowLoader == true ?  SizedBox():emit(senMSGLoadingState()) ;
-      ComentApiModel comentApiClass =
-          await Repository().commentApi(Room_ID, currentPage, record);
+      ShowLoader == true ? SizedBox() : emit(senMSGLoadingState());
+      comentApiClass =
+          await Repository().commentApi(Room_ID, currentPage, record, context);
 
       if (comentApiClass.success == true) {
         print("comentApiClass.sucuess-");
@@ -43,7 +45,7 @@ class senMSGCubit extends Cubit<senMSGState> {
       }
     } catch (e) {
       print('Catthceroor-${e.toString()}');
-      emit(senMSGErrorState(e.toString()));
+      emit(senMSGErrorState(comentApiClass));
     }
   }
 }

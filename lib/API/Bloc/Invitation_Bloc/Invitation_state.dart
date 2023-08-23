@@ -14,7 +14,7 @@ class InvitationLoadedState extends InvitationState {
 }
 
 class InvitationErrorState extends InvitationState {
-  final String error;
+  final dynamic error;
   InvitationErrorState(this.error);
 }
 

@@ -21,6 +21,6 @@ class FetchAllExpertsLoadedState extends FetchAllPublicRoomState {
 }
 
 class FetchAllPublicRoomErrorState extends FetchAllPublicRoomState {
-  final String error;
+  final dynamic error;
   FetchAllPublicRoomErrorState(this.error);
 }

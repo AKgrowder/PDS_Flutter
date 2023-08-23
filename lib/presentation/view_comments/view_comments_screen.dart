@@ -60,7 +60,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   @override
   void initState() {
     BlocProvider.of<senMSGCubit>(context)
-        .coomentPage(widget.Room_ID, ShowLoader: true);
+        .coomentPage(widget.Room_ID,context, ShowLoader: true);
     // if (widget.Screen_name == "RoomChat") {
     // }
     getToken();
@@ -174,7 +174,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
           }
           if (state is senMSGLoadedState) {
             BlocProvider.of<senMSGCubit>(context)
-                .coomentPage(widget.Room_ID, ShowLoader: true);
+                .coomentPage(widget.Room_ID,context, ShowLoader: true);
           }
           if (state is ComentApiState) {
             modelData = state.comentApiClass;

@@ -101,11 +101,11 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
           if (state is ChooseDocumeentLoadedState) {
             chooseDocument = state.chooseDocument;
             print('ChooseDocumeentLoadedState-${state.chooseDocument.message}');
-            SnackBar snackBar = SnackBar(
-              content: Text(state.chooseDocument.message.toString()),
-              backgroundColor: ColorConstant.primary_color,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            // SnackBar snackBar = SnackBar(
+            //   content: Text(state.chooseDocument.message.toString()),
+            //   backgroundColor: ColorConstant.primary_color,
+            // );
+            // ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
           if (state is CreatFourmLoadedState) {
             SnackBar snackBar = SnackBar(
@@ -448,7 +448,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                           };
                           print('button-$params');
                           BlocProvider.of<CreatFourmCubit>(context).CreatFourm(
-                              params, uplopdfile.text, filepath.toString());
+                              params, uplopdfile.text, filepath.toString(),context);
                         }
                         // if (name.text != null && name.text != "") {
                         //   if (profile.text != null && profile.text != "") {
@@ -669,7 +669,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
         }
         print('filenamecheckKB-${file1.path}');
         BlocProvider.of<CreatFourmCubit>(context)
-            .chooseDocumentprofile(dopcument.toString(), file1.path!);
+            .chooseDocumentprofile(dopcument.toString(), file1.path!,context);
         setState(() {});
         break;
       case 2:
@@ -711,7 +711,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
           }
           print('filecheckPath-${file1.path}');
           BlocProvider.of<CreatFourmCubit>(context)
-              .chooseDocumentprofile(dopcument.toString(), file1.path!);
+              .chooseDocumentprofile(dopcument.toString(), file1.path!,context);
         }
 
         break;

@@ -3,60 +3,53 @@ import 'package:archit_s_application1/API/Model/AddExportProfileModel/AddExportP
 import 'package:archit_s_application1/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
 import 'package:archit_s_application1/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:archit_s_application1/API/Repo/repository.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FetchExprtiseRoomCubit extends Cubit<FetchExprtiseRoomState> {
   FetchExprtiseRoomCubit() : super(FetchExprtiseRoomInitialState()) {}
-  Future<void> fetchExprties() async {
+  Future<void> fetchExprties(BuildContext context) async {
+    dynamic fetchExprtise;
     try {
       emit(FetchExprtiseRoomLoadingState());
-      FetchExprtise fetchExprtise = await Repository().fetchExprtise();
+      fetchExprtise = await Repository().fetchExprtise(context);
       if (fetchExprtise.success == true) {
         emit(FetchExprtiseRoomLoadedState(fetchExprtise));
-      } else {
-        emit(FetchExprtiseRoomErrorState(fetchExprtise.message.toString()));
       }
     } catch (e) {
-      emit(FetchExprtiseRoomErrorState(e.toString()));
+      emit(FetchExprtiseRoomErrorState(fetchExprtise));
     }
   }
 
-  Future<void> addExpertProfile(params) async {
+  Future<void> addExpertProfile(params, BuildContext context) async {
+    dynamic fetchExprtise;
     try {
       emit(FetchExprtiseRoomLoadingState());
-      AddExpertProfile fetchExprtise =
-          await Repository().addEXpertAPiCaling(params);
+      fetchExprtise = await Repository().addEXpertAPiCaling(params, context);
       if (fetchExprtise.success == true) {
         emit(AddExportLoadedState(fetchExprtise));
-      } else {
-        emit(FetchExprtiseRoomErrorState(fetchExprtise.message.toString()));
       }
     } catch (e) {
-      emit(FetchExprtiseRoomErrorState(e.toString()));
+      emit(FetchExprtiseRoomErrorState(fetchExprtise));
     }
   }
 
   Future<void> chooseDocumentprofile(
-    String file,
-    String fileName,
-  ) async {
+      String file, String fileName, BuildContext context) async {
     print('if this function');
+    dynamic createForm;
     try {
       emit(FetchExprtiseRoomLoadingState());
-      ChooseDocument createForm = await Repository().chooseProfileFile(
-        file,
-        fileName,
-      );
+      createForm =
+          await Repository().chooseProfileFile(file, fileName, context);
       print('createFormDataCheck-${createForm.message}');
       if (createForm.success == true) {
         print('createFormdataGet-----${createForm.object}');
         emit(chooseDocumentLoadedextends(createForm));
-      } else {
-        emit(FetchExprtiseRoomErrorState(createForm.message.toString()));
       }
     } catch (e) {
       print('error data-$e');
-      emit(FetchExprtiseRoomErrorState(e.toString()));
+      emit(FetchExprtiseRoomErrorState(createForm));
     }
   }
 }

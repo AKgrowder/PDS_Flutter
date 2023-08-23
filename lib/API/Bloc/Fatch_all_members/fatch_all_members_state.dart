@@ -14,6 +14,6 @@ class FatchAllMembersLoadedState extends FatchAllMembersState {
 }
 
 class FatchAllMembersErrorState extends FatchAllMembersState {
-  final String error;
+  final dynamic error;
   FatchAllMembersErrorState(this.error);
 }
