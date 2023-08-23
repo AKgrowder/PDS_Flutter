@@ -138,9 +138,11 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 15.0, right: 25),
             child: Container(
+              // color: Colors.amber,
+              height: _height / 1.3,
               child: GridView.builder(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  // physics: NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     childAspectRatio: 0.48,
                     mainAxisSpacing: 0,
@@ -171,7 +173,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                               ),
                             ),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment. start,
                               children: [
                                 Stack(
                                   children: [
@@ -326,9 +328,6 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                     ],
                                   ),
                                 ),
-
-                             
-
                                 Padding(
                                   padding:
                                       const EdgeInsets.only(left: 7, top: 5),
