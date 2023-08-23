@@ -89,7 +89,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
 
   void initState() {
     super.initState();
-    BlocProvider.of<FetchExprtiseRoomCubit>(context).fetchExprties();
+    BlocProvider.of<FetchExprtiseRoomCubit>(context).fetchExprties(context);
     dopcument = 'Upload Image';
   }
 
@@ -692,7 +692,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   print('pwarems-$params');
                                   BlocProvider.of<FetchExprtiseRoomCubit>(
                                           context)
-                                      .addExpertProfile(params);
+                                      .addExpertProfile(params, context);
                                 }
                               } else {
                                 SnackBar snackBar = SnackBar(
@@ -909,7 +909,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         }
         print('filenamecheckKB-${file1.path}');
         BlocProvider.of<FetchExprtiseRoomCubit>(context)
-            .chooseDocumentprofile(dopcument.toString(), file1.path!);
+            .chooseDocumentprofile(dopcument.toString(), file1.path!, context);
         setState(() {});
 
         // BlocProvider.of<DocumentUploadCubit>(context)
@@ -956,7 +956,8 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
           print('filecheckPath-${file1.path}');
           print('filecheckPath-${file1.path}');
           BlocProvider.of<FetchExprtiseRoomCubit>(context)
-              .chooseDocumentprofile(dopcument.toString(), file1.path!);
+              .chooseDocumentprofile(
+                  dopcument.toString(), file1.path!, context);
         }
 
         break;

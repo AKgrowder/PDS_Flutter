@@ -22,7 +22,6 @@ class RoomMembersScreen extends StatefulWidget {
 }
 
 Map userData = {
-
   "userData": [
     {
       "image": "assets/images/Ellipse 6 (1).png",
@@ -54,7 +53,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
   @override
   void initState() {
     BlocProvider.of<FatchAllMembersCubit>(context)
-        .FatchAllMembersAPI("${widget.room_Id}");
+        .FatchAllMembersAPI("${widget.room_Id}", context);
     super.initState();
   }
 
@@ -63,63 +62,62 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: theme.colorScheme.onPrimary,
-      appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
+        backgroundColor: theme.colorScheme.onPrimary,
+        appBar: AppBar(
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+          ),
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: theme.colorScheme.onPrimary,
+          title: Text(
+            "Room Members",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                fontFamily: "outfit",
+                fontSize: 20),
           ),
         ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: theme.colorScheme.onPrimary,
-        title: Text(
-          "Room Members",
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontFamily: "outfit",
-              fontSize: 20),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: BlocConsumer<FatchAllMembersCubit, FatchAllMembersState>(
-          listener: (context, state) {
-            if (state is FatchAllMembersErrorState) {
-              SnackBar snackBar = SnackBar(
-                content: Text(state.error),
-                backgroundColor: ColorConstant.primary_color,
-              );
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
+        body: SingleChildScrollView(
+            child: BlocConsumer<FatchAllMembersCubit, FatchAllMembersState>(
+                listener: (context, state) {
+          if (state is FatchAllMembersErrorState) {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.error),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
 
-            if (state is FatchAllMembersLoadingState) {
-              Center(
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 100),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.asset(ImageConstant.loader,
-                        fit: BoxFit.cover, height: 100.0, width: 100),
-                  ),
+          if (state is FatchAllMembersLoadingState) {
+            Center(
+              child: Container(
+                margin: EdgeInsets.only(bottom: 100),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(ImageConstant.loader,
+                      fit: BoxFit.cover, height: 100.0, width: 100),
                 ),
-              );
-            }
-            if (state is FatchAllMembersLoadedState) {
-              _data = state.FatchAllMembersData;
-              print("@@@@@@@@@@@@@@@@@@${_data?.object?.length}");
-              // setState(() {});
-            }
-          },
-          builder: (context, state) {
-               if (state is FatchAllMembersLoadedState) {
-              _data = state.FatchAllMembersData;
-              print("@@@@@@@@@@@@@@@@@@${_data?.object?.length}");
-              return Column(
+              ),
+            );
+          }
+          if (state is FatchAllMembersLoadedState) {
+            _data = state.FatchAllMembersData;
+            print("@@@@@@@@@@@@@@@@@@${_data?.object?.length}");
+            // setState(() {});
+          }
+        }, builder: (context, state) {
+          if (state is FatchAllMembersLoadedState) {
+            _data = state.FatchAllMembersData;
+            print("@@@@@@@@@@@@@@@@@@${_data?.object?.length}");
+            return Column(
               children: [
                 Center(
                   child: Container(
@@ -227,96 +225,93 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                 SizedBox(
                   height: 10,
                 ),
-      
-            ListView.builder(
-              physics: BouncingScrollPhysics(),
-              itemCount: _data?.object?.length,
-              // itemCount: 2,
-           
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                print('axfhsdfh-${_data?.object?.length}');
-                return Padding(
-                  padding:
-                      const EdgeInsets.only(left: 35, right: 35, top: 20),
-                  child: Container(
-                    height: _height / 12,
-                    width: _width / 1.2,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          CachedNetworkImage(
-                              imageUrl:
-                                  "${_data?.object?[index].userProfilePic}",
-                              placeholder: (context, url) => Container(
-                                    width: 50,
-                                    height: 50,
-                                    color: Colors.grey,
-                                  ),
-                              errorWidget: (context, url, error) =>
-                                  Image.asset(
-                                      "assets/images/Ellipse 6 (1).png")),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "${_data?.object?[index].fullName ?? ""}",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                fontFamily: "outfit",
-                                fontSize: 15),
-                          ),
-                          Spacer(),
-                          GestureDetector(
-                            onTapDown: (details) {
-                              _showPopupMenu(
-                                  details.globalPosition, context);
-                            },
-                            child: Container(
-                              height: 50,
-                              color: Colors.white,
-                              child: Padding(
-                                padding: const EdgeInsets.all(15.0),
+                ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  itemCount: _data?.object?.length,
+                  // itemCount: 2,
+
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    print('axfhsdfh-${_data?.object?.length}');
+                    return Padding(
+                      padding:
+                          const EdgeInsets.only(left: 35, right: 35, top: 20),
+                      child: Container(
+                        height: _height / 12,
+                        width: _width / 1.2,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              CachedNetworkImage(
+                                  imageUrl:
+                                      "${_data?.object?[index].userProfilePic}",
+                                  placeholder: (context, url) => Container(
+                                        width: 50,
+                                        height: 50,
+                                        color: Colors.grey,
+                                      ),
+                                  errorWidget: (context, url, error) =>
+                                      Image.asset(
+                                          "assets/images/Ellipse 6 (1).png")),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "${_data?.object?[index].fullName ?? ""}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontFamily: "outfit",
+                                    fontSize: 15),
+                              ),
+                              Spacer(),
+                              GestureDetector(
+                                onTapDown: (details) {
+                                  _showPopupMenu(
+                                      details.globalPosition, context);
+                                },
                                 child: Container(
-                                  child: CustomImageView(
-                                    imagePath: ImageConstant.popupimage,
-                                    height: 20,
-                                    fit: BoxFit.fill,
+                                  height: 50,
+                                  color: Colors.white,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: Container(
+                                      child: CustomImageView(
+                                        imagePath: ImageConstant.popupimage,
+                                        height: 20,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          )
-                        ],
+                              )
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              },
-            )
-          ],
+                    );
+                  },
+                )
+              ],
             );
-            }
-            return Center(
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 100),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.asset(ImageConstant.loader,
-                        fit: BoxFit.cover, height: 100.0, width: 100),
-                  ),
-                ),
-              );
-            })));
-
-  
+          }
+          return Center(
+            child: Container(
+              margin: EdgeInsets.only(bottom: 100),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.asset(ImageConstant.loader,
+                    fit: BoxFit.cover, height: 100.0, width: 100),
+              ),
+            ),
+          );
+        })));
   }
 
   void _showPopupMenu(

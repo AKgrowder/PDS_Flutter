@@ -82,8 +82,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllPublicRoom();
-    BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllExpertsAPI();
+    BlocProvider.of<FetchAllPublicRoomCubit>(context)
+        .FetchAllPublicRoom(context);
+    BlocProvider.of<FetchAllPublicRoomCubit>(context)
+        .FetchAllExpertsAPI(context);
 
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
@@ -435,7 +437,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     User_Mood != "EXPERT"
                         ? Container(
                             height: 240,
-                            width: _width / 1.2,
+                            width: _width / 1.1,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               physics: BouncingScrollPhysics(),
@@ -539,18 +541,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                               height: 15,
                                               // fit: BoxFit.fill,
                                             ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                "${FetchAllExpertsData?.object?[index].expertise?[0].expertiseName}",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w300,
-                                                    color: Colors.grey.shade700,
-                                                    fontFamily: "outfit",
-                                                    fontSize: 15),
-                                              ),
-                                            )
+                                            SizedBox(width: 5),
+                                            Text(
+                                              "${FetchAllExpertsData?.object?[index].expertise?[0].expertiseName}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w300,
+                                                  color: Colors.grey.shade700,
+                                                  fontFamily: "outfit",
+                                                  fontSize: 15),
+                                            ),
                                           ],
                                         ),
                                       ],

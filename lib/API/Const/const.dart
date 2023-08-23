@@ -1,4 +1,14 @@
 class Config {
+
+
+
+  static const String somethingWentWrong = "Something Went Wrong";
+  static const String servernotreachable =
+      "Servar Not Rechable, Try After Some Time.";
+
+
+
+
   static const String FetchAllPublicRoom = "guest/api/fetchAllPublicRoom";
   static const String CreateRoom = "guest/api/createRoom";
   static const String loginApi = "auth/auth/authenticate";

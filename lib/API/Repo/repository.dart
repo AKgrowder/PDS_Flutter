@@ -33,16 +33,21 @@ import 'package:archit_s_application1/API/Model/deviceInfo/deviceInfo_model.dart
 class Repository {
   ApiServices apiServices = ApiServices();
 
-  Future<PublicRoomModel> FetchAllPublicRoom({context}) async {
-    final response = await apiServices.getApiCall(Config.FetchAllPublicRoom,
-        context: context);
+  FetchAllPublicRoom(BuildContext context) async {
+    final response =
+        await apiServices.getApiCall(Config.FetchAllPublicRoom, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
       case 200:
         return PublicRoomModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return PublicRoomModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
@@ -57,338 +62,425 @@ class Repository {
   //       return CreatPublicRoomModel.fromJson(jsonString);:129
   //   }
   // }
-  Future<FetchExprtise> fetchExprtise() async {
-    final response = await apiServices.getApiCall(Config.fetchExprtise);
+  fetchExprtise(BuildContext context) async {
+    final response =
+        await apiServices.getApiCall(Config.fetchExprtise, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
       case 200:
         return FetchExprtise.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return FetchExprtise.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<FatchAllMembersModel> FatchAllMembersAPI(
-    String Roomuid,
-  ) async {
-    final response = await apiServices
-        .getApiCallWithToken("${Config.fetchallmembers}${Roomuid}");
+  FatchAllMembersAPI(String Roomuid, BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.fetchallmembers}${Roomuid}", context);
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
         return FatchAllMembersModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return FatchAllMembersModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<AddExpertProfile> addEXpertAPiCaling(
-    params,
-  ) async {
-    final response = await apiServices.postApiCall(Config.addExport, params);
+  addEXpertAPiCaling(params, BuildContext context) async {
+    final response =
+        await apiServices.postApiCall(Config.addExport, params, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
       case 200:
         return AddExpertProfile.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return AddExpertProfile.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<InvitationModel> InvitationModelAPI() async {
-    final response = await apiServices.getApiCallWithToken(Config.Invitations);
+  InvitationModelAPI(BuildContext context) async {
+    final response =
+        await apiServices.getApiCallWithToken(Config.Invitations, context);
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
         return InvitationModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return InvitationModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
 //http://192.168.29.100:8081/user/addExpertProfile
 //http://192.168.29.100:8081/user/addExpertProfile
-  Future<CreatPublicRoomModel> CreatPublicRoom(
-    Map<String, String> params,
-  ) async {
-    final response = await apiServices.postApiCall(Config.CreateRoom, params);
+  CreatPublicRoom(Map<String, String> params, BuildContext context) async {
+    final response =
+        await apiServices.postApiCall(Config.CreateRoom, params, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
       case 200:
         return CreatPublicRoomModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return CreatPublicRoomModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<LoginModel> loginApi(
-    Map<String, dynamic> params,
-  ) async {
-    final response = await apiServices.postApiCall(Config.loginApi, params);
+  loginApi(Map<String, dynamic> params, BuildContext context) async {
+    final response =
+        await apiServices.postApiCall(Config.loginApi, params, context);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
     switch (response.statusCode) {
       case 200:
         return LoginModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return LoginModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<RegisterClass> registerApi(
-    Map<String, String> params,
-  ) async {
-    final response = await apiServices.postApiCall(Config.registerApi, params);
+  registerApi(Map<String, String> params, BuildContext context) async {
+    final response =
+        await apiServices.postApiCall(Config.registerApi, params, context);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
     switch (response.statusCode) {
       case 200:
         return RegisterClass.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return RegisterClass.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<OtpModel> otpModel(
-    String userNumber,
-    String OTP,
-  ) async {
-    final response =
-        await apiServices.getApiCall('${Config.otpApi}/${OTP}/${userNumber}');
+  otpModel(String userNumber, String OTP, BuildContext context) async {
+    final response = await apiServices.getApiCall(
+        '${Config.otpApi}/${OTP}/${userNumber}', context);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
     switch (response.statusCode) {
       case 200:
         return OtpModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return OtpModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<GetUserDataModel> getUsrApi(
-    String userId,
-  ) async {
-    final response =
-        await apiServices.getApiCall('${Config.getUserDetails}/${userId}');
+  getUsrApi(String userId, BuildContext context) async {
+    final response = await apiServices.getApiCall(
+        '${Config.getUserDetails}/${userId}', context);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
     switch (response.statusCode) {
       case 200:
         return GetUserDataModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return GetUserDataModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<sendMSGModel> SendMSG(
-    String Room_ID,
-    String MSG,
-  ) async {
-    final response =
-        await apiServices.postApiCalla("${Config.SendMSG}/${Room_ID}/${MSG}");
+  SendMSG(String Room_ID, String MSG, BuildContext context) async {
+    final response = await apiServices.postApiCalla(
+        "${Config.SendMSG}/${Room_ID}/${MSG}", context);
     var jsonString = json.decode(response.body);
     print('jsonString$jsonString');
     switch (response.statusCode) {
       case 200:
         return sendMSGModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return sendMSGModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<ComentApiModel> commentApi(
-    String Room_ID,
-    String pageNumber,
-    String pageCount,
-  ) async {
-    final response = await apiServices
-        .getApiCall("${Config.coomment}/${Room_ID}/${pageNumber}/${pageCount}");
+  commentApi(String Room_ID, String pageNumber, String pageCount,
+      BuildContext context) async {
+    final response = await apiServices.getApiCall(
+        "${Config.coomment}/${Room_ID}/${pageNumber}/${pageCount}", context);
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
         return ComentApiModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return ComentApiModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<GetAllPrivateRoomModel> GetAllPrivateRoom() async {
+  GetAllPrivateRoom(BuildContext context) async {
     final response =
-        await apiServices.getApiCallWithToken("${Config.FetchMyRoom}");
+        await apiServices.getApiCallWithToken("${Config.FetchMyRoom}", context);
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
         return GetAllPrivateRoomModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return GetAllPrivateRoomModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<CreateRoomModel> CreateRoomAPI(
-    Map<String, String> params,
-  ) async {
-    final response = await apiServices.postApiCall(Config.createRoom, params);
+  CreateRoomAPI(Map<String, String> params, BuildContext context) async {
+    final response =
+        await apiServices.postApiCall(Config.createRoom, params, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
       case 200:
         return CreateRoomModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return CreateRoomModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<SherInvite> sherInvite(
-    String userRoomId,
-    String email,
-  ) async {
-    final response = await apiServices
-        .getApiCallWithToken("${Config.inviteUser}/${userRoomId}/${email}");
+  sherInvite(String userRoomId, String email, BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.inviteUser}/${userRoomId}/${email}", context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
       case 200:
         return SherInvite.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return SherInvite.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<CreateForm> creatFourm(
-    Map<String, dynamic> params,
-    String file,
-    String fileName,
-  ) async {
+  creatFourm(Map<String, dynamic> params, String file, String fileName,
+      BuildContext context) async {
     final response = await apiServices
-        .multipartFile(Config.company, file, fileName, params: params);
+        .multipartFile(Config.company, file, fileName, context, params: params);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
     switch (response.statusCode) {
       case 200:
         return CreateForm.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return CreateForm.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<FetchAllExpertsModel> FetchAllExpertsAPI({context}) async {
+  FetchAllExpertsAPI(BuildContext context) async {
     final response =
-        await apiServices.getApiCall(Config.fetchAllExperts, context: context);
+        await apiServices.getApiCall(Config.fetchAllExperts, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
       case 200:
         return FetchAllExpertsModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return FetchAllExpertsModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<EditRoomModel> EditroomAPI(
-    Map<String, dynamic> param,
-    String roomuId,
-  ) async {
-    final response =
-        await apiServices.postApiCall('${Config.editroom}/${roomuId}', param);
+  EditroomAPI(
+      Map<String, dynamic> param, String roomuId, BuildContext context) async {
+    final response = await apiServices.postApiCall(
+        '${Config.editroom}/${roomuId}', param, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
       case 200:
         return EditRoomModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return EditRoomModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<AcceptRejectInvitationModel> acceptRejectInvitationAPI(
-    bool status,
-    String roomLink,
-  ) async {
+  acceptRejectInvitationAPI(
+      bool status, String roomLink, BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.acceptRejectInvitationAPI}/${status}/${roomLink}');
+        '${Config.acceptRejectInvitationAPI}/${status}/${roomLink}', context);
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
         return AcceptRejectInvitationModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return AcceptRejectInvitationModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<DeleteRoomModel> DeleteRoomApi(
-    String roomuId,
-  ) async {
-    final response = await apiServices
-        .getApiCallWithToken("${Config.DeleteRoom}/${roomuId}");
+  DeleteRoomApi(String roomuId, BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.DeleteRoom}/${roomuId}", context);
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
         return DeleteRoomModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return DeleteRoomModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  Future<CheckUserStausModel> checkUserActive() async {
-    final response =
-        await apiServices.getApiCallWithToken("${Config.checkUserActive}");
+  checkUserActive(BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.checkUserActive}", context);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
         return CheckUserStausModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return CheckUserStausModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  chooseProfileFile(String file, String fileName, {params}) async {
+  chooseProfileFile(String file, String fileName, BuildContext context,
+      {params}) async {
     print("apiCaling");
     final response = await apiServices.multipartFile(
-        "${Config.uploadfile}", file, fileName,
+        "${Config.uploadfile}", file, fileName, context,
         apiName: 'create forum', params: params);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
       case 200:
         return ChooseDocument.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return ChooseDocument.fromJson(jsonString);
+        return jsonString;
     }
   }
 
-  userProfile(File imageFile) async {
+  userProfile(File imageFile, BuildContext context) async {
     final response = await apiServices.multipartFileUserprofile(
-        '${Config.uploadProfile}', imageFile);
+        '${Config.uploadProfile}', imageFile, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
       case 200:
         return ChooseDocument.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return ChooseDocument.fromJson(jsonString);
+        return jsonString;
     }
   }
-  Future<DeviceinfoModel> deviceInfoq(
-    Map<String, dynamic> param, 
-  ) async {
+
+  deviceInfoq(Map<String, dynamic> param, BuildContext context) async {
     final response =
-        await apiServices.postApiCall(Config.addDeviceDetail,param);
+        await apiServices.postApiCall(Config.addDeviceDetail, param, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
       case 200:
         return DeviceinfoModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
       default:
-        return DeviceinfoModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 }

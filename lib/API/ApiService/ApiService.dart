@@ -16,7 +16,7 @@ class ApiServices {
   UpdateBaseURL() async {
     baseURL = 
     // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
-    "http://192.168.29.102:8081/";
+    "http://192.168.29.100:8081/";
     print(baseURL);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     Token = prefs.getString(PreferencesKey.loginJwt) ?? "";
@@ -25,6 +25,7 @@ class ApiServices {
   postApiCall(
     String APIurl,
     Map<String, dynamic> params,
+    BuildContext context
   ) async {
     await UpdateBaseURL();
     final headers1 = {
@@ -42,7 +43,7 @@ class ApiServices {
     } else {}
   }
 
-  getApiCall(String APIurl, {context}) async {
+  getApiCall(String APIurl, BuildContext context) async {
     await UpdateBaseURL();
     print("API => ******** ${baseURL + APIurl}");
     final hasInternet = await checkInternet();
@@ -58,7 +59,7 @@ class ApiServices {
   }
 
   getApiCallWithToken(
-    String APIurl,
+    String APIurl,BuildContext context
   ) async {
     await UpdateBaseURL();
     final headers1 = {
@@ -79,6 +80,7 @@ class ApiServices {
 
   postApiCalla(
     String APIurl,
+    BuildContext context
   ) async {
     await UpdateBaseURL();
     final headers1 = {
@@ -97,7 +99,7 @@ class ApiServices {
     }
   }
 
-  multipartFile(String APIurl, String fileName, String file,
+  multipartFile(String APIurl, String fileName, String file,BuildContext context,
       {String? apiName, Map<String, dynamic>? params}) async {
     await UpdateBaseURL();
     print('fileApi-$file');
@@ -135,7 +137,7 @@ class ApiServices {
     return respond;
   }
 
-  multipartFileUserprofile(String APIurl, File imageFile) async {
+  multipartFileUserprofile(String APIurl, File imageFile,BuildContext context) async {
    await UpdateBaseURL();
     final response =
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));

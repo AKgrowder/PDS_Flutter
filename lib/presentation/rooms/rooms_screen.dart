@@ -55,7 +55,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
   method() async {
     print('this methosd perint or not');
     await BlocProvider.of<GetAllPrivateRoomCubit>(context)
-        .GetAllPrivateRoomAPI();
+        .GetAllPrivateRoomAPI(context);
   }
 
   @override
@@ -388,7 +388,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                         GestureDetector(
                                                                           onTap:
                                                                               () {
-                                                                            BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PublicRoomData!.object![index].uid.toString());
+                                                                            BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PublicRoomData!.object![index].uid.toString(),
+                                                                                context);
                                                                           },
                                                                           child:
                                                                               Container(
@@ -894,7 +895,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                     ),
                                                   ],
                                                   child: RoomMembersScreen(
-                                                      room_Id: '${PublicRoomData?.object?[index].uid.toString()}'),
+                                                      room_Id:
+                                                          '${PublicRoomData?.object?[index].uid.toString()}'),
                                                 );
                                               },
                                             ));
@@ -1468,7 +1470,6 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             ],
                                             controller: _DescriptionText,
                                             maxLines: 5,
- 
                                             cursorColor: Colors.grey,
                                             decoration: InputDecoration(
                                               hintText:
@@ -1570,7 +1571,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
 
                                               BlocProvider.of<CreateRoomCubit>(
                                                       context)
-                                                  .CreateRoomAPI(params);
+                                                  .CreateRoomAPI(
+                                                      params, context);
                                             }
                                             // if (roomName.text == null ||
                                             //     roomName.text.isEmpty) {

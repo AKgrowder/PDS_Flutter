@@ -309,7 +309,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                             "roomType": "PUBLIC"
                           };
                           BlocProvider.of<CreatPublicRoomCubit>(context)
-                              .CreatPublicRoomAPI(params);
+                              .CreatPublicRoomAPI(params, context);
                         }
                         // }
                       },
