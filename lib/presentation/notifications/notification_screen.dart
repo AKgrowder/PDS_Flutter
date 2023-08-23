@@ -99,7 +99,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   GetData() async {
-    await BlocProvider.of<InvitationCubit>(context).InvitationAPI();
+    await BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
   }
 
   @override
@@ -172,7 +172,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               backgroundColor: ColorConstant.primary_color,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            BlocProvider.of<InvitationCubit>(context).InvitationAPI();
+            BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
           }
         }, builder: (context, state) {
           return Column(children: [
@@ -544,7 +544,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                                             index]
                                                                         .invitationLink
                                                                         .toString() ??
-                                                                    "");
+                                                                    "",
+                                                                context);
                                                       },
                                                       child: Container(
                                                         height: 40,
@@ -592,7 +593,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                                             index]
                                                                         .invitationLink
                                                                         .toString() ??
-                                                                    "");
+                                                                    "",
+                                                                context);
                                                       },
                                                       child: Container(
                                                         height: 40,

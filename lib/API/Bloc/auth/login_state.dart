@@ -13,7 +13,7 @@ class LoginLoadedState extends LoginState {
 }
 
 class LoginErrorState extends LoginState {
-  final String error; 
+  final dynamic error; 
   LoginErrorState(this.error);
 }
 
