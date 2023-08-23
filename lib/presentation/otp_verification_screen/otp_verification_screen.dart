@@ -136,10 +136,15 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     }
                     if (state is OtpLoadedState) {
                       SnackBar snackBar = SnackBar(
-                        content: Text('Signup successfully'),
+                        content: Text('Otp verification Successfully'),
                         backgroundColor: ColorConstant.primary_color,
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      SnackBar snackBar2 = SnackBar(
+                        content: Text('Signup Successfully'),
+                        backgroundColor: ColorConstant.primary_color,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar2);
                       print('wiget flowcheck-${widget.flowCheck}');
                       if (widget.flowCheck == "Rgister") {
                         Navigator.push(context,
@@ -313,9 +318,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                               fontWeight: FontWeight.w500)),
                                       GestureDetector(
                                         onTap: () {
-                                          
-                                            _startTimer();
-                                            
+                                          _startTimer();
                                         },
                                         child: Text("Resend",
                                             textScaleFactor: 1.0,
@@ -327,8 +330,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                                                 .brightness ==
                                                             Brightness.light
                                                         ? Colors.black
-                                                        : Colors
-                                                            .white  
+                                                        : Colors.white
                                                     : Colors.red,
                                                 fontSize: 16,
                                                 fontFamily: 'Outfit',
