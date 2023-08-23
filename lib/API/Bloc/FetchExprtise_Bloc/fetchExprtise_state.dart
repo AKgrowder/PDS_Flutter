@@ -20,7 +20,7 @@ class AddExportLoadedState extends FetchExprtiseRoomState {
 }
 
 class FetchExprtiseRoomErrorState extends FetchExprtiseRoomState {
-  final String error;
+  final dynamic error;
   FetchExprtiseRoomErrorState(this.error);
 }
 

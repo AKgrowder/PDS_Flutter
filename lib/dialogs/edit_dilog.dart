@@ -216,8 +216,8 @@ class EditDilogScreenState extends State<EditDilogScreen>
                                     print(params);
 
                                     BlocProvider.of<EditroomCubit>(context)
-                                        .Editroom(
-                                            params, widget.uid.toString());
+                                        .Editroom(params, widget.uid.toString(),
+                                            context);
                                   },
                                   child: Container(
                                     height: 43,

@@ -82,8 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllPublicRoom();
-    BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllExpertsAPI();
+    BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllPublicRoom(context);
+    BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllExpertsAPI(context);
 
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
@@ -93,11 +93,15 @@ class _HomeScreenState extends State<HomeScreen> {
           body: BlocConsumer<FetchAllPublicRoomCubit, FetchAllPublicRoomState>(
               listener: (context, state) async {
             if (state is FetchAllPublicRoomErrorState) {
+              if (state.error != "error in fetch room") {
+
+              
               SnackBar snackBar = SnackBar(
                 content: Text(state.error),
                 backgroundColor: ColorConstant.primary_color,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
             }
 
             if (state is FetchAllPublicRoomLoadingState) {
@@ -122,70 +126,142 @@ class _HomeScreenState extends State<HomeScreen> {
               print(FetchAllExpertsData?.message);
             }
           }, builder: (context, state) {
-            if (state is FetchAllPublicRoomLoadedState) {
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16, right: 16),
-                      child: Row(
-                        children: [
-                          CustomImageView(
-                            imagePath: ImageConstant.pdslogo,
-                            height: 40,
-                          ),
-                          Spacer(),
-                          User_ID != null
-                              ? Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      Column(
-                                        // mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            User_Name != null
-                                                ? "${User_Name}"
-                                                : "User ID",
-                                            style: TextStyle(
-                                              fontFamily: 'outfit',
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 16),
+                    child: Row(
+                      children: [
+                        CustomImageView(
+                          imagePath: ImageConstant.pdslogo,
+                          height: 40,
+                        ),
+                        Spacer(),
+                        User_ID != null
+                            ? Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Column(
+                                      // mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          User_Name != null
+                                              ? "${User_Name}"
+                                              : "User ID",
+                                          style: TextStyle(
+                                            fontFamily: 'outfit',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            CircleAvatar(
+                                              backgroundColor: Colors.green,
+                                              maxRadius: 4,
                                             ),
-                                          ),
-                                          Row(
-                                            children: [
-                                              CircleAvatar(
-                                                backgroundColor: Colors.green,
-                                                maxRadius: 4,
-                                              ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text(
-                                                "Active",
-                                                style: TextStyle(
-                                                    fontFamily: 'outfit',
-                                                    fontSize: 10,
-                                                    fontWeight: FontWeight.w300,
-                                                    color: Colors.grey),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              "Active",
+                                              style: TextStyle(
+                                                  fontFamily: 'outfit',
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.w300,
+                                                  color: Colors.grey),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    if (User_ID != null) {
+                                      print("user login Mood");
+                                    } else {
+                                      print("User guest Mood on");
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  RegisterCreateAccountScreen()));
+                                    }
+                                  },
+                                  child: Container(
+                                    child: Text(
+                                      "Login",
+                                      style: TextStyle(
+                                        fontFamily: 'outfit',
+                                        fontSize: 18,
+                                        color: Color(0XFFED1C25),
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                )
-                              : Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                ),
+                              ),
+                        User_ID != null
+                            ? CustomImageView(
+                                imagePath: ImageConstant.imgRectangle39829,
+                                height: 50,
+                                radius: BorderRadius.circular(65),
+                                alignment: Alignment.center,
+                              )
+                            : Container()
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 16),
+                    child: Container(
+                      child: CustomImageView(
+                        imagePath: ImageConstant.homeimage,
+                        // height: 180,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 16, top: 20, right: 16, bottom: 20),
+                    child: Container(
+                      child: User_Mood == "COMPANY"
+                          ? SizedBox()
+                          : User_Mood == "EXPERT"
+                              ? Container(
+                                  // color: Colors.lightGreen,
+                                  height: 50,
                                   child: GestureDetector(
                                     onTap: () {
                                       if (User_ID != null) {
-                                        print("user login Mood");
+                                        /*  Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                RoomsScreen(),
+                                          )); */
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return MultiBlocProvider(providers: [
+                                            BlocProvider<InvitationCubit>(
+                                              create: (context) =>
+                                                  InvitationCubit(),
+                                            ),
+                                          ], child: InvitationScreen());
+                                        }));
                                       } else {
                                         print("User guest Mood on");
                                         Navigator.of(context).push(
@@ -195,96 +271,124 @@ class _HomeScreenState extends State<HomeScreen> {
                                       }
                                     },
                                     child: Container(
-                                      child: Text(
-                                        "Login",
-                                        style: TextStyle(
-                                          fontFamily: 'outfit',
-                                          fontSize: 18,
+                                      height: 50,
+                                      decoration: BoxDecoration(
                                           color: Color(0XFFED1C25),
-                                          fontWeight: FontWeight.bold,
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Container(
+                                        // width: _width / 2.5,
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            "Invitations",
+                                            style: TextStyle(
+                                              fontFamily: 'outfit',
+                                              fontSize: 13,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                          User_ID != null
-                              ? CustomImageView(
-                                  imagePath: ImageConstant.imgRectangle39829,
-                                  height: 50,
-                                  radius: BorderRadius.circular(65),
-                                  alignment: Alignment.center,
                                 )
-                              : Container()
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16, right: 16),
-                      child: Container(
-                        child: CustomImageView(
-                          imagePath: ImageConstant.homeimage,
-                          // height: 180,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16, top: 20, right: 16, bottom: 20),
-                      child: Container(
-                        child: User_Mood == "COMPANY"
-                            ? SizedBox()
-                            : User_Mood == "EXPERT"
-                                ? Container(
-                                    // color: Colors.lightGreen,
-                                    height: 50,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        if (User_ID != null) {
-                                          /*  Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                RoomsScreen(),
-                                          )); */
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                  builder: (context) {
-                                            return MultiBlocProvider(
-                                                providers: [
-                                                  BlocProvider<InvitationCubit>(
-                                                    create: (context) =>
-                                                        InvitationCubit(),
-                                                  ),
-                                                ],
-                                                child: InvitationScreen());
-                                          }));
-                                        } else {
-                                          print("User guest Mood on");
-                                          Navigator.of(context).push(
-                                              MaterialPageRoute(
+                              : Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          if (User_Name != null) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
                                                   builder: (context) =>
-                                                      RegisterCreateAccountScreen()));
-                                        }
-                                      },
-                                      child: Container(
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                            color: Color(0XFFED1C25),
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
+                                                      CreateForamScreen(),
+                                                ));
+                                          } else {
+                                            print("User guest Mood on");
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        RegisterCreateAccountScreen()));
+                                          }
+                                        },
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            CreateForum();
+
+                                            // Navigator.push(context,
+                                            //     MaterialPageRoute(
+                                            //         builder: (context) {
+                                            //   return MultiBlocProvider(
+                                            //       providers: [
+                                            //         BlocProvider<CreatFourmCubit>(
+                                            //           create: (context) =>
+                                            //               CreatFourmCubit(),
+                                            //         ),
+                                            //       ],
+                                            //       child: CreateForamScreen());
+                                            // }));
+                                          },
+                                          child: Container(
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                                color: Color(0XFFED1C25),
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
+                                            child: Container(
+                                              width: _width / 2.5,
+                                              child: Align(
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  "Create Forum",
+                                                  style: TextStyle(
+                                                    fontFamily: 'outfit',
+                                                    fontSize: 13,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          becomeAnExport();
+
+                                          /* Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BecomeExpertScreen(),
+                                            )); */
+                                        },
                                         child: Container(
-                                          // width: _width / 2.5,
-                                          child: Align(
-                                            alignment: Alignment.center,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                              color: Color(0XFFFFD9DA),
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              border: Border.all(
+                                                  color: Color(0XFFED1C25))),
+                                          child: Center(
                                             child: Text(
-                                              "Invitations",
+                                              "Become an Expert",
                                               style: TextStyle(
                                                 fontFamily: 'outfit',
                                                 fontSize: 13,
-                                                color: Colors.white,
+                                                color: Color(0XFFED1C25),
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -292,392 +396,293 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                     ),
-                                  )
-                                : Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        flex: 2,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            if (User_Name != null) {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        CreateForamScreen(),
-                                                  ));
-                                            } else {
-                                              print("User guest Mood on");
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          RegisterCreateAccountScreen()));
-                                            }
-                                          },
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              CreateForum();
-
-                                              // Navigator.push(context,
-                                              //     MaterialPageRoute(
-                                              //         builder: (context) {
-                                              //   return MultiBlocProvider(
-                                              //       providers: [
-                                              //         BlocProvider<CreatFourmCubit>(
-                                              //           create: (context) =>
-                                              //               CreatFourmCubit(),
-                                              //         ),
-                                              //       ],
-                                              //       child: CreateForamScreen());
-                                              // }));
-                                            },
-                                            child: Container(
-                                              height: 50,
-                                              decoration: BoxDecoration(
-                                                  color: Color(0XFFED1C25),
-                                                  borderRadius:
-                                                      BorderRadius.circular(5)),
-                                              child: Container(
-                                                width: _width / 2.5,
-                                                child: Align(
-                                                  alignment: Alignment.center,
-                                                  child: Text(
-                                                    "Create Forum",
-                                                    style: TextStyle(
-                                                      fontFamily: 'outfit',
-                                                      fontSize: 13,
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            becomeAnExport();
-
-                                            /* Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BecomeExpertScreen(),
-                                            )); */
-                                          },
-                                          child: Container(
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                                color: Color(0XFFFFD9DA),
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                border: Border.all(
-                                                    color: Color(0XFFED1C25))),
-                                            child: Center(
-                                              child: Text(
-                                                "Become an Expert",
-                                                style: TextStyle(
-                                                  fontFamily: 'outfit',
-                                                  fontSize: 13,
-                                                  color: Color(0XFFED1C25),
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                      ),
+                                  ],
+                                ),
                     ),
-                    User_Mood != "EXPERT"
-                        ? Padding(
-                            padding: const EdgeInsets.only(
-                                right: 20.0, left: 20, top: 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Our Experts",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                      fontFamily: "outfit",
-                                      fontSize: 23),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ExpertsScreen(),
-                                        ));
-                                  },
-                                  child: Icon(
-                                    Icons.arrow_forward,
-                                    size: 30,
+                  ),
+                  FetchAllExpertsData?.object?.length != 0
+                      ? User_Mood != "EXPERT"
+                          ? Padding(
+                              padding: const EdgeInsets.only(
+                                  right: 20.0, left: 20, top: 0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Our Experts",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontFamily: "outfit",
+                                        fontSize: 23),
                                   ),
-                                ),
-                              ],
-                            ),
-                          )
-                        : SizedBox(),
-                    User_Mood != "EXPERT"
-                        ? Container(
-                            height: 240,
-                            width: _width / 1.2,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              physics: BouncingScrollPhysics(),
-                              itemCount:
-                                  (FetchAllExpertsData?.object?.length ?? 0) > 5
-                                      ? 5
-                                      : FetchAllExpertsData?.object?.length,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    // height: 100,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                        color: Colors.red,
-                                      ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ExpertsScreen(),
+                                          ));
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_forward,
+                                      size: 30,
                                     ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Stack(
-                                          children: [
-                                            Container(
-                                              height: 150,
-                                              width: _width / 2.5,
-                                              child: CustomImageView(
-                                                imagePath:
-                                                    ImageConstant.experts,
-                                                // height: 50,
-                                                // width: _width/1.2,
-                                                radius:
-                                                    BorderRadius.circular(10),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : SizedBox()
+                      : SizedBox(),
+                  User_Mood != "EXPERT"
+                      ? Container(
+                          // color: Colors.red,
+                          height: FetchAllExpertsData?.object?.length != 0
+                              ? 240
+                              : 0,
+                          width: _width / 1.1,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            physics: BouncingScrollPhysics(),
+                            itemCount:
+                                (FetchAllExpertsData?.object?.length ?? 0) > 5
+                                    ? 5
+                                    : FetchAllExpertsData?.object?.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  // height: 100,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          Container(
+                                            height: 150,
+                                            width: _width / 2.5,
+                                            child: CustomImageView(
+                                              imagePath: ImageConstant.experts,
+                                              // height: 50,
+                                              // width: _width/1.2,
+                                              radius: BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 7,
+                                            left: 4,
+                                            child: Container(
+                                              width: 70,
+                                              height: 18,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  color: Colors.white),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  CircleAvatar(
+                                                    backgroundColor: Colors.red,
+                                                    maxRadius: 5,
+                                                  ),
+                                                  Text(
+                                                    "Online",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            Color(0XFFED1C25),
+                                                        fontFamily: "outfit",
+                                                        fontSize: 15),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                            Positioned(
-                                              top: 7,
-                                              left: 4,
-                                              child: Container(
-                                                width: 70,
-                                                height: 18,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    color: Colors.white),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  children: [
-                                                    CircleAvatar(
-                                                      backgroundColor:
-                                                          Colors.red,
-                                                      maxRadius: 5,
-                                                    ),
-                                                    Text(
-                                                      "Online",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color:
-                                                              Color(0XFFED1C25),
-                                                          fontFamily: "outfit",
-                                                          fontSize: 15),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${FetchAllExpertsData?.object?[index].userName}",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
-                                                  fontFamily: "outfit",
-                                                  fontSize: 18),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: CustomImageView(
-                                                imagePath:
-                                                    ImageConstant.imgright,
-                                                height: 15,
-                                                // fit: BoxFit.fill,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            CustomImageView(
-                                              imagePath: ImageConstant.bag,
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${FetchAllExpertsData?.object?[index].userName}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                                fontFamily: "outfit",
+                                                fontSize: 18),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: CustomImageView(
+                                              imagePath: ImageConstant.imgright,
                                               height: 15,
                                               // fit: BoxFit.fill,
                                             ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                "${FetchAllExpertsData?.object?[index].expertise?[0].expertiseName}",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w300,
-                                                    color: Colors.grey.shade700,
-                                                    fontFamily: "outfit",
-                                                    fontSize: 15),
-                                              ),
-                                            )
-                                          ],
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          CustomImageView(
+                                            imagePath: ImageConstant.bag,
+                                            height: 15,
+                                            // fit: BoxFit.fill,
+                                          ),
+                                          SizedBox(width: 5,),
+                                          Text(
+                                            "${FetchAllExpertsData?.object?[index].expertise?[0].expertiseName}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w300,
+                                                color: Colors.grey.shade700,
+                                                fontFamily: "outfit",
+                                                fontSize: 15),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      : SizedBox(),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 0.0, right: 16, left: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Public Threads",
+                          style: TextStyle(
+                            fontFamily: 'outfit',
+                            fontSize: 23,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        User_Mood != "EXPERT"
+                            ? GestureDetector(
+                                onTap: () {
+                                  Add_Threads();
+                                },
+                                child: Text(
+                                  "+ Add Threads",
+                                  style: TextStyle(
+                                    fontFamily: 'outfit',
+                                    fontSize: 15,
+                                    color: Color(0XFFED1C25),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              )
+                            : SizedBox(),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  state is FetchAllPublicRoomLoadedState
+                      ? ListView.builder(
+                          itemCount:
+                              (PublicRoomModelData?.object?.length ?? 0) > 5
+                                  ? 5
+                                  : PublicRoomModelData?.object?.length,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 16, right: 16, bottom: 10),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return MultiBlocProvider(
+                                      providers: [
+                                        BlocProvider(
+                                          create: (context) => senMSGCubit(),
                                         ),
                                       ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          )
-                        : SizedBox(),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 0.0, right: 16, left: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Public Threads",
-                            style: TextStyle(
-                              fontFamily: 'outfit',
-                              fontSize: 23,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          User_Mood != "EXPERT"
-                              ? GestureDetector(
-                                  onTap: () {
-                                    Add_Threads();
-                                  },
-                                  child: Text(
-                                    "+ Add Threads",
-                                    style: TextStyle(
-                                      fontFamily: 'outfit',
-                                      fontSize: 15,
-                                      color: Color(0XFFED1C25),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                )
-                              : SizedBox(),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    ListView.builder(
-                      itemCount: (PublicRoomModelData?.object?.length ?? 0) > 5
-                          ? 5
-                          : PublicRoomModelData?.object?.length,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              left: 16, right: 16, bottom: 10),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return MultiBlocProvider(
-                                  providers: [
-                                    BlocProvider(
-                                      create: (context) => senMSGCubit(),
-                                    ),
-                                  ],
-                                  child: ViewCommentScreen(
-                                    Room_ID:
-                                        "${PublicRoomModelData?.object?[index].uid ?? ""}",
-                                    Title:
-                                        "${PublicRoomModelData?.object?[index].roomQuestion ?? ""}",
-                                  ),
-                                );
-                              }));
-                            },
-                            child: Container(
-                              // height: demo.contains(index) ? null: height / 16,
-                              width: _width,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: const Color(0XFFD9D9D9), width: 2),
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
+                                      child: ViewCommentScreen(
+                                        Room_ID:
+                                            "${PublicRoomModelData?.object?[index].uid ?? ""}",
+                                        Title:
+                                            "${PublicRoomModelData?.object?[index].roomQuestion ?? ""}",
+                                      ),
+                                    );
+                                  }));
+                                },
+                                child: Container(
+                                  // height: demo.contains(index) ? null: height / 16,
+                                  width: _width,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: const Color(0XFFD9D9D9),
+                                          width: 2),
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
-                                          child: CustomImageView(
-                                            imagePath: ImageConstant.tomcruse,
-                                            height: 20,
-                                          )),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 5),
-                                        child: Text(
-                                          "${PublicRoomModelData?.object?[index].ownerUserName}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w800,
-                                              color: Colors.black,
-                                              fontFamily: "outfit",
-                                              fontSize: 14),
-                                        ),
+                                      SizedBox(
+                                        height: 10,
                                       ),
-                                      Spacer(),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            // if (image?.contains(index) ??
-                                            //     false) {
-                                            //   image?.remove(index);
-                                            // } else {
-                                            //   image?.add(index);
-                                            // }
-                                          },
-                                          child:
-                                              (image?.contains(index) ?? false)
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10),
+                                              child: CustomImageView(
+                                                imagePath:
+                                                    ImageConstant.tomcruse,
+                                                height: 20,
+                                              )),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 5),
+                                            child: Text(
+                                              "${PublicRoomModelData?.object?[index].ownerUserName}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w800,
+                                                  color: Colors.black,
+                                                  fontFamily: "outfit",
+                                                  fontSize: 14),
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 10),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                // if (image?.contains(index) ??
+                                                //     false) {
+                                                //   image?.remove(index);
+                                                // } else {
+                                                //   image?.add(index);
+                                                // }
+                                              },
+                                              child: (image?.contains(index) ??
+                                                      false)
                                                   ? CustomImageView(
                                                       imagePath: ImageConstant
                                                           .selectedimage,
@@ -688,204 +693,215 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           .unselectedimgVector,
                                                       height: 17,
                                                     ),
-                                        ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 8.0, top: 10, bottom: 10),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 8.0, top: 10, bottom: 10),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 2.0, top: 5),
+                                                  child: CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.black,
+                                                      maxRadius: 3),
+                                                ),
+                                                SizedBox(
+                                                  width: 3,
+                                                ),
+                                                Container(
+                                                  width: _width / 1.4,
+                                                  child: Text(
+                                                    "${PublicRoomModelData?.object?[index].roomQuestion}",
+                                                    maxLines: 2,
+                                                    textScaleFactor: 1.0,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        color: Colors.black,
+                                                        fontFamily: "outfit",
+                                                        fontSize: 14),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
                                               padding: const EdgeInsets.only(
-                                                  left: 2.0, top: 5),
-                                              child: CircleAvatar(
-                                                  backgroundColor: Colors.black,
-                                                  maxRadius: 3),
-                                            ),
-                                            SizedBox(
-                                              width: 3,
-                                            ),
-                                            Container(
+                                                  left: 10),
+                                              child: CustomImageView(
+                                                imagePath:
+                                                    ImageConstant.tomcruse,
+                                                height: 20,
+                                              )),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 5),
+                                            child: Container(
                                               width: _width / 1.4,
                                               child: Text(
-                                                "${PublicRoomModelData?.object?[index].roomQuestion}",
-                                                maxLines: 2,
-                                                textScaleFactor: 1.0,
+                                                "${PublicRoomModelData?.object?[index].message?.userName}",
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                    fontWeight: FontWeight.w800,
                                                     color: Colors.black,
                                                     fontFamily: "outfit",
                                                     fontSize: 14),
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
-                                          child: CustomImageView(
-                                            imagePath: ImageConstant.tomcruse,
-                                            height: 20,
-                                          )),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 5),
-                                        child: Container(
-                                          width: _width / 1.4,
-                                          child: Text(
-                                            "${PublicRoomModelData?.object?[index].message?.userName}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w800,
-                                                color: Colors.black,
-                                                fontFamily: "outfit",
-                                                fontSize: 14),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(left: 35, top: 2),
-                                    child: Text(
-                                      "${PublicRoomModelData?.object?[index].message?.message ?? ""}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black,
-                                          fontFamily: "outfit",
-                                          fontSize: 12),
-                                    ),
-                                  ),
-                                  Divider(
-                                    color: Colors.black,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                  builder: (context) {
-                                            return MultiBlocProvider(
-                                              providers: [
-                                                BlocProvider(
-                                                    create: (context) =>
-                                                        senMSGCubit())
-                                              ],
-                                              child: ViewCommentScreen(
-                                                Room_ID:
-                                                    "${PublicRoomModelData?.object?[index].uid ?? ""}",
-                                                Title:
-                                                    "${PublicRoomModelData?.object?[index].roomQuestion ?? ""}",
-                                              ),
-                                            );
-                                          }));
-                                        },
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 35, top: 2),
                                         child: Text(
-                                          "Add New Comment",
+                                          "${PublicRoomModelData?.object?[index].message?.message ?? ""}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               color: Colors.black,
                                               fontFamily: "outfit",
-                                              fontSize: 15),
+                                              fontSize: 12),
                                         ),
                                       ),
-                                      // Spacer(),
-                                      Flexible(
-                                        flex: 0,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 5),
-                                          child: Container(
-                                            //  height: 50,
-                                            alignment: Alignment.centerRight,
-                                            // width: 150,
-                                            // color: Colors.amber,
+                                      Divider(
+                                        color: Colors.black,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return MultiBlocProvider(
+                                                  providers: [
+                                                    BlocProvider(
+                                                        create: (context) =>
+                                                            senMSGCubit())
+                                                  ],
+                                                  child: ViewCommentScreen(
+                                                    Room_ID:
+                                                        "${PublicRoomModelData?.object?[index].uid ?? ""}",
+                                                    Title:
+                                                        "${PublicRoomModelData?.object?[index].roomQuestion ?? ""}",
+                                                  ),
+                                                );
+                                              }));
+                                            },
                                             child: Text(
-                                              "${PublicRoomModelData?.object?[index].message?.messageCount ?? "0"} Comments",
+                                              "Add New Comment",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w400,
-                                                  color: Colors.grey,
+                                                  color: Colors.black,
                                                   fontFamily: "outfit",
-                                                  fontSize: 13),
+                                                  fontSize: 15),
                                             ),
                                           ),
-                                        ),
+                                          // Spacer(),
+                                          Flexible(
+                                            flex: 0,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 5),
+                                              child: Container(
+                                                //  height: 50,
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                // width: 150,
+                                                // color: Colors.amber,
+                                                child: Text(
+                                                  "${PublicRoomModelData?.object?[index].message?.messageCount ?? "0"} Comments",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: Colors.grey,
+                                                      fontFamily: "outfit",
+                                                      fontSize: 13),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-                        );
-                      },
+                            );
+                          },
+                        )
+                      : Container(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  PublicRoomModelData?.object?.length == 0 ?
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => PublicRoomList(
+                                PublicRoomModelData: PublicRoomModelData,
+                              )));
+                    },
+                    child: Container(
+                      height: 50,
+                      width: _width / 1.2,
+                      decoration: BoxDecoration(
+                          color: Color(0XFFED1C25),
+                          borderRadius: BorderRadius.circular(6)),
+                      child: Center(
+                          child: Text(
+                        "View More",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                            fontFamily: "outfit",
+                            fontSize: 16),
+                      )),
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => PublicRoomList(
-                                  PublicRoomModelData: PublicRoomModelData,
-                                )));
-                      },
-                      child: Container(
-                        height: 50,
-                        width: _width / 1.2,
-                        decoration: BoxDecoration(
-                            color: Color(0XFFED1C25),
-                            borderRadius: BorderRadius.circular(6)),
-                        child: Center(
-                            child: Text(
-                          "View More",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
-                              fontFamily: "outfit",
-                              fontSize: 16),
-                        )),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
-                ),
-              );
-            }
-            return Center(
-              child: Container(
-                margin: EdgeInsets.only(bottom: 100),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.asset(ImageConstant.loader,
-                      fit: BoxFit.cover, height: 100.0, width: 100),
-                ),
+                  ): SizedBox(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                ],
               ),
             );
+
+            // return Center(
+            //   child: Container(
+            //     margin: EdgeInsets.only(bottom: 100),
+            //     child: ClipRRect(
+            //       borderRadius: BorderRadius.circular(20),
+            //       child: Image.asset(ImageConstant.loader,
+            //           fit: BoxFit.cover, height: 100.0, width: 100),
+            //     ),
+            //   ),
+            // );
           })),
     );
   }

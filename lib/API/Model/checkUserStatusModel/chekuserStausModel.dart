@@ -1,6 +1,6 @@
 class CheckUserStausModel {
   String? message;
-  bool? object;
+  String? object;
   bool? success;
 
   CheckUserStausModel({this.message, this.object, this.success});
