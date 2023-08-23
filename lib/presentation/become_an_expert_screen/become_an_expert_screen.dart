@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:archit_s_application1/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import 'package:archit_s_application1/API/Bloc/FetchExprtise_Bloc/fetchExprtise_state.dart';
-import 'package:archit_s_application1/API/Bloc/creatForum_Bloc/creat_Fourm_state.dart';
 import 'package:archit_s_application1/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
 import 'package:archit_s_application1/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:archit_s_application1/core/utils/color_constant.dart';
@@ -146,12 +145,12 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
           }
           if (state is chooseDocumentLoadedextends) {
             chooseDocument = state.chooseDocumentuploded;
-            print('choosDocumentGetorNot-${chooseDocument?.object}');
-            SnackBar snackBar = SnackBar(
-              content: Text(state.chooseDocumentuploded.message.toString()),
-              backgroundColor: ColorConstant.primary_color,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            // print('choosDocumentGetorNot-${chooseDocument?.object}');
+            // SnackBar snackBar = SnackBar(
+            //   content: Text(state.chooseDocumentuploded.message.toString()),
+            //   backgroundColor: ColorConstant.primary_color,
+            // );
+            // ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
 
           if (state is FetchExprtiseRoomLoadedState) {
@@ -291,8 +290,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 if (newValue != null) {
                                   setState(() {
                                     selectedExpertise = newValue;
-                                    print(
-                                        "Selectedexpertise: ${newValue.uid}");
+                                    print("Selectedexpertise: ${newValue.uid}");
                                   });
                                 }
                               },
@@ -653,7 +651,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           print("userid-$userid");
                           if (jobprofileController.text != null &&
                               jobprofileController.text != "") {
-                            if (jobprofileController.text.length <= 3) {
+                            if (jobprofileController.text.length < 4) {
                               SnackBar snackBar = SnackBar(
                                 content: Text('Minimum length required'),
                                 backgroundColor: ColorConstant.primary_color,
@@ -707,7 +705,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             } else {
                               print('esle');
                               SnackBar snackBar = SnackBar(
-                                content: Text('Please Selcte Expertise'),
+                                content: Text('Please Selcte Expertise in'),
                                 backgroundColor: ColorConstant.primary_color,
                               );
                               ScaffoldMessenger.of(context)
