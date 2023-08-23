@@ -320,10 +320,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                               fontWeight: FontWeight.w500)),
                                       GestureDetector(
                                         onTap: () {
+
                                           if (_secondsRemaining == 180) {
                                             _startTimer();
                                           }
                                            
+
                                         },
                                         child: Text("Resend",
                                             textScaleFactor: 1.0,

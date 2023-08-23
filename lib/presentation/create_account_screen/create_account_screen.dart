@@ -4,9 +4,7 @@ import 'package:archit_s_application1/API/Bloc/auth/register_Block.dart';
 import 'package:archit_s_application1/API/Bloc/auth/register_state.dart';
 import 'package:archit_s_application1/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:archit_s_application1/core/app_export.dart';
-import 'package:archit_s_application1/core/utils/cilprect.dart';
 import 'package:archit_s_application1/core/utils/color_constant.dart';
-import 'package:archit_s_application1/core/utils/image_utils.dart';
 import 'package:archit_s_application1/core/utils/sharedPreferences.dart';
 import 'package:archit_s_application1/presentation/otp_verification_screen/otp_verification_screen.dart';
 import 'package:archit_s_application1/widgets/custom_text_form_field.dart';
@@ -19,9 +17,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:permission_handler/permission_handler.dart';
-
-import '../view_comments/view_comments_screen.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   CreateAccountScreen({Key? key})
@@ -121,7 +116,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                       if (state is RegisterLoadingState) {
-                        print("loading");
                         Center(
                           child: Container(
                             margin: EdgeInsets.only(bottom: 100),
@@ -149,12 +143,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 state.chooseDocumentuploded.object.toString());
                         chooseDocument = state.chooseDocumentuploded;
 
-                        SnackBar snackBar = SnackBar(
-                          content: Text(
-                              state.chooseDocumentuploded.message.toString()),
-                          backgroundColor: ColorConstant.primary_color,
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        // SnackBar snackBar = SnackBar(
+                        //   content: Text(
+                        //       state.chooseDocumentuploded.message.toString()),
+                        //   backgroundColor: ColorConstant.primary_color,
+                        // );
+                        // ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         Navigator.pop(context);
                       }
                     },
@@ -212,104 +206,102 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               ? SizedBox(
                                   height: 20,
                                 )
-                              : url != null
-                                  ? SizedBox(
-                                      height: 20,
-                                    )
-                                  : SizedBox(),
+                              : SizedBox(),
 
                           chooseDocument?.object != null
-                              ? Container(
-                                  height: 120,
-                                  child: Center(
-                                    child: ClipOval(
-                                      child: FittedBox(
-                                        fit: BoxFit.cover,
-                                        child: CachedNetworkImage(
-                                          imageUrl:
-                                              '${chooseDocument?.object.toString()}',
-                                          placeholder: (context, url) =>
-                                              CircularProgressIndicator(),
-                                          errorWidget: (context, url, error) =>
-                                              Icon(Icons.error),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : url != null
-                                  ? Container(
-                                      height: 120,
-                                      child: Center(
+                              ? Align(
+                                  alignment: Alignment.center,
+                                  child: Stack(
+                                    alignment: Alignment.bottomRight,
+                                    children: [
+                                      Container(
+                                        height: 120,
                                         child: ClipOval(
                                           child: FittedBox(
-                                            fit: BoxFit.cover,
+                                            // fit: BoxFit.cover,
                                             child: CachedNetworkImage(
-                                                imageUrl: '${url.toString()}',
-                                                placeholder: (context, url) =>
-                                                    CircularProgressIndicator(),
-                                                errorWidget:
-                                                    (context, url, error) {
-                                                  print('erorro-$error');
-                                                  return Icon(Icons.error);
-                                                }),
+                                              imageUrl:
+                                                  '${chooseDocument?.object.toString()}',
+                                              height: 120,
+                                              width: 120,
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) =>
+                                                  CircularProgressIndicator(),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    )
-                                  : Align(
-                                      alignment: Alignment.center,
-                                      child: Container(
-                                        height: 130,
-                                        width: 130,
-                                        margin: EdgeInsets.only(
-                                          top: 20,
+                                      GestureDetector(
+                                        onTap: () {
+                                          _openBottomSheet(context);
+                                        },
+                                        child: Container(
+                                          height: 50,
+                                          width: 30,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              // color: Colors.red,
+                                              shape: BoxShape.circle),
+                                          child: CustomImageView(
+                                            svgPath: ImageConstant.imgCamera,
+                                            alignment: Alignment.center,
+                                          ),
+                                          // child: CustomIconButton(
+                                          //   height: 33,
+                                          //   width: 33,
+                                          //   alignment: Alignment.bottomRight,
+                                          //   child: GestureDetector(
+                                          //     onTap: () {
+                                          //       pickImage();
+                                          //     },
+                                          //     child: CustomImageView(
+                                          //       svgPath: ImageConstant.imgCamera,
+                                          //     ),
+                                          //   ),
+                                          // ),
                                         ),
-                                        child: Stack(
-                                          alignment: Alignment.bottomRight,
-                                          children: [
-                                            CustomImageView(
-                                              imagePath:
-                                                  ImageConstant.userProfie,
-                                              height: 130,
-                                              width: 130,
-                                              radius: BorderRadius.circular(65),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Align(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    height: 130,
+                                    width: 130,
+                                    margin: EdgeInsets.only(
+                                      top: 20,
+                                    ),
+                                    child: Stack(
+                                      alignment: Alignment.bottomRight,
+                                      children: [
+                                        CustomImageView(
+                                          imagePath: ImageConstant.userProfie,
+                                          height: 130,
+                                          width: 130,
+                                          radius: BorderRadius.circular(65),
+                                          alignment: Alignment.center,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            _openBottomSheet(context);
+                                          },
+                                          child: Container(
+                                            height: 50,
+                                            width: 30,
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                // color: Colors.red,
+                                                shape: BoxShape.circle),
+                                            child: CustomImageView(
+                                              svgPath: ImageConstant.imgCamera,
                                               alignment: Alignment.center,
                                             ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                _openBottomSheet(context);
-                                              },
-                                              child: Container(
-                                                height: 50,
-                                                width: 30,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    // color: Colors.red,
-                                                    shape: BoxShape.circle),
-                                                child: CustomImageView(
-                                                  svgPath:
-                                                      ImageConstant.imgCamera,
-                                                  alignment: Alignment.center,
-                                                ),
-                                                // child: CustomIconButton(
-                                                //   height: 33,
-                                                //   width: 33,
-                                                //   alignment: Alignment.bottomRight,
-                                                //   child: GestureDetector(
-                                                //     onTap: () {
-                                                //       pickImage();
-                                                //     },
-                                                //     child: CustomImageView(
-                                                //       svgPath: ImageConstant.imgCamera,
-                                                //     ),
-                                                //   ),
-                                                // ),
-                                              ),
-                                            ),
-
-                                            // CustomIconButton(
-                                            //   height: 33,+-----+-
+                                            // child: CustomIconButton(
+                                            //   height: 33,
                                             //   width: 33,
                                             //   alignment: Alignment.bottomRight,
                                             //   child: GestureDetector(
@@ -321,10 +313,26 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                             //     ),
                                             //   ),
                                             // ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
+
+                                        // CustomIconButton(
+                                        //   height: 33,+-----+-
+                                        //   width: 33,
+                                        //   alignment: Alignment.bottomRight,
+                                        //   child: GestureDetector(
+                                        //     onTap: () {
+                                        //       pickImage();
+                                        //     },
+                                        //     child: CustomImageView(
+                                        //       svgPath: ImageConstant.imgCamera,
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                      ],
                                     ),
+                                  ),
+                                ),
                           Padding(
                             padding: EdgeInsets.only(
                               top: 18,
@@ -533,7 +541,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   validator: (value) {
                                     final RegExp phoneRegExp =
                                         RegExp(r'^(?!0+$)[0-9]{10}$');
-
                                     if (value!.isEmpty) {
                                       return 'Please Enter Mobile Number';
                                     } else if (!phoneRegExp.hasMatch(value)) {
@@ -572,7 +579,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   ),
                                   // textStyle: theme.textTheme.titleMedium!,
                                   hintText: "Mobile Number",
-                                  // hintStyle: theme.textTheme.titleMedium!,
                                   filled: true,
                                   fillColor: appTheme.gray100,
                                   textInputAction: TextInputAction.next,
@@ -677,7 +683,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           GestureDetector(
                             onTap: () {
                               if (pickedFile == null) {
-                                if (url == null || url.toString() == '') {
+                                if (chooseDocument?.object.toString() == null) {
                                   SnackBar snackBar = SnackBar(
                                     content: Text('please select Profile'),
                                     backgroundColor:
@@ -695,9 +701,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   "mobileNo": contectnumberController.text,
                                   "password": passwordController.text,
                                   "module": "EMPLOYEE",
-                                  "profilePic" : url.toString()
+                                  "profilePic":
+                                      '${chooseDocument?.object.toString()}',
                                 };
-                                print('dataoassing-$datapPassing');
+                                print('dataPassing-$datapPassing');
                                 BlocProvider.of<RegisterCubit>(context)
                                     .registerApi(datapPassing);
                               }
