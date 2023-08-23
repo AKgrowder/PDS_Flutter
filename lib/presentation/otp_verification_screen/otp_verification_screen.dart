@@ -1,5 +1,5 @@
 import 'dart:async';
-import '../../API/Bloc/device_info_Bloc/device_info_bloc.dart';
+
 import 'package:archit_s_application1/API/Bloc/auth/login_Block.dart';
 import 'package:archit_s_application1/API/Bloc/auth/otp_block.dart';
 import 'package:archit_s_application1/API/Bloc/auth/otp_state.dart';
@@ -19,6 +19,7 @@ import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import '../../API/Bloc/auth/register_Block.dart';
+import '../../API/Bloc/device_info_Bloc/device_info_bloc.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../API/Model/authModel/loginModel.dart';
 import '../../core/utils/sharedPreferences.dart';
@@ -135,6 +136,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       );
                     }
                     if (state is OtpLoadedState) {
+                      
                       SnackBar snackBar = SnackBar(
                         content: Text('Otp verification Successfully'),
                         backgroundColor: ColorConstant.primary_color,
@@ -318,7 +320,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                               fontWeight: FontWeight.w500)),
                                       GestureDetector(
                                         onTap: () {
-                                          _startTimer();
+
+                                          if (_secondsRemaining == 180) {
+                                            _startTimer();
+                                          }
+                                           
+
                                         },
                                         child: Text("Resend",
                                             textScaleFactor: 1.0,
