@@ -9,7 +9,6 @@ class ImageConstant {
 
   static String imgArrowleft = 'assets/images/img_arrowleft.svg';
 
-
   static String imgClose = 'assets/images/img_close.svg';
   static String imgright = 'assets/images/Group 1171274794 (6).png';
 
@@ -19,7 +18,6 @@ class ImageConstant {
 
   static String imgRectangle39829 = 'assets/images/img_rectangle39829.png';
   static String userProfie = 'assets/images/profile.jpg';
-
 
   static String imgReply = 'assets/images/img_reply.svg';
 
@@ -146,11 +144,13 @@ class ImageConstant {
   static String roundrupee = 'assets/images/roundrupeee.png';
   static String timeimage = 'assets/images/ic_round-access-time.png';
   static String starimage = 'assets/images/material-symbols_star-rounded.png';
-  static String noInternetConnection= 'assets/images/noInternet.png';
-  static String expert2 =
-      'assets/images/expert3.png';
-  static String expert3 =
-      'assets/images/expert4.png';
-  static String expert4 =
-      'assets/images/expert5.png';
+  static String noInternetConnection = 'assets/images/noInternet.png';
+  static String expert2 = 'assets/images/expert3.png';
+  static String expert3 = 'assets/images/expert4.png';
+  static String expert4 = 'assets/images/expert5.png';
+  static String CreateForum = 'assets/images/CreateForum.png';
+  static String InPending = 'assets/images/InPending.png';
+  static String Rejected = 'assets/images/Rejected.png';
+
+  
 }
