@@ -136,7 +136,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       );
                     }
                     if (state is OtpLoadedState) {
-                      
                       SnackBar snackBar = SnackBar(
                         content: Text('Otp verification Successfully'),
                         backgroundColor: ColorConstant.primary_color,
@@ -281,7 +280,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                   print('vhbghghg');
                                   BlocProvider.of<OtpCubit>(context).OtpApi(
                                       OTPController.text,
-                                      widget.phonNumber.toString());
+                                      widget.phonNumber.toString(),
+                                      context);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 20),
@@ -320,12 +320,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                               fontWeight: FontWeight.w500)),
                                       GestureDetector(
                                         onTap: () {
-
                                           if (_secondsRemaining == 180) {
                                             _startTimer();
                                           }
-                                           
-
                                         },
                                         child: Text("Resend",
                                             textScaleFactor: 1.0,

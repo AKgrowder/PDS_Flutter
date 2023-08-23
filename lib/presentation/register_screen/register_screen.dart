@@ -76,7 +76,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               if (state is LoginLoadedState) {
                 loginModelData = state.loginModel;
                 BlocProvider.of<LoginCubit>(context).getUserDetails(
-                    state.loginModel.object?.uuid.toString() ?? "");
+                    state.loginModel.object?.uuid.toString() ?? "",context);
 
                 if (state.loginModel.object?.verified == true) {
                   getDataStroe(
@@ -330,7 +330,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 };
                                 print('dataPassing-$dataPassing');
                                 BlocProvider.of<LoginCubit>(context)
-                                    .loginApidata(dataPassing);
+                                    .loginApidata(dataPassing,context);
                               }
                             },
                             text: "Log In",

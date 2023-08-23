@@ -28,7 +28,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
   }
 
   GetData() async {
-    await BlocProvider.of<InvitationCubit>(context).InvitationAPI();
+    await BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
   }
 
   @override
@@ -108,7 +108,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
               backgroundColor: ColorConstant.primary_color,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            BlocProvider.of<InvitationCubit>(context).InvitationAPI();
+            BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
           }
         }, builder: (context, state) {
           if (state is InvitationLoadedState) {
@@ -309,7 +309,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
                                                             ?.object?[index]
                                                             .invitationLink
                                                             .toString() ??
-                                                        "");
+                                                        "",context);
                                           },
                                           child: Container(
                                             height: 40,
@@ -348,7 +348,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
                                                             ?.object?[index]
                                                             .invitationLink
                                                             .toString() ??
-                                                        "");
+                                                        "",context);
                                           },
                                           child: Container(
                                             height: 40,

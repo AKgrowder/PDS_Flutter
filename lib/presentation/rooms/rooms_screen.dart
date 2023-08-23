@@ -9,18 +9,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/CreateRoom_Bloc/CreateRoom_cubit.dart';
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_state.dart';
+import '../../API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import '../../API/Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
+import '../../core/utils/sharedPreferences.dart';
 import '../../dialogs/assigh_adminn_dilog..dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
+import '../create_foram/create_foram_screen.dart';
+import '../register_create_account_screen/register_create_account_screen.dart';
 
 class RoomsScreen extends StatefulWidget {
   const RoomsScreen({Key? key}) : super(key: key);
@@ -38,7 +43,7 @@ GetAllPrivateRoomModel? PublicRoomData;
 
 class _RoomsScreenState extends State<RoomsScreen> {
   var Show_NoData_Image = false;
-  bool? checkuserdata;
+  var checkuserdata = "";
 
   @override
   void initState() {
@@ -54,8 +59,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
 
   method() async {
     print('this methosd perint or not');
+    await BlocProvider.of<GetAllPrivateRoomCubit>(context).chckUserStaus(context);
     await BlocProvider.of<GetAllPrivateRoomCubit>(context)
-        .GetAllPrivateRoomAPI();
+        .GetAllPrivateRoomAPI(context);
   }
 
   @override
@@ -131,8 +137,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
           //   // method();
           // }
           if (state is CheckuserLoadedState) {
-            print('data check -${state.checkUserStausModel.object}');
-            checkuserdata = state.checkUserStausModel.object;
+            print('User Create Forum -${state.checkUserStausModel.object}');
+            checkuserdata = state.checkUserStausModel.object ?? "";
+
             // SnackBar snackBar = SnackBar(
             //   content: Text(state.checkUserStausModel.message.toString()),
             //   backgroundColor: ColorConstant.primary_color,
@@ -388,7 +395,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                         GestureDetector(
                                                                           onTap:
                                                                               () {
-                                                                            BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PublicRoomData!.object![index].uid.toString());
+                                                                            BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PublicRoomData!.object![index].uid.toString(),context);
                                                                           },
                                                                           child:
                                                                               Container(
@@ -894,7 +901,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                     ),
                                                   ],
                                                   child: RoomMembersScreen(
-                                                      room_Id: '${PublicRoomData?.object?[index].uid.toString()}'),
+                                                      room_Id:
+                                                          '${PublicRoomData?.object?[index].uid.toString()}'),
                                                 );
                                               },
                                             ));
@@ -1242,8 +1250,15 @@ class _RoomsScreenState extends State<RoomsScreen> {
                           height: _height / 2.5,
 
                           child: CustomImageView(
-                            imagePath: ImageConstant.noRoom,
+                            imagePath: checkuserdata == "PARTIALLY_REGISTERED"
+                                ? ImageConstant.CreateForum
+                                : checkuserdata == "PENDING"
+                                    ? ImageConstant.InPending
+                                    : checkuserdata == "APPROVED"
+                                        ? ImageConstant.noRoom
+                                        : ImageConstant.Rejected,
                           ),
+
                           // color: Colors.red,
                         ),
                       ),
@@ -1260,7 +1275,17 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                 create: (context) => CreateRoomCubit(),
                                 child: CreateRoomScreen()),
                           ); */
-                            CreatRoom(_height, _width);
+
+//  CreatRoom(_height, _width)
+//                                     : CreateForum()
+
+                            checkuserdata == "PARTIALLY_REGISTERED"
+                                ? CreateForum()
+                                : checkuserdata == "PENDING"
+                                    ? showAlert()
+                                    : checkuserdata == "APPROVED"
+                                        ? CreatRoom(_height, _width)
+                                        : showAlert1();
                           },
                           child: CustomImageView(
                             imagePath: ImageConstant.addimage,
@@ -1283,6 +1308,42 @@ class _RoomsScreenState extends State<RoomsScreen> {
             ),
           );
         }));
+  }
+
+  showAlert() {
+    SnackBar snackBar = SnackBar(
+      content: Text("Your Account in Process"),
+      backgroundColor: ColorConstant.primary_color,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  showAlert1() {
+    SnackBar snackBar = SnackBar(
+      content: Text("Your Account REJECTED"),
+      backgroundColor: ColorConstant.primary_color,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  CreateForum() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
+
+    if (UserLogin_ID == null) {
+      print("user login Mood");
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => RegisterCreateAccountScreen()));
+    } else {
+      print('no login');
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return MultiBlocProvider(providers: [
+          BlocProvider<CreatFourmCubit>(
+            create: (context) => CreatFourmCubit(),
+          ),
+        ], child: CreateForamScreen());
+      }));
+    }
   }
 
   CreatRoom(_height, _width) {
@@ -1468,7 +1529,6 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             ],
                                             controller: _DescriptionText,
                                             maxLines: 5,
- 
                                             cursorColor: Colors.grey,
                                             decoration: InputDecoration(
                                               hintText:
@@ -1570,7 +1630,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
 
                                               BlocProvider.of<CreateRoomCubit>(
                                                       context)
-                                                  .CreateRoomAPI(params);
+                                                  .CreateRoomAPI(params,context);
                                             }
                                             // if (roomName.text == null ||
                                             //     roomName.text.isEmpty) {

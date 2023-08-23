@@ -13,6 +13,6 @@ class CreatPublicRoomLoadedState extends CreatPublicRoomState {
 }
 
 class CreatPublicRoomErrorState extends CreatPublicRoomState {
-  final String error;
+  final dynamic error;
   CreatPublicRoomErrorState(this.error);
 }

@@ -96,12 +96,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   loginModelData = state.loginModel;
                   if (state.loginModel.object?.verified == false) {
                     BlocProvider.of<LoginCubit>(context).getUserDetails(
-                        state.loginModel.object?.uuid.toString() ?? "");
+                        state.loginModel.object?.uuid.toString() ?? "",
+                        context);
                   }
 
                   if (state.loginModel.object?.verified == true) {
                     BlocProvider.of<LoginCubit>(context).getUserDetails(
-                        state.loginModel.object?.uuid.toString() ?? "");
+                        state.loginModel.object?.uuid.toString() ?? "",
+                        context);
                     getDataStroe(
                         state.loginModel.object?.uuid.toString() ?? "",
                         state.loginModel.object?.jwt.toString() ?? "",
@@ -471,7 +473,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   };
                                   print('dataPassing-$dataPassing');
                                   BlocProvider.of<LoginCubit>(context)
-                                      .loginApidata(dataPassing);
+                                      .loginApidata(dataPassing, context);
                                 }
                               },
                               text: "Log In",
@@ -549,6 +551,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold)),
                           ),
+                          SizedBox(
+                            height: 10,
+                          )
                         ],
                       ),
                     ),
@@ -626,7 +631,8 @@ class _LoginScreenState extends State<LoginScreen> {
     };
 // DeviceInfo
 
-    await BlocProvider.of<DevicesInfoCubit>(context).DeviceInfo(details);
+    await BlocProvider.of<DevicesInfoCubit>(context)
+        .DeviceInfo(details, context);
 
     print(details);
   }

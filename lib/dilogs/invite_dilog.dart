@@ -85,7 +85,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-         Navigator.pop(context);
+          Navigator.pop(context);
         }
       },
       builder: (context, state) {
@@ -266,7 +266,8 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                                 context)
                                             .sherInviteApi(
                                                 widget.Room_UUID.toString(),
-                                                email.text.toString());
+                                                email.text.toString(),
+                                                context);
                                       }
                                       // if (_formKey.currentState!.validate()) {
                                     },
