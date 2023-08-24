@@ -321,35 +321,56 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                   style: TextStyle(fontSize: 16),
                                 ),
                               )),
-                          GestureDetector(
-                            onTap: () async {
-                              filepath = await prepareTestPdf(0);
-                              setState(() {
-                                uplopdfile.text = dopcument.toString();
-                              });
-                              print('filepath-${uplopdfile.text}');
-                            },
-                            child: Container(
-                              height: 50,
-                              width: _width / 4.5,
-                              decoration: BoxDecoration(
-                                  color: Color(0XFF777777),
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(5),
-                                      bottomRight: Radius.circular(5))),
-                              child: Center(
-                                child: Text(
-                                  "Choose",
-                                  style: TextStyle(
-                                    fontFamily: 'outfit',
-                                    fontSize: 15,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
+                          dopcument == "Upload Image"
+                              ? GestureDetector(
+                                  onTap: () async {
+                                    filepath = await prepareTestPdf(0);
+                                    setState(() {
+                                      uplopdfile.text = dopcument.toString();
+                                    });
+                                    print('filepath-${uplopdfile.text}');
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    width: _width / 4.5,
+                                    decoration: BoxDecoration(
+                                        color: Color(0XFF777777),
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(5),
+                                            bottomRight: Radius.circular(5))),
+                                    child: Center(
+                                      child: Text(
+                                        "Choose",
+                                        style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontSize: 15,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
                                   ),
+                                )
+                              : Container(
+                                  height: 50,
+                                  width: _width / 4.5,
+                                  decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 228, 228, 228),
+                                      borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(5),
+                                          bottomRight: Radius.circular(5))),
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        dopcument = "Upload Image";
+                                        chooseDocument?.object = null;
+
+                                        setState(() {});
+                                      },
+                                      child: Icon(
+                                        Icons.delete_forever,
+                                        color: ColorConstant.primary_color,
+                                      )),
                                 ),
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -448,7 +469,10 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                           };
                           print('button-$params');
                           BlocProvider.of<CreatFourmCubit>(context).CreatFourm(
-                              params, uplopdfile.text, filepath.toString(),context);
+                              params,
+                              uplopdfile.text,
+                              filepath.toString(),
+                              context);
                         }
                         // if (name.text != null && name.text != "") {
                         //   if (profile.text != null && profile.text != "") {
@@ -669,7 +693,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
         }
         print('filenamecheckKB-${file1.path}');
         BlocProvider.of<CreatFourmCubit>(context)
-            .chooseDocumentprofile(dopcument.toString(), file1.path!,context);
+            .chooseDocumentprofile(dopcument.toString(), file1.path!, context);
         setState(() {});
         break;
       case 2:
@@ -710,8 +734,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             default:
           }
           print('filecheckPath-${file1.path}');
-          BlocProvider.of<CreatFourmCubit>(context)
-              .chooseDocumentprofile(dopcument.toString(), file1.path!,context);
+          BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
+              dopcument.toString(), file1.path!, context);
         }
 
         break;

@@ -2,6 +2,7 @@ import 'package:archit_s_application1/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_
 import 'package:archit_s_application1/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:archit_s_application1/API/Bloc/auth/register_Block.dart';
 import 'package:archit_s_application1/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
+import 'package:archit_s_application1/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import 'package:archit_s_application1/core/app_export.dart';
 import 'package:archit_s_application1/custom_bottom_bar/custom_bottom_bar.dart';
 import 'package:archit_s_application1/presentation/Login_Screen/Login_Screen.dart';
@@ -13,6 +14,7 @@ import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../create_account_screen/create_account_screen.dart';
 import '../../API/Bloc/auth/login_Block.dart';
 import '../../API/Bloc/device_info_Bloc/device_info_bloc.dart';
+
 class RegisterCreateAccountScreen extends StatefulWidget {
   @override
   State<RegisterCreateAccountScreen> createState() =>
@@ -126,16 +128,13 @@ class _RegisterCreateAccountScreenState
           GestureDetector(
             onTap: () {
               print('this is the data fget');
-               Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return MultiBlocProvider(
-                          providers: [
-                            BlocProvider<RegisterCubit>(
-                              create: (context) => RegisterCubit(),
-                            )
-                          ],
-                          child: CreateAccountScreen());
-                    }));
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return MultiBlocProvider(providers: [
+                  BlocProvider<RegisterCubit>(
+                    create: (context) => RegisterCubit(),
+                  )
+                ], child: CreateAccountScreen());
+              }));
               // Navigator.push(
               //   context,
               //   MaterialPageRoute(builder: (context) => CreateAccountScreen()),
@@ -164,18 +163,16 @@ class _RegisterCreateAccountScreenState
           ),
           GestureDetector(
             onTap: () {
-                Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return MultiBlocProvider(providers: [
-                            BlocProvider<LoginCubit>(
-                              create: (context) => LoginCubit(),
-                            ),
-                             BlocProvider<DevicesInfoCubit>(
-                              create: (context) => DevicesInfoCubit(),
-                            )
-                            
-                          ], child: LoginScreen());
-                        }));
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return MultiBlocProvider(providers: [
+                  BlocProvider<LoginCubit>(
+                    create: (context) => LoginCubit(),
+                  ),
+                  BlocProvider<DevicesInfoCubit>(
+                    create: (context) => DevicesInfoCubit(),
+                  )
+                ], child: LoginScreen());
+              }));
             },
             child: Padding(
               padding: EdgeInsets.only(left: 30, right: 30, bottom: 30),

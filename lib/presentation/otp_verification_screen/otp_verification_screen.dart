@@ -50,6 +50,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   Timer? _timer;
   int GetTime = 0;
   int _secondsRemaining = 180;
+  bool tm = false;
 
   void _startTimer() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
@@ -64,6 +65,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           //     SetUi();
           //   }
           // });
+          tm = true;
           _secondsRemaining = 180;
         }
       });
@@ -318,30 +320,34 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                               fontSize: 16,
                                               fontFamily: 'Outfit',
                                               fontWeight: FontWeight.w500)),
-                                      GestureDetector(
-                                        onTap: () {
-                                          if (_secondsRemaining == 180) {
-                                            _startTimer();
-                                          }
-                                        },
-                                        child: Text("Resend",
-                                            textScaleFactor: 1.0,
-                                            style: TextStyle(
-                                                color: (_secondsRemaining !=
-                                                            GetTime &&
-                                                        _secondsRemaining != 0)
-                                                    ? Theme.of(context)
-                                                                .brightness ==
-                                                            Brightness.light
-                                                        ? Colors.black
-                                                        : Colors.white
-                                                    : Colors.red,
-                                                fontSize: 16,
-                                                fontFamily: 'Outfit',
-                                                fontWeight: FontWeight.w500,
-                                                decoration:
-                                                    TextDecoration.underline)),
-                                      ),
+                                      tm
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  tm = false;
+                                                  _startTimer();
+                                                });
+                                              },
+                                              child: Text("Resend",
+                                                  textScaleFactor: 1.0,
+                                                  style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontSize: 16,
+                                                      fontFamily: 'Outfit',
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      decoration: TextDecoration
+                                                          .underline)),
+                                            )
+                                          : Text("Resend",
+                                              textScaleFactor: 1.0,
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontFamily: 'Outfit',
+                                                  fontWeight: FontWeight.w500,
+                                                  decoration: TextDecoration
+                                                      .underline)),
                                     ]),
                               )
                             ]));

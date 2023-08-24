@@ -518,39 +518,39 @@ class _LoginScreenState extends State<LoginScreen> {
                               textAlign: TextAlign.left,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 30, right: 30, top: 10),
-                            child: CustomOutlinedButton(
-                                onTap: () {
-                                  if (state is GetUserLoadedState) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              OtpVerificationScreen(
-                                                loginModelData: loginModelData,
-                                              )),
-                                    );
-                                  }
-                                },
-                                text: "Log In With OTP",
-                                margin: EdgeInsets.only(
-                                  left: 30,
-                                  right: 30,
-                                  bottom: 51,
-                                ),
-                                buttonStyle: ButtonThemeHelper.outlinePrimaryTL6
-                                    .copyWith(
-                                        fixedSize:
-                                            MaterialStateProperty.all<Size>(
-                                                Size(double.maxFinite, 50))),
-                                buttonTextStyle: TextStyle(
-                                    color: Color(0xFFED1C25),
-                                    fontFamily: 'outfit',
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold)),
-                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.only(
+                          //       left: 30, right: 30, top: 10),
+                          //   child: CustomOutlinedButton(
+                          //       onTap: () {
+                          //         if (state is GetUserLoadedState) {
+                          //           Navigator.push(
+                          //             context,
+                          //             MaterialPageRoute(
+                          //                 builder: (context) =>
+                          //                     OtpVerificationScreen(
+                          //                       loginModelData: loginModelData,
+                          //                     )),
+                          //           );
+                          //         }
+                          //       },
+                          //       text: "Log In With OTP",
+                          //       margin: EdgeInsets.only(
+                          //         left: 30,
+                          //         right: 30,
+                          //         bottom: 51,
+                          //       ),
+                          //       buttonStyle: ButtonThemeHelper.outlinePrimaryTL6
+                          //           .copyWith(
+                          //               fixedSize:
+                          //                   MaterialStateProperty.all<Size>(
+                          //                       Size(double.maxFinite, 50))),
+                          //       buttonTextStyle: TextStyle(
+                          //           color: Color(0xFFED1C25),
+                          //           fontFamily: 'outfit',
+                          //           fontSize: 15,
+                          //           fontWeight: FontWeight.bold)),
+                          // ),
                           SizedBox(
                             height: 10,
                           )
