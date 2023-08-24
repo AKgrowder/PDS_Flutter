@@ -264,7 +264,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                                   keyboardType: TextInputType.multiline,
                                   controller: _RoomTitleController,
                                   cursorColor: Colors.grey,
-                                  maxLines: 6,
+                                  maxLines: 7,
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Add Thread....'),
