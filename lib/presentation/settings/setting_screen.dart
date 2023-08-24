@@ -1,8 +1,24 @@
+import 'package:archit_s_application1/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
+import 'package:archit_s_application1/presentation/create_account_screen/create_account_screen.dart';
 import 'package:archit_s_application1/presentation/experts_details_screen/experts_details_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:archit_s_application1/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 
+import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
+import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
+import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
+import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
+import '../../API/Bloc/auth/login_Block.dart';
+import '../../API/Bloc/auth/register_Block.dart';
+import '../../API/Bloc/device_info_Bloc/device_info_bloc.dart';
+import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../core/utils/image_constant.dart';
+import '../../core/utils/sharedPreferences.dart';
+import '../../custom_bottom_bar/custom_bottom_bar.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
+import '../Login_Screen/Login_Screen.dart';
 import '../experts/experts_screen.dart';
 import '../forget_password_screen/forget_password_screen.dart';
 import '../my account/my_account_screen.dart';
@@ -84,7 +100,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
   @override
   Widget build(BuildContext context) {
-     var _height = MediaQuery.of(context).size.height;
+    var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
 
     return SafeArea(
@@ -100,7 +116,8 @@ class _SettingScreenState extends State<SettingScreen> {
                   Align(
                       alignment: Alignment.topCenter,
                       child: Padding(
-                          padding: EdgeInsets.only(left: 21, right: 22, bottom: 24),
+                          padding:
+                              EdgeInsets.only(left: 21, right: 22, bottom: 24),
                           child: Text(
                             'My Account',
                             textScaleFactor: 1.0,
@@ -139,18 +156,22 @@ class _SettingScreenState extends State<SettingScreen> {
             // color: Theme.of(context).brightness == Brightness.light
             // ? Color(0XFF161616)
             // : Color(0XFF1D1D1D),
-            child: ListView.builder(physics: BouncingScrollPhysics(),
+            child: ListView.builder(
+                physics: BouncingScrollPhysics(),
                 itemCount: 12,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () {
                       switch (index) {
                         case 0:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>  MyAccountScreen(),
-                              ));
+                            Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return MultiBlocProvider(providers: [
+                              BlocProvider<MyAccountCubit>(
+                                create: (context) => MyAccountCubit(),
+                              )
+                            ], child: MyAccountScreen());
+                          }));
 
                           break;
                         case 1:
@@ -178,7 +199,8 @@ class _SettingScreenState extends State<SettingScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ForgetPasswordScreen()));
+                                  builder: (context) =>
+                                      ForgetPasswordScreen()));
 
                           break;
                         case 5:
@@ -206,11 +228,6 @@ class _SettingScreenState extends State<SettingScreen> {
 
                           break; */
                         case 7:
-
-
-
-
-
                           break;
                         case 8:
                           Navigator.push(context,
@@ -247,9 +264,30 @@ class _SettingScreenState extends State<SettingScreen> {
 
                           break;
                         case 11:
-                          // showDialog(
-                          //     context: context, builder: (_) => RoomsScreen());
-
+                          logout();
+                          Navigator.pushAndRemoveUntil(context,
+                              MaterialPageRoute(builder: (context) {
+                            return MultiBlocProvider(providers: [
+                              BlocProvider<FetchAllPublicRoomCubit>(
+                                create: (context) => FetchAllPublicRoomCubit(),
+                              ),
+                              BlocProvider<CreatPublicRoomCubit>(
+                                create: (context) => CreatPublicRoomCubit(),
+                              ),
+                              BlocProvider<senMSGCubit>(
+                                create: (context) => senMSGCubit(),
+                              ),
+                              BlocProvider<RegisterCubit>(
+                                create: (context) => RegisterCubit(),
+                              ),
+                              BlocProvider<GetAllPrivateRoomCubit>(
+                                create: (context) => GetAllPrivateRoomCubit(),
+                              ),
+                              BlocProvider<InvitationCubit>(
+                                create: (context) => InvitationCubit(),
+                              ),
+                            ], child: BottombarPage(buttomIndex: 0));
+                          }), (route) => false);
                           break;
                         case 12:
                           // showDialog(
@@ -334,5 +372,12 @@ class _SettingScreenState extends State<SettingScreen> {
                 })),
       ),
     );
+  }
+
+  logout() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove(PreferencesKey.loginUserID);
+    prefs.remove(PreferencesKey.loginJwt);
+    prefs.remove(PreferencesKey.module);
   }
 }

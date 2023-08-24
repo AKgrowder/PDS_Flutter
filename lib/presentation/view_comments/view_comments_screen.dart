@@ -433,31 +433,31 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                       ),
                                     ),
                                   ),
-                                  Spacer(),
-                                  GestureDetector(
-                                    onTap: () {
-                                      pickProfileImage();
-                                    },
-                                    child: Image.asset(
-                                      "assets/images/paperclip-2.png",
-                                      height: 28,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      camerapicker();
-                                    },
-                                    child: Image.asset(
-                                      "assets/images/Vector (12).png",
-                                      height: 20,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
+                                  // Spacer(),
+                                  // GestureDetector(
+                                  //   onTap: () {
+                                  //     pickProfileImage();
+                                  //   },
+                                  //   child: Image.asset(
+                                  //     "assets/images/paperclip-2.png",
+                                  //     height: 28,
+                                  //   ),
+                                  // ),
+                                  // SizedBox(
+                                  //   width: 10,
+                                  // ),
+                                  // GestureDetector(
+                                  //   onTap: () {
+                                  //     camerapicker();
+                                  //   },
+                                  //   child: Image.asset(
+                                  //     "assets/images/Vector (12).png",
+                                  //     height: 20,
+                                  //   ),
+                                  // ),
+                                  // SizedBox(
+                                  //   width: 8,
+                                  // ),
                                 ]),
                                 // child: TextField(
                                 //   controller: Add_Comment,

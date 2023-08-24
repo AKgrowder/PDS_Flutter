@@ -1,5 +1,6 @@
 class ImageConstant {
   static String imgInfo = 'assets/images/img_info.svg';
+  static String splashImage = 'assets/images/splashImage.png';
 
   static String unselectedimgVector = 'assets/images/Vector (10).png';
   static String tomcruse = 'assets/images/Ellipse 3942 (1).png';
@@ -151,6 +152,4 @@ class ImageConstant {
   static String CreateForum = 'assets/images/CreateForum.png';
   static String InPending = 'assets/images/InPending.png';
   static String Rejected = 'assets/images/Rejected.png';
-
-  
 }
