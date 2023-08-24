@@ -26,7 +26,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   MyAccontDetails? myAccontDetails;
   @override
   void initState() {
-    BlocProvider.of<MyAccountCubit>(context).MyAccount();
+    BlocProvider.of<MyAccountCubit>(context).MyAccount(context);
     super.initState();
   }
 
