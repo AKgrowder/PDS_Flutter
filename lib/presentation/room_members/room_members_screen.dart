@@ -143,68 +143,228 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                       fontFamily: "outfit",
                                       fontSize: 15),
                                 ),
-                                Container(
-                                  width: 99,
-                                  height: 28.87,
-                                  child: Stack(
-                                    children: [
-                                      Positioned(
-                                        left: 0,
-                                        top: 0,
-                                        child: Container(
-                                          width: 28.88,
-                                          height: 28.87,
-                                          child: CustomImageView(
-                                            imagePath: ImageConstant.expertone,
-                                            height: 30,
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        left: 22.56,
-                                        top: 0,
-                                        child: Container(
-                                          width: 28.88,
-                                          height: 28.87,
-                                          child: CustomImageView(
-                                            imagePath: ImageConstant.experttwo,
-                                            height: 30,
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        left: 45.12,
-                                        top: 0,
-                                        child: Container(
-                                          width: 28.88,
-                                          height: 28.87,
-                                          child: CustomImageView(
-                                            imagePath:
-                                                ImageConstant.expertthree,
-                                            height: 30,
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        left: 78,
-                                        top: 7,
-                                        child: SizedBox(
-                                          width: 21,
-                                          height: 16,
-                                          child: Text(
-                                            '+5',
-                                            style: TextStyle(
-                                              color: Color(0xFF2A2A2A),
-                                              fontSize: 12,
-                                              fontFamily: 'Outfit',
-                                              fontWeight: FontWeight.w400,
+                                _data?.object?.length == 1
+                                    ? Container(
+                                        width: 99,
+                                        height: 27.88,
+                                        child: Stack(
+                                          children: [
+                                            Positioned(
+                                              left: 0,
+                                              top: 0,
+                                              child: Container(
+                                                  width: 26.88,
+                                                  height: 26.87,
+                                                  decoration: BoxDecoration(
+                                                      color: ColorConstant
+                                                          .primary_color,
+                                                      border: Border.all(),
+                                                      shape: BoxShape.circle),
+                                                  child: Icon(
+                                                    Icons.person,
+                                                    size: 20,
+                                                    color: Colors.white,
+                                                  )),
                                             ),
-                                          ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                      )
+                                    : _data?.object?.length == 2
+                                        ? Container(
+                                            width: 99,
+                                            height: 27.88,
+                                            child: Stack(
+                                              children: [
+                                                Positioned(
+                                                  left: 0,
+                                                  top: 0,
+                                                  child: Container(
+                                                      width: 26.88,
+                                                      height: 26.87,
+                                                      decoration: BoxDecoration(
+                                                          color: ColorConstant
+                                                              .primary_color,
+                                                          border: Border.all(),
+                                                          shape:
+                                                              BoxShape.circle),
+                                                      child: Icon(
+                                                        Icons.person,
+                                                        size: 20,
+                                                        color: Colors.white,
+                                                      )),
+                                                ),
+                                                Positioned(
+                                                  left: 22.56,
+                                                  top: 0,
+                                                  child: Container(
+                                                      width: 26.88,
+                                                      height: 26.87,
+                                                      decoration: BoxDecoration(
+                                                          color: ColorConstant
+                                                              .primary_color,
+                                                          border: Border.all(),
+                                                          shape:
+                                                              BoxShape.circle),
+                                                      child: Icon(
+                                                        Icons.person,
+                                                        size: 20,
+                                                        color: Colors.white,
+                                                      )),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        : _data?.object?.length == 3
+                                            ? Container(
+                                                width: 99,
+                                                height: 27.88,
+                                                child: Stack(
+                                                  children: [
+                                                    Positioned(
+                                                      left: 0,
+                                                      top: 0,
+                                                      child: Container(
+                                                          width: 26.88,
+                                                          height: 26.87,
+                                                          decoration: BoxDecoration(
+                                                              color: ColorConstant
+                                                                  .primary_color,
+                                                              border:
+                                                                  Border.all(),
+                                                              shape: BoxShape
+                                                                  .circle),
+                                                          child: Icon(
+                                                            Icons.person,
+                                                            size: 20,
+                                                            color: Colors.white,
+                                                          )),
+                                                    ),
+                                                    Positioned(
+                                                      left: 22.56,
+                                                      top: 0,
+                                                      child: Container(
+                                                          width: 26.88,
+                                                          height: 26.87,
+                                                          decoration: BoxDecoration(
+                                                              color: ColorConstant
+                                                                  .primary_color,
+                                                              border:
+                                                                  Border.all(),
+                                                              shape: BoxShape
+                                                                  .circle),
+                                                          child: Icon(
+                                                            Icons.person,
+                                                            size: 20,
+                                                            color: Colors.white,
+                                                          )),
+                                                    ),
+                                                    Positioned(
+                                                      left: 45.12,
+                                                      top: 0,
+                                                      child: Container(
+                                                          width: 26.88,
+                                                          height: 26.87,
+                                                          decoration: BoxDecoration(
+                                                              color: ColorConstant
+                                                                  .primary_color,
+                                                              border:
+                                                                  Border.all(),
+                                                              shape: BoxShape
+                                                                  .circle),
+                                                          child: Icon(
+                                                            Icons.person,
+                                                            size: 20,
+                                                            color: Colors.white,
+                                                          )),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            : Container(
+                                                width: 99,
+                                                height: 27.88,
+                                                child: Stack(
+                                                  children: [
+                                                    Positioned(
+                                                      left: 0,
+                                                      top: 0,
+                                                      child: Container(
+                                                          width: 26.88,
+                                                          height: 26.87,
+                                                          decoration: BoxDecoration(
+                                                              color: ColorConstant
+                                                                  .primary_color,
+                                                              border:
+                                                                  Border.all(),
+                                                              shape: BoxShape
+                                                                  .circle),
+                                                          child: Icon(
+                                                            Icons.person,
+                                                            size: 20,
+                                                            color: Colors.white,
+                                                          )),
+                                                    ),
+                                                    Positioned(
+                                                      left: 22.56,
+                                                      top: 0,
+                                                      child: Container(
+                                                          width: 26.88,
+                                                          height: 26.87,
+                                                          decoration: BoxDecoration(
+                                                              color: ColorConstant
+                                                                  .primary_color,
+                                                              border:
+                                                                  Border.all(),
+                                                              shape: BoxShape
+                                                                  .circle),
+                                                          child: Icon(
+                                                            Icons.person,
+                                                            size: 20,
+                                                            color: Colors.white,
+                                                          )),
+                                                    ),
+                                                    Positioned(
+                                                      left: 45.12,
+                                                      top: 0,
+                                                      child: Container(
+                                                          width: 26.88,
+                                                          height: 26.87,
+                                                          decoration: BoxDecoration(
+                                                              color: ColorConstant
+                                                                  .primary_color,
+                                                              border:
+                                                                  Border.all(),
+                                                              shape: BoxShape
+                                                                  .circle),
+                                                          child: Icon(
+                                                            Icons.person,
+                                                            size: 20,
+                                                            color: Colors.white,
+                                                          )),
+                                                    ),
+                                                    Positioned(
+                                                      left: 78,
+                                                      top: 7,
+                                                      child: SizedBox(
+                                                        width: 21,
+                                                        height: 16,
+                                                        child: Text(
+                                                          "+${(_data?.object?.length ?? 0) - 3}",
+                                                          style: TextStyle(
+                                                            color: Color(
+                                                                0xFF2A2A2A),
+                                                            fontSize: 14,
+                                                            fontFamily:
+                                                                'Outfit',
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                               ],
                             ),
                           ),
