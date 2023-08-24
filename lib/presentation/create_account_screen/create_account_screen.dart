@@ -708,7 +708,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   };
                                   print('dataPassing-$datapPassing');
                                   BlocProvider.of<RegisterCubit>(context)
-                                      .registerApi(datapPassing);
+                                      .registerApi(datapPassing, context);
                                 }
                               }
                             },
@@ -818,7 +818,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         setState(() {
           pickedImage = File(pickedFile!.path);
         });
-        BlocProvider.of<RegisterCubit>(context).upoldeProfilePic(pickedImage!);
+        BlocProvider.of<RegisterCubit>(context)
+            .upoldeProfilePic(pickedImage!, context);
       }
     } catch (e) {}
   }

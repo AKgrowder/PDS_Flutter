@@ -767,7 +767,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             };
                             print('pwarems-$params');
                             BlocProvider.of<FetchExprtiseRoomCubit>(context)
-                                .addExpertProfile(params);
+                                .addExpertProfile(params,context);
                           }
                           /*     if (jobprofileController.text != null &&22
                               jobprofileController.text != "") {
