@@ -359,7 +359,7 @@ class Content {
   String? userName;
   Null? messageCount;
   String? userCode;
-  Null? userProfilePic;
+  String? userProfilePic;
   String? createdAt;
 
   Content(

@@ -5,6 +5,7 @@ import 'package:archit_s_application1/API/Bloc/Edit_room_bloc/edit_room_cubit.da
 import 'package:archit_s_application1/core/utils/color_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../core/utils/image_constant.dart';
 import '../widgets/custom_image_view.dart';
 
@@ -83,12 +84,15 @@ class EditDilogScreenState extends State<EditDilogScreen>
                   );
                 }
                 if (state is EditroomLoadedState) {
+                  editroom.clear();
                   SnackBar snackBar = SnackBar(
                     content: Text(state.editRoom.message ?? ""),
                     backgroundColor: ColorConstant.primary_color,
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  Navigator.pop(context);
+                  Future.delayed(const Duration(milliseconds: 900), () {
+                    Navigator.pop(context);
+                  });
                 }
                 if (state is EditroomErrorState) {
                   SnackBar snackBar = SnackBar(
@@ -208,16 +212,27 @@ class EditDilogScreenState extends State<EditDilogScreen>
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    print('uid-${widget.uid}');
-                                    var params = {
-                                      "roomQuestion": editroom.text
-                                    };
+                                    if (editroom.text.isEmpty) {
+                                      SnackBar snackBar = SnackBar(
+                                        content:
+                                            Text('Please Edit room Name first'),
+                                        backgroundColor:
+                                            ColorConstant.primary_color,
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    } else {
+                                      print('uid-${widget.uid}');
+                                      var params = {
+                                        "roomQuestion": editroom.text
+                                      };
 
-                                    print(params);
+                                      print(params);
 
-                                    BlocProvider.of<EditroomCubit>(context)
-                                        .Editroom(params, widget.uid.toString(),
-                                            context);
+                                      BlocProvider.of<EditroomCubit>(context)
+                                          .Editroom(params,
+                                              widget.uid.toString(), context);
+                                    }
                                   },
                                   child: Container(
                                     height: 43,

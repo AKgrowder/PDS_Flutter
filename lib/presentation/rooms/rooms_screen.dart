@@ -40,6 +40,7 @@ List? imagee = [];
 List? close = [];
 List? closee = [];
 GetAllPrivateRoomModel? PublicRoomData;
+String? User_Mood;
 
 class _RoomsScreenState extends State<RoomsScreen> {
   var Show_NoData_Image = false;
@@ -59,7 +60,13 @@ class _RoomsScreenState extends State<RoomsScreen> {
 
   method() async {
     print('this methosd perint or not');
-    await BlocProvider.of<GetAllPrivateRoomCubit>(context).chckUserStaus(context);
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    User_Mood = prefs.getString(PreferencesKey.module);
+
+
+    await BlocProvider.of<GetAllPrivateRoomCubit>(context)
+        .chckUserStaus(context);
     await BlocProvider.of<GetAllPrivateRoomCubit>(context)
         .GetAllPrivateRoomAPI(context);
   }
@@ -224,32 +231,68 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                 onTap: () {
                                                   showDialog(
                                                     context: context,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      print(
-                                                          'uid print-${PublicRoomData?.object?[index].uid}');
-                                                      return MultiBlocProvider(
-                                                          providers: [
-                                                            BlocProvider<
-                                                                EditroomCubit>(
-                                                              create: (context) =>
-                                                                  EditroomCubit(),
-                                                            )
-                                                          ],
-                                                          child:
-                                                              EditDilogScreen(
-                                                            parentName:
-                                                                PublicRoomData
-                                                                    ?.object?[
-                                                                        index]
-                                                                    .roomQuestion,
-                                                            uid: PublicRoomData
-                                                                ?.object?[index]
-                                                                .uid
-                                                                .toString(),
-                                                          ));
-                                                    },
+                                                    builder: (context) =>
+                                                        ScaffoldMessenger(
+                                                      child: Builder(
+                                                        builder: (context) =>
+                                                            Scaffold(
+                                                          backgroundColor:
+                                                              Colors
+                                                                  .transparent,
+                                                          body:
+                                                              MultiBlocProvider(
+                                                                  providers: [
+                                                                BlocProvider<
+                                                                    EditroomCubit>(
+                                                                  create: (context) =>
+                                                                      EditroomCubit(),
+                                                                )
+                                                              ],
+                                                                  child:
+                                                                      EditDilogScreen(
+                                                                    parentName: PublicRoomData
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .roomQuestion,
+                                                                    uid: PublicRoomData
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .uid
+                                                                        .toString(),
+                                                                  )),
+                                                        ),
+                                                      ),
+                                                    ),
                                                   );
+
+                                                  // showDialog(
+                                                  //   context: context,
+                                                  //   builder:
+                                                  //       (BuildContext context) {
+                                                  //     print(
+                                                  //         'uid print-${PublicRoomData?.object?[index].uid}');
+                                                  //     return MultiBlocProvider(
+                                                  //         providers: [
+                                                  //           BlocProvider<
+                                                  //               EditroomCubit>(
+                                                  //             create: (context) =>
+                                                  //                 EditroomCubit(),
+                                                  //           )
+                                                  //         ],
+                                                  //         child:
+                                                  //             EditDilogScreen(
+                                                  //           parentName:
+                                                  //               PublicRoomData
+                                                  //                   ?.object?[
+                                                  //                       index]
+                                                  //                   .roomQuestion,
+                                                  //           uid: PublicRoomData
+                                                  //               ?.object?[index]
+                                                  //               .uid
+                                                  //               .toString(),
+                                                  //         ));
+                                                  //   },
+                                                  // );
                                                   // editProfile(PublicRoomData?.object?[index].uid.toString());
                                                   // showDialog(
                                                   //     context: context,
@@ -395,7 +438,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                         GestureDetector(
                                                                           onTap:
                                                                               () {
-                                                                            BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PublicRoomData!.object![index].uid.toString(),context);
+                                                                            BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PublicRoomData!.object![index].uid.toString(),
+                                                                                context);
                                                                           },
                                                                           child:
                                                                               Container(
@@ -915,80 +959,237 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Container(
-                                                  width: 99,
-                                                  height: 28.87,
-                                                  child: Stack(
-                                                    children: [
-                                                      Positioned(
-                                                        left: 0,
-                                                        top: 0,
-                                                        child: Container(
-                                                          width: 28.88,
-                                                          height: 28.87,
-                                                          child:
-                                                              CustomImageView(
-                                                            imagePath:
-                                                                ImageConstant
-                                                                    .expertone,
-                                                            height: 30,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Positioned(
-                                                        left: 22.56,
-                                                        top: 0,
-                                                        child: Container(
-                                                          width: 28.88,
-                                                          height: 28.87,
-                                                          child:
-                                                              CustomImageView(
-                                                            imagePath:
-                                                                ImageConstant
-                                                                    .experttwo,
-                                                            height: 30,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Positioned(
-                                                        left: 45.12,
-                                                        top: 0,
-                                                        child: Container(
-                                                          width: 28.88,
-                                                          height: 28.87,
-                                                          child:
-                                                              CustomImageView(
-                                                            imagePath:
-                                                                ImageConstant
-                                                                    .expertthree,
-                                                            height: 30,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Positioned(
-                                                        left: 78,
-                                                        top: 7,
-                                                        child: SizedBox(
-                                                          width: 21,
-                                                          height: 16,
-                                                          child: Text(
-                                                            '+5',
-                                                            style: TextStyle(
-                                                              color: Color(
-                                                                  0xFF2A2A2A),
-                                                              fontSize: 12,
-                                                              fontFamily:
-                                                                  'Outfit',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
+                                                PublicRoomData
+                                                            ?.object?[index]
+                                                            .usersList
+                                                            ?.length ==
+                                                        1
+                                                    ? Container(
+                                                        width: 99,
+                                                        height: 27.88,
+                                                        child: Stack(
+                                                          children: [
+                                                            Positioned(
+                                                              left: 0,
+                                                              top: 0,
+                                                              child: Container(
+                                                                  width: 26.88,
+                                                                  height: 26.87,
+                                                                  decoration: BoxDecoration(
+                                                                      color: ColorConstant
+                                                                          .primary_color,
+                                                                      border: Border
+                                                                          .all(),
+                                                                      shape: BoxShape
+                                                                          .circle),
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .person,
+                                                                    size: 20,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  )),
                                                             ),
-                                                          ),
+                                                          ],
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
+                                                      )
+                                                    : PublicRoomData
+                                                                ?.object?[index]
+                                                                .usersList
+                                                                ?.length ==
+                                                            2
+                                                        ? Container(
+                                                            width: 99,
+                                                            height: 27.88,
+                                                            child: Stack(
+                                                              children: [
+                                                                Positioned(
+                                                                  left: 0,
+                                                                  top: 0,
+                                                                  child:
+                                                                      Container(
+                                                                          width:
+                                                                              26.88,
+                                                                          height:
+                                                                              26.87,
+                                                                          decoration: BoxDecoration(
+                                                                              color: ColorConstant.primary_color,
+                                                                              border: Border.all(),
+                                                                              shape: BoxShape.circle),
+                                                                          child: Icon(
+                                                                            Icons.person,
+                                                                            size:
+                                                                                20,
+                                                                            color:
+                                                                                Colors.white,
+                                                                          )),
+                                                                ),
+                                                                Positioned(
+                                                                  left: 22.56,
+                                                                  top: 0,
+                                                                  child:
+                                                                      Container(
+                                                                          width:
+                                                                              26.88,
+                                                                          height:
+                                                                              26.87,
+                                                                          decoration: BoxDecoration(
+                                                                              color: ColorConstant.primary_color,
+                                                                              border: Border.all(),
+                                                                              shape: BoxShape.circle),
+                                                                          child: Icon(
+                                                                            Icons.person,
+                                                                            size:
+                                                                                20,
+                                                                            color:
+                                                                                Colors.white,
+                                                                          )),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                        : PublicRoomData
+                                                                    ?.object?[
+                                                                        index]
+                                                                    .usersList
+                                                                    ?.length ==
+                                                                3
+                                                            ? Container(
+                                                                width: 99,
+                                                                height: 27.88,
+                                                                child: Stack(
+                                                                  children: [
+                                                                    Positioned(
+                                                                      left: 0,
+                                                                      top: 0,
+                                                                      child: Container(
+                                                                          width: 26.88,
+                                                                          height: 26.87,
+                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, border: Border.all(), shape: BoxShape.circle),
+                                                                          child: Icon(
+                                                                            Icons.person,
+                                                                            size:
+                                                                                20,
+                                                                            color:
+                                                                                Colors.white,
+                                                                          )),
+                                                                    ),
+                                                                    Positioned(
+                                                                      left:
+                                                                          22.56,
+                                                                      top: 0,
+                                                                      child: Container(
+                                                                          width: 26.88,
+                                                                          height: 26.87,
+                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, border: Border.all(), shape: BoxShape.circle),
+                                                                          child: Icon(
+                                                                            Icons.person,
+                                                                            size:
+                                                                                20,
+                                                                            color:
+                                                                                Colors.white,
+                                                                          )),
+                                                                    ),
+                                                                    Positioned(
+                                                                      left:
+                                                                          45.12,
+                                                                      top: 0,
+                                                                      child: Container(
+                                                                          width: 26.88,
+                                                                          height: 26.87,
+                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, border: Border.all(), shape: BoxShape.circle),
+                                                                          child: Icon(
+                                                                            Icons.person,
+                                                                            size:
+                                                                                20,
+                                                                            color:
+                                                                                Colors.white,
+                                                                          )),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              )
+                                                            : Container(
+                                                                width: 99,
+                                                                height: 27.88,
+                                                                child: Stack(
+                                                                  children: [
+                                                                    Positioned(
+                                                                      left: 0,
+                                                                      top: 0,
+                                                                      child: Container(
+                                                                          width: 26.88,
+                                                                          height: 26.87,
+                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, border: Border.all(), shape: BoxShape.circle),
+                                                                          child: Icon(
+                                                                            Icons.person,
+                                                                            size:
+                                                                                20,
+                                                                            color:
+                                                                                Colors.white,
+                                                                          )),
+                                                                    ),
+                                                                    Positioned(
+                                                                      left:
+                                                                          22.56,
+                                                                      top: 0,
+                                                                      child: Container(
+                                                                          width: 26.88,
+                                                                          height: 26.87,
+                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, border: Border.all(), shape: BoxShape.circle),
+                                                                          child: Icon(
+                                                                            Icons.person,
+                                                                            size:
+                                                                                20,
+                                                                            color:
+                                                                                Colors.white,
+                                                                          )),
+                                                                    ),
+                                                                    Positioned(
+                                                                      left:
+                                                                          45.12,
+                                                                      top: 0,
+                                                                      child: Container(
+                                                                          width: 26.88,
+                                                                          height: 26.87,
+                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, border: Border.all(), shape: BoxShape.circle),
+                                                                          child: Icon(
+                                                                            Icons.person,
+                                                                            size:
+                                                                                20,
+                                                                            color:
+                                                                                Colors.white,
+                                                                          )),
+                                                                    ),
+                                                                    Positioned(
+                                                                      left: 78,
+                                                                      top: 7,
+                                                                      child:
+                                                                          SizedBox(
+                                                                        width:
+                                                                            21,
+                                                                        height:
+                                                                            16,
+                                                                        child:
+                                                                            Text(
+                                                                          "+${(PublicRoomData?.object?[index].usersList?.length ?? 0) - 3}",
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Color(0xFF2A2A2A),
+                                                                            fontSize:
+                                                                                14,
+                                                                            fontFamily:
+                                                                                'Outfit',
+                                                                            fontWeight:
+                                                                                FontWeight.w400,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
                                                 GestureDetector(
                                                   onTap: () {
                                                     showDialog(
@@ -1150,6 +1351,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             SizedBox(
                                               width: 1,
                                             ),
+                                             User_Mood == "EXPERT" ? SizedBox():
                                             Expanded(
                                               flex: 2,
                                               child: GestureDetector(
@@ -1222,6 +1424,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                           ),
                         ]),
                       ),
+                       User_Mood == "EXPERT" ? SizedBox():
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: GestureDetector(
@@ -1265,6 +1468,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                       // checkuserdata == false
                       // ? SizedBox()
                       // :
+                       User_Mood == "EXPERT" ? SizedBox():
                       Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: GestureDetector(
@@ -1523,14 +1727,12 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                           padding: EdgeInsets.only(
                                               top: 0.0, left: 10),
                                           child: TextField(
-                                            inputFormatters: [
-                                              LengthLimitingTextInputFormatter(
-                                                  500),
-                                            ],
+                                            maxLength: 255,
                                             controller: _DescriptionText,
                                             maxLines: 5,
                                             cursorColor: Colors.grey,
                                             decoration: InputDecoration(
+                                              counterText: "",
                                               hintText:
                                                   'Describe your problem or topic here..',
                                               border: InputBorder.none,
@@ -1630,7 +1832,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
 
                                               BlocProvider.of<CreateRoomCubit>(
                                                       context)
-                                                  .CreateRoomAPI(params,context);
+                                                  .CreateRoomAPI(
+                                                      params, context);
                                             }
                                             // if (roomName.text == null ||
                                             //     roomName.text.isEmpty) {
