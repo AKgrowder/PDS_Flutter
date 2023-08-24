@@ -32,4 +32,17 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
       emit(FetchAllPublicRoomErrorState(PublicRModel));
     }
   }
+
+   Future<void> chckUserStaus(BuildContext context) async {
+    dynamic checkUserStausModel;
+    try {
+      emit(FetchAllPublicRoomLoadingState());
+      checkUserStausModel = await Repository().checkUserActive(context);
+      if (checkUserStausModel.success == true) {
+        emit(CheckuserLoadedState(checkUserStausModel));
+      }
+    } catch (e) {
+      emit(FetchAllPublicRoomErrorState(checkUserStausModel));
+    }
+  }
 }

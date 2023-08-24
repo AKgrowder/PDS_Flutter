@@ -9,12 +9,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_state.dart';
 import '../../API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
+import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
+import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
+import '../../API/Bloc/auth/register_Block.dart';
 import '../../API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import '../../API/Model/HomeScreenModel/PublicRoomModel.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
+import '../../custom_bottom_bar/custom_bottom_bar.dart';
 import '../add_threads/add_threads.dart';
 import '../create_foram/create_foram_screen.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
@@ -69,6 +73,7 @@ List<String> commentss = [
   "2078 Comments",
   "2078 Comments",
 ];
+var checkuserdata = "";
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
@@ -82,8 +87,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllPublicRoom(context);
-    BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllExpertsAPI(context);
+    BlocProvider.of<FetchAllPublicRoomCubit>(context)
+        .FetchAllPublicRoom(context);
+    BlocProvider.of<FetchAllPublicRoomCubit>(context)
+        .FetchAllExpertsAPI(context);
+    BlocProvider.of<FetchAllPublicRoomCubit>(context).chckUserStaus(context);
 
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
@@ -94,14 +102,18 @@ class _HomeScreenState extends State<HomeScreen> {
               listener: (context, state) async {
             if (state is FetchAllPublicRoomErrorState) {
               if (state.error != "error in fetch room") {
-
-              
-              SnackBar snackBar = SnackBar(
-                content: Text(state.error),
-                backgroundColor: ColorConstant.primary_color,
-              );
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                SnackBar snackBar = SnackBar(
+                  content: Text(state.error),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
             }
+
+            if (state is CheckuserLoadedState) {
+              checkuserdata = state.CheckUserStausModeldata.object ?? "";
+              print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&__-->" +
+                  checkuserdata);
             }
 
             if (state is FetchAllPublicRoomLoadingState) {
@@ -235,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                        left: 16, top: 20, right: 16, bottom: 20),
+                        left: 16, top: 20, right: 16, bottom: 0),
                     child: Container(
                       child: User_Mood == "COMPANY"
                           ? SizedBox()
@@ -294,110 +306,168 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 )
-                              : Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Expanded(
-                                      flex: 2,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          if (User_Name != null) {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CreateForamScreen(),
-                                                ));
-                                          } else {
-                                            print("User guest Mood on");
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        RegisterCreateAccountScreen()));
-                                          }
-                                        },
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            CreateForum();
+                              : User_Mood == "EMPLOYEE"
+                                  ? checkuserdata == "PARTIALLY_REGISTERED"
+                                      ? Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Expanded(
+                                              flex: 2,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  if (User_Name != null) {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              CreateForamScreen(),
+                                                        ));
+                                                  } else {
+                                                    print("User guest Mood on");
+                                                    Navigator.of(context).push(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                RegisterCreateAccountScreen()));
+                                                  }
+                                                },
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    CreateForum();
 
-                                            // Navigator.push(context,
-                                            //     MaterialPageRoute(
-                                            //         builder: (context) {
-                                            //   return MultiBlocProvider(
-                                            //       providers: [
-                                            //         BlocProvider<CreatFourmCubit>(
-                                            //           create: (context) =>
-                                            //               CreatFourmCubit(),
-                                            //         ),
-                                            //       ],
-                                            //       child: CreateForamScreen());
-                                            // }));
-                                          },
-                                          child: Container(
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                                color: Color(0XFFED1C25),
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                            child: Container(
-                                              width: _width / 2.5,
-                                              child: Align(
-                                                alignment: Alignment.center,
-                                                child: Text(
-                                                  "Create Forum",
-                                                  style: TextStyle(
-                                                    fontFamily: 'outfit',
-                                                    fontSize: 13,
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
+                                                    // Navigator.push(context,
+                                                    //     MaterialPageRoute(
+                                                    //         builder: (context) {
+                                                    //   return MultiBlocProvider(
+                                                    //       providers: [
+                                                    //         BlocProvider<CreatFourmCubit>(
+                                                    //           create: (context) =>
+                                                    //               CreatFourmCubit(),
+                                                    //         ),
+                                                    //       ],
+                                                    //       child: CreateForamScreen());
+                                                    // }));
+                                                  },
+                                                  child: Container(
+                                                    height: 50,
+                                                    decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0XFFED1C25),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5)),
+                                                    child: Container(
+                                                      width: _width / 2.5,
+                                                      child: Align(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: Text(
+                                                          "Create Forum",
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'outfit',
+                                                            fontSize: 13,
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          becomeAnExport();
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Expanded(
+                                              flex: 2,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  becomeAnExport();
 
-                                          /* Navigator.push(
+                                                  /* Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   BecomeExpertScreen(),
                                             )); */
-                                        },
-                                        child: Container(
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                              color: Color(0XFFFFD9DA),
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              border: Border.all(
-                                                  color: Color(0XFFED1C25))),
-                                          child: Center(
-                                            child: Text(
-                                              "Become an Expert",
-                                              style: TextStyle(
-                                                fontFamily: 'outfit',
-                                                fontSize: 13,
-                                                color: Color(0XFFED1C25),
-                                                fontWeight: FontWeight.bold,
+                                                },
+                                                child: Container(
+                                                  height: 50,
+                                                  decoration: BoxDecoration(
+                                                      color: Color(0XFFFFD9DA),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      border: Border.all(
+                                                          color: Color(
+                                                              0XFFED1C25))),
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Become an Expert",
+                                                      style: TextStyle(
+                                                        fontFamily: 'outfit',
+                                                        fontSize: 13,
+                                                        color:
+                                                            Color(0XFFED1C25),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                          ],
+                                        )
+                                      : checkuserdata == "REJECTED"
+                                          ? GestureDetector(
+                                            onTap: () {
+                                              
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return MultiBlocProvider(providers: [
+                BlocProvider<FetchAllPublicRoomCubit>(
+                  create: (context) => FetchAllPublicRoomCubit(),
+                ),
+                BlocProvider<CreatPublicRoomCubit>(
+                  create: (context) => CreatPublicRoomCubit(),
+                ),
+                BlocProvider<senMSGCubit>(
+                  create: (context) => senMSGCubit(),
+                ),
+                BlocProvider<RegisterCubit>(
+                  create: (context) => RegisterCubit(),
+                ),
+                BlocProvider<GetAllPrivateRoomCubit>(
+                  create: (context) => GetAllPrivateRoomCubit(),
+                ),
+                BlocProvider<InvitationCubit>(
+                  create: (context) => InvitationCubit(),
+                ),
+              ], child: BottombarPage(buttomIndex: 4));
+            }));
+                                              
+                                            },
+                                            child: Container(
+                                                height: 25,
+                                                width: _width,
+                                                // color: Colors.red,
+                                                child: Center(
+                                                  child: Text(
+                                                    "Your Account Rejected Update and Submit.",
+                                                    style: TextStyle(
+                                                      fontFamily: 'outfit',
+                                                      fontSize: 15,
+                                                      color: Color(0XFFED1C25),
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                          )
+                                          : SizedBox()
+                                  : SizedBox(),
                     ),
                   ),
                   FetchAllExpertsData?.object?.length != 0
@@ -540,7 +610,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             height: 15,
                                             // fit: BoxFit.fill,
                                           ),
-                                          SizedBox(width: 5,),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
                                           Text(
                                             "${FetchAllExpertsData?.object?[index].expertise?[0].expertiseName}",
                                             style: TextStyle(
@@ -860,31 +932,32 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  PublicRoomModelData?.object?.length == 0 ?
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => PublicRoomList(
-                                PublicRoomModelData: PublicRoomModelData,
-                              )));
-                    },
-                    child: Container(
-                      height: 50,
-                      width: _width / 1.2,
-                      decoration: BoxDecoration(
-                          color: Color(0XFFED1C25),
-                          borderRadius: BorderRadius.circular(6)),
-                      child: Center(
-                          child: Text(
-                        "View More",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white,
-                            fontFamily: "outfit",
-                            fontSize: 16),
-                      )),
-                    ),
-                  ): SizedBox(),
+                  PublicRoomModelData?.object?.length != 0
+                      ? GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => PublicRoomList(
+                                      PublicRoomModelData: PublicRoomModelData,
+                                    )));
+                          },
+                          child: Container(
+                            height: 50,
+                            width: _width / 1.2,
+                            decoration: BoxDecoration(
+                                color: Color(0XFFED1C25),
+                                borderRadius: BorderRadius.circular(6)),
+                            child: Center(
+                                child: Text(
+                              "View More",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                  fontFamily: "outfit",
+                                  fontSize: 16),
+                            )),
+                          ),
+                        )
+                      : SizedBox(),
                   SizedBox(
                     height: 10,
                   ),
