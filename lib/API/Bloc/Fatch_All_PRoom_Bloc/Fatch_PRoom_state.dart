@@ -3,6 +3,7 @@
 
 import '../../Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import '../../Model/HomeScreenModel/PublicRoomModel.dart';
+import '../../Model/checkUserStatusModel/chekuserStausModel.dart';
 
 abstract class FetchAllPublicRoomState {}
 
@@ -24,3 +25,9 @@ class FetchAllPublicRoomErrorState extends FetchAllPublicRoomState {
   final dynamic error;
   FetchAllPublicRoomErrorState(this.error);
 }
+
+class CheckuserLoadedState extends FetchAllPublicRoomState {
+  final CheckUserStausModel CheckUserStausModeldata;
+ CheckuserLoadedState(this.CheckUserStausModeldata);
+}
+

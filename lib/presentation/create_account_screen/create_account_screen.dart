@@ -76,9 +76,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   @override
   void initState() {
-    _requestPermissions();
     dataGet();
     super.initState();
+    _requestPermissions();
   }
 
   @override
@@ -683,31 +683,33 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              if (pickedFile == null) {
-                                if (chooseDocument?.object.toString() == null) {
-                                  SnackBar snackBar = SnackBar(
-                                    content: Text('please select Profile'),
-                                    backgroundColor:
-                                        ColorConstant.primary_color,
-                                  );
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
-                                }
-                              }
                               if (_formKey.currentState!.validate()) {
-                                var datapPassing = {
-                                  "name": enteruseridController.text,
-                                  "userName": nameController.text,
-                                  "email": emailAndMobileController.text,
-                                  "mobileNo": contectnumberController.text,
-                                  "password": passwordController.text,
-                                  "module": "EMPLOYEE",
-                                  "profilePic":
-                                      '${chooseDocument?.object.toString()}',
-                                };
-                                print('dataPassing-$datapPassing');
-                                BlocProvider.of<RegisterCubit>(context)
-                                    .registerApi(datapPassing, context);
+                                if (pickedFile == null) {
+                                  if (chooseDocument?.object.toString() ==
+                                      null) {
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text('please select Profile'),
+                                      backgroundColor:
+                                          ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }
+                                } else {
+                                  var datapPassing = {
+                                    "name": enteruseridController.text,
+                                    "userName": nameController.text,
+                                    "email": emailAndMobileController.text,
+                                    "mobileNo": contectnumberController.text,
+                                    "password": passwordController.text,
+                                    "module": "EMPLOYEE",
+                                    "profilePic":
+                                        '${chooseDocument?.object.toString()}',
+                                  };
+                                  print('dataPassing-$datapPassing');
+                                  BlocProvider.of<RegisterCubit>(context)
+                                      .registerApi(datapPassing);
+                                }
                               }
                             },
                             child: Container(
@@ -816,8 +818,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         setState(() {
           pickedImage = File(pickedFile!.path);
         });
-        BlocProvider.of<RegisterCubit>(context)
-            .upoldeProfilePic(pickedImage!, context);
+        BlocProvider.of<RegisterCubit>(context).upoldeProfilePic(pickedImage!);
       }
     } catch (e) {}
   }
