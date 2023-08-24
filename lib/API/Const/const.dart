@@ -34,4 +34,6 @@ class Config {
   static const String uploadProfile= 'user/api/uploadProfilePic';
    static const String addDeviceDetail = "auth/auth/addDeviceDetail";
   static const String fetchAllExperts = "user/api/fetchAllExperts";
+  static const String myaccountApi= "user/api/fetchUserProfile";
+   static const String systemconfig = "user/api/fetchSysConfig";
 }

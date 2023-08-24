@@ -336,7 +336,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
 
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
-                              RegExp(r'^[0-9]+.?[0-9]*'))
+                              RegExp(r'^\d{0,4}(\.\d{0,2})?')),
                         ],
                         textInputType: TextInputType.numberWithOptions(
                           decimal: true,
@@ -588,33 +588,54 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   style: TextStyle(fontSize: 16),
                                 ),
                               )),
-                          GestureDetector(
-                            onTap: () async {
-                              filepath = await prepareTestPdf(0);
-                              print(
-                                  'dopcument.toString()${dopcument.toString()}');
-                            },
-                            child: Container(
-                              height: 50,
-                              width: _width / 4.5,
-                              decoration: BoxDecoration(
-                                  color: Color(0XFF777777),
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(5),
-                                      bottomRight: Radius.circular(5))),
-                              child: Center(
-                                child: Text(
-                                  "Choose",
-                                  style: TextStyle(
-                                    fontFamily: 'outfit',
-                                    fontSize: 15,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
+                          dopcument == "Upload Image"
+                              ? GestureDetector(
+                                  onTap: () async {
+                                    filepath = await prepareTestPdf(0);
+                                    print(
+                                        'dopcument.toString()${dopcument.toString()}');
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    width: _width / 4.5,
+                                    decoration: BoxDecoration(
+                                        color: Color(0XFF777777),
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(5),
+                                            bottomRight: Radius.circular(5))),
+                                    child: Center(
+                                      child: Text(
+                                        "Choose",
+                                        style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontSize: 15,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
                                   ),
+                                )
+                              : Container(
+                                  height: 50,
+                                  width: _width / 4.5,
+                                  decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 228, 228, 228),
+                                      borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(5),
+                                          bottomRight: Radius.circular(5))),
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        dopcument = "Upload Image";
+                                        chooseDocument?.object = null;
+
+                                        setState(() {});
+                                      },
+                                      child: Icon(
+                                        Icons.delete_forever,
+                                        color: ColorConstant.primary_color,
+                                      )),
                                 ),
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                       Row(
@@ -649,7 +670,106 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           String? userid =
                               await prefs.getString(PreferencesKey.loginUserID);
                           print("userid-$userid");
-                          if (jobprofileController.text != null &&
+                          if (jobprofileController.text == null ||
+                              jobprofileController.text == "") {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please Enter job Profile'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (jobprofileController.text.isNotEmpty &&
+                              jobprofileController.text.length < 4) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Minimum length required'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (jobprofileController.text.isNotEmpty &&
+                              jobprofileController.text.length < 4) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Minimum length required'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (selectedExpertise?.expertiseName
+                                  .toString() ==
+                              null) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please Selcte Expertise in'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (selectedExpertise?.expertiseName
+                                  .toString() ==
+                              null) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please Selcte Expertise in'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (feesController.text == null ||
+                              feesController.text == '') {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please Selcte Fees'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (feesController.text == null ||
+                              feesController.text == '') {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please Selcte Fees'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (_endTime == null && _startTime == null) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please Selcte Working Hours'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (_endTime == null && _startTime == null) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please Selcte Working Hours'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (dopcument == 'Upload Image') {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please Upload Image'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else {
+                            String time =
+                                '${_startTime!.format(context).toString().split(" ").first} TO ${_endTime!.format(context).toString().split(" ").first}';
+                            print(
+                                'sddfsdm,gndfgj${chooseDocument?.object.toString()}');
+                            dynamic params = {
+                              "document":
+                                  "${chooseDocument?.object.toString()}",
+                              "expertUId": [
+                                "${selectedExpertise?.uid.toString()}"
+                              ],
+                              "fees": feesController.text,
+                              "jobProfile": jobprofileController.text,
+                              "uid": userid.toString(),
+                              "workingHours": time.toString(),
+                            };
+                            print('pwarems-$params');
+                            BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                                .addExpertProfile(params);
+                          }
+                          /*     if (jobprofileController.text != null &&22
                               jobprofileController.text != "") {
                             if (jobprofileController.text.length < 4) {
                               SnackBar snackBar = SnackBar(
@@ -718,7 +838,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
-                          }
+                          } */
                         },
                         child: Container(
                           alignment: Alignment.center,
@@ -912,8 +1032,6 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             .chooseDocumentprofile(dopcument.toString(), file1.path!, context);
         setState(() {});
 
-        // BlocProvider.of<DocumentUploadCubit>(context)
-        //     .documentUpload(file1.path!, );
         break;
       case 2:
         if (value2 > finalFileSize) {
