@@ -4,6 +4,7 @@ import 'package:archit_s_application1/API/Bloc/Edit_room_bloc/Edit_room_state.da
 import 'package:archit_s_application1/API/Bloc/Edit_room_bloc/edit_room_cubit.dart';
 import 'package:archit_s_application1/core/utils/color_constant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../core/utils/image_constant.dart';
@@ -170,11 +171,14 @@ class EditDilogScreenState extends State<EditDilogScreen>
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 10),
                                   child: TextField(
-                                    maxLength: 30,
+                                    // maxLength: 30,
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(30),
+                                    ],
                                     cursorColor: Colors.grey,
                                     controller: editroom,
                                     decoration: InputDecoration(
-                                        counterText: '',
+                                        // counterText: '',s
                                         border: InputBorder.none,
                                         hintText: 'Edit'),
                                   ),
