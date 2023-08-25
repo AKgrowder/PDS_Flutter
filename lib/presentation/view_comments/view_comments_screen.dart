@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:archit_s_application1/API/Model/coment/coment_model.dart';
-import 'package:archit_s_application1/presentation/home/home.dart';
 import 'package:archit_s_application1/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart' as foundation;
@@ -422,7 +421,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   ),
                                   Container(
                                     // height: 40,
-                                    width: _width / 2.2,
+                                    width: _width/1.7 ,
                                     // color: Colors.amber,
                                     child: TextField(
                                       controller: Add_Comment,

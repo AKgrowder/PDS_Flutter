@@ -1,24 +1,20 @@
-import 'package:archit_s_application1/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
-import 'package:archit_s_application1/presentation/create_account_screen/create_account_screen.dart';
+import 'package:archit_s_application1/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:archit_s_application1/presentation/experts_details_screen/experts_details_screen.dart';
+import 'package:archit_s_application1/presentation/otp_verification_screen/otp_verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:archit_s_application1/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
-import '../../API/Bloc/auth/login_Block.dart';
 import '../../API/Bloc/auth/register_Block.dart';
-import '../../API/Bloc/device_info_Bloc/device_info_bloc.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../../custom_bottom_bar/custom_bottom_bar.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
-import '../Login_Screen/Login_Screen.dart';
 import '../experts/experts_screen.dart';
 import '../forget_password_screen/forget_password_screen.dart';
 import '../my account/my_account_screen.dart';
@@ -175,10 +171,10 @@ class _SettingScreenState extends State<SettingScreen> {
 
                           break;
                         case 1:
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => RoomsScreen()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OtpVerificationScreen()));
 
                           break;
                         case 2:
