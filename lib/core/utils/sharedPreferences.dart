@@ -20,6 +20,7 @@ class PreferencesKey {
 
   static const String fileSize = 'FileSize';
   static const String mediaSize = 'MediaSize';
+  static const String otpTimer = 'OtpTimer';
 
 
 

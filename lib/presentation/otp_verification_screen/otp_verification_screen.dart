@@ -49,8 +49,18 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   TextEditingController OTPController = TextEditingController();
   Timer? _timer;
   int GetTime = 0;
-  int _secondsRemaining = 180;
+  int _secondsRemaining = 0;
+  int otpTimer = 0;
   bool tm = false;
+
+  timer() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    otpTimer = await prefs.getInt(PreferencesKey.otpTimer) ?? 0;
+    print(" otp timer  ${otpTimer}");
+    setState(() {
+      _secondsRemaining = otpTimer;
+    });
+  }
 
   void _startTimer() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
@@ -66,7 +76,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           //   }
           // });
           tm = true;
-          _secondsRemaining = 180;
+          _secondsRemaining = otpTimer;
         }
       });
     });
@@ -81,6 +91,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   void initState() {
     print(widget.loginModelData?.object);
     super.initState();
+    timer();
     _startTimer();
   }
 
