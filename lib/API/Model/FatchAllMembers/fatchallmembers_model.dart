@@ -30,14 +30,16 @@ class FatchAllMembersModel {
 class Object {
   String? userName;
   String? fullName;
-  String? userProfilePic;
+  Null? userProfilePic;
+  bool? isExpert;
 
-  Object({this.userName, this.fullName, this.userProfilePic});
+  Object({this.userName, this.fullName, this.userProfilePic, this.isExpert});
 
   Object.fromJson(Map<String, dynamic> json) {
     userName = json['userName'];
     fullName = json['fullName'];
     userProfilePic = json['userProfilePic'];
+    isExpert = json['isExpert'];
   }
 
   Map<String, dynamic> toJson() {
@@ -45,6 +47,7 @@ class Object {
     data['userName'] = this.userName;
     data['fullName'] = this.fullName;
     data['userProfilePic'] = this.userProfilePic;
+    data['isExpert'] = this.isExpert;
     return data;
   }
 }

@@ -158,12 +158,19 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                   decoration: BoxDecoration(
                                                       color: ColorConstant
                                                           .primary_color,
-                                                      border: Border.all(),
                                                       shape: BoxShape.circle),
-                                                  child: Icon(
-                                                    Icons.person,
-                                                    size: 20,
-                                                    color: Colors.white,
+                                                  child: CustomImageView(
+                                                    url: _data?.object?[0]
+                                                                .userProfilePic !=
+                                                            null
+                                                        ? "${_data?.object?[0].userProfilePic}"
+                                                        : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                    height: 20,
+                                                    radius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    width: 20,
+                                                    fit: BoxFit.fill,
                                                   )),
                                             ),
                                           ],
@@ -184,13 +191,19 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                       decoration: BoxDecoration(
                                                           color: ColorConstant
                                                               .primary_color,
-                                                          border: Border.all(),
                                                           shape:
                                                               BoxShape.circle),
-                                                      child: Icon(
-                                                        Icons.person,
-                                                        size: 20,
-                                                        color: Colors.white,
+                                                      child: CustomImageView(
+                                                        url: _data?.object?[0]
+                                                                    .userProfilePic !=
+                                                                null
+                                                            ? "${_data?.object?[0].userProfilePic}"
+                                                            : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                        height: 20,
+                                                        radius: BorderRadius
+                                                            .circular(20),
+                                                        width: 20,
+                                                        fit: BoxFit.fill,
                                                       )),
                                                 ),
                                                 Positioned(
@@ -202,13 +215,19 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                       decoration: BoxDecoration(
                                                           color: ColorConstant
                                                               .primary_color,
-                                                          border: Border.all(),
                                                           shape:
                                                               BoxShape.circle),
-                                                      child: Icon(
-                                                        Icons.person,
-                                                        size: 20,
-                                                        color: Colors.white,
+                                                      child: CustomImageView(
+                                                        url: _data?.object?[1]
+                                                                    .userProfilePic !=
+                                                                null
+                                                            ? "${_data?.object?[1].userProfilePic}"
+                                                            : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                        height: 20,
+                                                        radius: BorderRadius
+                                                            .circular(20),
+                                                        width: 20,
+                                                        fit: BoxFit.fill,
                                                       )),
                                                 ),
                                               ],
@@ -229,14 +248,20 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           decoration: BoxDecoration(
                                                               color: ColorConstant
                                                                   .primary_color,
-                                                              border:
-                                                                  Border.all(),
                                                               shape: BoxShape
                                                                   .circle),
-                                                          child: Icon(
-                                                            Icons.person,
-                                                            size: 20,
-                                                            color: Colors.white,
+                                                          child:
+                                                              CustomImageView(
+                                                            url: _data?.object?[0]
+                                                                        .userProfilePic !=
+                                                                    null
+                                                                ? "${_data?.object?[0].userProfilePic}"
+                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                            height: 20,
+                                                            radius: BorderRadius
+                                                                .circular(20),
+                                                            width: 20,
+                                                            fit: BoxFit.fill,
                                                           )),
                                                     ),
                                                     Positioned(
@@ -248,14 +273,20 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           decoration: BoxDecoration(
                                                               color: ColorConstant
                                                                   .primary_color,
-                                                              border:
-                                                                  Border.all(),
                                                               shape: BoxShape
                                                                   .circle),
-                                                          child: Icon(
-                                                            Icons.person,
-                                                            size: 20,
-                                                            color: Colors.white,
+                                                          child:
+                                                              CustomImageView(
+                                                            url: _data?.object?[1]
+                                                                        .userProfilePic !=
+                                                                    null
+                                                                ? "${_data?.object?[1].userProfilePic}"
+                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                            height: 20,
+                                                            radius: BorderRadius
+                                                                .circular(20),
+                                                            width: 20,
+                                                            fit: BoxFit.fill,
                                                           )),
                                                     ),
                                                     Positioned(
@@ -267,14 +298,20 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           decoration: BoxDecoration(
                                                               color: ColorConstant
                                                                   .primary_color,
-                                                              border:
-                                                                  Border.all(),
                                                               shape: BoxShape
                                                                   .circle),
-                                                          child: Icon(
-                                                            Icons.person,
-                                                            size: 20,
-                                                            color: Colors.white,
+                                                          child:
+                                                              CustomImageView(
+                                                            url: _data?.object?[2]
+                                                                        .userProfilePic !=
+                                                                    null
+                                                                ? "${_data?.object?[2].userProfilePic}"
+                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                            height: 20,
+                                                            radius: BorderRadius
+                                                                .circular(20),
+                                                            width: 20,
+                                                            fit: BoxFit.fill,
                                                           )),
                                                     ),
                                                   ],
@@ -294,14 +331,20 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           decoration: BoxDecoration(
                                                               color: ColorConstant
                                                                   .primary_color,
-                                                              border:
-                                                                  Border.all(),
                                                               shape: BoxShape
                                                                   .circle),
-                                                          child: Icon(
-                                                            Icons.person,
-                                                            size: 20,
-                                                            color: Colors.white,
+                                                          child:
+                                                              CustomImageView(
+                                                            url: _data?.object?[0]
+                                                                        .userProfilePic !=
+                                                                    null
+                                                                ? "${_data?.object?[0].userProfilePic}"
+                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                            height: 20,
+                                                            radius: BorderRadius
+                                                                .circular(20),
+                                                            width: 20,
+                                                            fit: BoxFit.fill,
                                                           )),
                                                     ),
                                                     Positioned(
@@ -313,14 +356,20 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           decoration: BoxDecoration(
                                                               color: ColorConstant
                                                                   .primary_color,
-                                                              border:
-                                                                  Border.all(),
                                                               shape: BoxShape
                                                                   .circle),
-                                                          child: Icon(
-                                                            Icons.person,
-                                                            size: 20,
-                                                            color: Colors.white,
+                                                          child:
+                                                              CustomImageView(
+                                                            url: _data?.object?[1]
+                                                                        .userProfilePic !=
+                                                                    null
+                                                                ? "${_data?.object?[1].userProfilePic}"
+                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                            height: 20,
+                                                            radius: BorderRadius
+                                                                .circular(20),
+                                                            width: 20,
+                                                            fit: BoxFit.fill,
                                                           )),
                                                     ),
                                                     Positioned(
@@ -332,14 +381,20 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           decoration: BoxDecoration(
                                                               color: ColorConstant
                                                                   .primary_color,
-                                                              border:
-                                                                  Border.all(),
                                                               shape: BoxShape
                                                                   .circle),
-                                                          child: Icon(
-                                                            Icons.person,
-                                                            size: 20,
-                                                            color: Colors.white,
+                                                          child:
+                                                              CustomImageView(
+                                                            url: _data?.object?[2]
+                                                                        .userProfilePic !=
+                                                                    null
+                                                                ? "${_data?.object?[2].userProfilePic}"
+                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                            height: 20,
+                                                            radius: BorderRadius
+                                                                .circular(20),
+                                                            width: 20,
+                                                            fit: BoxFit.fill,
                                                           )),
                                                     ),
                                                     Positioned(
@@ -430,6 +485,13 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                     fontFamily: "outfit",
                                     fontSize: 15),
                               ),
+                              // _data?.object?[index].isExpert == true
+                              //     ? Container(
+                              //         color:ColorConstant.primary_color,
+                              //         height: 20,
+                              //         width: 20,
+                              //       )
+                              //     : SizedBox(),
                               Spacer(),
                               GestureDetector(
                                 onTapDown: (details) {

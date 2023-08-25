@@ -39,8 +39,11 @@ List? image = [];
 List? imagee = [];
 List? close = [];
 List? closee = [];
-GetAllPrivateRoomModel? PublicRoomData;
+GetAllPrivateRoomModel? PriveateRoomData;
 String? User_Mood;
+DateTime now = DateTime.now();
+
+String formattedDate = DateFormat('dd-MM-yyyy').format(now);
 
 class _RoomsScreenState extends State<RoomsScreen> {
   var Show_NoData_Image = false;
@@ -64,13 +67,51 @@ class _RoomsScreenState extends State<RoomsScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_Mood = prefs.getString(PreferencesKey.module);
 
-
     await BlocProvider.of<GetAllPrivateRoomCubit>(context)
         .chckUserStaus(context);
     await BlocProvider.of<GetAllPrivateRoomCubit>(context)
         .GetAllPrivateRoomAPI(context);
   }
+ String customFormat(DateTime date) {
+    String day = date.day.toString();
+    String month = _getMonthName(date.month);
+    String year = date.year.toString();
+    String time = DateFormat('h:mm a').format(date);
 
+    String formattedDate = '$day$month $year $time';
+    return formattedDate;
+  }
+
+  String _getMonthName(int month) {
+    switch (month) {
+      case 1:
+        return 'st January';
+      case 2:
+        return 'nd February';
+      case 3:
+        return 'rd March';
+      case 4:
+        return 'th April';
+      case 5:
+        return 'th May';
+      case 6:
+        return 'th June';
+      case 7:
+        return 'th July';
+      case 8:
+        return 'th August';
+      case 9:
+        return 'th September';
+      case 10:
+        return 'th October';
+      case 11:
+        return 'th November';
+      case 12:
+        return 'th December';
+      default:
+        return '';
+    }
+  }
   @override
   Widget build(BuildContext context) {
     print('build method ');
@@ -124,15 +165,15 @@ class _RoomsScreenState extends State<RoomsScreen> {
             );
           }
           if (state is GetAllPrivateRoomLoadedState) {
-            PublicRoomData = state.PublicRoomData;
-            if (PublicRoomData?.object?.length == 0 ||
-                PublicRoomData?.object?.length == null) {
+            PriveateRoomData = state.PublicRoomData;
+            if (PriveateRoomData?.object?.length == 0 ||
+                PriveateRoomData?.object?.length == null) {
               Show_NoData_Image = true;
             } else {
               Show_NoData_Image = false;
             }
 
-            print(PublicRoomData?.message);
+            print(PriveateRoomData?.message);
           }
           // if (state is DeleteRoomLoadedState) {
           //   SnackBar snackBar = SnackBar(
@@ -166,7 +207,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                         child: Column(children: [
                           ListView.builder(
                             // itemCount: aa.length,
-                            itemCount: PublicRoomData?.object?.length,
+                            itemCount: PriveateRoomData?.object?.length,
                             /* (image?.contains(index) ?? false)
                               ? aa.length
                               : aa.length, */
@@ -174,15 +215,15 @@ class _RoomsScreenState extends State<RoomsScreen> {
                             physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
                               print(
-                                  "####################################${PublicRoomData?.object?[index]}");
-                              final apiDate = DateTime.parse(PublicRoomData
-                                      ?.object?[index].createdDate
-                                      .toString() ??
-                                  '');
-                              final formattedDate =
-                                  DateFormat("dd/MM/yyyy").format(apiDate);
+                                  "####################################${PriveateRoomData?.object?[index]}");
+                              // final apiDate = DateTime.parse(PublicRoomData
+                              //         ?.object?[index].createdDate
+                              //         .toString() ??
+                              //     '');
+                              
                               print('SDFJHFGSDFGHDFGHDFGH-$formattedDate');
-
+                              DateTime parsedDateTime = DateTime.parse(
+                                  '${PriveateRoomData?.object?[index].createdDate}');
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 35, vertical: 5),
@@ -213,7 +254,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             // Text(formattedDate),
 
                                             Text(
-                                              "${formattedDate}",
+                                              customFormat(parsedDateTime),
                                               // "${parsedDateTime}"  ,
                                               maxLines: 2,
                                               textScaleFactor: 1.0,
@@ -250,11 +291,11 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                               ],
                                                                   child:
                                                                       EditDilogScreen(
-                                                                    parentName: PublicRoomData
+                                                                    parentName: PriveateRoomData
                                                                         ?.object?[
                                                                             index]
                                                                         .roomQuestion,
-                                                                    uid: PublicRoomData
+                                                                    uid: PriveateRoomData
                                                                         ?.object?[
                                                                             index]
                                                                         .uid
@@ -438,7 +479,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                         GestureDetector(
                                                                           onTap:
                                                                               () {
-                                                                            BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PublicRoomData!.object![index].uid.toString(),
+                                                                            BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PriveateRoomData!.object![index].uid.toString(),
                                                                                 context);
                                                                           },
                                                                           child:
@@ -515,13 +556,18 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   left: 10),
-                                              child: Text(
-                                                "${PublicRoomData?.object?[index].roomQuestion}",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
-                                                    fontFamily: "outfit",
-                                                    fontSize: 14),
+                                              child: Container(
+                                                // color: Colors.amber,
+                                                width: _width / 1.3,
+                                                child: Text(
+                                                  "${PriveateRoomData?.object?[index].roomQuestion}",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black,
+                                                      fontFamily: "outfit",
+                                                      fontSize: 14),
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -530,7 +576,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                           padding:
                                               const EdgeInsets.only(left: 8.0),
                                           child: Text(
-                                            "${PublicRoomData?.object?[index].description}",
+                                            "${PriveateRoomData?.object?[index].description}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w400,
                                                 color: Colors.black
@@ -946,7 +992,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   ],
                                                   child: RoomMembersScreen(
                                                       room_Id:
-                                                          '${PublicRoomData?.object?[index].uid.toString()}'),
+                                                          '${PriveateRoomData?.object?[index].uid.toString()}'),
                                                 );
                                               },
                                             ));
@@ -959,7 +1005,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                PublicRoomData
+                                                PriveateRoomData
                                                             ?.object?[index]
                                                             .usersList
                                                             ?.length ==
@@ -978,22 +1024,34 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                   decoration: BoxDecoration(
                                                                       color: ColorConstant
                                                                           .primary_color,
-                                                                      border: Border
-                                                                          .all(),
                                                                       shape: BoxShape
                                                                           .circle),
-                                                                  child: Icon(
-                                                                    Icons
-                                                                        .person,
+                                                                  child:
+                                                                      CustomImageView(
+                                                                    url: PriveateRoomData?.object?[index].usersList?[0].userProfilePic !=
+                                                                            null
+                                                                        ? "${PriveateRoomData?.object?[index].usersList?[0].userProfilePic}"
+                                                                        : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  ) /* Image.network(
+                                                                    "",
+                                                                    
                                                                     size: 20,
                                                                     color: Colors
                                                                         .white,
-                                                                  )),
+                                                                  ) */
+                                                                  ),
                                                             ),
                                                           ],
                                                         ),
                                                       )
-                                                    : PublicRoomData
+                                                    : PriveateRoomData
                                                                 ?.object?[index]
                                                                 .usersList
                                                                 ?.length ==
@@ -1006,49 +1064,51 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                 Positioned(
                                                                   left: 0,
                                                                   top: 0,
-                                                                  child:
-                                                                      Container(
-                                                                          width:
-                                                                              26.88,
-                                                                          height:
-                                                                              26.87,
-                                                                          decoration: BoxDecoration(
-                                                                              color: ColorConstant.primary_color,
-                                                                              border: Border.all(),
-                                                                              shape: BoxShape.circle),
-                                                                          child: Icon(
-                                                                            Icons.person,
-                                                                            size:
-                                                                                20,
-                                                                            color:
-                                                                                Colors.white,
-                                                                          )),
+                                                                  child: Container(
+                                                                      width: 26.88,
+                                                                      height: 26.87,
+                                                                      decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
+                                                                      child: CustomImageView(
+                                                                        url: PriveateRoomData?.object?[index].usersList?[0].userProfilePic !=
+                                                                                null
+                                                                            ? "${PriveateRoomData?.object?[index].usersList?[0].userProfilePic}"
+                                                                            : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                                        height:
+                                                                            20,
+                                                                        radius:
+                                                                            BorderRadius.circular(20),
+                                                                        width:
+                                                                            20,
+                                                                        fit: BoxFit
+                                                                            .fill,
+                                                                      )),
                                                                 ),
                                                                 Positioned(
                                                                   left: 22.56,
                                                                   top: 0,
-                                                                  child:
-                                                                      Container(
-                                                                          width:
-                                                                              26.88,
-                                                                          height:
-                                                                              26.87,
-                                                                          decoration: BoxDecoration(
-                                                                              color: ColorConstant.primary_color,
-                                                                              border: Border.all(),
-                                                                              shape: BoxShape.circle),
-                                                                          child: Icon(
-                                                                            Icons.person,
-                                                                            size:
-                                                                                20,
-                                                                            color:
-                                                                                Colors.white,
-                                                                          )),
+                                                                  child: Container(
+                                                                      width: 26.88,
+                                                                      height: 26.87,
+                                                                      decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
+                                                                      child: CustomImageView(
+                                                                        url: PriveateRoomData?.object?[index].usersList?[1].userProfilePic !=
+                                                                                null
+                                                                            ? "${PriveateRoomData?.object?[index].usersList?[1].userProfilePic}"
+                                                                            : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                                        height:
+                                                                            20,
+                                                                        radius:
+                                                                            BorderRadius.circular(20),
+                                                                        width:
+                                                                            20,
+                                                                        fit: BoxFit
+                                                                            .fill,
+                                                                      )),
                                                                 ),
                                                               ],
                                                             ),
                                                           )
-                                                        : PublicRoomData
+                                                        : PriveateRoomData
                                                                     ?.object?[
                                                                         index]
                                                                     .usersList
@@ -1065,13 +1125,19 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                       child: Container(
                                                                           width: 26.88,
                                                                           height: 26.87,
-                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, border: Border.all(), shape: BoxShape.circle),
-                                                                          child: Icon(
-                                                                            Icons.person,
-                                                                            size:
+                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
+                                                                          child: CustomImageView(
+                                                                            url: PriveateRoomData?.object?[index].usersList?[0].userProfilePic != null
+                                                                                ? "${PriveateRoomData?.object?[index].usersList?[0].userProfilePic}"
+                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                                            height:
                                                                                 20,
-                                                                            color:
-                                                                                Colors.white,
+                                                                            radius:
+                                                                                BorderRadius.circular(20),
+                                                                            width:
+                                                                                20,
+                                                                            fit:
+                                                                                BoxFit.fill,
                                                                           )),
                                                                     ),
                                                                     Positioned(
@@ -1081,13 +1147,19 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                       child: Container(
                                                                           width: 26.88,
                                                                           height: 26.87,
-                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, border: Border.all(), shape: BoxShape.circle),
-                                                                          child: Icon(
-                                                                            Icons.person,
-                                                                            size:
+                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
+                                                                          child: CustomImageView(
+                                                                            url: PriveateRoomData?.object?[index].usersList?[1].userProfilePic != null
+                                                                                ? "${PriveateRoomData?.object?[index].usersList?[1].userProfilePic}"
+                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                                            height:
                                                                                 20,
-                                                                            color:
-                                                                                Colors.white,
+                                                                            radius:
+                                                                                BorderRadius.circular(20),
+                                                                            width:
+                                                                                20,
+                                                                            fit:
+                                                                                BoxFit.fill,
                                                                           )),
                                                                     ),
                                                                     Positioned(
@@ -1097,13 +1169,19 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                       child: Container(
                                                                           width: 26.88,
                                                                           height: 26.87,
-                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, border: Border.all(), shape: BoxShape.circle),
-                                                                          child: Icon(
-                                                                            Icons.person,
-                                                                            size:
+                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
+                                                                          child: CustomImageView(
+                                                                            url: PriveateRoomData?.object?[index].usersList?[2].userProfilePic != null
+                                                                                ? "${PriveateRoomData?.object?[index].usersList?[2].userProfilePic}"
+                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                                            height:
                                                                                 20,
-                                                                            color:
-                                                                                Colors.white,
+                                                                            radius:
+                                                                                BorderRadius.circular(20),
+                                                                            width:
+                                                                                20,
+                                                                            fit:
+                                                                                BoxFit.fill,
                                                                           )),
                                                                     ),
                                                                   ],
@@ -1120,13 +1198,19 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                       child: Container(
                                                                           width: 26.88,
                                                                           height: 26.87,
-                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, border: Border.all(), shape: BoxShape.circle),
-                                                                          child: Icon(
-                                                                            Icons.person,
-                                                                            size:
+                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
+                                                                          child: CustomImageView(
+                                                                            url: PriveateRoomData?.object?[index].usersList?[0].userProfilePic != null
+                                                                                ? "${PriveateRoomData?.object?[index].usersList?[0].userProfilePic}"
+                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                                            height:
                                                                                 20,
-                                                                            color:
-                                                                                Colors.white,
+                                                                            radius:
+                                                                                BorderRadius.circular(20),
+                                                                            width:
+                                                                                20,
+                                                                            fit:
+                                                                                BoxFit.fill,
                                                                           )),
                                                                     ),
                                                                     Positioned(
@@ -1136,13 +1220,19 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                       child: Container(
                                                                           width: 26.88,
                                                                           height: 26.87,
-                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, border: Border.all(), shape: BoxShape.circle),
-                                                                          child: Icon(
-                                                                            Icons.person,
-                                                                            size:
+                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
+                                                                          child: CustomImageView(
+                                                                            url: PriveateRoomData?.object?[index].usersList?[1].userProfilePic != null
+                                                                                ? "${PriveateRoomData?.object?[index].usersList?[1].userProfilePic}"
+                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                                            height:
                                                                                 20,
-                                                                            color:
-                                                                                Colors.white,
+                                                                            radius:
+                                                                                BorderRadius.circular(20),
+                                                                            width:
+                                                                                20,
+                                                                            fit:
+                                                                                BoxFit.fill,
                                                                           )),
                                                                     ),
                                                                     Positioned(
@@ -1152,13 +1242,19 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                       child: Container(
                                                                           width: 26.88,
                                                                           height: 26.87,
-                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, border: Border.all(), shape: BoxShape.circle),
-                                                                          child: Icon(
-                                                                            Icons.person,
-                                                                            size:
+                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
+                                                                          child: CustomImageView(
+                                                                            url: PriveateRoomData?.object?[index].usersList?[2].userProfilePic != null
+                                                                                ? "${PriveateRoomData?.object?[index].usersList?[2].userProfilePic}"
+                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                                            height:
                                                                                 20,
-                                                                            color:
-                                                                                Colors.white,
+                                                                            radius:
+                                                                                BorderRadius.circular(20),
+                                                                            width:
+                                                                                20,
+                                                                            fit:
+                                                                                BoxFit.fill,
                                                                           )),
                                                                     ),
                                                                     Positioned(
@@ -1172,7 +1268,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                             16,
                                                                         child:
                                                                             Text(
-                                                                          "+${(PublicRoomData?.object?[index].usersList?.length ?? 0) - 3}",
+                                                                          "+${(PriveateRoomData?.object?[index].usersList?.length ?? 0) - 3}",
                                                                           style:
                                                                               TextStyle(
                                                                             color:
@@ -1197,7 +1293,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                       builder: (BuildContext
                                                           context) {
                                                         print(
-                                                            'uid print-${PublicRoomData?.object?[index].uid}');
+                                                            'uid print-${PriveateRoomData?.object?[index].uid}');
                                                         return MultiBlocProvider(
                                                             providers: [
                                                               BlocProvider<
@@ -1209,7 +1305,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                             child:
                                                                 InviteDilogScreen(
                                                               Room_UUID:
-                                                                  "${PublicRoomData?.object?[index].uid}",
+                                                                  "${PriveateRoomData?.object?[index].uid}",
                                                             ));
                                                       },
                                                     );
@@ -1248,6 +1344,14 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             ),
                                           ),
                                         ),
+
+                                        // PriveateRoomData?.object?[index].usersList?[0]
+// PriveateRoomData?.object?[index].usersList?.forEach((element) { 
+
+  
+// }) 
+
+
                                         // index == 1 || index == 2 || index == 3
                                         //     ? Divider(color: Colors.grey)
                                         //     : SizedBox(),
@@ -1316,9 +1420,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                       ],
                                                       child: ViewCommentScreen(
                                                         Room_ID:
-                                                            "${PublicRoomData?.object?[index].uid ?? ""}",
+                                                            "${PriveateRoomData?.object?[index].uid ?? ""}",
                                                         Title:
-                                                            "${PublicRoomData?.object?[index].roomQuestion ?? ""}",
+                                                            "${PriveateRoomData?.object?[index].roomQuestion ?? ""}",
                                                       ),
                                                     );
                                                   }));
@@ -1351,44 +1455,51 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             SizedBox(
                                               width: 1,
                                             ),
-                                             User_Mood == "EXPERT" ? SizedBox():
-                                            Expanded(
-                                              flex: 2,
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return AssignAdminScreenn();
-                                                    },
-                                                  );
-                                                },
-                                                child: Container(
-                                                  height: 40,
-                                                  width: _width / 2.48,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                      bottomRight:
-                                                          Radius.circular(4),
+                                            User_Mood == "EXPERT"
+                                                ? SizedBox()
+                                                : Expanded(
+                                                    flex: 2,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                              context) {
+                                                            return AssignAdminScreenn();
+                                                          },
+                                                        );
+                                                      },
+                                                      child: Container(
+                                                        height: 40,
+                                                        width: _width / 2.48,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    4),
+                                                          ),
+                                                          color:
+                                                              Color(0XFF9B9B9B),
+                                                        ),
+                                                        child: Center(
+                                                          child: Text(
+                                                            "Select Expert",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: Colors
+                                                                    .white,
+                                                                fontFamily:
+                                                                    "outfit",
+                                                                fontSize: 15),
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ),
-                                                    color: Color(0XFF9B9B9B),
                                                   ),
-                                                  child: Center(
-                                                    child: Text(
-                                                      "Select Expert",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: Colors.white,
-                                                          fontFamily: "outfit",
-                                                          fontSize: 15),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
                                           ],
                                         ),
 
@@ -1424,26 +1535,27 @@ class _RoomsScreenState extends State<RoomsScreen> {
                           ),
                         ]),
                       ),
-                       User_Mood == "EXPERT" ? SizedBox():
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            /* showDialog(
+                      User_Mood == "EXPERT"
+                          ? SizedBox()
+                          : Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  /* showDialog(
                             context: context,
                             builder: (_) => BlocProvider<CreateRoomCubit>(
                                 create: (context) => CreateRoomCubit(),
                                 child: CreateRoomScreen()),
                           ); */
-                            CreatRoom(_height, _width);
-                          },
-                          child: CustomImageView(
-                            imagePath: ImageConstant.addimage,
-                            height: 60,
-                            alignment: Alignment.bottomRight,
-                          ),
-                        ),
-                      ),
+                                  CreatRoom(_height, _width);
+                                },
+                                child: CustomImageView(
+                                  imagePath: ImageConstant.addimage,
+                                  height: 60,
+                                  alignment: Alignment.bottomRight,
+                                ),
+                              ),
+                            ),
                     ],
                   )
                 : Stack(
@@ -1468,12 +1580,13 @@ class _RoomsScreenState extends State<RoomsScreen> {
                       // checkuserdata == false
                       // ? SizedBox()
                       // :
-                       User_Mood == "EXPERT" ? SizedBox():
-                      Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            /*  showDialog(
+                      User_Mood == "EXPERT"
+                          ? SizedBox()
+                          : Padding(
+                              padding: const EdgeInsets.all(18.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  /*  showDialog(
                             context: context,
                             builder: (_) => BlocProvider<CreateRoomCubit>(
                                 create: (context) => CreateRoomCubit(),
@@ -1483,21 +1596,21 @@ class _RoomsScreenState extends State<RoomsScreen> {
 //  CreatRoom(_height, _width)
 //                                     : CreateForum()
 
-                            checkuserdata == "PARTIALLY_REGISTERED"
-                                ? CreateForum()
-                                : checkuserdata == "PENDING"
-                                    ? showAlert()
-                                    : checkuserdata == "APPROVED"
-                                        ? CreatRoom(_height, _width)
-                                        : showAlert1();
-                          },
-                          child: CustomImageView(
-                            imagePath: ImageConstant.addimage,
-                            height: 55,
-                            alignment: Alignment.bottomRight,
-                          ),
-                        ),
-                      ),
+                                  checkuserdata == "PARTIALLY_REGISTERED"
+                                      ? CreateForum()
+                                      : checkuserdata == "PENDING"
+                                          ? showAlert()
+                                          : checkuserdata == "APPROVED"
+                                              ? CreatRoom(_height, _width)
+                                              : showAlert1();
+                                },
+                                child: CustomImageView(
+                                  imagePath: ImageConstant.addimage,
+                                  height: 55,
+                                  alignment: Alignment.bottomRight,
+                                ),
+                              ),
+                            ),
                     ],
                   );
           }
@@ -1682,7 +1795,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                           right: 20,
                                         ),
                                         child: TextField(
-                                          maxLength: 50,
+                                          // maxLength: 50,
                                           controller: _roomName,
                                           cursorColor: Colors.grey,
                                           inputFormatters: [
@@ -1690,7 +1803,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                           ],
                                           decoration: InputDecoration(
                                             hintText: 'Room Name',
-                                            counterText: '',
+                                            // counterText: '',
                                             border: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
@@ -1727,12 +1840,16 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                           padding: EdgeInsets.only(
                                               top: 0.0, left: 10),
                                           child: TextField(
-                                            maxLength: 255,
+                                            // maxLength: 255,
                                             controller: _DescriptionText,
                                             maxLines: 5,
                                             cursorColor: Colors.grey,
+                                            inputFormatters: [
+                                              LengthLimitingTextInputFormatter(
+                                                  255),
+                                            ],
                                             decoration: InputDecoration(
-                                              counterText: "",
+                                              // counterText: "",
                                               hintText:
                                                   'Describe your problem or topic here..',
                                               border: InputBorder.none,

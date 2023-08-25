@@ -423,49 +423,65 @@ class _HomeScreenState extends State<HomeScreen> {
                                         )
                                       : checkuserdata == "REJECTED"
                                           ? GestureDetector(
-                                            onTap: () {
-                                              
-                                              Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return MultiBlocProvider(providers: [
-                BlocProvider<FetchAllPublicRoomCubit>(
-                  create: (context) => FetchAllPublicRoomCubit(),
-                ),
-                BlocProvider<CreatPublicRoomCubit>(
-                  create: (context) => CreatPublicRoomCubit(),
-                ),
-                BlocProvider<senMSGCubit>(
-                  create: (context) => senMSGCubit(),
-                ),
-                BlocProvider<RegisterCubit>(
-                  create: (context) => RegisterCubit(),
-                ),
-                BlocProvider<GetAllPrivateRoomCubit>(
-                  create: (context) => GetAllPrivateRoomCubit(),
-                ),
-                BlocProvider<InvitationCubit>(
-                  create: (context) => InvitationCubit(),
-                ),
-              ], child: BottombarPage(buttomIndex: 4));
-            }));
-                                              
-                                            },
-                                            child: Container(
+                                              onTap: () {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return MultiBlocProvider(
+                                                      providers: [
+                                                        BlocProvider<
+                                                            FetchAllPublicRoomCubit>(
+                                                          create: (context) =>
+                                                              FetchAllPublicRoomCubit(),
+                                                        ),
+                                                        BlocProvider<
+                                                            CreatPublicRoomCubit>(
+                                                          create: (context) =>
+                                                              CreatPublicRoomCubit(),
+                                                        ),
+                                                        BlocProvider<
+                                                            senMSGCubit>(
+                                                          create: (context) =>
+                                                              senMSGCubit(),
+                                                        ),
+                                                        BlocProvider<
+                                                            RegisterCubit>(
+                                                          create: (context) =>
+                                                              RegisterCubit(),
+                                                        ),
+                                                        BlocProvider<
+                                                            GetAllPrivateRoomCubit>(
+                                                          create: (context) =>
+                                                              GetAllPrivateRoomCubit(),
+                                                        ),
+                                                        BlocProvider<
+                                                            InvitationCubit>(
+                                                          create: (context) =>
+                                                              InvitationCubit(),
+                                                        ),
+                                                      ],
+                                                      child: BottombarPage(
+                                                          buttomIndex: 4));
+                                                }));
+                                              },
+                                              child: Container(
                                                 height: 25,
                                                 width: _width,
                                                 // color: Colors.red,
                                                 child: Center(
                                                   child: Text(
-                                                    "Your Account Rejected Update and Submit.",
+                                                    "Your Account Rejected Update, click here..",
                                                     style: TextStyle(
                                                       fontFamily: 'outfit',
                                                       fontSize: 15,
                                                       color: Color(0XFFED1C25),
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                          )
+                                            )
                                           : SizedBox()
                                   : SizedBox(),
                     ),
@@ -548,39 +564,39 @@ class _HomeScreenState extends State<HomeScreen> {
                                               radius: BorderRadius.circular(10),
                                             ),
                                           ),
-                                          Positioned(
-                                            top: 7,
-                                            left: 4,
-                                            child: Container(
-                                              width: 70,
-                                              height: 18,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  color: Colors.white),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  CircleAvatar(
-                                                    backgroundColor: Colors.red,
-                                                    maxRadius: 5,
-                                                  ),
-                                                  Text(
-                                                    "Online",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            Color(0XFFED1C25),
-                                                        fontFamily: "outfit",
-                                                        fontSize: 15),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          )
+                                          // Positioned(
+                                          //   top: 7,
+                                          //   left: 4,
+                                          //   child: Container(
+                                          //     width: 70,
+                                          //     height: 18,
+                                          //     decoration: BoxDecoration(
+                                          //         borderRadius:
+                                          //             BorderRadius.circular(5),
+                                          //         color: Colors.white),
+                                          //     child: Row(
+                                          //       mainAxisAlignment:
+                                          //           MainAxisAlignment
+                                          //               .spaceAround,
+                                          //       children: [
+                                          //         CircleAvatar(
+                                          //           backgroundColor: Colors.red,
+                                          //           maxRadius: 5,
+                                          //         ),
+                                          //         Text(
+                                          //           "Online",
+                                          //           style: TextStyle(
+                                          //               fontWeight:
+                                          //                   FontWeight.w400,
+                                          //               color:
+                                          //                   Color(0XFFED1C25),
+                                          //               fontFamily: "outfit",
+                                          //               fontSize: 15),
+                                          //         ),
+                                          //       ],
+                                          //     ),
+                                          //   ),
+                                          // )
                                         ],
                                       ),
                                       Row(
@@ -593,14 +609,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 fontFamily: "outfit",
                                                 fontSize: 18),
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: CustomImageView(
-                                              imagePath: ImageConstant.imgright,
-                                              height: 15,
-                                              // fit: BoxFit.fill,
-                                            ),
-                                          ),
+                                          // Padding(
+                                          //   padding: const EdgeInsets.all(8.0),
+                                          //   child: CustomImageView(
+                                          //     imagePath: ImageConstant.imgright,
+                                          //     height: 15,
+                                          //     // fit: BoxFit.fill,
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                       Row(
