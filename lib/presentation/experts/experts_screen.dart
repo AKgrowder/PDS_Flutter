@@ -390,7 +390,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                                       builder: (BuildContext
                                                           context) {
                                                         print(
-                                                            'uid print-${PublicRoomData?.object?[index].uid}');
+                                                            'uid print-${FetchAllExpertsData?.object?[index].uuid}');
                                                         return MultiBlocProvider(
                                                             providers: [
                                                               BlocProvider<
@@ -402,7 +402,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                                             child:
                                                                 InviteDilogScreen(
                                                               Room_UUID:
-                                                                  "${PublicRoomData?.object?[index].uid}",
+                                                                  "${FetchAllExpertsData?.object?[index].uuid}",
                                                             ));
                                                       },
                                                     );
