@@ -8,6 +8,7 @@ import 'package:archit_s_application1/API/Model/authModel/loginModel.dart';
 import 'package:archit_s_application1/API/Model/authModel/registerModel.dart';
 import 'package:archit_s_application1/API/Model/checkUserStatusModel/chekuserStausModel.dart';
 import 'package:archit_s_application1/API/Model/createDocumentModel/createDocumentModel.dart';
+import 'package:archit_s_application1/API/Model/deviceInfo/deviceInfo_model.dart';
 import 'package:archit_s_application1/API/Model/otpmodel/otpmodel.dart';
 import 'package:archit_s_application1/API/Model/sherInviteModel/sherinviteModel.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,6 +19,7 @@ import '../Model/AddThread/CreateRoom_Model.dart';
 import '../Model/CreateRoomModel/CreateRoom_Model.dart';
 import '../Model/Edit_room_model/edit_room_model.dart';
 import '../Model/FatchAllMembers/fatchallmembers_model.dart';
+import '../Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import '../Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
 import '../Model/HomeScreenModel/PublicRoomModel.dart';
 import '../Model/InvitationModel/Invitation_Model.dart';
@@ -27,10 +29,7 @@ import '../Model/acceptRejectInvitaionModel/acceptRejectInvitaion.dart';
 import '../Model/coment/coment_model.dart';
 import '../Model/creat_form/creat_form_Model.dart';
 import '../Model/delete_room_model/Delete_room_model.dart';
-
-import '../Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
-import 'package:archit_s_application1/API/Model/deviceInfo/deviceInfo_model.dart';
-
+import '../Model/fetch_room_detail_model/fetch_room_detail_model.dart';
 import '../Model/myaccountModel/myaccountModel.dart';
 
 class Repository {
@@ -520,6 +519,26 @@ class Repository {
         return jsonString;
     }
   }
+
+    fetchRoomDetails(String userId,BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+      Config.fetchRoomDetails + userId,context
+    );
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return FetchRoomDetailModel.fromJson(jsonString);
+     case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
 }
 
 

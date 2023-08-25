@@ -246,10 +246,11 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 15, right: 15, top: 0),
                     child: Container(
-                      height: 210,
+                      height: 250,
                       // width: width / 1.1,
                       decoration: BoxDecoration(
                         color: Color(0XFFEFEFEF),
+                        // color: Colors.amber,
                         border:
                             Border.all(color: Colors.grey.shade300, width: 1),
                         borderRadius: BorderRadius.only(
@@ -264,7 +265,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                                   keyboardType: TextInputType.multiline,
                                   controller: _RoomTitleController,
                                   cursorColor: Colors.grey,
-                                  maxLines: 7,
+                                  maxLines: 10,
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Add Thread....'),

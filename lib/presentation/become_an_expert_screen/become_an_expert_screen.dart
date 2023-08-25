@@ -681,15 +681,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           } else if (jobprofileController.text.isNotEmpty &&
                               jobprofileController.text.length < 4) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Minimum length required'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (jobprofileController.text.isNotEmpty &&
-                              jobprofileController.text.length < 4) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Minimum length required'),
+                              content: Text('Minimum length required in Job Profiie'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -698,7 +690,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   .toString() ==
                               null) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please Selcte Expertise in'),
+                              content: Text('Please select Expertise in'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -707,7 +699,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   .toString() ==
                               null) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please Selcte Expertise in'),
+                              content: Text('Please select Expertise in'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -715,7 +707,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           } else if (feesController.text == null ||
                               feesController.text == '') {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please Selcte Fees'),
+                              content: Text('Please select Fees'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -723,14 +715,14 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           } else if (feesController.text == null ||
                               feesController.text == '') {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please Selcte Fees'),
+                              content: Text('Please select Fees'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
                           } else if (_endTime == null && _startTime == null) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please Selcte Working Hours'),
+                              content: Text('Please select Working Hours'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)

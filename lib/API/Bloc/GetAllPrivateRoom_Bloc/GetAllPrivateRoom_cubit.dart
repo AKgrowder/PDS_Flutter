@@ -1,8 +1,6 @@
-import 'package:archit_s_application1/API/Model/checkUserStatusModel/chekuserStausModel.dart';
-import 'package:archit_s_application1/API/Model/delete_room_model/Delete_room_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
+
 import '../../Repo/repository.dart';
 import 'GetAllPrivateRoom_state.dart';
 
@@ -44,6 +42,21 @@ class GetAllPrivateRoomCubit extends Cubit<GetAllPrivateRoomState> {
       }
     } catch (e) {
       emit(GetAllPrivateRoomErrorState(checkUserStausModel));
+    }
+  }
+  
+
+  Future<void> Fetchroomdetails(String userId, BuildContext context) async {
+    dynamic fetchRoomDetailModel;
+    try {
+      emit(GetAllPrivateRoomLoadingState());
+      fetchRoomDetailModel =
+          await Repository().fetchRoomDetails(userId, context);
+      if (fetchRoomDetailModel.success == true) {
+        emit(FetchRoomDetailLoadedState(fetchRoomDetailModel));
+      }
+    } catch (e) {
+      emit(GetAllPrivateRoomErrorState(fetchRoomDetailModel));
     }
   }
 }
