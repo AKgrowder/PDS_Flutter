@@ -2,9 +2,12 @@ import 'package:archit_s_application1/core/utils/image_constant.dart';
 import 'package:archit_s_application1/dilogs/invite_dilog.dart';
 import 'package:archit_s_application1/widgets/custom_image_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import '../../theme/theme_helper.dart';
 import '../home/home.dart';
+import '../rooms/rooms_screen.dart';
 
 class ExpertsScreen extends StatefulWidget {
   const ExpertsScreen({Key? key}) : super(key: key);
@@ -182,12 +185,13 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                     //     userData["userData"][index]["image"],
                                     //   ),
                                     // ),
-                                    index == 1
-                                        ? CustomImageView(
-                                            imagePath: ImageConstant.expert2,
-                                            radius: BorderRadius.circular(10),
-                                          )
-                                        : CustomImageView(
+                                    // index == 1
+                                        // ? CustomImageView(
+                                        //     imagePath: ImageConstant.expert2,
+                                        //     radius: BorderRadius.circular(10),
+                                        //   )
+                                        // :
+                                         CustomImageView(
                                             imagePath: ImageConstant.experts,
                                             radius: BorderRadius.circular(10),
                                           ),
@@ -334,7 +338,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                   child: Row(
                                     children: [
                                       CustomImageView(
-                                        imagePath: ImageConstant.roundrupee,
+                                        imagePath: ImageConstant. roundrupee,
                                         height: 20,
                                       ),
                                       SizedBox(
@@ -377,14 +381,32 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                 SizedBox(
                                   height: 17.2,
                                 ),
-                                index == 1 || index == 0
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (_) =>
-                                                  InviteDilogScreen());
-                                        },
+                                // index == 1 || index == 0
+                                //     ? 
+                                    GestureDetector(
+                                       onTap: () {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        print(
+                                                            'uid print-${PublicRoomData?.object?[index].uid}');
+                                                        return MultiBlocProvider(
+                                                            providers: [
+                                                              BlocProvider<
+                                                                  SherInviteCubit>(
+                                                                create: (_) =>
+                                                                    SherInviteCubit(),
+                                                              ),
+                                                            ],
+                                                            child:
+                                                                InviteDilogScreen(
+                                                              Room_UUID:
+                                                                  "${PublicRoomData?.object?[index].uid}",
+                                                            ));
+                                                      },
+                                                    );
+                                                  },
                                         child: Container(
                                           height: 30,
                                           width: _width,
@@ -394,17 +416,26 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                                 Radius.circular(10)),
                                           ),
                                           child: Center(
-                                            child: index == 1
-                                                ? Text(
-                                                    "invite sent",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.white,
-                                                        fontFamily: "outfit",
-                                                        fontSize: 15),
-                                                  )
-                                                : Text(
+                                            // child: index == 1
+                                            //     ? Text(
+                                            //         "invite sent",
+                                            //         style: TextStyle(
+                                            //             fontWeight:
+                                            //                 FontWeight.w400,
+                                            //             color: Colors.white,
+                                            //             fontFamily: "outfit",
+                                            //             fontSize: 15),
+                                            //       )
+                                            //     : Text(
+                                            //         "invite",
+                                            //         style: TextStyle(
+                                            //             fontWeight:
+                                            //                 FontWeight.w400,
+                                            //             color: Colors.white,
+                                            //             fontFamily: "outfit",
+                                            //             fontSize: 15),
+                                            //       ),
+                                                child: Text(
                                                     "invite",
                                                     style: TextStyle(
                                                         fontWeight:
@@ -416,62 +447,62 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                           ),
                                         ),
                                       )
-                                    : Container(
-                                        height: 30,
-                                        width: _width,
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                              color: index == 3
-                                                  ? Colors.red
-                                                  : Colors.green,
-                                            ),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10))),
-                                        child: Row(children: [
-                                          SizedBox(
-                                            width: 20,
-                                          ),
-                                          index == 3
-                                              ? Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 20),
-                                                  child: Icon(
-                                                    Icons.close,
-                                                    color: Colors.red,
-                                                  ),
-                                                )
-                                              : Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 20),
-                                                  child: Icon(
-                                                    Icons.done,
-                                                    color: Colors.green,
-                                                  ),
-                                                ),
-                                          index == 3
-                                              ? Text(
-                                                  "Rejected",
-                                                  style: TextStyle(
-                                                      color: Colors.red,
-                                                      fontFamily: 'outfit',
-                                                      fontSize: 13,
-                                                      fontWeight:
-                                                          FontWeight.w300),
-                                                )
-                                              : Text(
-                                                  "Accepted",
-                                                  style: TextStyle(
-                                                      color: Colors.green,
-                                                      fontFamily: 'outfit',
-                                                      fontSize: 13,
-                                                      fontWeight:
-                                                          FontWeight.w300),
-                                                )
-                                        ]),
-                                      ),
+                                    // : Container(
+                                    //     height: 30,
+                                    //     width: _width,
+                                    //     decoration: BoxDecoration(
+                                    //         color: Colors.white,
+                                    //         border: Border.all(
+                                    //           color: index == 3
+                                    //               ? Colors.red
+                                    //               : Colors.green,
+                                    //         ),
+                                    //         borderRadius: BorderRadius.all(
+                                    //             Radius.circular(10))),
+                                    //     child: Row(children: [
+                                    //       SizedBox(
+                                    //         width: 20,
+                                    //       ),
+                                    //       index == 3
+                                    //           ? Padding(
+                                    //               padding:
+                                    //                   const EdgeInsets.only(
+                                    //                       left: 20),
+                                    //               child: Icon(
+                                    //                 Icons.close,
+                                    //                 color: Colors.red,
+                                    //               ),
+                                    //             )
+                                    //           : Padding(
+                                    //               padding:
+                                    //                   const EdgeInsets.only(
+                                    //                       left: 20),
+                                    //               child: Icon(
+                                    //                 Icons.done,
+                                    //                 color: Colors.green,
+                                    //               ),
+                                    //             ),
+                                    //       index == 3
+                                    //           ? Text(
+                                    //               "Rejected",
+                                    //               style: TextStyle(
+                                    //                   color: Colors.red,
+                                    //                   fontFamily: 'outfit',
+                                    //                   fontSize: 13,
+                                    //                   fontWeight:
+                                    //                       FontWeight.w300),
+                                    //             )
+                                    //           : Text(
+                                    //               "Accepted",
+                                    //               style: TextStyle(
+                                    //                   color: Colors.green,
+                                    //                   fontFamily: 'outfit',
+                                    //                   fontSize: 13,
+                                    //                   fontWeight:
+                                    //                       FontWeight.w300),
+                                    //             )
+                                    //     ]),
+                                    //   ),
                               ],
                             )),
                       ),

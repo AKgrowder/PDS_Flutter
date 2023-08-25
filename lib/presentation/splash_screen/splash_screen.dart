@@ -76,6 +76,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (state is SystemConfigLoadedState) {
         systemConfigModel = state.systemConfigModel;
         print("@@@@@@@@@@@@@@@@@@${systemConfigModel?.object}");
+         SetUi();
 
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
           builder: (context) {
@@ -129,6 +130,10 @@ class _SplashScreenState extends State<SplashScreen> {
       } else if (element.name == "MaxMediaUploadSizeInMB") {
         var mediaSize = int.parse(element.value!);
         prefs.setInt(PreferencesKey.mediaSize, mediaSize);
+      } else if (element.name == "ResendTimerInSeconds") {
+        var otpTimer = int.parse(element.value!);
+        print(" otp timer  ${otpTimer}");
+        await prefs.setInt(PreferencesKey.otpTimer, otpTimer);
       }
     });
   }

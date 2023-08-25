@@ -1,6 +1,8 @@
 import 'package:archit_s_application1/API/Model/checkUserStatusModel/chekuserStausModel.dart';
 import 'package:archit_s_application1/API/Model/delete_room_model/Delete_room_model.dart';
+import 'package:archit_s_application1/API/Model/fetch_room_detail_model/fetch_room_detail_model.dart';
 import 'package:archit_s_application1/API/Model/sherInviteModel/sherinviteModel.dart';
+
 import '../../Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
 
 abstract class GetAllPrivateRoomState {}
@@ -32,5 +34,10 @@ class DeleteRoomLoadedState extends GetAllPrivateRoomState {
 class CheckuserLoadedState extends GetAllPrivateRoomState {
   final CheckUserStausModel checkUserStausModel;
   CheckuserLoadedState(this.checkUserStausModel);
+}
+
+class FetchRoomDetailLoadedState extends GetAllPrivateRoomState {
+  final FetchRoomDetailModel fetchRoomDetailModel;
+  FetchRoomDetailLoadedState(this.fetchRoomDetailModel);
 }
 
