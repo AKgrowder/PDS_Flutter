@@ -1,7 +1,7 @@
-import 'package:archit_s_application1/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
-import 'package:archit_s_application1/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
-import 'package:archit_s_application1/API/Model/createDocumentModel/createDocumentModel.dart';
-import 'package:archit_s_application1/API/Model/sherInviteModel/sherinviteModel.dart';
+import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
+import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
+import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
+import 'package:pds/API/Model/sherInviteModel/sherinviteModel.dart';
 
 abstract class FetchExprtiseRoomState {}
 

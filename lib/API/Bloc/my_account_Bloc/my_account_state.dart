@@ -1,8 +1,8 @@
-import 'package:archit_s_application1/API/Bloc/creatForum_Bloc/creat_Fourm_state.dart';
-import 'package:archit_s_application1/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
-import 'package:archit_s_application1/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
-import 'package:archit_s_application1/API/Model/createDocumentModel/createDocumentModel.dart';
-import 'package:archit_s_application1/API/Model/myaccountModel/myaccountModel.dart';
+import 'package:pds/API/Bloc/creatForum_Bloc/creat_Fourm_state.dart';
+import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
+import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
+import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
+import 'package:pds/API/Model/myaccountModel/myaccountModel.dart';
 
 abstract class MyAccountState {}
 

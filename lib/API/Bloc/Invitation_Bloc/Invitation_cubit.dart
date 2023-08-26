@@ -1,4 +1,4 @@
-import 'package:archit_s_application1/API/Model/acceptRejectInvitaionModel/acceptRejectInvitaion.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/acceptRejectInvitaion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../Model/InvitationModel/Invitation_Model.dart';

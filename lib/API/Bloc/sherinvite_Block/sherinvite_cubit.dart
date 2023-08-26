@@ -1,5 +1,5 @@
-import 'package:archit_s_application1/API/Model/sherInviteModel/sherinviteModel.dart';
-import 'package:archit_s_application1/API/Repo/repository.dart';
+import 'package:pds/API/Model/sherInviteModel/sherinviteModel.dart';
+import 'package:pds/API/Repo/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

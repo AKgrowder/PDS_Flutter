@@ -1,7 +1,7 @@
-import 'package:archit_s_application1/API/Bloc/auth/login_state.dart';
-import 'package:archit_s_application1/API/Model/authModel/getUserDetailsMdoel.dart';
-import 'package:archit_s_application1/API/Model/authModel/loginModel.dart';
-import 'package:archit_s_application1/API/Repo/repository.dart';
+import 'package:pds/API/Bloc/auth/login_state.dart';
+import 'package:pds/API/Model/authModel/getUserDetailsMdoel.dart';
+import 'package:pds/API/Model/authModel/loginModel.dart';
+import 'package:pds/API/Repo/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
