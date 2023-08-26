@@ -1,4 +1,4 @@
-import 'package:archit_s_application1/API/Model/System_Config_model/system_config_model.dart';
+import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
 
 abstract class SystemConfigState {}
 

@@ -1,4 +1,4 @@
-import 'package:archit_s_application1/API/Model/coment/coment_model.dart';
+import 'package:pds/API/Model/coment/coment_model.dart';
 
 import '../../Model/SendMSG/SendMSG_Model.dart';
 

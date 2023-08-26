@@ -1,4 +1,4 @@
-import 'package:archit_s_application1/presentation/experts_details_screen/review_scren.dart';
+import 'package:pds/presentation/experts_details_screen/review_scren.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 

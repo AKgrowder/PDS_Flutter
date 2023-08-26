@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:archit_s_application1/API/Bloc/auth/register_Block.dart';
-import 'package:archit_s_application1/API/Bloc/auth/register_state.dart';
-import 'package:archit_s_application1/API/Model/createDocumentModel/createDocumentModel.dart';
-import 'package:archit_s_application1/core/app_export.dart';
-import 'package:archit_s_application1/core/utils/color_constant.dart';
-import 'package:archit_s_application1/core/utils/sharedPreferences.dart';
-import 'package:archit_s_application1/presentation/otp_verification_screen/otp_verification_screen.dart';
-import 'package:archit_s_application1/widgets/custom_text_form_field.dart';
+import 'package:pds/API/Bloc/auth/register_Block.dart';
+import 'package:pds/API/Bloc/auth/register_state.dart';
+import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
+import 'package:pds/core/app_export.dart';
+import 'package:pds/core/utils/color_constant.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/otp_verification_screen/otp_verification_screen.dart';
+import 'package:pds/widgets/custom_text_form_field.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/utils/utils.dart';

@@ -1,5 +1,5 @@
-import 'package:archit_s_application1/API/Bloc/DeleteRoom_bloc/Delete_room_cubit.dart';
-import 'package:archit_s_application1/API/Bloc/DeleteRoom_bloc/Delete_room_state.dart';
+import 'package:pds/API/Bloc/DeleteRoom_bloc/Delete_room_cubit.dart';
+import 'package:pds/API/Bloc/DeleteRoom_bloc/Delete_room_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

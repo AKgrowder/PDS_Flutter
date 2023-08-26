@@ -1,7 +1,7 @@
-import 'package:archit_s_application1/API/Model/checkUserStatusModel/chekuserStausModel.dart';
-import 'package:archit_s_application1/API/Model/delete_room_model/Delete_room_model.dart';
-import 'package:archit_s_application1/API/Model/fetch_room_detail_model/fetch_room_detail_model.dart';
-import 'package:archit_s_application1/API/Model/sherInviteModel/sherinviteModel.dart';
+import 'package:pds/API/Model/checkUserStatusModel/chekuserStausModel.dart';
+import 'package:pds/API/Model/delete_room_model/Delete_room_model.dart';
+import 'package:pds/API/Model/fetch_room_detail_model/fetch_room_detail_model.dart';
+import 'package:pds/API/Model/sherInviteModel/sherinviteModel.dart';
 
 import '../../Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
 

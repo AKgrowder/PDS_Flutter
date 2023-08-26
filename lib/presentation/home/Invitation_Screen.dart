@@ -12,7 +12,7 @@ import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
 import '../room_members/room_members_screen.dart';
-import 'package:archit_s_application1/dilogs/invite_dilog.dart';
+import 'package:pds/dilogs/invite_dilog.dart';
 
 class InvitationScreen extends StatefulWidget {
   const InvitationScreen({Key? key}) : super(key: key);

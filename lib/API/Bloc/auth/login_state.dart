@@ -1,5 +1,5 @@
-import 'package:archit_s_application1/API/Model/authModel/getUserDetailsMdoel.dart';
-import 'package:archit_s_application1/API/Model/authModel/loginModel.dart';
+import 'package:pds/API/Model/authModel/getUserDetailsMdoel.dart';
+import 'package:pds/API/Model/authModel/loginModel.dart';
 
 abstract class LoginState {}
 

@@ -1,10 +1,10 @@
-// import 'package:archit_s_application1/core/utils/size_utils.dart';
+// import 'package:pds/core/utils/size_utils.dart';
 // ignore_for_file: must_be_immutable
 
-import 'package:archit_s_application1/API/Bloc/Fatch_all_members/fatch_all_members_cubit.dart';
-import 'package:archit_s_application1/API/Bloc/Fatch_all_members/fatch_all_members_state.dart';
-import 'package:archit_s_application1/API/Model/FatchAllMembers/fatchallmembers_model.dart';
-import 'package:archit_s_application1/core/utils/color_constant.dart';
+import 'package:pds/API/Bloc/Fatch_all_members/fatch_all_members_cubit.dart';
+import 'package:pds/API/Bloc/Fatch_all_members/fatch_all_members_state.dart';
+import 'package:pds/API/Model/FatchAllMembers/fatchallmembers_model.dart';
+import 'package:pds/core/utils/color_constant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

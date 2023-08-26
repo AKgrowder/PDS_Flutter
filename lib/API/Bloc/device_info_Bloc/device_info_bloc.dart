@@ -1,4 +1,4 @@
-import 'package:archit_s_application1/API/Bloc/device_info_Bloc/device_info_state.dart';
+import 'package:pds/API/Bloc/device_info_Bloc/device_info_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
