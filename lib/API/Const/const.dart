@@ -1,13 +1,9 @@
 class Config {
+  static const String somethingWentWrong =
+      "Something Went Wrong, Try After Some Time.";
 
-
-
-  static const String somethingWentWrong = "Something Went Wrong";
   static const String servernotreachable =
       "Servar Not Rechable, Try After Some Time.";
-
-
-
 
   static const String FetchAllPublicRoom = "guest/api/fetchAllPublicRoom";
   static const String CreateRoom = "guest/api/createRoom";
@@ -31,10 +27,10 @@ class Config {
   static const String DeleteRoom = "user/api/deleteRoom";
   static const String checkUserActive = "user/api/isForumCreated";
   static const String uploadfile = 'user/api/uploadFIle';
-  static const String uploadProfile= 'user/api/uploadProfilePic';
-   static const String addDeviceDetail = "auth/auth/addDeviceDetail";
+  static const String uploadProfile = 'user/api/uploadProfilePic';
+  static const String addDeviceDetail = "auth/auth/addDeviceDetail";
   static const String fetchAllExperts = "user/api/fetchAllExperts";
-  static const String myaccountApi= "user/api/fetchUserProfile";
-   static const String systemconfig = "user/api/fetchSysConfig";
-   static const String fetchRoomDetails = "user/api/fetchRoomDetails/";
+  static const String myaccountApi = "user/api/fetchUserProfile";
+  static const String systemconfig = "user/api/fetchSysConfig";
+  static const String fetchRoomDetails = "user/api/fetchRoomDetails/";
 }
