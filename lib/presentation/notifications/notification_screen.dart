@@ -614,8 +614,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                                     .circle),
                                                             child:   CustomImageView(
                                                     url:  InvitationRoomData?.object?[index]
-                                                      .roomMembers?[0].userProfilePic !=
-                                                            null
+                                                      .roomMembers?[0].userProfilePic?.isNotEmpty ?? false 
                                                         ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
                                                         : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                     height: 20,
@@ -652,8 +651,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                                         .circle),
                                                                 child: CustomImageView(
                                                     url:  InvitationRoomData?.object?[index]
-                                                      .roomMembers?[0].userProfilePic !=
-                                                            null
+                                                      .roomMembers?[0].userProfilePic?.isNotEmpty ?? false 
                                                         ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
                                                         : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                     height: 20,
@@ -677,8 +675,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                                         .circle),
                                                                 child:CustomImageView(
                                                     url:  InvitationRoomData?.object?[index]
-                                                      .roomMembers?[1].userProfilePic !=
-                                                            null
+                                                      .roomMembers?[1].userProfilePic?.isNotEmpty ?? false 
                                                         ? "${InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}"
                                                         : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                     height: 20,
@@ -719,8 +716,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                                         child:
                                                                           CustomImageView(
                                                     url:  InvitationRoomData?.object?[index]
-                                                      .roomMembers?[0].userProfilePic !=
-                                                            null
+                                                      .roomMembers?[0].userProfilePic?.isNotEmpty ?? false 
                                                         ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
                                                         : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                     height: 20,
@@ -748,8 +744,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                                         child:
                                                                             CustomImageView(
                                                     url:  InvitationRoomData?.object?[index]
-                                                      .roomMembers?[1].userProfilePic !=
-                                                            null
+                                                      .roomMembers?[1].userProfilePic?.isNotEmpty ?? false 
                                                         ? "${InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}"
                                                         : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                     height: 20,
@@ -777,8 +772,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                                         child:
                                                                             CustomImageView(
                                                     url:  InvitationRoomData?.object?[index]
-                                                      .roomMembers?[3].userProfilePic !=
-                                                            null
+                                                      .roomMembers?[3].userProfilePic?.isNotEmpty ?? false 
                                                         ? "${InvitationRoomData?.object?[index].roomMembers?[3].userProfilePic}"
                                                         : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                     height: 20,
@@ -814,8 +808,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                                         child:
                                                                             CustomImageView(
                                                     url:  InvitationRoomData?.object?[index]
-                                                      .roomMembers?[0].userProfilePic !=
-                                                            null
+                                                      .roomMembers?[0].userProfilePic?.isNotEmpty ?? false 
                                                         ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
                                                         : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                     height: 20,
@@ -843,8 +836,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                                         child:
                                                                            CustomImageView(
                                                     url:  InvitationRoomData?.object?[index]
-                                                      .roomMembers?[1].userProfilePic !=
-                                                            null
+                                                      .roomMembers?[1].userProfilePic?.isNotEmpty ?? false 
                                                         ? "${InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}"
                                                         : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                     height: 20,
@@ -872,8 +864,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                                         child:
                                                                           CustomImageView(
                                                     url:  InvitationRoomData?.object?[index]
-                                                      .roomMembers?[2].userProfilePic !=
-                                                            null
+                                                      .roomMembers?[2].userProfilePic?.isNotEmpty ?? false 
                                                         ? "${InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic}"
                                                         : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                     height: 20,

@@ -32,6 +32,7 @@ class Object {
   String? roomQuestion;
   String? roomType;
   String? ownerUserName;
+  String? ownerUsreProfilePic;
   String? ownerUserUid;
   Message? message;
   String? createdAt;
@@ -41,6 +42,7 @@ class Object {
       this.roomQuestion,
       this.roomType,
       this.ownerUserName,
+      this.ownerUsreProfilePic,
       this.ownerUserUid,
       this.message,
       this.createdAt});
@@ -50,6 +52,7 @@ class Object {
     roomQuestion = json['roomQuestion'];
     roomType = json['roomType'];
     ownerUserName = json['ownerUserName'];
+    ownerUsreProfilePic = json['ownerUsreProfilePic'];
     ownerUserUid = json['ownerUserUid'];
     message =
         json['message'] != null ? new Message.fromJson(json['message']) : null;
@@ -62,6 +65,7 @@ class Object {
     data['roomQuestion'] = this.roomQuestion;
     data['roomType'] = this.roomType;
     data['ownerUserName'] = this.ownerUserName;
+    data['ownerUsreProfilePic'] = this.ownerUsreProfilePic;
     data['ownerUserUid'] = this.ownerUserUid;
     if (this.message != null) {
       data['message'] = this.message!.toJson();
@@ -78,7 +82,7 @@ class Message {
   String? userName;
   int? messageCount;
   Null? userCode;
-  Null? userProfilePic;
+  String? userProfilePic;
   String? createdAt;
 
   Message(

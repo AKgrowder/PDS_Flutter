@@ -76,7 +76,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (state is SystemConfigLoadedState) {
         systemConfigModel = state.systemConfigModel;
         print("@@@@@@@@@@@@@@@@@@${systemConfigModel?.object}");
-         SetUi();
+        SetUi();
 
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
           builder: (context) {
@@ -125,8 +125,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
     systemConfigModel?.object?.forEach((element) async {
       if (element.name == "MaxDocUploadSizeInMB") {
-        var fileSize = int.parse(element.value!);
-        prefs.setInt(PreferencesKey.fileSize, fileSize);
+        var fileSize = element.value!;
+        prefs.setString(PreferencesKey.fileSize, fileSize);
       } else if (element.name == "MaxMediaUploadSizeInMB") {
         var mediaSize = int.parse(element.value!);
         prefs.setInt(PreferencesKey.mediaSize, mediaSize);

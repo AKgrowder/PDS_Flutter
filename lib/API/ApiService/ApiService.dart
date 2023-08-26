@@ -14,19 +14,16 @@ class ApiServices {
   var baseURL = "";
   var Token = "";
   UpdateBaseURL() async {
-    baseURL = 
-    // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
-    "http://192.168.29.17:8081/";
+    baseURL =
+        // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
+        "http://192.168.29.100:8081/";
     print(baseURL);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     Token = prefs.getString(PreferencesKey.loginJwt) ?? "";
   }
 
   postApiCall(
-    String APIurl,
-    Map<String, dynamic> params,
-    BuildContext context
-  ) async {
+      String APIurl, Map<String, dynamic> params, BuildContext context) async {
     await UpdateBaseURL();
     print('token-$Token');
     final headers1 = {
@@ -59,9 +56,7 @@ class ApiServices {
     }
   }
 
-  getApiCallWithToken(
-    String APIurl,BuildContext context
-  ) async {
+  getApiCallWithToken(String APIurl, BuildContext context) async {
     await UpdateBaseURL();
     final headers1 = {
       'Content-Type': 'application/json',
@@ -79,10 +74,7 @@ class ApiServices {
     } else {}
   }
 
-  postApiCalla(
-    String APIurl,
-    BuildContext context
-  ) async {
+  postApiCalla(String APIurl, BuildContext context) async {
     await UpdateBaseURL();
     final headers1 = {
       'Content-Type': 'application/json',
@@ -100,7 +92,33 @@ class ApiServices {
     }
   }
 
-  multipartFile(String APIurl, String fileName, String file,BuildContext context,
+  multipartFile2(String APIurl, Map<String, dynamic>? params) async {
+    await UpdateBaseURL();
+    var headers1 = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${Token}'
+    };
+    final response =
+        await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
+    response.headers.addAll(headers1);
+    if (params != null) {
+      response.fields["document"] = params['document'] ?? "";
+      response.fields["companyName"] = params['companyName'] ?? "";
+      response.fields["jobProfile"] = params['jobProfile'] ?? "";
+      response.fields["profile"] = params['profile'] ?? "";
+      response.fields["uuid"] = params['uuid'] ?? "";
+      response.fields["name"] = params['name'] ?? "";
+    }
+    var res = await response.send();
+    print('responce stauscode-${res.statusCode.toString()}');
+
+    var respond = await http.Response.fromStream(res);
+    print('responsData-${respond.body}');
+    return respond;
+  }
+
+  multipartFile(
+      String APIurl, String fileName, String file, BuildContext context,
       {String? apiName, Map<String, dynamic>? params}) async {
     await UpdateBaseURL();
     print('fileApi-$file');
@@ -120,6 +138,7 @@ class ApiServices {
         response.fields["document"] = params['document'] ?? "";
         response.fields["companyName"] = params['companyName'] ?? "";
         response.fields["jobProfile"] = params['jobProfile'] ?? "";
+
         print('params-$params');
       }
     }
@@ -138,11 +157,12 @@ class ApiServices {
     return respond;
   }
 
-  multipartFileUserprofile(String APIurl, File imageFile,BuildContext context) async {
-   await UpdateBaseURL();
+  multipartFileUserprofile(
+      String APIurl, File imageFile, BuildContext context) async {
+    await UpdateBaseURL();
     final response =
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
-      print("API =>******${baseURL + APIurl}");
+    print("API =>******${baseURL + APIurl}");
     if (imageFile != null) {
       response.files
           .add(await http.MultipartFile.fromPath('image', imageFile.path));

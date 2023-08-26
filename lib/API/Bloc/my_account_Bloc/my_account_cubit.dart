@@ -66,8 +66,9 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       emit(MyAccountErrorState(createForm));
     }
   }
-    Future<void> addExpertProfile(params, BuildContext context) async {
-      print('this method working');
+
+  Future<void> addExpertProfile(params, BuildContext context) async {
+    print('this method working');
     dynamic fetchExprtise;
     try {
       emit(MyAccountLoadingState());
@@ -77,6 +78,19 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       }
     } catch (e) {
       emit(MyAccountErrorState(fetchExprtise));
+    }
+  }
+
+  Future<void> cretaForumUpdate(Map<String, dynamic> params,  BuildContext context) async {
+    dynamic createForm;
+    try {
+      emit(MyAccountLoadingState());
+      createForm = await Repository().cretaForumUpdate(params, context);
+      if (createForm.success == true) {
+        emit(CreatFourmLoadedState(createForm));
+      }
+    } catch (e) {
+      emit(MyAccountErrorState(createForm));
     }
   }
 }
