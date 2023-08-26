@@ -30,10 +30,11 @@ class FetchAllExpertsModel {
 class Object {
   String? uuid;
   String? userName;
-  double ? fees;
+  double? fees;
   String? workingHours;
   String? userEmail;
   List<Expertise>? expertise;
+  String? profilePic;
 
   Object(
       {this.uuid,
@@ -41,7 +42,8 @@ class Object {
       this.fees,
       this.workingHours,
       this.userEmail,
-      this.expertise});
+      this.expertise,
+      this.profilePic});
 
   Object.fromJson(Map<String, dynamic> json) {
     uuid = json['uuid'];
@@ -55,6 +57,7 @@ class Object {
         expertise!.add(new Expertise.fromJson(v));
       });
     }
+    profilePic = json['profilePic'];
   }
 
   Map<String, dynamic> toJson() {
@@ -67,6 +70,7 @@ class Object {
     if (this.expertise != null) {
       data['expertise'] = this.expertise!.map((v) => v.toJson()).toList();
     }
+    data['profilePic'] = this.profilePic;
     return data;
   }
 }

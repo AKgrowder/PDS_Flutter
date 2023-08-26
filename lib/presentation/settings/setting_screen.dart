@@ -3,6 +3,8 @@ import 'package:pds/presentation/experts_details_screen/experts_details_screen.d
 import 'package:pds/presentation/otp_verification_screen/otp_verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/widgets/delete_dailog.dart';
+import 'package:pds/widgets/rateUS_dailog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
@@ -20,6 +22,7 @@ import '../forget_password_screen/forget_password_screen.dart';
 import '../my account/my_account_screen.dart';
 import '../rooms/room_details_screen.dart';
 import '../view_details_screen/view_public_forum_screen.dart';
+import 'package:pds/core/utils/color_constant.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen();
@@ -31,7 +34,7 @@ var status;
 
 var Setting_Array = [
   "My Details",
-  "Forum Details",
+  // "Forum Details",
   "Saved Threads",
   "Saved Pins",
   "Change Password",
@@ -54,7 +57,7 @@ var Setting_Array = [
 
 var SettingImage_Array = [
   ImageConstant.setting_profile,
-  ImageConstant.setting_shouteprofile,
+  // ImageConstant.setting_shouteprofile,
   ImageConstant.setting_save,
   ImageConstant.pin,
   ImageConstant.setting_lock,
@@ -101,6 +104,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: CustomAppBar(
             height: 100,
             leadingWidth: 74,
@@ -154,13 +158,13 @@ class _SettingScreenState extends State<SettingScreen> {
             // : Color(0XFF1D1D1D),
             child: ListView.builder(
                 physics: BouncingScrollPhysics(),
-                itemCount: 12,
+                itemCount: Setting_Array.length,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () {
                       switch (index) {
                         case 0:
-                            Navigator.push(context,
+                          Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return MultiBlocProvider(providers: [
                               BlocProvider<MyAccountCubit>(
@@ -170,28 +174,28 @@ class _SettingScreenState extends State<SettingScreen> {
                           }));
 
                           break;
-                        case 1:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => OtpVerificationScreen()));
+                        // case 1:
+                        //   // Navigator.push(
+                        //   //     context,
+                        //   //     MaterialPageRoute(
+                        //   //         builder: (context) => OtpVerificationScreen()));
 
-                          break;
-                        case 2:
+                        //   break;
+                        case 1:
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ExpertsScreen(),
                               ));
                           break;
-                        case 3:
+                        case 2:
                           // Navigator.push(
                           //     context,
                           //     MaterialPageRoute(
                           //       builder: (context) => RoomMembersScreen(room_Id: ""),
                           //     ));
                           break;
-                        case 4:
+                        case 3:
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -199,7 +203,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                       ForgetPasswordScreen()));
 
                           break;
-                        case 5:
+                        case 4:
                           // Navigator.push(
                           //   context,
                           //   MaterialPageRoute(
@@ -207,7 +211,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           // );
 
                           break;
-                        case 6:
+                        case 5:
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -223,20 +227,23 @@ class _SettingScreenState extends State<SettingScreen> {
                           }));
 
                           break; */
-                        case 7:
+                        case 6:
                           break;
-                        case 8:
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return RoomDetailScreen();
-                          }));
+                        case 7:
+                          // Navigator.push(context,
+                          //     MaterialPageRoute(builder: (context) {
+                          //   return RoomDetailScreen();
+                          // }));
 
                           break;
-                        case 9:
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return ExpertsDetailsScreen();
-                          }));
+                        case 8:
+                          // Navigator.push(context,
+                          //     MaterialPageRoute(builder: (context) {
+                          //   return ExpertsDetailsScreen();
+                          // }));
+
+                          showDialog(
+                              context: context, builder: (_) => rateUSdialog());
 
                           break;
                         /* case 8:
@@ -248,7 +255,10 @@ class _SettingScreenState extends State<SettingScreen> {
                               .showSnackBar(snackBar);
 
                           break; */
-                        case 10:
+                        case 9:
+                          showDialog(
+                              context: context, builder: (_) => FunkyOverlay());
+
                           // showDialog(
                           //     context: context, builder: (_) => RoomsScreen());
                           /*  SnackBar snackBar = SnackBar(
@@ -259,37 +269,15 @@ class _SettingScreenState extends State<SettingScreen> {
                               .showSnackBar(snackBar); */
 
                           break;
-                        case 11:
+                        case 10:
                           logout();
-                          Navigator.pushAndRemoveUntil(context,
-                              MaterialPageRoute(builder: (context) {
-                            return MultiBlocProvider(providers: [
-                              BlocProvider<FetchAllPublicRoomCubit>(
-                                create: (context) => FetchAllPublicRoomCubit(),
-                              ),
-                              BlocProvider<CreatPublicRoomCubit>(
-                                create: (context) => CreatPublicRoomCubit(),
-                              ),
-                              BlocProvider<senMSGCubit>(
-                                create: (context) => senMSGCubit(),
-                              ),
-                              BlocProvider<RegisterCubit>(
-                                create: (context) => RegisterCubit(),
-                              ),
-                              BlocProvider<GetAllPrivateRoomCubit>(
-                                create: (context) => GetAllPrivateRoomCubit(),
-                              ),
-                              BlocProvider<InvitationCubit>(
-                                create: (context) => InvitationCubit(),
-                              ),
-                            ], child: BottombarPage(buttomIndex: 0));
-                          }), (route) => false);
+                        
                           break;
-                        case 12:
-                          // showDialog(
-                          //     context: context, builder: (_) => RoomsScreen());
+                        // case 11:
+                        //   // showDialog(
+                        //   //     context: context, builder: (_) => RoomsScreen());
 
-                          break;
+                        //   break;
 
                         /* case 6:
                           Navigator.of(context).push(MaterialPageRoute(
@@ -370,10 +358,91 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  logout() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove(PreferencesKey.loginUserID);
-    prefs.remove(PreferencesKey.loginJwt);
-    prefs.remove(PreferencesKey.module);
+ 
+    logout() async {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Logout'),
+          content: const Text(
+            'Do You Want To Logout ?',
+          ),
+          actions: <Widget>[
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(10),
+                            topLeft: Radius.circular(10))),
+                    height: 50,
+                    child: TextButton(
+                      style: TextButton.styleFrom(),
+                      child: const Text(
+                        'No',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: ColorConstant.primary_color,
+                        borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(10),
+                            topRight: Radius.circular(10))),
+                    height: 50,
+                    child: TextButton(
+                      style: TextButton.styleFrom(),
+                      child: const Text('Yes',
+                          style: TextStyle(color: Colors.white)),
+                      onPressed: () async {
+                        final SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        prefs.remove(PreferencesKey.loginUserID);
+                        prefs.remove(PreferencesKey.loginJwt);
+                        prefs.remove(PreferencesKey.module);
+
+                        Navigator.pushAndRemoveUntil(context,
+                            MaterialPageRoute(builder: (context) {
+                          return MultiBlocProvider(providers: [
+                            BlocProvider<FetchAllPublicRoomCubit>(
+                              create: (context) => FetchAllPublicRoomCubit(),
+                            ),
+                            BlocProvider<CreatPublicRoomCubit>(
+                              create: (context) => CreatPublicRoomCubit(),
+                            ),
+                            BlocProvider<senMSGCubit>(
+                              create: (context) => senMSGCubit(),
+                            ),
+                            BlocProvider<RegisterCubit>(
+                              create: (context) => RegisterCubit(),
+                            ),
+                            BlocProvider<GetAllPrivateRoomCubit>(
+                              create: (context) => GetAllPrivateRoomCubit(),
+                            ),
+                            BlocProvider<InvitationCubit>(
+                              create: (context) => InvitationCubit(),
+                            ),
+                          ], child: BottombarPage(buttomIndex: 0));
+                        }), (route) => false);
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
+  
 }

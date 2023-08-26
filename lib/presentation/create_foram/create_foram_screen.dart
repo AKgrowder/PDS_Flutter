@@ -36,15 +36,27 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
   TextEditingController profile = TextEditingController();
   TextEditingController uplopdfile = TextEditingController();
   double value2 = 0.0;
-  double finalFileSize = 12.0;
+  double finalFileSize = 0;
+  double documentuploadsize = 0;
   String? dopcument;
   String? filepath;
   ChooseDocument? chooseDocument;
+
+  getDocumentSize() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    documentuploadsize =
+        await double.parse(prefs.getString(PreferencesKey.fileSize) ?? "0");
+
+    finalFileSize = documentuploadsize;
+    setState(() {});
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getDocumentSize();
     dopcument = 'Upload Image';
   }
 
@@ -390,7 +402,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             ),
                           ),
                           Text(
-                            "Max size 12MB",
+                            "Max size ${finalFileSize}MB",
                             style: TextStyle(
                               fontFamily: 'outfit',
                               fontSize: 15,

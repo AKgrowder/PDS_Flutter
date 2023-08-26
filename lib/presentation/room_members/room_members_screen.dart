@@ -161,8 +161,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                       shape: BoxShape.circle),
                                                   child: CustomImageView(
                                                     url: _data?.object?[0]
-                                                                .userProfilePic !=
-                                                            null
+                                                                .userProfilePic?.isNotEmpty ?? false 
                                                         ? "${_data?.object?[0].userProfilePic}"
                                                         : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                     height: 20,
@@ -195,8 +194,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                               BoxShape.circle),
                                                       child: CustomImageView(
                                                         url: _data?.object?[0]
-                                                                    .userProfilePic !=
-                                                                null
+                                                                    .userProfilePic?.isNotEmpty ?? false 
                                                             ? "${_data?.object?[0].userProfilePic}"
                                                             : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                         height: 20,
@@ -219,8 +217,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                               BoxShape.circle),
                                                       child: CustomImageView(
                                                         url: _data?.object?[1]
-                                                                    .userProfilePic !=
-                                                                null
+                                                                    .userProfilePic?.isNotEmpty ?? false 
                                                             ? "${_data?.object?[1].userProfilePic}"
                                                             : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                         height: 20,
@@ -253,8 +250,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           child:
                                                               CustomImageView(
                                                             url: _data?.object?[0]
-                                                                        .userProfilePic !=
-                                                                    null
+                                                                        .userProfilePic?.isNotEmpty ?? false 
                                                                 ? "${_data?.object?[0].userProfilePic}"
                                                                 : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                             height: 20,
@@ -278,8 +274,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           child:
                                                               CustomImageView(
                                                             url: _data?.object?[1]
-                                                                        .userProfilePic !=
-                                                                    null
+                                                                        .userProfilePic?.isNotEmpty ?? false 
                                                                 ? "${_data?.object?[1].userProfilePic}"
                                                                 : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                             height: 20,
@@ -303,8 +298,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           child:
                                                               CustomImageView(
                                                             url: _data?.object?[2]
-                                                                        .userProfilePic !=
-                                                                    null
+                                                                        .userProfilePic?.isNotEmpty ?? false 
                                                                 ? "${_data?.object?[2].userProfilePic}"
                                                                 : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                             height: 20,
@@ -336,8 +330,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           child:
                                                               CustomImageView(
                                                             url: _data?.object?[0]
-                                                                        .userProfilePic !=
-                                                                    null
+                                                                        .userProfilePic?.isNotEmpty ?? false 
                                                                 ? "${_data?.object?[0].userProfilePic}"
                                                                 : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                             height: 20,
@@ -361,8 +354,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           child:
                                                               CustomImageView(
                                                             url: _data?.object?[1]
-                                                                        .userProfilePic !=
-                                                                    null
+                                                                        .userProfilePic?.isNotEmpty ?? false 
                                                                 ? "${_data?.object?[1].userProfilePic}"
                                                                 : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                             height: 20,
@@ -386,8 +378,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           child:
                                                               CustomImageView(
                                                             url: _data?.object?[2]
-                                                                        .userProfilePic !=
-                                                                    null
+                                                                        .userProfilePic?.isNotEmpty ?? false 
                                                                 ? "${_data?.object?[2].userProfilePic}"
                                                                 : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                             height: 20,

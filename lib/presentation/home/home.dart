@@ -40,6 +40,7 @@ dynamic _CallBackCheck;
 String? User_Name;
 String? User_Mood;
 String? User_ID;
+bool refresh = false;
 
 PublicRoomModel? PublicRoomModelData;
 FetchAllExpertsModel? FetchAllExpertsData;
@@ -76,22 +77,28 @@ List<String> commentss = [
 var checkuserdata = "";
 
 class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    saveUserProfile();
-    // BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllPublicRoom();
-    // BlocProvider.of<FetchAllPublicRoomCubit>(context).FetchAllExpertsAPI();
-
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  api() {
     BlocProvider.of<FetchAllPublicRoomCubit>(context)
         .FetchAllPublicRoom(context);
     BlocProvider.of<FetchAllPublicRoomCubit>(context)
         .FetchAllExpertsAPI(context);
     BlocProvider.of<FetchAllPublicRoomCubit>(context).chckUserStaus(context);
+  }
+  @override
+  void initState() {
+    api();
+    saveUserProfile();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+     if (refresh) {
+      setState(() {
+        refresh = false;
+        api();
+      });
+    }
 
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
@@ -234,20 +241,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 7,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 16, right: 16),
                     child: Container(
                       child: CustomImageView(
                         imagePath: ImageConstant.homeimage,
-                        // height: 180,
+                        fit: BoxFit.fill,
+                        height: 160,
+                        width: _width,
                       ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                        left: 16, top: 20, right: 16, bottom: 0),
+                        left: 16, top: 10, right: 16, bottom: 0),
                     child: Container(
                       child: User_Mood == "COMPANY"
                           ? SizedBox()
@@ -483,14 +492,126 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                             )
                                           : SizedBox()
-                                  : SizedBox(),
+                                  : Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Expanded(
+                                              flex: 2,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  if (User_Name != null) {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              CreateForamScreen(),
+                                                        ));
+                                                  } else {
+                                                    print("User guest Mood on");
+                                                    Navigator.of(context).push(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                RegisterCreateAccountScreen()));
+                                                  }
+                                                },
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    CreateForum();
+
+                                                    // Navigator.push(context,
+                                                    //     MaterialPageRoute(
+                                                    //         builder: (context) {
+                                                    //   return MultiBlocProvider(
+                                                    //       providers: [
+                                                    //         BlocProvider<CreatFourmCubit>(
+                                                    //           create: (context) =>
+                                                    //               CreatFourmCubit(),
+                                                    //         ),
+                                                    //       ],
+                                                    //       child: CreateForamScreen());
+                                                    // }));
+                                                  },
+                                                  child: Container(
+                                                    height: 50,
+                                                    decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0XFFED1C25),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5)),
+                                                    child: Container(
+                                                      width: _width / 2.5,
+                                                      child: Align(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: Text(
+                                                          "Create Forum",
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'outfit',
+                                                            fontSize: 13,
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Expanded(
+                                              flex: 2,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  becomeAnExport();
+
+                                                  /* Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BecomeExpertScreen(),
+                                            )); */
+                                                },
+                                                child: Container(
+                                                  height: 50,
+                                                  decoration: BoxDecoration(
+                                                      color: Color(0XFFFFD9DA),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      border: Border.all(
+                                                          color: Color(
+                                                              0XFFED1C25))),
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Become an Expert",
+                                                      style: TextStyle(
+                                                        fontFamily: 'outfit',
+                                                        fontSize: 13,
+                                                        color:
+                                                            Color(0XFFED1C25),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                     ),
                   ),
                   FetchAllExpertsData?.object?.length != 0
                       ? User_Mood != "EXPERT"
                           ? Padding(
                               padding: const EdgeInsets.only(
-                                  right: 20.0, left: 20, top: 0),
+                                  right: 20.0, left: 20, top: 7),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -510,7 +631,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 ExpertsScreen(),
-                                          ));
+                                          )).then((value) => setState(() {
+                                            refresh = true;
+                                          }));
                                     },
                                     child: Icon(
                                       Icons.arrow_forward,
@@ -526,7 +649,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ? Container(
                           // color: Colors.red,
                           height: FetchAllExpertsData?.object?.length != 0
-                              ? 240
+                              ? 200
                               : 0,
                           width: _width / 1.1,
                           child: ListView.builder(
@@ -555,9 +678,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Stack(
                                         children: [
                                           Container(
-                                            height: 150,
-                                            width: _width / 2.5,
-                                            child: CustomImageView(
+                                            height: 120,
+                                            width: _width / 2.8,
+                                            child: (FetchAllExpertsData?.object?[index].profilePic?.isNotEmpty ?? false) ? CustomImageView(
+                                             url: "${FetchAllExpertsData?.object?[index].profilePic}",
+                                              // height: 50,
+                                              // width: _width/1.2,
+                                              radius: BorderRadius.circular(10),
+                                            ) : CustomImageView(
                                               imagePath: ImageConstant.experts,
                                               // height: 50,
                                               // width: _width/1.2,
@@ -713,7 +841,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                             "${PublicRoomModelData?.object?[index].roomQuestion ?? ""}",
                                       ),
                                     );
-                                  }));
+                                  })).then((value) {
+                                    setState(() {
+                                      refresh = true;
+                                    });
+                                  });
                                 },
                                 child: Container(
                                   // height: demo.contains(index) ? null: height / 16,
@@ -739,11 +871,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Padding(
                                               padding: const EdgeInsets.only(
                                                   left: 10),
-                                              child: CustomImageView(
-                                                imagePath:
-                                                    ImageConstant.tomcruse,
-                                                height: 20,
-                                              )),
+                                              child: PublicRoomModelData
+                                                          ?.object?[index]
+                                                          .ownerUserName !=
+                                                      null
+                                                  ? CustomImageView(
+                                                    // imagePath: ImageConstant
+                                                    //       .tomcruse,
+                                                       url: "${PublicRoomModelData?.object?[index].ownerUsreProfilePic}",
+                                                      height: 20,
+                                                         radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                    )
+                                                  : CustomImageView(
+                                                      imagePath: ImageConstant
+                                                          .tomcruse,
+                                                      height: 20,
+                                                    )),
                                           Padding(
                                             padding:
                                                 const EdgeInsets.only(left: 5),
@@ -756,33 +904,33 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   fontSize: 14),
                                             ),
                                           ),
-                                          Spacer(),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 10),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                // if (image?.contains(index) ??
-                                                //     false) {
-                                                //   image?.remove(index);
-                                                // } else {
-                                                //   image?.add(index);
-                                                // }
-                                              },
-                                              child: (image?.contains(index) ??
-                                                      false)
-                                                  ? CustomImageView(
-                                                      imagePath: ImageConstant
-                                                          .selectedimage,
-                                                      height: 17,
-                                                    )
-                                                  : CustomImageView(
-                                                      imagePath: ImageConstant
-                                                          .unselectedimgVector,
-                                                      height: 17,
-                                                    ),
-                                            ),
-                                          ),
+                                          // Spacer(),
+                                          // Padding(
+                                          //   padding: const EdgeInsets.only(
+                                          //       right: 10),
+                                          //   child: GestureDetector(
+                                          //     onTap: () {
+                                          //       // if (image?.contains(index) ??
+                                          //       //     false) {
+                                          //       //   image?.remove(index);
+                                          //       // } else {
+                                          //       //   image?.add(index);
+                                          //       // }
+                                          //     },
+                                          //     child: (image?.contains(index) ??
+                                          //             false)
+                                          //         ? CustomImageView(
+                                          //             imagePath: ImageConstant
+                                          //                 .selectedimage,
+                                          //             height: 17,
+                                          //           )
+                                          //         : CustomImageView(
+                                          //             imagePath: ImageConstant
+                                          //                 .unselectedimgVector,
+                                          //             height: 17,
+                                          //           ),
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                       Row(
@@ -841,11 +989,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Padding(
                                               padding: const EdgeInsets.only(
                                                   left: 10),
-                                              child: CustomImageView(
-                                                imagePath:
-                                                    ImageConstant.tomcruse,
-                                                height: 20,
-                                              )),
+                                              child: (PublicRoomModelData
+                                                          ?.object?[index]
+                                                          .message
+                                                          ?.userProfilePic?.isNotEmpty ?? false)
+                                                      
+                                                  ? CustomImageView(
+                                                      url:
+                                                      // "https://pds-testing-images.s3.amazonaws.com/PROFILE_PIC4ee8376e-6667-495a-9a17-47afabf8f732/4ee8376e-6667-495a-9a17-47afabf8f732_409dabd0_60cf_4c69_97d2_ef689d8d8f95.ile_example_JPG_2500kB.jpg",
+                                                          "${PublicRoomModelData?.object?[index].message?.userProfilePic}",
+                                                      height: 20,
+                                                       radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                    )
+                                                  : CustomImageView(
+                                                      imagePath: ImageConstant
+                                                          .tomcruse,
+                                                      height: 20,
+                                                    )),
                                           Padding(
                                             padding:
                                                 const EdgeInsets.only(left: 5),
@@ -900,7 +1065,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         "${PublicRoomModelData?.object?[index].roomQuestion ?? ""}",
                                                   ),
                                                 );
-                                              }));
+                                              })).then((value) {
+                                    setState(() {
+                                      refresh = true;
+                                    });
+                                  });
                                             },
                                             child: Text(
                                               "Add New Comment",
@@ -1005,8 +1174,12 @@ class _HomeScreenState extends State<HomeScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => AddThreadsScreen(),
-          ));
-    } else {
+          )).then((value) {
+        setState(() {
+          refresh = true;
+        });
+      });
+    }else {
       print("User guest Mood on");
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => RegisterCreateAccountScreen()));
