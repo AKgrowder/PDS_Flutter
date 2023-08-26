@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pds/presentation/Login_Screen/Login_Screen.dart';
 
+import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
@@ -14,7 +16,8 @@ class ChangePasswordScreen extends StatefulWidget {
 
 var Show_Password = true;
 var Show_Passwordd = true;
-TextEditingController passwordController = TextEditingController();
+TextEditingController newpasswordController = TextEditingController();
+TextEditingController conformpasswordController = TextEditingController();
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
@@ -65,11 +68,25 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           CustomTextFormField(
             // focusNode: FocusNode(),
             // autofocus: true,
-            controller: passwordController,
+            controller: newpasswordController,
             textStyle: theme.textTheme.titleMedium!,
-            hintText: "Password",
+            hintText: "New Password",
             hintStyle: theme.textTheme.titleMedium!,
             textInputType: TextInputType.visiblePassword,
+            validator: (value) {
+              String pattern =
+                  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$%^&*(),.?":{}|<>])[A-Za-z0-9!@#\$%^&*(),.?":{}|<>]{8,}$';
+
+              if (value!.isEmpty) {
+                return 'Please Enter Password';
+              }
+
+              if (!RegExp(pattern).hasMatch(value)) {
+                return 'Password should contain at least 1 uppercase, 1 lowercase, 1 digit, 1 special character and be at least 8 characters long';
+              }
+
+              return null;
+            },
             suffix: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
@@ -99,10 +116,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             height: 20,
           ),
           Align(
-                        alignment: Alignment.centerLeft,
-
+            alignment: Alignment.centerLeft,
             child: Text(
-              "Conform Password",
+              "Confirm Password",
               overflow: TextOverflow.ellipsis,
               // textAlign: TextAlign.left,
               style: TextStyle(
@@ -115,12 +131,26 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           CustomTextFormField(
             // focusNode: FocusNode(),
             // autofocus: true,
-            controller: passwordController,
+            controller: conformpasswordController,
 
             textStyle: theme.textTheme.titleMedium!,
-            hintText: "Password",
+            hintText: "Confirm Password",
             hintStyle: theme.textTheme.titleMedium!,
             textInputType: TextInputType.visiblePassword,
+            validator: (value) {
+              String pattern =
+                  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$%^&*(),.?":{}|<>])[A-Za-z0-9!@#\$%^&*(),.?":{}|<>]{8,}$';
+
+              if (value!.isEmpty) {
+                return 'Please Enter Password';
+              }
+
+              if (!RegExp(pattern).hasMatch(value)) {
+                return 'Password should contain at least 1 uppercase, 1 lowercase, 1 digit, 1 special character and be at least 8 characters long';
+              }
+
+              return null;
+            },
             suffix: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
@@ -149,21 +179,47 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           SizedBox(
             height: 30,
           ),
-          Container(
-            height: 50,
-            width: _width / 1.2,
-            decoration: BoxDecoration(
-                color: Color(0XFFED1C25),
-                borderRadius: BorderRadius.circular(6)),
-            child: Center(
-                child: Text(
-              "Change Password",
-              style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white,
-                  fontFamily: "outfit",
-                  fontSize: 16),
-            )),
+          GestureDetector(
+            onTap: () {
+              if (newpasswordController.text.isEmpty) {
+                SnackBar snackBar = SnackBar(
+                  content: Text('Please Enter New Password'),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              } else if (conformpasswordController.text. isEmpty) {
+                SnackBar snackBar = SnackBar(
+                  content: Text('Please Enter Confirm Password'),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              } else if (conformpasswordController.text !=newpasswordController.text) {
+                SnackBar snackBar = SnackBar(
+                  content: Text('New Password and Current Password are not same'),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              } else {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()));
+              }
+            },
+            child: Container(
+              height: 50,
+              width: _width / 1.2,
+              decoration: BoxDecoration(
+                  color: Color(0XFFED1C25),
+                  borderRadius: BorderRadius.circular(6)),
+              child: Center(
+                  child: Text(
+                "Change Password",
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white,
+                    fontFamily: "outfit",
+                    fontSize: 16),
+              )),
+            ),
           ),
         ]),
       ),

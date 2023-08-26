@@ -30,7 +30,7 @@ class FatchAllMembersModel {
 class Object {
   String? userName;
   String? fullName;
-  Null? userProfilePic;
+  String? userProfilePic;
   bool? isExpert;
 
   Object({this.userName, this.fullName, this.userProfilePic, this.isExpert});

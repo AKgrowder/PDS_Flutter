@@ -33,7 +33,8 @@ class Expertise {
 
 class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   double value2 = 0.0;
-  double finalFileSize = 12.0;
+  double finalFileSize = 0;
+  double documentuploadsize = 0;
   String? dopcument;
   String? filepath;
   FetchExprtise? _fetchExprtise;
@@ -87,8 +88,19 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
     }
   }
 
+  getDocumentSize() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    documentuploadsize =
+        await double.parse(prefs.getString(PreferencesKey.fileSize) ?? "0");
+
+    finalFileSize = documentuploadsize;
+    setState(() {});
+  }
+
   void initState() {
     super.initState();
+    getDocumentSize();
     BlocProvider.of<FetchExprtiseRoomCubit>(context).fetchExprties(context);
     dopcument = 'Upload Image';
   }
@@ -651,7 +663,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             ),
                           ),
                           Text(
-                            "Max size 12MB",
+                            "Max size ${finalFileSize}MB",
                             style: TextStyle(
                               fontFamily: 'outfit',
                               fontSize: 15,
@@ -681,7 +693,8 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           } else if (jobprofileController.text.isNotEmpty &&
                               jobprofileController.text.length < 4) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Minimum length required in Job Profiie'),
+                              content: Text(
+                                  'Minimum length required in Job Profiie'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -743,7 +756,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 .showSnackBar(snackBar);
                           } else {
                             String time =
-                                '${_startTime!.format(context).toString().split(" ").first} TO ${_endTime!.format(context).toString().split(" ").first}';
+                                '${_startTime!.format(context).toString().split(" ").first} to ${_endTime!.format(context).toString().split(" ").first}';
                             print(
                                 'sddfsdm,gndfgj${chooseDocument?.object.toString()}');
                             dynamic params = {
@@ -759,7 +772,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             };
                             print('pwarems-$params');
                             BlocProvider.of<FetchExprtiseRoomCubit>(context)
-                                .addExpertProfile(params,context);
+                                .addExpertProfile(params, context);
                           }
                           /*     if (jobprofileController.text != null &&22
                               jobprofileController.text != "") {

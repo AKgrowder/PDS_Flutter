@@ -59,7 +59,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   @override
   void initState() {
     BlocProvider.of<senMSGCubit>(context)
-        .coomentPage(widget.Room_ID,context, ShowLoader: true);
+        .coomentPage(widget.Room_ID, context, ShowLoader: true);
     // if (widget.Screen_name == "RoomChat") {
     // }
     getToken();
@@ -173,7 +173,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
           }
           if (state is senMSGLoadedState) {
             BlocProvider.of<senMSGCubit>(context)
-                .coomentPage(widget.Room_ID,context, ShowLoader: true);
+                .coomentPage(widget.Room_ID, context, ShowLoader: true);
           }
           if (state is ComentApiState) {
             modelData = state.comentApiClass;
@@ -421,7 +421,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   ),
                                   Container(
                                     // height: 40,
-                                    width: _width/1.7 ,
+                                    width: _width / 1.7,
                                     // color: Colors.amber,
                                     child: TextField(
                                       controller: Add_Comment,
@@ -472,12 +472,13 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   if (Add_Comment.text.isNotEmpty) {
                                     if (Add_Comment.text.length >= 255) {
                                       SnackBar snackBar = SnackBar(
-                                      content: Text('One Time Message Lenght only for 255 Your Meassge -> ${Add_Comment.text.length}'),
-                                      backgroundColor:
-                                          ColorConstant.primary_color,
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
+                                        content: Text(
+                                            'One Time Message Lenght only for 255 Your Meassge -> ${Add_Comment.text.length}'),
+                                        backgroundColor:
+                                            ColorConstant.primary_color,
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
                                     } else {
                                       checkGuestUser();
                                       Room_ID_stomp = "${widget.Room_ID}";
@@ -678,11 +679,30 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                           const EdgeInsets.only(
                                                               left: 10,
                                                               right: 3),
-                                                      child: CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .tomcruse,
-                                                        height: 20,
-                                                      ),
+                                                      child: modelData
+                                                                  ?.object
+                                                                  ?.messageOutputList
+                                                                  ?.content?[
+                                                                      index]
+                                                                  .userName !=
+                                                              null
+                                                          ? CustomImageView(
+                                                              url:
+                                                                  "${modelData?.object?.messageOutputList?.content?[index].userProfilePic}",
+                                                              height: 20,
+                                                                radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                            )
+                                                          : CustomImageView(
+                                                              imagePath:
+                                                                  ImageConstant
+                                                                      .tomcruse,
+                                                              height: 20,
+                                                            ),
                                                     ),
                                                     Text(
                                                       "${modelData?.object?.messageOutputList?.content?[index].userName}",
@@ -859,11 +879,29 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                           const EdgeInsets.only(
                                                               left: 3,
                                                               right: 10),
-                                                      child: CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .tomcruse,
-                                                        height: 20,
-                                                      ),
+                                                      child: modelData
+                                                                  ?.object
+                                                                  ?.messageOutputList
+                                                                  ?.content?[
+                                                                      index]
+                                                                  .userProfilePic?.isNotEmpty ?? false 
+                                                          ? CustomImageView(
+                                                              url:
+                                                                  "${modelData?.object?.messageOutputList?.content?[index].userProfilePic}",
+                                                              height: 20,
+                                                                radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                            )
+                                                          : CustomImageView(
+                                                              imagePath:
+                                                                  ImageConstant
+                                                                      .tomcruse,
+                                                              height: 20,
+                                                            ),
                                                     ),
                                                   ],
                                                 ),

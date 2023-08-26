@@ -46,17 +46,17 @@ class GetAllPrivateRoomCubit extends Cubit<GetAllPrivateRoomState> {
   }
   
 
-  Future<void> Fetchroomdetails(String userId, BuildContext context) async {
-    dynamic fetchRoomDetailModel;
-    try {
-      emit(GetAllPrivateRoomLoadingState());
-      fetchRoomDetailModel =
-          await Repository().fetchRoomDetails(userId, context);
-      if (fetchRoomDetailModel.success == true) {
-        emit(FetchRoomDetailLoadedState(fetchRoomDetailModel));
-      }
-    } catch (e) {
-      emit(GetAllPrivateRoomErrorState(fetchRoomDetailModel));
-    }
-  }
+  // Future<void> Fetchroomdetails(String userId, BuildContext context) async {
+  //   dynamic fetchRoomDetailModel;
+  //   try {
+  //     emit(GetAllPrivateRoomLoadingState());
+  //     fetchRoomDetailModel =
+  //         await Repository().fetchRoomDetails(userId, context);
+  //     if (fetchRoomDetailModel.success == true) {
+  //       emit(FetchRoomDetailLoadedState(fetchRoomDetailModel));
+  //     }
+  //   } catch (e) {
+  //     emit(GetAllPrivateRoomErrorState(fetchRoomDetailModel));
+  //   }
+  // }
 }
