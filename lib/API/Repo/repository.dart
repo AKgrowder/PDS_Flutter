@@ -170,7 +170,7 @@ class Repository {
         return Config.servernotreachable;
 
       default:
-        return jsonString;
+        return LoginModel.fromJson(jsonString);
     }
   }
 
@@ -423,7 +423,8 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
-
+      case 400:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -485,6 +486,24 @@ class Repository {
         return jsonString;
     }
   }
+
+  cretaForumUpdate(Map<String, dynamic> params, BuildContext context) async {
+    final response = await apiServices.multipartFile2(Config.company, params);
+    var jsonString = json.decode(response.body);
+    print('jsonString-$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return CreateForm.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
   SystemConfig(BuildContext context) async {
     final response = await apiServices.getApiCall(Config.systemconfig, context);
     var jsonString = json.decode(response.body);
@@ -501,16 +520,16 @@ class Repository {
         return jsonString;
     }
   }
-    myAccount(BuildContext context) async {
-    final response = await apiServices.getApiCallWithToken(
-      Config.myaccountApi,context
-    );
+
+  myAccount(BuildContext context) async {
+    final response =
+        await apiServices.getApiCallWithToken(Config.myaccountApi, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
       case 200:
         return MyAccontDetails.fromJson(jsonString);
-     case 404:
+      case 404:
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
@@ -520,16 +539,15 @@ class Repository {
     }
   }
 
-    fetchRoomDetails(String userId,BuildContext context) async {
+  fetchRoomDetails(String userId, BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
-      Config.fetchRoomDetails + userId,context
-    );
+        Config.fetchRoomDetails + userId, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
       case 200:
         return FetchRoomDetailModel.fromJson(jsonString);
-     case 404:
+      case 404:
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
@@ -538,7 +556,6 @@ class Repository {
         return jsonString;
     }
   }
-
 }
 
 

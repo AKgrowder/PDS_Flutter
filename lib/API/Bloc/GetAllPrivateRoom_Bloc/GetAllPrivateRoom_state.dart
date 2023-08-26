@@ -36,8 +36,8 @@ class CheckuserLoadedState extends GetAllPrivateRoomState {
   CheckuserLoadedState(this.checkUserStausModel);
 }
 
-class FetchRoomDetailLoadedState extends GetAllPrivateRoomState {
-  final FetchRoomDetailModel fetchRoomDetailModel;
-  FetchRoomDetailLoadedState(this.fetchRoomDetailModel);
-}
+// class FetchRoomDetailLoadedState extends GetAllPrivateRoomState {
+//   final FetchRoomDetailModel fetchRoomDetailModel;
+//   FetchRoomDetailLoadedState(this.fetchRoomDetailModel);
+// }
 

@@ -38,7 +38,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     BlocProvider.of<MyAccountCubit>(context).MyAccount(context);
     super.initState();
   }
-
   ImagePicker _imagePicker = ImagePicker();
 
   TextEditingController userId = TextEditingController();
@@ -48,10 +47,11 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   TextEditingController jobProfile = TextEditingController();
   TextEditingController expertIn = TextEditingController();
   TextEditingController fees = TextEditingController();
+  TextEditingController compayName = TextEditingController();
+
   XFile? pickedFile;
   File? pickedImage;
   double value2 = 0.0;
-
   FetchExprtise? _fetchExprtise;
   List<Expertiseclass> expertiseData = [];
   Expertiseclass? selectedExpertise;
@@ -77,7 +77,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       String? mobileNoSetdata,
       String? jobProfileSetdata,
       String? expertInSetdata,
-      dynamic feesInSetdata}) {
+      dynamic feesInSetdata,
+      String? companyNameSetData}) {
     userId.text = useridSetdata != null ? useridSetdata : '';
     userName.text = userNameSetdata != null ? userNameSetdata : '';
     email.text = emailSetdata != null ? emailSetdata : '';
@@ -85,6 +86,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     jobProfile.text = jobProfileSetdata != null ? jobProfileSetdata : '';
     expertIn.text = expertInSetdata != null ? expertInSetdata : '';
     fees.text = feesInSetdata != null ? '${feesInSetdata.toString()}' : '';
+    compayName.text =
+        companyNameSetData != null ? '${companyNameSetData.toString()}' : '';
     setState(() {});
   }
 
@@ -146,20 +149,30 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           expertBool = state.myAccontDetails.object?.expertise?.isNotEmpty;
           print('check expertbool-${expertBool}');
           dataSetMethod(
-            useridSetdata: state.myAccontDetails.object?.uuid,
+            useridSetdata: state.myAccontDetails.object?.userName,
             userNameSetdata: state.myAccontDetails.object?.userName,
             emailSetdata: state.myAccontDetails.object?.email,
             expertInSetdata: '',
             jobProfileSetdata: state.myAccontDetails.object?.jobProfile,
             mobileNoSetdata: state.myAccontDetails.object?.mobileNo,
             feesInSetdata: state.myAccontDetails.object?.fees,
+            companyNameSetData: state.myAccontDetails.object?.companyName,
           );
           print('printstatment-${myAccontDetails?.object?.workingHours}');
 
           if (myAccontDetails?.object?.workingHours != null) {
-            workingInList = myAccontDetails?.object?.workingHours?.split(' ');
-            // workingInList?.removeAt(2);
-            print('workingInList-$workingInList');
+            workignStart = myAccontDetails?.object?.workingHours
+                .toString()
+                .split(" to ")
+                .first;
+            workignend = myAccontDetails?.object?.workingHours
+                .toString()
+                .split(" to ")
+                .last;
+            print('workignStart-${workignStart?.split(" ").first}');
+            print('workignStart1-${workignStart?.split(" ").last}');
+            print('workignStart2-${workignend?.split(" ").first}');
+            print('workignStart3-${workignend?.split(" ").last}');
           }
         }
         if (state is MyAccountErrorState) {
@@ -210,6 +223,14 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           //   backgroundColor: ColorConstant.primary_color,
           // );
           // ScaffoldMessenger.of(context).showSnackBar(snackBar); */
+        }
+        if (state is CreatFourmLoadedState) {
+          SnackBar snackBar = SnackBar(
+            content: Text(state.createForm.object.toString()),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          Navigator.pop(context);
         }
       },
       builder: (context, state) {
@@ -335,7 +356,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   onTap: () {
                                     if (isupdate == false) {
                                       _openBottomSheet(context);
-                                      
                                     }
                                   },
                                   child: Container(
@@ -368,40 +388,76 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                             ),
                           )
                         : chooseDocumentuploded?.object != null
-                            ? InkWell(
-                              onTap: (){
-                                print('this is the data get-${chooseDocumentuploded?.object}');
-                              },
-                              child: Align(
-                                  alignment: Alignment.center,
+                            ? Align(
+                                alignment: Alignment.center,
+                                child: Stack(
+                                  alignment: Alignment.bottomRight,
+                                  children: [
+                                    Container(
+                                      height: 120,
+                                      child: ClipOval(
+                                        child: FittedBox(
+                                          child: CachedNetworkImage(
+                                              imageUrl:
+                                                  '${chooseDocumentuploded?.object}',
+                                              height: 120,
+                                              width: 120,
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) =>
+                                                  CircularProgressIndicator(),
+                                              errorWidget:
+                                                  (context, url, error) {
+                                                print('url print-$url');
+                                                print('error$error');
+
+                                                return Icon(Icons.error);
+                                              }),
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        _openBottomSheet(context);
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        width: 30,
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            // color: Colors.red,
+                                            shape: BoxShape.circle),
+                                        child: CustomImageView(
+                                          svgPath: ImageConstant.imgCamera,
+                                          alignment: Alignment.center,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Align(
+                                alignment: Alignment.center,
+                                child: Container(
+                                  height: 130,
+                                  width: 130,
+                                  margin: EdgeInsets.only(
+                                    top: 20,
+                                  ),
                                   child: Stack(
                                     alignment: Alignment.bottomRight,
                                     children: [
-                                      Container(
-                                        height: 120,
-                                        child: ClipOval(
-                                          child: FittedBox(
-                                            child: CachedNetworkImage(
-                                                imageUrl:
-                                                    '${chooseDocumentuploded?.object}',
-                                                height: 120,
-                                                width: 120,
-                                                fit: BoxFit.cover,
-                                                placeholder: (context, url) =>
-                                                    CircularProgressIndicator(),
-                                                errorWidget:
-                                                    (context, url, error) {
-                                                  print('url print-$url');
-                                                  print('error$error');
-                            
-                                                  return Icon(Icons.error);
-                                                }),
-                                          ),
-                                        ),
+                                      CustomImageView(
+                                        imagePath: ImageConstant.userProfie,
+                                        height: 130,
+                                        width: 130,
+                                        radius: BorderRadius.circular(65),
+                                        alignment: Alignment.center,
                                       ),
                                       GestureDetector(
                                         onTap: () {
-                                          _openBottomSheet(context);
+                                         if(isupdate == false){
+                                           _openBottomSheet(context);
+                                         }
                                         },
                                         child: Container(
                                           height: 50,
@@ -414,68 +470,17 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                             svgPath: ImageConstant.imgCamera,
                                             alignment: Alignment.center,
                                           ),
-                                          // child: CustomIconButton(
-                                          //   height: 33,
-                                          //   width: 33,
-                                          //   alignment: Alignment.bottomRight,
-                                          //   child: GestureDetector(
-                                          //     onTap: () {
-                                          //       pickImage();
-                                          //     },
-                                          //     child: CustomImageView(
-                                          //       svgPath: ImageConstant.imgCamera,
-                                          //     ),
-                                          //   ),
-                                          // ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                            )
-                            : Align(
-                                alignment: Alignment.center,
-                                child: Container(
-                                  height: _height / 8,
-                                  width: _width / 3.7,
-                                  child: Stack(
-                                    alignment: Alignment.bottomRight,
-                                    children: [
-                                      CustomImageView(
-                                        imagePath:
-                                            ImageConstant.viewdetailsimage,
-                                        height: 130,
-                                        width: 130,
-                                        radius: BorderRadius.circular(65),
-                                        alignment: Alignment.center,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          print(
-                                              'i want to chekc what is varialble value-$isupdate');
-                                          if (isupdate == false) {
-                                            _openBottomSheet(context);
-                                          }
-                                        },
-                                        child: CustomIconButton(
-                                          height: 33,
-                                          width: 33,
-                                          alignment: Alignment.bottomRight,
-                                          child: CustomImageView(
-                                            svgPath: ImageConstant.imgCamera,
-                                            color: Colors.black,
-                                          ),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
                               ),
-                    myAccontDetails?.object?.uuid != null
+                    myAccontDetails?.object?.userName != null
                         ? Padding(
                             padding: const EdgeInsets.only(left: 36.0, top: 10),
                             child: Text(
-                              "User ID",
+                              "User Name",
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: Colors.black,
@@ -487,7 +492,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                     SizedBox(
                       height: 5,
                     ),
-                    myAccontDetails?.object?.uuid != null
+                    myAccontDetails?.object?.userName != null
                         ? Center(
                             child: Container(
                               // height: 50,
@@ -610,7 +615,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                             keyboardType: TextInputType.numberWithOptions(
                               decimal: true,
                             ),
-                            readOnly: isupdate,
+                            readOnly: false,
                             controller: mobileNo,
                             cursorColor: Colors.grey,
                             decoration: InputDecoration(
@@ -649,6 +654,44 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 child: TextFormField(
                                   readOnly: isupdate,
                                   controller: jobProfile,
+                                  cursorColor: Colors.grey,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : SizedBox(),
+                    myAccontDetails?.object?.companyName != null
+                        ? Padding(
+                            padding: const EdgeInsets.only(left: 36.0, top: 20),
+                            child: Text(
+                              "Company Name",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black,
+                                  fontFamily: "outfit",
+                                  fontSize: 15),
+                            ),
+                          )
+                        : SizedBox(),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    myAccontDetails?.object?.companyName != null
+                        ? Center(
+                            child: Container(
+                              height: 50,
+                              width: _width / 1.2,
+                              decoration: BoxDecoration(
+                                  color: Color(0xFFF6F6F6),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: TextFormField(
+                                  readOnly: isupdate,
+                                  controller: compayName,
                                   cursorColor: Colors.grey,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
@@ -943,7 +986,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                               MainAxisAlignment.spaceAround,
                                           children: [
                                             Text(
-                                              '',
+                                              '${workignStart?.split(" ").first}',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.grey.shade700,
@@ -961,7 +1004,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                                     'working end-${workignStart}');
                                               },
                                               child: Text(
-                                                "",
+                                                "${workignStart?.split(" ").last}",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w400,
                                                     color: Colors.grey.shade700,
@@ -995,7 +1038,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                               MainAxisAlignment.spaceAround,
                                           children: [
                                             Text(
-                                              '',
+                                              '${workignend?.split(" ").first}',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.grey.shade700,
@@ -1008,7 +1051,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                               color: Colors.grey,
                                             ),
                                             Text(
-                                              '',
+                                              '${workignend?.split(" ").last}',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.grey.shade700,
@@ -1192,6 +1235,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   TextEditingController jobProfile = TextEditingController();
   TextEditingController expertIn = TextEditingController();
   TextEditingController fees = TextEditingController(); */
+                        print(
+                            'this is the data check-${myAccontDetails?.object?.module}');
                         if (isupdate == false) {
                           print('thsi is the yes-${userName.text}');
                           RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
@@ -1266,7 +1311,83 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
                           }
-                          if (myAccontDetails?.object?.module == 'EXPERT') {
+                          if (myAccontDetails?.object?.module == 'COMPANY') {
+                            print('yes check data ');
+                            if (isupdate == false) {
+                              if (jobProfile.text == null ||
+                                  jobProfile.text == '') {
+                                SnackBar snackBar = SnackBar(
+                                  content: Text('Please Enter job profile '),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              } else if (jobProfile.text.trim().isEmpty ||
+                                  jobProfile.text.trim() == '') {
+                                SnackBar snackBar = SnackBar(
+                                  content: Text(
+                                      'job profile can\'t be just blank spaces '),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              } else if (jobProfile.text.toString().length <=
+                                      3 ||
+                                  jobProfile.text.toString().length > 50) {
+                                SnackBar snackBar = SnackBar(
+                                  content: Text('please fill full job profile'),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              } else if (compayName.text == null ||
+                                  compayName.text == '') {
+                                print(';dsdfh');
+                                SnackBar snackBar = SnackBar(
+                                  content: Text('Please Enter Company Name '),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              } else if (compayName.text.trim().isEmpty ||
+                                  compayName.text.trim() == '') {
+                                SnackBar snackBar = SnackBar(
+                                  content: Text(
+                                      'Company Name can\'t be just blank spaces '),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              } else if (compayName.text.toString().length <=
+                                      3 ||
+                                  compayName.text.toString().length > 50) {
+                                SnackBar snackBar = SnackBar(
+                                  content:
+                                      Text('please fill full Company Name '),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              } else {
+                                Map<String, dynamic> params = {
+                                  'document':
+                                      chooseDocumentuploded2?.object.toString(),
+                                  'companyName': compayName.text,
+                                  'jobProfile': jobProfile.text,
+                                  'name': userName.text,
+                                  'uuid':
+                                      myAccontDetails?.object?.uuid.toString(),
+                                  'profile':
+                                      chooseDocumentuploded?.object != null
+                                          ? chooseDocumentuploded?.object
+                                          : ''
+                                };
+                                BlocProvider.of<MyAccountCubit>(context)
+                                    .cretaForumUpdate(params, context);
+                              }
+                            }
+                          } else if (myAccontDetails?.object?.module ==
+                              'EXPERT') {
                             if (jobProfile.text == null ||
                                 jobProfile.text == "") {
                               SnackBar snackBar = SnackBar(
@@ -1339,10 +1460,10 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                               print('in if condison');
 
                               print('pwarems-$params');
-                             BlocProvider.of<MyAccountCubit>(context)
-                                  .addExpertProfile(params, context); 
+                              BlocProvider.of<MyAccountCubit>(context)
+                                  .addExpertProfile(params, context);
                             }
-                          } else {}
+                          }
                         }
                       },
                       child: Center(
