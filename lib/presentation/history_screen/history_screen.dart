@@ -1,4 +1,4 @@
-import 'package:archit_s_application1/presentation/history_screen/history_details_screen.dart';
+import 'package:pds/presentation/history_screen/history_details_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../theme/theme_helper.dart';

@@ -1,5 +1,5 @@
  
-import 'package:archit_s_application1/API/Model/deviceInfo/deviceInfo_model.dart';
+import 'package:pds/API/Model/deviceInfo/deviceInfo_model.dart';
 
 abstract class DevicesInfoState {}
 

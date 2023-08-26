@@ -1,6 +1,6 @@
-import 'package:archit_s_application1/API/Bloc/my_account_Bloc/my_account_cubit.dart';
-import 'package:archit_s_application1/presentation/experts_details_screen/experts_details_screen.dart';
-import 'package:archit_s_application1/presentation/otp_verification_screen/otp_verification_screen.dart';
+import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
+import 'package:pds/presentation/experts_details_screen/experts_details_screen.dart';
+import 'package:pds/presentation/otp_verification_screen/otp_verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';

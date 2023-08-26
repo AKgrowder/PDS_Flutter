@@ -1,6 +1,6 @@
-import 'package:archit_s_application1/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
-import 'package:archit_s_application1/API/Bloc/senMSG_Bloc/senMSG_state.dart';
-import 'package:archit_s_application1/API/Model/coment/coment_model.dart';
+import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
+import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_state.dart';
+import 'package:pds/API/Model/coment/coment_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../Model/SendMSG/SendMSG_Model.dart';

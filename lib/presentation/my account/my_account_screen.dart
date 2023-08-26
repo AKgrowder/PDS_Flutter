@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:archit_s_application1/API/Bloc/my_account_Bloc/my_account_cubit.dart';
-import 'package:archit_s_application1/API/Bloc/my_account_Bloc/my_account_state.dart';
-import 'package:archit_s_application1/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
-import 'package:archit_s_application1/API/Model/createDocumentModel/createDocumentModel.dart';
-import 'package:archit_s_application1/API/Model/myaccountModel/myaccountModel.dart';
-import 'package:archit_s_application1/core/utils/color_constant.dart';
+import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
+import 'package:pds/API/Bloc/my_account_Bloc/my_account_state.dart';
+import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
+import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
+import 'package:pds/API/Model/myaccountModel/myaccountModel.dart';
+import 'package:pds/core/utils/color_constant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -1339,8 +1339,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                               print('in if condison');
 
                               print('pwarems-$params');
-                              /* BlocProvider.of<MyAccountCubit>(context)
-                                  .addExpertProfile(params, context); */
+                             BlocProvider.of<MyAccountCubit>(context)
+                                  .addExpertProfile(params, context); 
                             }
                           } else {}
                         }

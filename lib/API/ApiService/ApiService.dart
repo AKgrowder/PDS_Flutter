@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:archit_s_application1/core/utils/internet_utils.dart';
-import 'package:archit_s_application1/presentation/noInterneterror/noInterNetScreen.dart';
+import 'package:pds/core/utils/internet_utils.dart';
+import 'package:pds/presentation/noInterneterror/noInterNetScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -16,7 +16,7 @@ class ApiServices {
   UpdateBaseURL() async {
     baseURL = 
     // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
-    "http://192.168.29.100:8081/";
+    "http://192.168.29.17:8081/";
     print(baseURL);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     Token = prefs.getString(PreferencesKey.loginJwt) ?? "";

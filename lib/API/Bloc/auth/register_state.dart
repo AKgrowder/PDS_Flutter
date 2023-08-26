@@ -1,5 +1,5 @@
-import 'package:archit_s_application1/API/Model/authModel/registerModel.dart';
-import 'package:archit_s_application1/API/Model/createDocumentModel/createDocumentModel.dart';
+import 'package:pds/API/Model/authModel/registerModel.dart';
+import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 
 abstract class RegisterState {}
 

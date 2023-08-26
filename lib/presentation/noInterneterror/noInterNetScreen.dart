@@ -1,4 +1,4 @@
-import 'package:archit_s_application1/core/utils/image_constant.dart';
+import 'package:pds/core/utils/image_constant.dart';
 import 'package:flutter/material.dart';
 
 class NoInterNetScreen extends StatelessWidget {
