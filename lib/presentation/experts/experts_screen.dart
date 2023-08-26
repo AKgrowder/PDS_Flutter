@@ -1,6 +1,6 @@
-import 'package:archit_s_application1/core/utils/image_constant.dart';
-import 'package:archit_s_application1/dilogs/invite_dilog.dart';
-import 'package:archit_s_application1/widgets/custom_image_view.dart';
+import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/dilogs/invite_dilog.dart';
+import 'package:pds/widgets/custom_image_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

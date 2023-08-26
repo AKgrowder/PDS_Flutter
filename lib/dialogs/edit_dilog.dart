@@ -1,8 +1,8 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:archit_s_application1/API/Bloc/Edit_room_bloc/Edit_room_state.dart';
-import 'package:archit_s_application1/API/Bloc/Edit_room_bloc/edit_room_cubit.dart';
-import 'package:archit_s_application1/core/utils/color_constant.dart';
+import 'package:pds/API/Bloc/Edit_room_bloc/Edit_room_state.dart';
+import 'package:pds/API/Bloc/Edit_room_bloc/edit_room_cubit.dart';
+import 'package:pds/core/utils/color_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

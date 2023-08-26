@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:archit_s_application1/presentation/splash_screen/splash_screen.dart';
-import 'package:archit_s_application1/presentation/register_create_account_screen/register_create_account_screen.dart';
-import 'package:archit_s_application1/presentation/Login_Screen/Login_Screen.dart';
-import 'package:archit_s_application1/presentation/otp_verification_screen/otp_verification_screen.dart';
-import 'package:archit_s_application1/presentation/forget_password_screen/forget_password_screen.dart';
-import 'package:archit_s_application1/presentation/create_account_screen/create_account_screen.dart';
+import 'package:pds/presentation/splash_screen/splash_screen.dart';
+import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
+import 'package:pds/presentation/Login_Screen/Login_Screen.dart';
+import 'package:pds/presentation/otp_verification_screen/otp_verification_screen.dart';
+import 'package:pds/presentation/forget_password_screen/forget_password_screen.dart';
+import 'package:pds/presentation/create_account_screen/create_account_screen.dart';
 
 class AppRoutes {
   static const String splashScreen = '/splash_screen';

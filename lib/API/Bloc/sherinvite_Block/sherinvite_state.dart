@@ -1,4 +1,4 @@
-import 'package:archit_s_application1/API/Model/sherInviteModel/sherinviteModel.dart';
+import 'package:pds/API/Model/sherInviteModel/sherinviteModel.dart';
 
 abstract class SherInviteState {}
 

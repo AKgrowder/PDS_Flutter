@@ -1,7 +1,7 @@
-import 'package:archit_s_application1/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
-import 'package:archit_s_application1/core/app_export.dart';
-import 'package:archit_s_application1/presentation/become_an_expert_screen/become_an_expert_screen.dart';
-import 'package:archit_s_application1/presentation/experts/experts_screen.dart';
+import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
+import 'package:pds/core/app_export.dart';
+import 'package:pds/presentation/become_an_expert_screen/become_an_expert_screen.dart';
+import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';

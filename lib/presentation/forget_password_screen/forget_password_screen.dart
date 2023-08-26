@@ -1,9 +1,9 @@
-import 'package:archit_s_application1/core/app_export.dart';
-import 'package:archit_s_application1/presentation/change_password_screen/change_password_screen.dart';
-import 'package:archit_s_application1/widgets/app_bar/appbar_image.dart';
-import 'package:archit_s_application1/widgets/app_bar/custom_app_bar.dart';
-import 'package:archit_s_application1/widgets/custom_elevated_button.dart';
-import 'package:archit_s_application1/widgets/custom_text_form_field.dart';
+import 'package:pds/core/app_export.dart';
+import 'package:pds/presentation/change_password_screen/change_password_screen.dart';
+import 'package:pds/widgets/app_bar/appbar_image.dart';
+import 'package:pds/widgets/app_bar/custom_app_bar.dart';
+import 'package:pds/widgets/custom_elevated_button.dart';
+import 'package:pds/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
 // ignore_for_file: must_be_immutable

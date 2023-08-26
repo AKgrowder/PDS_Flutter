@@ -1,8 +1,8 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:archit_s_application1/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
-import 'package:archit_s_application1/API/Bloc/sherinvite_Block/sherinvite_state.dart';
-import 'package:archit_s_application1/core/utils/color_constant.dart';
+import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
+import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_state.dart';
+import 'package:pds/core/utils/color_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:archit_s_application1/API/Model/coment/coment_model.dart';
-import 'package:archit_s_application1/presentation/register_create_account_screen/register_create_account_screen.dart';
+import 'package:pds/API/Model/coment/coment_model.dart';
+import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';

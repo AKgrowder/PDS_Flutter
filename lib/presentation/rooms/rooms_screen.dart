@@ -1,10 +1,10 @@
-import 'package:archit_s_application1/API/Bloc/CreateRoom_Bloc/CreateRoom_state.dart';
-import 'package:archit_s_application1/API/Bloc/Edit_room_bloc/edit_room_cubit.dart';
-import 'package:archit_s_application1/API/Bloc/Fatch_all_members/fatch_all_members_cubit.dart';
-import 'package:archit_s_application1/dialogs/edit_dilog.dart';
-import 'package:archit_s_application1/dilogs/invite_dilog.dart';
-import 'package:archit_s_application1/presentation/room_members/room_members_screen.dart';
-import 'package:archit_s_application1/presentation/view_comments/view_comments_screen.dart';
+import 'package:pds/API/Bloc/CreateRoom_Bloc/CreateRoom_state.dart';
+import 'package:pds/API/Bloc/Edit_room_bloc/edit_room_cubit.dart';
+import 'package:pds/API/Bloc/Fatch_all_members/fatch_all_members_cubit.dart';
+import 'package:pds/dialogs/edit_dilog.dart';
+import 'package:pds/dilogs/invite_dilog.dart';
+import 'package:pds/presentation/room_members/room_members_screen.dart';
+import 'package:pds/presentation/view_comments/view_comments_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

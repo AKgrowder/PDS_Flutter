@@ -1,4 +1,4 @@
-import 'package:archit_s_application1/API/Model/acceptRejectInvitaionModel/acceptRejectInvitaion.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/acceptRejectInvitaion.dart';
 
 import '../../Model/InvitationModel/Invitation_Model.dart';
 
