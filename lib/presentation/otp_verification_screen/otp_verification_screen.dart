@@ -1,16 +1,17 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/auth/login_Block.dart';
 import 'package:pds/API/Bloc/auth/otp_block.dart';
 import 'package:pds/API/Bloc/auth/otp_state.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/custom_bottom_bar/custom_bottom_bar.dart';
+import 'package:pds/presentation/change_password_screen/change_password_screen.dart';
 import 'package:pds/widgets/app_bar/appbar_image.dart';
 import 'package:pds/widgets/app_bar/custom_app_bar.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,6 +31,7 @@ class OtpVerificationScreen extends StatefulWidget {
   String? phonNumber;
   String? flowCheck;
   String? userId;
+  bool? forgetpassword;
   LoginModel? loginModelData;
 
   OtpVerificationScreen(
@@ -37,6 +39,7 @@ class OtpVerificationScreen extends StatefulWidget {
       this.phonNumber,
       this.flowCheck,
       this.userId,
+      this.forgetpassword = false,
       this.loginModelData})
       : super(key: key);
 
@@ -108,15 +111,15 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               appBar: CustomAppBar(
                   height: 83,
                   leadingWidth: 54,
-                  // leading: AppbarImage(
-                  //     height: 23,
-                  //     width: 24,
-                  //     svgPath: ImageConstant.imgArrowleft,
-                  //     margin: EdgeInsets.only(
-                  //         left: 20, top: 19, bottom: 13, right: 15),
-                  //     onTap: () {
-                  //       onTapArrowleft(context);
-                  //     }),
+                  leading: AppbarImage(
+                      height: 23,
+                      width: 24,
+                      svgPath: ImageConstant.imgArrowleft,
+                      margin: EdgeInsets.only(
+                          left: 20, top: 19, bottom: 13, right: 15),
+                      onTap: () {
+                        onTapArrowleft(context);
+                      }),
                   centerTitle: true,
                   title: AppbarImage(
                       height: 37,
@@ -171,6 +174,15 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                               create: (context) => DevicesInfoCubit(),
                             )
                           ], child: LoginScreen());
+                        }));
+                      } else if (widget.forgetpassword == true) {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return MultiBlocProvider(providers: [
+                            BlocProvider<LoginCubit>(
+                              create: (context) => LoginCubit(),
+                            ),
+                          ], child: ChangePasswordScreen());
                         }));
                       } else {
                         getDataStroe(
@@ -290,11 +302,29 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  print('vhbghghg');
-                                  BlocProvider.of<OtpCubit>(context).OtpApi(
-                                      OTPController.text,
-                                      widget.phonNumber.toString(),
-                                      context);
+                                  if (OTPController.text.isEmpty) {
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text('Please Enter Valid OTP'),
+                                      backgroundColor:
+                                          ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } else if (OTPController.text.length < 6) {
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text('Please Enter Valid OTP'),
+                                      backgroundColor:
+                                          ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } else {
+                                    print('vhbghghg');
+                                    BlocProvider.of<OtpCubit>(context).OtpApi(
+                                        OTPController.text,
+                                        widget.phonNumber.toString(),
+                                        context);
+                                  }
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 20),

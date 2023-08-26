@@ -28,7 +28,7 @@ class Object {
   String? companyName;
   String? roomName;
   String? roomDescription;
-  Null? document;
+  String? document;
   String? createdDate;
 
   Object(
