@@ -110,7 +110,8 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                     children: [
                       Center(
                         child: Container(
-                          height: 280,
+                          height: 230,
+                          // height: 280
                           width: width / 1.25,
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -292,35 +293,35 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                   ),
                                 ],
                               ),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              Divider(
-                                color: Colors.black,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
-                                child: Row(
-                                  children: [
-                                    CustomImageView(
-                                      imagePath: ImageConstant.copyimage,
-                                      height: 20,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        "Copy Link",
-                                        style: TextStyle(
-                                          fontFamily: 'outfit',
-                                          fontSize: 15,
-                                          color: Color(0xFFED1C25),
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )
+                              // SizedBox(
+                              //   height: 8,
+                              // ),
+                              // Divider(
+                              //   color: Colors.black,
+                              // ),
+                              // Padding(
+                              //   padding: const EdgeInsets.only(left: 10.0),
+                              //   child: Row(
+                              //     children: [
+                              //       CustomImageView(
+                              //         imagePath: ImageConstant.copyimage,
+                              //         height: 20,
+                              //       ),
+                              //       Padding(
+                              //         padding: const EdgeInsets.all(8.0),
+                              //         child: Text(
+                              //           "Copy Link",
+                              //           style: TextStyle(
+                              //             fontFamily: 'outfit',
+                              //             fontSize: 15,
+                              //             color: Color(0xFFED1C25),
+                              //             fontWeight: FontWeight.w400,
+                              //           ),
+                              //         ),
+                              //       )
+                              //     ],
+                              //   ),
+                              // )
                             ],
                           ),
                         ),

@@ -38,7 +38,7 @@ class Object {
   String? approvalStatus;
   String? mobileNo;
   String? uuid;
-  dynamic userProfilePic;
+  String? userProfilePic;
   List<Expertise>? expertise;
 
   Object(

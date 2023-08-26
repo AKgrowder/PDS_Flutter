@@ -73,71 +73,71 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
       ),
       body: SingleChildScrollView(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0, right: 25, left: 25),
-            child: Row(
-              children: [
-                Container(
-                  width: 55,
-                  height: 45,
-                  decoration: BoxDecoration(
-                      color: Color(0xFFED1C25),
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5),
-                          bottomLeft: Radius.circular(5))),
-                  child: Center(
-                    child: CustomImageView(
-                      imagePath: ImageConstant.searchimage,
-                      color: Colors.white,
-                      height: 30,
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 45,
-                  width: 230,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF6F6F6),
-                    border: Border.all(
-                      color: Color(0xFFEFEFEF),
-                    ),
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(5),
-                        bottomLeft: Radius.circular(5)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 0.0, left: 10),
-                    child: TextField(
-                      decoration: InputDecoration(
-                          hintText: 'Search here...', border: InputBorder.none),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Container(
-                  height: 40,
-                  width: 50,
-                  decoration: BoxDecoration(
-                      color: Color(0xFFFFE7E7),
-                      border: Border.all(
-                        color: Color(0xFFED1C25),
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  child: Center(
-                    child: CustomImageView(
-                      imagePath: ImageConstant.filterimage,
-                      height: 25,
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 20.0, right: 25, left: 25),
+          //   child: Row(
+          //     children: [
+          //       Container(
+          //         width: 55,
+          //         height: 45,
+          //         decoration: BoxDecoration(
+          //             color: Color(0xFFED1C25),
+          //             borderRadius: BorderRadius.only(
+          //                 topLeft: Radius.circular(5),
+          //                 bottomLeft: Radius.circular(5))),
+          //         child: Center(
+          //           child: CustomImageView(
+          //             imagePath: ImageConstant.searchimage,
+          //             color: Colors.white,
+          //             height: 30,
+          //           ),
+          //         ),
+          //       ),
+          //       Container(
+          //         height: 45,
+          //         width: 230,
+          //         decoration: BoxDecoration(
+          //           color: Color(0xFFF6F6F6),
+          //           border: Border.all(
+          //             color: Color(0xFFEFEFEF),
+          //           ),
+          //           borderRadius: BorderRadius.only(
+          //               topRight: Radius.circular(5),
+          //               bottomLeft: Radius.circular(5)),
+          //         ),
+          //         child: Padding(
+          //           padding: const EdgeInsets.only(top: 0.0, left: 10),
+          //           child: TextField(
+          //             decoration: InputDecoration(
+          //                 hintText: 'Search here...', border: InputBorder.none),
+          //           ),
+          //         ),
+          //       ),
+          //       SizedBox(
+          //         width: 10,
+          //       ),
+          //       Container(
+          //         height: 40,
+          //         width: 50,
+          //         decoration: BoxDecoration(
+          //             color: Color(0xFFFFE7E7),
+          //             border: Border.all(
+          //               color: Color(0xFFED1C25),
+          //             ),
+          //             borderRadius: BorderRadius.all(Radius.circular(5))),
+          //         child: Center(
+          //           child: CustomImageView(
+          //             imagePath: ImageConstant.filterimage,
+          //             height: 25,
+          //           ),
+          //         ),
+          //       )
+          //     ],
+          //   ),
+          // ),
+          // SizedBox(
+          //   height: 20,
+          // ),
           Padding(
             padding: const EdgeInsets.only(left: 15.0, right: 25),
             child: Container(
@@ -176,7 +176,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                               ),
                             ),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment. start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Stack(
                                   children: [
@@ -186,15 +186,15 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                     //   ),
                                     // ),
                                     // index == 1
-                                        // ? CustomImageView(
-                                        //     imagePath: ImageConstant.expert2,
-                                        //     radius: BorderRadius.circular(10),
-                                        //   )
-                                        // :
-                                         CustomImageView(
-                                            imagePath: ImageConstant.experts,
-                                            radius: BorderRadius.circular(10),
-                                          ),
+                                    // ? CustomImageView(
+                                    //     imagePath: ImageConstant.expert2,
+                                    //     radius: BorderRadius.circular(10),
+                                    //   )
+                                    // :
+                                    CustomImageView(
+                                      imagePath: ImageConstant.experts,
+                                      radius: BorderRadius.circular(10),
+                                    ),
                                     index == 1
                                         ? Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -338,7 +338,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                   child: Row(
                                     children: [
                                       CustomImageView(
-                                        imagePath: ImageConstant. roundrupee,
+                                        imagePath: ImageConstant.roundrupee,
                                         height: 20,
                                       ),
                                       SizedBox(
@@ -382,127 +382,123 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                   height: 17.2,
                                 ),
                                 // index == 1 || index == 0
-                                //     ? 
-                                    GestureDetector(
-                                       onTap: () {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        print(
-                                                            'uid print-${FetchAllExpertsData?.object?[index].uuid}');
-                                                        return MultiBlocProvider(
-                                                            providers: [
-                                                              BlocProvider<
-                                                                  SherInviteCubit>(
-                                                                create: (_) =>
-                                                                    SherInviteCubit(),
-                                                              ),
-                                                            ],
-                                                            child:
-                                                                InviteDilogScreen(
-                                                              Room_UUID:
-                                                                  "${FetchAllExpertsData?.object?[index].uuid}",
-                                                            ));
-                                                      },
-                                                    );
-                                                  },
-                                        child: Container(
-                                          height: 30,
-                                          width: _width,
-                                          decoration: BoxDecoration(
-                                            color: Color(0xFFED1C25),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10)),
-                                          ),
-                                          child: Center(
-                                            // child: index == 1
-                                            //     ? Text(
-                                            //         "invite sent",
-                                            //         style: TextStyle(
-                                            //             fontWeight:
-                                            //                 FontWeight.w400,
-                                            //             color: Colors.white,
-                                            //             fontFamily: "outfit",
-                                            //             fontSize: 15),
-                                            //       )
-                                            //     : Text(
-                                            //         "invite",
-                                            //         style: TextStyle(
-                                            //             fontWeight:
-                                            //                 FontWeight.w400,
-                                            //             color: Colors.white,
-                                            //             fontFamily: "outfit",
-                                            //             fontSize: 15),
-                                            //       ),
-                                                child: Text(
-                                                    "invite",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.white,
-                                                        fontFamily: "outfit",
-                                                        fontSize: 15),
-                                                  ),
-                                          ),
-                                        ),
-                                      )
-                                    // : Container(
-                                    //     height: 30,
-                                    //     width: _width,
-                                    //     decoration: BoxDecoration(
-                                    //         color: Colors.white,
-                                    //         border: Border.all(
-                                    //           color: index == 3
-                                    //               ? Colors.red
-                                    //               : Colors.green,
-                                    //         ),
-                                    //         borderRadius: BorderRadius.all(
-                                    //             Radius.circular(10))),
-                                    //     child: Row(children: [
-                                    //       SizedBox(
-                                    //         width: 20,
-                                    //       ),
-                                    //       index == 3
-                                    //           ? Padding(
-                                    //               padding:
-                                    //                   const EdgeInsets.only(
-                                    //                       left: 20),
-                                    //               child: Icon(
-                                    //                 Icons.close,
-                                    //                 color: Colors.red,
-                                    //               ),
-                                    //             )
-                                    //           : Padding(
-                                    //               padding:
-                                    //                   const EdgeInsets.only(
-                                    //                       left: 20),
-                                    //               child: Icon(
-                                    //                 Icons.done,
-                                    //                 color: Colors.green,
-                                    //               ),
-                                    //             ),
-                                    //       index == 3
-                                    //           ? Text(
-                                    //               "Rejected",
-                                    //               style: TextStyle(
-                                    //                   color: Colors.red,
-                                    //                   fontFamily: 'outfit',
-                                    //                   fontSize: 13,
-                                    //                   fontWeight:
-                                    //                       FontWeight.w300),
-                                    //             )
-                                    //           : Text(
-                                    //               "Accepted",
-                                    //               style: TextStyle(
-                                    //                   color: Colors.green,
-                                    //                   fontFamily: 'outfit',
-                                    //                   fontSize: 13,
-                                    //                   fontWeight:
-                                    //                       FontWeight.w300),
-                                    //             )
-                                    //     ]),
-                                    //   ),
+                                //     ?
+                                GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        print(
+                                            'uid print-${FetchAllExpertsData?.object?[index].uuid}');
+                                        return MultiBlocProvider(
+                                            providers: [
+                                              BlocProvider<SherInviteCubit>(
+                                                create: (_) =>
+                                                    SherInviteCubit(),
+                                              ),
+                                            ],
+                                            child: InviteDilogScreen(
+                                              Room_UUID:
+                                                  "${FetchAllExpertsData?.object?[index].uuid}",
+                                            ));
+                                      },
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 30,
+                                    width: _width,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFED1C25),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                    ),
+                                    child: Center(
+                                      // child: index == 1
+                                      //     ? Text(
+                                      //         "invite sent",
+                                      //         style: TextStyle(
+                                      //             fontWeight:
+                                      //                 FontWeight.w400,
+                                      //             color: Colors.white,
+                                      //             fontFamily: "outfit",
+                                      //             fontSize: 15),
+                                      //       )
+                                      //     : Text(
+                                      //         "invite",
+                                      //         style: TextStyle(
+                                      //             fontWeight:
+                                      //                 FontWeight.w400,
+                                      //             color: Colors.white,
+                                      //             fontFamily: "outfit",
+                                      //             fontSize: 15),
+                                      //       ),
+                                      child: Text(
+                                        "invite",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.white,
+                                            fontFamily: "outfit",
+                                            fontSize: 15),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                // : Container(
+                                //     height: 30,
+                                //     width: _width,
+                                //     decoration: BoxDecoration(
+                                //         color: Colors.white,
+                                //         border: Border.all(
+                                //           color: index == 3
+                                //               ? Colors.red
+                                //               : Colors.green,
+                                //         ),
+                                //         borderRadius: BorderRadius.all(
+                                //             Radius.circular(10))),
+                                //     child: Row(children: [
+                                //       SizedBox(
+                                //         width: 20,
+                                //       ),
+                                //       index == 3
+                                //           ? Padding(
+                                //               padding:
+                                //                   const EdgeInsets.only(
+                                //                       left: 20),
+                                //               child: Icon(
+                                //                 Icons.close,
+                                //                 color: Colors.red,
+                                //               ),
+                                //             )
+                                //           : Padding(
+                                //               padding:
+                                //                   const EdgeInsets.only(
+                                //                       left: 20),
+                                //               child: Icon(
+                                //                 Icons.done,
+                                //                 color: Colors.green,
+                                //               ),
+                                //             ),
+                                //       index == 3
+                                //           ? Text(
+                                //               "Rejected",
+                                //               style: TextStyle(
+                                //                   color: Colors.red,
+                                //                   fontFamily: 'outfit',
+                                //                   fontSize: 13,
+                                //                   fontWeight:
+                                //                       FontWeight.w300),
+                                //             )
+                                //           : Text(
+                                //               "Accepted",
+                                //               style: TextStyle(
+                                //                   color: Colors.green,
+                                //                   fontFamily: 'outfit',
+                                //                   fontSize: 13,
+                                //                   fontWeight:
+                                //                       FontWeight.w300),
+                                //             )
+                                //     ]),
+                                //   ),
                               ],
                             )),
                       ),
