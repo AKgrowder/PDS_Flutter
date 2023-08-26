@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:archit_s_application1/API/Bloc/auth/login_Block.dart';
-import 'package:archit_s_application1/API/Bloc/auth/otp_block.dart';
-import 'package:archit_s_application1/API/Bloc/auth/otp_state.dart';
-import 'package:archit_s_application1/core/app_export.dart';
-import 'package:archit_s_application1/core/utils/color_constant.dart';
-import 'package:archit_s_application1/custom_bottom_bar/custom_bottom_bar.dart';
-import 'package:archit_s_application1/widgets/app_bar/appbar_image.dart';
-import 'package:archit_s_application1/widgets/app_bar/custom_app_bar.dart';
+import 'package:pds/API/Bloc/auth/login_Block.dart';
+import 'package:pds/API/Bloc/auth/otp_block.dart';
+import 'package:pds/API/Bloc/auth/otp_state.dart';
+import 'package:pds/core/app_export.dart';
+import 'package:pds/core/utils/color_constant.dart';
+import 'package:pds/custom_bottom_bar/custom_bottom_bar.dart';
+import 'package:pds/widgets/app_bar/appbar_image.dart';
+import 'package:pds/widgets/app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

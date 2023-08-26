@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:archit_s_application1/core/utils/sharedPreferences.dart';
-import 'package:archit_s_application1/presentation/home/home.dart';
-import 'package:archit_s_application1/presentation/register_create_account_screen/register_create_account_screen.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/home/home.dart';
+import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

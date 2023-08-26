@@ -1,8 +1,8 @@
-import 'package:archit_s_application1/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
-import 'package:archit_s_application1/API/Bloc/auth/register_Block.dart';
+import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
+import 'package:pds/API/Bloc/auth/register_Block.dart';
 
-import 'package:archit_s_application1/presentation/splash_screen/splash_screen.dart';
-import 'package:archit_s_application1/theme/theme_helper.dart';
+import 'package:pds/presentation/splash_screen/splash_screen.dart';
+import 'package:pds/theme/theme_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           visualDensity: VisualDensity.standard,
         ),
-        title: 'archit_s_application1',
+        title: 'pds',
         debugShowCheckedModeBanner: false,
         //  initialRoute: AppRoutes.splashScreen,
         //  routes: AppRoutes.routes,

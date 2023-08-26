@@ -1,4 +1,4 @@
-import 'package:archit_s_application1/widgets/base_button.dart';
+import 'package:pds/widgets/base_button.dart';
 import 'package:flutter/material.dart';
 
 class CustomOutlinedButton extends BaseButton {

@@ -1,6 +1,6 @@
-import 'package:archit_s_application1/API/Bloc/creatForum_Bloc/creat_Fourm_state.dart';
-import 'package:archit_s_application1/API/Model/createDocumentModel/createDocumentModel.dart';
-import 'package:archit_s_application1/API/Repo/repository.dart';
+import 'package:pds/API/Bloc/creatForum_Bloc/creat_Fourm_state.dart';
+import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
+import 'package:pds/API/Repo/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

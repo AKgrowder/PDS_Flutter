@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:archit_s_application1/core/app_export.dart';
+import 'package:pds/core/app_export.dart';
 
 class AppDecoration {
   static BoxDecoration get fill => BoxDecoration(
