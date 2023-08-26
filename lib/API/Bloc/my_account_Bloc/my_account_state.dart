@@ -1,6 +1,7 @@
 import 'package:pds/API/Bloc/creatForum_Bloc/creat_Fourm_state.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
+import 'package:pds/API/Model/creat_form/creat_form_Model.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Model/myaccountModel/myaccountModel.dart';
 
@@ -38,3 +39,7 @@ class AddExportLoadedState extends MyAccountState {
   AddExportLoadedState(this.addExpertProfile);
 }
 
+class CreatFourmLoadedState extends MyAccountState {
+  final CreateForm createForm;
+  CreatFourmLoadedState(this.createForm);
+}
