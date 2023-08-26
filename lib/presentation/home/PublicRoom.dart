@@ -80,6 +80,7 @@ class _PublicRoomListState extends State<PublicRoomList> {
                     // height: demo.contains(index) ? null: height / 16,
                     width: _width,
                     decoration: BoxDecoration(
+                      
                         border: Border.all(
                             color: const Color(0XFFD9D9D9), width: 2),
                         borderRadius: BorderRadius.circular(5)),
@@ -156,9 +157,15 @@ class _PublicRoomListState extends State<PublicRoomList> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            PublicRoomModelData?.object?[index].message?.message == null ? SizedBox():
                             Padding(
                                 padding: const EdgeInsets.only(left: 10),
-                                child: CustomImageView(
+                                child: PublicRoomModelData?.object?[index].message?.userProfilePic?.isNotEmpty ?? false ?
+                                CustomImageView(
+                                  url: "${PublicRoomModelData?.object?[index].message?.userProfilePic ?? ""}",
+                                  height: 20,
+                                ):
+                                 CustomImageView(
                                   imagePath: ImageConstant.tomcruse,
                                   height: 20,
                                 )),
