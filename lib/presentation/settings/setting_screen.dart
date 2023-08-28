@@ -97,7 +97,7 @@ class _SettingScreenState extends State<SettingScreen> {
     getUserStausFuction();
     Future.delayed(Duration.zero, () {
       print('userStatus-$userStatus');
-      if (userStatus != 'APPROVED') {
+      if (userStatus == 'REJECTED') {
         showDialog(
           context: context,
           builder: (BuildContext context) {
