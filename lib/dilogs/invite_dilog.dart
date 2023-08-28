@@ -1,10 +1,10 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_state.dart';
 import 'package:pds/core/utils/color_constant.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../core/utils/image_constant.dart';
 import '../widgets/custom_image_view.dart';
@@ -85,7 +85,9 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          Navigator.pop(context);
+          Future.delayed(const Duration(milliseconds: 900), () {
+            Navigator.pop(context);
+          });
         }
       },
       builder: (context, state) {
