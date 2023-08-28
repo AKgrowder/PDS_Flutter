@@ -152,4 +152,5 @@ class ImageConstant {
   static String CreateForum = 'assets/images/CreateForum.png';
   static String InPending = 'assets/images/InPending.png';
   static String Rejected = 'assets/images/Rejected.png';
+  static String rejctedPic = 'assets/images/rjected.png';
 }
