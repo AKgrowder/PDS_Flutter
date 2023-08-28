@@ -90,9 +90,91 @@ var IsGuestUserEnabled;
 var GetTimeSplash;
 
 class _SettingScreenState extends State<SettingScreen> {
+  String? userStatus;
+  String? rejcteReson;
   @override
   void initState() {
-    // BlocProvider.of<StatusCubit>(context).getStatus();
+    getUserStausFuction();
+    Future.delayed(Duration.zero, () {
+      print('userStatus-$userStatus');
+      if (userStatus != 'APPROVED') {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              content: SizedBox(
+                height: 570,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    Image.asset(ImageConstant.rejctedPic),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text(
+                        'Your Profile is rejected',
+                        style: TextStyle(fontSize: 25, fontFamily: 'Outfit'),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'Reason:',
+                      style: TextStyle(fontSize: 18, fontFamily: 'Outfit'),
+                    ),
+                    SizedBox(
+                      height: 1,
+                    ),
+                    Container(
+                      height: 80,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xffE8E8E8)),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 10,left: 10),
+                        child: Text('${rejcteReson}'),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    GestureDetector(
+                      onTap: (){
+                              Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return MultiBlocProvider(providers: [
+                                      BlocProvider<MyAccountCubit>(
+                                        create: (context) => MyAccountCubit(),
+                                      )
+                                    ], child: MyAccountScreen());
+                                  }));
+                      },
+                      child: Container(
+                        height: 60,
+                        width: MediaQuery.of(context).size.width,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                            color: Color(0xffED1C25)
+                        ),
+                        child: Text('Please update',style: TextStyle(color: Colors.white,),
+                      )
+                      ),
+                    )
+                  ])),
+            );
+          
+          },
+        );
+      }
+    });
 
     super.initState();
   }
@@ -141,7 +223,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                           fontSize: 18,
                                           fontFamily: 'Outfit',
                                           fontWeight: FontWeight.w400)),
-                                  Text("Approved",
+                                  Text("${userStatus}",
                                       style: TextStyle(
                                           color: Colors.green,
                                           fontSize: 18,
@@ -156,210 +238,224 @@ class _SettingScreenState extends State<SettingScreen> {
             // color: Theme.of(context).brightness == Brightness.light
             // ? Color(0XFF161616)
             // : Color(0XFF1D1D1D),
-            child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                itemCount: Setting_Array.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      switch (index) {
-                        case 0:
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return MultiBlocProvider(providers: [
-                              BlocProvider<MyAccountCubit>(
-                                create: (context) => MyAccountCubit(),
-                              )
-                            ], child: MyAccountScreen());
-                          }));
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: _height,
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: Setting_Array.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            onTap: () {
+                              switch (index) {
+                                case 0:
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return MultiBlocProvider(providers: [
+                                      BlocProvider<MyAccountCubit>(
+                                        create: (context) => MyAccountCubit(),
+                                      )
+                                    ], child: MyAccountScreen());
+                                  }));
 
-                          break;
-                        // case 1:
-                        //   // Navigator.push(
-                        //   //     context,
-                        //   //     MaterialPageRoute(
-                        //   //         builder: (context) => OtpVerificationScreen()));
+                                  break;
+                                // case 1:
+                                //   // Navigator.push(
+                                //   //     context,
+                                //   //     MaterialPageRoute(
+                                //   //         builder: (context) => OtpVerificationScreen()));
 
-                        //   break;
-                        case 1:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ExpertsScreen(),
-                              ));
-                          break;
-                        case 2:
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //       builder: (context) => RoomMembersScreen(room_Id: ""),
-                          //     ));
-                          break;
-                        case 3:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      ForgetPasswordScreen()));
+                                //   break;
+                                case 1:
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ExpertsScreen(),
+                                      ));
+                                  break;
+                                case 2:
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //       builder: (context) => RoomMembersScreen(room_Id: ""),
+                                  //     ));
+                                  break;
+                                case 3:
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ForgetPasswordScreen()));
 
-                          break;
-                        case 4:
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => ChangePasswordScreen()),
-                          // );
+                                  break;
+                                case 4:
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //       builder: (context) => ChangePasswordScreen()),
+                                  // );
 
-                          break;
-                        case 5:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ViewDetailsScreen()
+                                  break;
+                                case 5:
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ViewDetailsScreen()
 
-                                  // AddDeliveryAddressScreen();
-                                  ));
-                          break;
-                        /*    case 6:
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return PreferencesScreen();
-                          }));
+                                          // AddDeliveryAddressScreen();
+                                          ));
+                                  break;
+                                /*    case 6:
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return PreferencesScreen();
+                                  }));
+                    
+                                  break; */
+                                case 6:
+                                  break;
+                                case 7:
+                                  // Navigator.push(context,
+                                  //     MaterialPageRoute(builder: (context) {
+                                  //   return RoomDetailScreen();
+                                  // }));
 
-                          break; */
-                        case 6:
-                          break;
-                        case 7:
-                          // Navigator.push(context,
-                          //     MaterialPageRoute(builder: (context) {
-                          //   return RoomDetailScreen();
-                          // }));
+                                  break;
+                                case 8:
+                                  // Navigator.push(context,
+                                  //     MaterialPageRoute(builder: (context) {
+                                  //   return ExpertsDetailsScreen();
+                                  // }));
 
-                          break;
-                        case 8:
-                          // Navigator.push(context,
-                          //     MaterialPageRoute(builder: (context) {
-                          //   return ExpertsDetailsScreen();
-                          // }));
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) => rateUSdialog());
 
-                          showDialog(
-                              context: context, builder: (_) => rateUSdialog());
+                                  break;
+                                /* case 8:
+                                  SnackBar snackBar = SnackBar(
+                                    content: Text("No Invite Friends Screen"),
+                                    backgroundColor: ColorConstant.orangeA700,
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                    
+                                  break; */
+                                case 9:
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) => FunkyOverlay());
 
-                          break;
-                        /* case 8:
-                          SnackBar snackBar = SnackBar(
-                            content: Text("No Invite Friends Screen"),
-                            backgroundColor: ColorConstant.orangeA700,
-                          );
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(snackBar);
+                                  // showDialog(
+                                  //     context: context, builder: (_) => RoomsScreen());
+                                  /*  SnackBar snackBar = SnackBar(
+                                    content: Text("No Rate US Screen"),
+                                    backgroundColor: ColorConstant.orangeA700,
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar); */
 
-                          break; */
-                        case 9:
-                          showDialog(
-                              context: context, builder: (_) => FunkyOverlay());
+                                  break;
+                                case 10:
+                                  logout();
 
-                          // showDialog(
-                          //     context: context, builder: (_) => RoomsScreen());
-                          /*  SnackBar snackBar = SnackBar(
-                            content: Text("No Rate US Screen"),
-                            backgroundColor: ColorConstant.orangeA700,
-                          );
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(snackBar); */
+                                  break;
+                                // case 11:
+                                //   // showDialog(
+                                //   //     context: context, builder: (_) => RoomsScreen());
 
-                          break;
-                        case 10:
-                          logout();
-                        
-                          break;
-                        // case 11:
-                        //   // showDialog(
-                        //   //     context: context, builder: (_) => RoomsScreen());
+                                //   break;
 
-                        //   break;
-
-                        /* case 6:
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  const RaiseQueryScreen()));
-                          break;
-                        case 7:
-                          showDialog(
-                            context: context,
-                            builder: (_) => FunkyOverlay(),
-                          );
-                          break; */
-                        default:
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16, right: 16, top: 8, bottom: 8),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 60,
-                            width: _width,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                // color: ColorConstant.CategoriesBackColor,
-                                color: Color(0XFFF6F6F6),
-                                border: Border.all(
-                                    width: 1,
-                                    // color: ColorConstant.gray200,
-                                    color: Color(0XFFEFEFEF))),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 15, right: 15),
-                                  child: Container(
-                                    height: 25,
-                                    width: 25,
-                                    child: Image.asset(
-                                      "${SettingImage_Array[index]}",
+                                /* case 6:
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          const RaiseQueryScreen()));
+                                  break;
+                                case 7:
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => FunkyOverlay(),
+                                  );
+                                  break; */
+                                default:
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 16, right: 16, top: 8, bottom: 8),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: 60,
+                                    width: _width,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        // color: ColorConstant.CategoriesBackColor,
+                                        color: Color(0XFFF6F6F6),
+                                        border: Border.all(
+                                            width: 1,
+                                            // color: ColorConstant.gray200,
+                                            color: Color(0XFFEFEFEF))),
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 15, right: 15),
+                                          child: Container(
+                                            height: 25,
+                                            width: 25,
+                                            child: Image.asset(
+                                              "${SettingImage_Array[index]}",
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          "${Setting_Array[index]}",
+                                          style: TextStyle(
+                                              fontFamily: 'outfit',
+                                              fontSize: 18,
+                                              color: index == 0
+                                                  ? Color(0xFFED1C25)
+                                                  : Colors.black,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Spacer(),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 0),
+                                          child: Container(
+                                            // color: Colors.amber,
+                                            height: 30,
+                                            width: 60,
+                                            child: Icon(
+                                              Icons.arrow_forward_ios,
+                                              color: index == 0
+                                                  ? Colors.red
+                                                  : Colors.grey,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                                Text(
-                                  "${Setting_Array[index]}",
-                                  style: TextStyle(
-                                      fontFamily: 'outfit',
-                                      fontSize: 18,
-                                      color: index == 0
-                                          ? Color(0xFFED1C25)
-                                          : Colors.black,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 0),
-                                  child: Container(
-                                    // color: Colors.amber,
-                                    height: 30,
-                                    width: 60,
-                                    child: Icon(
-                                      Icons.arrow_forward_ios,
-                                      color:
-                                          index == 0 ? Colors.red : Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                })),
+                          );
+                        }),
+                  ),
+                ],
+              ),
+            )),
       ),
     );
   }
 
- 
-    logout() async {
+  logout() async {
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -444,5 +540,17 @@ class _SettingScreenState extends State<SettingScreen> {
       },
     );
   }
-  
+
+  getUserStausFuction() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    userStatus = await prefs.getString(PreferencesKey.userStatus);
+    if (userStatus != 'APPROVED') {
+      rejcteReson = userStatus?.split('-').last;
+    }
+    userStatus =
+        userStatus != 'APPROVED' ? userStatus?.split('-').first : userStatus;
+
+    setState(() {});
+    print('userStatus-${userStatus}');
+  }
 }

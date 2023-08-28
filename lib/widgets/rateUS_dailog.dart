@@ -54,7 +54,7 @@ class rateUSdialogState extends State<rateUSdialog>
         child: ScaleTransition(
           scale: scaleAnimation,
           child: Container(
-            height: height / 2.2,
+            height: height / 2,
             width: MediaQuery.of(context).size.width / 1.17,
             decoration: ShapeDecoration(
               color: Colors.white,
@@ -65,7 +65,7 @@ class rateUSdialogState extends State<rateUSdialog>
             child: Column(
               children: [
                 Container(
-                  height: height / 2.2,
+                  height: height / 2,
                   width: MediaQuery.of(context).size.width / 1.17,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
@@ -136,7 +136,8 @@ class rateUSdialogState extends State<rateUSdialog>
                       Padding(
                         padding: const EdgeInsets.only(top: 30),
                         child: RatingBar.builder(
-                          initialRating: userRating != null ? userRating : 5,
+                          // initialRating: userRating != null ? userRating : 5,
+                          initialRating: 3,
                           minRating: 1,
                           direction: Axis.horizontal,
                           allowHalfRating: true,

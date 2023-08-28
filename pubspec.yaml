@@ -25,6 +25,7 @@ dependencies:
   device_info_plus: ^8.1.0
   flutter_widget_from_html_core: ^0.10.3
   flutter_html: ^2.2.1
+  another_flushbar: ^1.12.30
    
   # keyboard_emoji_picker: ^1.0.3
   flutter_markdown:

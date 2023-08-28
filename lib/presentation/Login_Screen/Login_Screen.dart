@@ -12,6 +12,7 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/custom_bottom_bar/custom_bottom_bar.dart';
 import 'package:pds/presentation/otp_verification_screen/otp_verification_screen.dart';
+import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/widgets/custom_elevated_button.dart';
 import 'package:pds/widgets/custom_outlined_button.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
@@ -31,7 +32,8 @@ import '../../widgets/app_bar/appbar_image.dart';
 import '../forget_password_screen/forget_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({Key? key})
+  String? flagCheck;
+  LoginScreen({Key? key, this.flagCheck})
       : super(
           key: key,
         );
@@ -62,7 +64,17 @@ class _LoginScreenState extends State<LoginScreen> {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return WillPopScope(
-      onWillPop: () async => await false,
+      onWillPop: () async {
+        if (widget.flagCheck != null || widget.flagCheck == 'otp done') {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => RegisterCreateAccountScreen()));
+        } else {
+          Navigator.pop(context);
+        }
+        return true;
+      },
       child: SafeArea(
         child: Scaffold(
           backgroundColor: theme.colorScheme.onPrimary,
@@ -246,7 +258,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                           bottom: 13,
                                           right: 15),
                                       onTap: () {
-                                        Navigator.pop(context);
+                                        if (widget.flagCheck != null ||
+                                            widget.flagCheck == 'otp done') {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RegisterCreateAccountScreen()));
+                                        } else {
+                                          Navigator.pop(context);
+                                        }
                                       }),
                                 ),
                               ],
