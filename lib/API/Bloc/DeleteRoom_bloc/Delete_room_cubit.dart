@@ -14,6 +14,8 @@ class DeleteRoomCubit extends Cubit<DeleteRoomState> {
       DeleteRoom = await Repository().DeleteRoomApi(roomuId, context);
       if (DeleteRoom.success == true) {
         emit(DeleteRoomLoadedState(DeleteRoom));
+      } else {
+        emit(DeleteRoomErrorState(DeleteRoom.message));
       }
     } catch (e) {
       emit(DeleteRoomErrorState(DeleteRoom));

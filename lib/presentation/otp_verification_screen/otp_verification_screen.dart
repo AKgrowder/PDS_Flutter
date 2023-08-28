@@ -10,6 +10,7 @@ import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/custom_bottom_bar/custom_bottom_bar.dart';
 import 'package:pds/presentation/change_password_screen/change_password_screen.dart';
+import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/widgets/app_bar/appbar_image.dart';
 import 'package:pds/widgets/app_bar/custom_app_bar.dart';
 import 'package:pinput/pinput.dart';
@@ -99,12 +100,21 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-    return WillPopScope(
-      onWillPop: () async => await false,
-      child: SafeArea(
+    return SafeArea(
+        child: WillPopScope(
+          onWillPop: ()async{
+     Navigator.push(context,
+        MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen())); 
+            return true;
+          },
           child: Scaffold(
               backgroundColor: theme.colorScheme.onPrimary,
               resizeToAvoidBottomInset: false,
@@ -137,7 +147,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
-
+        
                     if (state is OtpLoadingState) {
                       print("loading");
                       Center(
@@ -173,7 +183,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             BlocProvider<DevicesInfoCubit>(
                               create: (context) => DevicesInfoCubit(),
                             )
-                          ], child: LoginScreen());
+                          ], child: LoginScreen(flagCheck: 'otp done',));
                         }));
                       } else if (widget.forgetpassword == true) {
                         Navigator.push(context,
@@ -394,8 +404,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             ]));
                   },
                 ),
-              ))),
-    );
+              )),
+        ));
   }
 
   /// Navigates back to the previous screen.
@@ -403,7 +413,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   /// This function takes a [BuildContext] object as a parameter, which is used
   /// to navigate back to the previous screen.
   onTapArrowleft(BuildContext context) {
-    Navigator.pop(context);
+   Navigator.push(context,
+        MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen())); 
   }
 
   getDataStroe(String userId, String jwt, String user_Module) async {

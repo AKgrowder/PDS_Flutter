@@ -127,8 +127,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                   onChanged: (value) {
                                     print("onchange");
                                     final RegExp regex = RegExp('[a-zA-Z]');
-                                    if (contectnumberrController.text == null ||
-                                        contectnumberrController.text.isEmpty ||
+                                    if (contectnumberrController.text.isEmpty ||
                                         !regex.hasMatch(
                                             contectnumberrController.text)) {
                                       setState(() {
@@ -170,7 +169,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                             onTap: () {
                               if (contectnumberrController.text.isEmpty) {
                                 SnackBar snackBar = SnackBar(
-                                  content: Text('Please Enter Mobile Number'),
+                                  content: Text('Please Enter Mobile Number',),
                                   backgroundColor: ColorConstant.primary_color,
                                 );
                                 ScaffoldMessenger.of(context)
