@@ -26,6 +26,8 @@ class GetAllPrivateRoomCubit extends Cubit<GetAllPrivateRoomState> {
       GetAllPrivateRoom = await Repository().DeleteRoomApi(roomuId, context);
       if (GetAllPrivateRoom.success == true) {
         emit(DeleteRoomLoadedState(GetAllPrivateRoom));
+      }else{
+        emit(GetAllPrivateRoomErrorState(GetAllPrivateRoom.message));
       }
     } catch (e) {
       emit(GetAllPrivateRoomErrorState(GetAllPrivateRoom));
