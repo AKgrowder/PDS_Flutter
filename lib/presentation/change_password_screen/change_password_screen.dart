@@ -187,15 +187,17 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   backgroundColor: ColorConstant.primary_color,
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              } else if (conformpasswordController.text. isEmpty) {
+              } else if (conformpasswordController.text.isEmpty) {
                 SnackBar snackBar = SnackBar(
                   content: Text('Please Enter Confirm Password'),
                   backgroundColor: ColorConstant.primary_color,
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              } else if (conformpasswordController.text !=newpasswordController.text) {
+              } else if (conformpasswordController.text !=
+                  newpasswordController.text) {
                 SnackBar snackBar = SnackBar(
-                  content: Text('New Password and Current Password are not same'),
+                  content:
+                      Text('New Password and Current Password are not same'),
                   backgroundColor: ColorConstant.primary_color,
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
