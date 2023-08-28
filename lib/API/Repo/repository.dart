@@ -416,6 +416,7 @@ class Repository {
     final response = await apiServices.getApiCallWithToken(
         "${Config.checkUserActive}", context);
     var jsonString = json.decode(response.body);
+    print('jsonStringcheckUserActive$jsonString');
     switch (response.statusCode) {
       case 200:
         return CheckUserStausModel.fromJson(jsonString);

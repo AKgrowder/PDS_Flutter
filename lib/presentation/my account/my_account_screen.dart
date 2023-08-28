@@ -38,6 +38,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     BlocProvider.of<MyAccountCubit>(context).MyAccount(context);
     super.initState();
   }
+
   ImagePicker _imagePicker = ImagePicker();
 
   TextEditingController userId = TextEditingController();
@@ -122,6 +123,12 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
@@ -149,7 +156,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           expertBool = state.myAccontDetails.object?.expertise?.isNotEmpty;
           print('check expertbool-${expertBool}');
           dataSetMethod(
-            useridSetdata: state.myAccontDetails.object?.userName,
+            useridSetdata: state.myAccontDetails.object?.uuid,
             userNameSetdata: state.myAccontDetails.object?.userName,
             emailSetdata: state.myAccontDetails.object?.email,
             expertInSetdata: '',
@@ -193,6 +200,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         if (state is chooseDocumentLoadedState) {
           chooseDocumentuploded = state.chooseDocumentuploded;
           print('chooseDocumentuploded-${chooseDocumentuploded?.object}');
+          myAccontDetails?.object?.userProfilePic = null;
           /*   SnackBar snackBar = SnackBar(
             content: Text(state.chooseDocumentuploded.message.toString()),
             backgroundColor: ColorConstant.primary_color,
@@ -272,49 +280,50 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 ))),
                         IsGuestUserEnabled == "true"
                             ? SizedBox.shrink()
-                            : Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Padding(
-                                  padding: EdgeInsets.only(top: 22),
-                                  child: myAccontDetails?.object?.module !=
-                                          'EMPLOYEE'
-                                      ? Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                              Text("Status:",
-                                                  textScaleFactor: 1.0,
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 18,
-                                                      fontFamily: 'Outfit',
-                                                      fontWeight:
-                                                          FontWeight.w400)),
-                                              Text("Approved",
-                                                  style: TextStyle(
-                                                      color: Colors.green,
-                                                      fontSize: 18,
-                                                      fontFamily: 'Outfit',
-                                                      fontWeight:
-                                                          FontWeight.w400))
-                                            ])
-                                      : SizedBox(),
-                                ),
-                              ),
+                            : myAccontDetails?.object?.approvalStatus != null
+                                ? Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: 22),
+                                      child: myAccontDetails?.object?.module !=
+                                              'EMPLOYEE'
+                                          ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                  Text("Status:",
+                                                      textScaleFactor: 1.0,
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 18,
+                                                          fontFamily: 'Outfit',
+                                                          fontWeight:
+                                                              FontWeight.w400)),
+                                                  Text(
+                                                      "${myAccontDetails?.object?.approvalStatus}",
+                                                      style: TextStyle(
+                                                          color: Colors.green,
+                                                          fontSize: 18,
+                                                          fontFamily: 'Outfit',
+                                                          fontWeight:
+                                                              FontWeight.w400))
+                                                ])
+                                          : SizedBox(),
+                                    ),
+                                  )
+                                : SizedBox(),
                       ],
                     ),
                   ),
                   GestureDetector(
                     onTap: () {
-                      isupdate = false;
+                      isupdate = isupdate == true ? false : true;
                       dopcument = 'Upload Image';
-
                       setState(() {});
-                      print('isupdate-$isupdate');
                     },
                     child: Icon(
                       Icons.edit,
-                      color: Colors.grey,
+                      color: isupdate == false ? Colors.red : Colors.grey,
                     ),
                   )
                 ],
@@ -455,9 +464,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                       ),
                                       GestureDetector(
                                         onTap: () {
-                                         if(isupdate == false){
-                                           _openBottomSheet(context);
-                                         }
+                                          if (isupdate == false) {
+                                            _openBottomSheet(context);
+                                          }
                                         },
                                         child: Container(
                                           height: 50,
@@ -476,11 +485,11 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   ),
                                 ),
                               ),
-                    myAccontDetails?.object?.userName != null
+                    myAccontDetails?.object?.uuid != null
                         ? Padding(
                             padding: const EdgeInsets.only(left: 36.0, top: 10),
                             child: Text(
-                              "User Name",
+                              "User ID",
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: Colors.black,
@@ -492,7 +501,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                     SizedBox(
                       height: 5,
                     ),
-                    myAccontDetails?.object?.userName != null
+                    myAccontDetails?.object?.uuid != null
                         ? Center(
                             child: Container(
                               // height: 50,
@@ -517,7 +526,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 36.0, top: 20),
                       child: Text(
-                        "Your Name",
+                        "User Name",
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: Colors.black,
@@ -615,7 +624,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                             keyboardType: TextInputType.numberWithOptions(
                               decimal: true,
                             ),
-                            readOnly: false,
+                            readOnly: true,
                             controller: mobileNo,
                             cursorColor: Colors.grey,
                             decoration: InputDecoration(
@@ -1382,6 +1391,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                           ? chooseDocumentuploded?.object
                                           : ''
                                 };
+                                print('paremdatapasssing-$params');
                                 BlocProvider.of<MyAccountCubit>(context)
                                     .cretaForumUpdate(params, context);
                               }
@@ -1456,6 +1466,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 "uid":
                                     '${myAccontDetails?.object?.uuid.toString()}',
                                 "workingHours": time.toString(),
+                                'profile': chooseDocumentuploded?.object != null
+                                    ? chooseDocumentuploded?.object.toString()
+                                    : ''
                               };
                               print('in if condison');
 
@@ -1466,25 +1479,27 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                           }
                         }
                       },
-                      child: Center(
-                        child: Container(
-                          height: 50,
-                          width: _width / 3,
-                          decoration: BoxDecoration(
-                              color: Color(0xFFED1C25),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Center(
-                            child: Text(
-                              "Save",
-                              style: TextStyle(
-                                  fontFamily: 'outfit',
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ),
+                      child: isupdate == false
+                          ? Center(
+                              child: Container(
+                                height: 50,
+                                width: _width / 3,
+                                decoration: BoxDecoration(
+                                    color: Color(0xFFED1C25),
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: Center(
+                                  child: Text(
+                                    "Save",
+                                    style: TextStyle(
+                                        fontFamily: 'outfit',
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
                     ),
                     SizedBox(
                       height: 10,

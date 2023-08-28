@@ -135,10 +135,7 @@ class _RegisterCreateAccountScreenState
                   )
                 ], child: CreateAccountScreen());
               }));
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => CreateAccountScreen()),
-              // );
+          
             },
             child: Padding(
               padding: EdgeInsets.only(left: 30, right: 30, bottom: 30),

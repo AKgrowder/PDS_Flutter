@@ -684,32 +684,21 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           GestureDetector(
                             onTap: () {
                               if (_formKey.currentState!.validate()) {
-                                if (pickedFile == null) {
-                                  if (chooseDocument?.object.toString() ==
-                                      null) {
-                                    SnackBar snackBar = SnackBar(
-                                      content: Text('please select Profile'),
-                                      backgroundColor:
-                                          ColorConstant.primary_color,
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  }
-                                } else {
-                                  var datapPassing = {
-                                    "name": enteruseridController.text,
-                                    "userName": nameController.text,
-                                    "email": emailAndMobileController.text,
-                                    "mobileNo": contectnumberController.text,
-                                    "password": passwordController.text,
-                                    "module": "EMPLOYEE",
-                                    "profilePic":
-                                        '${chooseDocument?.object.toString()}',
-                                  };
-                                  print('dataPassing-$datapPassing');
-                                  BlocProvider.of<RegisterCubit>(context)
-                                      .registerApi(datapPassing, context);
+                                var datapPassing = {
+                                  "name": enteruseridController.text,
+                                  "userName": nameController.text,
+                                  "email": emailAndMobileController.text,
+                                  "mobileNo": contectnumberController.text,
+                                  "password": passwordController.text,
+                                  "module": "EMPLOYEE",
+                                };
+                                if (chooseDocument?.object != null) {
+                                  datapPassing['profilePic'] =
+                                      '${chooseDocument?.object.toString()}';
                                 }
+                                print('dataPassing-$datapPassing');
+                                BlocProvider.of<RegisterCubit>(context)
+                                    .registerApi(datapPassing, context);
                               }
                             },
                             child: Container(
@@ -815,13 +804,31 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       pickedFile = await _imagePicker.pickImage(source: source);
 
       if (pickedFile != null) {
-        setState(() {
-          pickedImage = File(pickedFile!.path);
-        });
-        BlocProvider.of<RegisterCubit>(context)
-            .upoldeProfilePic(pickedImage!, context);
+        if (!_isGifOrSvg(pickedFile!.path)) {
+          setState(() {
+            setState(() {
+              pickedImage = File(pickedFile!.path);
+            });
+            BlocProvider.of<RegisterCubit>(context)
+                .upoldeProfilePic(pickedImage!, context);
+          });
+        } else {
+          Navigator.pop(context);
+          SnackBar snackBar = SnackBar(
+            content: Text('GIF and SVG images are not allowed.'),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
       }
     } catch (e) {}
+  }
+
+  bool _isGifOrSvg(String imagePath) {
+    // Check if the image file has a .gif or .svg extension
+    final lowerCaseImagePath = imagePath.toLowerCase();
+    return lowerCaseImagePath.endsWith('.gif') ||
+        lowerCaseImagePath.endsWith('.svg');
   }
 
   Future<void> _openBottomSheet(BuildContext context) async {
