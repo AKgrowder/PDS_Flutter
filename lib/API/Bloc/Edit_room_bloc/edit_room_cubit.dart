@@ -15,6 +15,9 @@ class EditroomCubit extends Cubit<EditroomState> {
       editRoom = await Repository().EditroomAPI(params, roomuId, context);
       if (editRoom.success == true) {
         emit(EditroomLoadedState(editRoom));
+      }else{
+            emit(EditroomErrorState(editRoom.message));
+
       }
     } catch (e) {
       emit(EditroomErrorState(editRoom));

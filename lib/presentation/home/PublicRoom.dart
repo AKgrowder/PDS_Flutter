@@ -54,7 +54,6 @@ class _PublicRoomListState extends State<PublicRoomList> {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              
               return Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16, bottom: 10),
                 child: GestureDetector(
@@ -80,7 +79,6 @@ class _PublicRoomListState extends State<PublicRoomList> {
                     // height: demo.contains(index) ? null: height / 16,
                     width: _width,
                     decoration: BoxDecoration(
-                      
                         border: Border.all(
                             color: const Color(0XFFD9D9D9), width: 2),
                         borderRadius: BorderRadius.circular(5)),
@@ -96,10 +94,22 @@ class _PublicRoomListState extends State<PublicRoomList> {
                           children: [
                             Padding(
                                 padding: const EdgeInsets.only(left: 10),
-                                child: CustomImageView(
-                                  imagePath: ImageConstant.tomcruse,
-                                  height: 20,
-                                )),
+                                child: PublicRoomModelData?.object?[index]
+                                            .ownerUsreProfilePic?.isNotEmpty ??
+                                        false
+                                    ? CustomImageView(
+                                        url:
+                                            "${PublicRoomModelData?.object?[index].ownerUsreProfilePic}",
+                                        height: 25,
+                                        width: 25,
+                                        fit: BoxFit.fill,
+                                        radius: BorderRadius.circular(25),
+                                      )
+                                    : CustomImageView(
+                                        imagePath: ImageConstant.tomcruse,
+                                        height: 25,
+                                        width: 25,
+                                      )),
                             Padding(
                               padding: const EdgeInsets.only(left: 5),
                               child: Text(
@@ -157,18 +167,31 @@ class _PublicRoomListState extends State<PublicRoomList> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            PublicRoomModelData?.object?[index].message?.message == null ? SizedBox():
-                            Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: PublicRoomModelData?.object?[index].message?.userProfilePic?.isNotEmpty ?? false ?
-                                CustomImageView(
-                                  url: "${PublicRoomModelData?.object?[index].message?.userProfilePic ?? ""}",
-                                  height: 20,
-                                ):
-                                 CustomImageView(
-                                  imagePath: ImageConstant.tomcruse,
-                                  height: 20,
-                                )),
+                            PublicRoomModelData
+                                        ?.object?[index].message?.message ==
+                                    null
+                                ? SizedBox()
+                                : Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: PublicRoomModelData
+                                                ?.object?[index]
+                                                .message
+                                                ?.userProfilePic
+                                                ?.isNotEmpty ??
+                                            false
+                                        ? CustomImageView(
+                                            url:
+                                                "${PublicRoomModelData?.object?[index].message?.userProfilePic}",
+                                            height: 25,
+                                            width: 25,
+                                            fit: BoxFit.fill,
+                                            radius: BorderRadius.circular(25),
+                                          )
+                                        : CustomImageView(
+                                            imagePath: ImageConstant.tomcruse,
+                                            height: 25,
+                                            width: 25,
+                                          )),
                             Padding(
                               padding: const EdgeInsets.only(left: 5),
                               child: Container(

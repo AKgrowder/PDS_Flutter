@@ -139,15 +139,15 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
           //   height: 20,
           // ),
           Padding(
-            padding: const EdgeInsets.only(left: 15.0, right: 25),
+            padding: const EdgeInsets.only(left: 15.0, right: 15.0),
             child: Container(
               // color: Colors.amber,
-              height: _height / 1.3,
+              // height: _height ,
               child: GridView.builder(
                   shrinkWrap: true,
-                  // physics: NeverScrollableScrollPhysics(),
+                  physics: NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 0.48,
+                    childAspectRatio: 0.53,
                     mainAxisSpacing: 0,
                     crossAxisSpacing: 0,
                     crossAxisCount: 2,
@@ -195,7 +195,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                       imagePath: ImageConstant.experts,
                                       radius: BorderRadius.circular(10),
                                     ),
-                                    index == 1
+                                    /* index == 1
                                         ? Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Container(
@@ -261,7 +261,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                                 )
                                               ]),
                                             ),
-                                          ),
+                                          ), */
                                   ],
                                 ),
                                 Row(
@@ -274,13 +274,13 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                           fontFamily: "outfit",
                                           fontSize: 18),
                                     ),
-                                    Padding(
+                                   /*  Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: CustomImageView(
                                         imagePath: ImageConstant.imgright,
                                         height: 15,
                                       ),
-                                    )
+                                    ) */
                                   ],
                                 ),
                                 SizedBox(
@@ -355,7 +355,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                     ],
                                   ),
                                 ),
-                                Padding(
+                                /* Padding(
                                   padding:
                                       const EdgeInsets.only(left: 5, top: 5),
                                   child: Row(
@@ -377,7 +377,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                       ),
                                     ],
                                   ),
-                                ),
+                                ), */
                                 SizedBox(
                                   height: 17.2,
                                 ),
