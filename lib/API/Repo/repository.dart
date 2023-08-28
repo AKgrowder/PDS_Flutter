@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
 import 'package:pds/API/Model/authModel/getUserDetailsMdoel.dart';
@@ -11,7 +12,6 @@ import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Model/deviceInfo/deviceInfo_model.dart';
 import 'package:pds/API/Model/otpmodel/otpmodel.dart';
 import 'package:pds/API/Model/sherInviteModel/sherinviteModel.dart';
-import 'package:flutter/cupertino.dart';
 
 import '../ApiService/ApiService.dart';
 import '../Const/const.dart';
@@ -412,7 +412,7 @@ class Repository {
     }
   }
 
-  checkUserActive(BuildContext context) async {
+   checkUserActive(BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
         "${Config.checkUserActive}", context);
     var jsonString = json.decode(response.body);
