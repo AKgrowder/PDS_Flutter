@@ -1,4 +1,4 @@
-import 'dart:ffi';
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -1743,12 +1743,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
     print('createroom');
     showDialog(
       context: context,
-      builder: (context) => ScaffoldMessenger(
-        child: Builder(
-          builder: (context) => Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: Colors.transparent,
-            body: MultiBlocProvider(
+      builder: (context) =>    MultiBlocProvider(
               providers: [
                 BlocProvider<CreateRoomCubit>(
                   create: (context) => CreateRoomCubit(),
@@ -2080,9 +2075,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                 ),
               ),
             ),
-          ),
-        ),
-      ),
+        
     );
 
     // showDialog(
