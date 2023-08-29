@@ -40,7 +40,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   }
 
   ImagePicker _imagePicker = ImagePicker();
-
   TextEditingController userId = TextEditingController();
   TextEditingController userName = TextEditingController();
   TextEditingController email = TextEditingController();
@@ -105,6 +104,13 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         _startTime = pickedTime;
       });
     }
+  }
+
+  bool _isGifOrSvg(String imagePath) {
+    // Check if the image file has a .gif or .svg extension
+    final lowerCaseImagePath = imagePath.toLowerCase();
+    return lowerCaseImagePath.endsWith('.gif') ||
+        lowerCaseImagePath.endsWith('.svg');
   }
 
   Future<void> _selectEndTime(BuildContext context) async {
@@ -1238,12 +1244,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        /*          TextEditingController userName = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController mobileNo = TextEditingController();
-  TextEditingController jobProfile = TextEditingController();
-  TextEditingController expertIn = TextEditingController();
-  TextEditingController fees = TextEditingController(); */
                         print(
                             'this is the data check-${myAccontDetails?.object?.module}');
                         if (isupdate == false) {
@@ -1523,16 +1523,25 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   Future<void> _getImageFromSource(ImageSource source) async {
     try {
       pickedFile = await _imagePicker.pickImage(source: source);
-      print('pickedFile-${pickedFile?.path}');
+
       if (pickedFile != null) {
-        setState(() {
+        if (!_isGifOrSvg(pickedFile!.path)) {
           pickedImage = File(pickedFile!.path);
-        });
-        print('i am this hear');
-        BlocProvider.of<MyAccountCubit>(context)
-            .upoldeProfilePic(pickedImage!, context);
+          setState(() {});
+          BlocProvider.of<MyAccountCubit>(context)
+              .upoldeProfilePic(pickedImage!, context);
+        } else {
+          Navigator.pop(context);
+          SnackBar snackBar = SnackBar(
+            content: Text('GIF and SVG images are not allowed.'),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
       }
-    } catch (e) {}
+    } catch (e) {
+      print('error-$e');
+    }
   }
 
   Future<void> _openBottomSheet(BuildContext context) async {

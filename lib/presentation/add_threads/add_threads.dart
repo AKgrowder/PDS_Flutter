@@ -127,7 +127,8 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                 );
               }
               if (state is CreatPublicRoomLoadedState) {
-                print('CreatPublicRoomLoadedState');
+                print(
+                    'CreatPublicRoomLoadedState-${state.PublicRoomData.message}');
                 SnackBar snackBar = SnackBar(
                   content: Text(state.PublicRoomData.message ?? ""),
                   backgroundColor: ColorConstant.primary_color,
