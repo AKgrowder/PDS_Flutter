@@ -1,6 +1,8 @@
 class Config {
   static const String somethingWentWrong =
       "Something Went Wrong, Try After Some Time.";
+        static const String mobileNumberIsNotvaild =
+      "your number is not vaild Please Enter correct Number";
 
   static const String servernotreachable =
       "Servar Not Rechable, Try After Some Time.";
@@ -33,4 +35,7 @@ class Config {
   static const String myaccountApi = "user/api/fetchUserProfile";
   static const String systemconfig = "user/api/fetchSysConfig";
   static const String fetchRoomDetails = "user/api/fetchRoomDetails/";
+  static const String forgetpassword = "user/api/forgotPassword/";
+  
+
 }

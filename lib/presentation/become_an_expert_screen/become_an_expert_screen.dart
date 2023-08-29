@@ -1,16 +1,16 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_state.dart';
 import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/utils/image_constant.dart';
@@ -148,6 +148,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
               ),
             );
           }
+
           if (state is FetchExprtiseRoomErrorState) {
             SnackBar snackBar = SnackBar(
               content: Text(state.error),
@@ -165,6 +166,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             // ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
 
+
           if (state is FetchExprtiseRoomLoadedState) {
             _fetchExprtise = state.fetchExprtise;
             // selctedIndex = state.fetchExprtise.object?[0].expertiseName;
@@ -179,6 +181,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             // selectedExpertise =
             //     expertiseData.isNotEmpty ? expertiseData[0] : null;
           }
+
           if (state is AddExportLoadedState) {
             SnackBar snackBar = SnackBar(
               content: Text(state.addExpertProfile.message.toString()),
@@ -190,10 +193,13 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         },
         builder: (context, state) {
           return Form(
+
             key: _formKey,
+
             child: SingleChildScrollView(
+
               child: Padding(
-                padding: const EdgeInsets.only(left: 30, right: 30, top: 10),
+                padding: const EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
