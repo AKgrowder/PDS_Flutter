@@ -1,8 +1,9 @@
-import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
-import 'package:pds/presentation/experts_details_screen/experts_details_screen.dart';
-import 'package:pds/presentation/otp_verification_screen/otp_verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_cubit.dart';
+import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
+import 'package:pds/core/utils/color_constant.dart';
+import 'package:pds/presentation/forget_password_screen/forget_password_screen.dart';
 import 'package:pds/widgets/delete_dailog.dart';
 import 'package:pds/widgets/rateUS_dailog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,10 +19,8 @@ import '../../core/utils/sharedPreferences.dart';
 import '../../custom_bottom_bar/custom_bottom_bar.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../experts/experts_screen.dart';
-import '../forget_password_screen/forget_password_screen.dart';
 import '../my account/my_account_screen.dart';
 import '../view_details_screen/view_public_forum_screen.dart';
-import 'package:pds/core/utils/color_constant.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen();
@@ -70,7 +69,7 @@ var SettingImage_Array = [
   // ImageConstant.Invite_Friends,
   ImageConstant.setting_delete,
   ImageConstant.setting_power,
-  ImageConstant.setting_power,
+  // ImageConstant.setting_power,
   // ImageConstant.setting_phone,
 ];
 
@@ -238,226 +237,219 @@ class _SettingScreenState extends State<SettingScreen> {
             // color: Theme.of(context).brightness == Brightness.light
             // ? Color(0XFF161616)
             // : Color(0XFF1D1D1D),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: _height,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: Setting_Array.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                            onTap: () {
-                              switch (index) {
-                                case 0:
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return MultiBlocProvider(providers: [
-                                      BlocProvider<MyAccountCubit>(
-                                        create: (context) => MyAccountCubit(),
-                                      )
-                                    ], child: MyAccountScreen());
-                                  }));
-
-                                  break;
-                                // case 1:
-                                //   // Navigator.push(
-                                //   //     context,
-                                //   //     MaterialPageRoute(
-                                //   //         builder: (context) => OtpVerificationScreen()));
-
-                                //   break;
-                                case 1:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ExpertsScreen(),
-                                      ));
-                                  break;
-                                case 2:
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //       builder: (context) => RoomMembersScreen(room_Id: ""),
-                                  //     ));
-                                  break;
-                                case 3:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ForgetPasswordScreen()));
-
-                                  break;
-                                case 4:
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //       builder: (context) => ChangePasswordScreen()),
-                                  // );
-
-                                  break;
-                                case 5:
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ViewDetailsScreen()
-
-                                          // AddDeliveryAddressScreen();
-                                          ));
-                                  break;
-                                /*    case 6:
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return PreferencesScreen();
-                                  }));
-                    
-                                  break; */
-                                case 6:
-                                  break;
-                                case 7:
-                                  // Navigator.push(context,
-                                  //     MaterialPageRoute(builder: (context) {
-                                  //   return RoomDetailScreen();
-                                  // }));
-
-                                  break;
-                                case 8:
-                                  // Navigator.push(context,
-                                  //     MaterialPageRoute(builder: (context) {
-                                  //   return ExpertsDetailsScreen();
-                                  // }));
-
-                                  showDialog(
-                                      context: context,
-                                      builder: (_) => rateUSdialog());
-
-                                  break;
-                                /* case 8:
-                                  SnackBar snackBar = SnackBar(
-                                    content: Text("No Invite Friends Screen"),
-                                    backgroundColor: ColorConstant.orangeA700,
-                                  );
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
-                    
-                                  break; */
-                                case 9:
-                                  showDialog(
-                                      context: context,
-                                      builder: (_) => FunkyOverlay());
-
-                                  // showDialog(
-                                  //     context: context, builder: (_) => RoomsScreen());
-                                  /*  SnackBar snackBar = SnackBar(
-                                    content: Text("No Rate US Screen"),
-                                    backgroundColor: ColorConstant.orangeA700,
-                                  );
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar); */
-
-                                  break;
-                                case 10:
-                                  logout();
-
-                                  break;
-                                // case 11:
-                                //   // showDialog(
-                                //   //     context: context, builder: (_) => RoomsScreen());
-
-                                //   break;
-
-                                /* case 6:
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          const RaiseQueryScreen()));
-                                  break;
-                                case 7:
-                                  showDialog(
-                                    context: context,
-                                    builder: (_) => FunkyOverlay(),
-                                  );
-                                  break; */
-                                default:
-                              }
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 16, right: 16, top: 8, bottom: 8),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 60,
-                                    width: _width,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        // color: ColorConstant.CategoriesBackColor,
-                                        color: Color(0XFFF6F6F6),
-                                        border: Border.all(
-                                            width: 1,
-                                            // color: ColorConstant.gray200,
-                                            color: Color(0XFFEFEFEF))),
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 15, right: 15),
-                                          child: Container(
-                                            height: 25,
-                                            width: 25,
-                                            child: index == 2
-                                                ? Image.asset(
-                                                    "${SettingImage_Array[index]}",
-                                                    color: Colors.grey,
-                                                  )
-                                                : Image.asset(
-                                                    "${SettingImage_Array[index]}",
-                                                  ),
+            child: ListView.builder(
+                shrinkWrap: true,
+                physics: BouncingScrollPhysics(),
+                itemCount: Setting_Array.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () {
+                      switch (index) {
+                        case 0:
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return MultiBlocProvider(providers: [
+                              BlocProvider<MyAccountCubit>(
+                                create: (context) => MyAccountCubit(),
+                              )
+                            ], child: MyAccountScreen());
+                          }));
+            
+                          break;
+                        // case 1:
+                        //   // Navigator.push(
+                        //   //     context,
+                        //   //     MaterialPageRoute(
+                        //   //         builder: (context) => OtpVerificationScreen()));
+            
+                        //   break;
+                        case 1:
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ExpertsScreen(),
+                              ));
+                          break;
+                        case 2:
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => RoomMembersScreen(room_Id: ""),
+                          //     ));
+                          break;
+                        case 3:
+                       Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return MultiBlocProvider(providers: [
+                              BlocProvider<ForgetpasswordCubit>(
+                                create: (context) => ForgetpasswordCubit(),
+                              )
+                            ], child: ForgetPasswordScreen());
+                          }));
+                          break;
+                        case 4:
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //       builder: (context) => ChangePasswordScreen()),
+                          // );
+            
+                          break;
+                        case 5:
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ViewDetailsScreen()
+            
+                                  // AddDeliveryAddressScreen();
+                                  ));
+                          break;
+                        /*    case 6:
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return PreferencesScreen();
+                          }));
+            
+                          break; */
+                        case 6:
+                          break;
+                        case 7:
+                          // Navigator.push(context,
+                          //     MaterialPageRoute(builder: (context) {
+                          //   return RoomDetailScreen();
+                          // }));
+            
+                          break;
+                        case 8:
+                          // Navigator.push(context,
+                          //     MaterialPageRoute(builder: (context) {
+                          //   return ExpertsDetailsScreen();
+                          // }));
+            
+                          showDialog(
+                              context: context,
+                              builder: (_) => rateUSdialog());
+            
+                          break;
+                        /* case 8:
+                          SnackBar snackBar = SnackBar(
+                            content: Text("No Invite Friends Screen"),
+                            backgroundColor: ColorConstant.orangeA700,
+                          );
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(snackBar);
+            
+                          break; */
+                        case 9:
+                          showDialog(
+                              context: context,
+                              builder: (_) => FunkyOverlay());
+            
+                          // showDialog(
+                          //     context: context, builder: (_) => RoomsScreen());
+                          /*  SnackBar snackBar = SnackBar(
+                            content: Text("No Rate US Screen"),
+                            backgroundColor: ColorConstant.orangeA700,
+                          );
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(snackBar); */
+            
+                          break;
+                        case 10:
+                          logout();
+            
+                          break;
+                        // case 11:
+                        //   // showDialog(
+                        //   //     context: context, builder: (_) => RoomsScreen());
+            
+                        //   break;
+            
+                        /* case 6:
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  const RaiseQueryScreen()));
+                          break;
+                        case 7:
+                          showDialog(
+                            context: context,
+                            builder: (_) => FunkyOverlay(),
+                          );
+                          break; */
+                        default:
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16, right: 16, top: 8, bottom: 8),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 60,
+                            width: _width,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                // color: ColorConstant.CategoriesBackColor,
+                                color: Color(0XFFF6F6F6),
+                                border: Border.all(
+                                    width: 1,
+                                    // color: ColorConstant.gray200,
+                                    color: Color(0XFFEFEFEF))),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 15, right: 15),
+                                  child: Container(
+                                    height: 25,
+                                    width: 25,
+                                    child: index == 2
+                                        ? Image.asset(
+                                            "${SettingImage_Array[index]}",
+                                            color: Colors.grey,
+                                          )
+                                        : Image.asset(
+                                            "${SettingImage_Array[index]}",
                                           ),
-                                        ),
-                                        Text(
-                                          "${Setting_Array[index]}",
-                                          style: TextStyle(
-                                              fontFamily: 'outfit',
-                                              fontSize: 18,
-                                              color: index == 0
-                                                  ? Color(0xFFED1C25)
-                                                  : Colors.black,
-                                              fontWeight: index == 0
-                                                  ? FontWeight.bold
-                                                  : FontWeight.w500),
-                                        ),
-                                        Spacer(),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 0),
-                                          child: Container(
-                                            // color: Colors.amber,
-                                            height: 30,
-                                            width: 60,
-                                            child: Icon(
-                                              Icons.arrow_forward_ios,
-                                              color: index == 0
-                                                  ? Colors.red
-                                                  : Colors.grey,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                  ),
+                                ),
+                                Text(
+                                  "${Setting_Array[index]}",
+                                  style: TextStyle(
+                                      fontFamily: 'outfit',
+                                      fontSize: 18,
+                                      color: index == 0
+                                          ? Color(0xFFED1C25)
+                                          : Colors.black,
+                                      fontWeight: index == 0
+                                          ? FontWeight.bold
+                                          : FontWeight.w500),
+                                ),
+                                Spacer(),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(right: 0),
+                                  child: Container(
+                                    // color: Colors.amber,
+                                    height: 30,
+                                    width: 60,
+                                    child: Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: index == 0
+                                          ? Colors.red
+                                          : Colors.grey,
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          );
-                        }),
-                  ),
-                ],
-              ),
-            )),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                })),
       ),
     );
   }

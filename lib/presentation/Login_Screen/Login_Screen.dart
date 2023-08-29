@@ -1,6 +1,12 @@
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
+import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_cubit.dart';
 import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:pds/API/Bloc/auth/login_Block.dart';
 import 'package:pds/API/Bloc/auth/login_state.dart';
@@ -16,11 +22,6 @@ import 'package:pds/presentation/register_create_account_screen/register_create_
 import 'package:pds/widgets/custom_elevated_button.dart';
 import 'package:pds/widgets/custom_outlined_button.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
@@ -463,9 +464,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          ForgetPasswordScreen()));
+                                  Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return MultiBlocProvider(providers: [
+                              BlocProvider<ForgetpasswordCubit>(
+                                create: (context) => ForgetpasswordCubit(),
+                              )
+                            ], child: ForgetPasswordScreen());
+                          }));
                                 },
                                 child: Text(
                                   "Forget Password?",
