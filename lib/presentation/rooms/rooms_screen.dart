@@ -1,4 +1,3 @@
-
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -46,7 +45,6 @@ List? closee = [];
 GetAllPrivateRoomModel? PriveateRoomData;
 String? User_Mood;
 DateTime now = DateTime.now();
-
 
 String formattedDate = DateFormat('dd-MM-yyyy').format(now);
 
@@ -246,9 +244,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
                               //         .toString() ??
                               //     '');
 
-                              print('SDFJHFGSDFGHDFGHDFGH-$formattedDate');
+                          
                               DateTime parsedDateTime = DateTime.parse(
-                                  '${PriveateRoomData?.object?[index].createdDate}');
+                                  '${PriveateRoomData?.object?[index].createdDate ?? ""}');
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 35, vertical: 5),
@@ -1327,7 +1325,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                               ),
                                                 GestureDetector(
                                                   onTap: () {
-                                                  showDialog(
+                                                    showDialog(
                                                       context: context,
                                                       builder: (context) =>
                                                           ScaffoldMessenger(
@@ -1396,35 +1394,35 @@ class _RoomsScreenState extends State<RoomsScreen> {
 
 // })
 
-                                        Container(
-                                          height: ExpertList?[index] == true ? 50 : 0,
-                                          child: ListView.builder(
-                                              // itemCount: aa.length,
-                                              itemCount: PriveateRoomData
-                                                  ?.object?[index]
-                                                  .usersList
-                                                  ?.length,
-                                              /* (image?.contains(index) ?? false)
-                                                                      ? aa.length
-                                                                      : aa.length, */
-                                              shrinkWrap: true,
-                                              physics:
-                                                  NeverScrollableScrollPhysics(),
-                                              itemBuilder: (context, index1) {
-                                                if (PriveateRoomData
-                                                        ?.object?[index]
-                                                        .usersList?[index1]
-                                                        .isExpert ==
-                                                    true) {
-                                                  return Container(
-                                                    height: 10,
-                                                    color: Colors.red,
-                                                  );
-                                                } else {
-                                                  return Container();
-                                                }
-                                              }),
-                                        ),
+                                        // Container(
+                                        //   height: ExpertList?[index] == true ? 50 : 0,
+                                        //   child: ListView.builder(
+                                        //       // itemCount: aa.length,
+                                        //       itemCount: PriveateRoomData
+                                        //           ?.object?[index]
+                                        //           .usersList
+                                        //           ?.length,
+                                        //       /* (image?.contains(index) ?? false)
+                                        //                               ? aa.length
+                                        //                               : aa.length, */
+                                        //       shrinkWrap: true,
+                                        //       physics:
+                                        //           NeverScrollableScrollPhysics(),
+                                        //       itemBuilder: (context, index1) {
+                                        //         if (PriveateRoomData
+                                        //                 ?.object?[index]
+                                        //                 .usersList?[index1]
+                                        //                 .isExpert ==
+                                        //             true) {
+                                        //           return Container(
+                                        //             height: 10,
+                                        //             color: Colors.red,
+                                        //           );
+                                        //         } else {
+                                        //           return Container();
+                                        //         }
+                                        //       }),
+                                        // ),
 
                                         // index == 1 || index == 2 || index == 3
                                         //     ? Divider(color: Colors.grey)
@@ -1737,345 +1735,324 @@ class _RoomsScreenState extends State<RoomsScreen> {
     }
   }
 
-   CreatRoom(_height, _width) {
+  CreatRoom(_height, _width) {
     TextEditingController _roomName = TextEditingController();
     TextEditingController _DescriptionText = TextEditingController();
     print('createroom');
     showDialog(
       context: context,
-      builder: (context) =>    MultiBlocProvider(
-              providers: [
-                BlocProvider<CreateRoomCubit>(
-                  create: (context) => CreateRoomCubit(),
-                ),
-              ],
-              child: Padding(
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: Center(
-                  child: Material(
-                    color: Color.fromARGB(0, 255, 255, 255),
-                    child: BlocConsumer<CreateRoomCubit, CreateRoomState>(
-                      listener: (context, state) {
-                        if (state is CreateRoomLoadingState) {
-                          Center(
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: 100),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.asset(ImageConstant.loader,
-                                    fit: BoxFit.cover,
-                                    height: 100.0,
-                                    width: 100),
-                              ),
-                            ),
-                          );
-                        }
-                        if (state is CreateRoomLoadedState) {
-                          print('this is the data get');
-                          method();
-                          _roomName.clear();
-                          _DescriptionText.clear();
+      builder: (context) => MultiBlocProvider(
+        providers: [
+          BlocProvider<CreateRoomCubit>(
+            create: (context) => CreateRoomCubit(),
+          ),
+        ],
+        child: Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Center(
+            child: Material(
+              color: Color.fromARGB(0, 255, 255, 255),
+              child: BlocConsumer<CreateRoomCubit, CreateRoomState>(
+                listener: (context, state) {
+                  if (state is CreateRoomLoadingState) {
+                    Center(
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 100),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.asset(ImageConstant.loader,
+                              fit: BoxFit.cover, height: 100.0, width: 100),
+                        ),
+                      ),
+                    );
+                  }
+                  if (state is CreateRoomLoadedState) {
+                    print('this is the data get');
+                    method();
+                    _roomName.clear();
+                    _DescriptionText.clear();
 
-                          Future.delayed(Duration(milliseconds: 800), () {
-                            SnackBar snackBar = SnackBar(
-                              content: Text(state.PublicRoomData.message ?? ""),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                            Navigator.pop(context);
-                          });
-                          // show_Icon_Flushbar(context,msg: state.PublicRoomData.message ?? "");
-                        }
-                        if (state is CreateRoomErrorState) {
-                          print('CreateRoomErrorState');
-                          SnackBar snackBar = SnackBar(
-                            content: Text(state.error),
-                            backgroundColor: ColorConstant.primary_color,
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        }
-                      },
-                      builder: (context, state) {
-                        return Container(
-                          height: _height / 2,
-                          width: _width / 1.17,
-                          decoration: ShapeDecoration(
-                            // color: Colors.black,
-
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
+            
+                      SnackBar snackBar = SnackBar(
+                        content: Text(state.PublicRoomData.message ?? ""),
+                        backgroundColor: ColorConstant.primary_color,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      Navigator.pop(context);
+                 
+                    // show_Icon_Flushbar(context,msg: state.PublicRoomData.message ?? "");
+                  }
+                  if (state is CreateRoomErrorState) {
+                    print('CreateRoomErrorState');
+                    SnackBar snackBar = SnackBar(
+                      content: Text(state.error),
+                      backgroundColor: ColorConstant.primary_color,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                },
+                builder: (context, state) {
+                  return Container(
+                    height: _height / 2,
+                    width: _width / 1.17,
+                    decoration: ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Center(
+                          child: Container(
+                            height: 400,
+                            width: _width / 1.2,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
                             ),
-                          ),
-                          child: Column(
-                            children: [
-                              Center(
-                                child: Container(
-                                  height: 400,
-                                  width: _width / 1.2,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5)),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 8.0, left: 20),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 8.0, left: 20),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              "Create Room",
-                                              style: TextStyle(
-                                                fontFamily: 'outfit',
-                                                fontSize: 20,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () =>
-                                                  Navigator.pop(context),
-                                              child: CustomImageView(
-                                                imagePath:
-                                                    ImageConstant.closeimage,
-                                                height: 40,
-                                              ),
-                                            ),
-                                          ],
+                                      Text(
+                                        "Create Room",
+                                        style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontSize: 20,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      Divider(
-                                        color: Colors.grey,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          left: 5.0,
-                                        ),
-                                        child: Text(
-                                          "Room Name",
-                                          style: TextStyle(
-                                            fontFamily: 'outfit',
-                                            fontSize: 15,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
+                                      GestureDetector(
+                                        onTap: () => Navigator.pop(context),
+                                        child: CustomImageView(
+                                          imagePath: ImageConstant.closeimage,
+                                          height: 40,
                                         ),
                                       ),
-                                      Center(
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                            top: 10.0,
-                                            left: 10,
-                                            right: 20,
-                                          ),
-                                          child: TextField(
-                                            // maxLength: 50,
-                                            controller: _roomName,
-                                            cursorColor: Colors.grey,
-                                            inputFormatters: [
-                                              LengthLimitingTextInputFormatter(
-                                                  50)
-                                            ],
-                                            decoration: InputDecoration(
-                                              hintText: 'Room Name',
-                                              // counterText: '',
-                                              border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  borderSide: BorderSide(
-                                                      color:
-                                                          Color(0xffDBDBDB))),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 15.0, top: 20, bottom: 10),
-                                        child: Text(
-                                          "Description",
-                                          style: TextStyle(
-                                            fontFamily: 'outfit',
-                                            fontSize: 15,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      ),
-                                      Center(
-                                        child: Container(
-                                          height: 80,
-                                          width: _width / 1.3,
-                                          decoration: BoxDecoration(
-                                              color: Colors.transparent,
-                                              border: Border.all(
-                                                  color: Colors.grey.shade300),
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 0.0, left: 10),
-                                            child: TextField(
-                                              // maxLength: 255,
-                                              controller: _DescriptionText,
-                                              maxLines: 5,
-                                              cursorColor: Colors.grey,
-                                              inputFormatters: [
-                                                LengthLimitingTextInputFormatter(
-                                                    255),
-                                              ],
-                                              decoration: InputDecoration(
-                                                // counterText: "",
-                                                hintText:
-                                                    'Describe your problem or topic here..',
-                                                border: InputBorder.none,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 30,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () => Navigator.pop(context),
-                                            child: Container(
-                                              height: 43,
-                                              width: _width / 3,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.transparent,
-                                                  border: Border.all(
-                                                      color:
-                                                          Colors.grey.shade400),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: Center(
-                                                  child: Text(
-                                                "Cancel",
-                                                style: TextStyle(
-                                                  fontFamily: 'outfit',
-                                                  fontSize: 15,
-                                                  color: Color(0xFFED1C25),
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              )),
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              if (_roomName.text.isEmpty) {
-                                                show_Icon_Flushbar(context,
-                                                    msg:
-                                                        "Please Enter Room Name");
-                                              } else if (_roomName.text
-                                                      .trim()
-                                                      .isEmpty ||
-                                                  _roomName.text.trim() == '') {
-                                                show_Icon_Flushbar(context,
-                                                    msg:
-                                                        'Room Name can\'t be just blank spaces');
-                                              } else if (_DescriptionText
-                                                      .text.isEmpty ||
-                                                  _DescriptionText.text == '') {
-                                                show_Icon_Flushbar(context,
-                                                    msg:
-                                                        'Please Enter Description');
-                                              } else if (_DescriptionText.text
-                                                      .trim()
-                                                      .isEmpty ||
-                                                  _DescriptionText.text
-                                                          .trim() ==
-                                                      '') {
-                                                show_Icon_Flushbar(context,
-                                                    msg:
-                                                        'Description can\'t be just blank spaces');
-                                              } else {
-                                                var params = {
-                                                  "roomQuestion":
-                                                      _roomName.text,
-                                                  "description":
-                                                      _DescriptionText.text,
-                                                  "roomType": "PRIVTAE"
-                                                };
-
-                                                print(params);
-
-                                                BlocProvider.of<
-                                                            CreateRoomCubit>(
-                                                        context)
-                                                    .CreateRoomAPI(
-                                                        params, context);
-                                              }
-                                              // if (roomName.text == null ||
-                                              //     roomName.text.isEmpty) {
-                                              //   SnackBar snackBar = SnackBar(
-                                              //     content: Text('Please Enter Room Name'),
-                                              //     backgroundColor:
-                                              //         ColorConstant.primary_color,
-                                              //   );
-                                              //   ScaffoldMessenger.of(context)
-                                              //       .showSnackBar(snackBar);
-                                              // }
-                                              // if (DescriptionText.text == null ||
-                                              //     DescriptionText.text.isEmpty) {
-                                              //   SnackBar snackBar = SnackBar(
-                                              //     content:
-                                              //         Text('Please Enter Description'),
-                                              //     backgroundColor:
-                                              //         ColorConstant.primary_color,
-                                              //   );
-                                              //   ScaffoldMessenger.of(context)
-                                              //       .showSnackBar(snackBar);
-                                              // }
-                                            },
-                                            child: Container(
-                                              height: 43,
-                                              width: _width / 3,
-                                              decoration: BoxDecoration(
-                                                  color: Color(0xFFED1C25),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: Center(
-                                                  child: Text(
-                                                "Create",
-                                                style: TextStyle(
-                                                  fontFamily: 'outfit',
-                                                  fontSize: 15,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              )),
-                                            ),
-                                          ),
-                                        ],
-                                      )
                                     ],
                                   ),
                                 ),
-                              ),
-                            ],
+                                Divider(
+                                  color: Colors.grey,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 5.0,
+                                  ),
+                                  child: Text(
+                                    "Room Name",
+                                    style: TextStyle(
+                                      fontFamily: 'outfit',
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                                Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      top: 10.0,
+                                      left: 10,
+                                      right: 20,
+                                    ),
+                                    child: TextField(
+                                      // maxLength: 50,
+                                      controller: _roomName,
+                                      cursorColor: Colors.grey,
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(50)
+                                      ],
+                                      decoration: InputDecoration(
+                                        hintText: 'Room Name',
+                                        // counterText: '',
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: BorderSide(
+                                                color: Color(0xffDBDBDB))),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 15.0, top: 20, bottom: 10),
+                                  child: Text(
+                                    "Description",
+                                    style: TextStyle(
+                                      fontFamily: 'outfit',
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ),
+                                Center(
+                                  child: Container(
+                                    height: 80,
+                                    width: _width / 1.3,
+                                    decoration: BoxDecoration(
+                                        color: Colors.transparent,
+                                        border: Border.all(
+                                            color: Colors.grey.shade300),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 0.0, left: 10),
+                                      child: TextField(
+                                        // maxLength: 255,
+                                        controller: _DescriptionText,
+                                        maxLines: 5,
+                                        cursorColor: Colors.grey,
+                                        inputFormatters: [
+                                          LengthLimitingTextInputFormatter(255),
+                                        ],
+                                        decoration: InputDecoration(
+                                          // counterText: "",
+                                          hintText:
+                                              'Describe your problem or topic here..',
+                                          border: InputBorder.none,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 30,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () => Navigator.pop(context),
+                                      child: Container(
+                                        height: 43,
+                                        width: _width / 3,
+                                        decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            border: Border.all(
+                                                color: Colors.grey.shade400),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Center(
+                                            child: Text(
+                                          "Cancel",
+                                          style: TextStyle(
+                                            fontFamily: 'outfit',
+                                            fontSize: 15,
+                                            color: Color(0xFFED1C25),
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        )),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        if (_roomName.text.isEmpty) {
+                                          show_Icon_Flushbar(context,
+                                              msg: "Please Enter Room Name");
+                                        } else if (_roomName.text
+                                                .trim()
+                                                .isEmpty ||
+                                            _roomName.text.trim() == '') {
+                                          show_Icon_Flushbar(context,
+                                              msg:
+                                                  'Room Name can\'t be just blank spaces');
+                                        } else if (_DescriptionText
+                                                .text.isEmpty ||
+                                            _DescriptionText.text == '') {
+                                          show_Icon_Flushbar(context,
+                                              msg: 'Please Enter Description');
+                                        } else if (_DescriptionText.text
+                                                .trim()
+                                                .isEmpty ||
+                                            _DescriptionText.text.trim() ==
+                                                '') {
+                                          show_Icon_Flushbar(context,
+                                              msg:
+                                                  'Description can\'t be just blank spaces');
+                                        } else {
+                                          var params = {
+                                            "roomQuestion": _roomName.text,
+                                            "description":
+                                                _DescriptionText.text,
+                                            "roomType": "PRIVTAE"
+                                          };
+
+                                          print(params);
+
+                                          BlocProvider.of<CreateRoomCubit>(
+                                                  context)
+                                              .CreateRoomAPI(params, context);
+                                        }
+                                        // if (roomName.text == null ||
+                                        //     roomName.text.isEmpty) {
+                                        //   SnackBar snackBar = SnackBar(
+                                        //     content: Text('Please Enter Room Name'),
+                                        //     backgroundColor:
+                                        //         ColorConstant.primary_color,
+                                        //   );
+                                        //   ScaffoldMessenger.of(context)
+                                        //       .showSnackBar(snackBar);
+                                        // }
+                                        // if (DescriptionText.text == null ||
+                                        //     DescriptionText.text.isEmpty) {
+                                        //   SnackBar snackBar = SnackBar(
+                                        //     content:
+                                        //         Text('Please Enter Description'),
+                                        //     backgroundColor:
+                                        //         ColorConstant.primary_color,
+                                        //   );
+                                        //   ScaffoldMessenger.of(context)
+                                        //       .showSnackBar(snackBar);
+                                        // }
+                                      },
+                                      child: Container(
+                                        height: 43,
+                                        width: _width / 3,
+                                        decoration: BoxDecoration(
+                                            color: Color(0xFFED1C25),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Center(
+                                            child: Text(
+                                          "Create",
+                                          style: TextStyle(
+                                            fontFamily: 'outfit',
+                                            fontSize: 15,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        )),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
-                        );
-                      },
+                        ),
+                      ],
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
             ),
-        
+          ),
+        ),
+      ),
     );
 
     // showDialog(
@@ -2085,7 +2062,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
     //     });
   }
 
-void show_Icon_Flushbar(BuildContext context, {String? msg}) {
+  void show_Icon_Flushbar(BuildContext context, {String? msg}) {
     Flushbar(
         backgroundColor: ColorConstant.primary_color,
         animationDuration: Duration(milliseconds: 500),
@@ -2116,6 +2093,4 @@ void show_Icon_Flushbar(BuildContext context, {String? msg}) {
   //     ),
   //   );
   // }
-  
 }
-
