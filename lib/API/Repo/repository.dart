@@ -10,6 +10,7 @@ import 'package:pds/API/Model/authModel/registerModel.dart';
 import 'package:pds/API/Model/checkUserStatusModel/chekuserStausModel.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Model/deviceInfo/deviceInfo_model.dart';
+import 'package:pds/API/Model/forget_password_model/forget_password_model.dart';
 import 'package:pds/API/Model/otpmodel/otpmodel.dart';
 import 'package:pds/API/Model/sherInviteModel/sherinviteModel.dart';
 
@@ -113,7 +114,7 @@ class Repository {
       case 400:
         return Config.somethingWentWrong;
       case 500:
-        return Config.servernotreachable; 
+        return Config.servernotreachable;
       default:
         return jsonString;
     }
@@ -551,6 +552,26 @@ class Repository {
         return FetchRoomDetailModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  forgetpassword(String userNumber, BuildContext context) async {
+    final response = await apiServices.getApiCall(
+        Config.forgetpassword + userNumber, context);
+    var jsonString = json.decode(response.body);
+    print('jsonString-$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return ForgetPasswordModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 400:
+        return Config.mobileNumberIsNotvaild;
       case 500:
         return Config.servernotreachable;
 
