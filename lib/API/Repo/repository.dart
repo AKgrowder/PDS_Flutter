@@ -110,9 +110,10 @@ class Repository {
         return AddExpertProfile.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
+      case 400:
+        return Config.somethingWentWrong;
       case 500:
-        return Config.servernotreachable;
-
+        return Config.servernotreachable; 
       default:
         return jsonString;
     }
@@ -412,7 +413,7 @@ class Repository {
     }
   }
 
-   checkUserActive(BuildContext context) async {
+  checkUserActive(BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
         "${Config.checkUserActive}", context);
     var jsonString = json.decode(response.body);
