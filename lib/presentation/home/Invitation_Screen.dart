@@ -20,6 +20,7 @@ class InvitationScreen extends StatefulWidget {
   @override
   State<InvitationScreen> createState() => _InvitationScreenState();
 }
+
 DateTime now = DateTime.now();
 
 String formattedDate = DateFormat('dd-MM-yyyy').format(now);
@@ -27,6 +28,7 @@ InvitationModel? InvitationRoomData;
 
 class _InvitationScreenState extends State<InvitationScreen> {
   var Show_NoData_Image = false;
+   DateTime? parsedDateTime;
   @override
   void initState() {
     // Show_NoData_Image = true;
@@ -34,7 +36,8 @@ class _InvitationScreenState extends State<InvitationScreen> {
 
     super.initState();
   }
-String customFormat(DateTime date) {
+
+  String customFormat(DateTime date) {
     String day = date.day.toString();
     String month = _getMonthName(date.month);
     String year = date.year.toString();
@@ -74,6 +77,7 @@ String customFormat(DateTime date) {
         return '';
     }
   }
+
   GetData() async {
     await BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
   }
@@ -170,8 +174,13 @@ String customFormat(DateTime date) {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
-                         DateTime parsedDateTime = DateTime.parse(
-                                  '${InvitationRoomData?.object?[index].createdAt}');
+                        print(
+                            'i want check date-${InvitationRoomData?.object?[index].createdAt}');
+                        if(InvitationRoomData?.object?[index].createdAt != null){
+                         parsedDateTime = DateTime.parse(
+                            InvitationRoomData?.object?[index].createdAt ?? '');
+                        }
+                        
                         return Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 35, vertical: 5),
@@ -198,7 +207,7 @@ String customFormat(DateTime date) {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                           customFormat(parsedDateTime),
+                                          parsedDateTime != null? customFormat(parsedDateTime!):"",
                                           maxLines: 2,
                                           textScaleFactor: 1.0,
                                           style: TextStyle(
@@ -317,7 +326,9 @@ String customFormat(DateTime date) {
                                                                               index]
                                                                           .roomMembers?[
                                                                               0]
-                                                                          .userProfilePic?.isNotEmpty ?? false)
+                                                                          .userProfilePic
+                                                                          ?.isNotEmpty ??
+                                                                      false)
                                                                   ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
                                                                   : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                               height: 20,
@@ -358,7 +369,9 @@ String customFormat(DateTime date) {
                                                                   url: InvitationRoomData
                                                                               ?.object?[index]
                                                                               .roomMembers?[0]
-                                                                              .userProfilePic?.isNotEmpty ?? false
+                                                                              .userProfilePic
+                                                                              ?.isNotEmpty ??
+                                                                          false
                                                                       ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
                                                                       : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                                   height: 20,
@@ -386,7 +399,9 @@ String customFormat(DateTime date) {
                                                                   url: InvitationRoomData
                                                                               ?.object?[index]
                                                                               .roomMembers?[1]
-                                                                              .userProfilePic?.isNotEmpty ?? false
+                                                                              .userProfilePic
+                                                                              ?.isNotEmpty ??
+                                                                          false
                                                                       ? "${InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}"
                                                                       : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                                   height: 20,
@@ -427,10 +442,7 @@ String customFormat(DateTime date) {
                                                                                 .circle),
                                                                         child:
                                                                             CustomImageView(
-                                                                          url:  InvitationRoomData
-                                                                              ?.object?[index]
-                                                                              .roomMembers?[0]
-                                                                              .userProfilePic?.isNotEmpty ?? false
+                                                                          url: InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ?? false
                                                                               ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
                                                                               : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                                           height:
@@ -459,10 +471,7 @@ String customFormat(DateTime date) {
                                                                                 .circle),
                                                                         child:
                                                                             CustomImageView(
-                                                                          url: InvitationRoomData
-                                                                              ?.object?[index]
-                                                                              .roomMembers?[1]
-                                                                              .userProfilePic?.isNotEmpty ?? false
+                                                                          url: InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic?.isNotEmpty ?? false
                                                                               ? "${InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}"
                                                                               : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                                           height:
@@ -491,10 +500,7 @@ String customFormat(DateTime date) {
                                                                                 .circle),
                                                                         child:
                                                                             CustomImageView(
-                                                                          url:  InvitationRoomData
-                                                                              ?.object?[index]
-                                                                              .roomMembers?[2]
-                                                                              .userProfilePic?.isNotEmpty ?? false
+                                                                          url: InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic?.isNotEmpty ?? false
                                                                               ? "${InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic}"
                                                                               : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                                           height:
@@ -531,10 +537,7 @@ String customFormat(DateTime date) {
                                                                                 .circle),
                                                                         child:
                                                                             CustomImageView(
-                                                                          url:  InvitationRoomData
-                                                                              ?.object?[index]
-                                                                              .roomMembers?[0]
-                                                                              .userProfilePic?.isNotEmpty ?? false
+                                                                          url: InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ?? false
                                                                               ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
                                                                               : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                                           height:
@@ -563,10 +566,7 @@ String customFormat(DateTime date) {
                                                                                 .circle),
                                                                         child:
                                                                             CustomImageView(
-                                                                          url:  InvitationRoomData
-                                                                              ?.object?[index]
-                                                                              .roomMembers?[1]
-                                                                              .userProfilePic?.isNotEmpty ?? false
+                                                                          url: InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic?.isNotEmpty ?? false
                                                                               ? "${InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}"
                                                                               : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                                           height:
@@ -595,10 +595,7 @@ String customFormat(DateTime date) {
                                                                                 .circle),
                                                                         child:
                                                                             CustomImageView(
-                                                                          url: InvitationRoomData
-                                                                              ?.object?[index]
-                                                                              .roomMembers?[2]
-                                                                              .userProfilePic?.isNotEmpty ?? false
+                                                                          url: InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic?.isNotEmpty ?? false
                                                                               ? "${InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic}"
                                                                               : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                                           height:

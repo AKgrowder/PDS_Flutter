@@ -756,7 +756,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 .showSnackBar(snackBar);
                           } else {
                             String time =
-                                '${_startTime!.format(context).toString().split(" ").first} to ${_endTime!.format(context).toString().split(" ").first}';
+                                '${_startTime!.format(context).toString().split(" ").first} to ${_endTime!.format(context).toString().split(" ").last}';
                             print(
                                 'sddfsdm,gndfgj${chooseDocument?.object.toString()}');
                             dynamic params = {
