@@ -805,13 +805,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
       if (pickedFile != null) {
         if (!_isGifOrSvg(pickedFile!.path)) {
-          setState(() {
-            setState(() {
-              pickedImage = File(pickedFile!.path);
-            });
-            BlocProvider.of<RegisterCubit>(context)
-                .upoldeProfilePic(pickedImage!, context);
-          });
+          pickedImage = File(pickedFile!.path);
+          setState(() {});
+          BlocProvider.of<RegisterCubit>(context)
+              .upoldeProfilePic(pickedImage!, context);
         } else {
           Navigator.pop(context);
           SnackBar snackBar = SnackBar(

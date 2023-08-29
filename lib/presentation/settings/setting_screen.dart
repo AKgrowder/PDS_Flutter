@@ -20,7 +20,6 @@ import '../../widgets/app_bar/custom_app_bar.dart';
 import '../experts/experts_screen.dart';
 import '../forget_password_screen/forget_password_screen.dart';
 import '../my account/my_account_screen.dart';
-import '../rooms/room_details_screen.dart';
 import '../view_details_screen/view_public_forum_screen.dart';
 import 'package:pds/core/utils/color_constant.dart';
 
@@ -34,7 +33,6 @@ var status;
 
 var Setting_Array = [
   "My Details",
-  // "Forum Details",
   "Saved Threads",
   "Saved Pins",
   "Change Password",
@@ -105,72 +103,74 @@ class _SettingScreenState extends State<SettingScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               content: SizedBox(
-                height: 570,
+                  height: 570,
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                    Image.asset(ImageConstant.rejctedPic),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Text(
-                        'Your Profile is rejected',
-                        style: TextStyle(fontSize: 25, fontFamily: 'Outfit'),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      'Reason:',
-                      style: TextStyle(fontSize: 18, fontFamily: 'Outfit'),
-                    ),
-                    SizedBox(
-                      height: 1,
-                    ),
-                    Container(
-                      height: 80,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Color(0xffE8E8E8)),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 10,left: 10),
-                        child: Text('${rejcteReson}'),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    GestureDetector(
-                      onTap: (){
-                              Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return MultiBlocProvider(providers: [
-                                      BlocProvider<MyAccountCubit>(
-                                        create: (context) => MyAccountCubit(),
-                                      )
-                                    ], child: MyAccountScreen());
-                                  }));
-                      },
-                      child: Container(
-                        height: 60,
-                        width: MediaQuery.of(context).size.width,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                            color: Color(0xffED1C25)
+                        Image.asset(ImageConstant.rejctedPic),
+                        SizedBox(
+                          height: 30,
                         ),
-                        child: Text('Please update',style: TextStyle(color: Colors.white,),
-                      )
-                      ),
-                    )
-                  ])),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            'Your Profile is rejected',
+                            style:
+                                TextStyle(fontSize: 25, fontFamily: 'Outfit'),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          'Reason:',
+                          style: TextStyle(fontSize: 18, fontFamily: 'Outfit'),
+                        ),
+                        SizedBox(
+                          height: 1,
+                        ),
+                        Container(
+                          height: 80,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Color(0xffE8E8E8)),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10, left: 10),
+                            child: Text('${rejcteReson}'),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return MultiBlocProvider(providers: [
+                                BlocProvider<MyAccountCubit>(
+                                  create: (context) => MyAccountCubit(),
+                                )
+                              ], child: MyAccountScreen());
+                            }));
+                          },
+                          child: Container(
+                              height: 60,
+                              width: MediaQuery.of(context).size.width,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(0xffED1C25)),
+                              child: Text(
+                                'Please update',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              )),
+                        )
+                      ])),
             );
-          
           },
         );
       }
@@ -408,9 +408,14 @@ class _SettingScreenState extends State<SettingScreen> {
                                           child: Container(
                                             height: 25,
                                             width: 25,
-                                            child: Image.asset(
-                                              "${SettingImage_Array[index]}",
-                                            ),
+                                            child: index == 2
+                                                ? Image.asset(
+                                                    "${SettingImage_Array[index]}",
+                                                    color: Colors.grey,
+                                                  )
+                                                : Image.asset(
+                                                    "${SettingImage_Array[index]}",
+                                                  ),
                                           ),
                                         ),
                                         Text(
@@ -421,7 +426,9 @@ class _SettingScreenState extends State<SettingScreen> {
                                               color: index == 0
                                                   ? Color(0xFFED1C25)
                                                   : Colors.black,
-                                              fontWeight: FontWeight.w500),
+                                              fontWeight: index == 0
+                                                  ? FontWeight.bold
+                                                  : FontWeight.w500),
                                         ),
                                         Spacer(),
                                         Padding(
