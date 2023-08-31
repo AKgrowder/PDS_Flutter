@@ -3,16 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../../API/Bloc/Fatch_all_members/fatch_all_members_cubit.dart';
+import '../../API/Bloc/Fetchroomdetails_Bloc/Fetchroomdetails_cubit.dart';
 import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../../API/Bloc/Invitation_Bloc/Invitation_state.dart';
-import '../../API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import '../../API/Model/InvitationModel/Invitation_Model.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
 import '../room_members/room_members_screen.dart';
-import 'package:pds/dilogs/invite_dilog.dart';
+import '../rooms/room_details_screen.dart';
+import '../rooms/rooms_screen.dart';
 
 class InvitationScreen extends StatefulWidget {
   const InvitationScreen({Key? key}) : super(key: key);
@@ -28,7 +29,7 @@ InvitationModel? InvitationRoomData;
 
 class _InvitationScreenState extends State<InvitationScreen> {
   var Show_NoData_Image = false;
-   DateTime? parsedDateTime;
+  DateTime? parsedDateTime;
   @override
   void initState() {
     // Show_NoData_Image = true;
@@ -176,11 +177,13 @@ class _InvitationScreenState extends State<InvitationScreen> {
                       itemBuilder: (context, index) {
                         print(
                             'i want check date-${InvitationRoomData?.object?[index].createdAt}');
-                        if(InvitationRoomData?.object?[index].createdAt != null){
-                         parsedDateTime = DateTime.parse(
-                            InvitationRoomData?.object?[index].createdAt ?? '');
+                        if (InvitationRoomData?.object?[index].createdAt !=
+                            null) {
+                          parsedDateTime = DateTime.parse(
+                              InvitationRoomData?.object?[index].createdAt ??
+                                  '');
                         }
-                        
+
                         return Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 35, vertical: 5),
@@ -207,7 +210,9 @@ class _InvitationScreenState extends State<InvitationScreen> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          parsedDateTime != null? customFormat(parsedDateTime!):"",
+                                          parsedDateTime != null
+                                              ? customFormat(parsedDateTime!)
+                                              : "",
                                           maxLines: 2,
                                           textScaleFactor: 1.0,
                                           style: TextStyle(
@@ -216,13 +221,44 @@ class _InvitationScreenState extends State<InvitationScreen> {
                                               fontFamily: "outfit",
                                               fontSize: 14),
                                         ),
+                                         Padding(
+                                        padding: const EdgeInsets.only(
+                                          right: 20,
+                                        ),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                              builder: (context) {
+                                                return MultiBlocProvider(
+                                                    providers: [
+                                                      BlocProvider<
+                                                          FetchRoomDetailCubit>(
+                                                        create: (_) =>
+                                                            FetchRoomDetailCubit(),
+                                                      ),
+                                                    ],
+                                                    child: RoomDetailScreen(
+                                                      uuid: PriveateRoomData
+                                                          ?.object?[index].uid
+                                                          .toString(),
+                                                    ));
+                                              },
+                                            ));
+                                          },
+                                          child: Icon(
+                                              Icons.remove_red_eye_outlined),
+                                        ),
+                                      )
                                       ],
                                     ),
                                   ),
+
                                   Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Padding(
                                         padding:
@@ -236,6 +272,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
                                               fontSize: 14),
                                         ),
                                       ),
+                                     
                                     ],
                                   ),
                                   SizedBox(
@@ -277,6 +314,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
 
                                   GestureDetector(
                                     onTap: () {
+                                      print("*************************************************${PriveateRoomData?.object?[index].roomQuestion}");
                                       Navigator.push(context, MaterialPageRoute(
                                         builder: (context) {
                                           return MultiBlocProvider(
@@ -287,6 +325,10 @@ class _InvitationScreenState extends State<InvitationScreen> {
                                               ),
                                             ],
                                             child: RoomMembersScreen(
+                                                roomname:
+                                                    "${PriveateRoomData?.object?[index].roomQuestion}",
+                                                roomdescription:
+                                                    "${PriveateRoomData?.object?[index].description}",
                                                 room_Id:
                                                     '${InvitationRoomData?.object?[index].roomUid.toString()}'),
                                           );

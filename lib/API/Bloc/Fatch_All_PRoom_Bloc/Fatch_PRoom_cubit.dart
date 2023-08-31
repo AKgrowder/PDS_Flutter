@@ -58,4 +58,20 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
       emit(FetchAllPublicRoomErrorState(FetchPublicRoomModel));
     }
   }
+
+  
+
+    Future<void> MyPublicRoom(String uuid,BuildContext context) async {
+    dynamic FetchPublicRoomModel;
+    try {
+      emit(FetchAllPublicRoomLoadingState());
+      FetchPublicRoomModel = await Repository().MyPublicRoom1(uuid,context);
+      if (FetchPublicRoomModel.success == true) {
+        emit(MyPublicRoomLoadedState(FetchPublicRoomModel));
+      }
+    } catch (e) {
+      emit(FetchAllPublicRoomErrorState(FetchPublicRoomModel));
+    }
+  }
+
 }
