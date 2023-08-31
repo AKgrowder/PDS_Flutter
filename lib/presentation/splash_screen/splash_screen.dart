@@ -27,6 +27,8 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   int GetTimeSplash = 0;
+  var user_Module = "";
+  var UserID = "";
 
   SystemConfigModel? systemConfigModel;
 
@@ -34,6 +36,10 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(
       Duration(seconds: 1),
       () async {
+        if (UserID != "") {
+          await BlocProvider.of<SystemConfigCubit>(context).UserModel(context);
+        }
+
         await BlocProvider.of<SystemConfigCubit>(context).SystemConfig(context);
       },
     );
@@ -42,6 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    getData();
     startTimer();
   }
 
@@ -72,6 +79,11 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           ),
         );
+      }
+      if (state is fetchUserModulemodelLoadedState) {
+        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" +
+            "${state.fetchUserModule.object}");
+        user_Module = state.fetchUserModule.object ?? "";
       }
       if (state is SystemConfigLoadedState) {
         systemConfigModel = state.systemConfigModel;
@@ -120,9 +132,14 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
+  getData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    UserID = prefs.getString(PreferencesKey.loginUserID) ?? "";
+  }
+
   SetUi() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
+    prefs.setString(PreferencesKey.module, user_Module);
     systemConfigModel?.object?.forEach((element) async {
       if (element.name == "MaxDocUploadSizeInMB") {
         var fileSize = element.value!;

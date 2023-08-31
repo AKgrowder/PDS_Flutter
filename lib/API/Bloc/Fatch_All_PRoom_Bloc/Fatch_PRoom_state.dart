@@ -1,4 +1,5 @@
 import '../../Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
+import '../../Model/HomeScreenModel/MyPublicRoom_model.dart';
 import '../../Model/HomeScreenModel/PublicRoomModel.dart';
 import '../../Model/checkUserStatusModel/chekuserStausModel.dart';
 
@@ -31,4 +32,9 @@ class CheckuserLoadedState extends FetchAllPublicRoomState {
 class FetchPublicRoomLoadedState extends FetchAllPublicRoomState {
   final PublicRoomModel FetchPublicRoomData;
   FetchPublicRoomLoadedState(this.FetchPublicRoomData);
+}
+
+class MyPublicRoomLoadedState extends FetchAllPublicRoomState {
+  final MyPublicRoom MyPublicRoomData;
+  MyPublicRoomLoadedState(this.MyPublicRoomData);
 }

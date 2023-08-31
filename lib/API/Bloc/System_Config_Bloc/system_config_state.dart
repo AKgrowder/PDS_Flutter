@@ -1,5 +1,7 @@
 import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
 
+import '../../Model/System_Config_model/fetchUserModule_model.dart';
+
 abstract class SystemConfigState {}
 
 class SystemConfigLoadingState extends SystemConfigState {}
@@ -12,6 +14,11 @@ class SystemConfigLoadedState extends SystemConfigState {
 }
 
 class SystemConfigErrorState extends SystemConfigState {
-  final String error;
+  final dynamic error;
   SystemConfigErrorState(this.error);
+}
+
+class fetchUserModulemodelLoadedState extends SystemConfigState {
+  final FetchUserModulemodel fetchUserModule;
+  fetchUserModulemodelLoadedState(this.fetchUserModule);
 }

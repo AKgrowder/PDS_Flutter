@@ -22,9 +22,11 @@ import '../Model/Edit_room_model/edit_room_model.dart';
 import '../Model/FatchAllMembers/fatchallmembers_model.dart';
 import '../Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import '../Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
+import '../Model/HomeScreenModel/MyPublicRoom_model.dart';
 import '../Model/HomeScreenModel/PublicRoomModel.dart';
 import '../Model/InvitationModel/Invitation_Model.dart';
 import '../Model/SendMSG/SendMSG_Model.dart';
+import '../Model/System_Config_model/fetchUserModule_model.dart';
 import '../Model/System_Config_model/system_config_model.dart';
 import '../Model/acceptRejectInvitaionModel/acceptRejectInvitaion.dart';
 import '../Model/coment/coment_model.dart';
@@ -528,6 +530,23 @@ class Repository {
     }
   }
 
+   UserModel(BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(Config.fetchUserModule, context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return FetchUserModulemodel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
   myAccount(BuildContext context) async {
     final response =
         await apiServices.getApiCallWithToken(Config.myaccountApi, context);
@@ -600,6 +619,25 @@ class Repository {
         return jsonString;
     }
   }
+
+
+   MyPublicRoom1(String uuid,BuildContext context) async {
+    final response =
+        await apiServices.getApiCall(Config.fetchMyPublicRoom + uuid , context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return MyPublicRoom.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  } 
 }
 
 
