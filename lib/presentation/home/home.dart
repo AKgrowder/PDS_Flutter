@@ -15,6 +15,7 @@ import '../../API/Bloc/auth/register_Block.dart';
 import '../../API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
+import '../../API/Model/HomeScreenModel/MyPublicRoom_model.dart';
 import '../../API/Model/HomeScreenModel/PublicRoomModel.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
@@ -38,12 +39,13 @@ int? isselectedimage = -1;
 List? image = [];
 dynamic _CallBackCheck;
 String? User_Name;
-String? User_Mood;
+String? User_Module;
 String? User_ID;
 bool refresh = false;
 
 PublicRoomModel? PublicRoomModelData;
 PublicRoomModel? FetchPublicRoomModelData;
+MyPublicRoom? MyPublicRoomData;
 FetchAllExpertsModel? FetchAllExpertsData;
 List<String> aa = [
   "Baluran Wild The Savvanah Baluran Wild The \nSavvanah",
@@ -93,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         refresh = false;
         // saveUserProfile();
-         User_ID == null ? api() : NewApi();
+        User_ID == null ? api() : NewApi();
       });
     }
 
@@ -155,6 +157,11 @@ class _HomeScreenState extends State<HomeScreen> {
             }
             if (state is FetchPublicRoomLoadedState) {
               FetchPublicRoomModelData = state.FetchPublicRoomData;
+            }
+
+            if (state is MyPublicRoomLoadedState) {
+              MyPublicRoomData = state.MyPublicRoomData;
+              print(MyPublicRoomData?.message);
             }
           }, builder: (context, state) {
             return SingleChildScrollView(
@@ -270,9 +277,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.only(
                         left: 16, top: 10, right: 16, bottom: 0),
                     child: Container(
-                      child: User_Mood == "COMPANY"
+                      child: User_Module == "COMPANY"
                           ? SizedBox()
-                          : User_Mood == "EXPERT"
+                          : User_Module == "EXPERT"
                               ? Container(
                                   // color: Colors.lightGreen,
                                   height: 50,
@@ -327,7 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 )
-                              : User_Mood == "EMPLOYEE"
+                              : User_Module == "EMPLOYEE"
                                   ? checkuserdata == "PARTIALLY_REGISTERED"
                                       ? Row(
                                           mainAxisSize: MainAxisSize.max,
@@ -614,7 +621,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   FetchAllExpertsData?.object?.length != 0
-                      ? User_Mood != "EXPERT"
+                      ? User_Module != "EXPERT"
                           ? Padding(
                               padding: const EdgeInsets.only(
                                   right: 20.0, left: 20, top: 7),
@@ -651,7 +658,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             )
                           : SizedBox()
                       : SizedBox(),
-                  User_Mood != "EXPERT"
+                  User_Module != "EXPERT"
                       ? Container(
                           // color: Colors.red,
                           height: FetchAllExpertsData?.object?.length != 0
@@ -670,128 +677,515 @@ class _HomeScreenState extends State<HomeScreen> {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
-                                  // height: 100,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      color: Colors.red,
+                                    // height: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: Colors.red,
+                                      ),
                                     ),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Stack(
-                                        children: [
-                                          Container(
-                                            height: 120,
-                                            width: _width / 2.8,
-                                            child: (FetchAllExpertsData
-                                                        ?.object?[index]
-                                                        .profilePic
-                                                        ?.isNotEmpty ??
-                                                    false)
-                                                ? CustomImageView(
-                                                    url:
-                                                        "${FetchAllExpertsData?.object?[index].profilePic}",
-                                                    // height: 50,
-                                                    // width: _width/1.2,
-                                                    radius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  )
-                                                : CustomImageView(
-                                                    imagePath:
-                                                        ImageConstant.experts,
-                                                    // height: 50,
-                                                    // width: _width/1.2,
-                                                    radius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                          ),
-                                          // Positioned(
-                                          //   top: 7,
-                                          //   left: 4,
-                                          //   child: Container(
-                                          //     width: 70,
-                                          //     height: 18,
-                                          //     decoration: BoxDecoration(
-                                          //         borderRadius:
-                                          //             BorderRadius.circular(5),
-                                          //         color: Colors.white),
-                                          //     child: Row(
-                                          //       mainAxisAlignment:
-                                          //           MainAxisAlignment
-                                          //               .spaceAround,
-                                          //       children: [
-                                          //         CircleAvatar(
-                                          //           backgroundColor: Colors.red,
-                                          //           maxRadius: 5,
-                                          //         ),
-                                          //         Text(
-                                          //           "Online",
-                                          //           style: TextStyle(
-                                          //               fontWeight:
-                                          //                   FontWeight.w400,
-                                          //               color:
-                                          //                   Color(0XFFED1C25),
-                                          //               fontFamily: "outfit",
-                                          //               fontSize: 15),
-                                          //         ),
-                                          //       ],
-                                          //     ),
-                                          //   ),
-                                          // )
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "${FetchAllExpertsData?.object?[index].userName}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                                fontFamily: "outfit",
-                                                fontSize: 18),
-                                          ),
-                                          // Padding(
-                                          //   padding: const EdgeInsets.all(8.0),
-                                          //   child: CustomImageView(
-                                          //     imagePath: ImageConstant.imgright,
-                                          //     height: 15,
-                                          //     // fit: BoxFit.fill,
-                                          //   ),
-                                          // ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          CustomImageView(
-                                            imagePath: ImageConstant.bag,
-                                            height: 15,
-                                            // fit: BoxFit.fill,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            "${FetchAllExpertsData?.object?[index].expertise?[0].expertiseName}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w300,
-                                                color: Colors.grey.shade700,
-                                                fontFamily: "outfit",
-                                                fontSize: 15),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Stack(
+                                          children: [
+                                            Container(
+                                              height: 120,
+                                              width: _width / 2.8,
+                                              child: (FetchAllExpertsData
+                                                          ?.object?[index]
+                                                          .profilePic
+                                                          ?.isNotEmpty ??
+                                                      false)
+                                                  ? CustomImageView(
+                                                      url:
+                                                          "${FetchAllExpertsData?.object?[index].profilePic}",
+                                                      // height: 50,
+                                                      // width: _width/1.2,
+                                                      radius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    )
+                                                  : CustomImageView(
+                                                      imagePath:
+                                                          ImageConstant.experts,
+                                                      // height: 50,
+                                                      // width: _width/1.2,
+                                                      radius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                            ),
+                                            // Positioned(
+                                            //   top: 7,
+                                            //   left: 4,
+                                            //   child: Container(
+                                            //     width: 70,
+                                            //     height: 18,
+                                            //     decoration: BoxDecoration(
+                                            //         borderRadius:
+                                            //             BorderRadius.circular(5),
+                                            //         color: Colors.white),
+                                            //     child: Row(
+                                            //       mainAxisAlignment:
+                                            //           MainAxisAlignment
+                                            //               .spaceAround,
+                                            //       children: [
+                                            //         CircleAvatar(
+                                            //           backgroundColor: Colors.red,
+                                            //           maxRadius: 5,
+                                            //         ),
+                                            //         Text(
+                                            //           "Online",
+                                            //           style: TextStyle(
+                                            //               fontWeight:
+                                            //                   FontWeight.w400,
+                                            //               color:
+                                            //                   Color(0XFFED1C25),
+                                            //               fontFamily: "outfit",
+                                            //               fontSize: 15),
+                                            //         ),
+                                            //       ],
+                                            //     ),
+                                            //   ),
+                                            // )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${FetchAllExpertsData?.object?[index].userName}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                  fontFamily: "outfit",
+                                                  fontSize: 18),
+                                            ),
+                                            // Padding(
+                                            //   padding: const EdgeInsets.all(8.0),
+                                            //   child: CustomImageView(
+                                            //     imagePath: ImageConstant.imgright,
+                                            //     height: 15,
+                                            //     // fit: BoxFit.fill,
+                                            //   ),
+                                            // ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            CustomImageView(
+                                              imagePath: ImageConstant.bag,
+                                              height: 15,
+                                              // fit: BoxFit.fill,
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              "${FetchAllExpertsData?.object?[index].expertise?[0].expertiseName}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w300,
+                                                  color: Colors.grey.shade700,
+                                                  fontFamily: "outfit",
+                                                  fontSize: 15),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    )),
                               );
                             },
                           ),
                         )
+                      : SizedBox(),
+                  User_ID != null
+                      ? MyPublicRoomData?.object?.length != 0
+                          ? User_Module == "COMPANY" ||
+                                  User_Module == "EMPLOYEE"
+                              ? Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 0.0, right: 16, left: 16),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Your Forum",
+                                        style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontSize: 23,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : SizedBox()
+                          : SizedBox()
+                      : SizedBox(),
+                  User_ID != null
+                      ? MyPublicRoomData?.object?.length != 0
+                          ? User_Module == "COMPANY" ||
+                                  User_Module == "EMPLOYEE"
+                              ? state is MyPublicRoomLoadedState
+                                  ? ListView.builder(
+                                      itemCount: (MyPublicRoomData
+                                                      ?.object?.length ??
+                                                  0) >
+                                              5
+                                          ? 5
+                                          : MyPublicRoomData?.object?.length,
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 16, right: 16, bottom: 10),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return MultiBlocProvider(
+                                                  providers: [
+                                                    BlocProvider(
+                                                      create: (context) =>
+                                                          senMSGCubit(),
+                                                    ),
+                                                  ],
+                                                  child: ViewCommentScreen(
+                                                    Room_ID:
+                                                        "${MyPublicRoomData?.object?[index].uid ?? ""}",
+                                                    Title:
+                                                        "${MyPublicRoomData?.object?[index].roomQuestion ?? ""}",
+                                                  ),
+                                                );
+                                              })).then((value) {
+                                                setState(() {
+                                                  refresh = true;
+                                                });
+                                              });
+                                            },
+                                            child: Container(
+                                              // height: demo.contains(index) ? null: height / 16,
+                                              width: _width,
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: const Color(
+                                                          0XFFD9D9D9),
+                                                      width: 2),
+                                                  borderRadius:
+                                                      BorderRadius.circular(5)),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      // Padding(
+                                                      //     padding:
+                                                      //         const EdgeInsets
+                                                      //                 .only(
+                                                      //             left: 10),
+                                                      //     child: MyPublicRoomData
+                                                      //                 ?.object?[
+                                                      //                     index]
+                                                      //                 .ownerUsreProfilePic
+                                                      //                 ?.isNotEmpty ==
+                                                      //             false
+                                                      //         ? CustomImageView(
+                                                      //             // imagePath: ImageConstant
+                                                      //             //       .tomcruse,
+                                                      //             url:
+                                                      //                 "${MyPublicRoomData?.object?[index].ownerUsreProfilePic}",
+                                                      //             height: 20,
+                                                      //             radius: BorderRadius
+                                                      //                 .circular(
+                                                      //                     20),
+                                                      //             width: 20,
+                                                      //             fit: BoxFit
+                                                      //                 .fill,
+                                                      //           )
+                                                      //         : CustomImageView(
+                                                      //             imagePath:
+                                                      //                 ImageConstant
+                                                      //                     .tomcruse,
+                                                      //             height: 20,
+                                                      //           )),
+                                                      // Padding(
+                                                      //   padding:
+                                                      //       const EdgeInsets
+                                                      //           .only(left: 5),
+                                                      //   child: Text(
+                                                      //     "${MyPublicRoomData?.object?[index].ownerUserName}",
+                                                      //     style: TextStyle(
+                                                      //         fontWeight:
+                                                      //             FontWeight
+                                                      //                 .w800,
+                                                      //         color:
+                                                      //             Colors.black,
+                                                      //         fontFamily:
+                                                      //             "outfit",
+                                                      //         fontSize: 14),
+                                                      //   ),
+                                                      // ),
+                                                       
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 8.0,
+                                                                top: 10,
+                                                                bottom: 10),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left: 2.0,
+                                                                      top: 5),
+                                                              child: CircleAvatar(
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .black,
+                                                                  maxRadius: 3),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 3,
+                                                            ),
+                                                            Container(
+                                                              width:
+                                                                  _width / 1.4,
+                                                              child: Text(
+                                                                "${MyPublicRoomData?.object?[index].roomQuestion}",
+                                                                maxLines: 2,
+                                                                textScaleFactor:
+                                                                    1.0,
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    overflow: TextOverflow
+                                                                        .ellipsis,
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontFamily:
+                                                                        "outfit",
+                                                                    fontSize:
+                                                                        14),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  MyPublicRoomData
+                                                              ?.object?[index]
+                                                              .message
+                                                              ?.message !=
+                                                          null
+                                                      ? Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            10),
+                                                                child: MyPublicRoomData
+                                                                            ?.object?[index]
+                                                                            .message
+                                                                            ?.userProfilePic !=
+                                                                        null
+                                                                    ? CustomImageView(
+                                                                        url:
+                                                                            // "https://pds-testing-images.s3.amazonaws.com/PROFILE_PIC4ee8376e-6667-495a-9a17-47afabf8f732/4ee8376e-6667-495a-9a17-47afabf8f732_409dabd0_60cf_4c69_97d2_ef689d8d8f95.ile_example_JPG_2500kB.jpg",
+                                                                            "${MyPublicRoomData?.object?[index].message?.userProfilePic}",
+                                                                        height:
+                                                                            20,
+                                                                        radius:
+                                                                            BorderRadius.circular(20),
+                                                                        width:
+                                                                            20,
+                                                                        fit: BoxFit
+                                                                            .fill,
+                                                                      )
+                                                                    : CustomImageView(
+                                                                        imagePath:
+                                                                            ImageConstant.tomcruse,
+                                                                        height:
+                                                                            20,
+                                                                      )),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left: 5),
+                                                              child: Container(
+                                                                width: _width /
+                                                                    1.4,
+                                                                child: Text(
+                                                                  "${MyPublicRoomData?.object?[index].message?.userName}",
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w800,
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontFamily:
+                                                                          "outfit",
+                                                                      fontSize:
+                                                                          14),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        )
+                                                      : SizedBox(),
+                                                  MyPublicRoomData
+                                                              ?.object?[index]
+                                                              .message
+                                                              ?.message !=
+                                                          null
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 35,
+                                                                  top: 2),
+                                                          child: Text(
+                                                            "${MyPublicRoomData?.object?[index].message?.message ?? ""}",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontFamily:
+                                                                    "outfit",
+                                                                fontSize: 12),
+                                                          ),
+                                                        )
+                                                      : SizedBox(),
+                                                  Divider(
+                                                    color: Colors.black,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) {
+                                                            return MultiBlocProvider(
+                                                              providers: [
+                                                                BlocProvider(
+                                                                    create: (context) =>
+                                                                        senMSGCubit())
+                                                              ],
+                                                              child:
+                                                                  ViewCommentScreen(
+                                                                Room_ID:
+                                                                    "${MyPublicRoomData?.object?[index].uid ?? ""}",
+                                                                Title:
+                                                                    "${MyPublicRoomData?.object?[index].roomQuestion ?? ""}",
+                                                              ),
+                                                            );
+                                                          })).then((value) {
+                                                            setState(() {
+                                                              refresh = true;
+                                                            });
+                                                          });
+                                                        },
+                                                        child: Text(
+                                                          "Add New Comment",
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontFamily:
+                                                                  "outfit",
+                                                              fontSize: 15),
+                                                        ),
+                                                      ),
+                                                      // Spacer(),
+                                                      Flexible(
+                                                        flex: 0,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 5),
+                                                          child: Container(
+                                                            //  height: 50,
+                                                            alignment: Alignment
+                                                                .centerRight,
+                                                            // width: 150,
+                                                            // color: Colors.amber,
+                                                            child: Text(
+                                                              "${MyPublicRoomData?.object?[index].message?.messageCount ?? "0"} Comments",
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  fontFamily:
+                                                                      "outfit",
+                                                                  fontSize: 13),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    )
+                                  : Container()
+                              : SizedBox()
+                          : SizedBox()
                       : SizedBox(),
                   Padding(
                     padding:
@@ -800,7 +1194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Public Threads",
+                          "Public Forum",
                           style: TextStyle(
                             fontFamily: 'outfit',
                             fontSize: 23,
@@ -808,7 +1202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        User_Mood != "EXPERT"
+                        User_Module != "EXPERT"
                             ? GestureDetector(
                                 onTap: () {
                                   Add_Threads();
@@ -1620,7 +2014,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // prefs.getString(PreferencesKey.ProfileUserName);
     User_ID = prefs.getString(PreferencesKey.loginUserID);
     User_Name = prefs.getString(PreferencesKey.ProfileName);
-    User_Mood = prefs.getString(PreferencesKey.module);
+    User_Module = prefs.getString(PreferencesKey.module);
 
     var Token = prefs.getString(PreferencesKey.loginJwt);
     var FCMToken = prefs.getString(PreferencesKey.fcmToken);
@@ -1649,6 +2043,8 @@ class _HomeScreenState extends State<HomeScreen> {
     print("1111111111111${User_ID}");
     await BlocProvider.of<FetchAllPublicRoomCubit>(context)
         .FetchPublicRoom("${User_ID}", context);
+    await BlocProvider.of<FetchAllPublicRoomCubit>(context)
+        .MyPublicRoom("${User_ID}", context);
   }
 
   setUserStatusFunction({String? acticueUser, String? rejectionReason}) async {
