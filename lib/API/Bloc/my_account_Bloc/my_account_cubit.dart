@@ -81,7 +81,8 @@ class MyAccountCubit extends Cubit<MyAccountState> {
     }
   }
 
-  Future<void> cretaForumUpdate(Map<String, dynamic> params,  BuildContext context) async {
+  Future<void> cretaForumUpdate(
+      Map<String, dynamic> params, BuildContext context) async {
     dynamic createForm;
     try {
       emit(MyAccountLoadingState());

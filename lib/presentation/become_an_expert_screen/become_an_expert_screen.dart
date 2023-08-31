@@ -762,10 +762,13 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 .showSnackBar(snackBar);
                           } else {
                             String time =
-                                '${_startTime!.format(context).toString().split(" ").first} to ${_endTime!.format(context).toString().split(" ").last}';
+                                '${_startTime!.format(context).toString()} to ${_endTime!.format(context).toString()}';
+                            print('_startTime${_startTime!.format(context).toString()}');    
+                            print('endtime-${_endTime!.format(context).toString()}');    
+                            print('Finaltime-$time');
                             print(
                                 'sddfsdm,gndfgj${chooseDocument?.object.toString()}');
-                            dynamic params = {
+                            var params = {
                               "document":
                                   "${chooseDocument?.object.toString()}",
                               "expertUId": [
@@ -776,6 +779,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                               "uid": userid.toString(),
                               "workingHours": time.toString(),
                             };
+                            print('working time-$time');
                             print('pwarems-$params');
                             BlocProvider.of<FetchExprtiseRoomCubit>(context)
                                 .addExpertProfile(params, context);
