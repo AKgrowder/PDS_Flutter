@@ -17,7 +17,7 @@ class Config {
   static const String getUserDetails = "auth/auth/getMasterUserByUUID";
   static const String company = "user/api/addUserProfile";
   static const String FetchMyRoom = "user/api/fetchMyRoom";
-  static const String createRoom = "user/api/createRoom";
+  static const String createRoom1 = "user/api/createRoom";
   static const String inviteUser = "user/api/inviteUserToRoom";
   static const String fetchExprtise = "user/api/fetchExprtise";
   static const String addExport = "user/addExpertProfile";
