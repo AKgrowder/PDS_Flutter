@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_state.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
+import '../../core/utils/sharedPreferences.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
 
@@ -60,6 +62,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
   TextEditingController _RoomTitleController = TextEditingController();
   String description = 'My great package';
   TextMode? currentmode;
+  var User_ID = "";
   List<String> items = [];
   TextStyle getStyle(TextMode? mode) {
     switch (mode) {
@@ -73,6 +76,13 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
       default:
         return normalStyle;
     }
+  }
+
+@override
+  void initState() {
+    get_UserUUID();
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -308,7 +318,8 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                           var params = {
                             "roomQuestion": _RoomTitleController.text,
                             "description": _RoomTitleController.text,
-                            "roomType": "PUBLIC"
+                            "roomType": "PUBLIC",
+                            "userUid": User_ID,
                           };
                           BlocProvider.of<CreatPublicRoomCubit>(context)
                               .CreatPublicRoomAPI(params, context);
@@ -340,6 +351,13 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                 ],
               );
             })));
+  }
+
+  get_UserUUID() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // prefs.getString(PreferencesKey.ProfileUserName);
+    User_ID = prefs.getString(PreferencesKey.loginUserID) ?? "";
   }
 
   doteFunction() {

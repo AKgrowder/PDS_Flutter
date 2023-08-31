@@ -78,27 +78,12 @@ List<String> commentss = [
 var checkuserdata = "";
 
 class _HomeScreenState extends State<HomeScreen> {
-  api() {
-    BlocProvider.of<FetchAllPublicRoomCubit>(context)
-        .FetchAllPublicRoom(context);
-
-    // BlocProvider.of<FetchAllPublicRoomCubit>(context).chckUserStaus(context);
-  }
-
-  NewApi() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    User_ID = prefs.getString(PreferencesKey.loginUserID);
-    print("1111111111111${User_ID}");
-    await BlocProvider.of<FetchAllPublicRoomCubit>(context)
-        .FetchPublicRoom("${User_ID}", context);
-  }
-
   @override
   void initState() {
     BlocProvider.of<FetchAllPublicRoomCubit>(context)
         .FetchAllExpertsAPI(context);
     saveUserProfile();
-    User_ID != null ? api() : NewApi();
+
     super.initState();
   }
 
@@ -107,7 +92,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (refresh) {
       setState(() {
         refresh = false;
-        api();
+        // saveUserProfile();
+         User_ID == null ? api() : NewApi();
       });
     }
 
@@ -844,7 +830,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  User_ID != null
+                  User_ID == null
                       ? state is FetchAllPublicRoomLoadedState
                           ? ListView.builder(
                               itemCount:
@@ -1244,7 +1230,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           left: 10),
                                                   child: FetchPublicRoomModelData
                                                               ?.object?[index]
-                                                              .ownerUserName !=
+                                                              .ownerUsreProfilePic !=
                                                           null
                                                       ? CustomImageView(
                                                           // imagePath: ImageConstant
@@ -1357,68 +1343,89 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                             ],
                                           ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Padding(
+                                          FetchPublicRoomModelData
+                                                      ?.object?[index]
+                                                      .message
+                                                      ?.message !=
+                                                  null
+                                              ? Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(left: 10),
+                                                        child: FetchPublicRoomModelData
+                                                                    ?.object?[
+                                                                        index]
+                                                                    .message
+                                                                    ?.userProfilePic !=
+                                                                null
+                                                            ? CustomImageView(
+                                                                url:
+                                                                    // "https://pds-testing-images.s3.amazonaws.com/PROFILE_PIC4ee8376e-6667-495a-9a17-47afabf8f732/4ee8376e-6667-495a-9a17-47afabf8f732_409dabd0_60cf_4c69_97d2_ef689d8d8f95.ile_example_JPG_2500kB.jpg",
+                                                                    "${FetchPublicRoomModelData?.object?[index].message?.userProfilePic}",
+                                                                height: 20,
+                                                                radius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                width: 20,
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                              )
+                                                            : CustomImageView(
+                                                                imagePath:
+                                                                    ImageConstant
+                                                                        .tomcruse,
+                                                                height: 20,
+                                                              )),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 5),
+                                                      child: Container(
+                                                        width: _width / 1.4,
+                                                        child: Text(
+                                                          "${FetchPublicRoomModelData?.object?[index].message?.userName}",
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w800,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontFamily:
+                                                                  "outfit",
+                                                              fontSize: 14),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              : SizedBox(),
+                                          FetchPublicRoomModelData
+                                                      ?.object?[index]
+                                                      .message
+                                                      ?.message !=
+                                                  null
+                                              ? Padding(
                                                   padding:
                                                       const EdgeInsets.only(
-                                                          left: 10),
-                                                  child: (FetchPublicRoomModelData
-                                                              ?.object?[index]
-                                                              .message
-                                                              ?.userProfilePic
-                                                              ?.isNotEmpty ??
-                                                          false)
-                                                      ? CustomImageView(
-                                                          url:
-                                                              // "https://pds-testing-images.s3.amazonaws.com/PROFILE_PIC4ee8376e-6667-495a-9a17-47afabf8f732/4ee8376e-6667-495a-9a17-47afabf8f732_409dabd0_60cf_4c69_97d2_ef689d8d8f95.ile_example_JPG_2500kB.jpg",
-                                                              "${FetchPublicRoomModelData?.object?[index].message?.userProfilePic}",
-                                                          height: 20,
-                                                          radius: BorderRadius
-                                                              .circular(20),
-                                                          width: 20,
-                                                          fit: BoxFit.fill,
-                                                        )
-                                                      : CustomImageView(
-                                                          imagePath:
-                                                              ImageConstant
-                                                                  .tomcruse,
-                                                          height: 20,
-                                                        )),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 5),
-                                                child: Container(
-                                                  width: _width / 1.4,
+                                                          left: 35, top: 2),
                                                   child: Text(
-                                                    "${FetchPublicRoomModelData?.object?[index].message?.userName}",
+                                                    "${FetchPublicRoomModelData?.object?[index].message?.message}",
                                                     style: TextStyle(
                                                         fontWeight:
-                                                            FontWeight.w800,
+                                                            FontWeight.w400,
                                                         color: Colors.black,
                                                         fontFamily: "outfit",
-                                                        fontSize: 14),
+                                                        fontSize: 12),
                                                   ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 35, top: 2),
-                                            child: Text(
-                                              "${FetchPublicRoomModelData?.object?[index].message?.message ?? ""}",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Colors.black,
-                                                  fontFamily: "outfit",
-                                                  fontSize: 12),
-                                            ),
-                                          ),
+                                                )
+                                              : SizedBox(),
                                           Divider(
                                             color: Colors.black,
                                           ),
@@ -1625,9 +1632,23 @@ class _HomeScreenState extends State<HomeScreen> {
     if (User_ID != "" && User_ID != null) {
       BlocProvider.of<FetchAllPublicRoomCubit>(context).chckUserStaus(context);
     }
+    User_ID == null ? api() : NewApi();
     // prefs.getString(PreferencesKey.ProfileEmail);
     // prefs.getString(PreferencesKey.ProfileModule);
     // prefs.getString(PreferencesKey.ProfileMobileNo);
+  }
+
+  api() {
+    BlocProvider.of<FetchAllPublicRoomCubit>(context)
+        .FetchAllPublicRoom(context);
+
+    // BlocProvider.of<FetchAllPublicRoomCubit>(context).chckUserStaus(context);
+  }
+
+  NewApi() async {
+    print("1111111111111${User_ID}");
+    await BlocProvider.of<FetchAllPublicRoomCubit>(context)
+        .FetchPublicRoom("${User_ID}", context);
   }
 
   setUserStatusFunction({String? acticueUser, String? rejectionReason}) async {
