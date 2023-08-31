@@ -132,7 +132,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   margin:
                       EdgeInsets.only(left: 20, top: 19, bottom: 13, right: 15),
                   onTap: () {
-                    onTapArrowleft(context);
+                    // onTapArrowleft(context);
+                    Navigator.pop(context);
                   }),
               centerTitle: true,
               title: AppbarImage(

@@ -13,12 +13,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
-import '../../widgets/custom_icon_button.dart';
 import '../../widgets/custom_image_view.dart';
 import '../settings/setting_screen.dart';
 
@@ -36,6 +37,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   @override
   void initState() {
     BlocProvider.of<MyAccountCubit>(context).MyAccount(context);
+    localDataGet();
     super.initState();
   }
 
@@ -48,7 +50,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   TextEditingController expertIn = TextEditingController();
   TextEditingController fees = TextEditingController();
   TextEditingController compayName = TextEditingController();
-
+  String? User_ID;
   XFile? pickedFile;
   File? pickedImage;
   double value2 = 0.0;
@@ -107,10 +109,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   }
 
   bool _isGifOrSvg(String imagePath) {
-    // Check if the image file has a .gif or .svg extension
-    final lowerCaseImagePath = imagePath.toLowerCase();
-    return lowerCaseImagePath.endsWith('.gif') ||
-        lowerCaseImagePath.endsWith('.svg');
+  final lowerCaseImagePath = imagePath.toLowerCase();
+  return lowerCaseImagePath.endsWith('.gif') ||
+      lowerCaseImagePath.endsWith('.svg');
   }
 
   Future<void> _selectEndTime(BuildContext context) async {
@@ -162,8 +163,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           expertBool = state.myAccontDetails.object?.expertise?.isNotEmpty;
           print('check expertbool-${expertBool}');
           dataSetMethod(
-            useridSetdata: state.myAccontDetails.object?.uuid,
-            userNameSetdata: state.myAccontDetails.object?.userName,
+            useridSetdata: state.myAccontDetails.object?.userName,
+            userNameSetdata: state.myAccontDetails.object?.name,
             emailSetdata: state.myAccontDetails.object?.email,
             expertInSetdata: '',
             jobProfileSetdata: state.myAccontDetails.object?.jobProfile,
@@ -216,11 +217,11 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         }
         if (state is chooseDocumentLoadedState2) {
           chooseDocumentuploded2 = state.chooseDocumentuploded;
-          SnackBar snackBar = SnackBar(
+          /*   SnackBar snackBar = SnackBar(
             content: Text(state.chooseDocumentuploded.message.toString()),
             backgroundColor: ColorConstant.primary_color,
           );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          ScaffoldMessenger.of(context).showSnackBar(snackBar); */
         }
         if (state is FetchExprtiseRoomLoadedState) {
           _fetchExprtise = state.fetchExprtise;
@@ -491,7 +492,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   ),
                                 ),
                               ),
-                    myAccontDetails?.object?.uuid != null
+                    myAccontDetails?.object?.userName != null
                         ? Padding(
                             padding: const EdgeInsets.only(left: 36.0, top: 10),
                             child: Text(
@@ -507,7 +508,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                     SizedBox(
                       height: 5,
                     ),
-                    myAccontDetails?.object?.uuid != null
+                    myAccontDetails?.object?.userName != null
                         ? Center(
                             child: Container(
                               // height: 50,
@@ -1454,27 +1455,41 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   .showSnackBar(snackBar);
                             } else {
                               String time =
-                                  '${_startTime!.format(context).toString().split(" ").first} TO ${_endTime!.format(context).toString().split(" ").first}';
-                              var params = {
-                                "document":
-                                    "${chooseDocumentuploded2?.object.toString()}",
-                                "expertUId": [
-                                  "${selectedExpertise?.uid.toString()}"
-                                ],
-                                "fees": '${fees.text}',
-                                "jobProfile": '${jobProfile.text}',
-                                "uid":
-                                    '${myAccontDetails?.object?.uuid.toString()}',
-                                "workingHours": time.toString(),
-                                'profile': chooseDocumentuploded?.object != null
-                                    ? chooseDocumentuploded?.object.toString()
-                                    : ''
-                              };
-                              print('in if condison');
+                                  '${_startTime!.format(context).toString()} to ${_endTime!.format(context).toString()}';
+                              if (chooseDocumentuploded?.object != null) {
+                                var params = {
+                                  "document":
+                                      "${chooseDocumentuploded2?.object.toString()}",
+                                  "expertUId": [
+                                    "${selectedExpertise?.uid.toString()}"
+                                  ],
+                                  "fees": '${fees.text}',
+                                  "jobProfile": '${jobProfile.text}',
+                                  "uid": User_ID.toString(),
+                                  "workingHours": time.toString(),
+                                  "profilePic":
+                                      '${chooseDocumentuploded?.object.toString()}'
+                                };
+                                print('params if -$params');
 
-                              print('pwarems-$params');
-                              BlocProvider.of<MyAccountCubit>(context)
-                                  .addExpertProfile(params, context);
+                                BlocProvider.of<MyAccountCubit>(context)
+                                    .addExpertProfile(params, context);
+                              } else {
+                                var params = {
+                                  "document":
+                                      "${chooseDocumentuploded2?.object.toString()}",
+                                  "expertUId": [
+                                    "${selectedExpertise?.uid.toString()}"
+                                  ],
+                                  "fees": '${fees.text}',
+                                  "jobProfile": '${jobProfile.text}',
+                                  "uid": User_ID.toString(),
+                                  "workingHours": time.toString(),
+                                };
+                                print('params else -$params');
+                                BlocProvider.of<MyAccountCubit>(context)
+                                    .addExpertProfile(params, context);
+                              }
                             }
                           }
                         }
@@ -1747,6 +1762,12 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     }
 
     return STR;
+  }
+
+  localDataGet() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    User_ID = prefs.getString(PreferencesKey.loginUserID);
+    setState(() {});
   }
 }
 
