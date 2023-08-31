@@ -1026,6 +1026,10 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                     ),
                                                   ],
                                                   child: RoomMembersScreen(
+                                                      roomname:
+                                                          "${PriveateRoomData?.object?[index].roomQuestion}",
+                                                      roomdescription:
+                                                          "${PriveateRoomData?.object?[index].description}",
                                                       room_Id:
                                                           '${PriveateRoomData?.object?[index].uid.toString()}'),
                                                 );

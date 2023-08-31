@@ -254,14 +254,14 @@ class _SettingScreenState extends State<SettingScreen> {
                               )
                             ], child: MyAccountScreen());
                           }));
-            
+
                           break;
                         // case 1:
                         //   // Navigator.push(
                         //   //     context,
                         //   //     MaterialPageRoute(
                         //   //         builder: (context) => OtpVerificationScreen()));
-            
+
                         //   break;
                         case 1:
                           Navigator.push(
@@ -278,7 +278,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           //     ));
                           break;
                         case 3:
-                       Navigator.push(context,
+                          Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return MultiBlocProvider(providers: [
                               BlocProvider<ForgetpasswordCubit>(
@@ -293,15 +293,14 @@ class _SettingScreenState extends State<SettingScreen> {
                           //   MaterialPageRoute(
                           //       builder: (context) => ChangePasswordScreen()),
                           // );
-            
+
                           break;
                         case 5:
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      ViewDetailsScreen()
-            
+                                  builder: (context) => ViewDetailsScreen()
+
                                   // AddDeliveryAddressScreen();
                                   ));
                           break;
@@ -319,18 +318,17 @@ class _SettingScreenState extends State<SettingScreen> {
                           //     MaterialPageRoute(builder: (context) {
                           //   return RoomDetailScreen();
                           // }));
-            
+
                           break;
                         case 8:
                           // Navigator.push(context,
                           //     MaterialPageRoute(builder: (context) {
                           //   return ExpertsDetailsScreen();
                           // }));
-            
+
                           showDialog(
-                              context: context,
-                              builder: (_) => rateUSdialog());
-            
+                              context: context, builder: (_) => rateUSdialog());
+
                           break;
                         /* case 8:
                           SnackBar snackBar = SnackBar(
@@ -343,9 +341,8 @@ class _SettingScreenState extends State<SettingScreen> {
                           break; */
                         case 9:
                           showDialog(
-                              context: context,
-                              builder: (_) => FunkyOverlay());
-            
+                              context: context, builder: (_) => FunkyOverlay());
+
                           // showDialog(
                           //     context: context, builder: (_) => RoomsScreen());
                           /*  SnackBar snackBar = SnackBar(
@@ -354,18 +351,18 @@ class _SettingScreenState extends State<SettingScreen> {
                           );
                           ScaffoldMessenger.of(context)
                               .showSnackBar(snackBar); */
-            
+
                           break;
                         case 10:
                           logout();
-            
+
                           break;
                         // case 11:
                         //   // showDialog(
                         //   //     context: context, builder: (_) => RoomsScreen());
-            
+
                         //   break;
-            
+
                         /* case 6:
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) =>
@@ -428,17 +425,15 @@ class _SettingScreenState extends State<SettingScreen> {
                                 ),
                                 Spacer(),
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.only(right: 0),
+                                  padding: const EdgeInsets.only(right: 0),
                                   child: Container(
                                     // color: Colors.amber,
                                     height: 30,
                                     width: 60,
                                     child: Icon(
                                       Icons.arrow_forward_ios,
-                                      color: index == 0
-                                          ? Colors.red
-                                          : Colors.grey,
+                                      color:
+                                          index == 0 ? Colors.red : Colors.grey,
                                     ),
                                   ),
                                 ),
@@ -499,12 +494,17 @@ class _SettingScreenState extends State<SettingScreen> {
                       child: const Text('Yes',
                           style: TextStyle(color: Colors.white)),
                       onPressed: () async {
-                        
                         final SharedPreferences prefs =
                             await SharedPreferences.getInstance();
                         prefs.remove(PreferencesKey.loginUserID);
                         prefs.remove(PreferencesKey.loginJwt);
                         prefs.remove(PreferencesKey.module);
+
+                        SnackBar snackBar = SnackBar(
+                          content: Text("Logged out successfully."),
+                          backgroundColor: ColorConstant.primary_color,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
                         Navigator.pushAndRemoveUntil(context,
                             MaterialPageRoute(builder: (context) {
