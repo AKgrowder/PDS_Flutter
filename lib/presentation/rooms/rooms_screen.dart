@@ -57,7 +57,6 @@ class _RoomsScreenState extends State<RoomsScreen> {
   void initState() {
     Show_NoData_Image = true;
     // BlocProvider.of<GetAllPrivateRoomCubit>(context).GetAllPrivateRoomAPI();
-
     // BlocProvider.of<GetAllPrivateRoomCubit>(context).GetAllPrivateRoomAPI();
     // BlocProvider.of<GetAllPrivateRoomCubit>(context).chckUserStaus();
     method();
@@ -244,7 +243,6 @@ class _RoomsScreenState extends State<RoomsScreen> {
                               //         .toString() ??
                               //     '');
 
-                          
                               DateTime parsedDateTime = DateTime.parse(
                                   '${PriveateRoomData?.object?[index].createdDate ?? ""}');
                               return Padding(
@@ -1773,14 +1771,13 @@ class _RoomsScreenState extends State<RoomsScreen> {
                     _roomName.clear();
                     _DescriptionText.clear();
 
-            
-                      SnackBar snackBar = SnackBar(
-                        content: Text(state.PublicRoomData.message ?? ""),
-                        backgroundColor: ColorConstant.primary_color,
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      Navigator.pop(context);
-                 
+                    SnackBar snackBar = SnackBar(
+                      content: Text(state.PublicRoomData.message ?? ""),
+                      backgroundColor: ColorConstant.primary_color,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    Navigator.pop(context);
+
                     // show_Icon_Flushbar(context,msg: state.PublicRoomData.message ?? "");
                   }
                   if (state is CreateRoomErrorState) {
