@@ -174,9 +174,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           );
           print('printstatment-${myAccontDetails?.object?.workingHours}');
           if (myAccontDetails?.object?.workingHours != null) {
-              print('workignHours-${myAccontDetails?.object?.workingHours }');
-            /* _startTime = TimeOfDay(hour: hour, minute: minute);
-            _endTime = TimeOfDay(hour: hour, minute: minute); */
+            print(
+                'workignHoursCheckPrintstatment-${myAccontDetails?.object?.workingHours}');
 
             workignStart = myAccontDetails?.object?.workingHours
                 .toString()
@@ -322,7 +321,10 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                   GestureDetector(
                     onTap: () {
                       isupdate = isupdate == true ? false : true;
-                      dopcument = 'Upload Image';
+                      dopcument = myAccontDetails?.object?.userDocument != null
+                          ? myAccontDetails?.object?.userDocument
+                          : 'Upload Image';
+
                       setState(() {});
                     },
                     child: Icon(
@@ -1319,7 +1321,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 .showSnackBar(snackBar);
                           }
                           if (myAccontDetails?.object?.module == 'COMPANY') {
-                            print('yes check data ');
                             if (isupdate == false) {
                               if (jobProfile.text == null ||
                                   jobProfile.text == '') {
@@ -1376,22 +1377,39 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
                               } else {
-                                Map<String, dynamic> params = {
-                                  'document':
-                                      chooseDocumentuploded2?.object.toString(),
-                                  'companyName': compayName.text,
-                                  'jobProfile': jobProfile.text,
-                                  'name': userName.text,
-                                  'uuid':
-                                      myAccontDetails?.object?.uuid.toString(),
-                                  'profile':
-                                      chooseDocumentuploded?.object != null
-                                          ? chooseDocumentuploded?.object
-                                          : ''
-                                };
-                                print('paremdatapasssing-$params');
-                                BlocProvider.of<MyAccountCubit>(context)
-                                    .cretaForumUpdate(params, context);
+                                if (chooseDocumentuploded?.object != null) {
+                                  Map<String, dynamic> params = {
+                                    'document': chooseDocumentuploded2?.object
+                                        .toString(),
+                                    'companyName': compayName.text,
+                                    'jobProfile': jobProfile.text,
+                                    'name': userName.text,
+                                    'uuid': myAccontDetails?.object?.uuid
+                                        .toString(),
+                                    'userProfilePic':
+                                        chooseDocumentuploded?.object.toString()
+                                  };
+                                  print('if change-');
+
+                                  print('paremdatapasssing-$params');
+                                  BlocProvider.of<MyAccountCubit>(context)
+                                      .cretaForumUpdate(params, context);
+                                } else {
+                                  Map<String, dynamic> params = {
+                                    'document': chooseDocumentuploded2?.object
+                                        .toString(),
+                                    'companyName': compayName.text,
+                                    'jobProfile': jobProfile.text,
+                                    'name': userName.text,
+                                    'uuid': myAccontDetails?.object?.uuid
+                                        .toString(),
+                                  };
+                                  print('else if change-');
+                                  BlocProvider.of<MyAccountCubit>(context)
+                                      .cretaForumUpdate(params, context);
+                                  print('paremdatapasssing-$params');
+                                }
+                                ;
                               }
                             }
                           } else if (myAccontDetails?.object?.module ==
@@ -1455,8 +1473,10 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   '${_startTime!.format(context).toString()} to ${_endTime!.format(context).toString()}';
                               if (chooseDocumentuploded?.object != null) {
                                 var params = {
-                                  "document":
-                                      "${chooseDocumentuploded2?.object.toString()}",
+                                  "document": chooseDocumentuploded2?.object !=
+                                          null
+                                      ? "${chooseDocumentuploded2?.object.toString()}"
+                                      : '${dopcument.toString()}',
                                   "expertUId": [
                                     "${selectedExpertise?.uid.toString()}"
                                   ],
@@ -1473,8 +1493,10 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                     .addExpertProfile(params, context);
                               } else {
                                 var params = {
-                                  "document":
-                                      "${chooseDocumentuploded2?.object.toString()}",
+                                  "document": chooseDocumentuploded2?.object !=
+                                          null
+                                      ? "${chooseDocumentuploded2?.object.toString()}"
+                                      : '${dopcument.toString()}',
                                   "expertUId": [
                                     "${selectedExpertise?.uid.toString()}"
                                   ],
