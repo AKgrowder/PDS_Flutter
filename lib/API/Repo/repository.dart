@@ -186,6 +186,8 @@ class Repository {
         return RegisterClass.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
+      case 400:
+        return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
 
@@ -203,6 +205,8 @@ class Repository {
       case 200:
         return OtpModel.fromJson(jsonString);
       case 404:
+        return Config.somethingWentWrong;
+       case 400:
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
@@ -528,7 +532,7 @@ class Repository {
     final response =
         await apiServices.getApiCallWithToken(Config.myaccountApi, context);
     var jsonString = json.decode(response.body);
-    print(jsonString);
+    print('Myaccount$jsonString');
     switch (response.statusCode) {
       case 200:
         return MyAccontDetails.fromJson(jsonString);
@@ -572,6 +576,23 @@ class Repository {
         return Config.somethingWentWrong;
       case 400:
         return Config.mobileNumberIsNotvaild;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+  FetchPublicRoom(String uuid,BuildContext context) async {
+    final response =
+        await apiServices.getApiCall(Config.FetchPublicRoom + uuid , context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return PublicRoomModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
 

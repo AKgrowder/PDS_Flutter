@@ -26,6 +26,7 @@ class ApiServices {
       String APIurl, Map<String, dynamic> params, BuildContext context) async {
     await UpdateBaseURL();
     print('token-$Token');
+    print('parems-$params');
     final headers1 = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${Token}'

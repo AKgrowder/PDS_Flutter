@@ -499,6 +499,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       child: const Text('Yes',
                           style: TextStyle(color: Colors.white)),
                       onPressed: () async {
+                        
                         final SharedPreferences prefs =
                             await SharedPreferences.getInstance();
                         prefs.remove(PreferencesKey.loginUserID);
