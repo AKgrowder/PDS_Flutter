@@ -1,6 +1,3 @@
- 
- 
-
 import '../../Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import '../../Model/HomeScreenModel/PublicRoomModel.dart';
 import '../../Model/checkUserStatusModel/chekuserStausModel.dart';
@@ -13,12 +10,12 @@ class FetchAllPublicRoomInitialState extends FetchAllPublicRoomState {}
 
 class FetchAllPublicRoomLoadedState extends FetchAllPublicRoomState {
   final PublicRoomModel PublicRoomData;
- FetchAllPublicRoomLoadedState(this.PublicRoomData);
+  FetchAllPublicRoomLoadedState(this.PublicRoomData);
 }
 
 class FetchAllExpertsLoadedState extends FetchAllPublicRoomState {
   final FetchAllExpertsModel FetchAllExpertsData;
- FetchAllExpertsLoadedState(this.FetchAllExpertsData);
+  FetchAllExpertsLoadedState(this.FetchAllExpertsData);
 }
 
 class FetchAllPublicRoomErrorState extends FetchAllPublicRoomState {
@@ -28,6 +25,10 @@ class FetchAllPublicRoomErrorState extends FetchAllPublicRoomState {
 
 class CheckuserLoadedState extends FetchAllPublicRoomState {
   final CheckUserStausModel CheckUserStausModeldata;
- CheckuserLoadedState(this.CheckUserStausModeldata);
+  CheckuserLoadedState(this.CheckUserStausModeldata);
 }
 
+class FetchPublicRoomLoadedState extends FetchAllPublicRoomState {
+  final PublicRoomModel FetchPublicRoomData;
+  FetchPublicRoomLoadedState(this.FetchPublicRoomData);
+}

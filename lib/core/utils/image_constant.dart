@@ -3,7 +3,7 @@ class ImageConstant {
   static String splashImage = 'assets/images/splashImage.png';
 
   static String unselectedimgVector = 'assets/images/Vector (10).png';
-  static String tomcruse = 'assets/images/Ellipse 3942 (1).png';
+  static String tomcruse = 'assets/images/Profileimage.png';
   static String bag = 'assets/images/iconoir_shopping-bag-alt.png';
   static String experts =
       'assets/images/pexels-tima-miroshnichenko-5452201 2 (1).png';
