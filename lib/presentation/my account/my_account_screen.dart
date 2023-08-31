@@ -109,9 +109,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   }
 
   bool _isGifOrSvg(String imagePath) {
-  final lowerCaseImagePath = imagePath.toLowerCase();
-  return lowerCaseImagePath.endsWith('.gif') ||
-      lowerCaseImagePath.endsWith('.svg');
+    final lowerCaseImagePath = imagePath.toLowerCase();
+    return lowerCaseImagePath.endsWith('.gif') ||
+        lowerCaseImagePath.endsWith('.svg');
   }
 
   Future<void> _selectEndTime(BuildContext context) async {
@@ -173,8 +173,11 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
             companyNameSetData: state.myAccontDetails.object?.companyName,
           );
           print('printstatment-${myAccontDetails?.object?.workingHours}');
-
           if (myAccontDetails?.object?.workingHours != null) {
+              print('workignHours-${myAccontDetails?.object?.workingHours }');
+            /* _startTime = TimeOfDay(hour: hour, minute: minute);
+            _endTime = TimeOfDay(hour: hour, minute: minute); */
+
             workignStart = myAccontDetails?.object?.workingHours
                 .toString()
                 .split(" to ")
@@ -225,19 +228,13 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         }
         if (state is FetchExprtiseRoomLoadedState) {
           _fetchExprtise = state.fetchExprtise;
-          selectedExpertise =
-              expertiseData.isNotEmpty ? expertiseData[0] : null;
 
+          print('selectedExpertise-${selectedExpertise?.expertiseName}');
           expertiseData = state.fetchExprtise.object!
               .map((e) =>
                   Expertiseclass(e.uid.toString(), e.expertiseName.toString()))
               .toList();
-          // /* print('this statment working0');
-          // SnackBar snackBar = SnackBar(
-          //   content: Text('${state.fetchExprtise.message}'),
-          //   backgroundColor: ColorConstant.primary_color,
-          // );
-          // ScaffoldMessenger.of(context).showSnackBar(snackBar); */
+          selectedExpertise = expertiseData != null ? expertiseData[0] : null;
         }
         if (state is CreatFourmLoadedState) {
           SnackBar snackBar = SnackBar(
@@ -492,7 +489,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   ),
                                 ),
                               ),
-                    myAccontDetails?.object?.userName != null
+                    myAccontDetails?.object?.uuid != null
                         ? Padding(
                             padding: const EdgeInsets.only(left: 36.0, top: 10),
                             child: Text(
@@ -508,7 +505,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                     SizedBox(
                       height: 5,
                     ),
-                    myAccontDetails?.object?.userName != null
+                    myAccontDetails?.object?.uuid != null
                         ? Center(
                             child: Container(
                               // height: 50,
@@ -747,7 +744,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                     padding: EdgeInsets.only(left: 12),
                                     child: DropdownButton<Expertiseclass>(
                                       value: selectedExpertise,
-                                      hint: Text('Please select an option'),
+                                      //hint: Text('Please select an option'),
                                       onChanged: (Expertiseclass? newValue) {
                                         // When the user selects an option from the dropdown.
                                         if (newValue != null) {
