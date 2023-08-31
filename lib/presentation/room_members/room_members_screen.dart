@@ -1,13 +1,13 @@
 // import 'package:pds/core/utils/size_utils.dart';
 // ignore_for_file: must_be_immutable
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/Fatch_all_members/fatch_all_members_cubit.dart';
 import 'package:pds/API/Bloc/Fatch_all_members/fatch_all_members_state.dart';
 import 'package:pds/API/Model/FatchAllMembers/fatchallmembers_model.dart';
 import 'package:pds/core/utils/color_constant.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
@@ -15,7 +15,9 @@ import '../../widgets/custom_image_view.dart';
 
 class RoomMembersScreen extends StatefulWidget {
   String room_Id;
-  RoomMembersScreen({Key? key, required this.room_Id}) : super(key: key);
+  var roomname;
+  var roomdescription;
+  RoomMembersScreen({Key? key, required this.room_Id,this.roomname,this.roomdescription}) : super(key: key);
 
   @override
   State<RoomMembersScreen> createState() => _RoomMembersScreenState();
@@ -136,7 +138,8 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Room Name",
+                                  "${widget.roomname}",
+                                  // "Room Name",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
@@ -160,8 +163,11 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           .primary_color,
                                                       shape: BoxShape.circle),
                                                   child: CustomImageView(
-                                                    url: _data?.object?[0]
-                                                                .userProfilePic?.isNotEmpty ?? false 
+                                                    url: _data
+                                                                ?.object?[0]
+                                                                .userProfilePic
+                                                                ?.isNotEmpty ??
+                                                            false
                                                         ? "${_data?.object?[0].userProfilePic}"
                                                         : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                     height: 20,
@@ -193,8 +199,11 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           shape:
                                                               BoxShape.circle),
                                                       child: CustomImageView(
-                                                        url: _data?.object?[0]
-                                                                    .userProfilePic?.isNotEmpty ?? false 
+                                                        url: _data
+                                                                    ?.object?[0]
+                                                                    .userProfilePic
+                                                                    ?.isNotEmpty ??
+                                                                false
                                                             ? "${_data?.object?[0].userProfilePic}"
                                                             : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                         height: 20,
@@ -216,8 +225,11 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           shape:
                                                               BoxShape.circle),
                                                       child: CustomImageView(
-                                                        url: _data?.object?[1]
-                                                                    .userProfilePic?.isNotEmpty ?? false 
+                                                        url: _data
+                                                                    ?.object?[1]
+                                                                    .userProfilePic
+                                                                    ?.isNotEmpty ??
+                                                                false
                                                             ? "${_data?.object?[1].userProfilePic}"
                                                             : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                         height: 20,
@@ -249,8 +261,12 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                   .circle),
                                                           child:
                                                               CustomImageView(
-                                                            url: _data?.object?[0]
-                                                                        .userProfilePic?.isNotEmpty ?? false 
+                                                            url: _data
+                                                                        ?.object?[
+                                                                            0]
+                                                                        .userProfilePic
+                                                                        ?.isNotEmpty ??
+                                                                    false
                                                                 ? "${_data?.object?[0].userProfilePic}"
                                                                 : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                             height: 20,
@@ -273,8 +289,12 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                   .circle),
                                                           child:
                                                               CustomImageView(
-                                                            url: _data?.object?[1]
-                                                                        .userProfilePic?.isNotEmpty ?? false 
+                                                            url: _data
+                                                                        ?.object?[
+                                                                            1]
+                                                                        .userProfilePic
+                                                                        ?.isNotEmpty ??
+                                                                    false
                                                                 ? "${_data?.object?[1].userProfilePic}"
                                                                 : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                             height: 20,
@@ -297,8 +317,12 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                   .circle),
                                                           child:
                                                               CustomImageView(
-                                                            url: _data?.object?[2]
-                                                                        .userProfilePic?.isNotEmpty ?? false 
+                                                            url: _data
+                                                                        ?.object?[
+                                                                            2]
+                                                                        .userProfilePic
+                                                                        ?.isNotEmpty ??
+                                                                    false
                                                                 ? "${_data?.object?[2].userProfilePic}"
                                                                 : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                             height: 20,
@@ -329,8 +353,12 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                   .circle),
                                                           child:
                                                               CustomImageView(
-                                                            url: _data?.object?[0]
-                                                                        .userProfilePic?.isNotEmpty ?? false 
+                                                            url: _data
+                                                                        ?.object?[
+                                                                            0]
+                                                                        .userProfilePic
+                                                                        ?.isNotEmpty ??
+                                                                    false
                                                                 ? "${_data?.object?[0].userProfilePic}"
                                                                 : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                             height: 20,
@@ -353,8 +381,12 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                   .circle),
                                                           child:
                                                               CustomImageView(
-                                                            url: _data?.object?[1]
-                                                                        .userProfilePic?.isNotEmpty ?? false 
+                                                            url: _data
+                                                                        ?.object?[
+                                                                            1]
+                                                                        .userProfilePic
+                                                                        ?.isNotEmpty ??
+                                                                    false
                                                                 ? "${_data?.object?[1].userProfilePic}"
                                                                 : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                             height: 20,
@@ -377,8 +409,12 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                   .circle),
                                                           child:
                                                               CustomImageView(
-                                                            url: _data?.object?[2]
-                                                                        .userProfilePic?.isNotEmpty ?? false 
+                                                            url: _data
+                                                                        ?.object?[
+                                                                            2]
+                                                                        .userProfilePic
+                                                                        ?.isNotEmpty ??
+                                                                    false
                                                                 ? "${_data?.object?[2].userProfilePic}"
                                                                 : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                             height: 20,
@@ -417,7 +453,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0),
                             child: Text(
-                              "Description of the problem/Topic to be discussed here......lorem ipsum.....",
+                              "${widget. roomdescription}",
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   color: Colors.black,

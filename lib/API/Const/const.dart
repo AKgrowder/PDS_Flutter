@@ -34,7 +34,10 @@ class Config {
   static const String fetchAllExperts = "user/api/fetchAllExperts";
   static const String myaccountApi = "user/api/fetchUserProfile";
   static const String systemconfig = "user/api/fetchSysConfig";
+  static const String fetchUserModule = "user/api/fetchUserModule";
   static const String fetchRoomDetails = "user/api/fetchRoomDetails/";
   static const String forgetpassword = "user/api/forgotPassword/";
   static const String FetchPublicRoom = "guest/api/fetchOtherPublicRoom/";
+  static const String fetchMyPublicRoom = "guest/api/fetchMyPublicRoom/";
+
 }
