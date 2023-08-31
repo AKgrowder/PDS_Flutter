@@ -219,7 +219,7 @@ class EditDilogScreenState extends State<EditDilogScreen>
                                     if (editroom.text.isEmpty) {
                                       SnackBar snackBar = SnackBar(
                                         content:
-                                            Text('Room Name Can Not Be Blank'),
+                                            Text("Room Name Can't Be Blank"),
                                         backgroundColor:
                                             ColorConstant.primary_color,
                                       );
