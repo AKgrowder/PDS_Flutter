@@ -134,7 +134,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0, top: 0),
                             child: Text(
-                              "address specific packaging challenges....  ",
+                              "${fetchRoomDetailModel?.object?.roomDescription}",
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   color: Colors.black,
@@ -272,13 +272,18 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(left: 10),
-                          child: Text(
-                            "${fetchRoomDetailModel?.object?.document}",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey.shade700,
-                                fontFamily: "outfit",
-                                fontSize: 15),
+                          child: Container(
+                            // color: Colors.amber,
+                            width: _width / 1.5,
+                            child: Text(
+                              "${fetchRoomDetailModel?.object?.document}",
+                              style: TextStyle(
+                                  overflow: TextOverflow.ellipsis,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.grey.shade700,
+                                  fontFamily: "outfit",
+                                  fontSize: 15),
+                            ),
                           ),
                         ),
                         Spacer(),

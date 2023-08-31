@@ -115,7 +115,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
             child: BlocConsumer<CreatPublicRoomCubit, CreatPublicRoomState>(
                 listener: (context, state) async {
               if (state is CreatPublicRoomErrorState) {
-                print("error");
+                print("error + ${state.error}");
                 SnackBar snackBar = SnackBar(
                   content: Text(state.error),
                   backgroundColor: ColorConstant.primary_color,
