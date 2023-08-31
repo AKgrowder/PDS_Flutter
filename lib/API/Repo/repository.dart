@@ -291,7 +291,7 @@ class Repository {
 
   CreateRoomAPI(Map<String, String> params, BuildContext context) async {
     final response =
-        await apiServices.postApiCall(Config.createRoom, params, context);
+        await apiServices.postApiCall(Config.createRoom1, params, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
