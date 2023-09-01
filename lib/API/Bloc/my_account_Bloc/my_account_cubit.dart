@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:pds/API/Bloc/my_account_Bloc/my_account_state.dart';
+import 'package:pds/API/Model/updateprofileModel/updateprofileModel.dart';
 import 'package:pds/API/Repo/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -92,6 +93,20 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       }
     } catch (e) {
       emit(MyAccountErrorState(createForm));
+    }
+  }
+
+  Future<void> UpdateProfileEmployee(
+      Map<String, dynamic> params, BuildContext context) async {
+    dynamic updateProfile;
+    try {
+      emit(MyAccountLoadingState());
+      updateProfile = await Repository().employeeApiUpdate(params, context);
+      if (updateProfile.success == true) {
+        emit(UpdateProfileLoadedState(updateProfile));
+      }
+    } catch (e) {
+      emit(MyAccountErrorState(updateProfile));
     }
   }
 }

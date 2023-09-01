@@ -13,6 +13,7 @@ import 'package:pds/API/Model/deviceInfo/deviceInfo_model.dart';
 import 'package:pds/API/Model/forget_password_model/forget_password_model.dart';
 import 'package:pds/API/Model/otpmodel/otpmodel.dart';
 import 'package:pds/API/Model/sherInviteModel/sherinviteModel.dart';
+import 'package:pds/API/Model/updateprofileModel/updateprofileModel.dart';
 
 import '../ApiService/ApiService.dart';
 import '../Const/const.dart';
@@ -208,7 +209,7 @@ class Repository {
         return OtpModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
-       case 400:
+      case 400:
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
@@ -496,6 +497,24 @@ class Repository {
     }
   }
 
+  employeeApiUpdate(Map<String, dynamic> param, BuildContext context) async {
+    final response =
+        await apiServices.postApiCall(Config.updateUserProfile, param, context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return UpdateProfile.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
   cretaForumUpdate(Map<String, dynamic> params, BuildContext context) async {
     final response = await apiServices.multipartFile2(Config.company, params);
     var jsonString = json.decode(response.body);
@@ -530,8 +549,9 @@ class Repository {
     }
   }
 
-   UserModel(BuildContext context) async {
-    final response = await apiServices.getApiCallWithToken(Config.fetchUserModule, context);
+  UserModel(BuildContext context) async {
+    final response =
+        await apiServices.getApiCallWithToken(Config.fetchUserModule, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
@@ -602,9 +622,10 @@ class Repository {
         return jsonString;
     }
   }
-  FetchPublicRoom(String uuid,BuildContext context) async {
+
+  FetchPublicRoom(String uuid, BuildContext context) async {
     final response =
-        await apiServices.getApiCall(Config.FetchPublicRoom + uuid , context);
+        await apiServices.getApiCall(Config.FetchPublicRoom + uuid, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
@@ -620,10 +641,9 @@ class Repository {
     }
   }
 
-
-   MyPublicRoom1(String uuid,BuildContext context) async {
+  MyPublicRoom1(String uuid, BuildContext context) async {
     final response =
-        await apiServices.getApiCall(Config.fetchMyPublicRoom + uuid , context);
+        await apiServices.getApiCall(Config.fetchMyPublicRoom + uuid, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
@@ -637,7 +657,7 @@ class Repository {
       default:
         return jsonString;
     }
-  } 
+  }
 }
 
 
