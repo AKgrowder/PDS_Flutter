@@ -67,7 +67,7 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
       emit(FetchAllPublicRoomLoadingState());
       FetchPublicRoomModel = await Repository().MyPublicRoom1(uuid,context);
       if (FetchPublicRoomModel.success == true) {
-        emit(MyPublicRoomLoadedState(FetchPublicRoomModel));
+        emit(MyPublicRoom1LoadedState(FetchPublicRoomModel));
       }
     } catch (e) {
       emit(FetchAllPublicRoomErrorState(FetchPublicRoomModel));

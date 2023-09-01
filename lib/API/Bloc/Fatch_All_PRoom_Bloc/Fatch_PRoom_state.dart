@@ -1,6 +1,7 @@
 import '../../Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import '../../Model/HomeScreenModel/MyPublicRoom_model.dart';
 import '../../Model/HomeScreenModel/PublicRoomModel.dart';
+import '../../Model/HomeScreenModel/getLoginPublicRoom_model.dart';
 import '../../Model/checkUserStatusModel/chekuserStausModel.dart';
 
 abstract class FetchAllPublicRoomState {}
@@ -30,11 +31,11 @@ class CheckuserLoadedState extends FetchAllPublicRoomState {
 }
 
 class FetchPublicRoomLoadedState extends FetchAllPublicRoomState {
-  final PublicRoomModel FetchPublicRoomData;
+  final LoginPublicRoomModel FetchPublicRoomData;
   FetchPublicRoomLoadedState(this.FetchPublicRoomData);
 }
 
-class MyPublicRoomLoadedState extends FetchAllPublicRoomState {
+class MyPublicRoom1LoadedState extends FetchAllPublicRoomState {
   final MyPublicRoom MyPublicRoomData;
-  MyPublicRoomLoadedState(this.MyPublicRoomData);
+  MyPublicRoom1LoadedState(this.MyPublicRoomData);
 }
