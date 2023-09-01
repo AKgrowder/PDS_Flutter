@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_cubit.dart';
+import 'package:pds/API/Bloc/logOut_bloc/LogOut_state.dart';
+import 'package:pds/API/Bloc/logOut_bloc/logOut_cubit.dart';
 import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/forget_password_screen/forget_password_screen.dart';
+import 'package:pds/presentation/settings/LogOut_dailog.dart';
 import 'package:pds/widgets/delete_dailog.dart';
 import 'package:pds/widgets/rateUS_dailog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -278,13 +281,17 @@ class _SettingScreenState extends State<SettingScreen> {
                           //     ));
                           break;
                         case 3:
-                          Navigator.push(context,
+                      Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return MultiBlocProvider(providers: [
-                              BlocProvider<ForgetpasswordCubit>(
-                                create: (context) => ForgetpasswordCubit(),
-                              )
-                            ], child: ForgetPasswordScreen());
+                            return MultiBlocProvider(
+                                providers: [
+                                  BlocProvider<ForgetpasswordCubit>(
+                                    create: (context) => ForgetpasswordCubit(),
+                                  )
+                                ],
+                                child: ForgetPasswordScreen(
+                                  isProfile: true,
+                                ));
                           }));
                           break;
                         case 4:
@@ -354,7 +361,12 @@ class _SettingScreenState extends State<SettingScreen> {
 
                           break;
                         case 10:
-                          logout();
+                          showDialog(
+                              context: context,
+                              builder: (_) => BlocProvider<LogOutCubit>(
+                                    create: (context) => LogOutCubit(),
+                                    child: LogOutdailog(),
+                                  ));
 
                           break;
                         // case 11:
@@ -446,98 +458,6 @@ class _SettingScreenState extends State<SettingScreen> {
                   );
                 })),
       ),
-    );
-  }
-
-  logout() async {
-    showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Logout'),
-          content: const Text(
-            'Do You Want To Logout ?',
-          ),
-          actions: <Widget>[
-            Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            topLeft: Radius.circular(10))),
-                    height: 50,
-                    child: TextButton(
-                      style: TextButton.styleFrom(),
-                      child: const Text(
-                        'No',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: ColorConstant.primary_color,
-                        borderRadius: BorderRadius.only(
-                            bottomRight: Radius.circular(10),
-                            topRight: Radius.circular(10))),
-                    height: 50,
-                    child: TextButton(
-                      style: TextButton.styleFrom(),
-                      child: const Text('Yes',
-                          style: TextStyle(color: Colors.white)),
-                      onPressed: () async {
-                        final SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        prefs.remove(PreferencesKey.loginUserID);
-                        prefs.remove(PreferencesKey.loginJwt);
-                        prefs.remove(PreferencesKey.module);
-
-                        SnackBar snackBar = SnackBar(
-                          content: Text("Logged out successfully."),
-                          backgroundColor: ColorConstant.primary_color,
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-                        Navigator.pushAndRemoveUntil(context,
-                            MaterialPageRoute(builder: (context) {
-                          return MultiBlocProvider(providers: [
-                            BlocProvider<FetchAllPublicRoomCubit>(
-                              create: (context) => FetchAllPublicRoomCubit(),
-                            ),
-                            BlocProvider<CreatPublicRoomCubit>(
-                              create: (context) => CreatPublicRoomCubit(),
-                            ),
-                            BlocProvider<senMSGCubit>(
-                              create: (context) => senMSGCubit(),
-                            ),
-                            BlocProvider<RegisterCubit>(
-                              create: (context) => RegisterCubit(),
-                            ),
-                            BlocProvider<GetAllPrivateRoomCubit>(
-                              create: (context) => GetAllPrivateRoomCubit(),
-                            ),
-                            BlocProvider<InvitationCubit>(
-                              create: (context) => InvitationCubit(),
-                            ),
-                          ], child: BottombarPage(buttomIndex: 0));
-                        }), (route) => false);
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
     );
   }
 
