@@ -4,6 +4,7 @@ import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
 import 'package:pds/API/Model/creat_form/creat_form_Model.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Model/myaccountModel/myaccountModel.dart';
+import 'package:pds/API/Model/updateprofileModel/updateprofileModel.dart';
 
 abstract class MyAccountState {}
 
@@ -43,3 +44,8 @@ class CreatFourmLoadedState extends MyAccountState {
   final CreateForm createForm;
   CreatFourmLoadedState(this.createForm);
 }
+class UpdateProfileLoadedState extends MyAccountState {
+  final UpdateProfile updateProfile;
+  UpdateProfileLoadedState(this.updateProfile);
+}
+
