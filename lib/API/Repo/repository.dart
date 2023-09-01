@@ -34,7 +34,10 @@ import '../Model/coment/coment_model.dart';
 import '../Model/creat_form/creat_form_Model.dart';
 import '../Model/delete_room_model/Delete_room_model.dart';
 import '../Model/fetch_room_detail_model/fetch_room_detail_model.dart';
+import '../Model/forget_password_model/change_password_model.dart';
 import '../Model/myaccountModel/myaccountModel.dart';
+import 'package:pds/API/Model/LogOutModel/LogOut_model.dart';
+import '../Model/HomeScreenModel/getLoginPublicRoom_model.dart';
 
 class Repository {
   ApiServices apiServices = ApiServices();
@@ -630,7 +633,7 @@ class Repository {
     print(jsonString);
     switch (response.statusCode) {
       case 200:
-        return PublicRoomModel.fromJson(jsonString);
+        return LoginPublicRoomModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -649,6 +652,43 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return MyPublicRoom.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  Changepassword(Map<String, dynamic> params, BuildContext context) async {
+    final response =
+        await apiServices.postApiCall(Config.changepassword, params, context);
+    var jsonString = json.decode(response.body);
+    print('jsonString-$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return ChangePasswordModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+
+   LogOut(BuildContext context) async {
+    final response =
+        await apiServices.getApiCallWithToken(Config.logOut, context);
+    var jsonString = json.decode(response.body);
+    print('Myaccount$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return LogOutModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
