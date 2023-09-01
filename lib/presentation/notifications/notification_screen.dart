@@ -580,6 +580,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                               ),
                                             ],
                                             child: RoomMembersScreen(
+                                              
+                                               roomname:
+                                                    "${InvitationRoomData?.object?[index].roomQuestion}",
+                                                roomdescription:
+                                                    "${InvitationRoomData?.object?[index].description}",
                                                 room_Id:
                                                     '${InvitationRoomData?.object?[index].roomUid.toString()}'),
                                           );

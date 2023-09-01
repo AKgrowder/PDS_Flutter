@@ -326,9 +326,9 @@ class _InvitationScreenState extends State<InvitationScreen> {
                                             ],
                                             child: RoomMembersScreen(
                                                 roomname:
-                                                    "${PriveateRoomData?.object?[index].roomQuestion}",
+                                                    "${InvitationRoomData?.object?[index].roomQuestion}",
                                                 roomdescription:
-                                                    "${PriveateRoomData?.object?[index].description}",
+                                                    "${InvitationRoomData?.object?[index].description}",
                                                 room_Id:
                                                     '${InvitationRoomData?.object?[index].roomUid.toString()}'),
                                           );

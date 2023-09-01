@@ -243,6 +243,14 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           Navigator.pop(context);
         }
+        if(state is UpdateProfileLoadedState){
+           SnackBar snackBar = SnackBar(
+            content: Text(state.updateProfile.object.toString()),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          Navigator.pop(context);
+        }
       },
       builder: (context, state) {
         return Scaffold(
@@ -1461,7 +1469,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                               );
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
-                            } else if (dopcument == 'Upload Image') {
+                            } else if (dopcument == '') {
                               SnackBar snackBar = SnackBar(
                                 content: Text('Please Upload Image'),
                                 backgroundColor: ColorConstant.primary_color,
@@ -1509,6 +1517,28 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 BlocProvider.of<MyAccountCubit>(context)
                                     .addExpertProfile(params, context);
                               }
+                            }
+                          } else if (myAccontDetails?.object?.module ==
+                              'EMPLOYEE') {
+                            if (isupdate == false) {
+                              if (chooseDocumentuploded?.object.toString() !=
+                                  null) {
+                                var param = {
+                                  "userProfilePic": chooseDocumentuploded2
+                                              ?.object !=
+                                          null
+                                      ? "${chooseDocumentuploded2?.object.toString()}"
+                                      : '${dopcument.toString()}',
+                                  "name": "${userId.text}",
+                                  "uuid": "$User_ID"
+                                };
+                                BlocProvider.of<MyAccountCubit>(context).UpdateProfileEmployee(param,context);
+                              } else {
+                                var param = {
+                                  "name": "${userId.text}",
+                                  "uuid": "$User_ID"
+                                };
+                                BlocProvider.of<MyAccountCubit>(context).UpdateProfileEmployee(param,context);       }
                             }
                           }
                         }
