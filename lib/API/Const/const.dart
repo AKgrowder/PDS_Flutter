@@ -39,5 +39,7 @@ class Config {
   static const String forgetpassword = "user/api/forgotPassword/";
   static const String FetchPublicRoom = "guest/api/fetchOtherPublicRoom/";
   static const String fetchMyPublicRoom = "guest/api/fetchMyPublicRoom/";
+  static const String updateUserProfile = "user/api/updateUserProfile";
+
 
 }
