@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +17,8 @@ import '../../core/utils/color_constant.dart';
 
 // ignore_for_file: must_be_immutable
 class ForgetPasswordScreen extends StatefulWidget {
-  ForgetPasswordScreen({Key? key}) : super(key: key);
+  bool? isProfile;
+  ForgetPasswordScreen({Key? key, this.isProfile = false}) : super(key: key);
 
   @override
   State<ForgetPasswordScreen> createState() => _ForgetPasswordScreenState();
@@ -50,14 +52,23 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       onTapArrowleft1(context);
                     }),
                 centerTitle: true,
-                title: Text("Forget Password",
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontFamily: 'outfit',
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black))),
+                title: widget.isProfile == true
+                    ? Text("Change Password",
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontFamily: 'outfit',
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black))
+                    : Text("Forget Password",
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontFamily: 'outfit',
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black))),
             body: BlocConsumer<ForgetpasswordCubit, ForgetpasswordState>(
               listener: (context, state) {
                 if (state is ForgetpasswordErrorState) {
@@ -81,7 +92,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   );
                 }
                 if (state is ForgetpasswordLoadedState) {
-                    Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return MultiBlocProvider(
                         providers: [
@@ -91,7 +101,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                         ],
                         child: OtpVerificationScreen(
                           phonNumber: contectnumberrController.text,
-                          otp_verfiaction: true,
+                          forgetpassword: true,
+                          isProfile: widget.isProfile == true ? true : false,
                         ));
                   }));
                   SnackBar snackBar = SnackBar(
@@ -219,15 +230,21 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                               CustomElevatedButton(
                                 onTap: () {
                                   if (contectnumberrController.text.isEmpty) {
-                                    SnackBar snackBar = SnackBar(
-                                      content: Text(
-                                        'Please Enter Mobile Number',
-                                      ),
-                                      backgroundColor:
-                                          ColorConstant.primary_color,
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
+                                    // SnackBar snackBar = SnackBar(
+                                    //   content: Text(
+                                    //     'Please Enter Mobile Number',
+                                    //   ),
+                                    //   backgroundColor:
+                                    //       ColorConstant.primary_color,
+                                    // );
+                                    // ScaffoldMessenger.of(context)
+                                    //     .showSnackBar(snackBar);
+
+                                    Flushbar(
+                                        backgroundColor:
+                                            ColorConstant.primary_color,
+                                        duration: Duration(milliseconds: 800),
+                                        message: "Please Enter Mobile Number");
                                   } else {
                                     BlocProvider.of<ForgetpasswordCubit>(
                                             context)

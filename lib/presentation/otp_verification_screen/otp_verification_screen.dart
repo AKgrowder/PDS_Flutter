@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_cubit.dart';
 import 'package:pds/API/Bloc/auth/login_Block.dart';
 import 'package:pds/API/Bloc/auth/otp_block.dart';
 import 'package:pds/API/Bloc/auth/otp_state.dart';
@@ -32,16 +33,17 @@ class OtpVerificationScreen extends StatefulWidget {
   String? phonNumber;
   String? flowCheck;
   String? userId;
-  bool? otp_verfiaction;
+  bool? isProfile;
+
   bool? forgetpassword;
   LoginModel? loginModelData;
 
   OtpVerificationScreen(
       {Key? key,
       this.phonNumber,
-      this.otp_verfiaction,
       this.flowCheck,
       this.userId,
+      this.isProfile = false,
       this.forgetpassword = false,
       this.loginModelData})
       : super(key: key);
@@ -167,6 +169,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   );
                 }
                 if (state is OtpLoadedState) {
+                  OTPController.clear();
                   print('i want flow checlk-${widget.flowCheck}');
                   if (widget.flowCheck != null) {
                     SnackBar snackBar = SnackBar(
@@ -198,11 +201,27 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             flagCheck: 'otp done',
                           ));
                     }));
-                  } 
-                  else if(widget.otp_verfiaction == true){
-                    Navigator.push(context,MaterialPageRoute(builder: (context)=> ChangePasswordScreen()));
-                  }
-                  else {
+                  } else if (widget.forgetpassword == true) {
+                    SnackBar snackBar = SnackBar(
+                      content: Text('Otp verify Successfully'),
+                      backgroundColor: ColorConstant.primary_color,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    print("hhhhhhh ${widget.isProfile}");
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return MultiBlocProvider(
+                          providers: [
+                            BlocProvider<ForgetpasswordCubit>(
+                              create: (context) => ForgetpasswordCubit(),
+                            )
+                          ],
+                          child: ChangePasswordScreen(
+                            mobile: widget.phonNumber,
+                            isProfile: widget.isProfile == true ? true : false,
+                          ));
+                    }));
+                  } else {
                     getDataStroe(
                         widget.loginModelData?.object?.uuid.toString() ?? "",
                         widget.loginModelData?.object?.jwt.toString() ?? "",
