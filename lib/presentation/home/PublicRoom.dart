@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../API/Model/HomeScreenModel/PublicRoomModel.dart';
+import '../../API/Model/HomeScreenModel/getLoginPublicRoom_model.dart';
 import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
@@ -11,17 +12,23 @@ import '../view_comments/view_comments_screen.dart';
 
 class PublicRoomList extends StatefulWidget {
   PublicRoomModel? PublicRoomModelData;
-  PublicRoomList({required this.PublicRoomModelData});
+  LoginPublicRoomModel? FetchPublicRoomModelData;
+  PublicRoomList({this.PublicRoomModelData, this.FetchPublicRoomModelData});
 
   @override
   State<PublicRoomList> createState() => _PublicRoomListState();
 }
 
 class _PublicRoomListState extends State<PublicRoomList> {
-  PublicRoomModel? PublicRoomModelData;
+  dynamic PublicRoomModelData;
   @override
   Widget build(BuildContext context) {
-    PublicRoomModelData = widget.PublicRoomModelData;
+    if (widget.PublicRoomModelData?.object?.isNotEmpty == false) {
+      PublicRoomModelData = widget.FetchPublicRoomModelData;
+    } else {
+      PublicRoomModelData = widget.PublicRoomModelData;
+    }
+
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
