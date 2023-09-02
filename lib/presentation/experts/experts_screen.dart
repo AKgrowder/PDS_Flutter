@@ -190,10 +190,19 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                     //     radius: BorderRadius.circular(10),
                                     //   )
                                     // :
+                                    // CustomImageView(
+                                    //   imagePath: ImageConstant.experts,
+                                    //   radius: BorderRadius.circular(10),
+                                    // ),
                                     CustomImageView(
-                                      imagePath: ImageConstant.experts,
+                                      url:
+                                          "${FetchAllExpertsData?.object?[index].profilePic}",
+                                      height: _height / 4.8,
+                                      width: _width,
+                                      fit: BoxFit.fill,
                                       radius: BorderRadius.circular(10),
-                                    ),
+                                    )
+
                                     /* index == 1
                                         ? Padding(
                                             padding: const EdgeInsets.all(8.0),
