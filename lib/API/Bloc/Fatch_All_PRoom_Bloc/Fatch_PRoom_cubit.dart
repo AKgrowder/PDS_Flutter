@@ -74,4 +74,17 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
     }
   }
 
+   Future<void> UserModel(BuildContext context) async {
+    dynamic systemConfigModel;
+    try {
+      emit(FetchAllPublicRoomLoadingState());
+      systemConfigModel = await Repository().UserModel(context);
+      if (systemConfigModel.success == true) {
+        emit(fetchUserModulemodelLoadedState(systemConfigModel));
+      }
+    } catch (e) {
+      emit(FetchAllPublicRoomErrorState(systemConfigModel));
+    }
+  }
+
 }
