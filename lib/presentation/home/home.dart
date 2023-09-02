@@ -83,9 +83,9 @@ var checkuserdata = "";
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    saveUserProfile();
     BlocProvider.of<FetchAllPublicRoomCubit>(context)
         .FetchAllExpertsAPI(context);
-    saveUserProfile();
 
     super.initState();
   }
@@ -96,7 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         refresh = false;
         // saveUserProfile();
-        User_ID == null ? api() : NewApi();
+        // User_ID == null ? api() : NewApi();
+        saveUserProfile();
       });
     }
 
@@ -170,6 +171,19 @@ class _HomeScreenState extends State<HomeScreen> {
               MyPublicRoomData = state.MyPublicRoomData;
               print(MyPublicRoomData?.message);
               print(MyPublicRoomData?.object?.length);
+            }
+
+            if (state is fetchUserModulemodelLoadedState) {
+              print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" +
+                  "${state.fetchUserModule.object}");
+              var user_Module = state.fetchUserModule.object ?? "";
+              final SharedPreferences prefs =
+                  await SharedPreferences.getInstance();
+
+              prefs.setString(PreferencesKey.module, user_Module);
+               setState(() {
+                //  saveUserProfile();
+               });
             }
           }, builder: (context, state) {
             return SingleChildScrollView(
@@ -721,7 +735,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           ImageConstant.experts,
                                                       // height: 50,
                                                       // width: _width/1.2,
-                                                        fit: BoxFit.fill,
+                                                      fit: BoxFit.fill,
                                                       radius:
                                                           BorderRadius.circular(
                                                               10),
@@ -1979,7 +1993,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  PublicRoomModelData?.object?.length != 0
+                  PublicRoomModelData?.object?.length != 0 ||
+                          PublicRoomModelData?.object?.isNotEmpty == true
                       ? GestureDetector(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
@@ -2004,7 +2019,35 @@ class _HomeScreenState extends State<HomeScreen> {
                             )),
                           ),
                         )
-                      : SizedBox(),
+                      : FetchPublicRoomModelData?.object?.length != 0 ||
+                              FetchPublicRoomModelData?.object?.isNotEmpty ==
+                                  true
+                          ? GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => PublicRoomList(
+                                          FetchPublicRoomModelData:
+                                              FetchPublicRoomModelData,
+                                        )));
+                              },
+                              child: Container(
+                                height: 50,
+                                width: _width / 1.2,
+                                decoration: BoxDecoration(
+                                    color: Color(0XFFED1C25),
+                                    borderRadius: BorderRadius.circular(6)),
+                                child: Center(
+                                    child: Text(
+                                  "View More",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white,
+                                      fontFamily: "outfit",
+                                      fontSize: 16),
+                                )),
+                              ),
+                            )
+                          : SizedBox(),
                   SizedBox(
                     height: 10,
                   ),
@@ -2121,6 +2164,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   NewApi() async {
     print("1111111111111${User_ID}");
+    await BlocProvider.of<FetchAllPublicRoomCubit>(context).UserModel(context);
     await BlocProvider.of<FetchAllPublicRoomCubit>(context)
         .FetchPublicRoom("${User_ID}", context);
     await BlocProvider.of<FetchAllPublicRoomCubit>(context)
