@@ -76,6 +76,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               listener: (context, state) async {
             if (state is ForgetpasswordErrorState) {
               print("error");
+              // Flushbar(
+              //     backgroundColor: ColorConstant.primary_color,
+              //     duration: Duration(milliseconds: 800),
+              //     message: state.error);
+
               SnackBar snackBar = SnackBar(
                 content: Text(state.error),
                 backgroundColor: ColorConstant.primary_color,
