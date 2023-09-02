@@ -173,6 +173,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
             companyNameSetData: state.myAccontDetails.object?.companyName,
           );
           print('printstatment-${myAccontDetails?.object?.workingHours}');
+          print('extert dtaa check-${myAccontDetails?.object?.expertise?.first.uid}');
           if (myAccontDetails?.object?.workingHours != null) {
             print(
                 'workignHoursCheckPrintstatment-${myAccontDetails?.object?.workingHours}');
@@ -227,7 +228,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         }
         if (state is FetchExprtiseRoomLoadedState) {
           _fetchExprtise = state.fetchExprtise;
-
+          
+            // selectedExpertise = Expertiseclass(uid, expertiseName);      
           print('selectedExpertise-${selectedExpertise?.expertiseName}');
           expertiseData = state.fetchExprtise.object!
               .map((e) =>
@@ -1524,10 +1526,10 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                               if (chooseDocumentuploded?.object.toString() !=
                                   null) {
                                 var param = {
-                                  "userProfilePic": chooseDocumentuploded2
+                                  "userProfilePic": chooseDocumentuploded
                                               ?.object !=
                                           null
-                                      ? "${chooseDocumentuploded2?.object.toString()}"
+                                      ? "${chooseDocumentuploded?.object.toString()}"
                                       : '${dopcument.toString()}',
                                   "name": "${userId.text}",
                                   "uuid": "$User_ID"
