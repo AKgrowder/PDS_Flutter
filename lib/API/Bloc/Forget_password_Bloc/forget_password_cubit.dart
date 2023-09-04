@@ -22,13 +22,30 @@ class ForgetpasswordCubit extends Cubit<ForgetpasswordState> {
   }
 
   Future<void> Changepassword(
+      BuildContext context,String mobilnumber) async {
+    dynamic changePasswordModel;
+    try {
+      emit(ForgetpasswordLoadingState());
+      changePasswordModel = await Repository().Changepassword(context,mobilnumber);
+      if (changePasswordModel.success == true) {
+        emit(ChangePasswordLoadedState(changePasswordModel));
+      } else {
+        emit(ForgetpasswordErrorState(changePasswordModel.message));
+      }
+    } catch (e) {
+      emit(ForgetpasswordErrorState(changePasswordModel));
+    }
+  }
+
+  Future<void> ChangepasswordinSetitngScreenwork(
       Map<String, dynamic> params, BuildContext context) async {
     dynamic changePasswordModel;
     try {
       emit(ForgetpasswordLoadingState());
-      changePasswordModel = await Repository().Changepassword(params, context);
+      changePasswordModel =
+          await Repository().ChangepasswordinSettingScreen(params, context);
       if (changePasswordModel.success == true) {
-        emit(ChangePasswordLoadedState(changePasswordModel));
+        emit(ChangePasswordInSettingScreenLoadedState(changePasswordModel));
       } else {
         emit(ForgetpasswordErrorState(changePasswordModel.message));
       }

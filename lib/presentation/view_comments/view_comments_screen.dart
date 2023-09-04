@@ -20,6 +20,7 @@ import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
+import '../../widgets/pagenation.dart';
 
 class ViewCommentScreen extends StatefulWidget {
   final Room_ID;
@@ -52,26 +53,21 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   var User_Name = "";
   ImagePicker picker = ImagePicker();
   XFile? pickedImageFile;
+  ScrollController scrollController = ScrollController();
 
   ComentApiModel? modelData;
   TextEditingController Add_Comment = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final _scrollController = ScrollController();
   @override
   void initState() {
+    print('bbbbbbbbbbbbb ${widget.Room_ID}');
+    BlocProvider.of<senMSGCubit>(context)
+        .coomentPage(widget.Room_ID, context, "0", ShowLoader: true);
+    // if (widget.Screen_name == "RoomChat") {
+    // }
     getToken();
     stompClient.activate();
-       BlocProvider.of<senMSGCubit>(context)
-          .coomentPage(widget.Room_ID, context, ShowLoader: true);
-    //  _scrollController.addListener(_onScroll);
     super.initState();
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-   
-    }
   }
 
   String customFormat(DateTime date) {
@@ -115,9 +111,11 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     }
   }
 
-  void dispose() {
-    super.dispose();
-  }
+  //  @override
+  // void dispose() {
+  //  stompClient.deactivate();
+  //   super.dispose();
+  // }
 
   _onBackspacePressed() {
     Add_Comment
@@ -177,8 +175,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
             // );
           }
           if (state is senMSGLoadedState) {
-            BlocProvider.of<senMSGCubit>(context)
-                .coomentPage(widget.Room_ID, context, ShowLoader: true);
+            // BlocProvider.of<senMSGCubit>(context)
+            //     .coomentPage(widget.Room_ID, context, ShowLoader: true);
           }
           if (state is ComentApiState) {
             modelData = state.comentApiClass;
@@ -227,37 +225,35 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                     ),
                                   ),
                                   /*   GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (image?.contains(index) ?? false) {
-                                        image?.remove(index);
-                                      } else {
-                                        image?.add(index);
-                                      }
-                                    });
-                                  },
-                                  child: (image?.contains(index) ?? false)
-                                      ? CustomImageView(
-                                          imagePath:
-                                              ImageConstant.unselectedimgVector,
-                                          height: 20,
-                                        )
-                                      : CustomImageView(
-                                          imagePath: ImageConstant.selectedimage,
-                                          height: 20,
-                                        ),
-                                ), */
+                            onTap: () {
+                              setState(() {
+                                if (image?.contains(index) ?? false) {
+                                  image?.remove(index);
+                                } else {
+                                  image?.add(index);
+                                }
+                              });
+                            },
+                            child: (image?.contains(index) ?? false)
+                                ? CustomImageView(
+                                    imagePath:
+                                        ImageConstant.unselectedimgVector,
+                                    height: 20,
+                                  )
+                                : CustomImageView(
+                                    imagePath: ImageConstant.selectedimage,
+                                    height: 20,
+                                  ),
+                          ), */
                                 ]),
                           ),
                           Divider(
                             color: Color.fromARGB(53, 117, 117, 117),
                           ),
                           Padding(
-                            padding:
-                                const EdgeInsets.only(left: 10, right: 10),
+                            padding: const EdgeInsets.only(left: 10, right: 10),
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   "${formattedDate}",
@@ -508,13 +504,12 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                             print(
                                                 "please1 ---> ${modelData?.object?.messageOutputList?.content?.length}");
 
-                                            Content content =
-                                                Content.fromJson(
-                                                    jsonString['object']);
+                                            Content content = Content.fromJson(
+                                                jsonString['object']);
                                             print(
                                                 "please2 ---> ${content.message}");
-                                            modelData?.object
-                                                ?.messageOutputList?.content
+                                            modelData?.object?.messageOutputList
+                                                ?.content
                                                 ?.add(content);
 
                                             setState(() {
@@ -588,8 +583,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   // width: 50,
                                   decoration: BoxDecoration(
                                       color: Color(0xFFED1C25),
-                                      borderRadius:
-                                          BorderRadius.circular(25)),
+                                      borderRadius: BorderRadius.circular(25)),
                                   child: Image.asset(
                                     "assets/images/Vector (13).png",
                                     color: Colors.white,
@@ -627,15 +621,13 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                     skinToneDialogBgColor: Colors.white,
                                     skinToneIndicatorColor: Colors.grey,
                                     enableSkinTones: true,
-                                    recentTabBehavior:
-                                        RecentTabBehavior.RECENT,
+                                    recentTabBehavior: RecentTabBehavior.RECENT,
                                     recentsLimit: 28,
                                     replaceEmojiOnLimitExceed: false,
                                     noRecents: const Text(
                                       'No Recents',
                                       style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.black26),
+                                          fontSize: 20, color: Colors.black26),
                                       textAlign: TextAlign.center,
                                     ),
                                     loadingIndicator: const SizedBox.shrink(),
@@ -655,394 +647,432 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                       // color: Colors.red[200],
                       child: Padding(
                         padding: const EdgeInsets.only(top: 15),
-                        child: modelData?.object?.messageOutputList != null
-                            ? ListView.builder(
-                                controller: _scrollController,
-                                itemCount: modelData?.object
-                                    ?.messageOutputList?.content?.length,
-                                shrinkWrap: true,
-                                // physics: NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  DateTime parsedDateTime = DateTime.parse(
-                                      '${modelData?.object?.messageOutputList?.content?[index].createdAt}');
-                                  print(
-                                      "check User name --> ${modelData?.object?.messageOutputList?.content?[index].userName} Login User Name --> ${User_Name}");
+                        child: modelData != null
+                            ? SingleChildScrollView(
+                                controller: scrollController,
+                                child: Column(
+                                  children: [
+                                    PaginationWidget(
+                                        onPagination: (p0) async {
+                                          print(
+                                              "-------------" + p0.toString());
 
-                                  return modelData?.object?.messageOutputList
-                                              ?.content?[index].userName !=
-                                          User_Name
-                                      ? Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              /* horizontal: 35, vertical: 5 */),
-                                          child: GestureDetector(
-                                            onTap: () {},
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets
-                                                                  .only(
-                                                              left: 10,
-                                                              right: 3),
-                                                      child: modelData
-                                                                  ?.object
-                                                                  ?.messageOutputList
-                                                                  ?.content?[
-                                                                      index]
-                                                                  .userName !=
-                                                              null
-                                                          ? CustomImageView(
-                                                              url:
-                                                                  "${modelData?.object?.messageOutputList?.content?[index].userProfilePic}",
-                                                              height: 20,
-                                                              radius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20),
-                                                              width: 20,
-                                                              fit:
-                                                                  BoxFit.fill,
-                                                            )
-                                                          : CustomImageView(
-                                                              imagePath:
-                                                                  ImageConstant
-                                                                      .tomcruse,
-                                                              height: 20,
+                                          await BlocProvider.of<senMSGCubit>(
+                                                  context)
+                                              .coomentPagePagenation(
+                                                  widget.Room_ID,
+                                                  context,
+                                                  p0.toString(),
+                                                  ShowLoader: true);
+                                        },
+                                        offSet: (modelData
+                                            ?.object
+                                            ?.messageOutputList
+                                            ?.pageable
+                                            ?.pageNumber),
+                                        scrollController: scrollController,
+                                        totalSize: modelData?.object
+                                            ?.messageOutputList?.totalElements,
+                                        items: ListView.builder(
+                                            itemCount: modelData
+                                                ?.object
+                                                ?.messageOutputList
+                                                ?.content
+                                                ?.length,
+                                            shrinkWrap: true,
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            itemBuilder: (context, index) {
+                                              DateTime parsedDateTime =
+                                                  DateTime.parse(
+                                                      '${modelData?.object?.messageOutputList?.content?[index].createdAt}');
+                                              print(
+                                                  "check User name --> ${modelData?.object?.messageOutputList?.content?[index].userName} Login User Name --> ${User_Name}");
+
+                                              return modelData
+                                                          ?.object
+                                                          ?.messageOutputList
+                                                          ?.content?[index]
+                                                          .userName !=
+                                                      User_Name
+                                                  ? Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          /* horizontal: 35, vertical: 5 */),
+                                                      child: GestureDetector(
+                                                        onTap: () {},
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Row(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      left: 10,
+                                                                      right: 3),
+                                                                  child: modelData
+                                                                              ?.object
+                                                                              ?.messageOutputList
+                                                                              ?.content?[index]
+                                                                              .userName !=
+                                                                          null
+                                                                      ? CustomImageView(
+                                                                          url:
+                                                                              "${modelData?.object?.messageOutputList?.content?[index].userProfilePic}",
+                                                                          height:
+                                                                              20,
+                                                                          radius:
+                                                                              BorderRadius.circular(20),
+                                                                          width:
+                                                                              20,
+                                                                          fit: BoxFit
+                                                                              .fill,
+                                                                        )
+                                                                      : CustomImageView(
+                                                                          imagePath:
+                                                                              ImageConstant.tomcruse,
+                                                                          height:
+                                                                              20,
+                                                                        ),
+                                                                ),
+                                                                Text(
+                                                                  "${modelData?.object?.messageOutputList?.content?[index].userName}",
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontFamily:
+                                                                          "outfit",
+                                                                      fontSize:
+                                                                          14),
+                                                                ),
+                                                                Spacer(),
+                                                                Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      right:
+                                                                          16),
+                                                                  child: Text(
+                                                                    customFormat(
+                                                                        parsedDateTime),
+                                                                    // maxLines: 3,
+                                                                    textScaleFactor:
+                                                                        1.0,
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        color: Colors
+                                                                            .grey,
+                                                                        fontFamily:
+                                                                            "outfit",
+                                                                        fontSize:
+                                                                            12),
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
-                                                    ),
-                                                    Text(
-                                                      "${modelData?.object?.messageOutputList?.content?[index].userName}",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: Colors.black,
-                                                          fontFamily:
-                                                              "outfit",
-                                                          fontSize: 14),
-                                                    ),
-                                                    Spacer(),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets
-                                                                  .only(
-                                                              right: 16),
-                                                      child: Text(
-                                                        customFormat(
-                                                            parsedDateTime),
-                                                        // maxLines: 3,
-                                                        textScaleFactor: 1.0,
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold,
-                                                            color:
-                                                                Colors.grey,
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 12),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                /* index == 2
-                                                ? Padding(
-                                                    padding: const EdgeInsets.only(
-                                                      left: 8.0,
-                                                    ),
-                                                    child: Row(
-                                                      children: [
-                                                        CustomImageView(
-                                                          imagePath: ImageConstant
-                                                              .viewcommentimage,
-                                                          height: 60,
-                                                        ),
-                                                        SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        CustomImageView(
-                                                          imagePath:
-                                                              ImageConstant.mobileman,
-                                                          height: 60,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                : SizedBox(), */
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsets.only(
-                                                              left: 8.0,
-                                                              top: 5,
-                                                              bottom: 10),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    left: 2.0,
-                                                                    top: 5),
-                                                            // child: CircleAvatar(
-                                                            //     backgroundColor: Colors.black,
-                                                            //     maxRadius: 3),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 3,
-                                                          ),
-                                                          Container(
-                                                            // height: 45,
-                                                            width:
-                                                                _width / 1.3,
-                                                            // color: Colors.amber,
-                                                            child: Text(
-                                                              modelData
-                                                                      ?.object
-                                                                      ?.messageOutputList
-                                                                      ?.content?[
-                                                                          index]
-                                                                      .message ??
-                                                                  "",
-                                                              // maxLines: 3,
-                                                              textScaleFactor:
-                                                                  1.0,
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontFamily:
-                                                                      "outfit",
-                                                                  fontSize:
-                                                                      12),
+                                                            SizedBox(
+                                                              height: 10,
                                                             ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Divider(
-                                                  color: const Color.fromARGB(
-                                                      117, 0, 0, 0),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                      : Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              /* horizontal: 35, vertical: 5 */),
-                                          child: GestureDetector(
-                                            onTap: () {},
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets
-                                                              .only(left: 16),
-                                                      child: Text(
-                                                        customFormat(
-                                                            parsedDateTime),
-                                                        // maxLines: 3,
-                                                        textScaleFactor: 1.0,
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold,
-                                                            color:
-                                                                Colors.grey,
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 12),
-                                                      ),
-                                                    ),
-                                                    Spacer(),
-                                                    Text(
-                                                      "${modelData?.object?.messageOutputList?.content?[index].userName}",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: Colors.black,
-                                                          fontFamily:
-                                                              "outfit",
-                                                          fontSize: 14),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets
-                                                                  .only(
-                                                              left: 3,
-                                                              right: 10),
-                                                      child: modelData
-                                                                  ?.object
-                                                                  ?.messageOutputList
-                                                                  ?.content?[
-                                                                      index]
-                                                                  .userProfilePic
-                                                                  ?.isNotEmpty ??
-                                                              false
-                                                          ? CustomImageView(
-                                                              url:
-                                                                  "${modelData?.object?.messageOutputList?.content?[index].userProfilePic}",
-                                                              height: 20,
-                                                              radius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20),
-                                                              width: 20,
-                                                              fit:
-                                                                  BoxFit.fill,
-                                                            )
-                                                          : CustomImageView(
-                                                              imagePath:
-                                                                  ImageConstant
-                                                                      .tomcruse,
-                                                              height: 20,
+                                                            /* index == 2
+                                          ? Padding(
+                                              padding: const EdgeInsets.only(
+                                                left: 8.0,
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  CustomImageView(
+                                                    imagePath: ImageConstant
+                                                        .viewcommentimage,
+                                                    height: 60,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  CustomImageView(
+                                                    imagePath:
+                                                        ImageConstant.mobileman,
+                                                    height: 60,
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : SizedBox(), */
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Padding(
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              8.0,
+                                                                          top:
+                                                                              5,
+                                                                          bottom:
+                                                                              10),
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: const EdgeInsets.only(
+                                                                            left:
+                                                                                2.0,
+                                                                            top:
+                                                                                5),
+                                                                        // child: CircleAvatar(
+                                                                        //     backgroundColor: Colors.black,
+                                                                        //     maxRadius: 3),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            3,
+                                                                      ),
+                                                                      Container(
+                                                                        // height: 45,
+                                                                        width: _width /
+                                                                            1.3,
+                                                                        // color: Colors.amber,
+                                                                        child:
+                                                                            Text(
+                                                                          modelData?.object?.messageOutputList?.content?[index].message ??
+                                                                              "",
+                                                                          // maxLines: 3,
+                                                                          textScaleFactor:
+                                                                              1.0,
+                                                                          style: TextStyle(
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Colors.grey,
+                                                                              fontFamily: "outfit",
+                                                                              fontSize: 12),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                /* index == 2
-                                                ? Padding(
-                                                    padding: const EdgeInsets.only(
-                                                      left: 8.0,
-                                                    ),
-                                                    child: Row(
-                                                      children: [
-                                                        CustomImageView(
-                                                          imagePath: ImageConstant
-                                                              .viewcommentimage,
-                                                          height: 60,
-                                                        ),
-                                                        SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        CustomImageView(
-                                                          imagePath:
-                                                              ImageConstant.mobileman,
-                                                          height: 60,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                : SizedBox(), */
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Spacer(),
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsets.only(
-                                                              left: 8.0,
-                                                              top: 5,
-                                                              bottom: 10,
-                                                              right: 12),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    left: 2.0,
-                                                                    top: 5),
-                                                            // child: CircleAvatar(
-                                                            //     backgroundColor: Colors.black,
-                                                            //     maxRadius: 3),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 3,
-                                                          ),
-                                                          Container(
-                                                            // height: 45,
-                                                            width:
-                                                                _width / 1.3,
-                                                            // color: Colors.amber,
-                                                            child: Align(
-                                                              alignment:
-                                                                  Alignment
-                                                                      .topRight,
-                                                              child: Text(
-                                                                modelData
-                                                                        ?.object
-                                                                        ?.messageOutputList
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .message ??
-                                                                    "",
-                                                                // maxLines: 3,
-                                                                textScaleFactor:
-                                                                    1.0,
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Colors
-                                                                        .grey,
-                                                                    fontFamily:
-                                                                        "outfit",
-                                                                    fontSize:
-                                                                        12),
-                                                              ),
+                                                            Divider(
+                                                              color: const Color
+                                                                      .fromARGB(
+                                                                  117, 0, 0, 0),
                                                             ),
-                                                          ),
-                                                        ],
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Divider(
-                                                  color: const Color.fromARGB(
-                                                      117, 0, 0, 0),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                })
+                                                    )
+                                                  : Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          /* horizontal: 35, vertical: 5 */),
+                                                      child: GestureDetector(
+                                                        onTap: () {},
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Row(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      left: 16),
+                                                                  child: Text(
+                                                                    customFormat(
+                                                                        parsedDateTime),
+                                                                    // maxLines: 3,
+                                                                    textScaleFactor:
+                                                                        1.0,
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        color: Colors
+                                                                            .grey,
+                                                                        fontFamily:
+                                                                            "outfit",
+                                                                        fontSize:
+                                                                            12),
+                                                                  ),
+                                                                ),
+                                                                Spacer(),
+                                                                Text(
+                                                                  "${modelData?.object?.messageOutputList?.content?[index].userName}",
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontFamily:
+                                                                          "outfit",
+                                                                      fontSize:
+                                                                          14),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      left: 3,
+                                                                      right:
+                                                                          10),
+                                                                  child: modelData
+                                                                              ?.object
+                                                                              ?.messageOutputList
+                                                                              ?.content?[index]
+                                                                              .userProfilePic
+                                                                              ?.isNotEmpty ??
+                                                                          false
+                                                                      ? CustomImageView(
+                                                                          url:
+                                                                              "${modelData?.object?.messageOutputList?.content?[index].userProfilePic}",
+                                                                          height:
+                                                                              20,
+                                                                          radius:
+                                                                              BorderRadius.circular(20),
+                                                                          width:
+                                                                              20,
+                                                                          fit: BoxFit
+                                                                              .fill,
+                                                                        )
+                                                                      : CustomImageView(
+                                                                          imagePath:
+                                                                              ImageConstant.tomcruse,
+                                                                          height:
+                                                                              20,
+                                                                        ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            /* index == 2
+                                          ? Padding(
+                                              padding: const EdgeInsets.only(
+                                                left: 8.0,
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  CustomImageView(
+                                                    imagePath: ImageConstant
+                                                        .viewcommentimage,
+                                                    height: 60,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  CustomImageView(
+                                                    imagePath:
+                                                        ImageConstant.mobileman,
+                                                    height: 60,
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : SizedBox(), */
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Spacer(),
+                                                                Padding(
+                                                                  padding: EdgeInsets.only(
+                                                                      left: 8.0,
+                                                                      top: 5,
+                                                                      bottom:
+                                                                          10,
+                                                                      right:
+                                                                          12),
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: const EdgeInsets.only(
+                                                                            left:
+                                                                                2.0,
+                                                                            top:
+                                                                                5),
+                                                                        // child: CircleAvatar(
+                                                                        //     backgroundColor: Colors.black,
+                                                                        //     maxRadius: 3),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            3,
+                                                                      ),
+                                                                      Container(
+                                                                        // height: 45,
+                                                                        width: _width /
+                                                                            1.3,
+                                                                        // color: Colors.amber,
+                                                                        child:
+                                                                            Align(
+                                                                          alignment:
+                                                                              Alignment.topRight,
+                                                                          child:
+                                                                              Text(
+                                                                            modelData?.object?.messageOutputList?.content?[index].message ??
+                                                                                "",
+                                                                            // maxLines: 3,
+                                                                            textScaleFactor:
+                                                                                1.0,
+                                                                            style: TextStyle(
+                                                                                fontWeight: FontWeight.bold,
+                                                                                color: Colors.grey,
+                                                                                fontFamily: "outfit",
+                                                                                fontSize: 12),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Divider(
+                                                              color: const Color
+                                                                      .fromARGB(
+                                                                  117, 0, 0, 0),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                            })),
+                                  ],
+                                ),
+                              )
                             : SizedBox(),
                       ),
                     ),
