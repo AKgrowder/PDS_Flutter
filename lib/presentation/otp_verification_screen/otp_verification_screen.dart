@@ -76,13 +76,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         if (_secondsRemaining > 0) {
           _secondsRemaining--;
         } else {
-          _timer!.cancel();
-          // model!.data!.forEach((element) {
-          //   if (element.name == "ResendTimerInSeconds") {
-          //     GetTime = int.parse(element.value!);
-          //     SetUi();
-          //   }
-          // });
+          _timer!.cancel();   
           tm = true;
           _secondsRemaining = otpTimer;
         }
