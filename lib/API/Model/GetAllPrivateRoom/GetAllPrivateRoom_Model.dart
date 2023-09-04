@@ -184,6 +184,7 @@ class Object {
   String? roomType;
   String? createdDate;
   String? description;
+  ExpertUserProfile? expertUserProfile;
   List<UsersList>? usersList;
 
   Object(
@@ -192,6 +193,7 @@ class Object {
       this.roomType,
       this.createdDate,
       this.description,
+      this.expertUserProfile,
       this.usersList});
 
   Object.fromJson(Map<String, dynamic> json) {
@@ -200,6 +202,9 @@ class Object {
     roomType = json['roomType'];
     createdDate = json['createdDate'];
     description = json['description'];
+    expertUserProfile = json['expertUserProfile'] != null
+        ? new ExpertUserProfile.fromJson(json['expertUserProfile'])
+        : null;
     if (json['usersList'] != null) {
       usersList = <UsersList>[];
       json['usersList'].forEach((v) {
@@ -215,9 +220,45 @@ class Object {
     data['roomType'] = this.roomType;
     data['createdDate'] = this.createdDate;
     data['description'] = this.description;
+    if (this.expertUserProfile != null) {
+      data['expertUserProfile'] = this.expertUserProfile!.toJson();
+    }
     if (this.usersList != null) {
       data['usersList'] = this.usersList!.map((v) => v.toJson()).toList();
     }
+    return data;
+  }
+}
+
+class ExpertUserProfile {
+  String? uuid;
+  String? userName;
+  String? name;
+  bool? isExpert;
+  String? userProfilePic;
+
+  ExpertUserProfile(
+      {this.uuid,
+      this.userName,
+      this.name,
+      this.isExpert,
+      this.userProfilePic});
+
+  ExpertUserProfile.fromJson(Map<String, dynamic> json) {
+    uuid = json['uuid'];
+    userName = json['userName'];
+    name = json['name'];
+    isExpert = json['isExpert'];
+    userProfilePic = json['userProfilePic'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['uuid'] = this.uuid;
+    data['userName'] = this.userName;
+    data['name'] = this.name;
+    data['isExpert'] = this.isExpert;
+    data['userProfilePic'] = this.userProfilePic;
     return data;
   }
 }

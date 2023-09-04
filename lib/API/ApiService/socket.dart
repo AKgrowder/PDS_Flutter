@@ -50,7 +50,9 @@ void onConnect(StompFrame frame) {
 
 final stompClient = StompClient(
   config: StompConfig(
-    url: 'ws://192.168.29.100:8081/user/pdsChat',
+    url:
+    // 'ws://b71b-2405-201-200b-a0cf-e57b-ed1f-25d4-f1ec.ngrok.io/user/pdsChat',
+    'ws://192.168.29.100:8081/user/pdsChat',
 
     onConnect: onConnect,
     beforeConnect: () async {
