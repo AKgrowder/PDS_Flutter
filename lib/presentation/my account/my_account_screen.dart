@@ -16,7 +16,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
@@ -72,6 +72,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   List<String>? workingInList;
   PermissionStatus _cameraPermissionStatus = PermissionStatus.denied;
   PermissionStatus _galleryPermissionStatus = PermissionStatus.denied;
+  Uint8List? _pdfData;
+
   dataSetMethod(
       {String? useridSetdata,
       String? userNameSetdata,
@@ -173,7 +175,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
             companyNameSetData: state.myAccontDetails.object?.companyName,
           );
           print('printstatment-${myAccontDetails?.object?.workingHours}');
-          print('extert dtaa check-${myAccontDetails?.object?.expertise?.first.uid}');
+          print(
+              'extert dtaa check-${myAccontDetails?.object?.expertise?.first.uid}');
           if (myAccontDetails?.object?.workingHours != null) {
             print(
                 'workignHoursCheckPrintstatment-${myAccontDetails?.object?.workingHours}');
@@ -228,8 +231,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         }
         if (state is FetchExprtiseRoomLoadedState) {
           _fetchExprtise = state.fetchExprtise;
-          
-            // selectedExpertise = Expertiseclass(uid, expertiseName);      
+
+          // selectedExpertise = Expertiseclass(uid, expertiseName);
           print('selectedExpertise-${selectedExpertise?.expertiseName}');
           expertiseData = state.fetchExprtise.object!
               .map((e) =>
@@ -245,8 +248,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           Navigator.pop(context);
         }
-        if(state is UpdateProfileLoadedState){
-           SnackBar snackBar = SnackBar(
+        if (state is UpdateProfileLoadedState) {
+          SnackBar snackBar = SnackBar(
             content: Text(state.updateProfile.object.toString()),
             backgroundColor: ColorConstant.primary_color,
           );
@@ -705,23 +708,32 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                       height: 5,
                     ),
                     myAccontDetails?.object?.companyName != null
-                        ? Center(
-                            child: Container(
-                              height: 50,
-                              width: _width / 1.2,
-                              decoration: BoxDecoration(
-                                  color: Color(0xFFF6F6F6),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: TextFormField(
-                                  readOnly: isupdate,
-                                  controller: compayName,
-                                  cursorColor: Colors.grey,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                  ),
-                                ),
+                        ? InkWell(
+                            onTap: () {
+                              print(
+                                  'dfdhfdhf-${myAccontDetails?.object?.approvalStatus}');
+                            },
+                            child: Center(
+                              child: Container(
+                                height: 50,
+                                width: _width / 1.2,
+                                decoration: BoxDecoration(
+                                    color: Color(0xFFF6F6F6),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Padding(
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: TextFormField(
+                                      readOnly: myAccontDetails
+                                                  ?.object?.approvalStatus ==
+                                              'APPROVED'
+                                          ? true
+                                          : isupdate,
+                                      controller: compayName,
+                                      cursorColor: Colors.grey,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                      ),
+                                    )),
                               ),
                             ),
                           )
@@ -1167,30 +1179,65 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                               ),
                                             ),
                                           )
-                                        : Container(
-                                            height: 50,
-                                            width: _width / 4.5,
-                                            decoration: BoxDecoration(
-                                                color: Color.fromARGB(
-                                                    255, 228, 228, 228),
-                                                borderRadius: BorderRadius.only(
-                                                    topRight:
-                                                        Radius.circular(5),
-                                                    bottomRight:
-                                                        Radius.circular(5))),
-                                            child: GestureDetector(
+                                        : myAccontDetails
+                                                    ?.object?.approvalStatus !=
+                                                'APPROVED'
+                                            ? Container(
+                                                height: 50,
+                                                width: _width / 4.5,
+                                                decoration: BoxDecoration(
+                                                    color: Color.fromARGB(
+                                                        255, 228, 228, 228),
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                            topRight: Radius
+                                                                .circular(5),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    5))),
+                                                child: GestureDetector(
+                                                    onTap: () {
+                                                      dopcument =
+                                                          "Upload Image";
+                                                      setState(() {});
+                                                    },
+                                                    child: Icon(
+                                                      Icons.delete_forever,
+                                                      color: ColorConstant
+                                                          .primary_color,
+                                                    )),
+                                              )
+                                            : GestureDetector(
                                                 onTap: () {
-                                                  dopcument = "Upload Image";
-                                                  /*   chooseDocument?.object = null; */
-
-                                                  setState(() {});
+                                                  print(
+                                                      'object-${myAccontDetails?.object?.userDocument?.toString()}');
+                                                  showPdfDialog(
+                                                      context,
+                                                      myAccontDetails
+                                                          ?.object?.userDocument
+                                                          ?.toString());
                                                 },
-                                                child: Icon(
-                                                  Icons.delete_forever,
-                                                  color: ColorConstant
-                                                      .primary_color,
-                                                )),
-                                          ),
+                                                child: Container(
+                                                  height: 50,
+                                                  width: _width / 4.5,
+                                                  decoration: BoxDecoration(
+                                                      color: Color.fromARGB(
+                                                          255, 228, 228, 228),
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                              topRight: Radius
+                                                                  .circular(5),
+                                                              bottomRight:
+                                                                  Radius
+                                                                      .circular(
+                                                                          5))),
+                                                  child: Icon(
+                                                    Icons.arrow_forward,
+                                                    color: ColorConstant
+                                                        .primary_color,
+                                                  ),
+                                                ),
+                                              ),
                                   ],
                                 ),
                               )
@@ -1534,13 +1581,16 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   "name": "${userId.text}",
                                   "uuid": "$User_ID"
                                 };
-                                BlocProvider.of<MyAccountCubit>(context).UpdateProfileEmployee(param,context);
+                                BlocProvider.of<MyAccountCubit>(context)
+                                    .UpdateProfileEmployee(param, context);
                               } else {
                                 var param = {
                                   "name": "${userId.text}",
                                   "uuid": "$User_ID"
                                 };
-                                BlocProvider.of<MyAccountCubit>(context).UpdateProfileEmployee(param,context);       }
+                                BlocProvider.of<MyAccountCubit>(context)
+                                    .UpdateProfileEmployee(param, context);
+                              }
                             }
                           }
                         }
@@ -1573,6 +1623,33 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                   ]),
             ),
           ),
+        );
+      },
+    );
+  }
+
+  void showPdfDialog(BuildContext context, pdfUrl) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('PDF Viewer'),
+          content: Container(
+            width: double.maxFinite,
+            height: 400, // Adjust the height as needed
+            child: SfPdfViewer.network(
+              pdfUrl,
+              // Customize the viewer with options here if needed
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Close'),
+            ),
+          ],
         );
       },
     );
@@ -1818,6 +1895,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   localDataGet() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
+    prefs.setBool(PreferencesKey.OpenProfile, false);
+
     setState(() {});
   }
 }

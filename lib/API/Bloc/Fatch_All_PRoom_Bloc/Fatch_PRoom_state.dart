@@ -1,4 +1,5 @@
 import '../../Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
+import '../../Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../Model/HomeScreenModel/MyPublicRoom_model.dart';
 import '../../Model/HomeScreenModel/PublicRoomModel.dart';
 import '../../Model/HomeScreenModel/getLoginPublicRoom_model.dart';
@@ -44,4 +45,10 @@ class MyPublicRoom1LoadedState extends FetchAllPublicRoomState {
 class fetchUserModulemodelLoadedState extends FetchAllPublicRoomState {
   final FetchUserModulemodel fetchUserModule;
   fetchUserModulemodelLoadedState(this.fetchUserModule);
+}
+
+
+class GetallblogLoadedState extends FetchAllPublicRoomState {
+  final GetallBlogModel getallBlogdata;
+  GetallblogLoadedState(this.getallBlogdata);
 }
