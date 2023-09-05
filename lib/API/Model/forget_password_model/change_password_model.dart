@@ -1,6 +1,6 @@
 class ChangePasswordModel {
   String? message;
-  String? object;
+  bool? object;
   bool? success;
 
   ChangePasswordModel({this.message, this.object, this.success});
