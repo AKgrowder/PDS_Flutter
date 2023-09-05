@@ -16,7 +16,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
@@ -1186,11 +1185,11 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                                 onTap: () {
                                                   print(
                                                       'object-${myAccontDetails?.object?.userDocument?.toString()}');
-                                                  showPdfDialog(
+                                               /*    showPdfDialog(
                                                       context,
                                                       myAccontDetails
                                                           ?.object?.userDocument
-                                                          ?.toString());
+                                                          ?.toString()); */
                                                 },
                                                 child: Container(
                                                   height: 50,
@@ -1416,31 +1415,34 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
                               } else {
-                                print('userProfilePicapi data-${ myAccontDetails
-                                              ?.object?.userProfilePic}');
-                               print('userProfilelocally-${chooseDocumentuploded?.object}');               
-                                Map<String, dynamic> params = {
-                                  "document": chooseDocumentuploded2?.object !=
-                                          null
-                                      ? "${chooseDocumentuploded2?.object.toString()}"
-                                      : '${myAccontDetails?.object?.userDocument}',
-                                  "userProfilePic": myAccontDetails
-                                              ?.object?.userProfilePic !=
-                                          null
-                                      ? myAccontDetails?.object?.userProfilePic
-                                      : chooseDocumentuploded?.object != null
-                                          ? chooseDocumentuploded?.object
-                                              .toString()
-                                          : null,
-                                  'companyName': compayName.text,
-                                  'jobProfile': jobProfile.text,
-                                  'name': userName.text,
-                                  'uuid':
-                                      myAccontDetails?.object?.uuid.toString(),
-                                };
+                                print(
+                                    'userProfilePicapi data-${myAccontDetails?.object?.userProfilePic}');
+                                print(
+                                    'userProfilelocally-${chooseDocumentuploded?.object}');
+                                print(
+                                    'uuid-${myAccontDetails?.object?.uuid.toString()}');
+                                Map<String, dynamic> params = {};
+                                params['document'] = chooseDocumentuploded2
+                                            ?.object !=
+                                        null
+                                    ? "${chooseDocumentuploded2?.object.toString()}"
+                                    : '${myAccontDetails?.object?.userDocument}';
+                                params['userProfilePic'] = myAccontDetails
+                                            ?.object?.userProfilePic !=
+                                        null
+                                    ? myAccontDetails?.object?.userProfilePic
+                                    : chooseDocumentuploded?.object != null
+                                        ? chooseDocumentuploded?.object
+                                            .toString()
+                                        : null;
+                                params['companyName'] = compayName.text;
+                                params['jobProfile'] = jobProfile.text;
+                                params['name'] = userName.text;
+                                params['uuid'] =
+                                    myAccontDetails?.object?.uuid.toString();
                                 print('paremdatapasssing-$params');
-                        BlocProvider.of<MyAccountCubit>(context)
-                                    .cretaForumUpdate(params, context); 
+                                BlocProvider.of<MyAccountCubit>(context)
+                                    .cretaForumUpdate(params, context);
                               }
                             }
                           } else if (myAccontDetails?.object?.module ==
@@ -1597,7 +1599,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     );
   }
 
-  void showPdfDialog(BuildContext context, pdfUrl) {
+/*   void showPdfDialog(BuildContext context, pdfUrl) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1622,7 +1624,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         );
       },
     );
-  }
+  } */
 
   Future<void> _requestPermissions() async {
     final cameraStatus = await Permission.camera.request();
