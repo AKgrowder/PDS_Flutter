@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
+import 'package:pds/API/Model/myaccountModel/myaccountModel.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/presentation/become_an_expert_screen/become_an_expert_screen.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
@@ -45,7 +46,6 @@ String? User_Module = "";
 String? UserProfile;
 String? User_ID;
 bool refresh = false;
-
 PublicRoomModel? PublicRoomModelData;
 LoginPublicRoomModel? FetchPublicRoomModelData;
 MyPublicRoom? MyPublicRoomData;
@@ -175,6 +175,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
               print(FetchPublicRoomModelData?.object?.length);
             }
+            if (state is GetUserProfileLoadedState) {
+              print('dsfgsgfgsd-${state.myAccontDetails.success.toString()}');
+              User_Name = state.myAccontDetails.object?.userName;
+              User_Module = state.myAccontDetails.object?.module;
+              UserProfile = state.myAccontDetails.object?.userProfilePic;
+              OpenProfile();
+            }
 
             if (state is MyPublicRoom1LoadedState) {
               MyPublicRoomData = state.MyPublicRoomData;
@@ -192,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
               prefs.setString(PreferencesKey.module, user_Module);
               setState(() {
                 //  saveUserProfile();
-                 User_Module = user_Module;
+                User_Module = user_Module;
               });
             }
           }, builder: (context, state) {
@@ -348,10 +355,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           : User_Module == "EXPERT"
                               ? Container(
                                   // color: Colors.lightGreen,
-                                  height:  checkuserdata == "REJECTED" ? 80:50,
+                                  height: checkuserdata == "REJECTED" ? 80 : 50,
                                   child: Column(
                                     children: [
-                                       checkuserdata == "REJECTED"
+                                      checkuserdata == "REJECTED"
                                           ? GestureDetector(
                                               onTap: () {
                                                 Navigator.push(context,
@@ -426,12 +433,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                             Navigator.push(context,
                                                 MaterialPageRoute(
                                                     builder: (context) {
-                                              return MultiBlocProvider(providers: [
-                                                BlocProvider<InvitationCubit>(
-                                                  create: (context) =>
-                                                      InvitationCubit(),
-                                                ),
-                                              ], child: InvitationScreen());
+                                              return MultiBlocProvider(
+                                                  providers: [
+                                                    BlocProvider<
+                                                        InvitationCubit>(
+                                                      create: (context) =>
+                                                          InvitationCubit(),
+                                                    ),
+                                                  ],
+                                                  child: InvitationScreen());
                                             }));
                                           } else {
                                             print("User guest Mood on");
@@ -465,7 +475,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                     ],
-                                  ),  
+                                  ),
                                 )
                               : User_Module == "EMPLOYEE"
                                   ? checkuserdata == "PARTIALLY_REGISTERED"
@@ -2168,442 +2178,68 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             )
                           : SizedBox(),
-                  getallBlogdata?.object?.length == 0  ||  getallBlogdata?.object?.isNotEmpty == false ? SizedBox(): Padding(
-                    padding:
-                        const EdgeInsets.only(right: 20.0, left: 20, top: 7),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Recent Blogs",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              fontFamily: "outfit",
-                              fontSize: 23),
-                        ),
-                        GestureDetector(
-                          onTap: () {},
-                          child: Icon(
-                            Icons.arrow_forward,
-                            size: 30,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                   getallBlogdata?.object?.length == 0  ||  getallBlogdata?.object?.isNotEmpty == false ? SizedBox():
-                  Container(
-                    // color: Colors.red,
-                    height: _height / 3,
-                    width: _width / 1.1,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      physics: BouncingScrollPhysics(),
-                      itemCount: getallBlogdata?.object?.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                              // height: 100,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                // border: Border.all(
-                                //   color: Colors.red,
-                                // ),
+                  getallBlogdata?.object?.length == 0 ||
+                          getallBlogdata?.object?.isNotEmpty == false
+                      ? SizedBox()
+                      : Padding(
+                          padding: const EdgeInsets.only(
+                              right: 20.0, left: 20, top: 7),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Recent Blogs",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontFamily: "outfit",
+                                    fontSize: 23),
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Stack(
-                                    // alignment: Alignment.topRight,
-                                    children: [
-                                      Container(
-                                        height: _height / 3.2,
-                                        width: _width / 1.2,
-                                        child: CustomImageView(
-                                          // imagePath: ImageConstant.blogimage,
-
-                                          url: getallBlogdata
-                                                  ?.object?[index].image
-                                                  .toString() ??
-                                              "",
-                                          // height: 50,
-                                          width: _width,
-                                          fit: BoxFit.fill,
-                                          radius: BorderRadius.circular(10),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 290, top: 10),
-                                        child: Image.asset(
-                                          ImageConstant.blogsaveimage,
-                                          height: 40,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          top: 180,
-                                        ),
-                                        child: Container(
-                                          height: _height / 10,
-                                          width: _width / 1.2,
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  Colors.white.withOpacity(0.7),
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: Column(children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10),
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    getallBlogdata
-                                                            ?.object?[index]
-                                                            .description
-                                                            .toString() ??
-                                                        "",
-                                                    style: TextStyle(
-                                                        fontFamily: 'outfit',
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(
-                                                    getallBlogdata
-                                                            ?.object?[index]
-                                                            .createdAt
-                                                            .toString() ??
-                                                        "",
-                                                    style: TextStyle(
-                                                        fontFamily: 'outfit',
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                CircleAvatar(
-                                                  backgroundColor: Colors.black,
-                                                  maxRadius: 2,
-                                                ),
-                                                SizedBox(
-                                                  width: 2,
-                                                ),
-                                                Text("12.3K Views",
-                                                    style: TextStyle(
-                                                        fontFamily: 'outfit',
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                                Spacer(),
-                                                Image.asset(
-                                                  ImageConstant.like_image,
-                                                  height: 20,
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Image.asset(
-                                                  ImageConstant.arrowleftimage,
-                                                  height: 30,
-                                                  color: Colors.black,
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                )
-                                              ],
-                                            )
-                                          ]),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              )),
-                        );
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(right: 20.0, left: 20, top: 7),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Previous Blogs",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              fontFamily: "outfit",
-                              fontSize: 23),
-                        ),
-                        GestureDetector(
-                          onTap: () {},
-                          child: Icon(
-                            Icons.arrow_forward,
-                            size: 30,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    // color: Colors.red,
-                    height: _height / 3.5,
-                    width: _width / 1.1,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      physics: BouncingScrollPhysics(),
-                      itemCount: 5,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            // height: 100,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.grey.shade300,
+                              GestureDetector(
+                                onTap: () {},
+                                child: Icon(
+                                  Icons.arrow_forward,
+                                  size: 30,
+                                ),
                               ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Stack(
-                                  children: [
-                                    Container(
-                                      height: 120,
-                                      width: _width / 2.35,
-                                      child: CustomImageView(
-                                        imagePath: ImageConstant.blogimage,
-                                        // height: 50,
-                                        // width: _width/1.2,
-                                        fit: BoxFit.fill,
-                                        radius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Baluran Wild The",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black,
-                                          fontFamily: "outfit",
-                                          fontSize: 20),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Savvanah",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black,
-                                          fontFamily: "outfit",
-                                          fontSize: 20),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text("27th june 2020  10:47 PM",
-                                        style: TextStyle(
-                                            fontFamily: 'outfit',
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w100)),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    CircleAvatar(
-                                      backgroundColor: Colors.black,
-                                      maxRadius: 2,
-                                    ),
-                                    SizedBox(
-                                      width: 2,
-                                    ),
-                                    Text("12.3K Views",
-                                        style: TextStyle(
-                                            fontFamily: 'outfit',
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w100)),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Image.asset(
-                                      ImageConstant.like_image,
-                                      height: 20,
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Image.asset(
-                                      ImageConstant.arrowleftimage,
-                                      height: 30,
-                                      color: Colors.black,
-                                    ),
-                                    SizedBox(width: _width / 4.8),
-                                    Image.asset(
-                                      ImageConstant.setting_save,
-                                      height: 20,
-                                      color: Colors.black,
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
+                            ],
                           ),
-                        );
-                      },
-                    ),
-                  ),
+                        ),
+                  getallBlogdata?.object?.length == 0 ||
+                          getallBlogdata?.object?.isNotEmpty == false
+                      ? SizedBox()
+                      : Recentblogs(),
+                  // Padding(
+                  //   padding:
+                  //       const EdgeInsets.only(right: 20.0, left: 20, top: 7),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     children: [
+                  //       Text(
+                  //         "Previous Blogs",
+                  //         style: TextStyle(
+                  //             fontWeight: FontWeight.bold,
+                  //             color: Colors.black,
+                  //             fontFamily: "outfit",
+                  //             fontSize: 23),
+                  //       ),
+                  //       GestureDetector(
+                  //         onTap: () {},
+                  //         child: Icon(
+                  //           Icons.arrow_forward,
+                  //           size: 30,
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  //  Previousblogs(),
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
+                  // Previousblogsone(),
                   SizedBox(
                     height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      physics: BouncingScrollPhysics(),
-                      itemCount: 4,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            // height: 100,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.grey.shade300,
-                              ),
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: 110,
-                                  width: _width / 4,
-                                  child: CustomImageView(
-                                    imagePath: ImageConstant.blogimage,
-                                    // height: 50,
-                                    // width: _width/1.2,
-                                    fit: BoxFit.fill,
-                                    radius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 2),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text("Baluran Wild The Savvanah",
-                                          style: TextStyle(
-                                              fontFamily: 'outfit',
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold)),
-                                      Container(
-                                        height: 70,
-                                        width: _width / 1.6,
-                                        // color: Colors.amber,
-                                        child: Text(
-                                            "Lectus scelerisque vulputate tortor pellentesque ac. Fringilla cras ut facilisis amet imperdiet vitae etiam pellentesque pellentesque. Pellentesq",
-                                            style: TextStyle(
-                                                fontFamily: 'outfit',
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w300)),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text("27th June 2020",
-                                              style: TextStyle(
-                                                  fontFamily: 'outfit',
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w300)),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text("10:47 pm",
-                                              style: TextStyle(
-                                                  fontFamily: 'outfit',
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w300)),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          CircleAvatar(
-                                            maxRadius: 2,
-                                            backgroundColor: Colors.grey,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text("12.3K Views",
-                                              style: TextStyle(
-                                                  fontFamily: 'outfit',
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w300)),
-                                          SizedBox(
-                                            width: 4,
-                                          ),
-                                          Image.asset(
-                                            ImageConstant.like_image,
-                                            height: 20,
-                                          ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Image.asset(
-                                            ImageConstant.arrowleftimage,
-                                            height: 20,
-                                            color: Colors.black,
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
                   ),
                 ],
               ),
@@ -2696,8 +2332,10 @@ class _HomeScreenState extends State<HomeScreen> {
     User_ID == null ? api() : NewApi();
     User_Name = prefs.getString(PreferencesKey.ProfileName);
     User_Module = prefs.getString(PreferencesKey.module);
-    if (User_Module == null || User_Module == "") {
-      BlocProvider.of<FetchAllPublicRoomCubit>(context).UserModel(context);
+    if (User_ID != null) {
+      if (User_Module == null || User_Module == "") {
+        BlocProvider.of<FetchAllPublicRoomCubit>(context).UserModel(context);
+      }
     }
     UserProfile = prefs.getString(PreferencesKey.UserProfile);
     prefs.setBool(PreferencesKey.OpenProfile, false);
@@ -2714,9 +2352,17 @@ class _HomeScreenState extends State<HomeScreen> {
     // prefs.getString(PreferencesKey.ProfileModule);
     // prefs.getString(PreferencesKey.ProfileMobileNo);
   }
-   OpenProfileSave() async {
+
+  OpenProfileSave() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool(PreferencesKey.OpenProfile, true);
+  }
+
+  OpenProfile() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(PreferencesKey.ProfileName, User_Name ?? "");
+    prefs.setString(PreferencesKey.module, User_Module ?? "");
+    prefs.setString(PreferencesKey.UserProfile, UserProfile ?? "");
   }
 
   api() {
@@ -2729,6 +2375,8 @@ class _HomeScreenState extends State<HomeScreen> {
   NewApi() async {
     print("1111111111111${User_ID}");
     await BlocProvider.of<FetchAllPublicRoomCubit>(context).UserModel(context);
+    await BlocProvider.of<FetchAllPublicRoomCubit>(context).MyAccount(context);
+
     await BlocProvider.of<FetchAllPublicRoomCubit>(context)
         .FetchPublicRoom("${User_ID}", context);
     await BlocProvider.of<FetchAllPublicRoomCubit>(context)
@@ -2744,5 +2392,389 @@ class _HomeScreenState extends State<HomeScreen> {
       print('elseif condison check$acticueUser');
       prefs.setString(PreferencesKey.userStatus, acticueUser.toString());
     }
+  }
+
+  Previousblogs() {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
+    return Container(
+      // color: Colors.red,
+      height: _height / 3.5,
+      width: _width / 1.1,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        physics: BouncingScrollPhysics(),
+        itemCount: 5,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              // height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.grey.shade300,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        height: 120,
+                        width: _width / 2.35,
+                        child: CustomImageView(
+                          imagePath: ImageConstant.blogimage,
+                          // height: 50,
+                          // width: _width/1.2,
+                          fit: BoxFit.fill,
+                          radius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Baluran Wild The",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontFamily: "outfit",
+                            fontSize: 20),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Savvanah",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontFamily: "outfit",
+                            fontSize: 20),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text("27th june 2020  10:47 PM",
+                          style: TextStyle(
+                              fontFamily: 'outfit',
+                              fontSize: 10,
+                              fontWeight: FontWeight.w100)),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      CircleAvatar(
+                        backgroundColor: Colors.black,
+                        maxRadius: 2,
+                      ),
+                      SizedBox(
+                        width: 2,
+                      ),
+                      Text("12.3K Views",
+                          style: TextStyle(
+                              fontFamily: 'outfit',
+                              fontSize: 10,
+                              fontWeight: FontWeight.w100)),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Image.asset(
+                        ImageConstant.like_image,
+                        height: 20,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Image.asset(
+                        ImageConstant.arrowleftimage,
+                        height: 30,
+                        color: Colors.black,
+                      ),
+                      SizedBox(width: _width / 4.8),
+                      Image.asset(
+                        ImageConstant.setting_save,
+                        height: 20,
+                        color: Colors.black,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Recentblogs() {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
+    return Container(
+      // color: Colors.red,
+      height: _height / 3,
+      width: _width / 1.1,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        physics: BouncingScrollPhysics(),
+        itemCount: getallBlogdata?.object?.length,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+                // height: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  // border: Border.all(
+                  //   color: Colors.red,
+                  // ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(
+                      // alignment: Alignment.topRight,
+                      children: [
+                        Container(
+                          height: _height / 3.2,
+                          width: _width / 1.2,
+                          child: CustomImageView(
+                            // imagePath: ImageConstant.blogimage,
+
+                            url: getallBlogdata?.object?[index].image
+                                    .toString() ??
+                                "",
+                            // height: 50,
+                            width: _width,
+                            fit: BoxFit.fill,
+                            radius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(left: 290, top: 10),
+                        //   child: Image.asset(
+                        //     ImageConstant.blogsaveimage,
+                        //     height: 40,
+                        //   ),
+                        // ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 180,
+                          ),
+                          child: Container(
+                            height: _height / 10,
+                            width: _width / 1.2,
+                            decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.7),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Column(children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      getallBlogdata?.object?[index].description
+                                              .toString() ??
+                                          "",
+                                      style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                      getallBlogdata?.object?[index].createdAt
+                                              .toString() ??
+                                          "",
+                                      style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold)),
+                                  // SizedBox(
+                                  //   width: 10,
+                                  // ),
+                                  // CircleAvatar(
+                                  //   backgroundColor: Colors.black,
+                                  //   maxRadius: 2,
+                                  // ),
+                                  // SizedBox(
+                                  //   width: 2,
+                                  // ),
+                                  // Text("12.3K Views",
+                                  //     style: TextStyle(
+                                  //         fontFamily: 'outfit',
+                                  //         fontSize: 12,
+                                  //         fontWeight: FontWeight.bold)),
+                                  // Spacer(),
+                                  // Image.asset(
+                                  //   ImageConstant.like_image,
+                                  //   height: 20,
+                                  // ),
+                                  // SizedBox(
+                                  //   width: 10,
+                                  // ),
+                                  // Image.asset(
+                                  //   ImageConstant.arrowleftimage,
+                                  //   height: 30,
+                                  //   color: Colors.black,
+                                  // ),
+                                  // SizedBox(
+                                  //   width: 10,
+                                  // )
+                                ],
+                              )
+                            ]),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                )),
+          );
+        },
+      ),
+    );
+  }
+
+  Previousblogsone() {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ListView.builder(
+        scrollDirection: Axis.vertical,
+        physics: BouncingScrollPhysics(),
+        itemCount: 4,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              // height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.grey.shade300,
+                ),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 110,
+                    width: _width / 4,
+                    child: CustomImageView(
+                      imagePath: ImageConstant.blogimage,
+                      // height: 50,
+                      // width: _width/1.2,
+                      fit: BoxFit.fill,
+                      radius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 2),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Baluran Wild The Savvanah",
+                            style: TextStyle(
+                                fontFamily: 'outfit',
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold)),
+                        Container(
+                          height: 70,
+                          width: _width / 1.6,
+                          // color: Colors.amber,
+                          child: Text(
+                              "Lectus scelerisque vulputate tortor pellentesque ac. Fringilla cras ut facilisis amet imperdiet vitae etiam pellentesque pellentesque. Pellentesq",
+                              style: TextStyle(
+                                  fontFamily: 'outfit',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w300)),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          children: [
+                            Text("27th June 2020",
+                                style: TextStyle(
+                                    fontFamily: 'outfit',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w300)),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text("10:47 pm",
+                                style: TextStyle(
+                                    fontFamily: 'outfit',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w300)),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            CircleAvatar(
+                              maxRadius: 2,
+                              backgroundColor: Colors.grey,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text("12.3K Views",
+                                style: TextStyle(
+                                    fontFamily: 'outfit',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w300)),
+                            SizedBox(
+                              width: 4,
+                            ),
+                            Image.asset(
+                              ImageConstant.like_image,
+                              height: 20,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Image.asset(
+                              ImageConstant.arrowleftimage,
+                              height: 20,
+                              color: Colors.black,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 }
