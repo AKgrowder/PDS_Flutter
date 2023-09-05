@@ -433,7 +433,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                       onTap: () {
                                         if (widget.RoomUUID == null ||
                                             widget.RoomUUID == "") {
-                                          print("asd");
+                                          print("Open Room Selection screen");
                                         } else {
                                           print(widget.RoomUUID);
                                           print(FetchAllExpertsData
