@@ -17,6 +17,11 @@ class ChangePasswordLoadedState extends ForgetpasswordState {
   final ChangePasswordModel changePasswordModel;
   ChangePasswordLoadedState(this.changePasswordModel);
 }
+class ChangePasswordInSettingScreenLoadedState extends ForgetpasswordState {
+  final ChangePasswordModelSectionPasswordChages changePasswordModel;
+  ChangePasswordInSettingScreenLoadedState(this.changePasswordModel);
+}
+
 
 class ForgetpasswordErrorState extends ForgetpasswordState {
   final String error;

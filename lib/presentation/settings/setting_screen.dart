@@ -5,6 +5,7 @@ import 'package:pds/API/Bloc/logOut_bloc/LogOut_state.dart';
 import 'package:pds/API/Bloc/logOut_bloc/logOut_cubit.dart';
 import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/core/utils/color_constant.dart';
+import 'package:pds/presentation/change_password_screen/change_password_screen.dart';
 import 'package:pds/presentation/forget_password_screen/forget_password_screen.dart';
 import 'package:pds/presentation/settings/LogOut_dailog.dart';
 import 'package:pds/widgets/delete_dailog.dart';
@@ -92,6 +93,7 @@ var GetTimeSplash;
 class _SettingScreenState extends State<SettingScreen> {
   String? userStatus;
   String? rejcteReson;
+  bool? UserProfileOpen;
   @override
   void initState() {
     getUserStausFuction();
@@ -281,6 +283,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           //     ));
                           break;
                         case 3:
+                    
                       Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return MultiBlocProvider(
@@ -289,7 +292,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                     create: (context) => ForgetpasswordCubit(),
                                   )
                                 ],
-                                child: ForgetPasswordScreen(
+                                child: ChangePasswordScreen(
                                   isProfile: true,
                                 ));
                           }));
@@ -461,16 +464,27 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  getUserStausFuction() async {
+  
+ getUserStausFuction() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     userStatus = await prefs.getString(PreferencesKey.userStatus);
+    UserProfileOpen = await prefs.getBool(PreferencesKey.OpenProfile);
     if (userStatus != 'APPROVED') {
       rejcteReson = userStatus?.split('-').last;
+    }
+    if (UserProfileOpen == true) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return MultiBlocProvider(providers: [
+          BlocProvider<MyAccountCubit>(
+            create: (context) => MyAccountCubit(),
+          )
+        ], child: MyAccountScreen());
+      }));
     }
     userStatus =
         userStatus != 'APPROVED' ? userStatus?.split('-').first : userStatus;
 
     setState(() {});
-    print('userStatus-${userStatus}');
-  }
+   
+}
 }

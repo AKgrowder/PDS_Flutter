@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
+import 'package:pds/API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import 'package:pds/API/Model/authModel/getUserDetailsMdoel.dart';
 import 'package:pds/API/Model/authModel/loginModel.dart';
 import 'package:pds/API/Model/authModel/registerModel.dart';
@@ -258,10 +259,9 @@ class Repository {
     }
   }
 
-  commentApi(String Room_ID, String pageNumber, String pageCount,
-      BuildContext context) async {
+  commentApi(String Room_ID, String pageNumber, BuildContext context) async {
     final response = await apiServices.getApiCall(
-        "${Config.coomment}/${Room_ID}/${pageNumber}/${pageCount}", context);
+        "${Config.coomment}/${Room_ID}/${pageNumber}/${20}", context);
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -662,7 +662,7 @@ class Repository {
     }
   }
 
-  Changepassword(Map<String, dynamic> params, BuildContext context) async {
+ Changepassword(Map<String, dynamic> params, BuildContext context) async {
     final response =
         await apiServices.postApiCall(Config.changepassword, params, context);
     var jsonString = json.decode(response.body);
@@ -680,8 +680,43 @@ class Repository {
     }
   }
 
+  ChangepasswordinSettingScreen(
+      Map<String, dynamic> params, BuildContext context) async {
+    final response = await apiServices.postApiCall(
+        Config.changepasswordInSettingScrnee, params, context);
+    var jsonString = json.decode(response.body);
+    print('jsonString-$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return ChangePasswordModelSectionPasswordChages.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
 
-   LogOut(BuildContext context) async {
+      default:
+        return jsonString;
+    }
+  }
+
+  GetallBlog(BuildContext context) async {
+    final response = await apiServices.getApiCall(Config.getallBlog, context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return GetallBlogModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  LogOut(BuildContext context) async {
     final response =
         await apiServices.getApiCallWithToken(Config.logOut, context);
     var jsonString = json.decode(response.body);

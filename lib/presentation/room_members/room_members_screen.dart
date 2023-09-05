@@ -17,7 +17,9 @@ class RoomMembersScreen extends StatefulWidget {
   String room_Id;
   var roomname;
   var roomdescription;
-  RoomMembersScreen({Key? key, required this.room_Id,this.roomname,this.roomdescription}) : super(key: key);
+  RoomMembersScreen(
+      {Key? key, required this.room_Id, this.roomname, this.roomdescription})
+      : super(key: key);
 
   @override
   State<RoomMembersScreen> createState() => _RoomMembersScreenState();
@@ -137,16 +139,22 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  "${widget.roomname}",
-                                  // "Room Name",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                      fontFamily: "outfit",
-                                      fontSize: 15),
+                                Container(
+                                  height: 40,
+                                  width: _width / 1.85,
+                                  // color: Colors.amber,
+                                  child: Text(
+                                    "${widget.roomname}", maxLines: 2,
+                                    // "Room Name",
+                                    style: TextStyle(
+                                        overflow: TextOverflow.ellipsis,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontFamily: "outfit",
+                                        fontSize: 15),
+                                  ),
                                 ),
-                                _data?.object?.length == 1
+                               /*  _data?.object?.length == 1
                                     ? Container(
                                         width: 99,
                                         height: 27.88,
@@ -447,18 +455,25 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                   ],
                                                 ),
                                               ),
-                              ],
+                             */  ],
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0),
-                            child: Text(
-                              "${widget. roomdescription}",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black,
-                                  fontFamily: "outfit",
-                                  fontSize: 13),
+                            child: Container(
+                              height: 40,
+                              width: _width,
+                              // color: Colors.amber,
+                              child: Text(
+                                "${widget.roomdescription}",
+                                maxLines: 2,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    overflow: TextOverflow.ellipsis,
+                                    color: Colors.black,
+                                    fontFamily: "outfit",
+                                    fontSize: 13),
+                              ),
                             ),
                           ),
                         ]),
@@ -490,17 +505,17 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              CachedNetworkImage(
-                                  imageUrl:
-                                      "${_data?.object?[index].userProfilePic}",
-                                  placeholder: (context, url) => Container(
-                                        width: 50,
-                                        height: 50,
-                                        color: Colors.grey,
-                                      ),
-                                  errorWidget: (context, url, error) =>
-                                      Image.asset(
-                                          "assets/images/Ellipse 6 (1).png")),
+                              CustomImageView(
+                                url: _data?.object?[index].userProfilePic
+                                            ?.isNotEmpty ??
+                                        false
+                                    ? "${_data?.object?[index].userProfilePic}"
+                                    : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                height: 50,
+                                radius: BorderRadius.circular(25),
+                                width: 50,
+                                fit: BoxFit.fill,
+                              ),
                               SizedBox(
                                 width: 10,
                               ),

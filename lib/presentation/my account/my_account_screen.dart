@@ -16,7 +16,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
@@ -72,6 +72,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   List<String>? workingInList;
   PermissionStatus _cameraPermissionStatus = PermissionStatus.denied;
   PermissionStatus _galleryPermissionStatus = PermissionStatus.denied;
+  Uint8List? _pdfData;
+
   dataSetMethod(
       {String? useridSetdata,
       String? userNameSetdata,
@@ -131,7 +133,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -155,13 +156,10 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         }
         if (state is MyAccountLoadedState) {
           myAccontDetails = state.myAccontDetails;
-          print('chekc modeil-${myAccontDetails?.object?.module}');
           if (myAccontDetails?.object?.module == 'EXPERT') {
-            print('thid condiosn workibng');
             BlocProvider.of<MyAccountCubit>(context).fetchExprties(context);
           }
           expertBool = state.myAccontDetails.object?.expertise?.isNotEmpty;
-          print('check expertbool-${expertBool}');
           dataSetMethod(
             useridSetdata: state.myAccontDetails.object?.userName,
             userNameSetdata: state.myAccontDetails.object?.name,
@@ -172,12 +170,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
             feesInSetdata: state.myAccontDetails.object?.fees,
             companyNameSetData: state.myAccontDetails.object?.companyName,
           );
-          print('printstatment-${myAccontDetails?.object?.workingHours}');
-          print('extert dtaa check-${myAccontDetails?.object?.expertise?.first.uid}');
-          if (myAccontDetails?.object?.workingHours != null) {
-            print(
-                'workignHoursCheckPrintstatment-${myAccontDetails?.object?.workingHours}');
 
+          if (myAccontDetails?.object?.workingHours != null) {
             workignStart = myAccontDetails?.object?.workingHours
                 .toString()
                 .split(" to ")
@@ -186,10 +180,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                 .toString()
                 .split(" to ")
                 .last;
-            print('workignStart-${workignStart?.split(" ").first}');
-            print('workignStart1-${workignStart?.split(" ").last}');
-            print('workignStart2-${workignend?.split(" ").first}');
-            print('workignStart3-${workignend?.split(" ").last}');
           }
         }
         if (state is MyAccountErrorState) {
@@ -209,28 +199,16 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         }
         if (state is chooseDocumentLoadedState) {
           chooseDocumentuploded = state.chooseDocumentuploded;
-          print('chooseDocumentuploded-${chooseDocumentuploded?.object}');
           myAccontDetails?.object?.userProfilePic = null;
-          /*   SnackBar snackBar = SnackBar(
-            content: Text(state.chooseDocumentuploded.message.toString()),
-            backgroundColor: ColorConstant.primary_color,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar); */
           Navigator.pop(context);
         }
         if (state is chooseDocumentLoadedState2) {
           chooseDocumentuploded2 = state.chooseDocumentuploded;
-          /*   SnackBar snackBar = SnackBar(
-            content: Text(state.chooseDocumentuploded.message.toString()),
-            backgroundColor: ColorConstant.primary_color,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar); */
         }
         if (state is FetchExprtiseRoomLoadedState) {
           _fetchExprtise = state.fetchExprtise;
-          
-            // selectedExpertise = Expertiseclass(uid, expertiseName);      
-          print('selectedExpertise-${selectedExpertise?.expertiseName}');
+
+          // selectedExpertise = Expertiseclass(uid, expertiseName);
           expertiseData = state.fetchExprtise.object!
               .map((e) =>
                   Expertiseclass(e.uid.toString(), e.expertiseName.toString()))
@@ -245,8 +223,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           Navigator.pop(context);
         }
-        if(state is UpdateProfileLoadedState){
-           SnackBar snackBar = SnackBar(
+        if (state is UpdateProfileLoadedState) {
+          SnackBar snackBar = SnackBar(
             content: Text(state.updateProfile.object.toString()),
             backgroundColor: ColorConstant.primary_color,
           );
@@ -705,23 +683,32 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                       height: 5,
                     ),
                     myAccontDetails?.object?.companyName != null
-                        ? Center(
-                            child: Container(
-                              height: 50,
-                              width: _width / 1.2,
-                              decoration: BoxDecoration(
-                                  color: Color(0xFFF6F6F6),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: TextFormField(
-                                  readOnly: isupdate,
-                                  controller: compayName,
-                                  cursorColor: Colors.grey,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                  ),
-                                ),
+                        ? InkWell(
+                            onTap: () {
+                              print(
+                                  'dfdhfdhf-${myAccontDetails?.object?.approvalStatus}');
+                            },
+                            child: Center(
+                              child: Container(
+                                height: 50,
+                                width: _width / 1.2,
+                                decoration: BoxDecoration(
+                                    color: Color(0xFFF6F6F6),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Padding(
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: TextFormField(
+                                      readOnly: myAccontDetails
+                                                  ?.object?.approvalStatus ==
+                                              'APPROVED'
+                                          ? true
+                                          : isupdate,
+                                      controller: compayName,
+                                      cursorColor: Colors.grey,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                      ),
+                                    )),
                               ),
                             ),
                           )
@@ -1167,30 +1154,65 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                               ),
                                             ),
                                           )
-                                        : Container(
-                                            height: 50,
-                                            width: _width / 4.5,
-                                            decoration: BoxDecoration(
-                                                color: Color.fromARGB(
-                                                    255, 228, 228, 228),
-                                                borderRadius: BorderRadius.only(
-                                                    topRight:
-                                                        Radius.circular(5),
-                                                    bottomRight:
-                                                        Radius.circular(5))),
-                                            child: GestureDetector(
+                                        : myAccontDetails
+                                                    ?.object?.approvalStatus !=
+                                                'APPROVED'
+                                            ? Container(
+                                                height: 50,
+                                                width: _width / 4.5,
+                                                decoration: BoxDecoration(
+                                                    color: Color.fromARGB(
+                                                        255, 228, 228, 228),
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                            topRight: Radius
+                                                                .circular(5),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    5))),
+                                                child: GestureDetector(
+                                                    onTap: () {
+                                                      dopcument =
+                                                          "Upload Image";
+                                                      setState(() {});
+                                                    },
+                                                    child: Icon(
+                                                      Icons.delete_forever,
+                                                      color: ColorConstant
+                                                          .primary_color,
+                                                    )),
+                                              )
+                                            : GestureDetector(
                                                 onTap: () {
-                                                  dopcument = "Upload Image";
-                                                  /*   chooseDocument?.object = null; */
-
-                                                  setState(() {});
+                                                  print(
+                                                      'object-${myAccontDetails?.object?.userDocument?.toString()}');
+                                                  showPdfDialog(
+                                                      context,
+                                                      myAccontDetails
+                                                          ?.object?.userDocument
+                                                          ?.toString());
                                                 },
-                                                child: Icon(
-                                                  Icons.delete_forever,
-                                                  color: ColorConstant
-                                                      .primary_color,
-                                                )),
-                                          ),
+                                                child: Container(
+                                                  height: 50,
+                                                  width: _width / 4.5,
+                                                  decoration: BoxDecoration(
+                                                      color: Color.fromARGB(
+                                                          255, 228, 228, 228),
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                              topRight: Radius
+                                                                  .circular(5),
+                                                              bottomRight:
+                                                                  Radius
+                                                                      .circular(
+                                                                          5))),
+                                                  child: Icon(
+                                                    Icons.arrow_forward,
+                                                    color: ColorConstant
+                                                        .primary_color,
+                                                  ),
+                                                ),
+                                              ),
                                   ],
                                 ),
                               )
@@ -1386,40 +1408,39 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 );
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
+                              } else if (dopcument == 'Upload Image') {
+                                SnackBar snackBar = SnackBar(
+                                  content: Text('Please Upload Image'),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
                               } else {
-                                if (chooseDocumentuploded?.object != null) {
-                                  Map<String, dynamic> params = {
-                                    'document': chooseDocumentuploded2?.object
-                                        .toString(),
-                                    'companyName': compayName.text,
-                                    'jobProfile': jobProfile.text,
-                                    'name': userName.text,
-                                    'uuid': myAccontDetails?.object?.uuid
-                                        .toString(),
-                                    'userProfilePic':
-                                        chooseDocumentuploded?.object.toString()
-                                  };
-                                  print('if change-');
-
-                                  print('paremdatapasssing-$params');
-                                  BlocProvider.of<MyAccountCubit>(context)
-                                      .cretaForumUpdate(params, context);
-                                } else {
-                                  Map<String, dynamic> params = {
-                                    'document': chooseDocumentuploded2?.object
-                                        .toString(),
-                                    'companyName': compayName.text,
-                                    'jobProfile': jobProfile.text,
-                                    'name': userName.text,
-                                    'uuid': myAccontDetails?.object?.uuid
-                                        .toString(),
-                                  };
-                                  print('else if change-');
-                                  BlocProvider.of<MyAccountCubit>(context)
-                                      .cretaForumUpdate(params, context);
-                                  print('paremdatapasssing-$params');
-                                }
-                                ;
+                                print('userProfilePicapi data-${ myAccontDetails
+                                              ?.object?.userProfilePic}');
+                               print('userProfilelocally-${chooseDocumentuploded?.object}');               
+                                Map<String, dynamic> params = {
+                                  "document": chooseDocumentuploded2?.object !=
+                                          null
+                                      ? "${chooseDocumentuploded2?.object.toString()}"
+                                      : '${myAccontDetails?.object?.userDocument}',
+                                  "userProfilePic": myAccontDetails
+                                              ?.object?.userProfilePic !=
+                                          null
+                                      ? myAccontDetails?.object?.userProfilePic
+                                      : chooseDocumentuploded?.object != null
+                                          ? chooseDocumentuploded?.object
+                                              .toString()
+                                          : null,
+                                  'companyName': compayName.text,
+                                  'jobProfile': jobProfile.text,
+                                  'name': userName.text,
+                                  'uuid':
+                                      myAccontDetails?.object?.uuid.toString(),
+                                };
+                                print('paremdatapasssing-$params');
+                        BlocProvider.of<MyAccountCubit>(context)
+                                    .cretaForumUpdate(params, context); 
                               }
                             }
                           } else if (myAccontDetails?.object?.module ==
@@ -1471,7 +1492,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                               );
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
-                            } else if (dopcument == '') {
+                            } else if (dopcument == 'Upload Image') {
                               SnackBar snackBar = SnackBar(
                                 content: Text('Please Upload Image'),
                                 backgroundColor: ColorConstant.primary_color,
@@ -1481,44 +1502,39 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                             } else {
                               String time =
                                   '${_startTime!.format(context).toString()} to ${_endTime!.format(context).toString()}';
-                              if (chooseDocumentuploded?.object != null) {
-                                var params = {
-                                  "document": chooseDocumentuploded2?.object !=
-                                          null
-                                      ? "${chooseDocumentuploded2?.object.toString()}"
-                                      : '${dopcument.toString()}',
-                                  "expertUId": [
-                                    "${selectedExpertise?.uid.toString()}"
-                                  ],
-                                  "fees": '${fees.text}',
-                                  "jobProfile": '${jobProfile.text}',
-                                  "uid": User_ID.toString(),
-                                  "workingHours": time.toString(),
-                                  "profilePic":
-                                      '${chooseDocumentuploded?.object.toString()}'
-                                };
-                                print('params if -$params');
+                              print(
+                                  'chooseDocumentuploded2?.object-${chooseDocumentuploded2?.object}');
+                              print(
+                                  'dopcument.toString()-${dopcument.toString()}');
 
-                                BlocProvider.of<MyAccountCubit>(context)
-                                    .addExpertProfile(params, context);
-                              } else {
-                                var params = {
-                                  "document": chooseDocumentuploded2?.object !=
-                                          null
-                                      ? "${chooseDocumentuploded2?.object.toString()}"
-                                      : '${dopcument.toString()}',
-                                  "expertUId": [
-                                    "${selectedExpertise?.uid.toString()}"
-                                  ],
-                                  "fees": '${fees.text}',
-                                  "jobProfile": '${jobProfile.text}',
-                                  "uid": User_ID.toString(),
-                                  "workingHours": time.toString(),
-                                };
-                                print('params else -$params');
-                                BlocProvider.of<MyAccountCubit>(context)
-                                    .addExpertProfile(params, context);
-                              }
+                              print(
+                                  'profilePic-${chooseDocumentuploded?.object.toString()}');
+                              print(
+                                  'UserprofilePic -${myAccontDetails?.object?.userProfilePic}');
+                              var params = {
+                                "document": chooseDocumentuploded2?.object !=
+                                        null
+                                    ? "${chooseDocumentuploded2?.object.toString()}"
+                                    : '${myAccontDetails?.object?.userDocument}',
+                                "expertUId": [
+                                  "${selectedExpertise?.uid.toString()}"
+                                ],
+                                "fees": '${fees.text}',
+                                "jobProfile": '${jobProfile.text}',
+                                "uid": User_ID.toString(),
+                                "workingHours": time.toString(),
+                                "profilePic": myAccontDetails
+                                            ?.object?.userProfilePic !=
+                                        null
+                                    ? myAccontDetails?.object?.userProfilePic
+                                    : chooseDocumentuploded?.object != null
+                                        ? chooseDocumentuploded?.object
+                                            .toString()
+                                        : null
+                              };
+                              print('paramscheck-$params');
+                              BlocProvider.of<MyAccountCubit>(context)
+                                  .addExpertProfile(params, context);
                             }
                           } else if (myAccontDetails?.object?.module ==
                               'EMPLOYEE') {
@@ -1534,13 +1550,16 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   "name": "${userId.text}",
                                   "uuid": "$User_ID"
                                 };
-                                BlocProvider.of<MyAccountCubit>(context).UpdateProfileEmployee(param,context);
+                                BlocProvider.of<MyAccountCubit>(context)
+                                    .UpdateProfileEmployee(param, context);
                               } else {
                                 var param = {
                                   "name": "${userId.text}",
                                   "uuid": "$User_ID"
                                 };
-                                BlocProvider.of<MyAccountCubit>(context).UpdateProfileEmployee(param,context);       }
+                                BlocProvider.of<MyAccountCubit>(context)
+                                    .UpdateProfileEmployee(param, context);
+                              }
                             }
                           }
                         }
@@ -1573,6 +1592,33 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                   ]),
             ),
           ),
+        );
+      },
+    );
+  }
+
+  void showPdfDialog(BuildContext context, pdfUrl) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('PDF Viewer'),
+          content: Container(
+            width: double.maxFinite,
+            height: 400, // Adjust the height as needed
+            child: SfPdfViewer.network(
+              pdfUrl,
+              // Customize the viewer with options here if needed
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Close'),
+            ),
+          ],
         );
       },
     );
@@ -1818,6 +1864,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   localDataGet() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
+    prefs.setBool(PreferencesKey.OpenProfile, false);
+
     setState(() {});
   }
 }

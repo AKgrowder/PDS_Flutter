@@ -120,7 +120,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     getDataStroe(
                         state.loginModel.object?.uuid.toString() ?? "",
                         state.loginModel.object?.jwt.toString() ?? "",
-                        loginModelData?.object?.module.toString() ?? ""
+                        loginModelData?.object?.module.toString() ?? "",
+                        loginModelData?.object?.profilePic.toString() ?? ""
 
                         // state.loginModel.object!.verified.toString(),
                         );
@@ -174,7 +175,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     getDataStroe(
                         loginModelData?.object?.uuid.toString() ?? "",
                         loginModelData?.object?.jwt.toString() ?? "",
-                        loginModelData?.object?.module.toString() ?? ""
+                        loginModelData?.object?.module.toString() ?? "",
+                        loginModelData?.object?.profilePic.toString() ?? ""
                         // state.loginModel.object!.verified.toString(),
                         );
                     if (saveDeviceInfo == true) {
@@ -465,13 +467,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return MultiBlocProvider(providers: [
-                              BlocProvider<ForgetpasswordCubit>(
-                                create: (context) => ForgetpasswordCubit(),
-                              )
-                            ], child: ForgetPasswordScreen());
-                          }));
+                                      MaterialPageRoute(builder: (context) {
+                                    return MultiBlocProvider(providers: [
+                                      BlocProvider<ForgetpasswordCubit>(
+                                        create: (context) =>
+                                            ForgetpasswordCubit(),
+                                      )
+                                    ], child: ForgetPasswordScreen());
+                                  }));
                                 },
                                 child: Text(
                                   "Forget Password?",
@@ -594,11 +597,13 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  getDataStroe(String userId, String jwt, String user_Module) async {
+  getDataStroe(String userId, String jwt, String user_Module,String UserProfile) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKey.loginUserID, userId);
     prefs.setString(PreferencesKey.loginJwt, jwt);
     prefs.setString(PreferencesKey.module, user_Module);
+    prefs.setString(PreferencesKey.UserProfile, UserProfile);
+
     // prefs.setString(PreferencesKey.loginVerify, verify);
     print('userId-$userId');
     print('jwt-$jwt');

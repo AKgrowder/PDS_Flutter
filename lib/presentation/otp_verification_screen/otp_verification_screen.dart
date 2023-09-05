@@ -77,12 +77,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           _secondsRemaining--;
         } else {
           _timer!.cancel();
-          // model!.data!.forEach((element) {
-          //   if (element.name == "ResendTimerInSeconds") {
-          //     GetTime = int.parse(element.value!);
-          //     SetUi();
-          //   }
-          // });
           tm = true;
           _secondsRemaining = otpTimer;
         }
@@ -218,7 +212,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           ],
                           child: ChangePasswordScreen(
                             mobile: widget.phonNumber,
-                            isProfile: widget.isProfile == true ? true : false,
                           ));
                     }));
                   } else {

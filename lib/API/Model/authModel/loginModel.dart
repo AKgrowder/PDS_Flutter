@@ -30,9 +30,10 @@ class Object {
   bool? signUpStep;
   String? name;
   String? mobileNo;
+  String? profilePic;
   bool? active;
-  bool? verified;
   bool? approved;
+  bool? verified;
 
   Object(
       {this.jwt,
@@ -41,9 +42,10 @@ class Object {
       this.signUpStep,
       this.name,
       this.mobileNo,
+      this.profilePic,
       this.active,
-      this.verified,
-      this.approved});
+      this.approved,
+      this.verified});
 
   Object.fromJson(Map<String, dynamic> json) {
     jwt = json['jwt'];
@@ -52,9 +54,10 @@ class Object {
     signUpStep = json['signUpStep'];
     name = json['name'];
     mobileNo = json['mobileNo'];
+    profilePic = json['profilePic'];
     active = json['active'];
-    verified = json['verified'];
     approved = json['approved'];
+    verified = json['verified'];
   }
 
   Map<String, dynamic> toJson() {
@@ -65,9 +68,10 @@ class Object {
     data['signUpStep'] = this.signUpStep;
     data['name'] = this.name;
     data['mobileNo'] = this.mobileNo;
+    data['profilePic'] = this.profilePic;
     data['active'] = this.active;
-    data['verified'] = this.verified;
     data['approved'] = this.approved;
+    data['verified'] = this.verified;
     return data;
   }
 }

@@ -1,6 +1,10 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'package:pds/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
@@ -13,14 +17,12 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/custom_bottom_bar/custom_bottom_bar.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../../theme/theme_helper.dart';
+import '../policy_of_company/policy_screen.dart';
+import '../policy_of_company/privecy_policy.dart';
 
 class CreateForamScreen extends StatefulWidget {
   const CreateForamScreen({Key? key}) : super(key: key);
@@ -553,7 +555,16 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Policies(
+                                    title: " ",
+                                    data: Policy_Data.turms_of_use,
+                                  ),
+                                ));
+                          },
                           child: Text(
                             " Terms & Cinditions",
                             style: TextStyle(
@@ -569,7 +580,16 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                     ),
                     Center(
                       child: GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Policies(
+                                  title: " ",
+                                  data: Policy_Data.privacy_policy1,
+                                ),
+                              ));
+                        },
                         child: Text(
                           "Privacy & Policy of PDS Terms",
                           style: TextStyle(

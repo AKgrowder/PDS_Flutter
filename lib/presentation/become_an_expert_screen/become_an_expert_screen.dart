@@ -16,6 +16,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_text_form_field.dart';
+import '../policy_of_company/policy_screen.dart';
+import '../policy_of_company/privecy_policy.dart';
 
 class BecomeExpertScreen extends StatefulWidget {
   const BecomeExpertScreen({Key? key}) : super(key: key);
@@ -879,37 +881,87 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           margin: EdgeInsets.only(
                             left: 10,
                             top: 16,
-                            right: 10,
+                            right: 0,
                           ),
-                          child: RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: "By Submitting you are agreeing to ",
-                                  style: TextStyle(
-                                    color: appTheme.black900,
-                                    fontSize: 14,
-                                    fontFamily: 'Outfit',
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                          child: Row(
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: "By Submitting you are agreeing to ",
+                                      style: TextStyle(
+                                        color: appTheme.black900,
+                                        fontSize: 14,
+                                        fontFamily: 'Outfit',
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    // TextSpan(
+                                    //   text:
+                                    //       "Terms & Conditions  Privacy & Policy  of PDS Terms",
+                                    //   style: TextStyle(
+                                    //     color: theme.colorScheme.primary,
+                                    //     fontSize: 14,
+                                    //     fontFamily: 'Outfit',
+                                    //     fontWeight: FontWeight.w500,
+                                    //     decoration: TextDecoration.underline,
+                                    //   ),
+                                    // ),
+                                  ],
                                 ),
-                                TextSpan(
-                                  text:
-                                      "Terms & Conditions  Privacy & Policy  of PDS Terms",
-                                  style: TextStyle(
-                                    color: theme.colorScheme.primary,
-                                    fontSize: 14,
-                                    fontFamily: 'Outfit',
-                                    fontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline,
+                                textAlign: TextAlign.center,
+                              ),
+                               GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Policies(
+                                              title: " ",
+                                              data: Policy_Data.turms_of_use,
+                                            ),
+                                          ));
+                                    },
+                                    child: Text(
+                                      "Terms & Conditions",
+                                      style: TextStyle(
+                                        color: theme.colorScheme.primary,
+                                        fontSize: 14,
+                                        fontFamily: 'Outfit',
+                                        fontWeight: FontWeight.w500,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            textAlign: TextAlign.center,
+                            ],
                           ),
                         ),
                       ),
+                      Center(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Policies(
+                                        title: " ",
+                                        data: Policy_Data.privacy_policy1,
+                                      ),
+                                    ));
+                              },
+                              child: Text(
+                                "Privacy & Policy  of PDS Terms",
+                                style: TextStyle(
+                                  color: theme.colorScheme.primary,
+                                  fontSize: 14,
+                                  fontFamily: 'Outfit',
+                                  fontWeight: FontWeight.w500,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ),
                       SizedBox(
                         height: 20,
                       )

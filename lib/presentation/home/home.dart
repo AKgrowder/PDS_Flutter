@@ -1,11 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/presentation/become_an_expert_screen/become_an_expert_screen.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import '../../API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_state.dart';
 import '../../API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
@@ -15,6 +15,7 @@ import '../../API/Bloc/auth/register_Block.dart';
 import '../../API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
+import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../API/Model/HomeScreenModel/MyPublicRoom_model.dart';
 import '../../API/Model/HomeScreenModel/PublicRoomModel.dart';
 import '../../API/Model/HomeScreenModel/getLoginPublicRoom_model.dart';
@@ -40,7 +41,8 @@ int? isselectedimage = -1;
 List? image = [];
 dynamic _CallBackCheck;
 String? User_Name;
-String? User_Module;
+String? User_Module = "";
+String? UserProfile;
 String? User_ID;
 bool refresh = false;
 
@@ -79,6 +81,7 @@ List<String> commentss = [
   "2078 Comments",
 ];
 var checkuserdata = "";
+GetallBlogModel? getallBlogdata;
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
@@ -86,6 +89,8 @@ class _HomeScreenState extends State<HomeScreen> {
     saveUserProfile();
     BlocProvider.of<FetchAllPublicRoomCubit>(context)
         .FetchAllExpertsAPI(context);
+
+    BlocProvider.of<FetchAllPublicRoomCubit>(context).GetallBlog(context);
 
     super.initState();
   }
@@ -136,6 +141,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   checkuserdata);
             }
 
+            if (state is GetallblogLoadedState) {
+              getallBlogdata = state.getallBlogdata;
+            }
+
             if (state is FetchAllPublicRoomLoadingState) {
               Center(
                 child: Container(
@@ -176,14 +185,15 @@ class _HomeScreenState extends State<HomeScreen> {
             if (state is fetchUserModulemodelLoadedState) {
               print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" +
                   "${state.fetchUserModule.object}");
-              var user_Module = state.fetchUserModule.object ?? "";
+              var user_Module = state.fetchUserModule.object?.userModule ?? "";
               final SharedPreferences prefs =
                   await SharedPreferences.getInstance();
 
               prefs.setString(PreferencesKey.module, user_Module);
-               setState(() {
+              setState(() {
                 //  saveUserProfile();
-               });
+                 User_Module = user_Module;
+              });
             }
           }, builder: (context, state) {
             return SingleChildScrollView(
@@ -271,11 +281,45 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                         User_ID != null
-                            ? CustomImageView(
-                                imagePath: ImageConstant.imgRectangle39829,
-                                height: 50,
-                                radius: BorderRadius.circular(65),
-                                alignment: Alignment.center,
+                            ? GestureDetector(
+                                onTap: () {
+                                  OpenProfileSave();
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return MultiBlocProvider(providers: [
+                                      BlocProvider<FetchAllPublicRoomCubit>(
+                                        create: (context) =>
+                                            FetchAllPublicRoomCubit(),
+                                      ),
+                                      BlocProvider<CreatPublicRoomCubit>(
+                                        create: (context) =>
+                                            CreatPublicRoomCubit(),
+                                      ),
+                                      BlocProvider<senMSGCubit>(
+                                        create: (context) => senMSGCubit(),
+                                      ),
+                                      BlocProvider<RegisterCubit>(
+                                        create: (context) => RegisterCubit(),
+                                      ),
+                                      BlocProvider<GetAllPrivateRoomCubit>(
+                                        create: (context) =>
+                                            GetAllPrivateRoomCubit(),
+                                      ),
+                                      BlocProvider<InvitationCubit>(
+                                        create: (context) => InvitationCubit(),
+                                      ),
+                                    ], child: BottombarPage(buttomIndex: 4));
+                                  }));
+                                },
+                                child: CustomImageView(
+                                  // imagePath: ImageConstant.imgRectangle39829,
+                                  url: UserProfile,
+                                  height: 50,
+                                  width: 50,
+                                  fit: BoxFit.fill,
+                                  radius: BorderRadius.circular(25),
+                                  alignment: Alignment.center,
+                                ),
                               )
                             : Container()
                       ],
@@ -304,57 +348,124 @@ class _HomeScreenState extends State<HomeScreen> {
                           : User_Module == "EXPERT"
                               ? Container(
                                   // color: Colors.lightGreen,
-                                  height: 50,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      if (User_ID != null) {
-                                        /*  Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                RoomsScreen(),
-                                          )); */
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return MultiBlocProvider(providers: [
-                                            BlocProvider<InvitationCubit>(
-                                              create: (context) =>
-                                                  InvitationCubit(),
-                                            ),
-                                          ], child: InvitationScreen());
-                                        }));
-                                      } else {
-                                        print("User guest Mood on");
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
+                                  height:  checkuserdata == "REJECTED" ? 80:50,
+                                  child: Column(
+                                    children: [
+                                       checkuserdata == "REJECTED"
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return MultiBlocProvider(
+                                                      providers: [
+                                                        BlocProvider<
+                                                            FetchAllPublicRoomCubit>(
+                                                          create: (context) =>
+                                                              FetchAllPublicRoomCubit(),
+                                                        ),
+                                                        BlocProvider<
+                                                            CreatPublicRoomCubit>(
+                                                          create: (context) =>
+                                                              CreatPublicRoomCubit(),
+                                                        ),
+                                                        BlocProvider<
+                                                            senMSGCubit>(
+                                                          create: (context) =>
+                                                              senMSGCubit(),
+                                                        ),
+                                                        BlocProvider<
+                                                            RegisterCubit>(
+                                                          create: (context) =>
+                                                              RegisterCubit(),
+                                                        ),
+                                                        BlocProvider<
+                                                            GetAllPrivateRoomCubit>(
+                                                          create: (context) =>
+                                                              GetAllPrivateRoomCubit(),
+                                                        ),
+                                                        BlocProvider<
+                                                            InvitationCubit>(
+                                                          create: (context) =>
+                                                              InvitationCubit(),
+                                                        ),
+                                                      ],
+                                                      child: BottombarPage(
+                                                          buttomIndex: 4));
+                                                }));
+                                              },
+                                              child: Container(
+                                                height: 25,
+                                                width: _width,
+                                                // color: Colors.red,
+                                                child: Center(
+                                                  child: Text(
+                                                    "Your Account Rejected Update, click here..",
+                                                    style: TextStyle(
+                                                      fontFamily: 'outfit',
+                                                      fontSize: 15,
+                                                      color: Color(0XFFED1C25),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : SizedBox(),
+                                      Spacer(),
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (User_ID != null) {
+                                            /*  Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
                                                 builder: (context) =>
-                                                    RegisterCreateAccountScreen()));
-                                      }
-                                    },
-                                    child: Container(
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                          color: Color(0XFFED1C25),
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      child: Container(
-                                        // width: _width / 2.5,
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            "Invitations",
-                                            style: TextStyle(
-                                              fontFamily: 'outfit',
-                                              fontSize: 13,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
+                                                    RoomsScreen(),
+                                              )); */
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return MultiBlocProvider(providers: [
+                                                BlocProvider<InvitationCubit>(
+                                                  create: (context) =>
+                                                      InvitationCubit(),
+                                                ),
+                                              ], child: InvitationScreen());
+                                            }));
+                                          } else {
+                                            print("User guest Mood on");
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        RegisterCreateAccountScreen()));
+                                          }
+                                        },
+                                        child: Container(
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                              color: Color(0XFFED1C25),
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          child: Container(
+                                            // width: _width / 2.5,
+                                            child: Align(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                "Invitations",
+                                                style: TextStyle(
+                                                  fontFamily: 'outfit',
+                                                  fontSize: 13,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ),
+                                    ],
+                                  ),  
                                 )
                               : User_Module == "EMPLOYEE"
                                   ? checkuserdata == "PARTIALLY_REGISTERED"
@@ -665,7 +776,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                ExpertsScreen(),
+                                                MultiBlocProvider(
+                                                    providers: [
+                                                  BlocProvider<SherInviteCubit>(
+                                                    create: (_) =>
+                                                        SherInviteCubit(),
+                                                  ),
+                                                ],
+                                                    child: ExpertsScreen(
+                                                        RoomUUID: "")),
+                                            // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
                                           )).then((value) => setState(() {
                                             refresh = true;
                                           }));
@@ -2048,8 +2168,441 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             )
                           : SizedBox(),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(right: 20.0, left: 20, top: 7),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Recent Blogs",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontFamily: "outfit",
+                              fontSize: 23),
+                        ),
+                        GestureDetector(
+                          onTap: () {},
+                          child: Icon(
+                            Icons.arrow_forward,
+                            size: 30,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    // color: Colors.red,
+                    height: _height / 3,
+                    width: _width / 1.1,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      physics: BouncingScrollPhysics(),
+                      itemCount: getallBlogdata?.object?.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                              // height: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                // border: Border.all(
+                                //   color: Colors.red,
+                                // ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Stack(
+                                    // alignment: Alignment.topRight,
+                                    children: [
+                                      Container(
+                                        height: _height / 3.2,
+                                        width: _width / 1.2,
+                                        child: CustomImageView(
+                                          // imagePath: ImageConstant.blogimage,
+
+                                          url: getallBlogdata
+                                                  ?.object?[index].image
+                                                  .toString() ??
+                                              "",
+                                          // height: 50,
+                                          width: _width,
+                                          fit: BoxFit.fill,
+                                          radius: BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 290, top: 10),
+                                        child: Image.asset(
+                                          ImageConstant.blogsaveimage,
+                                          height: 40,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          top: 180,
+                                        ),
+                                        child: Container(
+                                          height: _height / 10,
+                                          width: _width / 1.2,
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  Colors.white.withOpacity(0.7),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Column(children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    getallBlogdata
+                                                            ?.object?[index]
+                                                            .description
+                                                            .toString() ??
+                                                        "",
+                                                    style: TextStyle(
+                                                        fontFamily: 'outfit',
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Row(
+                                              children: [
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                    getallBlogdata
+                                                            ?.object?[index]
+                                                            .createdAt
+                                                            .toString() ??
+                                                        "",
+                                                    style: TextStyle(
+                                                        fontFamily: 'outfit',
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                CircleAvatar(
+                                                  backgroundColor: Colors.black,
+                                                  maxRadius: 2,
+                                                ),
+                                                SizedBox(
+                                                  width: 2,
+                                                ),
+                                                Text("12.3K Views",
+                                                    style: TextStyle(
+                                                        fontFamily: 'outfit',
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                Spacer(),
+                                                Image.asset(
+                                                  ImageConstant.like_image,
+                                                  height: 20,
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Image.asset(
+                                                  ImageConstant.arrowleftimage,
+                                                  height: 30,
+                                                  color: Colors.black,
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                )
+                                              ],
+                                            )
+                                          ]),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              )),
+                        );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(right: 20.0, left: 20, top: 7),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Previous Blogs",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontFamily: "outfit",
+                              fontSize: 23),
+                        ),
+                        GestureDetector(
+                          onTap: () {},
+                          child: Icon(
+                            Icons.arrow_forward,
+                            size: 30,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    // color: Colors.red,
+                    height: _height / 3.5,
+                    width: _width / 1.1,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      physics: BouncingScrollPhysics(),
+                      itemCount: 5,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            // height: 100,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Stack(
+                                  children: [
+                                    Container(
+                                      height: 120,
+                                      width: _width / 2.35,
+                                      child: CustomImageView(
+                                        imagePath: ImageConstant.blogimage,
+                                        // height: 50,
+                                        // width: _width/1.2,
+                                        fit: BoxFit.fill,
+                                        radius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Baluran Wild The",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.black,
+                                          fontFamily: "outfit",
+                                          fontSize: 20),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Savvanah",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.black,
+                                          fontFamily: "outfit",
+                                          fontSize: 20),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text("27th june 2020  10:47 PM",
+                                        style: TextStyle(
+                                            fontFamily: 'outfit',
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w100)),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    CircleAvatar(
+                                      backgroundColor: Colors.black,
+                                      maxRadius: 2,
+                                    ),
+                                    SizedBox(
+                                      width: 2,
+                                    ),
+                                    Text("12.3K Views",
+                                        style: TextStyle(
+                                            fontFamily: 'outfit',
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w100)),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Image.asset(
+                                      ImageConstant.like_image,
+                                      height: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Image.asset(
+                                      ImageConstant.arrowleftimage,
+                                      height: 30,
+                                      color: Colors.black,
+                                    ),
+                                    SizedBox(width: _width / 4.8),
+                                    Image.asset(
+                                      ImageConstant.setting_save,
+                                      height: 20,
+                                      color: Colors.black,
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                   SizedBox(
-                    height: 10,
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      physics: BouncingScrollPhysics(),
+                      itemCount: 4,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            // height: 100,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 110,
+                                  width: _width / 4,
+                                  child: CustomImageView(
+                                    imagePath: ImageConstant.blogimage,
+                                    // height: 50,
+                                    // width: _width/1.2,
+                                    fit: BoxFit.fill,
+                                    radius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 2),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Baluran Wild The Savvanah",
+                                          style: TextStyle(
+                                              fontFamily: 'outfit',
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold)),
+                                      Container(
+                                        height: 70,
+                                        width: _width / 1.6,
+                                        // color: Colors.amber,
+                                        child: Text(
+                                            "Lectus scelerisque vulputate tortor pellentesque ac. Fringilla cras ut facilisis amet imperdiet vitae etiam pellentesque pellentesque. Pellentesq",
+                                            style: TextStyle(
+                                                fontFamily: 'outfit',
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w300)),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text("27th June 2020",
+                                              style: TextStyle(
+                                                  fontFamily: 'outfit',
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300)),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text("10:47 pm",
+                                              style: TextStyle(
+                                                  fontFamily: 'outfit',
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300)),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          CircleAvatar(
+                                            maxRadius: 2,
+                                            backgroundColor: Colors.grey,
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text("12.3K Views",
+                                              style: TextStyle(
+                                                  fontFamily: 'outfit',
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300)),
+                                          SizedBox(
+                                            width: 4,
+                                          ),
+                                          Image.asset(
+                                            ImageConstant.like_image,
+                                            height: 20,
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Image.asset(
+                                            ImageConstant.arrowleftimage,
+                                            height: 20,
+                                            color: Colors.black,
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
                   ),
                 ],
               ),
@@ -2136,23 +2689,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // prefs.getString(PreferencesKey.ProfileUserName);
     User_ID = prefs.getString(PreferencesKey.loginUserID);
+    if (User_ID != "" && User_ID != null) {
+      BlocProvider.of<FetchAllPublicRoomCubit>(context).chckUserStaus(context);
+    }
+    User_ID == null ? api() : NewApi();
     User_Name = prefs.getString(PreferencesKey.ProfileName);
     User_Module = prefs.getString(PreferencesKey.module);
-
+    if (User_Module == null || User_Module == "") {
+      BlocProvider.of<FetchAllPublicRoomCubit>(context).UserModel(context);
+    }
+    UserProfile = prefs.getString(PreferencesKey.UserProfile);
+    prefs.setBool(PreferencesKey.OpenProfile, false);
     var Token = prefs.getString(PreferencesKey.loginJwt);
     var FCMToken = prefs.getString(PreferencesKey.fcmToken);
 
     print("---------------------->> : ${FCMToken}");
     print("User Token :--- " + "${Token}");
-    setState(() {});
+
     print('usrId-$User_ID');
-    if (User_ID != "" && User_ID != null) {
-      BlocProvider.of<FetchAllPublicRoomCubit>(context).chckUserStaus(context);
-    }
-    User_ID == null ? api() : NewApi();
+
+    setState(() {});
     // prefs.getString(PreferencesKey.ProfileEmail);
     // prefs.getString(PreferencesKey.ProfileModule);
     // prefs.getString(PreferencesKey.ProfileMobileNo);
+  }
+   OpenProfileSave() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(PreferencesKey.OpenProfile, true);
   }
 
   api() {
