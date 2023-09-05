@@ -93,6 +93,7 @@ var GetTimeSplash;
 class _SettingScreenState extends State<SettingScreen> {
   String? userStatus;
   String? rejcteReson;
+  bool? UserProfileOpen;
   @override
   void initState() {
     getUserStausFuction();
@@ -484,5 +485,6 @@ class _SettingScreenState extends State<SettingScreen> {
         userStatus != 'APPROVED' ? userStatus?.split('-').first : userStatus;
 
     setState(() {});
-    print
+   
+}
 }
