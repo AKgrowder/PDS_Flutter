@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
-import 'package:pds/API/Model/myaccountModel/myaccountModel.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/presentation/become_an_expert_screen/become_an_expert_screen.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
+
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_state.dart';
 import '../../API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
@@ -15,6 +15,7 @@ import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import '../../API/Bloc/auth/register_Block.dart';
 import '../../API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
+import '../../API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import '../../API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../API/Model/HomeScreenModel/MyPublicRoom_model.dart';
@@ -80,6 +81,47 @@ List<String> commentss = [
   "2078 Comments",
   "2078 Comments",
 ];
+String customFormat(DateTime date) {
+  String day = date.day.toString();
+  String month = _getMonthName(date.month);
+  String year = date.year.toString();
+  String time = DateFormat('h:mm a').format(date);
+
+  String formattedDate = '$day$month $year $time';
+  return formattedDate;
+}
+
+String _getMonthName(int month) {
+  switch (month) {
+    case 1:
+      return 'st January';
+    case 2:
+      return 'nd February';
+    case 3:
+      return 'rd March';
+    case 4:
+      return 'th April';
+    case 5:
+      return 'th May';
+    case 6:
+      return 'th June';
+    case 7:
+      return 'th July';
+    case 8:
+      return 'th August';
+    case 9:
+      return 'th September';
+    case 10:
+      return 'th October';
+    case 11:
+      return 'th November';
+    case 12:
+      return 'th December';
+    default:
+      return '';
+  }
+}
+
 var checkuserdata = "";
 GetallBlogModel? getallBlogdata;
 
@@ -2533,6 +2575,8 @@ class _HomeScreenState extends State<HomeScreen> {
         itemCount: getallBlogdata?.object?.length,
         shrinkWrap: true,
         itemBuilder: (context, index) {
+          DateTime parsedDateTime = DateTime.parse(
+              '${getallBlogdata?.object?[index].createdAt ?? ""}');
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -2606,10 +2650,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   SizedBox(
                                     width: 10,
                                   ),
-                                  Text(
-                                      getallBlogdata?.object?[index].createdAt
-                                              .toString() ??
-                                          "",
+                                  Text(customFormat(parsedDateTime),
                                       style: TextStyle(
                                           fontFamily: 'outfit',
                                           fontSize: 12,
