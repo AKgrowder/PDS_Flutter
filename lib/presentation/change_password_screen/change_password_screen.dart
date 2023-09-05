@@ -41,13 +41,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  void dispose() {
-    newpasswordController.clear();
-    conformpasswordController.clear();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
@@ -161,6 +154,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   hintText: "New Password",
                   hintStyle: theme.textTheme.titleMedium!,
                   textInputType: TextInputType.visiblePassword,
+                  errorMaxLines: 3,
                   validator: (value) {
                     String pattern =
                         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$%^&*(),.?":{}|<>])[A-Za-z0-9!@#\$%^&*(),.?":{}|<>]{8,}$';
@@ -225,6 +219,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   hintText: "Confirm Password",
                   hintStyle: theme.textTheme.titleMedium!,
                   textInputType: TextInputType.visiblePassword,
+                  errorMaxLines: 3,
                   validator: (value) {
                     String pattern =
                         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$%^&*(),.?":{}|<>])[A-Za-z0-9!@#\$%^&*(),.?":{}|<>]{8,}$';
@@ -281,23 +276,22 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       } else {
                         if (widget.isProfile == true) {
                           print('this is condions');
+
                           var params = {
                             "uuid": userUid.toString(),
                             "password": conformpasswordController.text,
                           };
-
                           BlocProvider.of<ForgetpasswordCubit>(context)
                               .ChangepasswordinSetitngScreenwork(
                                   params, context);
                         } else {
                           var params = {
                             "mobileNo": widget.mobile.toString(),
-                            "password": conformpasswordController.text,
+                            "changePassword": conformpasswordController.text,
                           };
 
                           BlocProvider.of<ForgetpasswordCubit>(context)
-                              .Changepassword(
-                                  context, params);
+                              .Changepassword(context, params);
                         }
                       }
                     }

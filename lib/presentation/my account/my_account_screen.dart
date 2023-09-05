@@ -540,7 +540,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                         child: Padding(
                           padding: EdgeInsets.only(left: 10),
                           child: TextFormField(
-                            readOnly: isupdate,
+                            readOnly: true,
                             controller: userName,
                             cursorColor: Colors.grey,
                             decoration: InputDecoration(
@@ -1185,7 +1185,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                                 onTap: () {
                                                   print(
                                                       'object-${myAccontDetails?.object?.userDocument?.toString()}');
-                                               /*    showPdfDialog(
+                                                  /*    showPdfDialog(
                                                       context,
                                                       myAccontDetails
                                                           ?.object?.userDocument
