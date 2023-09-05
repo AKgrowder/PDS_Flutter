@@ -103,12 +103,14 @@ class ApiServices {
     };
     final response =
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
+    
+
     response.headers.addAll(headers1);
     if (params != null) {
       response.fields["document"] = params['document'] ?? "";
       response.fields["companyName"] = params['companyName'] ?? "";
       response.fields["jobProfile"] = params['jobProfile'] ?? "";
-      response.fields["profile"] = params['profile'] ?? "";
+      response.fields["userProfilePic"] = params['userProfilePic'] ?? "";
       response.fields["uuid"] = params['uuid'] ?? "";
       response.fields["name"] = params['name'] ?? "";
     }
