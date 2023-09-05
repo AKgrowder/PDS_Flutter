@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
-import '../../Model/HomeScreenModel/PublicRoomModel.dart';
+
 import '../../Repo/repository.dart';
 import 'Fatch_PRoom_state.dart';
 
@@ -33,7 +32,7 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
     }
   }
 
-   Future<void> chckUserStaus(BuildContext context) async {
+  Future<void> chckUserStaus(BuildContext context) async {
     dynamic checkUserStausModel;
     try {
       emit(FetchAllPublicRoomLoadingState());
@@ -46,11 +45,11 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
     }
   }
 
-  Future<void> FetchPublicRoom(String uuid,BuildContext context) async {
+  Future<void> FetchPublicRoom(String uuid, BuildContext context) async {
     dynamic FetchPublicRoomModel;
     try {
       emit(FetchAllPublicRoomLoadingState());
-      FetchPublicRoomModel = await Repository().FetchPublicRoom(uuid,context);
+      FetchPublicRoomModel = await Repository().FetchPublicRoom(uuid, context);
       if (FetchPublicRoomModel.success == true) {
         emit(FetchPublicRoomLoadedState(FetchPublicRoomModel));
       }
@@ -59,13 +58,11 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
     }
   }
 
-  
-
-    Future<void> MyPublicRoom(String uuid,BuildContext context) async {
+  Future<void> MyPublicRoom(String uuid, BuildContext context) async {
     dynamic FetchPublicRoomModel;
     try {
       emit(FetchAllPublicRoomLoadingState());
-      FetchPublicRoomModel = await Repository().MyPublicRoom1(uuid,context);
+      FetchPublicRoomModel = await Repository().MyPublicRoom1(uuid, context);
       if (FetchPublicRoomModel.success == true) {
         emit(MyPublicRoom1LoadedState(FetchPublicRoomModel));
       }
@@ -74,7 +71,7 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
     }
   }
 
-   Future<void> UserModel(BuildContext context) async {
+  Future<void> UserModel(BuildContext context) async {
     dynamic systemConfigModel;
     try {
       emit(FetchAllPublicRoomLoadingState());
@@ -87,4 +84,16 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
     }
   }
 
+  Future<void> GetallBlog(BuildContext context) async {
+    dynamic getallBlogmodel;
+    try {
+      emit(FetchAllPublicRoomLoadingState());
+      getallBlogmodel = await Repository().GetallBlog(context);
+      if (getallBlogmodel.success == true) {
+        emit(GetallblogLoadedState(getallBlogmodel));
+      }
+    } catch (e) {
+      emit(FetchAllPublicRoomErrorState(getallBlogmodel));
+    }
+  }
 }

@@ -153,4 +153,9 @@ class ImageConstant {
   static String InPending = 'assets/images/InPending.png';
   static String Rejected = 'assets/images/Rejected.png';
   static String rejctedPic = 'assets/images/rjected.png';
+  static String blogsaveimage = 'assets/images/blog_save_image.png';
+  static String blogunsaveimage = 'assets/images/blog_unsave_image.png';
+  static String blogimage = 'assets/images/Rectangle 39864.png';
+  static String like_image = 'assets/images/likeimage.png';
+  static String arrowright = 'assets/images/arrow_right.png';
 }

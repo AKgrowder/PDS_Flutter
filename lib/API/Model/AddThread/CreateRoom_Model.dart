@@ -27,11 +27,11 @@ class Object {
   int? id;
   String? createdAt;
   int? createdBy;
-  Null? status;
+  String? status;
   bool? isActive;
   String? uid;
   String? modifiedAt;
-  Null? modifiedBy;
+  String? modifiedBy;
   String? roomQuestion;
   String? description;
   String? roomType;
@@ -105,7 +105,7 @@ class User {
   String? otpExpiryTime;
   int? otpAttempt;
   String? mobileNo;
-  Null? userProfilePic;
+  String? userProfilePic;
 
   User(
       {this.id,

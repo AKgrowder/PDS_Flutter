@@ -2,19 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_cubit.dart';
 import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_state.dart';
+import 'package:pds/API/Bloc/auth/login_Block.dart';
 import 'package:pds/presentation/Login_Screen/Login_Screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
-import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
-import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
-import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
-import '../../API/Bloc/auth/login_Block.dart';
-import '../../API/Bloc/auth/register_Block.dart';
 import '../../API/Bloc/device_info_Bloc/device_info_bloc.dart';
-import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
-import '../../custom_bottom_bar/custom_bottom_bar.dart';
+import '../../core/utils/sharedPreferences.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
 import '../../widgets/custom_text_form_field.dart';
@@ -36,6 +31,15 @@ TextEditingController newpasswordController = TextEditingController();
 TextEditingController conformpasswordController = TextEditingController();
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+  String? userUid;
+  @override
+  void initState() {
+    SetData();
+    super.initState();
+  }
+
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   void dispose() {
     newpasswordController.clear();
@@ -70,95 +74,70 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           ),
         ),
         backgroundColor: theme.colorScheme.onPrimary,
-        body: BlocProvider<ForgetpasswordCubit>(
-          create: (context) => ForgetpasswordCubit(),
-          child: BlocConsumer<ForgetpasswordCubit, ForgetpasswordState>(
-              listener: (context, state) async {
-            if (state is ForgetpasswordErrorState) {
-              print("error");
-              // Flushbar(
-              //     backgroundColor: ColorConstant.primary_color,
-              //     duration: Duration(milliseconds: 800),
-              //     message: state.error);
+        body: BlocConsumer<ForgetpasswordCubit, ForgetpasswordState>(
+            listener: (context, state) async {
+          if (state is ForgetpasswordErrorState) {
+            print("error");
+            SnackBar snackBar = SnackBar(
+              content: Text(state.error),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
+
+          if (state is ForgetpasswordLoadingState) {
+            print("loading");
+            Center(
+              child: Container(
+                margin: EdgeInsets.only(bottom: 100),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(ImageConstant.loader,
+                      fit: BoxFit.cover, height: 100.0, width: 100),
+                ),
+              ),
+            );
+          }
+          if (state is ChangePasswordLoadedState) {
+            if (state.changePasswordModel.success == true) {
+              newpasswordController.clear();
+              conformpasswordController.clear();
 
               SnackBar snackBar = SnackBar(
-                content: Text(state.error),
+                content: Text("Password Change Successfully"),
                 backgroundColor: ColorConstant.primary_color,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
 
-            if (state is ForgetpasswordLoadingState) {
-              print("loading");
-              Center(
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 100),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.asset(ImageConstant.loader,
-                        fit: BoxFit.cover, height: 100.0, width: 100),
-                  ),
-                ),
-              );
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                builder: (context) {
+                  return MultiBlocProvider(
+                    providers: [
+                      BlocProvider<LoginCubit>(
+                        create: (context) => LoginCubit(),
+                      ),
+                      BlocProvider<DevicesInfoCubit>(
+                        create: (context) => DevicesInfoCubit(),
+                      ),
+                    ],
+                    child: LoginScreen(),
+                  );
+                },
+              ), (route) => false);
             }
-            if (state is ChangePasswordLoadedState) {
-              if (state.changePasswordModel.success == true) {
-                newpasswordController.clear();
-                conformpasswordController.clear();
-
-                SnackBar snackBar = SnackBar(
-                  content: Text("Password Change Successfully"),
-                  backgroundColor: ColorConstant.primary_color,
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-                widget.isProfile == true
-                    ? Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-                        builder: (context) {
-                          return MultiBlocProvider(
-                            providers: [
-                              BlocProvider<FetchAllPublicRoomCubit>(
-                                create: (context) => FetchAllPublicRoomCubit(),
-                              ),
-                              BlocProvider<CreatPublicRoomCubit>(
-                                create: (context) => CreatPublicRoomCubit(),
-                              ),
-                              BlocProvider<senMSGCubit>(
-                                create: (context) => senMSGCubit(),
-                              ),
-                              BlocProvider<RegisterCubit>(
-                                create: (context) => RegisterCubit(),
-                              ),
-                              BlocProvider<GetAllPrivateRoomCubit>(
-                                create: (context) => GetAllPrivateRoomCubit(),
-                              ),
-                              BlocProvider<InvitationCubit>(
-                                create: (context) => InvitationCubit(),
-                              ),
-                            ],
-                            child: BottombarPage(buttomIndex: 4),
-                          );
-                        },
-                      ), (route) => false)
-                    : Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-                        builder: (context) {
-                          return MultiBlocProvider(
-                            providers: [
-                              BlocProvider<LoginCubit>(
-                                create: (context) => LoginCubit(),
-                              ),
-                              BlocProvider<DevicesInfoCubit>(
-                                create: (context) => DevicesInfoCubit(),
-                              ),
-                            ],
-                            child: LoginScreen(),
-                          );
-                        },
-                      ), (route) => false);
-              }
-            }
-          }, builder: (context, state) {
-            return Padding(
+          }
+          if (state is ChangePasswordInSettingScreenLoadedState) {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.changePasswordModel.message.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            Navigator.pop(context);
+          }
+        }, builder: (context, state) {
+          return Form(
+            key: _formKey,
+            child: Padding(
               padding: EdgeInsets.only(left: 35.0, right: 35),
               child: Column(children: [
                 SizedBox(
@@ -290,7 +269,34 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    if (newpasswordController.text.isEmpty) {
+                    if (_formKey.currentState!.validate()) {
+                      if (conformpasswordController.text !=
+                          newpasswordController.text) {
+                        SnackBar snackBar = SnackBar(
+                          content: Text(
+                              'New Password and Current Password are not same'),
+                          backgroundColor: ColorConstant.primary_color,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      } else {
+                        if (widget.isProfile == true) {
+                          print('this is condions');
+                          var params = {
+                            "uuid": userUid.toString(),
+                            "password": conformpasswordController.text,
+                          };
+
+                          BlocProvider.of<ForgetpasswordCubit>(context)
+                              .ChangepasswordinSetitngScreenwork(
+                                  params, context);
+                        } else {
+                          BlocProvider.of<ForgetpasswordCubit>(context)
+                              .Changepassword(
+                                  context, widget.mobile.toString());
+                        }
+                      }
+                    }
+                    /*    if (newpasswordController.text.isEmpty) {
                       SnackBar snackBar = SnackBar(
                         content: Text('Please Enter New Password'),
                         backgroundColor: ColorConstant.primary_color,
@@ -311,14 +317,25 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     } else {
-                      var params = {
-                        "mobileNo": widget.mobile,
-                        "changePassword": conformpasswordController.text
-                      };
-
-                      BlocProvider.of<ForgetpasswordCubit>(context)
-                          .Changepassword(params, context);
-                    }
+                      if (widget.isProfile == true) {
+                        print('this is condions');
+                        var params = {
+                          "uuid": userUid.toString(),
+                          "password": conformpasswordController.text,
+                        };
+          
+                        BlocProvider.of<ForgetpasswordCubit>(context)
+                            .ChangepasswordinSetitngScreenwork(params, context);
+                      } else {
+                        var params = {
+                          "mobileNo": widget.mobile,
+                          "changePassword": conformpasswordController.text
+                        };
+          
+                        BlocProvider.of<ForgetpasswordCubit>(context)
+                            .Changepassword(params, context);
+                      }
+                    } */
                   },
                   child: Container(
                     height: 50,
@@ -338,8 +355,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   ),
                 ),
               ]),
-            );
-          }),
-        ));
+            ),
+          );
+        }));
+  }
+
+  SetData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    userUid = prefs.getString(
+      PreferencesKey.loginUserID,
+    );
+    setState(() {});
   }
 }
