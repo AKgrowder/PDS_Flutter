@@ -1,3 +1,6 @@
+import 'package:pds/API/Bloc/my_account_Bloc/my_account_state.dart';
+import 'package:pds/API/Model/myaccountModel/myaccountModel.dart';
+
 import '../../Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import '../../Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../Model/HomeScreenModel/MyPublicRoom_model.dart';
@@ -47,8 +50,13 @@ class fetchUserModulemodelLoadedState extends FetchAllPublicRoomState {
   fetchUserModulemodelLoadedState(this.fetchUserModule);
 }
 
-
 class GetallblogLoadedState extends FetchAllPublicRoomState {
   final GetallBlogModel getallBlogdata;
   GetallblogLoadedState(this.getallBlogdata);
+}
+
+class GetUserProfileLoadedState extends FetchAllPublicRoomState {
+  final MyAccontDetails myAccontDetails;
+
+  GetUserProfileLoadedState(this.myAccontDetails);
 }
