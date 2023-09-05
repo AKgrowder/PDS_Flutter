@@ -76,7 +76,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         if (_secondsRemaining > 0) {
           _secondsRemaining--;
         } else {
-          _timer!.cancel();   
+          _timer!.cancel();
           tm = true;
           _secondsRemaining = otpTimer;
         }
@@ -212,7 +212,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           ],
                           child: ChangePasswordScreen(
                             mobile: widget.phonNumber,
-                            isProfile: widget.isProfile == true ? true : false,
                           ));
                     }));
                   } else {

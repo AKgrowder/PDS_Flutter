@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
+import 'package:pds/API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import 'package:pds/API/Model/authModel/getUserDetailsMdoel.dart';
 import 'package:pds/API/Model/authModel/loginModel.dart';
 import 'package:pds/API/Model/authModel/registerModel.dart';
@@ -661,9 +662,9 @@ class Repository {
     }
   }
 
-  Changepassword(BuildContext context,mobilnumber) async {
+ Changepassword(Map<String, dynamic> params, BuildContext context) async {
     final response =
-        await apiServices.getApiCall('${Config.changepassword}/${mobilnumber}', context);
+        await apiServices.postApiCall(Config.changepassword, params, context);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
     switch (response.statusCode) {
@@ -697,7 +698,8 @@ class Repository {
         return jsonString;
     }
   }
-GetallBlog(BuildContext context) async {
+
+  GetallBlog(BuildContext context) async {
     final response = await apiServices.getApiCall(Config.getallBlog, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
