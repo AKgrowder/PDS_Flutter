@@ -1428,33 +1428,33 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                     Text(
                                                         " ${PriveateRoomData?.object?[index].expertUserProfile?.userName}"),
                                                     Spacer(),
-                                                    // Container(
-                                                    //   width: 80,
-                                                    //   height: 20,
-                                                    //   decoration:
-                                                    //       ShapeDecoration(
-                                                    //     color:
-                                                    //         Color(0xFFED1C25),
-                                                    //     shape:
-                                                    //         RoundedRectangleBorder(
-                                                    //       borderRadius:
-                                                    //           BorderRadius
-                                                    //               .circular(
-                                                    //                   49.46),
-                                                    //     ),
-                                                    //   ),
-                                                    //   child: Center(
-                                                    //       child: Text(
-                                                    //     "Switch Expert",
-                                                    //     style: TextStyle(
-                                                    //         fontWeight:
-                                                    //             FontWeight.w400,
-                                                    //         color: Colors.white,
-                                                    //         fontFamily:
-                                                    //             "outfit",
-                                                    //         fontSize: 10),
-                                                    //   )),
-                                                    // )
+                                                    Container(
+                                                      width: 80,
+                                                      height: 20,
+                                                      decoration:
+                                                          ShapeDecoration(
+                                                        color:
+                                                            Color(0xFFED1C25),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      49.46),
+                                                        ),
+                                                      ),
+                                                      child: Center(
+                                                          child: Text(
+                                                        "Expert",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color: Colors.white,
+                                                            fontFamily:
+                                                                "outfit",
+                                                            fontSize: 10),
+                                                      )),
+                                                    )
                                                   ],
                                                 ),
                                               )
