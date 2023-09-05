@@ -368,7 +368,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               height: 20,
             ),
             arrNotiyTypeList[0].isSelected == true
-                ? Container(
+                ? SizedBox()/* Container(
                     height: _height / 1.44,
                     child: ListView.separated(
                       physics: BouncingScrollPhysics(),
@@ -437,7 +437,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       },
                     ),
                   )
-                : SizedBox(),
+               */  : SizedBox(),
             arrNotiyTypeList[1].isSelected == true
                 ? Container(
                     height: 100,
