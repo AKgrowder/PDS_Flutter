@@ -154,7 +154,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                         fontSize: 15),
                                   ),
                                 ),
-                                _data?.object?.length == 1
+                               /*  _data?.object?.length == 1
                                     ? Container(
                                         width: 99,
                                         height: 27.88,
@@ -455,7 +455,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                   ],
                                                 ),
                                               ),
-                              ],
+                             */  ],
                             ),
                           ),
                           Padding(
