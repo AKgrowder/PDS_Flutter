@@ -17,8 +17,9 @@ import '../../core/utils/color_constant.dart';
 
 // ignore_for_file: must_be_immutable
 class ForgetPasswordScreen extends StatefulWidget {
-  bool? isProfile;
-  ForgetPasswordScreen({Key? key, this.isProfile = false}) : super(key: key);
+  ForgetPasswordScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ForgetPasswordScreen> createState() => _ForgetPasswordScreenState();
@@ -52,23 +53,14 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       onTapArrowleft1(context);
                     }),
                 centerTitle: true,
-                title: widget.isProfile == true
-                    ? Text("Change Password",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontFamily: 'outfit',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black))
-                    : Text("Forget Password",
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontFamily: 'outfit',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black))),
+                title: Text("Forget Password",
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        fontFamily: 'outfit',
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black))),
             body: BlocConsumer<ForgetpasswordCubit, ForgetpasswordState>(
               listener: (context, state) {
                 if (state is ForgetpasswordErrorState) {
@@ -102,7 +94,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                         child: OtpVerificationScreen(
                           phonNumber: contectnumberrController.text,
                           forgetpassword: true,
-                          isProfile: widget.isProfile == true ? true : false,
                         ));
                   }));
                   SnackBar snackBar = SnackBar(

@@ -290,9 +290,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               .ChangepasswordinSetitngScreenwork(
                                   params, context);
                         } else {
+                          var params = {
+                            "mobileNo": widget.mobile.toString(),
+                            "password": conformpasswordController.text,
+                          };
+
                           BlocProvider.of<ForgetpasswordCubit>(context)
                               .Changepassword(
-                                  context, widget.mobile.toString());
+                                  context, params);
                         }
                       }
                     }
