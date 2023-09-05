@@ -176,7 +176,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ),
             ),
           ),
-          Column(
+         /*  Column(
             children: [
               arrNotiyTypeList[0].isSelected == true
                   ? Container(
@@ -327,7 +327,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   : SizedBox(),
             ],
           )
-        ]),
+       */  ]),
       ),
     );
   }
