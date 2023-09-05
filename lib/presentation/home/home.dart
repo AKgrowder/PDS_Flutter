@@ -185,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
             if (state is fetchUserModulemodelLoadedState) {
               print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" +
                   "${state.fetchUserModule.object}");
-              var user_Module = state.fetchUserModule.object ?? "";
+              var user_Module = state.fetchUserModule.object?.userModule ?? "";
               final SharedPreferences prefs =
                   await SharedPreferences.getInstance();
 

@@ -22,11 +22,11 @@ class ForgetpasswordCubit extends Cubit<ForgetpasswordState> {
   }
 
   Future<void> Changepassword(
-      BuildContext context,String mobilnumber) async {
+      BuildContext context, Map<String, dynamic> params) async {
     dynamic changePasswordModel;
     try {
       emit(ForgetpasswordLoadingState());
-      changePasswordModel = await Repository().Changepassword(context,mobilnumber);
+      changePasswordModel = await Repository().Changepassword(params,context);
       if (changePasswordModel.success == true) {
         emit(ChangePasswordLoadedState(changePasswordModel));
       } else {
