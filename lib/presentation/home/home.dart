@@ -2168,7 +2168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             )
                           : SizedBox(),
-                  Padding(
+                  getallBlogdata?.object?.length == 0  ||  getallBlogdata?.object?.isNotEmpty == false ? SizedBox(): Padding(
                     padding:
                         const EdgeInsets.only(right: 20.0, left: 20, top: 7),
                     child: Row(
@@ -2192,6 +2192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
+                   getallBlogdata?.object?.length == 0  ||  getallBlogdata?.object?.isNotEmpty == false ? SizedBox():
                   Container(
                     // color: Colors.red,
                     height: _height / 3,
