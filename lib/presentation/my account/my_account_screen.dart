@@ -975,7 +975,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   ],
                                 ),
                               )
-                            : Padding(
+                             : Padding(
                                 padding: const EdgeInsets.only(
                                     left: 30.0, right: 30),
                                 child: Row(
@@ -1541,27 +1541,21 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                           } else if (myAccontDetails?.object?.module ==
                               'EMPLOYEE') {
                             if (isupdate == false) {
-                              if (chooseDocumentuploded?.object.toString() !=
-                                  null) {
-                                var param = {
-                                  "userProfilePic": chooseDocumentuploded
-                                              ?.object !=
-                                          null
-                                      ? "${chooseDocumentuploded?.object.toString()}"
-                                      : '${dopcument.toString()}',
-                                  "name": "${userId.text}",
-                                  "uuid": "$User_ID"
-                                };
-                                BlocProvider.of<MyAccountCubit>(context)
-                                    .UpdateProfileEmployee(param, context);
-                              } else {
-                                var param = {
-                                  "name": "${userId.text}",
-                                  "uuid": "$User_ID"
-                                };
-                                BlocProvider.of<MyAccountCubit>(context)
-                                    .UpdateProfileEmployee(param, context);
-                              }
+                              var params = {
+                                    "userProfilePic": myAccontDetails
+                                            ?.object?.userProfilePic !=
+                                        null
+                                    ? myAccontDetails?.object?.userProfilePic
+                                    : chooseDocumentuploded?.object != null
+                                        ? chooseDocumentuploded?.object
+                                            .toString()
+                                        : null,
+                                    "uid": User_ID.toString(),
+                                    "email" : email.text,
+                              };
+                               BlocProvider.of<MyAccountCubit>(context)
+                                    .UpdateProfileEmployee(params, context);
+                            
                             }
                           }
                         }
