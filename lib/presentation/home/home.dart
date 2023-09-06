@@ -2175,11 +2175,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             FetchPublicRoomModelData?.object?.isNotEmpty ==
                                 true) {
                           print("FetchPublicRoomModelData?.object? data");
-                          /*  Navigator.of(context).push(MaterialPageRoute(
+                            Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => PublicRoomList(
                                     FetchPublicRoomModelData:
                                         FetchPublicRoomModelData,
-                                  ))); */
+                                  ))); 
                         } else {
                           print("FetchPublicRoomModelData?.object? no data");
                         }
