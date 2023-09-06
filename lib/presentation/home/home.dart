@@ -124,6 +124,7 @@ String _getMonthName(int month) {
 
 var checkuserdata = "";
 GetallBlogModel? getallBlogdata;
+DateTime? parsedDateTime;
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
@@ -185,6 +186,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
             if (state is GetallblogLoadedState) {
               getallBlogdata = state.getallBlogdata;
+            }
+
+            if (state is GetallblogLoadingState) {
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 100),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(ImageConstant.loader,
+                        fit: BoxFit.cover, height: 100.0, width: 100),
+                  ),
+                ),
+              );
             }
 
             if (state is FetchAllPublicRoomLoadingState) {
@@ -2175,11 +2189,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             FetchPublicRoomModelData?.object?.isNotEmpty ==
                                 true) {
                           print("FetchPublicRoomModelData?.object? data");
-                          /*  Navigator.of(context).push(MaterialPageRoute(
+                          Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => PublicRoomList(
                                     FetchPublicRoomModelData:
                                         FetchPublicRoomModelData,
-                                  ))); */
+                                  )));
                         } else {
                           print("FetchPublicRoomModelData?.object? no data");
                         }
@@ -2243,6 +2257,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
+
                   getallBlogdata?.object?.length == 0 ||
                           getallBlogdata?.object?.isNotEmpty == false
                       ? SizedBox()
@@ -2435,141 +2450,154 @@ class _HomeScreenState extends State<HomeScreen> {
   Recentblogs() {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-    return Container(
-      // color: Colors.red,
-      height: _height / 3,
-      width: _width / 1.1,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        physics: BouncingScrollPhysics(),
-        itemCount: getallBlogdata?.object?.length,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          DateTime parsedDateTime = DateTime.parse(
-              '${getallBlogdata?.object?[index].createdAt ?? ""}');
-          print('index $index parsedDateTime------$parsedDateTime ');
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-                // height: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  // border: Border.all(
-                  //   color: Colors.red,
-                  // ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Stack(
-                      // alignment: Alignment.topRight,
-                      children: [
-                        Container(
-                          height: _height / 3.2,
-                          width: _width / 1.2,
-                          child: CustomImageView(
-                            // imagePath: ImageConstant.blogimage,
+    return getallBlogdata?.object != null
+        ? Container(
+            // color: Colors.red,
+            height: _height / 3,
+            width: _width / 1.1,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              physics: BouncingScrollPhysics(),
+              itemCount: getallBlogdata?.object?.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                if (getallBlogdata?.object?.length != 0 ||
+                    getallBlogdata?.object != null) {
+                  parsedDateTime = DateTime.parse(
+                      '${getallBlogdata?.object?[index].createdAt ?? ""}');
+                  print('index $index parsedDateTime------$parsedDateTime ');
+                }
 
-                            url: getallBlogdata?.object?[index].image
-                                    .toString() ??
-                                "",
-                            // height: 50,
-                            width: _width,
-                            fit: BoxFit.fill,
-                            radius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(left: 290, top: 10),
-                        //   child: Image.asset(
-                        //     ImageConstant.blogsaveimage,
-                        //     height: 40,
-                        //   ),
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                      // height: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        // border: Border.all(
+                        //   color: Colors.red,
                         // ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 180,
-                          ),
-                          child: Container(
-                            height: _height / 10,
-                            width: _width / 1.2,
-                            decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.7),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Column(children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      getallBlogdata?.object?[index].description
-                                              .toString() ??
-                                          "",
-                                      style: TextStyle(
-                                          fontFamily: 'outfit',
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Stack(
+                            // alignment: Alignment.topRight,
+                            children: [
+                              Container(
+                                height: _height / 3.2,
+                                width: _width / 1.2,
+                                child: CustomImageView(
+                                  // imagePath: ImageConstant.blogimage,
+
+                                  url: getallBlogdata?.object?[index].image
+                                          .toString() ??
+                                      "",
+                                  // height: 50,
+                                  width: _width,
+                                  fit: BoxFit.fill,
+                                  radius: BorderRadius.circular(10),
                                 ),
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(customFormat(parsedDateTime),
-                                      style: TextStyle(
-                                          fontFamily: 'outfit',
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold)),
-                                  // SizedBox(
-                                  //   width: 10,
-                                  // ),
-                                  // CircleAvatar(
-                                  //   backgroundColor: Colors.black,
-                                  //   maxRadius: 2,
-                                  // ),
-                                  // SizedBox(
-                                  //   width: 2,
-                                  // ),
-                                  // Text("12.3K Views",
-                                  //     style: TextStyle(
-                                  //         fontFamily: 'outfit',
-                                  //         fontSize: 12,
-                                  //         fontWeight: FontWeight.bold)),
-                                  // Spacer(),
-                                  // Image.asset(
-                                  //   ImageConstant.like_image,
-                                  //   height: 20,
-                                  // ),
-                                  // SizedBox(
-                                  //   width: 10,
-                                  // ),
-                                  // Image.asset(
-                                  //   ImageConstant.arrowleftimage,
-                                  //   height: 30,
-                                  //   color: Colors.black,
-                                  // ),
-                                  // SizedBox(
-                                  //   width: 10,
-                                  // )
-                                ],
+                              // Padding(
+                              //   padding: const EdgeInsets.only(left: 290, top: 10),
+                              //   child: Image.asset(
+                              //     ImageConstant.blogsaveimage,
+                              //     height: 40,
+                              //   ),
+                              // ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 180,
+                                ),
+                                child: Container(
+                                  height: _height / 10,
+                                  width: _width / 1.2,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.7),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Column(children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            getallBlogdata
+                                                    ?.object?[index].description
+                                                    .toString() ??
+                                                "",
+                                            style: TextStyle(
+                                                fontFamily: 'outfit',
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                            getallBlogdata?.object?.length !=
+                                                        0 ||
+                                                    getallBlogdata?.object !=
+                                                        null
+                                                ? customFormat(parsedDateTime!)
+                                                : "",
+                                            style: TextStyle(
+                                                fontFamily: 'outfit',
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold)),
+                                        // SizedBox(
+                                        //   width: 10,
+                                        // ),
+                                        // CircleAvatar(
+                                        //   backgroundColor: Colors.black,
+                                        //   maxRadius: 2,
+                                        // ),
+                                        // SizedBox(
+                                        //   width: 2,
+                                        // ),
+                                        // Text("12.3K Views",
+                                        //     style: TextStyle(
+                                        //         fontFamily: 'outfit',
+                                        //         fontSize: 12,
+                                        //         fontWeight: FontWeight.bold)),
+                                        // Spacer(),
+                                        // Image.asset(
+                                        //   ImageConstant.like_image,
+                                        //   height: 20,
+                                        // ),
+                                        // SizedBox(
+                                        //   width: 10,
+                                        // ),
+                                        // Image.asset(
+                                        //   ImageConstant.arrowleftimage,
+                                        //   height: 30,
+                                        //   color: Colors.black,
+                                        // ),
+                                        // SizedBox(
+                                        //   width: 10,
+                                        // )
+                                      ],
+                                    )
+                                  ]),
+                                ),
                               )
-                            ]),
+                            ],
                           ),
-                        )
-                      ],
-                    ),
-                  ],
-                )),
-          );
-        },
-      ),
-    );
+                        ],
+                      )),
+                );
+              },
+            ),
+          )
+        : SizedBox();
   }
 
   Previousblogs() {
