@@ -12,7 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
-import '../experts/experts_screen.dart';
 import '../my account/my_account_screen.dart';
 import '../view_details_screen/view_public_forum_screen.dart';
 
@@ -262,11 +261,11 @@ class _SettingScreenState extends State<SettingScreen> {
 
                         //   break;
                         case 1:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ExpertsScreen(),
-                              ));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => ExpertsScreen(),
+                          //     ));
                           break;
                         case 2:
                           // Navigator.push(
