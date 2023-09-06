@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +11,6 @@ import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_text_form_field.dart';
@@ -168,7 +166,6 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             // ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
 
-
           if (state is FetchExprtiseRoomLoadedState) {
             _fetchExprtise = state.fetchExprtise;
             // selctedIndex = state.fetchExprtise.object?[0].expertiseName;
@@ -195,13 +192,11 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         },
         builder: (context, state) {
           return Form(
-
             key: _formKey,
-
             child: SingleChildScrollView(
-
               child: Padding(
-                padding: const EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0),
+                padding:
+                    const EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -765,8 +760,10 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           } else {
                             String time =
                                 '${_startTime!.format(context).toString()} to ${_endTime!.format(context).toString()}';
-                            print('_startTime${_startTime!.format(context).toString()}');    
-                            print('endtime-${_endTime!.format(context).toString()}');    
+                            print(
+                                '_startTime${_startTime!.format(context).toString()}');
+                            print(
+                                'endtime-${_endTime!.format(context).toString()}');
                             print('Finaltime-$time');
                             print(
                                 'sddfsdm,gndfgj${chooseDocument?.object.toString()}');
@@ -889,7 +886,8 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                      text: "By Submitting you are agreeing to ",
+                                      text:
+                                          "By Submitting you are agreeing to ",
                                       style: TextStyle(
                                         color: appTheme.black900,
                                         fontSize: 14,
@@ -912,56 +910,56 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 ),
                                 textAlign: TextAlign.center,
                               ),
-                               GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => Policies(
-                                              title: " ",
-                                              data: Policy_Data.turms_of_use,
-                                            ),
-                                          ));
-                                    },
-                                    child: Text(
-                                      "Terms & Conditions",
-                                      style: TextStyle(
-                                        color: theme.colorScheme.primary,
-                                        fontSize: 14,
-                                        fontFamily: 'Outfit',
-                                        fontWeight: FontWeight.w500,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                    ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Policies(
+                                          title: " ",
+                                          data: Policy_Data.turms_of_use,
+                                        ),
+                                      ));
+                                },
+                                child: Text(
+                                  "Terms & Conditions",
+                                  style: TextStyle(
+                                    color: theme.colorScheme.primary,
+                                    fontSize: 14,
+                                    fontFamily: 'Outfit',
+                                    fontWeight: FontWeight.w500,
+                                    decoration: TextDecoration.underline,
                                   ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       ),
                       Center(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Policies(
-                                        title: " ",
-                                        data: Policy_Data.privacy_policy1,
-                                      ),
-                                    ));
-                              },
-                              child: Text(
-                                "Privacy & Policy  of PDS Terms",
-                                style: TextStyle(
-                                  color: theme.colorScheme.primary,
-                                  fontSize: 14,
-                                  fontFamily: 'Outfit',
-                                  fontWeight: FontWeight.w500,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Policies(
+                                    title: " ",
+                                    data: Policy_Data.privacy_policy1,
+                                  ),
+                                ));
+                          },
+                          child: Text(
+                            "Privacy & Policy  of PDS Terms",
+                            style: TextStyle(
+                              color: theme.colorScheme.primary,
+                              fontSize: 14,
+                              fontFamily: 'Outfit',
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline,
                             ),
                           ),
+                        ),
+                      ),
                       SizedBox(
                         height: 20,
                       )
