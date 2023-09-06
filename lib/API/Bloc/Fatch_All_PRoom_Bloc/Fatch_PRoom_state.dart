@@ -50,6 +50,8 @@ class fetchUserModulemodelLoadedState extends FetchAllPublicRoomState {
   fetchUserModulemodelLoadedState(this.fetchUserModule);
 }
 
+class GetallblogLoadingState extends FetchAllPublicRoomState {}
+
 class GetallblogLoadedState extends FetchAllPublicRoomState {
   final GetallBlogModel getallBlogdata;
   GetallblogLoadedState(this.getallBlogdata);
