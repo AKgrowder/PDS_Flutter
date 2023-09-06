@@ -63,6 +63,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   bool isScroll = false;
   bool isEmojiVisible = false;
   bool isKeyboardVisible = false;
+  FocusNode _focusNode = FocusNode();
   final focusNode = FocusNode();
   KeyboardVisibilityController keyboardVisibilityController =
       KeyboardVisibilityController();
@@ -137,10 +138,10 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   }
 
   //  @override
-  // void dispose() {
-  //  stompClient.deactivate();
-  //   super.dispose();
-  // }
+  void dispose() {
+    //  stompClient.deactivate();
+    super.dispose();
+  }
 
   _onBackspacePressed() {
     Add_Comment
@@ -303,6 +304,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                       ),
                     ),
                     Divider(
+                      height: 5,
                       color: Color.fromARGB(53, 117, 117, 117),
                     ),
                     Expanded(
@@ -310,7 +312,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                         // height: _height / 1.4,
                         // color: Colors.red[200],
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 15),
+                          padding: const EdgeInsets.only(top: 5),
                           child: modelData != null
                               ? modelData?.object?.roomUid == null ||
                                       modelData?.object?.roomUid == ""
@@ -767,9 +769,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                               width: 5,
                             ),
                             Container(
-                              // height: 40,
                               width: _width / 1.7,
-                              // color: Colors.amber,
                               child: TextField(
                                 controller: Add_Comment,
                                 cursorColor: Colors.grey,
@@ -871,6 +871,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                     "userCode": "${UserCode}"
                                   }),
                                 );
+
+                     
                               }
                             } else {
                               SnackBar snackBar = SnackBar(
@@ -972,17 +974,11 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
       textEditingController: Add_Comment,
       config: Config(
         columns: 7,
-        // Issue: https://github.com/flutter/flutter/issues/28894
         emojiSizeMax: 32 *
             (foundation.defaultTargetPlatform == TargetPlatform.iOS
                 ? 1.30
                 : 1.0),
       ),
-      // rows: 3,
-      // columns: 7,
-      // buttonMode: ButtonMode.MATERIAL,
-      // recommendKeywords: ["racing", "horse"],
-      // numRecommended: 10,
       onEmojiSelected: (emoji, category) {
         print(emoji);
       },
@@ -996,12 +992,6 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     if (UserLogin_ID != null) {
       print("user login Mood");
       if (Add_Comment.text.isNotEmpty) {
-        // BlocProvider.of<senMSGCubit>(context)
-        //     .senMSGAPI(widget.Room_ID, Add_Comment.text, ShowLoader: true);
-
-        // BlocProvider.of<senMSGCubit>(context)
-        //         .coomentPage(widget.Room_ID, ShowLoader: true);
-
         setState(() {
           addmsg = "";
           Add_Comment.text = '';
