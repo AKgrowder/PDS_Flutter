@@ -121,10 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         state.loginModel.object?.uuid.toString() ?? "",
                         state.loginModel.object?.jwt.toString() ?? "",
                         loginModelData?.object?.module.toString() ?? "",
-                        loginModelData?.object?.profilePic.toString() ?? ""
-
-                        // state.loginModel.object!.verified.toString(),
-                        );
+                        loginModelData?.object?.profilePic.toString() ?? "");
                     if (saveDeviceInfo == true) {
                       savePhoneData();
                     }
@@ -176,9 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         loginModelData?.object?.uuid.toString() ?? "",
                         loginModelData?.object?.jwt.toString() ?? "",
                         loginModelData?.object?.module.toString() ?? "",
-                        loginModelData?.object?.profilePic.toString() ?? ""
-                        // state.loginModel.object!.verified.toString(),
-                        );
+                        loginModelData?.object?.profilePic.toString() ?? "");
                     if (saveDeviceInfo == true) {
                       savePhoneData();
                     }
