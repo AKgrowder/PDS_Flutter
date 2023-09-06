@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/widgets/commentPdf.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/utils/image_constant.dart';
@@ -262,7 +263,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 padding: EdgeInsets.only(
                                     left: 21, right: 22, bottom: 24),
                                 child: Text(
-                                  'My Account',
+                                  'My Details',
                                   textScaleFactor: 1.0,
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
@@ -975,7 +976,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   ],
                                 ),
                               )
-                             : Padding(
+                            : Padding(
                                 padding: const EdgeInsets.only(
                                     left: 30.0, right: 30),
                                 child: Row(
@@ -1101,24 +1102,39 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Container(
-                                        height: 50,
-                                        width: _width / 1.6,
-                                        decoration: BoxDecoration(
-                                            color: Color(0XFFF6F6F6),
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(5),
-                                                bottomLeft:
-                                                    Radius.circular(5))),
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 15, left: 20),
-                                          child: Text(
-                                            '${dopcument.toString()}',
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(fontSize: 16),
-                                          ),
-                                        )),
+                                    GestureDetector(
+                                      onTap: () {
+                                        print(
+                                            'dsfhdfhsdfg-${myAccontDetails?.object?.userDocument.toString()}');
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DocumentViewScreen(
+                                                      path: myAccontDetails
+                                                          ?.object?.userDocument
+                                                          .toString(),
+                                                      title: 'Pdf',
+                                                    )));
+                                      },
+                                      child: Container(
+                                          height: 50,
+                                          width: _width / 1.6,
+                                          decoration: BoxDecoration(
+                                              color: Color(0XFFF6F6F6),
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(5),
+                                                  bottomLeft:
+                                                      Radius.circular(5))),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 15, left: 20),
+                                            child: Text(
+                                              '${dopcument.toString()}',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                          )),
+                                    ),
                                     dopcument == "Upload Image"
                                         ? GestureDetector(
                                             onTap: () async {
@@ -1220,27 +1236,43 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      height: 50,
-                                      width: _width / 1.65,
-                                      decoration: BoxDecoration(
-                                          color: Color(0XFFF6F6F6),
-                                          borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(5),
-                                              bottomLeft: Radius.circular(5))),
-                                      child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 13.0, left: 10),
-                                          child: Text(
-                                            '${myAccontDetails?.object?.userDocument}',
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontFamily: 'outfit',
-                                              fontSize: 15,
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          )),
+                                    GestureDetector(
+                                      onTap: () {
+                                        print(
+                                            'dsfhdfhsdfg-${myAccontDetails?.object?.userDocument.toString()}');
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DocumentViewScreen(
+                                                      path: myAccontDetails
+                                                          ?.object?.userDocument
+                                                          .toString(),
+                                                      title: 'Pdf',
+                                                    )));
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        width: _width / 1.65,
+                                        decoration: BoxDecoration(
+                                            color: Color(0XFFF6F6F6),
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(5),
+                                                bottomLeft:
+                                                    Radius.circular(5))),
+                                        child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 13.0, left: 10),
+                                            child: Text(
+                                              '${myAccontDetails?.object?.userDocument}',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontFamily: 'outfit',
+                                                fontSize: 15,
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            )),
+                                      ),
                                     ),
                                     GestureDetector(
                                       onTap: () {},
@@ -1542,7 +1574,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                               'EMPLOYEE') {
                             if (isupdate == false) {
                               var params = {
-                                    "userProfilePic": myAccontDetails
+                                "userProfilePic": myAccontDetails
                                             ?.object?.userProfilePic !=
                                         null
                                     ? myAccontDetails?.object?.userProfilePic
@@ -1550,12 +1582,11 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                         ? chooseDocumentuploded?.object
                                             .toString()
                                         : null,
-                                    "uid": User_ID.toString(),
-                                    "email" : email.text,
+                                "uid": User_ID.toString(),
+                                "email": email.text,
                               };
-                               BlocProvider.of<MyAccountCubit>(context)
-                                    .UpdateProfileEmployee(params, context);
-                            
+                              BlocProvider.of<MyAccountCubit>(context)
+                                  .UpdateProfileEmployee(params, context);
                             }
                           }
                         }
