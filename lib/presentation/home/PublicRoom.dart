@@ -21,8 +21,8 @@ class PublicRoomList extends StatefulWidget {
 
 class _PublicRoomListState extends State<PublicRoomList> {
   dynamic PublicRoomModelData;
-  method(){
-       if (widget.PublicRoomModelData?.object?.isNotEmpty == false) {
+  method() {
+    if (/* widget.PublicRoomModelData?.object?.isNotEmpty == false */widget.PublicRoomModelData == null) {
       print('if condison work');
       PublicRoomModelData = widget.FetchPublicRoomModelData;
       print('PublicRoomModelData-$PublicRoomModelData');
@@ -31,16 +31,16 @@ class _PublicRoomListState extends State<PublicRoomList> {
       print('else condsion work');
       print('PublicRoomModelData-$PublicRoomModelData');
     }
-
   }
+
   @override
   void initState() {
     super.initState();
     method();
   }
+
   @override
   Widget build(BuildContext context) {
- 
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -303,7 +303,6 @@ class _PublicRoomListState extends State<PublicRoomList> {
           ),
         ),
       ),
-
     );
   }
 }
