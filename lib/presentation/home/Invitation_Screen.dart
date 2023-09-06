@@ -221,35 +221,35 @@ class _InvitationScreenState extends State<InvitationScreen> {
                                               fontFamily: "outfit",
                                               fontSize: 14),
                                         ),
-                                         Padding(
-                                        padding: const EdgeInsets.only(
-                                          right: 20,
-                                        ),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
-                                              builder: (context) {
-                                                return MultiBlocProvider(
-                                                    providers: [
-                                                      BlocProvider<
-                                                          FetchRoomDetailCubit>(
-                                                        create: (_) =>
-                                                            FetchRoomDetailCubit(),
-                                                      ),
-                                                    ],
-                                                    child: RoomDetailScreen(
-                                                      uuid: PriveateRoomData
-                                                          ?.object?[index].uid
-                                                          .toString(),
-                                                    ));
-                                              },
-                                            ));
-                                          },
-                                          child: Icon(
-                                              Icons.remove_red_eye_outlined),
-                                        ),
-                                      )
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: 20,
+                                          ),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                builder: (context) {
+                                                  return MultiBlocProvider(
+                                                      providers: [
+                                                        BlocProvider<
+                                                            FetchRoomDetailCubit>(
+                                                          create: (_) =>
+                                                              FetchRoomDetailCubit(),
+                                                        ),
+                                                      ],
+                                                      child: RoomDetailScreen(
+                                                        uuid: PriveateRoomData
+                                                            ?.object?[index].uid
+                                                            .toString(),
+                                                      ));
+                                                },
+                                              ));
+                                            },
+                                            child: Icon(
+                                                Icons.remove_red_eye_outlined),
+                                          ),
+                                        )
                                       ],
                                     ),
                                   ),
@@ -272,7 +272,6 @@ class _InvitationScreenState extends State<InvitationScreen> {
                                               fontSize: 14),
                                         ),
                                       ),
-                                     
                                     ],
                                   ),
                                   SizedBox(
@@ -286,13 +285,20 @@ class _InvitationScreenState extends State<InvitationScreen> {
                                       Padding(
                                         padding:
                                             const EdgeInsets.only(left: 10),
-                                        child: Text(
-                                          "${InvitationRoomData?.object?[index].roomQuestion}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                              fontFamily: "outfit",
-                                              fontSize: 14),
+                                        child: Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.78,
+                                          child: Text(
+                                            "${InvitationRoomData?.object?[index].roomQuestion}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                                fontFamily: "outfit",
+                                                fontSize: 14),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -314,7 +320,8 @@ class _InvitationScreenState extends State<InvitationScreen> {
 
                                   GestureDetector(
                                     onTap: () {
-                                      print("*************************************************${PriveateRoomData?.object?[index].roomQuestion}");
+                                      print(
+                                          "*************************************************${PriveateRoomData?.object?[index].roomQuestion}");
                                       Navigator.push(context, MaterialPageRoute(
                                         builder: (context) {
                                           return MultiBlocProvider(
