@@ -236,6 +236,9 @@ class _SettingScreenState extends State<SettingScreen> {
                 physics: BouncingScrollPhysics(),
                 itemCount: Setting_Array.length,
                 itemBuilder: (BuildContext context, int index) {
+                  if (index == 1 || index == 2) {
+                    return SizedBox();
+                  }
                   return GestureDetector(
                     onTap: () {
                       switch (index) {

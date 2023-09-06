@@ -1,14 +1,14 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-
-import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
+import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
+import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/presentation/view_comments/view_comments_screen.dart';
+import 'package:pds/widgets/custom_image_view.dart';
 import '../../API/Model/HomeScreenModel/PublicRoomModel.dart';
 import '../../API/Model/HomeScreenModel/getLoginPublicRoom_model.dart';
-import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
-import '../../widgets/custom_image_view.dart';
-import '../view_comments/view_comments_screen.dart';
 
 class PublicRoomList extends StatefulWidget {
   PublicRoomModel? PublicRoomModelData;
@@ -21,14 +21,26 @@ class PublicRoomList extends StatefulWidget {
 
 class _PublicRoomListState extends State<PublicRoomList> {
   dynamic PublicRoomModelData;
-  @override
-  Widget build(BuildContext context) {
-    if (widget.PublicRoomModelData?.object?.isNotEmpty == false) {
+  method(){
+       if (widget.PublicRoomModelData?.object?.isNotEmpty == false) {
+      print('if condison work');
       PublicRoomModelData = widget.FetchPublicRoomModelData;
+      print('PublicRoomModelData-$PublicRoomModelData');
     } else {
       PublicRoomModelData = widget.PublicRoomModelData;
+      print('else condsion work');
+      print('PublicRoomModelData-$PublicRoomModelData');
     }
 
+  }
+  @override
+  void initState() {
+    super.initState();
+    method();
+  }
+  @override
+  Widget build(BuildContext context) {
+ 
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -291,6 +303,7 @@ class _PublicRoomListState extends State<PublicRoomList> {
           ),
         ),
       ),
+
     );
   }
 }
