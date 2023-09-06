@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_cubit.dart';
 import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_state.dart';
@@ -155,7 +156,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   hintStyle: theme.textTheme.titleMedium!,
                   textInputType: TextInputType.visiblePassword,
                   errorMaxLines: 3,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                   validator: (value) {
+                    value?.trim();
                     String pattern =
                         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$%^&*(),.?":{}|<>])[A-Za-z0-9!@#\$%^&*(),.?":{}|<>]{8,}$';
 
@@ -219,8 +224,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   hintText: "Confirm Password",
                   hintStyle: theme.textTheme.titleMedium!,
                   textInputType: TextInputType.visiblePassword,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                   errorMaxLines: 3,
                   validator: (value) {
+                    value?.trim();
                     String pattern =
                         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$%^&*(),.?":{}|<>])[A-Za-z0-9!@#\$%^&*(),.?":{}|<>]{8,}$';
 

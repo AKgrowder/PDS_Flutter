@@ -94,6 +94,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     print(widget.loginModelData?.object);
     super.initState();
     timer();
+
     _startTimer();
   }
 
@@ -161,6 +162,15 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       ),
                     ),
                   );
+                }
+
+                if (state is resendOtpLoadedState) {
+                  
+                  SnackBar snackBar = SnackBar(
+                    content: Text(state.Forgetpassword.message.toString()),
+                    backgroundColor: ColorConstant.primary_color,
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
                 if (state is OtpLoadedState) {
                   OTPController.clear();
@@ -391,6 +401,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                             setState(() {
                                               tm = false;
                                               _startTimer();
+                                               BlocProvider.of<OtpCubit>(
+                                            context)
+                                        .resendOtpApi(
+                                           widget.phonNumber.toString(),
+                                            context);
                                             });
                                           },
                                           child: Text("Resend",
