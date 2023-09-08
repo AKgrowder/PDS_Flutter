@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/dilogs/invite_dilog.dart';
 import 'package:pds/widgets/custom_image_view.dart';
- 
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
+import '../../API/Bloc/SelectRoom_Bloc/SelectRoom_cubit.dart';
 import '../../API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import '../../API/Bloc/sherinvite_Block/sherinvite_state.dart';
 import '../../core/utils/color_constant.dart';
 import '../../theme/theme_helper.dart';
 import '../home/home.dart';
+import '../register_create_account_screen/register_create_account_screen.dart';
+import 'Room_selection_screen.dart';
 
 class ExpertsScreen extends StatefulWidget {
   String? RoomUUID;
@@ -19,6 +25,7 @@ class ExpertsScreen extends StatefulWidget {
 }
 
 var selecteoneArray;
+String? User_ID;
 Map userData = {
   "userData": [
     {
@@ -433,7 +440,24 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                       onTap: () {
                                         if (widget.RoomUUID == null ||
                                             widget.RoomUUID == "") {
-                                          print("Open Room Selection screen");
+                                          User_ID != null || User_ID != ""
+                                              ? Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                  return MultiBlocProvider(
+                                                      providers: [
+                                                        BlocProvider<
+                                                            SelectedRoomCubit>(
+                                                          create: (context) =>
+                                                              SelectedRoomCubit(),
+                                                        ),
+                                                      ],
+                                                      child: RoomSelection(ExperID: "${FetchAllExpertsData?.object?[index].userEmail}",));
+                                                }))
+                                              : Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          RegisterCreateAccountScreen()));
                                         } else {
                                           print(widget.RoomUUID);
                                           print(FetchAllExpertsData
@@ -556,5 +580,11 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
             ]),
           );
         }));
+  }
+
+  getUserID() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    User_ID = prefs.getString(PreferencesKey.loginUserID);
   }
 }

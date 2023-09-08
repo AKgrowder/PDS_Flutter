@@ -202,7 +202,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             textAlign: TextAlign.left,
                             style: TextStyle(color: Colors.black),
                           ))),
-                  IsGuestUserEnabled == "true"
+                /*   IsGuestUserEnabled == "true"
                       ? SizedBox.shrink()
                       : Align(
                           alignment: Alignment.bottomCenter,
@@ -225,7 +225,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                           fontFamily: 'Outfit',
                                           fontWeight: FontWeight.w400))
                                 ]),
-                          ))
+                          )) */
                 ]))),
         body: Container(
             height: _height - 100,
