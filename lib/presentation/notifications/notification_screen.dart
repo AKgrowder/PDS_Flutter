@@ -98,9 +98,7 @@ String formattedDate = DateFormat('dd-MM-yyyy').format(now);
 class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   void initState() {
-    // Show_NoData_Image = true;
     GetData();
-
     super.initState();
   }
 

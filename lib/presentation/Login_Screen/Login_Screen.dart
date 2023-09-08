@@ -17,6 +17,7 @@ import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/custom_bottom_bar/custom_bottom_bar.dart';
+import 'package:pds/presentation/Login_Screen/UserReActivate_screen.dart';
 import 'package:pds/presentation/otp_verification_screen/otp_verification_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/widgets/custom_elevated_button.dart';
@@ -26,6 +27,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
+import '../../API/Bloc/UserReActivate_Bloc/UserReActivate_cubit.dart';
 import '../../API/Bloc/device_info_Bloc/device_info_bloc.dart';
 import '../../API/Model/authModel/getUserDetailsMdoel.dart';
 import '../../API/Model/authModel/loginModel.dart';
@@ -83,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
           body: BlocProvider<LoginCubit>(
             create: (context) => LoginCubit(),
             child: BlocConsumer<LoginCubit, LoginState>(
-              listener: (context, state) {
+              listener: (context, state) async {
                 if (state is LoginErrorState) {
                   print("error");
                   SnackBar snackBar = SnackBar(
@@ -106,63 +108,86 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 }
                 if (state is LoginLoadedState) {
-                  loginModelData = state.loginModel;
-                  if (state.loginModel.object?.verified == false) {
-                    BlocProvider.of<LoginCubit>(context).getUserDetails(
-                        state.loginModel.object?.uuid.toString() ?? "",
-                        context);
-                  }
-
-                  if (state.loginModel.object?.verified == true) {
-                    BlocProvider.of<LoginCubit>(context).getUserDetails(
-                        state.loginModel.object?.uuid.toString() ?? "",
-                        context);
-                    getDataStroe(
-                        state.loginModel.object?.uuid.toString() ?? "",
-                        state.loginModel.object?.jwt.toString() ?? "",
-                        loginModelData?.object?.module.toString() ?? "",
-                        loginModelData?.object?.profilePic.toString() ?? "");
-                    if (saveDeviceInfo == true) {
-                      savePhoneData();
+                  if (state.loginModel.message == "User Deleted") {
+                    showDialog(
+                        context: context,
+                        builder: (_) => BlocProvider<UserReActivateCubit>(
+                              create: (context) {
+                                return UserReActivateCubit();
+                              },
+                              child: UserReActivateDailog(
+                                userName: emailAndMobileController.text,
+                                password: passwordoneController.text,
+                              ),
+                            ));
+                  } else if (state.loginModel.success == false) {
+                    SnackBar snackBar = SnackBar(
+                      content: Text(state.loginModel.message.toString()),
+                      backgroundColor: ColorConstant.primary_color,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  } else {
+                    loginModelData = await state.loginModel;
+                    if (state.loginModel.object?.verified == false) {
+                      BlocProvider.of<LoginCubit>(context).getUserDetails(
+                          state.loginModel.object?.uuid.toString() ?? "",
+                          context);
                     }
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return MultiBlocProvider(
-                          providers: [
-                            BlocProvider<FetchAllPublicRoomCubit>(
-                              create: (context) => FetchAllPublicRoomCubit(),
-                            ),
-                            BlocProvider<CreatPublicRoomCubit>(
-                              create: (context) => CreatPublicRoomCubit(),
-                            ),
-                            BlocProvider<senMSGCubit>(
-                              create: (context) => senMSGCubit(),
-                            ),
-                            BlocProvider<RegisterCubit>(
-                              create: (context) => RegisterCubit(),
-                            ),
-                            BlocProvider<GetAllPrivateRoomCubit>(
-                              create: (context) => GetAllPrivateRoomCubit(),
-                            ),
-                            BlocProvider<InvitationCubit>(
-                              create: (context) => InvitationCubit(),
-                            ),
-                          ],
-                          child: BottombarPage(
-                            buttomIndex: 0,
-                          ));
-                    }));
+
+                    if (state.loginModel.object?.verified == true) {
+                      BlocProvider.of<LoginCubit>(context).getUserDetails(
+                          state.loginModel.object?.uuid.toString() ?? "",
+                          context);
+                      getDataStroe(
+                          state.loginModel.object?.uuid.toString() ?? "",
+                          state.loginModel.object?.jwt.toString() ?? "",
+                          loginModelData?.object?.module.toString() ?? "",
+                          loginModelData?.object?.profilePic.toString() ?? ""
+
+                          // state.loginModel.object!.verified.toString(),
+                          );
+                      if (saveDeviceInfo == true) {
+                        savePhoneData();
+                      }
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return MultiBlocProvider(
+                            providers: [
+                              BlocProvider<FetchAllPublicRoomCubit>(
+                                create: (context) => FetchAllPublicRoomCubit(),
+                              ),
+                              BlocProvider<CreatPublicRoomCubit>(
+                                create: (context) => CreatPublicRoomCubit(),
+                              ),
+                              BlocProvider<senMSGCubit>(
+                                create: (context) => senMSGCubit(),
+                              ),
+                              BlocProvider<RegisterCubit>(
+                                create: (context) => RegisterCubit(),
+                              ),
+                              BlocProvider<GetAllPrivateRoomCubit>(
+                                create: (context) => GetAllPrivateRoomCubit(),
+                              ),
+                              BlocProvider<InvitationCubit>(
+                                create: (context) => InvitationCubit(),
+                              ),
+                            ],
+                            child: BottombarPage(
+                              buttomIndex: 0,
+                            ));
+                      }));
+                    }
+
+                    SnackBar snackBar = SnackBar(
+                      content: Text(state.loginModel.message ?? ""),
+                      backgroundColor: ColorConstant.primary_color,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    print(
+                        'check Status--${state.loginModel.object!.verified.toString()}');
+
+                    // Navigator.push(context,MaterialPageRoute(builder: (context)=> HomeScreen()));
                   }
-
-                  SnackBar snackBar = SnackBar(
-                    content: Text(state.loginModel.message ?? ""),
-                    backgroundColor: ColorConstant.primary_color,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  print(
-                      'check Status--${state.loginModel.object!.verified.toString()}');
-
-                  // Navigator.push(context,MaterialPageRoute(builder: (context)=> HomeScreen()));
                 }
                 if (state is GetUserLoadedState) {
                   getUserDataModelData = state.getUserDataModel;
@@ -512,37 +537,27 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(
-                              top: 25,
-                              bottom: 5,
-                            ),
-                            child: RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: "Connect with us at  ",
-                                    style: TextStyle(
-                                      color: appTheme.black900,
-                                      fontSize: 14,
-                                      fontFamily: 'Outfit',
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: "Support",
-                                    style: TextStyle(
-                                      color: theme.colorScheme.primary,
-                                      fontSize: 14,
-                                      fontFamily: 'Outfit',
-                                      fontWeight: FontWeight.w500,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                ],
+                              padding: EdgeInsets.only(
+                                top: 25,
+                                bottom: 5,
                               ),
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  String email = Uri.encodeComponent(
+                                      "info@packagingdepot.store");
+                                  launchEmail(email);
+                                },
+                                child: Text(
+                                  "Support",
+                                  style: TextStyle(
+                                    color: theme.colorScheme.primary,
+                                    fontSize: 14,
+                                    fontFamily: 'Outfit',
+                                    fontWeight: FontWeight.w500,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              )),
                           // Padding(
                           //   padding: const EdgeInsets.only(
                           //       left: 30, right: 30, top: 10),
@@ -592,7 +607,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  getDataStroe(String userId, String jwt, String user_Module,String UserProfile) async {
+  getDataStroe(
+      String userId, String jwt, String user_Module, String UserProfile) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKey.loginUserID, userId);
     prefs.setString(PreferencesKey.loginJwt, jwt);
@@ -662,5 +678,23 @@ class _LoginScreenState extends State<LoginScreen> {
         .DeviceInfo(details, context);
 
     print(details);
+  }
+
+  void launchEmail(String emailAddress) async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'Test',
+      path: emailAddress,
+    );
+    Uri mailto = Uri.parse("mailto:$emailLaunchUri");
+    if (Platform.isAndroid) {
+      await launchUrl(mailto);
+    } else {
+      print("Somthing went wrong!");
+    }
+    /* if (await canLaunch(emailLaunchUri.toString())) {
+    await launch(emailLaunchUri.toString());
+  } else {
+    throw 'Could not launch email';
+  } */
   }
 }
