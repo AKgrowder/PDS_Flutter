@@ -2,9 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import '../Model/SelectRoomModel/SelectRoom_Model.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
+import 'package:pds/API/Model/DeleteUserModel/DeleteUser_Model.dart';
 import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
 import 'package:pds/API/Model/Get_all_blog_Model/get_all_blog_model.dart';
+import 'package:pds/API/Model/UserReActivateModel/UserReActivate_model.dart';
 import 'package:pds/API/Model/authModel/getUserDetailsMdoel.dart';
 import 'package:pds/API/Model/authModel/loginModel.dart';
 import 'package:pds/API/Model/authModel/registerModel.dart';
@@ -174,6 +177,8 @@ class Repository {
       case 200:
         return LoginModel.fromJson(jsonString);
       case 404:
+        return Config.somethingWentWrong;
+      case 400:
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
@@ -662,7 +667,7 @@ class Repository {
     }
   }
 
- Changepassword(Map<String, dynamic> params, BuildContext context) async {
+  Changepassword(Map<String, dynamic> params, BuildContext context) async {
     final response =
         await apiServices.postApiCall(Config.changepassword, params, context);
     var jsonString = json.decode(response.body);
@@ -724,6 +729,60 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return LogOutModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  DeleteUser(String uuid, BuildContext context) async {
+    final response =
+        await apiServices.getApiCall(Config.DeleteUser + uuid, context);
+    var jsonString = json.decode(response.body);
+    print('Myaccount$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return DeleteUserModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  UserReActivate(Map<String, dynamic> params, BuildContext context) async {
+    final response =
+        await apiServices.postApiCall(Config.ReActivateUSer, params, context);
+    var jsonString = json.decode(response.body);
+    print('jsonString-$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return UserReActivateModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  SelectRoomAPI(BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.SelectRoomList}", context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return SelectRoomModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
