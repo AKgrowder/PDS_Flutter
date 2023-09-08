@@ -203,30 +203,32 @@ class _SettingScreenState extends State<SettingScreen> {
                             textAlign: TextAlign.left,
                             style: TextStyle(color: Colors.black),
                           ))),
-                  // IsGuestUserEnabled == "true"
-                  //     ? SizedBox.shrink()
-                  //     : Align(
-                  //         alignment: Alignment.bottomCenter,
-                  //         child: Padding(
-                  //           padding: EdgeInsets.only(top: 22),
-                  //           child: Row(
-                  //               mainAxisAlignment: MainAxisAlignment.center,
-                  //               children: [
-                  //                 Text("Status:",
-                  //                     textScaleFactor: 1.0,
-                  //                     style: TextStyle(
-                  //                         color: Colors.black,
-                  //                         fontSize: 18,
-                  //                         fontFamily: 'Outfit',
-                  //                         fontWeight: FontWeight.w400)),
-                  //                 Text("${userStatus}",
-                  //                     style: TextStyle(
-                  //                         color: Colors.green,
-                  //                         fontSize: 18,
-                  //                         fontFamily: 'Outfit',
-                  //                         fontWeight: FontWeight.w400))
-                  //               ]),
-                  //         ))
+
+                /*   IsGuestUserEnabled == "true"
+                      ? SizedBox.shrink()
+                      : Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 22),
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("Status:",
+                                      textScaleFactor: 1.0,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                          fontFamily: 'Outfit',
+                                          fontWeight: FontWeight.w400)),
+                                  Text("${userStatus}",
+                                      style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 18,
+                                          fontFamily: 'Outfit',
+                                          fontWeight: FontWeight.w400))
+                                ]),
+                          )) */
+
                 ]))),
         body: Container(
             height: _height - 100,

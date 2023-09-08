@@ -309,7 +309,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Icon(
-                              Icons.download,
+                              Icons.remove_red_eye_outlined,
                               color: Colors.black.withOpacity(0.5),
                             ),
                           )
