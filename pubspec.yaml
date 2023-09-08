@@ -28,7 +28,7 @@ dependencies:
   another_flushbar: ^1.12.30
   flutter_keyboard_visibility: ^5.4.1
   syncfusion_flutter_pdfviewer: ^21.2.3
-  
+  url_launcher:
    
   # keyboard_emoji_picker: ^1.0.3
   flutter_markdown:
