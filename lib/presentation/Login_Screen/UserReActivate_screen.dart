@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:another_flushbar/flushbar.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/DeleteUser_Bloc/DeleteUser_cubit.dart';
@@ -7,6 +11,7 @@ import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'package:pds/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
+import 'package:pds/API/Bloc/UserReActivate_Bloc/UserReActivate_state.dart';
 import 'package:pds/API/Bloc/auth/register_Block.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/core/utils/color_constant.dart';
@@ -15,20 +20,33 @@ import 'package:pds/custom_bottom_bar/custom_bottom_bar.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../core/utils/sharedPreferences.dart';
+import '../../API/Bloc/UserReActivate_Bloc/UserReActivate_cubit.dart';
+import '../../API/Model/UserReActivateModel/UserReActivate_model.dart';
+import '../../core/utils/sharedPreferences.dart';
 
-class DeleteUserdailog extends StatefulWidget {
+class UserReActivateDailog extends StatefulWidget {
+  String? userName;
+  String? password;
+
+  UserReActivateDailog({
+    Key? key,
+    this.userName,
+    this.password,
+  }) : super(key: key);
   @override
-  State<StatefulWidget> createState() => DeleteUserdailogState();
+  State<StatefulWidget> createState() => UserReActivateDailogState();
 }
 
-class DeleteUserdailogState extends State<DeleteUserdailog>
+class UserReActivateDailogState extends State<UserReActivateDailog>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
   late Animation<double> scaleAnimation;
 
-  TextEditingController reasonController = TextEditingController();
-  String? User_ID;
+  // TextEditingController reasonController = TextEditingController();
+  // String? User_ID;
+
+  bool saveDeviceInfo = true;
+  UserReActivateModel? loginModelData;
 
   @override
   void initState() {
@@ -57,7 +75,8 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
         child: ScaleTransition(
           scale: scaleAnimation,
           child: Container(
-            height: height / 1.4,
+            height: height / 3.8,
+            width: MediaQuery.of(context).size.width / 1.17,
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
@@ -66,9 +85,9 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  BlocConsumer<DeleteUserCubit, DeleteUserState>(
+                  BlocConsumer<UserReActivateCubit, UserReActivateState>(
                     listener: (context, state) async {
-                      if (state is DeleteUserErrorState) {
+                      if (state is UserReActivateErrorState) {
                         if (state.error != "error in fetch room") {
                           SnackBar snackBar = SnackBar(
                             content: Text(state.error),
@@ -77,19 +96,22 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
                       }
-                      if (state is DeleteUserLoadedState) {
-                        final SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        prefs.remove(PreferencesKey.loginUserID);
-                        prefs.remove(PreferencesKey.loginJwt);
-                        prefs.remove(PreferencesKey.module);
-                        SnackBar snackBar = SnackBar(
-                          content:
-                              Text(state.deleteUserModel.message.toString()),
-                          backgroundColor: ColorConstant.primary_color,
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      if (state is UserReActivateLoadedState) {
+                        loginModelData = await state.LoginOutModel;
 
+                        getDataStroe(
+                            state.LoginOutModel.object?.uuid.toString() ?? "",
+                            state.LoginOutModel.object?.jwt.toString() ?? "",
+                            loginModelData?.object?.module.toString() ?? "",
+                            ""
+
+                            // state.loginModel.object!.verified.toString(),
+                            );
+                        if (saveDeviceInfo == true) {
+                          savePhoneData();
+                        }
+
+                        
                         Navigator.pushAndRemoveUntil(context,
                             MaterialPageRoute(builder: (context) {
                           return MultiBlocProvider(providers: [
@@ -117,8 +139,6 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
                     },
                     builder: (context, state) {
                       return Container(
-                        height: height / 1.4 - 80,
-                        width: MediaQuery.of(context).size.width / 1.17,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
                           color: Colors.white,
@@ -147,89 +167,18 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
                                 ),
                               ),
                             ),
-                            Container(
-                              height: MediaQuery.of(context).size.width / 3.2,
-                              width: MediaQuery.of(context).size.width / 3,
-                              // color: Colors.red[100],
-                              child: Image.asset(
-                                ImageConstant.closeimage,
-                                fit: BoxFit.fill,
-                                color: ColorConstant.primary_color,
-                              ),
-                            ),
                             Padding(
                               padding: const EdgeInsets.only(top: 10),
-                              child: Text(
-                                  "Are you Sure you want to \n Delete your Account?",
+                              child: Text("Please Re-Activate Your Account",
                                   textScaleFactor: 1.0,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: 'outfit',
-                                    fontSize: 18,
+                                    fontSize: 22,
                                     fontWeight: FontWeight.w600,
                                     color: ColorConstant
                                         .primary_color, /* textCenter: true, */
                                   )),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 7),
-                              child: Text(
-                                "All the data will be deleted from the \n server after 30 days.",
-                                textScaleFactor: 1.0,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: 'outfit',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  // textCenter: true,
-                                  // color: Colors.black45,
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.light
-                                      ? Colors.black45
-                                      : Colors.grey,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.only(top: 1, left: 15),
-                                child: Row(children: [
-                                  Padding(
-                                      padding:
-                                          EdgeInsets.only(top: 5, bottom: 5),
-                                      child: Text("Reason",
-                                          textScaleFactor: 1.0,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            fontFamily: 'outfit',
-                                            color: ColorConstant.primary_color,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                          ))),
-                                  Padding(
-                                      padding:
-                                          EdgeInsets.only(left: 5, bottom: 2),
-                                      child: Text("*",
-                                          textScaleFactor: 1.0,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            color: ColorConstant.primary_color,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                          )))
-                                ])),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 15, right: 15),
-                              child: CustomTextFormField(
-                                // focusNode: FocusNode(),
-                                controller: reasonController,
-                                hintText: "",
-                                maxLength: 150,
-                                // padding: TextFormFieldPadding.PaddingT44,
-                                maxLines: 5,
-                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
@@ -241,22 +190,15 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
                                     fit: FlexFit.tight,
                                     child: GestureDetector(
                                       onTap: () async {
-                                        final SharedPreferences prefs =
-                                            await SharedPreferences
-                                                .getInstance();
-                                        User_ID = prefs.getString(
-                                            PreferencesKey.loginUserID);
-                                        if (reasonController.text.isNotEmpty) {
-                                          BlocProvider.of<DeleteUserCubit>(
-                                                  context)
-                                              .DeleteUserApi(
-                                                  User_ID.toString(), context);
-                                        } else {
-                                          show_Icon_Flushbar(context,
-                                              msg:
-                                                  "Please Enter Valid Reason.");
-                                        }
-                                        // Navigator.pop(context);
+                                        Map<String, dynamic> dataPassing = {
+                                          "username": widget.userName,
+                                          "password": widget.password,
+                                          "isFromAdmin": false
+                                        };
+                                        BlocProvider.of<UserReActivateCubit>(
+                                                context)
+                                            .UserReActivateApi(
+                                                dataPassing, context);
                                       },
                                       child: Container(
                                         width: 163,
@@ -362,5 +304,63 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
         duration: Duration(seconds: 3),
         message: msg)
       ..show(context);
+  }
+
+  getDataStroe(
+      String userId, String jwt, String user_Module, String UserProfile) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(PreferencesKey.loginUserID, userId);
+    prefs.setString(PreferencesKey.loginJwt, jwt);
+    prefs.setString(PreferencesKey.module, user_Module);
+    prefs.setString(PreferencesKey.UserProfile, UserProfile);
+
+    // prefs.setString(PreferencesKey.loginVerify, verify);
+    print('userId-$userId');
+    print('jwt-$jwt');
+    // print('verify-$verify');
+  }
+
+  savePhoneData() async {
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    print('UUID is------> ${fcmToken}');
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(PreferencesKey.fcmToken, "${fcmToken}");
+
+    saveDeviceInfo = false;
+
+    var deviceTokne = prefs.getString(PreferencesKey.fcmToken);
+
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+
+    var androidMOdel = "";
+    var androidVersion = "";
+    var iosModel = "";
+
+    if (Platform.isAndroid) {
+      androidMOdel = androidInfo.model;
+      androidVersion = androidInfo.version.release;
+    } else if (Platform.isIOS) {
+      iosModel = "${iosInfo.utsname.machine}";
+    }
+
+    var details = {
+      "deviceModel": iosModel == "" ? androidMOdel : iosModel,
+      "deviceType": Platform.isIOS ? "ios" : "Android",
+      "mobileNumber": "${loginModelData?.object?.mobileNo ?? ""}",
+      "module": "${loginModelData?.object?.module ?? ""}",
+      "userId": 0,
+      "fcmToken": deviceTokne ?? "",
+      "version":
+          iosModel == "" ? androidVersion : Platform.operatingSystemVersion,
+    };
+// DeviceInfo
+
+    await BlocProvider.of<UserReActivateCubit>(context)
+        .DeviceInfo(details, context);
+
+    print(details);
   }
 }

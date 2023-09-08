@@ -13,11 +13,9 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       emit(LoginLoadingState());
       registerClassData = await Repository().loginApi(params, context);
-      if (registerClassData.success == true) {
-        emit(LoginLoadedState(registerClassData));
-      } else {
-        emit(LoginErrorState(registerClassData.message));
-      }
+      // if (registerClassData.success == true) {
+      emit(LoginLoadedState(registerClassData));
+      // }
     } catch (e) {
       print('LoginScreen-${e.toString()}');
       emit(LoginErrorState(registerClassData));
