@@ -219,7 +219,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(
                           color: const Color.fromARGB(101, 158, 158, 158))),
-                  child: Column(children: [
+                  child: Column(children: [ 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(

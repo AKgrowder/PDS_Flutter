@@ -73,7 +73,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   PermissionStatus _cameraPermissionStatus = PermissionStatus.denied;
   PermissionStatus _galleryPermissionStatus = PermissionStatus.denied;
   Uint8List? _pdfData;
-
+  List<Expertiseclass> selctedexpertiseData = [];
   dataSetMethod(
       {String? useridSetdata,
       String? userNameSetdata,
@@ -170,7 +170,17 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
             feesInSetdata: state.myAccontDetails.object?.fees,
             companyNameSetData: state.myAccontDetails.object?.companyName,
           );
-
+          if (myAccontDetails?.object?.expertise != null ||
+              myAccontDetails?.object?.expertise?.isNotEmpty == false) {
+            print('this condison working');
+            print(
+                'check Data expertiseName-${myAccontDetails?.object?.expertise?.first.expertiseName}');
+            print(
+                'check Data uid-${myAccontDetails?.object?.expertise?.first.uid}');
+            selctedexpertiseData.add(Expertiseclass(
+                '${myAccontDetails?.object?.expertise?.first.uid}',
+                '${myAccontDetails?.object?.expertise?.first.expertiseName}'));
+          }
           if (myAccontDetails?.object?.workingHours != null) {
             workignStart = myAccontDetails?.object?.workingHours
                 .toString()
@@ -208,12 +218,20 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         if (state is FetchExprtiseRoomLoadedState) {
           _fetchExprtise = state.fetchExprtise;
 
-          // selectedExpertise = Expertiseclass(uid, expertiseName);
           expertiseData = state.fetchExprtise.object!
-              .map((e) =>
-                  Expertiseclass(e.uid.toString(), e.expertiseName.toString()))
+              .map((e){
+                print('uid-${e.uid}');
+                print('expertiseName-${e.expertiseName}');
+
+                 return  Expertiseclass(e.uid.toString(), e.expertiseName.toString());
+        })
               .toList();
-          selectedExpertise = expertiseData != null ? expertiseData[0] : null;
+
+          selctedexpertiseData.add(Expertiseclass(
+              '${myAccontDetails?.object?.expertise?.first.uid}',
+              '${myAccontDetails?.object?.expertise?.first.expertiseName}'));
+
+            selectedExpertise = expertiseData != null ? expertiseData[0] : null;
         }
         if (state is CreatFourmLoadedState) {
           SnackBar snackBar = SnackBar(
@@ -312,7 +330,13 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                       dopcument = myAccontDetails?.object?.userDocument != null
                           ? myAccontDetails?.object?.userDocument
                           : 'Upload Image';
-
+                      if (selctedexpertiseData.length != null ||
+                          selctedexpertiseData.isNotEmpty) {
+                        print(
+                            'check expertiseName-${selctedexpertiseData.first.expertiseName}');
+                        print('check uid-${selctedexpertiseData.first.uid}');
+                      
+                      }
                       setState(() {});
                     },
                     child: Icon(
@@ -742,8 +766,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   child: Padding(
                                     padding: EdgeInsets.only(left: 12),
                                     child: DropdownButton<Expertiseclass>(
-                                      value: selectedExpertise,
-                                      //hint: Text('Please select an option'),
+                                      value: Expertiseclass('3fed69f8-14a9-4e54-bf54-4e88e04213c0', 'Wood'),
+                                      // value: Expertiseclass(uid, expertiseName),
+                                    /*   value: Expertiseclass(selctedexpertiseData[0].uid,selctedexpertiseData[0].expertiseName), */
                                       onChanged: (Expertiseclass? newValue) {
                                         // When the user selects an option from the dropdown.
                                         if (newValue != null) {
@@ -1222,7 +1247,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                                                       .circular(
                                                                           5))),
                                                   child: Icon(
-                                                    Icons.arrow_forward,
+                                                    Icons
+                                                        .remove_red_eye_outlined,
                                                     color: ColorConstant
                                                         .primary_color,
                                                   ),
