@@ -43,5 +43,8 @@ class Config {
   static const String changepassword = "auth/auth/changePassword";
   static const String changepasswordInSettingScrnee = "user/changeUserPassword";
   static const String logOut = "auth/auth/logoutByToken";
-  static const String getallBlog= "guest/api/getAllBlog";
+  static const String getallBlog = "guest/api/getAllBlog";
+  static const String DeleteUser = "auth/auth/deleteForumUser/";
+  static const String ReActivateUSer = "auth/auth/activeForumUser";
+  static const String SelectRoomList = "user/api/fetchOwnerRoom";
 }
