@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/Bloc/DeleteUser_Bloc/DeleteUser_cubit.dart';
 import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_cubit.dart';
 import 'package:pds/API/Bloc/logOut_bloc/logOut_cubit.dart';
 import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
@@ -202,30 +203,30 @@ class _SettingScreenState extends State<SettingScreen> {
                             textAlign: TextAlign.left,
                             style: TextStyle(color: Colors.black),
                           ))),
-                  IsGuestUserEnabled == "true"
-                      ? SizedBox.shrink()
-                      : Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 22),
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("Status:",
-                                      textScaleFactor: 1.0,
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 18,
-                                          fontFamily: 'Outfit',
-                                          fontWeight: FontWeight.w400)),
-                                  Text("${userStatus}",
-                                      style: TextStyle(
-                                          color: Colors.green,
-                                          fontSize: 18,
-                                          fontFamily: 'Outfit',
-                                          fontWeight: FontWeight.w400))
-                                ]),
-                          ))
+                  // IsGuestUserEnabled == "true"
+                  //     ? SizedBox.shrink()
+                  //     : Align(
+                  //         alignment: Alignment.bottomCenter,
+                  //         child: Padding(
+                  //           padding: EdgeInsets.only(top: 22),
+                  //           child: Row(
+                  //               mainAxisAlignment: MainAxisAlignment.center,
+                  //               children: [
+                  //                 Text("Status:",
+                  //                     textScaleFactor: 1.0,
+                  //                     style: TextStyle(
+                  //                         color: Colors.black,
+                  //                         fontSize: 18,
+                  //                         fontFamily: 'Outfit',
+                  //                         fontWeight: FontWeight.w400)),
+                  //                 Text("${userStatus}",
+                  //                     style: TextStyle(
+                  //                         color: Colors.green,
+                  //                         fontSize: 18,
+                  //                         fontFamily: 'Outfit',
+                  //                         fontWeight: FontWeight.w400))
+                  //               ]),
+                  //         ))
                 ]))),
         body: Container(
             height: _height - 100,
@@ -277,8 +278,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           //     ));
                           break;
                         case 3:
-                    
-                      Navigator.push(context,
+                          Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return MultiBlocProvider(
                                 providers: [
@@ -353,7 +353,13 @@ class _SettingScreenState extends State<SettingScreen> {
                           break; */
                         case 9:
                           showDialog(
-                              context: context, builder: (_) => FunkyOverlay());
+                              context: context,
+                              builder: (_) => BlocProvider<DeleteUserCubit>(
+                                    create: (context) {
+                                      return DeleteUserCubit();
+                                    },
+                                    child: DeleteUserdailog(),
+                                  ));
 
                           // showDialog(
                           //     context: context, builder: (_) => RoomsScreen());
@@ -466,8 +472,7 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  
- getUserStausFuction() async {
+  getUserStausFuction() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     userStatus = await prefs.getString(PreferencesKey.userStatus);
     UserProfileOpen = await prefs.getBool(PreferencesKey.OpenProfile);
@@ -487,6 +492,5 @@ class _SettingScreenState extends State<SettingScreen> {
         userStatus != 'APPROVED' ? userStatus?.split('-').first : userStatus;
 
     setState(() {});
-   
+  }
 }
-} 
