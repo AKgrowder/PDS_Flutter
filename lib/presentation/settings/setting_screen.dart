@@ -9,6 +9,7 @@ import 'package:pds/presentation/settings/LogOut_dailog.dart';
 import 'package:pds/widgets/delete_dailog.dart';
 import 'package:pds/widgets/rateUS_dailog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
@@ -16,7 +17,6 @@ import '../../widgets/app_bar/custom_app_bar.dart';
 import '../my account/my_account_screen.dart';
 import '../policy_of_company/policy_screen.dart';
 import '../policy_of_company/privecy_policy.dart';
-import '../view_details_screen/view_public_forum_screen.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen();
@@ -204,7 +204,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             style: TextStyle(color: Colors.black),
                           ))),
 
-                /*   IsGuestUserEnabled == "true"
+                  /*   IsGuestUserEnabled == "true"
                       ? SizedBox.shrink()
                       : Align(
                           alignment: Alignment.bottomCenter,
@@ -228,7 +228,6 @@ class _SettingScreenState extends State<SettingScreen> {
                                           fontWeight: FontWeight.w400))
                                 ]),
                           )) */
-
                 ]))),
         body: Container(
             height: _height - 100,
@@ -302,13 +301,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
                           break;
                         case 5:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ViewDetailsScreen()
-
-                                  // AddDeliveryAddressScreen();
-                                  ));
+                          launchEmail();
                           break;
                         /*    case 6:
                           Navigator.push(context,
@@ -318,14 +311,14 @@ class _SettingScreenState extends State<SettingScreen> {
             
                           break; */
                         case 6:
-                        Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Policies(
-                                    title: " ",
-                                    data: Policy_Data.privacy_policy1,
-                                  ),
-                                ));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Policies(
+                                  title: " ",
+                                  data: Policy_Data.privacy_policy1,
+                                ),
+                              ));
                           break;
                         case 7:
                           // Navigator.push(context,
@@ -472,6 +465,19 @@ class _SettingScreenState extends State<SettingScreen> {
                 })),
       ),
     );
+  }
+
+  dynamic launchEmail() async {
+    try {
+      Uri email = Uri(
+        scheme: 'mailto',
+        path: "info@packagingdepot.store",
+      );
+
+      await launchUrl(email);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   getUserStausFuction() async {
