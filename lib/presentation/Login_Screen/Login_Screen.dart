@@ -24,6 +24,7 @@ import 'package:pds/widgets/custom_elevated_button.dart';
 import 'package:pds/widgets/custom_outlined_button.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
@@ -537,27 +538,42 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           Padding(
-                              padding: EdgeInsets.only(
-                                top: 25,
-                                bottom: 5,
-                              ),
-                              child: GestureDetector(
-                                onTap: () async {
-                                  String email = Uri.encodeComponent(
-                                      "info@packagingdepot.store");
-                                  launchEmail(email);
-                                },
-                                child: Text(
-                                  "Support",
-                                  style: TextStyle(
-                                    color: theme.colorScheme.primary,
-                                    fontSize: 14,
-                                    fontFamily: 'Outfit',
-                                    fontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline,
+                            padding: const EdgeInsets.only(
+                                left: 30, right: 30, top: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("Connect with us at",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontFamily: 'Outfit',
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    String email = Uri.encodeComponent(
+                                        "info@packagingdepot.store");
+                                    launchEmail(email);
+                                  },
+                                  child: Text(
+                                    "Support",
+                                    style: TextStyle(
+                                      color: theme.colorScheme.primary,
+                                      fontSize: 14,
+                                      fontFamily: 'Outfit',
+                                      fontWeight: FontWeight.w500,
+                                      decoration: TextDecoration.underline,
+                                    ),
                                   ),
                                 ),
-                              )),
+                              ],
+                            ),
+                          ),
+
                           // Padding(
                           //   padding: const EdgeInsets.only(
                           //       left: 30, right: 30, top: 10),
