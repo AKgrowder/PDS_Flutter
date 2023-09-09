@@ -158,4 +158,8 @@ class ImageConstant {
   static String blogimage = 'assets/images/Rectangle 39864.png';
   static String like_image = 'assets/images/likeimage.png';
   static String arrowright = 'assets/images/arrow_right.png';
+  static String phoneimage = 'assets/images/imagephone.png';
+  static String privecy_policy = 'assets/images/privecy_policy.png';
+  static String turms_of_use = 'assets/images/turmsofuse.png';
+  static String mail = 'assets/images/mail.png';
 }

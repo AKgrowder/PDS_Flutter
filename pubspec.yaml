@@ -29,6 +29,7 @@ dependencies:
   flutter_keyboard_visibility: ^5.4.1
   syncfusion_flutter_pdfviewer: ^21.2.3
   url_launcher:
+  share_plus:  
    
   # keyboard_emoji_picker: ^1.0.3
   flutter_markdown:
