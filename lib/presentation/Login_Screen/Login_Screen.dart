@@ -21,11 +21,9 @@ import 'package:pds/presentation/Login_Screen/UserReActivate_screen.dart';
 import 'package:pds/presentation/otp_verification_screen/otp_verification_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/widgets/custom_elevated_button.dart';
-import 'package:pds/widgets/custom_outlined_button.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../../API/Bloc/UserReActivate_Bloc/UserReActivate_cubit.dart';
