@@ -57,6 +57,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   FetchExprtise? _fetchExprtise;
   List<Expertiseclass> expertiseData = [];
   Expertiseclass? selectedExpertise;
+
   String? dopcument;
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
@@ -67,6 +68,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   String setTime = 'Am';
   String? filepath;
   double finalFileSize = 12.0;
+
   ChooseDocument? chooseDocumentuploded2;
   ChooseDocument? chooseDocumentuploded;
   List<String>? workingInList;
@@ -216,22 +218,17 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           chooseDocumentuploded2 = state.chooseDocumentuploded;
         }
         if (state is FetchExprtiseRoomLoadedState) {
-          _fetchExprtise = state.fetchExprtise;
+          state.fetchExprtise.object?.forEach((element) {
+            expertiseData.add(Expertiseclass(
+                element.uid.toString(), element.expertiseName.toString()));
+          });
 
-          expertiseData = state.fetchExprtise.object!
-              .map((e){
-                print('uid-${e.uid}');
-                print('expertiseName-${e.expertiseName}');
-
-                 return  Expertiseclass(e.uid.toString(), e.expertiseName.toString());
-        })
-              .toList();
-
-          selctedexpertiseData.add(Expertiseclass(
-              '${myAccontDetails?.object?.expertise?.first.uid}',
-              '${myAccontDetails?.object?.expertise?.first.expertiseName}'));
-
-            selectedExpertise = expertiseData != null ? expertiseData[0] : null;
+          expertiseData.forEach((element) {
+            if (element.expertiseName ==
+                myAccontDetails?.object?.expertise?[0].expertiseName) {
+              selectedExpertise = element;
+            }
+          });
         }
         if (state is CreatFourmLoadedState) {
           SnackBar snackBar = SnackBar(
@@ -330,13 +327,12 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                       dopcument = myAccontDetails?.object?.userDocument != null
                           ? myAccontDetails?.object?.userDocument
                           : 'Upload Image';
-                      if (selctedexpertiseData.length != null ||
+                      /*    if (selctedexpertiseData.length != null ||
                           selctedexpertiseData.isNotEmpty) {
                         print(
                             'check expertiseName-${selctedexpertiseData.first.expertiseName}');
                         print('check uid-${selctedexpertiseData.first.uid}');
-                      
-                      }
+                      } */
                       setState(() {});
                     },
                     child: Icon(
@@ -766,9 +762,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   child: Padding(
                                     padding: EdgeInsets.only(left: 12),
                                     child: DropdownButton<Expertiseclass>(
-                                      value: Expertiseclass('3fed69f8-14a9-4e54-bf54-4e88e04213c0', 'Wood'),
+                                      value: selectedExpertise,
                                       // value: Expertiseclass(uid, expertiseName),
-                                    /*   value: Expertiseclass(selctedexpertiseData[0].uid,selctedexpertiseData[0].expertiseName), */
+                                      /*   value: Expertiseclass(selctedexpertiseData[0].uid,selctedexpertiseData[0].expertiseName), */
                                       onChanged: (Expertiseclass? newValue) {
                                         // When the user selects an option from the dropdown.
                                         if (newValue != null) {
@@ -782,6 +778,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                       items: expertiseData.map<
                                               DropdownMenuItem<Expertiseclass>>(
                                           (Expertiseclass expertise) {
+                                        print('ababababaabab ${expertise}');
                                         return DropdownMenuItem<Expertiseclass>(
                                           value: expertise,
                                           child: Text(expertise.expertiseName),
@@ -1224,6 +1221,16 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                               )
                                             : GestureDetector(
                                                 onTap: () {
+
+                                                  SnackBar snackBar = SnackBar(
+                                                    content: Text(
+                                                        "Your Profile is Approved,You can't Change Document!"),
+                                                    backgroundColor:
+                                                        ColorConstant
+                                                            .primary_color,
+                                                  );
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(snackBar);
                                                   print(
                                                       'object-${myAccontDetails?.object?.userDocument?.toString()}');
                                                   /*    showPdfDialog(
@@ -1237,7 +1244,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                                   width: _width / 4.5,
                                                   decoration: BoxDecoration(
                                                       color: Color.fromARGB(
-                                                          255, 228, 228, 228),
+                                                          255, 189, 189, 189),
                                                       borderRadius:
                                                           BorderRadius.only(
                                                               topRight: Radius
@@ -1246,11 +1253,17 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                                                   Radius
                                                                       .circular(
                                                                           5))),
-                                                  child: Icon(
-                                                    Icons
-                                                        .remove_red_eye_outlined,
-                                                    color: ColorConstant
-                                                        .primary_color,
+                                                  child:  Center(
+                                                    child: Text(
+                                                      "Change",
+                                                      style: TextStyle(
+                                                        fontFamily: 'outfit',
+                                                        fontSize: 15,
+                                                        color: Colors.black45,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -1266,7 +1279,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                       onTap: () {
                                         print(
                                             'dsfhdfhsdfg-${myAccontDetails?.object?.userDocument.toString()}');
-                                        Navigator.of(context).push(
+                                      /*   Navigator.of(context).push(
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     DocumentViewScreen(
@@ -1274,7 +1287,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                                           ?.object?.userDocument
                                                           .toString(),
                                                       title: 'Pdf',
-                                                    )));
+                                                    ))); */
                                       },
                                       child: Container(
                                         height: 50,
@@ -1300,30 +1313,35 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                             )),
                                       ),
                                     ),
-                                    GestureDetector(
-                                      onTap: () {},
+                                  GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DocumentViewScreen(
+                                                      path: myAccontDetails
+                                                          ?.object?.userDocument
+                                                          .toString(),
+                                                      title: 'Pdf',
+                                                    )));
+                                      },
                                       child: Container(
                                         height: 50,
                                         width: _width / 4.5,
                                         decoration: BoxDecoration(
-                                            color: Color(0XFF777777),
+                                            color: Color.fromARGB(
+                                                255, 226, 226, 226),
                                             borderRadius: BorderRadius.only(
                                                 topRight: Radius.circular(5),
                                                 bottomRight:
                                                     Radius.circular(5))),
                                         child: Center(
-                                          child: Text(
-                                            "Change",
-                                            style: TextStyle(
-                                              fontFamily: 'outfit',
-                                              fontSize: 15,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                                          child: Icon(
+                                            Icons.remove_red_eye_outlined,
+                                            color: Colors.red,
                                           ),
                                         ),
-                                      ),
-                                    ),
+                                      ),),
                                   ],
                                 ),
                               )
