@@ -440,7 +440,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                       onTap: () {
                                         if (widget.RoomUUID == null ||
                                             widget.RoomUUID == "") {
-                                          User_ID != null || User_ID != ""
+                                          User_ID != null
                                               ? Navigator.push(context,
                                                   MaterialPageRoute(
                                                       builder: (context) {
