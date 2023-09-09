@@ -38,10 +38,10 @@ class _SplashScreenState extends State<SplashScreen> {
       Duration(seconds: 1),
       () async {
         if (UserID != "") {
-          await BlocProvider.of<SystemConfigCubit>(context).UserModel(context);
+          BlocProvider.of<SystemConfigCubit>(context).UserModel(context);
         }
 
-        await BlocProvider.of<SystemConfigCubit>(context).SystemConfig(context);
+        BlocProvider.of<SystemConfigCubit>(context).SystemConfig(context);
       },
     );
   }
@@ -60,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
     double height = MediaQuery.of(context).size.height; */
 
     return BlocConsumer<SystemConfigCubit, SystemConfigState>(
-        listener: (context, state) {
+        listener: (context, state) async {
       if (state is SystemConfigErrorState) {
         SnackBar snackBar = SnackBar(
           content: Text(state.error),
@@ -82,43 +82,43 @@ class _SplashScreenState extends State<SplashScreen> {
         );
       }
       if (state is fetchUserModulemodelLoadedState) {
-        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" +
-            "${state.fetchUserModule.object}");
         user_Module = state.fetchUserModule.object?.userModule ?? "";
         User_profile = state.fetchUserModule.object?.userProfilePic ?? "";
       }
       if (state is SystemConfigLoadedState) {
-        systemConfigModel = state.systemConfigModel;
-        print("@@@@@@@@@@@@@@@@@@${systemConfigModel?.object}");
-        SetUi();
+          systemConfigModel = state.systemConfigModel;
+         await SetUi();
+       
 
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-          builder: (context) {
-            return MultiBlocProvider(
-              providers: [
-                BlocProvider<FetchAllPublicRoomCubit>(
-                  create: (context) => FetchAllPublicRoomCubit(),
-                ),
-                BlocProvider<CreatPublicRoomCubit>(
-                  create: (context) => CreatPublicRoomCubit(),
-                ),
-                BlocProvider<senMSGCubit>(
-                  create: (context) => senMSGCubit(),
-                ),
-                BlocProvider<RegisterCubit>(
-                  create: (context) => RegisterCubit(),
-                ),
-                BlocProvider<GetAllPrivateRoomCubit>(
-                  create: (context) => GetAllPrivateRoomCubit(),
-                ),
-                BlocProvider<InvitationCubit>(
-                  create: (context) => InvitationCubit(),
-                ),
-              ],
-              child: BottombarPage(buttomIndex: 0),
-            );
-          },
-        ), (route) => false);
+        Future.delayed(Duration(seconds: 0), () {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+            builder: (context) {
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider<FetchAllPublicRoomCubit>(
+                    create: (context) => FetchAllPublicRoomCubit(),
+                  ),
+                  BlocProvider<CreatPublicRoomCubit>(
+                    create: (context) => CreatPublicRoomCubit(),
+                  ),
+                  BlocProvider<senMSGCubit>(
+                    create: (context) => senMSGCubit(),
+                  ),
+                  BlocProvider<RegisterCubit>(
+                    create: (context) => RegisterCubit(),
+                  ),
+                  BlocProvider<GetAllPrivateRoomCubit>(
+                    create: (context) => GetAllPrivateRoomCubit(),
+                  ),
+                  BlocProvider<InvitationCubit>(
+                    create: (context) => InvitationCubit(),
+                  ),
+                ],
+                child: BottombarPage(buttomIndex: 0),
+              );
+            },
+          ), (route) => false);
+        });
       }
     }, builder: (context, state) {
       return Container(
@@ -144,6 +144,14 @@ class _SplashScreenState extends State<SplashScreen> {
     prefs.setString(PreferencesKey.module, user_Module);
     prefs.setString(PreferencesKey.UserProfile, User_profile);
 
+    prefs.setString(PreferencesKey.appApkRouteVersion, "1");
+    prefs.setString(PreferencesKey.appApkLatestVersion, "1");
+    prefs.setString(PreferencesKey.appApkMinVersion, "1");
+
+    prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
+    prefs.setString(PreferencesKey.IPAIosRoutVersion, "1");
+    prefs.setString(PreferencesKey.IPAIosMainversion, "1");
+
     systemConfigModel?.object?.forEach((element) async {
       if (element.name == "MaxDocUploadSizeInMB") {
         var fileSize = element.value!;
@@ -154,8 +162,60 @@ class _SplashScreenState extends State<SplashScreen> {
       } else if (element.name == "ResendTimerInSeconds") {
         var otpTimer = int.parse(element.value!);
         print(" otp timer  ${otpTimer}");
-        await prefs.setInt(PreferencesKey.otpTimer, otpTimer);
+        prefs.setInt(PreferencesKey.otpTimer, otpTimer);
       }
+
+      /// --------
+
+      else if (element.name == "ApkMinVersion") {
+        var ApkMinVersion = element.value ?? "";
+        print("ApkMinVersion  ${ApkMinVersion}");
+        prefs.setString(PreferencesKey.ApkMinVersion, ApkMinVersion);
+      } else if (element.name == "ApkLatestVersion") {
+        var ApkLatestVersion = element.value ?? "";
+        print(" ApkLatestVersion  ${ApkLatestVersion}");
+        prefs.setString(PreferencesKey.ApkLatestVersion, ApkLatestVersion);
+      } else if (element.name == "ApkRouteVersion") {
+        var ApkRouteVersion = element.value ?? "";
+        print(" ApkRouteVersion  ${ApkRouteVersion}");
+        prefs.setString(PreferencesKey.ApkRouteVersion, ApkRouteVersion);
+      }
+
+      /// -----
+
+      else if (element.name == "IosLatestVersion") {
+        var IosLatestVersion = element.value ?? "";
+        print(" IosLatestVersion  ${IosLatestVersion}");
+        prefs.setString(PreferencesKey.IosLatestVersion, IosLatestVersion);
+      } else if (element.name == "IosRoutVersion") {
+        var IosRoutVersion = element.value ?? "";
+        print("IosRoutVersion  ${IosRoutVersion}");
+        prefs.setString(PreferencesKey.IosRoutVersion, IosRoutVersion);
+      } else if (element.name == "IosMainversion") {
+        var IosMainversion = element.value ?? "";
+        print(" IosMainversion  ${IosMainversion}");
+        prefs.setString(PreferencesKey.IosMainversion, IosMainversion);
+      }
+
+      /// ---------
+
+      else if (element.name == "SocketLink") {
+        var SocketLink = element.value ?? "";
+        print(" SocketLink  ${SocketLink}");
+        prefs.setString(PreferencesKey.SocketLink, SocketLink);
+      } else if (element.name == "RoutURL") {
+        var RoutURL = element.value ?? "";
+        print(" RoutURL  ${RoutURL}");
+        prefs.setString(PreferencesKey.RoutURL, RoutURL);
+      } else if (element.name == "SupportEmailId") {
+        var SupportEmailId = element.value ?? "";
+        print(" SupportEmailId  ${SupportEmailId}");
+        prefs.setString(PreferencesKey.SupportEmailId, SupportEmailId);
+      } else if (element.name == "SupportPhoneNumber") {
+        var SupportPhoneNumber = element.value ?? "";
+        print(" SupportPhoneNumber  ${SupportPhoneNumber}");
+        prefs.setString(PreferencesKey.SupportPhoneNumber, SupportPhoneNumber);
+      } 
     });
   }
 }
