@@ -64,17 +64,6 @@ class Repository {
     }
   }
 
-  // Future<CreatPublicRoomModel> loginApi() async {
-  //   final response = await apiServices.postApiCall();
-  //   var jsonString = json.decode(response.body);
-  //   print(jsonString);
-  //   switch (response.statusCode) {
-  //     case 200:
-  //       return CreatPublicRoomModel.fromJson(jsonString);
-  //     default:
-  //       return CreatPublicRoomModel.fromJson(jsonString);:129
-  //   }
-  // }
   fetchExprtise(BuildContext context) async {
     final response =
         await apiServices.getApiCall(Config.fetchExprtise, context);
@@ -87,7 +76,6 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
-
       default:
         return jsonString;
     }
@@ -179,10 +167,9 @@ class Repository {
       case 404:
         return Config.somethingWentWrong;
       case 400:
-        return Config.somethingWentWrong;
+      return Config.loginerror;
       case 500:
         return Config.servernotreachable;
-
       default:
         return LoginModel.fromJson(jsonString);
     }

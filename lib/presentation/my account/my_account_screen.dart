@@ -69,6 +69,11 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   String? filepath;
   double finalFileSize = 12.0;
 
+  String? start;
+  String? startAm;
+  String? end;
+  String? endAm;
+
   ChooseDocument? chooseDocumentuploded2;
   ChooseDocument? chooseDocumentuploded;
   List<String>? workingInList;
@@ -105,6 +110,14 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       initialTime: initialTime,
     );
 
+    String? time = pickedTime?.format(context);
+    print('aaaaaaaaaaaaaa  ${time}');
+
+    start = time?.split(' ')[0];
+    startAm = time?.split(' ')[1];
+    print('start ${start}');
+    print('start ${startAm}');
+
     if (pickedTime != null && pickedTime != _startTime) {
       setState(() {
         _startTime = pickedTime;
@@ -125,6 +138,14 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       context: context,
       initialTime: initialTime,
     );
+
+    String? time = pickedTime?.format(context);
+    print('aaaaaaaaaaaaaa  ${time}');
+
+    end = time?.split(' ')[0];
+    endAm = time?.split(' ')[1];
+    print('end ${end}');
+    print('end ${endAm}');
 
     if (pickedTime != null && pickedTime != _endTime) {
       setState(() {
@@ -188,10 +209,20 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                 .toString()
                 .split(" to ")
                 .first;
+            print('ronakkkkkkkkkkkk ${workignStart}');
+
+            start = workignStart?.split(' ')[0];
+            startAm = workignStart?.split(' ')[1];
+            print('start ${start}');
+            print('start ${startAm}');
             workignend = myAccontDetails?.object?.workingHours
                 .toString()
                 .split(" to ")
                 .last;
+            end = workignend?.split(' ')[0];
+            endAm = workignend?.split(' ')[1];
+            print('end ${end}');
+            print('end ${endAm}');
           }
         }
         if (state is MyAccountErrorState) {
@@ -897,13 +928,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                                 padding:
                                                     EdgeInsets.only(left: 20),
                                                 child: Text(
-                                                  _startTime != null
-                                                      ? _startTime!
-                                                          .format(context)
-                                                          .toString()
-                                                          .split(' ')
-                                                          .first
-                                                      : '00:00',
+                                                  start.toString(),
                                                   style: TextStyle(
                                                       fontSize: 16,
                                                       color: Color(0xff989898)),
@@ -922,14 +947,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                             SizedBox(
                                               width: 10,
                                             ),
-                                            Text(
-                                                _startTime != null
-                                                    ? _startTime!
-                                                        .format(context)
-                                                        .toString()
-                                                        .split(' ')
-                                                        .last
-                                                    : 'AM',
+                                            Text(startAm.toString(),
                                                 style: TextStyle(
                                                     fontSize: 16,
                                                     color: Color(0xff989898))),
@@ -955,13 +973,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                                 padding:
                                                     EdgeInsets.only(left: 20),
                                                 child: Text(
-                                                  _endTime != null
-                                                      ? _endTime!
-                                                          .format(context)
-                                                          .toString()
-                                                          .split(" ")
-                                                          .first
-                                                      : ' 00:00',
+                                                  end.toString(),
                                                   style: TextStyle(
                                                       fontSize: 16,
                                                       color: Color(0xff989898)),
@@ -980,14 +992,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                             SizedBox(
                                               width: 5,
                                             ),
-                                            Text(
-                                                _endTime != null
-                                                    ? _endTime!
-                                                        .format(context)
-                                                        .toString()
-                                                        .split(" ")
-                                                        .last
-                                                    : 'PM',
+                                            Text(endAm.toString(),
                                                 style: TextStyle(
                                                     fontSize: 16,
                                                     color: Color(0xff989898))),
@@ -1020,7 +1025,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                               MainAxisAlignment.spaceAround,
                                           children: [
                                             Text(
-                                              '${workignStart?.split(" ").first}',
+                                              '${start}',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.grey.shade700,
@@ -1038,7 +1043,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                                     'working end-${workignStart}');
                                               },
                                               child: Text(
-                                                "${workignStart?.split(" ").last}",
+                                                "${startAm}",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w400,
                                                     color: Colors.grey.shade700,
@@ -1072,7 +1077,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                               MainAxisAlignment.spaceAround,
                                           children: [
                                             Text(
-                                              '${workignend?.split(" ").first}',
+                                              '${end}',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.grey.shade700,
@@ -1085,7 +1090,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                               color: Colors.grey,
                                             ),
                                             Text(
-                                              '${workignend?.split(" ").last}',
+                                              '${endAm}',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.grey.shade700,
@@ -1221,7 +1226,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                               )
                                             : GestureDetector(
                                                 onTap: () {
-
                                                   SnackBar snackBar = SnackBar(
                                                     content: Text(
                                                         "Your Profile is Approved,You can't Change Document!"),
@@ -1253,7 +1257,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                                                   Radius
                                                                       .circular(
                                                                           5))),
-                                                  child:  Center(
+                                                  child: Center(
                                                     child: Text(
                                                       "Change",
                                                       style: TextStyle(
@@ -1279,7 +1283,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                       onTap: () {
                                         print(
                                             'dsfhdfhsdfg-${myAccontDetails?.object?.userDocument.toString()}');
-                                      /*   Navigator.of(context).push(
+                                        /*   Navigator.of(context).push(
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     DocumentViewScreen(
@@ -1313,7 +1317,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                             )),
                                       ),
                                     ),
-                                  GestureDetector(
+                                    GestureDetector(
                                       onTap: () {
                                         Navigator.of(context).push(
                                             MaterialPageRoute(
@@ -1341,7 +1345,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                             color: Colors.red,
                                           ),
                                         ),
-                                      ),),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               )
@@ -1563,7 +1568,10 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                               );
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
-                            } else if (_endTime == null && _startTime == null) {
+                            } else if ((start?.isEmpty ?? false) &&
+                                (startAm?.isEmpty ?? false) &&
+                                (end?.isEmpty ?? false) &&
+                                (endAm?.isEmpty ?? false)) {
                               SnackBar snackBar = SnackBar(
                                 content: Text('Please select Working Hours'),
                                 backgroundColor: ColorConstant.primary_color,
@@ -1579,7 +1587,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   .showSnackBar(snackBar);
                             } else {
                               String time =
-                                  '${_startTime!.format(context).toString()} to ${_endTime!.format(context).toString()}';
+                                  '${start} ${startAm} to ${end} ${endAm}';
+                              print('gegegegegegegege ${time}');
                               print(
                                   'chooseDocumentuploded2?.object-${chooseDocumentuploded2?.object}');
                               print(

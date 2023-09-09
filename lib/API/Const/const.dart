@@ -47,4 +47,6 @@ class Config {
   static const String DeleteUser = "auth/auth/deleteForumUser/";
   static const String ReActivateUSer = "auth/auth/activeForumUser";
   static const String SelectRoomList = "user/api/fetchOwnerRoom";
+  static const String loginerror = "user only login with UserName";
+
 }
