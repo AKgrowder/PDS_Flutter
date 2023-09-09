@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -51,6 +53,25 @@ PublicRoomModel? PublicRoomModelData;
 LoginPublicRoomModel? FetchPublicRoomModelData;
 MyPublicRoom? MyPublicRoomData;
 FetchAllExpertsModel? FetchAllExpertsData;
+
+String? ApkMinVersion;
+String? ApkLatestVersion;
+String? ApkRouteVersion;
+String? IosLatestVersion;
+String? IosRoutVersion;
+String? IosMainversion;
+String? SocketLink;
+String? RoutURL;
+String? SupportEmailId;
+String? SupportPhoneNumber;
+
+String? appApkMinVersion;
+String? appApkLatestVersion;
+String? appApkRouteVersion;
+String? ipaIosLatestVersion;
+String? ipaIosRoutVersion;
+String? ipaIosMainversion;
+
 List<String> aa = [
   "Baluran Wild The Savvanah Baluran Wild The \nSavvanah",
   "Baluran Wild The Savvanah Baluran Wild The \nSavvanah",
@@ -129,7 +150,10 @@ DateTime? parsedDateTime;
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    refresh = false;
     saveUserProfile();
+    VersionControll();
+
     BlocProvider.of<FetchAllPublicRoomCubit>(context)
         .FetchAllExpertsAPI(context);
 
@@ -215,10 +239,8 @@ class _HomeScreenState extends State<HomeScreen> {
             }
 
             if (state is FetchAllPublicRoomLoadedState) {
-              setState(() {
-                PublicRoomModelData = state.PublicRoomData;
-                print(PublicRoomModelData?.object?.length);
-              });
+              PublicRoomModelData = state.PublicRoomData;
+              print(PublicRoomModelData?.object?.length);
             }
 
             if (state is FetchAllExpertsLoadedState) {
@@ -253,10 +275,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   await SharedPreferences.getInstance();
 
               prefs.setString(PreferencesKey.module, user_Module);
-              setState(() {
-                //  saveUserProfile();
-                User_Module = user_Module;
-              });
+
+              //  saveUserProfile();
+              User_Module = user_Module;
             }
           }, builder: (context, state) {
             return SingleChildScrollView(
@@ -2400,7 +2421,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     print('usrId-$User_ID');
 
-    setState(() {});
     // prefs.getString(PreferencesKey.ProfileEmail);
     // prefs.getString(PreferencesKey.ProfileModule);
     // prefs.getString(PreferencesKey.ProfileMobileNo);
@@ -2842,5 +2862,116 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
     );
+  }
+
+  VersionControll() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    ApkMinVersion = prefs.getString(PreferencesKey.ApkMinVersion);
+    ApkLatestVersion = prefs.getString(PreferencesKey.ApkLatestVersion);
+    ApkRouteVersion = prefs.getString(PreferencesKey.ApkRouteVersion);
+
+    IosLatestVersion = prefs.getString(PreferencesKey.IosLatestVersion);
+    IosRoutVersion = prefs.getString(PreferencesKey.IosRoutVersion);
+    IosMainversion = prefs.getString(PreferencesKey.IosMainversion);
+
+    SocketLink = prefs.getString(PreferencesKey.SocketLink);
+    RoutURL = prefs.getString(PreferencesKey.RoutURL);
+    SupportEmailId = prefs.getString(PreferencesKey.SupportEmailId);
+    SupportPhoneNumber = prefs.getString(PreferencesKey.SupportPhoneNumber);
+
+    appApkRouteVersion = prefs.getString(PreferencesKey.appApkRouteVersion);
+    appApkLatestVersion = prefs.getString(PreferencesKey.appApkLatestVersion);
+    appApkMinVersion = prefs.getString(PreferencesKey.appApkMinVersion);
+
+    ipaIosLatestVersion = prefs.getString(PreferencesKey.IPAIosLatestVersion);
+    ipaIosRoutVersion = prefs.getString(PreferencesKey.IPAIosRoutVersion);
+    ipaIosMainversion = prefs.getString(PreferencesKey.IPAIosMainversion);
+  }
+
+  VersionAlert() {
+    if (Platform.isAndroid) {
+      if (int.parse(ApkMinVersion ?? "") >
+          (int.parse(appApkMinVersion ?? ""))) {
+        print("Moti1");
+
+        AlertDialog(
+          title: const Text('New Version Alert'),
+          content: const Text(
+            'New application version is available',
+          ),
+          actions: <Widget>[
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(10),
+                            topLeft: Radius.circular(10))),
+                    height: 50,
+                    child: TextButton(
+                      style: TextButton.styleFrom(),
+                      child: const Text(
+                        'No',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: ColorConstant.primary_color,
+                        borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(10),
+                            topRight: Radius.circular(10))),
+                    height: 50,
+                    child: TextButton(
+                      style: TextButton.styleFrom(),
+                      child: const Text('Yes',
+                          style: TextStyle(color: Colors.white)),
+                      onPressed: () async {},
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      }
+
+      if (int.parse(ApkLatestVersion ?? "") >
+          (int.parse(appApkLatestVersion ?? ""))) {
+        print("Moti2");
+      }
+
+      if (int.parse(ApkRouteVersion ?? "") ==
+          (int.parse(appApkRouteVersion ?? ""))) {
+        print("same");
+      }
+    }
+
+    /// -----------------------------------------
+    if (Platform.isIOS) {
+      if (int.parse(IosMainversion ?? "") >
+          (int.parse(ipaIosMainversion ?? ""))) {
+        print("Moti1");
+      }
+
+      if (int.parse(IosLatestVersion ?? "") >
+          (int.parse(ipaIosLatestVersion ?? ""))) {
+        print("Moti2");
+      }
+
+      if (int.parse(IosRoutVersion ?? "") ==
+          (int.parse(ipaIosRoutVersion ?? ""))) {
+        print("same");
+      }
+    }
   }
 }
