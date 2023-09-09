@@ -26,6 +26,32 @@ class PreferencesKey {
   static const String fileSize = 'FileSize';
   static const String mediaSize = 'MediaSize';
   static const String otpTimer = 'OtpTimer';
+  static const String ApkRouteVersion = 'ApkRouteVersion';
+  static const String ApkLatestVersion = 'ApkLatestVersion';
+  static const String ApkMinVersion = 'ApkMinVersion';
+  static const String IosLatestVersion = 'IosLatestVersion';
+  static const String IosRoutVersion = 'IosRoutVersion';
+  static const String IosMainversion = 'IosMainversion';
+  static const String SocketLink = 'SocketLink';
+  static const String RoutURL = 'RoutURL';
+  static const String SupportEmailId = 'SupportEmailId';
+  static const String SupportPhoneNumber = 'SupportPhoneNumber';
+
+  
+
+   static const String appApkRouteVersion = 'appRouteVersion';
+  static const String appApkLatestVersion = 'appLatestVersion';
+  static const String appApkMinVersion = 'appMinVersion';
+  static const String IPAIosLatestVersion = 'IPAIosLatestVersion';
+  static const String IPAIosRoutVersion = 'IPARoutVersion';
+  static const String IPAIosMainversion = 'IPAMainversion';
+
+
+  
+
+
+
+  
 
 
 
