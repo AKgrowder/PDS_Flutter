@@ -163,4 +163,8 @@ class ImageConstant {
   static String turms_of_use = 'assets/images/turmsofuse.png';
   static String mail = 'assets/images/mail.png';
   static String redphoneimage = 'assets/images/phoneimage.png';
+  static String alertimage = 'assets/images/alertimage.png';
+
+
+  
 }

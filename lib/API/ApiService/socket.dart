@@ -57,7 +57,7 @@ final stompClient = StompClient(
   config: StompConfig(
     url:
         // 'ws://b71b-2405-201-200b-a0cf-e57b-ed1f-25d4-f1ec.ngrok.io/user/pdsChat',
-        'ws://192.168.29.100:8081/user/pdsChat',
+        'ws://192.168.29.17:8081/user/pdsChat',
 // "ws://https://uat.packagingdepot.store/user/pdsChat",
         // "${baseURL}",
     onConnect: onConnect,

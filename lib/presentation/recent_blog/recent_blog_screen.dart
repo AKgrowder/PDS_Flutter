@@ -8,7 +8,13 @@ import '../../widgets/custom_image_view.dart';
 import '../home/home.dart';
 
 class RecentBlogScren extends StatefulWidget {
-  const RecentBlogScren({Key? key}) : super(key: key);
+  String? title;
+  String? description1;
+  String? imageURL;
+  RecentBlogScren(
+      {required this.description1,
+      required this.title,
+      required this.imageURL});
 
   @override
   State<RecentBlogScren> createState() => _RecentBlogScrenState();
@@ -53,7 +59,11 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
               Stack(
                 children: [
                   CustomImageView(
-                    imagePath: ImageConstant.blogimage,
+                    url: "${widget.imageURL}",
+                    height: _height / 2.8,
+                    width: _width,
+                    fit: BoxFit.fill,
+                    // imagePath: ImageConstant.blogimage,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -68,54 +78,77 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 350, top: 10),
-                    child: CustomImageView(
-                      imagePath: ImageConstant.blogsaveimage,
-                      height: 40,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 280,
-                    ),
-                    child: Container(
-                      height: _height / 10,
-                      // width: _width / 1,
-                      decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.7),
-                          borderRadius: BorderRadius.circular(0)),
-                      child: Column(children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Row(
-                            children: [
-                              Container(
-                                // color: Colors.amber,
-                                width: _width / 1.05,
-                                height: 50,
-                                child: Text(
-                                  "Air gliding towarsssssssssssssssds paradise for showing well...",
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                      fontFamily: 'outfit',
-                                      overflow: TextOverflow.ellipsis,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(left: 350, top: 10),
+                  //   child: CustomImageView(
+                  //     imagePath: ImageConstant.blogsaveimage,
+                  //     height: 40,
+                  //   ),
+                  // ),
+
+                  Container(
+                    height: _height / 2.8,
+                    // height: _height / 14,
+                    // width: _width / 1,
+                    // decoration: BoxDecoration(
+                    //     color: Colors.white.withOpacity(0.7),
+                    //     borderRadius: BorderRadius.circular(0)),
+                    child: Column(children: [
+                      Spacer(),
+                      Container(
+                        // height: _height / 2.8,
+                        height: _height / 14,
+                        // width: _width / 1,
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(53, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(0)),
+                        child: Column(children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 12),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Title",
+                                style: TextStyle(
+                                    fontFamily: 'outfit',
+                                    overflow: TextOverflow.ellipsis,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ]),
-                    ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Row(
+                              children: [
+                                Container(
+                                  // color: Colors.amber,
+                                  // width: _width / 1.05,
+                                  // height: _height / 14,
+                                  child: Text(
+                                    "${widget.title}",
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        fontFamily: 'outfit',
+                                        overflow: TextOverflow.ellipsis,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Spacer(),
+                        ]),
+                      ),
+                    ]),
                   ),
                 ],
               ),
               SizedBox(
                 height: 20,
               ),
-              Row(
+              /*  Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(
@@ -181,18 +214,25 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
               ),
               SizedBox(
                 height: 20,
+              ), */
+              Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: Text(
+                  "Description",
+                  style: TextStyle(
+                      fontFamily: 'outfit',
+                      overflow: TextOverflow.ellipsis,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
-              Center(
-                child: Container(
-                  height: _height / 3,
-                  width: _width / 1.1,
-                  // color: Colors.amber,
+              Padding(
+                padding: const EdgeInsets.only(left: 20,bottom: 10),
+                child: SingleChildScrollView(
                   child: Text(
-                    "Lectus scelerisque vulputate tortor pellentesque ac. Fringilla cras ut faciwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwlisis amet imperdiet vitae etiam pellentesque pellentesque. Pellentesque amet sed luctus vel viverra tincidunt amet quis. Odio eget tincidunt diam cursus. Egestas venenatis platea egestas nulla convallis cursus at proin consectetur. Nisi, eget",
-                    maxLines: 15,
+                    "${widget.description1} ",// maxLines: ,
                     style: TextStyle(
                         fontFamily: 'outfit',
-                        overflow: TextOverflow.ellipsis,
                         fontSize: 15,
                         fontWeight: FontWeight.w500),
                   ),
@@ -201,7 +241,7 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
               SizedBox(
                 height: 20,
               ),
-              Padding(
+              /* Padding(
                 padding: const EdgeInsets.only(right: 20.0, left: 20, top: 7),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -224,7 +264,7 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                   ],
                 ),
               ),
-              similerblogs()
+              similerblogs() */
             ],
           ),
         ),

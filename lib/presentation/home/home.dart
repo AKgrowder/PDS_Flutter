@@ -1549,7 +1549,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                   ?.object?[
                                                                       index]
                                                                   .ownerUsreProfilePic
-                                                                  ?.isNotEmpty ==
+                                                                  ?.isNotEmpty ??
                                                               false
                                                           ? CustomImageView(
                                                               // imagePath: ImageConstant
@@ -2564,7 +2564,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
- Recentblogs() {
+  Recentblogs() {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return getallBlogdata?.object != null
@@ -2592,16 +2592,27 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => RecentBlogScren(),
+                            builder: (context) => RecentBlogScren(
+                                description1: getallBlogdata
+                                        ?.object?[index].description
+                                        .toString() ??
+                                    "",
+                                title: getallBlogdata?.object?[index].title
+                                        .toString() ??
+                                    "",
+                                imageURL: getallBlogdata?.object?[index].image
+                                        .toString() ??
+                                    ""),
                           ));
                     },
                     child: Container(
                         // height: 100,
+                        width: 280,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          // border: Border.all(
-                          //   color: Colors.red,
-                          // ),
+                          border: Border.all(
+                            color: Color.fromARGB(106, 244, 67, 54),
+                          ),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -2611,7 +2622,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Container(
                                   height: _height / 3.2,
-                                  width: _width / 1.2,
+                                  // width: _width / 1.2,
                                   child: CustomImageView(
                                     // imagePath: ImageConstant.blogimage,
 
@@ -2637,7 +2648,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   child: Container(
                                     height: _height / 10,
-                                    width: _width / 1.2,
+                                    // width: _width / 1.2,
                                     decoration: BoxDecoration(
                                         color: Colors.white.withOpacity(0.7),
                                         borderRadius:
@@ -2650,10 +2661,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           children: [
                                             Container(
                                               // color: Colors.amber,
-                                              width: _width / 1.3,
+                                              // width: _width / 1.3,
                                               child: Text(
-                                                getallBlogdata?.object?[index]
-                                                        .description
+                                                getallBlogdata
+                                                        ?.object?[index].title
                                                         .toString() ??
                                                     "",
                                                 style: TextStyle(
@@ -2678,7 +2689,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                           Container(
                                             // color: Colors.amber,
-                                            width: _width / 1.3,
+                                            // width: _width / 1.3,
                                             child: Text(
                                                 getallBlogdata?.object
                                                                 ?.length !=
@@ -3012,6 +3023,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ipaIosLatestVersion = prefs.getString(PreferencesKey.IPAIosLatestVersion);
     ipaIosRoutVersion = prefs.getString(PreferencesKey.IPAIosRoutVersion);
     ipaIosMainversion = prefs.getString(PreferencesKey.IPAIosMainversion);
+    VersionAlert();
   }
 
   VersionAlert() {
@@ -3019,8 +3031,9 @@ class _HomeScreenState extends State<HomeScreen> {
       if (int.parse(ApkMinVersion ?? "") >
           (int.parse(appApkMinVersion ?? ""))) {
         print("Moti1");
+        AlertHardUpdate();
 
-        AlertDialog(
+        /*  AlertDialog(
           title: const Text('New Version Alert'),
           content: const Text(
             'New application version is available',
@@ -3067,12 +3080,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ],
-        );
+        ); */
       }
 
       if (int.parse(ApkLatestVersion ?? "") >
           (int.parse(appApkLatestVersion ?? ""))) {
         print("Moti2");
+        AlertSoftUpdate();
+        
       }
 
       if (int.parse(ApkRouteVersion ?? "") ==
@@ -3086,11 +3101,14 @@ class _HomeScreenState extends State<HomeScreen> {
       if (int.parse(IosMainversion ?? "") >
           (int.parse(ipaIosMainversion ?? ""))) {
         print("Moti1");
+        AlertHardUpdate();
       }
 
       if (int.parse(IosLatestVersion ?? "") >
           (int.parse(ipaIosLatestVersion ?? ""))) {
         print("Moti2");
+        AlertSoftUpdate();
+        
       }
 
       if (int.parse(IosRoutVersion ?? "") ==
@@ -3098,5 +3116,218 @@ class _HomeScreenState extends State<HomeScreen> {
         print("same");
       }
     }
+  }
+
+  AlertHardUpdate() {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: Dialog(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              child: Container(
+                height: height / 2,
+                width: width,
+                // color: Colors.white,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      ImageConstant.alertimage,
+                      height: height / 4.8,
+                      width: width,
+                      fit: BoxFit.fill,
+                    ),
+                    Container(
+                      height: height / 7,
+                      width: width,
+                      color: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "New Version Alert",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: ColorConstant.primary_color,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "New application version is available",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.black),
+                          ),
+                          Text(
+                            "please download latest version",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        height: 45,
+                        width: width,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10)),
+                            color: ColorConstant.primary_color),
+                        child: Center(
+                            child: Text(
+                          "Update",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 17,
+                            color: Colors.white,
+                          ),
+                        )),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  AlertSoftUpdate() {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: Dialog(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              child: Container(
+                height: height / 2,
+                width: width,
+                // color: Colors.white,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      ImageConstant.alertimage,
+                      height: height / 4.8,
+                      width: width,
+                      fit: BoxFit.fill,
+                    ),
+                    Container(
+                      height: height / 7,
+                      width: width,
+                      color: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "New Version Alert",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: ColorConstant.primary_color,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "New application version is available",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.black),
+                          ),
+                          Text(
+                            "please download latest version",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            height: 50,
+                            width: width / 2.5,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: ColorConstant.primary_color),
+                                color: Colors.white),
+                            child: Center(
+                                child: Text(
+                              "Later",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                                color: ColorConstant.primary_color,
+                              ),
+                            )),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            height: 50,
+                            width: width / 2.5,
+                            decoration: BoxDecoration(
+                                color: ColorConstant.primary_color),
+                            child: Center(
+                                child: Text(
+                              "Update",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                                color: Colors.white,
+                              ),
+                            )),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 }
