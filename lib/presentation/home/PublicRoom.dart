@@ -22,7 +22,9 @@ class PublicRoomList extends StatefulWidget {
 class _PublicRoomListState extends State<PublicRoomList> {
   dynamic PublicRoomModelData;
   method() {
-    if (/* widget.PublicRoomModelData?.object?.isNotEmpty == false */widget.PublicRoomModelData == null) {
+    if (/* widget.PublicRoomModelData?.object?.isNotEmpty == false */ widget
+            .PublicRoomModelData ==
+        null) {
       print('if condison work');
       PublicRoomModelData = widget.FetchPublicRoomModelData;
       print('PublicRoomModelData-$PublicRoomModelData');
@@ -119,15 +121,15 @@ class _PublicRoomListState extends State<PublicRoomList> {
                                     ? CustomImageView(
                                         url:
                                             "${PublicRoomModelData?.object?[index].ownerUsreProfilePic}",
-                                        height: 25,
-                                        width: 25,
+                                        height: 18,
+                                        width: 18,
                                         fit: BoxFit.fill,
-                                        radius: BorderRadius.circular(25),
+                                        radius: BorderRadius.circular(18),
                                       )
                                     : CustomImageView(
                                         imagePath: ImageConstant.tomcruse,
-                                        height: 25,
-                                        width: 25,
+                                        height: 18,
+                                        width: 18,
                                       )),
                             Padding(
                               padding: const EdgeInsets.only(left: 5),
@@ -137,7 +139,7 @@ class _PublicRoomListState extends State<PublicRoomList> {
                                     fontWeight: FontWeight.w800,
                                     color: Colors.black,
                                     fontFamily: "outfit",
-                                    fontSize: 14),
+                                    fontSize: 12),
                               ),
                             ),
                           ],
@@ -174,7 +176,7 @@ class _PublicRoomListState extends State<PublicRoomList> {
                                           overflow: TextOverflow.ellipsis,
                                           color: Colors.black,
                                           fontFamily: "outfit",
-                                          fontSize: 14),
+                                          fontSize: 16),
                                     ),
                                   ),
                                 ],
@@ -183,15 +185,33 @@ class _PublicRoomListState extends State<PublicRoomList> {
                           ],
                         ),
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5),
+                              child: Container(
+                                width: _width / 1.4,
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    "${PublicRoomModelData?.object?[index].message?.userName ?? ""}",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.black,
+                                        fontFamily: "outfit",
+                                        fontSize: 12),
+                                  ),
+                                ),
+                              ),
+                            ),
                             PublicRoomModelData
                                         ?.object?[index].message?.message ==
                                     null
                                 ? SizedBox()
                                 : Padding(
-                                    padding: const EdgeInsets.only(left: 10),
+                                    padding: const EdgeInsets.only(
+                                        left: 5, right: 15),
                                     child: PublicRoomModelData
                                                 ?.object?[index]
                                                 .message
@@ -201,41 +221,30 @@ class _PublicRoomListState extends State<PublicRoomList> {
                                         ? CustomImageView(
                                             url:
                                                 "${PublicRoomModelData?.object?[index].message?.userProfilePic}",
-                                            height: 25,
-                                            width: 25,
+                                            height: 18,
+                                            width: 18,
                                             fit: BoxFit.fill,
-                                            radius: BorderRadius.circular(25),
+                                            radius: BorderRadius.circular(18),
                                           )
                                         : CustomImageView(
                                             imagePath: ImageConstant.tomcruse,
-                                            height: 25,
-                                            width: 25,
+                                            height: 18,
+                                            width: 18,
                                           )),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5),
-                              child: Container(
-                                width: _width / 1.4,
-                                child: Text(
-                                  "${PublicRoomModelData?.object?[index].message?.userName ?? ""}",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.black,
-                                      fontFamily: "outfit",
-                                      fontSize: 14),
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 35, top: 2),
-                          child: Text(
-                            "${PublicRoomModelData?.object?[index].message?.message ?? ""}",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black,
-                                fontFamily: "outfit",
-                                fontSize: 12),
+                          padding: const EdgeInsets.only(left: 20, top: 2,right: 15),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              "${PublicRoomModelData?.object?[index].message?.message ?? ""}",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black,
+                                  fontFamily: "outfit",
+                                  fontSize: 16),
+                            ),
                           ),
                         ),
                         Divider(
