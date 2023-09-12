@@ -1,13 +1,18 @@
 import 'dart:async';
 
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
+import '../../core/utils/sharedPreferences.dart';
+
 var Room_ID_stomp = "";
+var baseURL = "";
 
 /// late StompClient stompClient;
 void onConnect(StompFrame frame) {
+  getAPI();
   stompClient.subscribe(
     destination: "/topic/getMessage/${Room_ID_stomp}",
     // "user/topic/messages",
@@ -43,7 +48,7 @@ void onConnect(StompFrame frame) {
     //     "message": "Archit 1",
     //     "messageType": "asd",
     //     "roomUid": "${Room_ID}"
-    //   }),  
+    //   }),
     // );
   });
 }
@@ -51,9 +56,10 @@ void onConnect(StompFrame frame) {
 final stompClient = StompClient(
   config: StompConfig(
     url:
-    // 'ws://b71b-2405-201-200b-a0cf-e57b-ed1f-25d4-f1ec.ngrok.io/user/pdsChat',
-    'ws://192.168.29.100:8081/user/pdsChat',
-
+        // 'ws://b71b-2405-201-200b-a0cf-e57b-ed1f-25d4-f1ec.ngrok.io/user/pdsChat',
+        'ws://192.168.29.100:8081/user/pdsChat',
+// "ws://https://uat.packagingdepot.store/user/pdsChat",
+        // "${baseURL}",
     onConnect: onConnect,
     beforeConnect: () async {
       print('waiting to connect...');
@@ -70,6 +76,11 @@ final stompClient = StompClient(
   ),
 );
 
+getAPI() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  baseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
+}
+
 onConnectCallback(StompFrame connectFrame) {
   // client is connected and ready
   print("client is connected and ready");
@@ -80,7 +91,6 @@ onErrorCallback(dynamic error) {
   print('Error connecting to STOMP server: $error');
   // Handle connection error
 }
-
 
 ///set in On_Tap()
 //  stompClient.send(
