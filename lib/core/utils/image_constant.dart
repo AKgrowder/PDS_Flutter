@@ -127,7 +127,7 @@ class ImageConstant {
   static String setting_save = 'assets/images/saveimagee.png';
   static String setting_tadu = 'assets/images/lockimageee.png';
   static String setting_settingimage = 'assets/images/settingimagge.png';
-  static String setting_phone = 'assets/images/phoneimage.png';
+  static String setting_phone = 'assets/images/imagephonegray.png';
 
   //------------------------------defult_images----------------------------------------
   static String plusn = 'assets/images/plus.png';
@@ -162,4 +162,5 @@ class ImageConstant {
   static String privecy_policy = 'assets/images/privecy_policy.png';
   static String turms_of_use = 'assets/images/turmsofuse.png';
   static String mail = 'assets/images/mail.png';
+  static String redphoneimage = 'assets/images/phoneimage.png';
 }
