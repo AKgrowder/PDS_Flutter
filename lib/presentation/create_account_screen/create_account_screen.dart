@@ -51,20 +51,23 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   ChooseDocument? chooseDocument;
   String? url;
   XFile? pickedFile;
+
   Future<void> _checkPermissions() async {
     final cameraStatus = await Permission.camera.status;
-
-    setState(() {
-      _cameraPermissionStatus = cameraStatus;
-    });
+    if (this.mounted) {
+      setState(() {
+        _cameraPermissionStatus = cameraStatus;
+      });
+    }
   }
 
   Future<void> _requestPermissions() async {
     final cameraStatus = await Permission.camera.request();
-
-    setState(() {
-      _cameraPermissionStatus = cameraStatus;
-    });
+    if (this.mounted) {
+      setState(() {
+        _cameraPermissionStatus = cameraStatus;
+      });
+    }
   }
 
   dataGet() async {
@@ -72,9 +75,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     url = await prefs.getString(
       PreferencesKey.userPrfoile,
     );
-
-    setState(() {});
-    print('url-$url');
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -474,13 +477,17 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   emailAndMobileController.text.isEmpty ||
                                   !regex.hasMatch(
                                       emailAndMobileController.text)) {
-                                setState(() {
-                                  isPhone = true;
-                                });
+                                if (this.mounted) {
+                                  setState(() {
+                                    isPhone = true;
+                                  });
+                                }
                               } else {
-                                setState(() {
-                                  isPhone = false;
-                                });
+                                if (this.mounted) {
+                                  setState(() {
+                                    isPhone = false;
+                                  });
+                                }
                               }
                             },
                             maxLength: isPhone == true ? 10 : 50,
@@ -559,13 +566,17 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                         contectnumberController.text.isEmpty ||
                                         !regex.hasMatch(
                                             contectnumberController.text)) {
-                                      setState(() {
-                                        isPhonee = true;
-                                      });
+                                      if (this.mounted) {
+                                        setState(() {
+                                          isPhonee = true;
+                                        });
+                                      }
                                     } else {
-                                      setState(() {
-                                        isPhonee = false;
-                                      });
+                                      if (this.mounted) {
+                                        setState(() {
+                                          isPhonee = false;
+                                        });
+                                      }
                                     }
                                   },
                                   maxLength: isPhonee == true ? 10 : 50,
@@ -664,9 +675,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               ),
                               child: GestureDetector(
                                 onTap: () {
-                                  setState(() {
-                                    Show_Password = !Show_Password;
-                                  });
+                                  if (this.mounted) {
+                                    setState(() {
+                                      Show_Password = !Show_Password;
+                                    });
+                                  }
                                 },
                                 child: Show_Password
                                     ? CustomImageView(
@@ -860,7 +873,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       if (pickedFile != null) {
         if (!_isGifOrSvg(pickedFile!.path)) {
           pickedImage = File(pickedFile!.path);
-          setState(() {});
+          if (this.mounted) {
+            setState(() {});
+          }
           BlocProvider.of<RegisterCubit>(context)
               .upoldeProfilePic(pickedImage!, context);
         } else {

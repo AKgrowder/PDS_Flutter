@@ -111,12 +111,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     );
 
     String? time = pickedTime?.format(context);
-    print('aaaaaaaaaaaaaa  ${time}');
 
     start = time?.split(' ')[0];
     startAm = time?.split(' ')[1];
-    print('start ${start}');
-    print('start ${startAm}');
 
     if (pickedTime != null && pickedTime != _startTime) {
       setState(() {
@@ -140,12 +137,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     );
 
     String? time = pickedTime?.format(context);
-    print('aaaaaaaaaaaaaa  ${time}');
 
     end = time?.split(' ')[0];
     endAm = time?.split(' ')[1];
-    print('end ${end}');
-    print('end ${endAm}');
 
     if (pickedTime != null && pickedTime != _endTime) {
       setState(() {
@@ -193,13 +187,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
             feesInSetdata: state.myAccontDetails.object?.fees,
             companyNameSetData: state.myAccontDetails.object?.companyName,
           );
-          if (myAccontDetails?.object?.expertise != null ||
-              myAccontDetails?.object?.expertise?.isNotEmpty == false) {
-            print('this condison working');
-            print(
-                'check Data expertiseName-${myAccontDetails?.object?.expertise?.first.expertiseName}');
-            print(
-                'check Data uid-${myAccontDetails?.object?.expertise?.first.uid}');
+          if (myAccontDetails?.object?.expertise?.isEmpty == false) {
             selctedexpertiseData.add(Expertiseclass(
                 '${myAccontDetails?.object?.expertise?.first.uid}',
                 '${myAccontDetails?.object?.expertise?.first.expertiseName}'));
@@ -209,20 +197,15 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                 .toString()
                 .split(" to ")
                 .first;
-            print('ronakkkkkkkkkkkk ${workignStart}');
 
             start = workignStart?.split(' ')[0];
             startAm = workignStart?.split(' ')[1];
-            print('start ${start}');
-            print('start ${startAm}');
             workignend = myAccontDetails?.object?.workingHours
                 .toString()
                 .split(" to ")
                 .last;
             end = workignend?.split(' ')[0];
             endAm = workignend?.split(' ')[1];
-            print('end ${end}');
-            print('end ${endAm}');
           }
         }
         if (state is MyAccountErrorState) {
@@ -398,9 +381,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                           placeholder: (context, url) =>
                                               CircularProgressIndicator(),
                                           errorWidget: (context, url, error) {
-                                            print('url print-$url');
-                                            print('error$error');
-
                                             return Icon(Icons.error);
                                           }),
                                     ),
@@ -461,9 +441,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                                   CircularProgressIndicator(),
                                               errorWidget:
                                                   (context, url, error) {
-                                                print('url print-$url');
-                                                print('error$error');
-
                                                 return Icon(Icons.error);
                                               }),
                                         ),
@@ -734,33 +711,27 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                       height: 5,
                     ),
                     myAccontDetails?.object?.companyName != null
-                        ? InkWell(
-                            onTap: () {
-                              print(
-                                  'dfdhfdhf-${myAccontDetails?.object?.approvalStatus}');
-                            },
-                            child: Center(
-                              child: Container(
-                                height: 50,
-                                width: _width / 1.2,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFF6F6F6),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Padding(
-                                    padding: EdgeInsets.only(left: 10),
-                                    child: TextFormField(
-                                      readOnly: myAccontDetails
-                                                  ?.object?.approvalStatus ==
-                                              'APPROVED'
-                                          ? true
-                                          : isupdate,
-                                      controller: compayName,
-                                      cursorColor: Colors.grey,
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                      ),
-                                    )),
-                              ),
+                        ? Center(
+                            child: Container(
+                              height: 50,
+                              width: _width / 1.2,
+                              decoration: BoxDecoration(
+                                  color: Color(0xFFF6F6F6),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Padding(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child: TextFormField(
+                                    readOnly: myAccontDetails
+                                                ?.object?.approvalStatus ==
+                                            'APPROVED'
+                                        ? true
+                                        : isupdate,
+                                    controller: compayName,
+                                    cursorColor: Colors.grey,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                    ),
+                                  )),
                             ),
                           )
                         : SizedBox(),
@@ -809,7 +780,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                       items: expertiseData.map<
                                               DropdownMenuItem<Expertiseclass>>(
                                           (Expertiseclass expertise) {
-                                        print('ababababaabab ${expertise}');
                                         return DropdownMenuItem<Expertiseclass>(
                                           value: expertise,
                                           child: Text(expertise.expertiseName),
@@ -1037,19 +1007,13 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                               height: 30,
                                               color: Colors.grey,
                                             ),
-                                            InkWell(
-                                              onTap: () {
-                                                print(
-                                                    'working end-${workignStart}');
-                                              },
-                                              child: Text(
-                                                "${startAm}",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Colors.grey.shade700,
-                                                    fontFamily: "outfit",
-                                                    fontSize: 15),
-                                              ),
+                                            Text(
+                                              "${startAm}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.grey.shade700,
+                                                  fontFamily: "outfit",
+                                                  fontSize: 15),
                                             ),
                                           ],
                                         ),
@@ -1131,8 +1095,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        print(
-                                            'dsfhdfhsdfg-${myAccontDetails?.object?.userDocument.toString()}');
                                         Navigator.of(context).push(
                                             MaterialPageRoute(
                                                 builder: (context) =>
@@ -1167,8 +1129,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                             onTap: () async {
                                               filepath =
                                                   await prepareTestPdf(0);
-                                              print(
-                                                  'dopcument.toString()${dopcument.toString()}');
                                             },
                                             child: Container(
                                               height: 50,
@@ -1235,8 +1195,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                                   );
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(snackBar);
-                                                  print(
-                                                      'object-${myAccontDetails?.object?.userDocument?.toString()}');
+
                                                   /*    showPdfDialog(
                                                       context,
                                                       myAccontDetails
@@ -1281,8 +1240,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        print(
-                                            'dsfhdfhsdfg-${myAccontDetails?.object?.userDocument.toString()}');
                                         /*   Navigator.of(context).push(
                                             MaterialPageRoute(
                                                 builder: (context) =>
@@ -1356,10 +1313,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        print(
-                            'this is the data check-${myAccontDetails?.object?.module}');
                         if (isupdate == false) {
-                          print('thsi is the yes-${userName.text}');
                           RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                           final RegExp emailRegExp = RegExp(
                               r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
@@ -1462,7 +1416,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                     .showSnackBar(snackBar);
                               } else if (compayName.text == null ||
                                   compayName.text == '') {
-                                print(';dsdfh');
                                 SnackBar snackBar = SnackBar(
                                   content: Text('Please Enter Company Name '),
                                   backgroundColor: ColorConstant.primary_color,
@@ -1496,12 +1449,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
                               } else {
-                                print(
-                                    'userProfilePicapi data-${myAccontDetails?.object?.userProfilePic}');
-                                print(
-                                    'userProfilelocally-${chooseDocumentuploded?.object}');
-                                print(
-                                    'uuid-${myAccontDetails?.object?.uuid.toString()}');
                                 Map<String, dynamic> params = {};
                                 params['document'] = chooseDocumentuploded2
                                             ?.object !=
@@ -1521,7 +1468,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 params['name'] = userName.text;
                                 params['uuid'] =
                                     myAccontDetails?.object?.uuid.toString();
-                                print('paremdatapasssing-$params');
                                 BlocProvider.of<MyAccountCubit>(context)
                                     .cretaForumUpdate(params, context);
                               }
@@ -1588,16 +1534,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                             } else {
                               String time =
                                   '${start} ${startAm} to ${end} ${endAm}';
-                              print('gegegegegegegege ${time}');
-                              print(
-                                  'chooseDocumentuploded2?.object-${chooseDocumentuploded2?.object}');
-                              print(
-                                  'dopcument.toString()-${dopcument.toString()}');
 
-                              print(
-                                  'profilePic-${chooseDocumentuploded?.object.toString()}');
-                              print(
-                                  'UserprofilePic -${myAccontDetails?.object?.userProfilePic}');
                               var params = {
                                 "document": chooseDocumentuploded2?.object !=
                                         null
@@ -1619,7 +1556,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                             .toString()
                                         : null
                               };
-                              print('paramscheck-$params');
+
                               BlocProvider.of<MyAccountCubit>(context)
                                   .addExpertProfile(params, context);
                             }
