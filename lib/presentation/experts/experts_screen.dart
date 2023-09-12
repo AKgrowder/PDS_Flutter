@@ -52,6 +52,13 @@ List<String> experts = [
 
 class _ExpertsScreenState extends State<ExpertsScreen> {
   var _containerColor;
+
+  void initState() { 
+     getUserID();
+ 
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
