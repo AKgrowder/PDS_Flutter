@@ -34,27 +34,12 @@ class _PoliciesScreenState extends State<PoliciesScreen> {
                 Navigator.pop(context);
               },
               child: Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Stack(
-                  children: [
-                    Container(
-                      height: 45,
-                      width: 45,
-                      decoration: BoxDecoration(
-                        // color: const Color(0XFFF6F6F6),
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? Color(0XFFEFEFEF)
-                            : Color(0XFF212121),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Icon(
-                        Icons.arrow_back,
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? Color(0XFF989898)
-                            : Color(0xFFC5C0C0),
-                      ),
-                    ),
-                  ],
+                padding: const EdgeInsets.only(top: 0),
+                child: Icon(
+                  Icons.arrow_back,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Color(0XFF989898)
+                      : Color(0xFFC5C0C0),
                 ),
               ),
             )),
@@ -96,7 +81,7 @@ class _PoliciesScreenState extends State<PoliciesScreen> {
                   borderRadius: BorderRadius.circular(5),
                   // color: const Color(0XFFF6F6F6),
                   color: Theme.of(context).brightness == Brightness.light
-                      ? Color(0XFFEFEFEF)
+                      ? Color(0xFFF6F4F4)
                       : Color(0XFF212121),
                 ),
                 child: Center(
@@ -158,7 +143,7 @@ class _PoliciesScreenState extends State<PoliciesScreen> {
                   borderRadius: BorderRadius.circular(5),
                   // color: const Color(0XFFF6F6F6),
                   color: Theme.of(context).brightness == Brightness.light
-                      ? Color(0XFFEFEFEF)
+                      ? Color(0xFFF6F4F4)
                       : Color(0XFF212121),
                 ),
                 child: Center(
