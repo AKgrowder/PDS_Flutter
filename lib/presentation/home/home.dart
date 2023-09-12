@@ -8,7 +8,7 @@ import 'package:pds/core/app_export.dart';
 import 'package:pds/presentation/become_an_expert_screen/become_an_expert_screen.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import '../recent_blog/recent_blog_screen.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_state.dart';
 import '../../API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
@@ -1214,7 +1214,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                   _width / 1.4,
                                                               child: Text(
                                                                 "${MyPublicRoomData?.object?[index].roomQuestion}",
-                                                                maxLines: 2,
+                                                                maxLines: 3,
                                                                 textScaleFactor:
                                                                     1.0,
                                                                 style: TextStyle(
@@ -1228,7 +1228,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     fontFamily:
                                                                         "outfit",
                                                                     fontSize:
-                                                                        14),
+                                                                        16),
                                                               ),
                                                             ),
                                                           ],
@@ -1244,17 +1244,47 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       ? Row(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
-                                                                  .start,
+                                                                  .center,
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
-                                                                  .start,
+                                                                  .end,
                                                           children: [
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left: 5),
+                                                              child: Container(
+                                                                // color: Colors.red,
+                                                                width: _width /
+                                                                    1.4,
+                                                                child: Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .centerRight,
+                                                                  child: Text(
+                                                                    "${MyPublicRoomData?.object?[index].message?.userName}",
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w800,
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontFamily:
+                                                                            "outfit",
+                                                                        fontSize:
+                                                                            12),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
                                                             Padding(
                                                                 padding:
                                                                     const EdgeInsets
                                                                             .only(
-                                                                        left:
-                                                                            10),
+                                                                        left: 5,
+                                                                        right:
+                                                                            15),
                                                                 child: MyPublicRoomData
                                                                             ?.object?[index]
                                                                             .message
@@ -1265,11 +1295,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                             // "https://pds-testing-images.s3.amazonaws.com/PROFILE_PIC4ee8376e-6667-495a-9a17-47afabf8f732/4ee8376e-6667-495a-9a17-47afabf8f732_409dabd0_60cf_4c69_97d2_ef689d8d8f95.ile_example_JPG_2500kB.jpg",
                                                                             "${MyPublicRoomData?.object?[index].message?.userProfilePic}",
                                                                         height:
-                                                                            20,
+                                                                            18,
                                                                         radius:
-                                                                            BorderRadius.circular(20),
+                                                                            BorderRadius.circular(18),
                                                                         width:
-                                                                            20,
+                                                                            18,
                                                                         fit: BoxFit
                                                                             .fill,
                                                                       )
@@ -1277,31 +1307,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         imagePath:
                                                                             ImageConstant.tomcruse,
                                                                         height:
-                                                                            20,
-                                                                      )),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left: 5),
-                                                              child: Container(
-                                                                width: _width /
-                                                                    1.4,
-                                                                child: Text(
-                                                                  "${MyPublicRoomData?.object?[index].message?.userName}",
-                                                                  style: TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w800,
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontFamily:
-                                                                          "outfit",
-                                                                      fontSize:
-                                                                          14),
-                                                                ),
-                                                              ),
-                                                            ),
+                                                                            18,
+                                                                      ))
                                                           ],
                                                         )
                                                       : SizedBox(),
@@ -1315,18 +1322,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               const EdgeInsets
                                                                       .only(
                                                                   left: 35,
-                                                                  top: 2),
-                                                          child: Text(
-                                                            "${MyPublicRoomData?.object?[index].message?.message ?? ""}",
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontFamily:
-                                                                    "outfit",
-                                                                fontSize: 12),
+                                                                  top: 2,
+                                                                  right: 15),
+                                                          child: Align(
+                                                            alignment: Alignment
+                                                                .centerRight,
+                                                            child: Text(
+                                                              "${MyPublicRoomData?.object?[index].message?.message ?? ""}",
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontFamily:
+                                                                      "outfit",
+                                                                  fontSize: 15),
+                                                            ),
                                                           ),
                                                         )
                                                       : SizedBox(),
@@ -1525,7 +1537,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                               Row(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                    CrossAxisAlignment.center,
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.start,
                                                 children: [
@@ -1544,19 +1556,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               //       .tomcruse,
                                                               url:
                                                                   "${PublicRoomModelData?.object?[index].ownerUsreProfilePic}",
-                                                              height: 20,
+                                                              height: 18,
                                                               radius:
                                                                   BorderRadius
                                                                       .circular(
-                                                                          20),
-                                                              width: 20,
+                                                                          18),
+                                                              width: 18,
                                                               fit: BoxFit.fill,
                                                             )
                                                           : CustomImageView(
                                                               imagePath:
                                                                   ImageConstant
                                                                       .tomcruse,
-                                                              height: 20,
+                                                              height: 18,
                                                             )),
                                                   Padding(
                                                     padding:
@@ -1569,7 +1581,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               FontWeight.w800,
                                                           color: Colors.black,
                                                           fontFamily: "outfit",
-                                                          fontSize: 14),
+                                                          fontSize: 12),
                                                     ),
                                                   ),
                                                   // Spacer(),
@@ -1637,7 +1649,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           width: _width / 1.4,
                                                           child: Text(
                                                             "${PublicRoomModelData?.object?[index].roomQuestion}",
-                                                            maxLines: 2,
+                                                            maxLines: 3,
                                                             textScaleFactor:
                                                                 1.0,
                                                             style: TextStyle(
@@ -1651,7 +1663,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     .black,
                                                                 fontFamily:
                                                                     "outfit",
-                                                                fontSize: 14),
+                                                                fontSize: 16),
                                                           ),
                                                         ),
                                                       ],
@@ -1664,65 +1676,79 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           .message
                                                           ?.message !=
                                                       null
-                                                  ? Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Padding(
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 15),
+                                                      child: Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          Padding(
                                                             padding:
                                                                 const EdgeInsets
                                                                         .only(
-                                                                    left: 10),
-                                                            child: PublicRoomModelData
-                                                                        ?.object?[
-                                                                            index]
-                                                                        .message
-                                                                        ?.userProfilePic !=
-                                                                    null
-                                                                ? CustomImageView(
-                                                                    url:
-                                                                        // "https://pds-testing-images.s3.amazonaws.com/PROFILE_PIC4ee8376e-6667-495a-9a17-47afabf8f732/4ee8376e-6667-495a-9a17-47afabf8f732_409dabd0_60cf_4c69_97d2_ef689d8d8f95.ile_example_JPG_2500kB.jpg",
-                                                                        "${PublicRoomModelData?.object?[index].message?.userProfilePic}",
-                                                                    height: 20,
-                                                                    radius: BorderRadius
-                                                                        .circular(
-                                                                            20),
-                                                                    width: 20,
-                                                                    fit: BoxFit
-                                                                        .fill,
-                                                                  )
-                                                                : CustomImageView(
-                                                                    imagePath:
-                                                                        ImageConstant
-                                                                            .tomcruse,
-                                                                    height: 20,
-                                                                  )),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 5),
-                                                          child: Container(
-                                                            width: _width / 1.4,
-                                                            child: Text(
-                                                              "${PublicRoomModelData?.object?[index].message?.userName}",
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w800,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontFamily:
-                                                                      "outfit",
-                                                                  fontSize: 14),
+                                                                    left: 5),
+                                                            child: Container(
+                                                              width:
+                                                                  _width / 1.4,
+                                                              // color: Colors.red,
+                                                              child: Align(
+                                                                alignment: Alignment
+                                                                    .centerRight,
+                                                                child: Text(
+                                                                  "${PublicRoomModelData?.object?[index].message?.userName}",
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w800,
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontFamily:
+                                                                          "outfit",
+                                                                      fontSize:
+                                                                          12),
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                      ],
+                                                          Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left: 5),
+                                                              child: PublicRoomModelData
+                                                                          ?.object?[
+                                                                              index]
+                                                                          .message
+                                                                          ?.userProfilePic !=
+                                                                      null
+                                                                  ? CustomImageView(
+                                                                      url:
+                                                                          // "https://pds-testing-images.s3.amazonaws.com/PROFILE_PIC4ee8376e-6667-495a-9a17-47afabf8f732/4ee8376e-6667-495a-9a17-47afabf8f732_409dabd0_60cf_4c69_97d2_ef689d8d8f95.ile_example_JPG_2500kB.jpg",
+                                                                          "${PublicRoomModelData?.object?[index].message?.userProfilePic}",
+                                                                      height:
+                                                                          18,
+                                                                      radius: BorderRadius
+                                                                          .circular(
+                                                                              18),
+                                                                      width: 18,
+                                                                      fit: BoxFit
+                                                                          .fill,
+                                                                    )
+                                                                  : CustomImageView(
+                                                                      imagePath:
+                                                                          ImageConstant
+                                                                              .tomcruse,
+                                                                      height:
+                                                                          18,
+                                                                    )),
+                                                        ],
+                                                      ),
                                                     )
                                                   : SizedBox(),
                                               PublicRoomModelData
@@ -1733,16 +1759,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ? Padding(
                                                       padding:
                                                           const EdgeInsets.only(
-                                                              left: 35, top: 2),
-                                                      child: Text(
-                                                        "${PublicRoomModelData?.object?[index].message?.message ?? ""}",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: Colors.black,
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 12),
+                                                              left: 35,
+                                                              top: 2,
+                                                              right: 15),
+                                                      child: Align(
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        child: Text(
+                                                          "${PublicRoomModelData?.object?[index].message?.message ?? ""}",
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontFamily:
+                                                                  "outfit",
+                                                              fontSize: 16),
+                                                        ),
                                                       ),
                                                     )
                                                   : SizedBox(),
@@ -1913,19 +1947,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               //       .tomcruse,
                                                               url:
                                                                   "${FetchPublicRoomModelData?.object?[index].ownerUsreProfilePic}",
-                                                              height: 20,
+                                                              height: 18,
                                                               radius:
                                                                   BorderRadius
                                                                       .circular(
-                                                                          20),
-                                                              width: 20,
+                                                                          18),
+                                                              width: 18,
                                                               fit: BoxFit.fill,
                                                             )
                                                           : CustomImageView(
                                                               imagePath:
                                                                   ImageConstant
                                                                       .tomcruse,
-                                                              height: 20,
+                                                              height: 18,
                                                             )),
                                                   Padding(
                                                     padding:
@@ -1938,7 +1972,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               FontWeight.w800,
                                                           color: Colors.black,
                                                           fontFamily: "outfit",
-                                                          fontSize: 14),
+                                                          fontSize: 12),
                                                     ),
                                                   ),
                                                   // Spacer(),
@@ -1993,7 +2027,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               const EdgeInsets
                                                                       .only(
                                                                   left: 2.0,
-                                                                  top: 5),
+                                                                  top: 7),
                                                           child: CircleAvatar(
                                                               backgroundColor:
                                                                   Colors.black,
@@ -2006,7 +2040,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           width: _width / 1.4,
                                                           child: Text(
                                                             "${FetchPublicRoomModelData?.object?[index].roomQuestion}",
-                                                            maxLines: 2,
+                                                            maxLines: 3,
                                                             textScaleFactor:
                                                                 1.0,
                                                             style: TextStyle(
@@ -2020,7 +2054,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     .black,
                                                                 fontFamily:
                                                                     "outfit",
-                                                                fontSize: 14),
+                                                                fontSize: 16),
                                                           ),
                                                         ),
                                                       ],
@@ -2036,16 +2070,43 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ? Row(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
-                                                              .start,
+                                                              .center,
                                                       mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
+                                                          MainAxisAlignment.end,
                                                       children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                            left: 5,
+                                                          ),
+                                                          child: Container(
+                                                            width: _width / 1.4,
+                                                            child: Align(
+                                                              alignment: Alignment
+                                                                  .centerRight,
+                                                              child: Text(
+                                                                "${FetchPublicRoomModelData?.object?[index].message?.userName}",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w800,
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontFamily:
+                                                                        "outfit",
+                                                                    fontSize:
+                                                                        12),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
                                                         Padding(
                                                             padding:
                                                                 const EdgeInsets
                                                                         .only(
-                                                                    left: 10),
+                                                                    left: 5,
+                                                                    right: 15),
                                                             child: FetchPublicRoomModelData
                                                                         ?.object?[
                                                                             index]
@@ -2056,11 +2117,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     url:
                                                                         // "https://pds-testing-images.s3.amazonaws.com/PROFILE_PIC4ee8376e-6667-495a-9a17-47afabf8f732/4ee8376e-6667-495a-9a17-47afabf8f732_409dabd0_60cf_4c69_97d2_ef689d8d8f95.ile_example_JPG_2500kB.jpg",
                                                                         "${FetchPublicRoomModelData?.object?[index].message?.userProfilePic}",
-                                                                    height: 20,
+                                                                    height: 18,
                                                                     radius: BorderRadius
                                                                         .circular(
-                                                                            20),
-                                                                    width: 20,
+                                                                            18),
+                                                                    width: 18,
                                                                     fit: BoxFit
                                                                         .fill,
                                                                   )
@@ -2068,29 +2129,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     imagePath:
                                                                         ImageConstant
                                                                             .tomcruse,
-                                                                    height: 20,
-                                                                  )),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 5),
-                                                          child: Container(
-                                                            width: _width / 1.4,
-                                                            child: Text(
-                                                              "${FetchPublicRoomModelData?.object?[index].message?.userName}",
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w800,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontFamily:
-                                                                      "outfit",
-                                                                  fontSize: 14),
-                                                            ),
-                                                          ),
-                                                        ),
+                                                                    height: 18,
+                                                                  ))
                                                       ],
                                                     )
                                                   : SizedBox(),
@@ -2102,16 +2142,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ? Padding(
                                                       padding:
                                                           const EdgeInsets.only(
-                                                              left: 35, top: 2),
-                                                      child: Text(
-                                                        "${FetchPublicRoomModelData?.object?[index].message?.message}",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: Colors.black,
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 12),
+                                                              left: 35,
+                                                              top: 2,
+                                                              right: 15),
+                                                      child: Align(
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        child: Text(
+                                                          "${FetchPublicRoomModelData?.object?[index].message?.message}",
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontFamily:
+                                                                  "outfit",
+                                                              fontSize: 16),
+                                                        ),
                                                       ),
                                                     )
                                                   : SizedBox(),
@@ -2268,13 +2316,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontFamily: "outfit",
                                     fontSize: 23),
                               ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Icon(
-                                  Icons.arrow_forward,
-                                  size: 30,
-                                ),
-                              ),
+                              // GestureDetector(
+                              //   onTap: () {},
+                              //   child: Icon(
+                              //     Icons.arrow_forward,
+                              //     size: 30,
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),
@@ -2364,14 +2412,43 @@ class _HomeScreenState extends State<HomeScreen> {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => RegisterCreateAccountScreen()));
     } else {
-      print('no login');
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return MultiBlocProvider(providers: [
-          BlocProvider<FetchExprtiseRoomCubit>(
-            create: (context) => FetchExprtiseRoomCubit(),
-          ),
-        ], child: BecomeExpertScreen());
-      }));
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text("Creating Expert"),
+          content: const Text(
+              "! Please fill the necessary data before Registering as an Expert."),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+                print('no login');
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return MultiBlocProvider(providers: [
+                    BlocProvider<FetchExprtiseRoomCubit>(
+                      create: (context) => FetchExprtiseRoomCubit(),
+                    ),
+                  ], child: BecomeExpertScreen());
+                }));
+              },
+              child: Container(
+                // color: Colors.green,
+                padding: const EdgeInsets.all(14),
+                child: const Text("Okay"),
+              ),
+            ),
+          ],
+        ),
+      );
+
+      // print('no login');
+      // Navigator.push(context, MaterialPageRoute(builder: (context) {
+      //   return MultiBlocProvider(providers: [
+      //     BlocProvider<FetchExprtiseRoomCubit>(
+      //       create: (context) => FetchExprtiseRoomCubit(),
+      //     ),
+      //   ], child: BecomeExpertScreen());
+      // }));
     }
   }
 
@@ -2384,14 +2461,34 @@ class _HomeScreenState extends State<HomeScreen> {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => RegisterCreateAccountScreen()));
     } else {
-      print('no login');
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return MultiBlocProvider(providers: [
-          BlocProvider<CreatFourmCubit>(
-            create: (context) => CreatFourmCubit(),
-          ),
-        ], child: CreateForamScreen());
-      }));
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text("Creating Forum"),
+          content: const Text(
+              "! Please fill your Company info before creation forum."),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+                print('no login');
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return MultiBlocProvider(providers: [
+                    BlocProvider<CreatFourmCubit>(
+                      create: (context) => CreatFourmCubit(),
+                    ),
+                  ], child: CreateForamScreen());
+                }));
+              },
+              child: Container(
+                // color: Colors.green,
+                padding: const EdgeInsets.all(14),
+                child: const Text("Okay"),
+              ),
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -2467,7 +2564,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Recentblogs() {
+ Recentblogs() {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return getallBlogdata?.object != null
@@ -2490,129 +2587,157 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      // height: 100,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        // border: Border.all(
-                        //   color: Colors.red,
-                        // ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Stack(
-                            // alignment: Alignment.topRight,
-                            children: [
-                              Container(
-                                height: _height / 3.2,
-                                width: _width / 1.2,
-                                child: CustomImageView(
-                                  // imagePath: ImageConstant.blogimage,
-
-                                  url: getallBlogdata?.object?[index].image
-                                          .toString() ??
-                                      "",
-                                  // height: 50,
-                                  width: _width,
-                                  fit: BoxFit.fill,
-                                  radius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              // Padding(
-                              //   padding: const EdgeInsets.only(left: 290, top: 10),
-                              //   child: Image.asset(
-                              //     ImageConstant.blogsaveimage,
-                              //     height: 40,
-                              //   ),
-                              // ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 180,
-                                ),
-                                child: Container(
-                                  height: _height / 10,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RecentBlogScren(),
+                          ));
+                    },
+                    child: Container(
+                        // height: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          // border: Border.all(
+                          //   color: Colors.red,
+                          // ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Stack(
+                              // alignment: Alignment.topRight,
+                              children: [
+                                Container(
+                                  height: _height / 3.2,
                                   width: _width / 1.2,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.7),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Column(children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            getallBlogdata
-                                                    ?.object?[index].description
-                                                    .toString() ??
-                                                "",
-                                            style: TextStyle(
-                                                fontFamily: 'outfit',
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                            getallBlogdata?.object?.length !=
-                                                        0 ||
-                                                    getallBlogdata?.object !=
-                                                        null
-                                                ? customFormat(parsedDateTime!)
-                                                : "",
-                                            style: TextStyle(
-                                                fontFamily: 'outfit',
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold)),
-                                        // SizedBox(
-                                        //   width: 10,
-                                        // ),
-                                        // CircleAvatar(
-                                        //   backgroundColor: Colors.black,
-                                        //   maxRadius: 2,
-                                        // ),
-                                        // SizedBox(
-                                        //   width: 2,
-                                        // ),
-                                        // Text("12.3K Views",
-                                        //     style: TextStyle(
-                                        //         fontFamily: 'outfit',
-                                        //         fontSize: 12,
-                                        //         fontWeight: FontWeight.bold)),
-                                        // Spacer(),
-                                        // Image.asset(
-                                        //   ImageConstant.like_image,
-                                        //   height: 20,
-                                        // ),
-                                        // SizedBox(
-                                        //   width: 10,
-                                        // ),
-                                        // Image.asset(
-                                        //   ImageConstant.arrowleftimage,
-                                        //   height: 30,
-                                        //   color: Colors.black,
-                                        // ),
-                                        // SizedBox(
-                                        //   width: 10,
-                                        // )
-                                      ],
-                                    )
-                                  ]),
+                                  child: CustomImageView(
+                                    // imagePath: ImageConstant.blogimage,
+
+                                    url: getallBlogdata?.object?[index].image
+                                            .toString() ??
+                                        "",
+                                    // height: 50,
+                                    width: _width,
+                                    fit: BoxFit.fill,
+                                    radius: BorderRadius.circular(10),
+                                  ),
                                 ),
-                              )
-                            ],
-                          ),
-                        ],
-                      )),
+                                // Padding(
+                                //   padding: const EdgeInsets.only(left: 290, top: 10),
+                                //   child: Image.asset(
+                                //     ImageConstant.blogsaveimage,
+                                //     height: 40,
+                                //   ),
+                                // ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 180,
+                                  ),
+                                  child: Container(
+                                    height: _height / 10,
+                                    width: _width / 1.2,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.7),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Column(children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              // color: Colors.amber,
+                                              width: _width / 1.3,
+                                              child: Text(
+                                                getallBlogdata?.object?[index]
+                                                        .description
+                                                        .toString() ??
+                                                    "",
+                                                style: TextStyle(
+                                                    fontFamily: 'outfit',
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Container(
+                                            // color: Colors.amber,
+                                            width: _width / 1.3,
+                                            child: Text(
+                                                getallBlogdata?.object
+                                                                ?.length !=
+                                                            0 ||
+                                                        getallBlogdata
+                                                                ?.object !=
+                                                            null
+                                                    ? customFormat(
+                                                        parsedDateTime!)
+                                                    : "",
+                                                style: TextStyle(
+                                                    fontFamily: 'outfit',
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ),
+                                          // SizedBox(
+                                          //   width: 10,
+                                          // ),
+                                          // CircleAvatar(
+                                          //   backgroundColor: Colors.black,
+                                          //   maxRadius: 2,
+                                          // ),
+                                          // SizedBox(
+                                          //   width: 2,
+                                          // ),
+                                          // Text("12.3K Views",
+                                          //     style: TextStyle(
+                                          //         fontFamily: 'outfit',
+                                          //         fontSize: 12,
+                                          //         fontWeight: FontWeight.bold)),
+                                          // Spacer(),
+                                          // Image.asset(
+                                          //   ImageConstant.like_image,
+                                          //   height: 20,
+                                          // ),
+                                          // SizedBox(
+                                          //   width: 10,
+                                          // ),
+                                          // Image.asset(
+                                          //   ImageConstant.arrowleftimage,
+                                          //   height: 30,
+                                          //   color: Colors.black,
+                                          // ),
+                                          // SizedBox(
+                                          //   width: 10,
+                                          // )
+                                        ],
+                                      )
+                                    ]),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        )),
+                  ),
                 );
               },
             ),

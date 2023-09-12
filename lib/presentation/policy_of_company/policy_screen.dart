@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 
 import '../../widgets/app_bar/custom_app_bar.dart';
- 
- 
+
 // ignore: must_be_immutable
 class Policies extends StatefulWidget {
   String? data;
@@ -16,54 +15,41 @@ class Policies extends StatefulWidget {
 class _PoliciesState extends State<Policies> {
   @override
   Widget build(BuildContext context) {
- 
     return Scaffold(
       appBar: CustomAppBar(
           height: 84,
           leadingWidth: 74,
           leading: Container(
             height: 44,
-            width:44,
+            width: 44,
             margin: EdgeInsets.only(left: 30, top: 6, bottom: 6),
             child: GestureDetector(
               onTap: () {
                 Navigator.pop(context);
               },
               child: Padding(
-                   padding: const EdgeInsets.only(top:16),
-                   child: Stack(
-                     children: [Container(
-                          height: 45,
-                          width: 45,
-                          decoration: BoxDecoration(
-                            // color: const Color(0XFFF6F6F6),
-                            color: Theme.of(context).brightness == Brightness.light
-                             ? Color(0XFFEFEFEF)
-                             : Color(0XFF212121),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child:   Icon(
-                            Icons.arrow_back,color: Theme.of(context).brightness == Brightness.light
-                             ? Color(0XFF989898)
-                             : Color(0xFFC5C0C0),
-                            
-                          ),
-                        ),], 
-                   ),
-                 ),
+                padding: const EdgeInsets.only(top: 0),
+                child: Icon(
+                  Icons.arrow_back,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Color(0XFF989898)
+                      : Color(0xFFC5C0C0),
+                ),
+              ),
             ),
           ),
           centerTitle: true,
           title: Text(
-            widget.title ?? '',textScaleFactor: 1.0,
+            widget.title ?? '',
+            textScaleFactor: 1.0,
             style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 25,
-                // color: ColorConstant.black900
-                color:   Theme.of(context).brightness == Brightness.light
-                           ? Colors.black
-                           : Colors.white,
-                ),
+              fontWeight: FontWeight.bold,
+              fontSize: 25,
+              // color: ColorConstant.black900
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black
+                  : Colors.white,
+            ),
           )),
       // backgroundColor: Colors.white,
       body: Padding(
@@ -126,7 +112,7 @@ class _PoliciesState extends State<Policies> {
 
   Widget customPrivacyContainer(
       {required String name, required String image, void Function()? onTap}) {
-            double _width = MediaQuery.of(context).size.width;
+    double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     return Padding(
       padding: const EdgeInsets.only(left: 30, right: 30, top: 20),
@@ -158,7 +144,8 @@ class _PoliciesState extends State<Policies> {
                 width: _width / 20,
               ),
               Text(
-                name,textScaleFactor: 1.0,
+                name,
+                textScaleFactor: 1.0,
                 style: TextStyle(
                     color: Color(0xFF939393),
                     fontWeight: FontWeight.bold,

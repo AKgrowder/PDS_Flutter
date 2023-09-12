@@ -30,45 +30,37 @@ class _SupportScreenState extends State<SupportScreen> {
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: CustomAppBar(
-          height: 100,
-          leadingWidth: 74,
-          leading: Container(
-            height: 44,
-            width: 44,
-            margin: EdgeInsets.only(left: 30, top: 6, bottom: 6),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Stack(
-                  children: [
-                    Container(
-                      height: 45,
-                      width: 45,
-                      decoration: BoxDecoration(
-                        // color: const Color(0XFFF6F6F6),
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? Color(0XFFEFEFEF)
-                            : Color(0XFF212121),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Icon(
-                        Icons.arrow_back,
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? Color(0XFF989898)
-                            : Color(0xFFC5C0C0),
-                      ),
-                    ),
-                  ],
-                ),
+        height: 100,
+        title: Text(
+          "Support",
+          style: TextStyle(
+              color: Colors.black,
+              fontFamily: 'Outfit',
+              fontWeight: FontWeight.w600,
+              fontSize: 20),
+        ),
+        leadingWidth: 74,
+        leading: Container(
+          height: 44,
+          width: 44,
+          margin: EdgeInsets.only(left: 30, top: 6, bottom: 6),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(top: 0),
+              child: Icon(
+                Icons.arrow_back,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Color(0XFF989898)
+                    : Color(0xFFC5C0C0),
               ),
             ),
           ),
-          centerTitle: true,
-          title:
-              Column(mainAxisAlignment: MainAxisAlignment.start, children: [])),
+        ),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Column(
@@ -244,7 +236,7 @@ class _SupportScreenState extends State<SupportScreen> {
                                         }
                                       }), */
                                   btnWidget(
-                                      img: ImageConstant.phoneimage,
+                                      img: ImageConstant.redphoneimage,
                                       name: "Toll-free",
                                       height: 40,
                                       onTap: () async {
@@ -408,12 +400,9 @@ class _SupportScreenState extends State<SupportScreen> {
                 height: _height / 15,
                 // width: width / 1.2,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  // color: const Color(0XFFF6F6F6),
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? Color(0XFFEFEFEF)
-                      : Color(0XFF212121),
-                ),
+                    borderRadius: BorderRadius.circular(5),
+                    // color: const Color(0XFFF6F6F6),
+                    color: Color(0xFFF6F4F4)),
                 child: Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
