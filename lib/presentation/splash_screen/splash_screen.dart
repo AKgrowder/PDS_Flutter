@@ -86,9 +86,8 @@ class _SplashScreenState extends State<SplashScreen> {
         User_profile = state.fetchUserModule.object?.userProfilePic ?? "";
       }
       if (state is SystemConfigLoadedState) {
-          systemConfigModel = state.systemConfigModel;
-         await SetUi();
-       
+        systemConfigModel = state.systemConfigModel;
+        await SetUi();
 
         Future.delayed(Duration(seconds: 0), () {
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
@@ -215,7 +214,7 @@ class _SplashScreenState extends State<SplashScreen> {
         var SupportPhoneNumber = element.value ?? "";
         print(" SupportPhoneNumber  ${SupportPhoneNumber}");
         prefs.setString(PreferencesKey.SupportPhoneNumber, SupportPhoneNumber);
-      } 
+      }
     });
   }
 }
