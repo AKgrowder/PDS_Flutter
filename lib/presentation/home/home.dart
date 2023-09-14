@@ -7,6 +7,7 @@ import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/presentation/become_an_expert_screen/become_an_expert_screen.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
+import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../recent_blog/recent_blog_screen.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
@@ -303,14 +304,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          User_Name != null
-                                              ? "${User_Name}"
-                                              : "User ID",
-                                          style: TextStyle(
-                                            fontFamily: 'outfit',
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
+                                        Container(
+                                          child: Text(
+                                            User_Name != null
+                                                ? "${User_Name}"
+                                                : "User ID",
+                                            style: TextStyle(
+                                              fontFamily: 'outfit',
+                                              fontSize: 18,
+                                              overflow: TextOverflow.ellipsis,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                         Row(
@@ -395,19 +399,35 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ], child: BottombarPage(buttomIndex: 4));
                                   }));
                                 },
-                                child: CustomImageView(
-                                  // imagePath: ImageConstant.imgRectangle39829,
-                                  url: UserProfile,
-                                  height: 50,
-                                  width: 50,
-                                  fit: BoxFit.fill,
-                                  radius: BorderRadius.circular(25),
-                                  alignment: Alignment.center,
-                                ),
+                                child: UserProfile == "" || UserProfile == null
+                                    ? CustomImageView(
+                                        imagePath: ImageConstant
+                                            .tomcruse, // url: UserProfile,
+                                        height: 50,
+                                        width: 50,
+                                        fit: BoxFit.fill,
+                                        radius: BorderRadius.circular(25),
+                                        alignment: Alignment.center,
+                                      )
+                                    : CustomImageView(
+                                        // imagePath: ImageConstant.imgRectangle39829,
+                                        url: UserProfile,
+                                        height: 50,
+                                        width: 50,
+                                        fit: BoxFit.fill,
+                                        radius: BorderRadius.circular(25),
+                                        alignment: Alignment.center,
+                                    ),
                               )
                             : Container()
                       ],
                     ),
+                  ),
+                  Container(
+                    height: 0,
+                    color: Colors.red,
+                    child: Text(
+                        "${User_ID} \n ${User_Name}  \n ${User_Module} \n ${User_Mood}"),
                   ),
                   SizedBox(
                     height: 7,
@@ -1621,7 +1641,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   Padding(
                                                     padding: EdgeInsets.only(
                                                         left: 8.0,
-                                                        top: 10,
+                                                        top: 5,
                                                         bottom: 10),
                                                     child: Row(
                                                       mainAxisAlignment:
@@ -2415,9 +2435,9 @@ class _HomeScreenState extends State<HomeScreen> {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text("Creating Expert"),
+          title: const Text("Create Expert"),
           content: const Text(
-              "! Please fill the necessary data before Registering as an Expert."),
+              "Please fill the necessary data before Registering as an Expert."),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -2433,7 +2453,6 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: Container(
                 // color: Colors.green,
-                padding: const EdgeInsets.all(14),
                 child: const Text("Okay"),
               ),
             ),
@@ -2464,9 +2483,8 @@ class _HomeScreenState extends State<HomeScreen> {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text("Creating Forum"),
-          content: const Text(
-              "! Please fill your Company info before creation forum."),
+          title: Text("Create Forum"),
+          content: Text("Please fill your Company info before creation forum."),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -2482,8 +2500,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: Container(
                 // color: Colors.green,
-                padding: const EdgeInsets.all(14),
-                child: const Text("Okay"),
+                child: Text("Okay"),
               ),
             ),
           ],
@@ -3087,7 +3104,6 @@ class _HomeScreenState extends State<HomeScreen> {
           (int.parse(appApkLatestVersion ?? ""))) {
         print("Moti2");
         AlertSoftUpdate();
-        
       }
 
       if (int.parse(ApkRouteVersion ?? "") ==
@@ -3108,7 +3124,6 @@ class _HomeScreenState extends State<HomeScreen> {
           (int.parse(ipaIosLatestVersion ?? ""))) {
         print("Moti2");
         AlertSoftUpdate();
-        
       }
 
       if (int.parse(IosRoutVersion ?? "") ==
