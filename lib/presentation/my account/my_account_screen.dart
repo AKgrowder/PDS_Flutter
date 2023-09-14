@@ -178,8 +178,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           }
           expertBool = state.myAccontDetails.object?.expertise?.isNotEmpty;
           dataSetMethod(
-            useridSetdata: state.myAccontDetails.object?.userName,
-            userNameSetdata: state.myAccontDetails.object?.name,
+            useridSetdata: state.myAccontDetails.object?.name,
+            userNameSetdata: state.myAccontDetails.object?.userName,
             emailSetdata: state.myAccontDetails.object?.email,
             expertInSetdata: '',
             jobProfileSetdata: state.myAccontDetails.object?.jobProfile,

@@ -17,7 +17,7 @@ class DocumentViewScreen extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.grey),
         elevation: 0,
         title: Text(
-          title ?? '',
+          "Document",
           style: TextStyle(color: Colors.black),
         ),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
