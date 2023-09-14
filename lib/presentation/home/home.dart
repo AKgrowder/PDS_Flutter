@@ -73,6 +73,8 @@ String? ipaIosLatestVersion;
 String? ipaIosRoutVersion;
 String? ipaIosMainversion;
 
+bool? ShowSoftAlert = false;
+
 List<String> aa = [
   "Baluran Wild The Savvanah Baluran Wild The \nSavvanah",
   "Baluran Wild The Savvanah Baluran Wild The \nSavvanah",
@@ -302,13 +304,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Column(
                                       // mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Container(
+                                          width: _width/3,
                                           child: Text(
                                             User_Name != null
                                                 ? "${User_Name}"
-                                                : "User ID",
+                                                : "User ID",textAlign: TextAlign.end,
                                             style: TextStyle(
                                               fontFamily: 'outfit',
                                               fontSize: 18,
@@ -417,7 +420,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         fit: BoxFit.fill,
                                         radius: BorderRadius.circular(25),
                                         alignment: Alignment.center,
-                                    ),
+                                      ),
                               )
                             : Container()
                       ],
@@ -448,7 +451,68 @@ class _HomeScreenState extends State<HomeScreen> {
                         left: 16, top: 10, right: 16, bottom: 0),
                     child: Container(
                       child: User_Module == "COMPANY"
-                          ? SizedBox()
+                          ? checkuserdata == "REJECTED"
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return MultiBlocProvider(
+                                                      providers: [
+                                                        BlocProvider<
+                                                            FetchAllPublicRoomCubit>(
+                                                          create: (context) =>
+                                                              FetchAllPublicRoomCubit(),
+                                                        ),
+                                                        BlocProvider<
+                                                            CreatPublicRoomCubit>(
+                                                          create: (context) =>
+                                                              CreatPublicRoomCubit(),
+                                                        ),
+                                                        BlocProvider<
+                                                            senMSGCubit>(
+                                                          create: (context) =>
+                                                              senMSGCubit(),
+                                                        ),
+                                                        BlocProvider<
+                                                            RegisterCubit>(
+                                                          create: (context) =>
+                                                              RegisterCubit(),
+                                                        ),
+                                                        BlocProvider<
+                                                            GetAllPrivateRoomCubit>(
+                                                          create: (context) =>
+                                                              GetAllPrivateRoomCubit(),
+                                                        ),
+                                                        BlocProvider<
+                                                            InvitationCubit>(
+                                                          create: (context) =>
+                                                              InvitationCubit(),
+                                                        ),
+                                                      ],
+                                                      child: BottombarPage(
+                                                          buttomIndex: 4));
+                                                }));
+                                              },
+                                              child: Container(
+                                                height: 25,
+                                                width: _width,
+                                                // color: Colors.red,
+                                                child: Center(
+                                                  child: Text(
+                                                    "Your Account Rejected Update, click here..",
+                                                    style: TextStyle(
+                                                      fontFamily: 'outfit',
+                                                      fontSize: 15,
+                                                      color: Color(0XFFED1C25),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : SizedBox()
                           : User_Module == "EXPERT"
                               ? Container(
                                   // color: Colors.lightGreen,
@@ -3040,7 +3104,14 @@ class _HomeScreenState extends State<HomeScreen> {
     ipaIosLatestVersion = prefs.getString(PreferencesKey.IPAIosLatestVersion);
     ipaIosRoutVersion = prefs.getString(PreferencesKey.IPAIosRoutVersion);
     ipaIosMainversion = prefs.getString(PreferencesKey.IPAIosMainversion);
+
+    ShowSoftAlert = prefs.getBool(PreferencesKey.ShowSoftAlert);
     VersionAlert();
+  }
+
+  saveAlertStatus() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(PreferencesKey.ShowSoftAlert, true);
   }
 
   VersionAlert() {
@@ -3049,61 +3120,14 @@ class _HomeScreenState extends State<HomeScreen> {
           (int.parse(appApkMinVersion ?? ""))) {
         print("Moti1");
         AlertHardUpdate();
-
-        /*  AlertDialog(
-          title: const Text('New Version Alert'),
-          content: const Text(
-            'New application version is available',
-          ),
-          actions: <Widget>[
-            Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            topLeft: Radius.circular(10))),
-                    height: 50,
-                    child: TextButton(
-                      style: TextButton.styleFrom(),
-                      child: const Text(
-                        'No',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: ColorConstant.primary_color,
-                        borderRadius: BorderRadius.only(
-                            bottomRight: Radius.circular(10),
-                            topRight: Radius.circular(10))),
-                    height: 50,
-                    child: TextButton(
-                      style: TextButton.styleFrom(),
-                      child: const Text('Yes',
-                          style: TextStyle(color: Colors.white)),
-                      onPressed: () async {},
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ); */
       }
 
       if (int.parse(ApkLatestVersion ?? "") >
           (int.parse(appApkLatestVersion ?? ""))) {
         print("Moti2");
-        AlertSoftUpdate();
+        if (ShowSoftAlert == false || ShowSoftAlert == null) {
+          AlertSoftUpdate();
+        }
       }
 
       if (int.parse(ApkRouteVersion ?? "") ==
@@ -3296,6 +3320,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         GestureDetector(
                           onTap: () {
+                            saveAlertStatus();
                             Navigator.pop(context);
                           },
                           child: Container(

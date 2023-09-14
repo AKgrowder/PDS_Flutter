@@ -701,8 +701,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             onTap: () {
                               if (_formKey.currentState!.validate()) {
                                 var datapPassing = {
-                                  "name": enteruseridController.text,
-                                  "userName": nameController.text,
+                                  "name": nameController.text,
+                                  "userName":enteruseridController.text,
                                   "email": emailAndMobileController.text,
                                   "mobileNo": contectnumberController.text,
                                   "password": passwordController.text,
