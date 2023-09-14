@@ -64,11 +64,12 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
             body: BlocConsumer<ForgetpasswordCubit, ForgetpasswordState>(
               listener: (context, state) {
                 if (state is ForgetpasswordErrorState) {
-                  SnackBar snackBar = SnackBar(
-                    content: Text(state.error),
-                    backgroundColor: ColorConstant.primary_color,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  show_Icon_Flushbar(context,msg: state.error);
+                  // SnackBar snackBar = SnackBar(
+                  //   content: Text("state.error"),
+                  //   backgroundColor: ColorConstant.primary_color,
+                  // );
+                  // ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
 
                 if (state is ForgetpasswordLoadingState) {
@@ -209,7 +210,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                       hintText: "Mobile Number",
                                       filled: true,
                                       fillColor: appTheme.gray100,
-                                      textInputAction: TextInputAction.next,
+                                      textInputAction: TextInputAction.done,
                                       textInputType: TextInputType.number,
                                       inputFormatters: [
                                         FilteringTextInputFormatter.digitsOnly
@@ -306,5 +307,14 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   /// to navigate back to the previous screen.
   onTapArrowleft1(BuildContext context) {
     Navigator.pop(context);
+  }
+
+   void show_Icon_Flushbar(BuildContext context, {String? msg}) {
+    Flushbar(
+        backgroundColor: ColorConstant.primary_color,
+        animationDuration: Duration(milliseconds: 500),
+        duration: Duration(seconds: 3),
+        message: msg)
+      ..show(context);
   }
 }

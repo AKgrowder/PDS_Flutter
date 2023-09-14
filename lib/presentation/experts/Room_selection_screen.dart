@@ -9,6 +9,7 @@ import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../../theme/theme_helper.dart';
+import '../../widgets/custom_image_view.dart';
 
 class RoomSelection extends StatefulWidget {
   String? ExperID;
@@ -19,7 +20,7 @@ class RoomSelection extends StatefulWidget {
 }
 
 SelectRoomModel? SelectedRoomData;
-int? selectedIndex;
+int? selectedIndex = -1;
 String? RoomID;
 
 class _RoomSelectionState extends State<RoomSelection> {
@@ -83,6 +84,7 @@ class _RoomSelectionState extends State<RoomSelection> {
         print("uuuuuuuuuuuuuuuuuuuuuuuuuu");
         print(state.SelectedRoom.object?[0]);
         SelectedRoomData = state.SelectedRoom;
+        print(SelectedRoomData?.object?.length);
         setState(() {});
       }
     }, builder: (context, state) {
@@ -113,87 +115,117 @@ class _RoomSelectionState extends State<RoomSelection> {
         body: Container(
           // color: Colors.red[200],
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SelectedRoomData?.object?.length != 0 ||
-                      SelectedRoomData?.object != null
-                  ? Container(
+              SelectedRoomData?.object?.length == 0 ||
+                      SelectedRoomData?.object == null ? Spacer() : SizedBox(),
+              SelectedRoomData?.object?.length == 0 ||
+                      SelectedRoomData?.object == null
+                  ? Center(
+                      child: Container(
+                        height: 400,
+                        width: 250,
+                        child: CustomImageView(
+                          imagePath: ImageConstant.noRoom,
+                          fit: BoxFit.fill,
+                        ),
+                        // color: Colors.red,
+                      ),
+                    )
+                  : Container(
                       height: _height / 1.3,
                       // color: Colors.green[100],
                       child: ListView.separated(
                         padding: const EdgeInsets.all(8),
                         itemCount: SelectedRoomData?.object?.length ?? 0,
                         itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectedIndex = index;
-                                RoomID = SelectedRoomData?.object?[index].uid;
-                              });
-                            },
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 16, right: 16),
-                              child: Container(
-                                  height: 65,
-                                  decoration: BoxDecoration(
-                                      color: selectedIndex == index
-                                          ? Color(0xFFFFE7E7)
-                                          : Colors.white,
-                                      border: Border.all(
-                                          color: Color(0xFFED1C25), width: 1),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 10, left: 15,),
-                                        child: Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Text(
-                                            "${SelectedRoomData?.object?[index].roomQuestion}",
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.left,
-                                             maxLines: 1,
-                                            style: TextStyle(
-                                              fontFamily: 'outfit',
-                                              fontWeight: FontWeight.w600,
+                          return SelectedRoomData
+                                      ?.object?[index].isExpertPresent ==
+                                  true
+                              ? Container(
+                                  height: 0,
+                                )
+                              : GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedIndex = index;
+                                      RoomID =
+                                          SelectedRoomData?.object?[index].uid;
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 16, right: 16),
+                                    child: Container(
+                                        height: 65,
+                                        decoration: BoxDecoration(
+                                            color: selectedIndex == index
+                                                ? Color(0xFFFFE7E7)
+                                                : Colors.white,
+                                            border: Border.all(
+                                                color: Color(0xFFED1C25),
+                                                width: 1),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                top: 10,
+                                                left: 15,
+                                              ),
+                                              child: Align(
+                                                alignment: Alignment.topLeft,
+                                                child: Text(
+                                                  "${SelectedRoomData?.object?[index].roomQuestion}",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.left,
+                                                  maxLines: 1,
+                                                  style: TextStyle(
+                                                    fontFamily: 'outfit',
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 5, left: 15),
-                                        child: Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Text(
-                                            "${SelectedRoomData?.object?[index].description}",
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.left,
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                              fontFamily: 'outfit',
-                                              fontWeight: FontWeight.w400,
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 5, left: 15),
+                                              child: Align(
+                                                alignment: Alignment.topLeft,
+                                                child: Text(
+                                                  "${SelectedRoomData?.object?[index].description}",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.left,
+                                                  maxLines: 1,
+                                                  style: TextStyle(
+                                                    fontFamily: 'outfit',
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                          ],
+                                        )
+                                        // Center(child: Text('Entry ${entries[index]}')),
                                         ),
-                                      ),
-                                    ],
-                                  )
-                                  // Center(child: Text('Entry ${entries[index]}')),
                                   ),
-                            ),
-                          );
+                                );
                         },
                         separatorBuilder: (BuildContext context, int index) =>
-                            const Divider(),
+                            SelectedRoomData?.object?[index].isExpertPresent ==
+                                    true
+                                ? SizedBox()
+                                : Divider(),
                       ),
-                    )
-                  : SizedBox(),
+                    ),
+              Spacer(),
               selectedIndex != -1
                   ? Padding(
-                      padding:
-                          const EdgeInsets.only(top: 20, left: 16, right: 16),
+                      padding: const EdgeInsets.only(
+                          top: 20, left: 16, right: 16, bottom: 25),
                       child: Container(
                         height: 50,
                         child: GestureDetector(

@@ -46,6 +46,9 @@ class PreferencesKey {
   static const String IPAIosRoutVersion = 'IPARoutVersion';
   static const String IPAIosMainversion = 'IPAMainversion';
 
+  static const String ShowSoftAlert = 'ShowSoftAlert';
+
+
 
   
 
