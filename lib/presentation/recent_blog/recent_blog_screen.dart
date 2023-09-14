@@ -71,11 +71,16 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                       onTap: () {
                         Navigator.pop(context);
                       },
-                      child: Icon(
+                      child: CustomImageView(
+                        imagePath: ImageConstant.RightArrowWithBorder,
+                        height: 35,
+                        width: 35,
+                      )/* Icon(
+                        1
                         Icons.arrow_back,
                         size: 35,
                         color: Colors.white,
-                      ),
+                      ), */
                     ),
                   ),
                   // Padding(

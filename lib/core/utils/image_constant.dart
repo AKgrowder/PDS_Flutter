@@ -164,6 +164,8 @@ class ImageConstant {
   static String mail = 'assets/images/mail.png';
   static String redphoneimage = 'assets/images/phoneimage.png';
   static String alertimage = 'assets/images/alertimage.png';
+  static String RightArrowWithBorder = 'assets/images/RightArrowWithBorder.png';
+  
 
 
   
