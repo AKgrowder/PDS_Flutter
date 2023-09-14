@@ -3,7 +3,6 @@ class Config {
       "Something Went Wrong, Try After Some Time.";
   static const String mobileNumberIsNotvaild =
       "your number is not vaild Please Enter correct Number";
-
   static const String servernotreachable =
       "Servar Not Rechable, Try After Some Time.";
   static const String FetchAllPublicRoom = "guest/api/fetchAllPublicRoom";
@@ -45,6 +44,5 @@ class Config {
   static const String DeleteUser = "auth/auth/deleteForumUser/";
   static const String ReActivateUSer = "auth/auth/activeForumUser";
   static const String SelectRoomList = "user/api/fetchOwnerRoom";
-  static const String loginerror = "user only login with UserName";
-
+  static const String loginerror = "Please Login With UserName";
 }
