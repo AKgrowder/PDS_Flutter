@@ -167,7 +167,7 @@ class Repository {
       case 404:
         return Config.somethingWentWrong;
       case 400:
-      return Config.loginerror;
+        return Config.loginerror;
       case 500:
         return Config.servernotreachable;
       default:

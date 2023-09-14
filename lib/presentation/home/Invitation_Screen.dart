@@ -349,6 +349,18 @@ class _InvitationScreenState extends State<InvitationScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
+                                          InvitationRoomData
+                                                          ?.object?[index]
+                                                          .roomMembers
+                                                          ?.length ==
+                                                      0 ||
+                                                  InvitationRoomData
+                                                          ?.object?[index]
+                                                          .roomMembers
+                                                          ?.isEmpty ==
+                                                      true
+                                              ? SizedBox()
+                                              : 
                                           InvitationRoomData?.object?[index]
                                                       .roomMembers?.length ==
                                                   1

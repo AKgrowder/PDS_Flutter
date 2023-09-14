@@ -305,7 +305,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                     alignment: Alignment.bottomCenter,
                                     child: Padding(
                                       padding: EdgeInsets.only(top: 22),
-                                      child: myAccontDetails?.object?.module !=
+                                      child:  myAccontDetails?.object?.module !=
                                               'EMPLOYEE'
                                           ? Row(
                                               mainAxisAlignment:
