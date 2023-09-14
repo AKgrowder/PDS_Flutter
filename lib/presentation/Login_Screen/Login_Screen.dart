@@ -696,7 +696,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void launchEmail(String emailAddress) async {
     final Uri emailLaunchUri = Uri(
-      scheme: 'Test',
+      // scheme: 'Test',
       path: emailAddress,
     );
     Uri mailto = Uri.parse("mailto:$emailLaunchUri");
