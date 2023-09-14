@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +12,7 @@ import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_text_form_field.dart';
@@ -876,7 +878,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                         child: Container(
                           // width: 330,
                           margin: EdgeInsets.only(
-                            left: 10,
+                            left: 4,
                             top: 16,
                             right: 0,
                           ),
@@ -887,7 +889,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   children: [
                                     TextSpan(
                                       text:
-                                          "By Submitting you are agreeing to ",
+                                          "By Submitting you are agreeing to",
                                       style: TextStyle(
                                         color: appTheme.black900,
                                         fontSize: 14,
