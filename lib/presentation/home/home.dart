@@ -399,21 +399,36 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ], child: BottombarPage(buttomIndex: 4));
                                   }));
                                 },
-                                child: CustomImageView(
-                                  // imagePath: ImageConstant.imgRectangle39829,
-                                  url: UserProfile,
-                                  height: 50,
-                                  width: 50,
-                                  fit: BoxFit.fill,
-                                  radius: BorderRadius.circular(25),
-                                  alignment: Alignment.center,
-                                ),
+                                child: UserProfile == "" || UserProfile == null
+                                    ? CustomImageView(
+                                        imagePath: ImageConstant
+                                            .tomcruse, // url: UserProfile,
+                                        height: 50,
+                                        width: 50,
+                                        fit: BoxFit.fill,
+                                        radius: BorderRadius.circular(25),
+                                        alignment: Alignment.center,
+                                      )
+                                    : CustomImageView(
+                                        // imagePath: ImageConstant.imgRectangle39829,
+                                        url: UserProfile,
+                                        height: 50,
+                                        width: 50,
+                                        fit: BoxFit.fill,
+                                        radius: BorderRadius.circular(25),
+                                        alignment: Alignment.center,
+                                    ),
                               )
                             : Container()
                       ],
                     ),
                   ),
-                  Container(height: 0,color: Colors.red,child: Text("${User_ID} \n ${User_Name}  \n ${User_Module} \n ${User_Mood}"),),
+                  Container(
+                    height: 0,
+                    color: Colors.red,
+                    child: Text(
+                        "${User_ID} \n ${User_Name}  \n ${User_Module} \n ${User_Mood}"),
+                  ),
                   SizedBox(
                     height: 7,
                   ),
@@ -2468,9 +2483,8 @@ class _HomeScreenState extends State<HomeScreen> {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title:  Text("Create Forum"),
-          content:  Text(
-              "Please fill your Company info before creation forum."),
+          title: Text("Create Forum"),
+          content: Text("Please fill your Company info before creation forum."),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -2486,7 +2500,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: Container(
                 // color: Colors.green,
-                child:  Text("Okay"),
+                child: Text("Okay"),
               ),
             ),
           ],
@@ -3090,7 +3104,6 @@ class _HomeScreenState extends State<HomeScreen> {
           (int.parse(appApkLatestVersion ?? ""))) {
         print("Moti2");
         AlertSoftUpdate();
-        
       }
 
       if (int.parse(ApkRouteVersion ?? "") ==
@@ -3111,7 +3124,6 @@ class _HomeScreenState extends State<HomeScreen> {
           (int.parse(ipaIosLatestVersion ?? ""))) {
         print("Moti2");
         AlertSoftUpdate();
-        
       }
 
       if (int.parse(IosRoutVersion ?? "") ==
