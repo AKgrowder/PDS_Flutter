@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/dilogs/invite_dilog.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../../API/Bloc/SelectRoom_Bloc/SelectRoom_cubit.dart';
 import '../../API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import '../../API/Bloc/sherinvite_Block/sherinvite_state.dart';
@@ -198,7 +196,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                       physics: NeverScrollableScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        childAspectRatio: 0.52,
+                        childAspectRatio: 0.50,
                         mainAxisSpacing: 0,
                         crossAxisSpacing: 0,
                         crossAxisCount: 2,
