@@ -142,6 +142,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
+                            Navigator.pop(context);
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
                               return MultiBlocProvider(providers: [
