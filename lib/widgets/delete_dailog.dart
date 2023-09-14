@@ -117,7 +117,8 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
                     },
                     builder: (context, state) {
                       return Container(
-                        height: height / 1.4 - 80,
+                        height: 550,
+                        // height: height / 1.4 - 80,
                         width: MediaQuery.of(context).size.width / 1.17,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
@@ -233,7 +234,7 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
-                                  top: 35, left: 30, right: 30),
+                                  top: 20, left: 30, right: 30),
                               child: Row(
                                 children: [
                                   Flexible(

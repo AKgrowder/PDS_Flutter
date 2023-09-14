@@ -81,7 +81,7 @@ class _RoomSelectionState extends State<RoomSelection> {
       // }
       if (state is SelectedRoomLoadedState) {
         print("uuuuuuuuuuuuuuuuuuuuuuuuuu");
-        print(state.SelectedRoom.object?[0].roomQuestion);
+        print(state.SelectedRoom.object?[0]);
         SelectedRoomData = state.SelectedRoom;
         setState(() {});
       }
