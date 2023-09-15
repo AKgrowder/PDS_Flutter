@@ -111,7 +111,6 @@ class UserReActivateDailogState extends State<UserReActivateDailog>
                           savePhoneData();
                         }
 
-                        
                         Navigator.pushAndRemoveUntil(context,
                             MaterialPageRoute(builder: (context) {
                           return MultiBlocProvider(providers: [
@@ -169,7 +168,8 @@ class UserReActivateDailogState extends State<UserReActivateDailog>
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 10),
-                              child: Text("Please Re-Activate Your Account",
+                              child: Text(
+                                  "Are you Sure you want to \n Reactivate your Account?",
                                   textScaleFactor: 1.0,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
