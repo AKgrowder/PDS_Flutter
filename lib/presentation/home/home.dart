@@ -2485,27 +2485,38 @@ class _HomeScreenState extends State<HomeScreen> {
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text("Create Expert"),
-          content: const Text(
-              "Please fill the necessary data before Registering as an Expert."),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(ctx).pop();
-                print('no login');
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return MultiBlocProvider(providers: [
-                    BlocProvider<FetchExprtiseRoomCubit>(
-                      create: (context) => FetchExprtiseRoomCubit(),
-                    ),
-                  ], child: BecomeExpertScreen());
-                }));
-              },
-              child: Container(
-                // color: Colors.green,
-                child: const Text("Okay"),
-              ),
+          content: Container(
+            height: 87,
+            child: Column(
+              children: [
+                Text(
+                    "Please fill the necessary data before Registering as an Expert."),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                    print('no login');
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return MultiBlocProvider(providers: [
+                        BlocProvider<FetchExprtiseRoomCubit>(
+                          create: (context) => FetchExprtiseRoomCubit(),
+                        ),
+                      ], child: BecomeExpertScreen());
+                    }));
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        // color: Colors.green,
+                        child: Text("Okay"),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       );
 
@@ -2534,7 +2545,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (ctx) => AlertDialog(
           title: Text("Create Forum"),
           content: Container(
-            height: 82,
+            height: 87,
             //color: Colors.amber,
             child: Column(
               children: [
@@ -2565,7 +2576,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-        
+
           /*   actions: <Widget>[
             TextButton(
               onPressed: () {

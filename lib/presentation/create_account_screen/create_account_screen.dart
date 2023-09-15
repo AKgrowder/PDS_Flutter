@@ -358,7 +358,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               top: 18,
                             ),
                             child: Text(
-                              "User ID",
+                              "User Name",
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.left,
                               style: TextStyle(
@@ -394,7 +394,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               return null;
                             },
                             // textStyle: theme.textTheme.titleMedium!,
-                            hintText: "Enter User ID",
+                            hintText: "User Name",
                             // hintStyle: theme.textTheme.titleMedium!,
                             textInputAction: TextInputAction.next,
                             filled: true,
@@ -409,7 +409,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               top: 20,
                             ),
                             child: Text(
-                              "User Name",
+                              "Name",
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.left,
                               style: TextStyle(
@@ -451,7 +451,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               bottom: 14,
                             ),
                             // textStyle: theme.textTheme.titleMedium!,
-                            hintText: "Enter name",
+                            hintText: "Enter Name",
                             // hintStyle: theme.textTheme.titleMedium!,
                             textInputAction: TextInputAction.next,
                             filled: true,
@@ -517,7 +517,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               bottom: 14,
                             ),
                             // textStyle: theme.textTheme.titleMedium!,
-                            hintText: "Email address",
+                            hintText: "Email Address",
                             // hintStyle: theme.textTheme.titleMedium!,
                             textInputAction: TextInputAction.next,
                             textInputType: TextInputType.emailAddress,
