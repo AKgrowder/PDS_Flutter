@@ -58,7 +58,7 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
-          
+     
       default:
         return jsonString;
     }
@@ -130,6 +130,7 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
+
 
       default:
         return jsonString;
@@ -468,7 +469,6 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
-
       default:
         return jsonString;
     }
@@ -511,7 +511,7 @@ class Repository {
   }
 
   cretaForumUpdate(Map<String, dynamic> params, BuildContext context) async {
-    final response = await apiServices.multipartFile2(Config.company, params);
+    final response = await apiServices.multipartFile2(Config.company, params,context);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
     switch (response.statusCode) {
