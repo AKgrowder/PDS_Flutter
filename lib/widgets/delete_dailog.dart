@@ -48,8 +48,8 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
 
   @override
   Widget build(BuildContext context) {
-    // double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
 
     return Center(
       child: Material(
@@ -57,7 +57,7 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
         child: ScaleTransition(
           scale: scaleAnimation,
           child: Container(
-            height: height / 1.4,
+            height: 480,
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
@@ -117,82 +117,88 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
                     },
                     builder: (context, state) {
                       return Container(
-                        height: 550,
-                        // height: height / 1.4 - 80,
-                        width: MediaQuery.of(context).size.width / 1.17,
+                        // height: 520,
+                        height: 480,
+                        width: _width / 1.1,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.white,
+                          color: Color.fromARGB(255, 255, 255, 255),
                           // color: Theme.of(context).brightness == Brightness.light
                           //     ? Color(0XFFEFEFEF)
                           //     : Color(0XFF212121),
                         ),
                         child: Column(
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                margin: EdgeInsets.only(right: 4),
-                                height: 50,
-                                color: Colors.transparent,
-                                child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Image.asset(
-                                    ImageConstant.closeimage,
-                                    height: 40,
-                                    width: 40,
-                                    fit: BoxFit.fill,
+                            Row(
+                              children: [
+                                Spacer(),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.only(right: 4),
+                                    height: 50,
+                                    width: 50,
+                                    color: Color.fromARGB(0, 0, 0, 0),
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Image.asset(
+                                        ImageConstant.closeimage,
+                                        height: 40,
+                                        width: 40,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
                             Container(
-                              height: MediaQuery.of(context).size.width / 3.2,
-                              width: MediaQuery.of(context).size.width / 3,
-                              // color: Colors.red[100],
+                              height: 130,
+                              width: 130,
+                              color: Color.fromARGB(0, 32, 192, 157),
                               child: Image.asset(
                                 ImageConstant.closeimage,
                                 fit: BoxFit.fill,
                                 color: ColorConstant.primary_color,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: Text(
-                                  "Are you Sure you want to \n Delete your Account?",
-                                  textScaleFactor: 1.0,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: 'outfit',
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: ColorConstant
-                                        .primary_color, /* textCenter: true, */
-                                  )),
+                            SizedBox(
+                              height: 10,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 7),
-                              child: Text(
-                                "All the data will be deleted from the \n server after 30 days.",
+                            Text(
+                                "Are you Sure you want to \n Delete your Account?",
                                 textScaleFactor: 1.0,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: 'outfit',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  // textCenter: true,
-                                  // color: Colors.black45,
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.light
-                                      ? Colors.black45
-                                      : Colors.grey,
-                                ),
-                              ),
-                            ),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: ColorConstant
+                                      .primary_color, /* textCenter: true, */
+                                )),
+                            // Padding(
+                            //   padding: const EdgeInsets.only(top: 7),
+                            //   child: Text(
+                            //     "All the data will be deleted from the \n server after 30 days.",
+                            //     textScaleFactor: 1.0,
+                            //     textAlign: TextAlign.center,
+                            //     style: TextStyle(
+                            //       fontFamily: 'outfit',
+                            //       fontSize: 14,
+                            //       fontWeight: FontWeight.w500,
+                            //       // textCenter: true,
+                            //       // color: Colors.black45,
+                            //       color: Theme.of(context).brightness ==
+                            //               Brightness.light
+                            //           ? Colors.black45
+                            //           : Colors.grey,
+                            //     ),
+                            //   ),
+                            // ),
                             Padding(
-                                padding: EdgeInsets.only(top: 1, left: 15),
+                                padding: EdgeInsets.only(left: 15),
                                 child: Row(children: [
                                   Padding(
                                       padding:
@@ -223,18 +229,22 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
                             Padding(
                               padding:
                                   const EdgeInsets.only(left: 15, right: 15),
-                              child: CustomTextFormField(
-                                // focusNode: FocusNode(),
-                                controller: reasonController,
-                                hintText: "",
-                                maxLength: 150,
-                                // padding: TextFormFieldPadding.PaddingT44,
-                                maxLines: 5,
+                              child: Container(
+                                // color: Colors.red,
+                                height:100,
+                                child: CustomTextFormField(
+                                  // focusNode: FocusNode(),
+                                  controller: reasonController,
+                                  hintText: "",
+                                  maxLength: 150,
+                                  // padding: TextFormFieldPadding.PaddingT44,
+                                  maxLines: 5,
+                                ),
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
-                                  top: 20, left: 30, right: 30),
+                                  top: 25, left: 30, right: 30),
                               child: Row(
                                 children: [
                                   Flexible(
@@ -260,7 +270,7 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
                                         // Navigator.pop(context);
                                       },
                                       child: Container(
-                                        width: 163,
+                                        // width: 163,
                                         height: 48,
                                         decoration: BoxDecoration(
                                           borderRadius:
@@ -290,7 +300,7 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
                                           Navigator.pop(context);
                                         },
                                         child: Container(
-                                            width: 163,
+                                            // width: 163,
                                             height: 48,
                                             decoration: BoxDecoration(
                                               borderRadius:
@@ -339,9 +349,9 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
                                 mainAxisAlignment: MainAxisAlignment.center,
                               ),
                             ),
-                            SizedBox(
-                              height: 20,
-                            ),
+                            // SizedBox(
+                            //   height: 20,
+                            // ),
                           ],
                         ),
                       );
