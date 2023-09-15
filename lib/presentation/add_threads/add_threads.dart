@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
@@ -78,7 +79,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
     }
   }
 
-@override
+  @override
   void initState() {
     get_UserUUID();
     // TODO: implement initState
@@ -321,8 +322,18 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                             "roomType": "PUBLIC",
                             "userUid": User_ID,
                           };
-                          BlocProvider.of<CreatPublicRoomCubit>(context)
-                              .CreatPublicRoomAPI(params, context);
+                          if (_RoomTitleController.length >= 500) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text("Maximum length allowed 500 -> ${_RoomTitleController.length}"),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else {
+                            print("nani");
+                            BlocProvider.of<CreatPublicRoomCubit>(context)
+                                .CreatPublicRoomAPI(params, context);
+                          }
                         }
                         // }
                       },
