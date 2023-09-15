@@ -874,22 +874,21 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                         ),
                       ),
                       Align(
-                        // alignment: Alignment.center,
-                        child: Container(
-                          // width: 330,
-                          margin: EdgeInsets.only(
-                            left: 4,
-                            top: 16,
-                            right: 0,
-                          ),
-                          child: Row(
-                            children: [
-                              RichText(
+                            // alignment: Alignment.center,
+                            child: Container(
+                              // color: Colors.amber,
+                              // width: 330,
+                              margin: EdgeInsets.only(
+                                left: 10,
+                                top: 16,
+                                right: 0,
+                              ),
+                              child: RichText(
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
                                       text:
-                                          "By Submitting you are agreeing to",
+                                          "By Submitting you are agreeing to ",
                                       style: TextStyle(
                                         color: appTheme.black900,
                                         fontSize: 14,
@@ -900,68 +899,93 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                     // TextSpan(
                                     //   text:
                                     //       "Terms & Conditions  Privacy & Policy  of PDS Terms",
-                                    //   style: TextStyle(
-                                    //     color: theme.colorScheme.primary,
-                                    //     fontSize: 14,
-                                    //     fontFamily: 'Outfit',
-                                    //     fontWeight: FontWeight.w500,
-                                    //     decoration: TextDecoration.underline,
-                                    //   ),
+                                    // style: TextStyle(
+                                    //   color: theme.colorScheme.primary,
+                                    //   fontSize: 14,
+                                    //   fontFamily: 'Outfit',
+                                    //   fontWeight: FontWeight.w500,
+                                    //   decoration: TextDecoration.underline,
+                                    // ),
                                     // ),
                                   ],
                                 ),
                                 textAlign: TextAlign.center,
                               ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
                               GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Policies(
-                                          title: " ",
-                                          data: Policy_Data.turms_of_use,
-                                        ),
-                                      ));
-                                },
-                                child: Text(
-                                  "Terms & Conditions",
-                                  style: TextStyle(
-                                    color: theme.colorScheme.primary,
-                                    fontSize: 14,
-                                    fontFamily: 'Outfit',
-                                    fontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Policies(
+                                              title: " ",
+                                              data: Policy_Data.turms_of_use,
+                                            ),
+                                          ));
+                                    },
+                                    child: Text(
+                                      "Terms & Conditions",
+                                      style: TextStyle(
+                                        color: theme.colorScheme.primary,
+                                        fontSize: 14,
+                                        fontFamily: 'Outfit',
+                                        fontWeight: FontWeight.w500,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                  ),
+                              Center(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Policies(
+                                            title: " ",
+                                            data: Policy_Data.privacy_policy1,
+                                          ),
+                                        ));
+                                  },
+                                  child: Text(
+                                    "Privacy & Policy of PDS Terms",
+                                    style: TextStyle(
+                                      color: theme.colorScheme.primary,
+                                      fontSize: 14,
+                                      fontFamily: 'Outfit',
+                                      fontWeight: FontWeight.w500,
+                                      decoration: TextDecoration.underline,
+                                    ),
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ),
-                      Center(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Policies(
-                                    title: " ",
-                                    data: Policy_Data.privacy_policy1,
-                                  ),
-                                ));
-                          },
-                          child: Text(
-                            "Privacy & Policy  of PDS Terms",
-                            style: TextStyle(
-                              color: theme.colorScheme.primary,
-                              fontSize: 14,
-                              fontFamily: 'Outfit',
-                              fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                      ),
                       SizedBox(
                         height: 20,
                       )

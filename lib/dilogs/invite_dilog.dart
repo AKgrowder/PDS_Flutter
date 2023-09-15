@@ -245,6 +245,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
 
                                       // }
                                       if (email.text.toString().isEmpty) {
+                                       
                                         SnackBar snackBar = SnackBar(
                                           content: Text('Please Enter email'),
                                           backgroundColor:
@@ -252,7 +253,20 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                         );
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackBar);
-                                      } else if (!emailRegExp
+                                      }
+                                      else if(email.text.trim().isEmpty ||
+                                  email.text.trim() == ''){
+
+                                        SnackBar snackBar = SnackBar(
+                                          content: Text('email can\'t be just blank spaces'),
+                                          backgroundColor:
+                                              ColorConstant.primary_color,
+                                        );
+                                        ScaffoldMessenger.of(context);
+                                        
+
+                                      }
+                                       else if (!emailRegExp
                                           .hasMatch(email.text.toString())) {
                                         SnackBar snackBar = SnackBar(
                                           content:

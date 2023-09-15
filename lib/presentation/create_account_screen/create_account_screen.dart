@@ -384,7 +384,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             validator: (value) {
                               RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                               if (value!.isEmpty) {
-                                return 'Please Enter User Id';
+                                return 'Please Enter User Name';
                               } else if (!nameRegExp.hasMatch(value)) {
                                 return 'Input cannot contains prohibited special characters';
                               } else if (value.length < 1 ||
