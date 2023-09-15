@@ -1,8 +1,8 @@
 class Config {
   static const String somethingWentWrong =
       "Something Went Wrong, Try After Some Time.";
-  static const String mobileNumberIsNotvaild =
-      "your number is not vaild Please Enter correct Number";
+  static const String mobileNumberIsNotvaild = "Your Number is Not Register";
+      // "your number is not vaild Please Enter correct Number";
   static const String servernotreachable =
       "Servar Not Rechable, Try After Some Time.";
   static const String FetchAllPublicRoom = "guest/api/fetchAllPublicRoom";
