@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../../presentation/splash_screen/splash_screen.dart';
@@ -294,7 +293,7 @@ setLOGOUT(BuildContext context) async {
                             color: ColorConstant.primary_color),
                         child: Center(
                             child: Text(
-                          "Update",
+                          "Logout",
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 17,
