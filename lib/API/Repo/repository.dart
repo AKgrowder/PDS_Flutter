@@ -58,7 +58,7 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
-
+          
       default:
         return jsonString;
     }
@@ -630,7 +630,7 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
-
+    
       default:
         return jsonString;
     }

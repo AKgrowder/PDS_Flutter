@@ -156,12 +156,9 @@ class _HomeScreenState extends State<HomeScreen> {
     refresh = false;
     saveUserProfile();
     VersionControll();
-
     BlocProvider.of<FetchAllPublicRoomCubit>(context)
         .FetchAllExpertsAPI(context);
-
     BlocProvider.of<FetchAllPublicRoomCubit>(context).GetallBlog(context);
-
     super.initState();
   }
 
@@ -307,11 +304,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                           CrossAxisAlignment.end,
                                       children: [
                                         Container(
-                                          width: _width/3,
+                                          width: _width / 3,
                                           child: Text(
                                             User_Name != null
                                                 ? "${User_Name}"
-                                                : "User ID",textAlign: TextAlign.end,
+                                                : "User ID",
+                                            textAlign: TextAlign.end,
                                             style: TextStyle(
                                               fontFamily: 'outfit',
                                               fontSize: 18,
@@ -452,67 +450,54 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Container(
                       child: User_Module == "COMPANY"
                           ? checkuserdata == "REJECTED"
-                                          ? GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                  return MultiBlocProvider(
-                                                      providers: [
-                                                        BlocProvider<
-                                                            FetchAllPublicRoomCubit>(
-                                                          create: (context) =>
-                                                              FetchAllPublicRoomCubit(),
-                                                        ),
-                                                        BlocProvider<
-                                                            CreatPublicRoomCubit>(
-                                                          create: (context) =>
-                                                              CreatPublicRoomCubit(),
-                                                        ),
-                                                        BlocProvider<
-                                                            senMSGCubit>(
-                                                          create: (context) =>
-                                                              senMSGCubit(),
-                                                        ),
-                                                        BlocProvider<
-                                                            RegisterCubit>(
-                                                          create: (context) =>
-                                                              RegisterCubit(),
-                                                        ),
-                                                        BlocProvider<
-                                                            GetAllPrivateRoomCubit>(
-                                                          create: (context) =>
-                                                              GetAllPrivateRoomCubit(),
-                                                        ),
-                                                        BlocProvider<
-                                                            InvitationCubit>(
-                                                          create: (context) =>
-                                                              InvitationCubit(),
-                                                        ),
-                                                      ],
-                                                      child: BottombarPage(
-                                                          buttomIndex: 4));
-                                                }));
-                                              },
-                                              child: Container(
-                                                height: 25,
-                                                width: _width,
-                                                // color: Colors.red,
-                                                child: Center(
-                                                  child: Text(
-                                                    "Your Account Rejected Update, click here..",
-                                                    style: TextStyle(
-                                                      fontFamily: 'outfit',
-                                                      fontSize: 15,
-                                                      color: Color(0XFFED1C25),
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                          : SizedBox()
+                              ? GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return MultiBlocProvider(providers: [
+                                        BlocProvider<FetchAllPublicRoomCubit>(
+                                          create: (context) =>
+                                              FetchAllPublicRoomCubit(),
+                                        ),
+                                        BlocProvider<CreatPublicRoomCubit>(
+                                          create: (context) =>
+                                              CreatPublicRoomCubit(),
+                                        ),
+                                        BlocProvider<senMSGCubit>(
+                                          create: (context) => senMSGCubit(),
+                                        ),
+                                        BlocProvider<RegisterCubit>(
+                                          create: (context) => RegisterCubit(),
+                                        ),
+                                        BlocProvider<GetAllPrivateRoomCubit>(
+                                          create: (context) =>
+                                              GetAllPrivateRoomCubit(),
+                                        ),
+                                        BlocProvider<InvitationCubit>(
+                                          create: (context) =>
+                                              InvitationCubit(),
+                                        ),
+                                      ], child: BottombarPage(buttomIndex: 4));
+                                    }));
+                                  },
+                                  child: Container(
+                                    height: 25,
+                                    width: _width,
+                                    // color: Colors.red,
+                                    child: Center(
+                                      child: Text(
+                                        "Your Account Rejected Update, click here..",
+                                        style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontSize: 15,
+                                          color: Color(0XFFED1C25),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : SizedBox()
                           : User_Module == "EXPERT"
                               ? Container(
                                   // color: Colors.lightGreen,
@@ -2548,8 +2533,40 @@ class _HomeScreenState extends State<HomeScreen> {
         context: context,
         builder: (ctx) => AlertDialog(
           title: Text("Create Forum"),
-          content: Text("Please fill your Company info before creation forum."),
-          actions: <Widget>[
+          content: Container(
+            height: 82,
+            //color: Colors.amber,
+            child: Column(
+              children: [
+                Text("Please fill your Company info before creation forum."),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                    print('no login');
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return MultiBlocProvider(providers: [
+                        BlocProvider<CreatFourmCubit>(
+                          create: (context) => CreatFourmCubit(),
+                        ),
+                      ], child: CreateForamScreen());
+                    }));
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        // color: Colors.green,
+                        child: Text("Okay"),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        
+          /*   actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(ctx).pop();
@@ -2567,7 +2584,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Text("Okay"),
               ),
             ),
-          ],
+          ], */
         ),
       );
     }
