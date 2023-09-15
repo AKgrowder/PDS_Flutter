@@ -108,5 +108,4 @@ class MyAccountCubit extends Cubit<MyAccountState> {
     }
   }
 
-
 }
