@@ -79,6 +79,9 @@ final stompClient = StompClient(
 getAPI() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   baseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
+  dynamic yes = [['xbvfsdvgfsdfg ']];
+
+  prefs.setStringList('key',yes);
 }
 
 onConnectCallback(StompFrame connectFrame) {

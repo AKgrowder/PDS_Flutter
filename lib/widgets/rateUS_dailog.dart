@@ -54,10 +54,10 @@ class rateUSdialogState extends State<rateUSdialog>
         child: ScaleTransition(
           scale: scaleAnimation,
           child: Container(
-            height: height / 2,
+            height: 420,
             width: MediaQuery.of(context).size.width / 1.17,
             decoration: ShapeDecoration(
-              color: Colors.white,
+              color: Color.fromARGB(0, 0, 0, 0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
               ),
@@ -65,11 +65,11 @@ class rateUSdialogState extends State<rateUSdialog>
             child: Column(
               children: [
                 Container(
-                  height: height / 2,
+                  height: 420,
                   width: MediaQuery.of(context).size.width / 1.17,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
-                    // color: Colors.amber
+                    color: const Color.fromARGB(255, 255, 255, 255)
                   ),
                   child: Column(
                     children: [
@@ -118,6 +118,7 @@ class rateUSdialogState extends State<rateUSdialog>
                                 child: Container(
                                   height: 50,
                                   width: 50,
+                                  // color: Colors.red,
                                   child: Align(
                                     alignment: Alignment.centerRight,
                                     child: Image.asset(
