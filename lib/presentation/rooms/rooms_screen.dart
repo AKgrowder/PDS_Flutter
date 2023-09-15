@@ -1323,71 +1323,77 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                               ),
                                                 User_Mood == "EXPERT"
                                                     ? SizedBox()
-                                                    : GestureDetector(
-                                                        onTap: () {
-                                                          showDialog(
-                                                            context: context,
-                                                            builder: (context) =>
-                                                                ScaffoldMessenger(
-                                                              child: Builder(
+                                                    : checkuserdata ==
+                                                            "PARTIALLY_REGISTERED"
+                                                        ? SizedBox()
+                                                        : GestureDetector(
+                                                            onTap: () {
+                                                              showDialog(
+                                                                context:
+                                                                    context,
                                                                 builder:
                                                                     (context) =>
-                                                                        Scaffold(
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  body: MultiBlocProvider(
-                                                                      providers: [
-                                                                        BlocProvider<
-                                                                            SherInviteCubit>(
-                                                                          create: (_) =>
-                                                                              SherInviteCubit(),
-                                                                        ),
-                                                                      ],
-                                                                      child: InviteDilogScreen(
-                                                                        Room_UUID:
-                                                                            "${PriveateRoomData?.object?[index].uid}",
-                                                                      )),
+                                                                        ScaffoldMessenger(
+                                                                  child:
+                                                                      Builder(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            Scaffold(
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .transparent,
+                                                                      body: MultiBlocProvider(
+                                                                          providers: [
+                                                                            BlocProvider<SherInviteCubit>(
+                                                                              create: (_) => SherInviteCubit(),
+                                                                            ),
+                                                                          ],
+                                                                          child: InviteDilogScreen(
+                                                                            Room_UUID:
+                                                                                "${PriveateRoomData?.object?[index].uid}",
+                                                                          )),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
+                                                            child: Container(
+                                                              width: 140,
+                                                              height: 22.51,
+                                                              decoration:
+                                                                  ShapeDecoration(
+                                                                color: Color(
+                                                                    0xFFFFD9DA),
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  side:
+                                                                      BorderSide(
+                                                                    width: 1,
+                                                                    color: Color(
+                                                                        0xFFED1C25),
+                                                                  ),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              50),
                                                                 ),
                                                               ),
+                                                              child: Center(
+                                                                  child: Text(
+                                                                "Invite User",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    color: Color(
+                                                                        0xFFED1C25),
+                                                                    fontFamily:
+                                                                        "outfit",
+                                                                    fontSize:
+                                                                        13),
+                                                              )),
                                                             ),
-                                                          );
-                                                        },
-                                                        child: Container(
-                                                          width: 140,
-                                                          height: 22.51,
-                                                          decoration:
-                                                              ShapeDecoration(
-                                                            color: Color(
-                                                                0xFFFFD9DA),
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              side: BorderSide(
-                                                                width: 1,
-                                                                color: Color(
-                                                                    0xFFED1C25),
-                                                              ),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          50),
-                                                            ),
-                                                          ),
-                                                          child: Center(
-                                                              child: Text(
-                                                            "Invite User",
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: Color(
-                                                                    0xFFED1C25),
-                                                                fontFamily:
-                                                                    "outfit",
-                                                                fontSize: 13),
-                                                          )),
-                                                        ),
-                                                      )
+                                                          )
                                               ],
                                             ),
                                           ),
@@ -1572,70 +1578,69 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                     null
                                                 ? User_Mood == "EXPERT"
                                                     ? SizedBox()
-                                                    : Expanded(
-                                                        flex: 2,
-                                                        child: GestureDetector(
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder: (context) => MultiBlocProvider(
-                                                                      providers: [
-                                                                        BlocProvider<
-                                                                            SherInviteCubit>(
-                                                                          create: (_) =>
-                                                                              SherInviteCubit(),
-                                                                        ),
-                                                                      ],
-                                                                      child: ExpertsScreen(
-                                                                          RoomUUID: PriveateRoomData
-                                                                              ?.object?[index]
-                                                                              .uid)),
-                                                                  // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
-                                                                ));
-                                                            // showDialog(
-                                                            //   context: context,
-                                                            //   builder: (BuildContext
-                                                            //       context) {
-                                                            //     return AssignAdminScreenn();
-                                                            //   },
-                                                            // );
-                                                          },
-                                                          child: Container(
-                                                            height: 40,
-                                                            width:
-                                                                _width / 2.48,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .only(
-                                                                bottomRight:
-                                                                    Radius
-                                                                        .circular(
+                                                    : checkuserdata ==
+                                                            "PARTIALLY_REGISTERED"
+                                                        ? SizedBox()
+                                                        : Expanded(
+                                                            flex: 2,
+                                                            child:
+                                                                GestureDetector(
+                                                              onTap: () {
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                      builder: (context) => MultiBlocProvider(
+                                                                          providers: [
+                                                                            BlocProvider<SherInviteCubit>(
+                                                                              create: (_) => SherInviteCubit(),
+                                                                            ),
+                                                                          ],
+                                                                          child:
+                                                                              ExpertsScreen(RoomUUID: PriveateRoomData?.object?[index].uid)),
+                                                                      // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
+                                                                    ));
+                                                                // showDialog(
+                                                                //   context: context,
+                                                                //   builder: (BuildContext
+                                                                //       context) {
+                                                                //     return AssignAdminScreenn();
+                                                                //   },
+                                                                // );
+                                                              },
+                                                              child: Container(
+                                                                height: 40,
+                                                                width: _width /
+                                                                    2.48,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .only(
+                                                                    bottomRight:
+                                                                        Radius.circular(
                                                                             4),
+                                                                  ),
+                                                                  color: Color(
+                                                                      0XFF9B9B9B),
+                                                                ),
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    "Select Expert",
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w400,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontFamily:
+                                                                            "outfit",
+                                                                        fontSize:
+                                                                            15),
+                                                                  ),
+                                                                ),
                                                               ),
-                                                              color: Color(
-                                                                  0XFF9B9B9B),
                                                             ),
-                                                            child: Center(
-                                                              child: Text(
-                                                                "Select Expert",
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400,
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontFamily:
-                                                                        "outfit",
-                                                                    fontSize:
-                                                                        15),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      )
+                                                          )
                                                 : SizedBox(),
                                           ],
                                         ),
