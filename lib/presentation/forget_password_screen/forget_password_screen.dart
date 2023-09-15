@@ -64,7 +64,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
             body: BlocConsumer<ForgetpasswordCubit, ForgetpasswordState>(
               listener: (context, state) {
                 if (state is ForgetpasswordErrorState) {
-                  show_Icon_Flushbar(context,msg: state.error);
+                  show_Icon_Flushbar(context, msg: state.error);
                   // SnackBar snackBar = SnackBar(
                   //   content: Text("state.error"),
                   //   backgroundColor: ColorConstant.primary_color,
@@ -221,65 +221,24 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                               ),
                               CustomElevatedButton(
                                 onTap: () {
+                                  final RegExp phoneRegExp =
+                                      RegExp(r'^(?!0+$)[0-9]{10}$');
+                                  print('gbdfbgfh');
                                   if (contectnumberrController.text.isEmpty) {
-                                    // SnackBar snackBar = SnackBar(
-                                    //   content: Text(
-                                    //     'Please Enter Mobile Number',
-                                    //   ),
-                                    //   backgroundColor:
-                                    //       ColorConstant.primary_color,
-                                    // );
-                                    // ScaffoldMessenger.of(context)
-                                    //     .showSnackBar(snackBar);
-
-                                    Flushbar(
-                                        backgroundColor:
-                                            ColorConstant.primary_color,
-                                        duration: Duration(milliseconds: 800),
-                                        message: "Please Enter Mobile Number");
+                                    show_Icon_Flushbar(context,
+                                        msg: "Please Enter Mobile Number");
+                                  } else if (!phoneRegExp.hasMatch(
+                                      contectnumberrController.text
+                                          .toString())) {
+                                    print('xfghsdghgh');
+                                    show_Icon_Flushbar(context,
+                                        msg: "Invalid Mobile Number");
                                   } else {
                                     BlocProvider.of<ForgetpasswordCubit>(
                                             context)
                                         .Forgetpassword(
                                             contectnumberrController.text,
                                             context);
-                                    // Navigator.push(
-                                    //     context,
-
-                                    // MultiBlocProvider(
-                                    //                           providers: [
-                                    //                             BlocProvider<FetchAllPublicRoomCubit>(
-                                    //                               create: (context) => FetchAllPublicRoomCubit(),
-                                    //                             ),
-                                    //                             BlocProvider<CreatPublicRoomCubit>(
-                                    //                               create: (context) => CreatPublicRoomCubit(),
-                                    //                             ),
-                                    //                             BlocProvider<senMSGCubit>(
-                                    //                               create: (context) => senMSGCubit(),
-                                    //                             ),
-                                    //                             BlocProvider<RegisterCubit>(
-                                    //                               create: (context) => RegisterCubit(),
-                                    //                             ),
-                                    //                             BlocProvider<GetAllPrivateRoomCubit>(
-                                    //                               create: (context) => GetAllPrivateRoomCubit(),
-                                    //                             ),
-                                    //                             BlocProvider<InvitationCubit>(
-                                    //                               create: (context) => InvitationCubit(),
-                                    //                             ),
-                                    //                           ],
-                                    //                           child: BottombarPage(
-                                    //                             buttomIndex: 0,
-                                    //                           ));
-
-                                    // MaterialPageRoute(
-                                    //     builder: (context) =>
-                                    //         OtpVerificationScreen(
-                                    //           forgetpassword: true,
-                                    //           phonNumber:
-                                    //               contectnumberrController
-                                    //                   .text,
-                                    //         ))
-                                    // );
                                   }
                                 },
                                 text: "Send OTP",
@@ -309,7 +268,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     Navigator.pop(context);
   }
 
-   void show_Icon_Flushbar(BuildContext context, {String? msg}) {
+  void show_Icon_Flushbar(BuildContext context, {String? msg}) {
     Flushbar(
         backgroundColor: ColorConstant.primary_color,
         animationDuration: Duration(milliseconds: 500),
