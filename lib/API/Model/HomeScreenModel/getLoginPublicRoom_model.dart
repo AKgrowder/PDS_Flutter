@@ -31,6 +31,7 @@ class LoginPublicRoomModel {
 class Object {
   String? uid;
   String? roomQuestion;
+  String? description;
   String? roomType;
   String? ownerUserName;
   String? ownerUsreProfilePic;
@@ -41,6 +42,7 @@ class Object {
   Object(
       {this.uid,
       this.roomQuestion,
+      this.description,
       this.roomType,
       this.ownerUserName,
       this.ownerUsreProfilePic,
@@ -51,6 +53,7 @@ class Object {
   Object.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
     roomQuestion = json['roomQuestion'];
+    description = json['description'];
     roomType = json['roomType'];
     ownerUserName = json['ownerUserName'];
     ownerUsreProfilePic = json['ownerUsreProfilePic'];
@@ -64,6 +67,7 @@ class Object {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['uid'] = this.uid;
     data['roomQuestion'] = this.roomQuestion;
+    data['description'] = this.description;
     data['roomType'] = this.roomType;
     data['ownerUserName'] = this.ownerUserName;
     data['ownerUsreProfilePic'] = this.ownerUsreProfilePic;
