@@ -1162,7 +1162,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     Room_ID:
                                                         "${MyPublicRoomData?.object?[index].uid ?? ""}",
                                                     Title:
-                                                        "${MyPublicRoomData?.object?[index].roomQuestion ?? ""}",
+                                                        "${MyPublicRoomData?.object?[index].description ?? ""}",
                                                   ),
                                                 );
                                               })).then((value) {
@@ -1282,7 +1282,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               width:
                                                                   _width / 1.4,
                                                               child: Text(
-                                                                "${MyPublicRoomData?.object?[index].roomQuestion}",
+                                                                "${MyPublicRoomData?.object?[index].description}",
                                                                 maxLines: 3,
                                                                 textScaleFactor:
                                                                     1.0,
@@ -1437,7 +1437,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 Room_ID:
                                                                     "${MyPublicRoomData?.object?[index].uid ?? ""}",
                                                                 Title:
-                                                                    "${MyPublicRoomData?.object?[index].roomQuestion ?? ""}",
+                                                                    "${MyPublicRoomData?.object?[index].description ?? ""}",
                                                               ),
                                                             );
                                                           })).then((value) {
@@ -1578,7 +1578,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 Room_ID:
                                                     "${PublicRoomModelData?.object?[index].uid ?? ""}",
                                                 Title:
-                                                    "${PublicRoomModelData?.object?[index].roomQuestion ?? ""}",
+                                                    "${PublicRoomModelData?.object?[index].description ?? ""}",
                                               ),
                                             );
                                           })).then((value) {
@@ -1717,7 +1717,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         Container(
                                                           width: _width / 1.4,
                                                           child: Text(
-                                                            "${PublicRoomModelData?.object?[index].roomQuestion}",
+                                                            "${PublicRoomModelData?.object?[index].description}",
                                                             maxLines: 3,
                                                             textScaleFactor:
                                                                 1.0,
@@ -1874,7 +1874,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             Room_ID:
                                                                 "${PublicRoomModelData?.object?[index].uid ?? ""}",
                                                             Title:
-                                                                "${PublicRoomModelData?.object?[index].roomQuestion ?? ""}",
+                                                                "${PublicRoomModelData?.object?[index].description ?? ""}",
                                                           ),
                                                         );
                                                       })).then((value) {
@@ -1970,7 +1970,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 Room_ID:
                                                     "${FetchPublicRoomModelData?.object?[index].uid ?? ""}",
                                                 Title:
-                                                    "${FetchPublicRoomModelData?.object?[index].roomQuestion ?? ""}",
+                                                    "${FetchPublicRoomModelData?.object?[index].description ?? ""}",
                                               ),
                                             );
                                           })).then((value) {
@@ -2108,7 +2108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         Container(
                                                           width: _width / 1.4,
                                                           child: Text(
-                                                            "${FetchPublicRoomModelData?.object?[index].roomQuestion}",
+                                                            "${FetchPublicRoomModelData?.object?[index].description}",
                                                             maxLines: 3,
                                                             textScaleFactor:
                                                                 1.0,
@@ -2257,7 +2257,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             Room_ID:
                                                                 "${FetchPublicRoomModelData?.object?[index].uid ?? ""}",
                                                             Title:
-                                                                "${FetchPublicRoomModelData?.object?[index].roomQuestion ?? ""}",
+                                                                "${FetchPublicRoomModelData?.object?[index].description ?? ""}",
                                                           ),
                                                         );
                                                       })).then((value) {

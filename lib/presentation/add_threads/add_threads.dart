@@ -317,7 +317,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                           print('condison3');
 
                           var params = {
-                            "roomQuestion": _RoomTitleController.text,
+                            // "roomQuestion": _RoomTitleController.text,
                             "description": _RoomTitleController.text,
                             "roomType": "PUBLIC",
                             "userUid": User_ID,
