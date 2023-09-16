@@ -40,8 +40,7 @@ class LogOutdailogState extends State<LogOutdailog>
     controller.addListener(() {
       setState(() {});
     });
-
-    controller.forward();
+  controller.forward();
   }
 
   @override
