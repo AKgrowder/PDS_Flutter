@@ -230,7 +230,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         widget.loginModelData?.object?.jwt.toString() ?? "",
                         widget.loginModelData?.object?.module.toString() ?? ""
                         // state.loginModel.object!.verified.toString(),
-                        );
+);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return MultiBlocProvider(providers: [
@@ -398,7 +398,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                   tm
                                       ? GestureDetector(
                                           onTap: () {
+                                         
                                             setState(() {
+                                                 OTPController.clear();
                                               tm = false;
                                               _startTimer();
                                                BlocProvider.of<OtpCubit>(
