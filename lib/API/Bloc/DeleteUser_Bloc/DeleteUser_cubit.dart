@@ -5,11 +5,11 @@ import 'package:pds/API/Repo/repository.dart';
 
 class DeleteUserCubit extends Cubit<DeleteUserState> {
   DeleteUserCubit() : super(DeleteUserInitialState()) {}
-  Future<void> DeleteUserApi(String uuid, BuildContext context) async {
+  Future<void> DeleteUserApi(String uuid,String reason, BuildContext context) async {
     dynamic deleteUserModel;
     try {
       emit(DeleteUserLoadingState());
-      deleteUserModel = await Repository().DeleteUser(uuid, context);
+      deleteUserModel = await Repository().DeleteUser(uuid,reason, context);
       if (deleteUserModel.success == true) {
         emit(DeleteUserLoadedState(deleteUserModel));
       }
