@@ -1,4 +1,3 @@
-import 'package:pds/API/Model/sherInviteModel/sherinviteModel.dart';
 import 'package:pds/API/Repo/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +14,8 @@ class SherInviteCubit extends Cubit<SherInviteState> {
       sherInvite = await Repository().sherInvite(userRoomId, email, context);
       if (sherInvite.success == true) {
         emit(SherInviteLoadedState(sherInvite));
+      }else{
+         emit(SherInviteLoadedState(sherInvite));
       }
     } catch (e) {
       emit(SherInviteErrorState(sherInvite));
