@@ -1391,7 +1391,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                               if (jobProfile.text == null ||
                                   jobProfile.text == '') {
                                 SnackBar snackBar = SnackBar(
-                                  content: Text('Please Enter job profile '),
+                                  content: Text('Please Enter Job profile '),
                                   backgroundColor: ColorConstant.primary_color,
                                 );
                                 ScaffoldMessenger.of(context)
@@ -1400,7 +1400,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   jobProfile.text.trim() == '') {
                                 SnackBar snackBar = SnackBar(
                                   content: Text(
-                                      'job profile can\'t be just blank spaces '),
+                                      'Job profile can\'t be just blank spaces '),
                                   backgroundColor: ColorConstant.primary_color,
                                 );
                                 ScaffoldMessenger.of(context)
@@ -1409,7 +1409,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                       3 ||
                                   jobProfile.text.toString().length > 50) {
                                 SnackBar snackBar = SnackBar(
-                                  content: Text('please fill full job profile'),
+                                  content: Text('Please fill full Job Profile'),
                                   backgroundColor: ColorConstant.primary_color,
                                 );
                                 ScaffoldMessenger.of(context)
@@ -1436,7 +1436,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   compayName.text.toString().length > 50) {
                                 SnackBar snackBar = SnackBar(
                                   content:
-                                      Text('please fill full Company Name '),
+                                      Text('Please fill full Company Name '),
                                   backgroundColor: ColorConstant.primary_color,
                                 );
                                 ScaffoldMessenger.of(context)
@@ -1477,7 +1477,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                             if (jobProfile.text == null ||
                                 jobProfile.text == "") {
                               SnackBar snackBar = SnackBar(
-                                content: Text('Please Enter job Profile'),
+                                content: Text('Please Enter Job Profile'),
                                 backgroundColor: ColorConstant.primary_color,
                               );
                               ScaffoldMessenger.of(context)

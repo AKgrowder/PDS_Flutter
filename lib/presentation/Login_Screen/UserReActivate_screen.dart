@@ -75,7 +75,7 @@ class UserReActivateDailogState extends State<UserReActivateDailog>
         child: ScaleTransition(
           scale: scaleAnimation,
           child: Container(
-            height: height / 3.8,
+            height: 250,
             width: MediaQuery.of(context).size.width / 1.17,
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(

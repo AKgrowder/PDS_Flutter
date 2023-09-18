@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/DeleteUser_Bloc/DeleteUser_cubit.dart';
 import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_cubit.dart';
+import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
 import 'package:pds/API/Bloc/logOut_bloc/logOut_cubit.dart';
 import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/presentation/change_password_screen/change_password_screen.dart';
@@ -241,7 +242,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 physics: BouncingScrollPhysics(),
                 itemCount: Setting_Array.length,
                 itemBuilder: (BuildContext context, int index) {
-                  if (index == 1 || index == 2|| index==4) {
+                  if (index == 1 || index == 2 || index == 4) {
                     return SizedBox();
                   }
                   return GestureDetector(
@@ -322,8 +323,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           }));
                           break;
                         case 7:
-                          Share.share(
-                              'https://play.google.com/');
+                          Share.share('https://play.google.com/');
                           // Navigator.push(context,
                           //     MaterialPageRoute(builder: (context) {
                           //   return RoomDetailScreen();
@@ -335,9 +335,14 @@ class _SettingScreenState extends State<SettingScreen> {
                           //     MaterialPageRoute(builder: (context) {
                           //   return ExpertsDetailsScreen();
                           // }));
-
                           showDialog(
-                              context: context, builder: (_) => rateUSdialog());
+                              context: context,
+                              builder: (_) => BlocProvider<RateUsCubit>(
+                                    create: (context) {
+                                      return RateUsCubit();
+                                    },
+                                    child: rateUSdialog(),
+                                  ));
 
                           break;
                         /* case 8:
