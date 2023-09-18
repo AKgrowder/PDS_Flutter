@@ -45,4 +45,5 @@ class Config {
   static const String ReActivateUSer = "auth/auth/activeForumUser";
   static const String SelectRoomList = "user/api/fetchOwnerRoom";
   static const String loginerror = "Please Login With UserName";
+  static const String RateUs = "guest/addRating";
 }

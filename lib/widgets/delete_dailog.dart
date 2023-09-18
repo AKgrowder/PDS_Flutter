@@ -261,7 +261,7 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
                                           BlocProvider.of<DeleteUserCubit>(
                                                   context)
                                               .DeleteUserApi(
-                                                  User_ID.toString(), context);
+                                                  User_ID.toString(),"${reasonController.text}" ,context);
                                         } else {
                                           show_Icon_Flushbar(context,
                                               msg:
