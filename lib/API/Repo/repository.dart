@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
+import 'package:pds/API/Model/RateUseModel/Rateuse_model.dart';
 import '../Model/SelectRoomModel/SelectRoom_Model.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/DeleteUserModel/DeleteUser_Model.dart';
@@ -58,7 +60,7 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
-     
+
       default:
         return jsonString;
     }
@@ -130,7 +132,6 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
-
 
       default:
         return jsonString;
@@ -511,7 +512,8 @@ class Repository {
   }
 
   cretaForumUpdate(Map<String, dynamic> params, BuildContext context) async {
-    final response = await apiServices.multipartFile2(Config.company, params,context);
+    final response =
+        await apiServices.multipartFile2(Config.company, params, context);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
     switch (response.statusCode) {
@@ -630,7 +632,7 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
-    
+
       default:
         return jsonString;
     }
@@ -726,9 +728,9 @@ class Repository {
     }
   }
 
-  DeleteUser(String uuid, BuildContext context) async {
+  DeleteUser(String uuid,String reason, BuildContext context) async {
     final response =
-        await apiServices.getApiCall(Config.DeleteUser + uuid, context);
+        await apiServices.getApiCall(Config.DeleteUser + uuid + "/${reason}", context);
     var jsonString = json.decode(response.body);
     print('Myaccount$jsonString');
     switch (response.statusCode) {
@@ -770,6 +772,24 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return SelectRoomModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  RateUs(Map<String, dynamic> params, BuildContext context) async {
+    final response =
+        await apiServices.postApiCall(Config.RateUs, params, context);
+    var jsonString = json.decode(response.body);
+    print('jsonString-$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return RateUsModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
