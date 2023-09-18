@@ -34,7 +34,7 @@ class _PoliciesScreenState extends State<PoliciesScreen> {
                 Navigator.pop(context);
               },
               child: Padding(
-                padding: const EdgeInsets.only(top: 0),
+                padding: const EdgeInsets.only(top: 0, right: 20),
                 child: Icon(
                   Icons.arrow_back,
                   color: Theme.of(context).brightness == Brightness.light

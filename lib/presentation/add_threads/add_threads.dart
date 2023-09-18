@@ -324,7 +324,8 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                           };
                           if (_RoomTitleController.length >= 500) {
                             SnackBar snackBar = SnackBar(
-                              content: Text("Maximum length allowed 500"),
+                              content:
+                                  Text("Maximum length allowed 500 character"),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)

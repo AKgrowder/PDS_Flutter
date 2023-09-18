@@ -1,8 +1,17 @@
+import 'dart:io';
+
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
+import '../core/utils/sharedPreferences.dart';
 
 class rateUSdialog extends StatefulWidget {
   @override
@@ -16,11 +25,10 @@ class rateUSdialogState extends State<rateUSdialog>
   late AnimationController controller;
   late Animation<double> scaleAnimation;
   double? rateStar = 5.0;
-  var IsGuestUserEnabled;
   var GetTimeSplash;
   @override
   void initState() {
-    // setUserRating();
+    setUserRating();
     super.initState();
 
     controller =
@@ -36,6 +44,7 @@ class rateUSdialogState extends State<rateUSdialog>
   }
 
   var userRating;
+  var User_ID;
 
   @override
   void dispose() {
@@ -68,9 +77,8 @@ class rateUSdialogState extends State<rateUSdialog>
                   height: 420,
                   width: MediaQuery.of(context).size.width / 1.17,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: const Color.fromARGB(255, 255, 255, 255)
-                  ),
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: const Color.fromARGB(255, 255, 255, 255)),
                   child: Column(
                     children: [
                       Stack(
@@ -137,8 +145,7 @@ class rateUSdialogState extends State<rateUSdialog>
                       Padding(
                         padding: const EdgeInsets.only(top: 30),
                         child: RatingBar.builder(
-                          // initialRating: userRating != null ? userRating : 5,
-                          initialRating: 3,
+                          initialRating: userRating != null ? userRating : 5,
                           minRating: 1,
                           direction: Axis.horizontal,
                           allowHalfRating: true,
@@ -188,7 +195,73 @@ class rateUSdialogState extends State<rateUSdialog>
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10, top: 30),
                         child: GestureDetector(
-                          onTap: () async {},
+                          onTap: () async {
+                            final SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            User_ID =
+                                prefs.getString(PreferencesKey.loginUserID);
+                            var params = {
+                              "userUid": User_ID,
+                              "description": RateUSController.text,
+                              "star": rateStar
+                            };
+                            print(params);
+                            print(User_ID);
+
+                            if (rateStar! <= 3.0) {
+                              if (RateUSController.text.isEmpty) {
+                                show_Icon_Flushbar(context,
+                                    msg: "Please Enter Description");
+                              } else {
+                                BlocProvider.of<RateUsCubit>(context)
+                                    .RateUsApi(params, context);
+                                SnackBar snackBar = SnackBar(
+                                  content:
+                                      Text("Your Rate Is Successfully Submit!"),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+
+                                print(rateStar);
+
+                                final SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                prefs.setDouble(PreferencesKey.rating,
+                                    rateStar!.toDouble());
+
+                                Navigator.pop(context);
+                              }
+                            } else {
+                              Navigator.pop(context);
+
+                              if (Platform.isAndroid) {
+                                final SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                prefs.setDouble(PreferencesKey.rating,
+                                    rateStar!.toDouble());
+                                final Uri url = Uri.parse(
+                                    "https://play.google.com/store/apps/");
+
+                                launchUrl(url,
+                                    mode: LaunchMode.externalApplication);
+                              } else if (Platform.isIOS) {
+                                final SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                prefs.setDouble(PreferencesKey.rating,
+                                    rateStar!.toDouble());
+                                final Uri url =
+                                    Uri.parse("https://apps.apple.com/in/app/");
+
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url,
+                                      mode: LaunchMode.externalApplication);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              }
+                            }
+                          },
                           child: Container(
                             width: 163,
                             height: 48,
@@ -225,14 +298,20 @@ class rateUSdialogState extends State<rateUSdialog>
     );
   }
 
-  // setUserRating() async {
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   userRating = prefs.getDouble(UserdefaultsData.rating);
-  //   print('UserRating........${userRating}');
-  //   IsGuestUserEnabled =
-  //       await prefs.getString(UserdefaultsData.IsGuestUserEnabled);
-  //   print(IsGuestUserEnabled);
+  setUserRating() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    userRating = prefs.getDouble(PreferencesKey.rating);
+    print('UserRating........${userRating}');
 
-  //   GetTimeSplash = await prefs.getInt(UserdefaultsData.SaveTimer);
-  // }
+    // prefs.getString(PreferencesKey.ProfileUserName);
+  }
+
+  void show_Icon_Flushbar(BuildContext context, {String? msg}) {
+    Flushbar(
+        backgroundColor: ColorConstant.primary_color,
+        animationDuration: Duration(milliseconds: 500),
+        duration: Duration(seconds: 3),
+        message: msg)
+      ..show(context);
+  }
 }
