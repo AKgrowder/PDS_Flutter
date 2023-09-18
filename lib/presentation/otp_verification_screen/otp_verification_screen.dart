@@ -177,7 +177,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   print('i want flow checlk-${widget.flowCheck}');
                   if (widget.flowCheck != null) {
                     SnackBar snackBar = SnackBar(
-                      content: Text('Otp verification Successfully'),
+                      content: Text('OTP verification Successfully'),
                       backgroundColor: ColorConstant.primary_color,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -207,7 +207,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     }));
                   } else if (widget.forgetpassword == true) {
                     SnackBar snackBar = SnackBar(
-                      content: Text('Otp verify Successfully'),
+                      content: Text('OTP verify Successfully'),
                       backgroundColor: ColorConstant.primary_color,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);

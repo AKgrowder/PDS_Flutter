@@ -9,7 +9,7 @@ import 'package:pds/presentation/become_an_expert_screen/become_an_expert_screen
 import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../recent_blog/recent_blog_screen.dart';
+
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_state.dart';
 import '../../API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
@@ -29,6 +29,7 @@ import '../../core/utils/sharedPreferences.dart';
 import '../../custom_bottom_bar/custom_bottom_bar.dart';
 import '../add_threads/add_threads.dart';
 import '../create_foram/create_foram_screen.dart';
+import '../recent_blog/recent_blog_screen.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
 import '../view_comments/view_comments_screen.dart';
 import 'Invitation_Screen.dart';
@@ -2679,7 +2680,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return getallBlogdata?.object != null
         ? Container(
             // color: Colors.red,
-            height: _height / 3,
+            height: _height / 2.93,
             width: _width / 1.1,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -2770,7 +2771,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           children: [
                                             Container(
                                               // color: Colors.amber,
-                                              // width: _width / 1.3,
+                                              width: _width / 1.6,
                                               child: Text(
                                                 getallBlogdata
                                                         ?.object?[index].title

@@ -690,7 +690,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           if (jobprofileController.text == null ||
                               jobprofileController.text == "") {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please Enter job Profile'),
+                              content: Text('Please Enter Job Profile'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -849,7 +849,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             }
                           } else {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please Enter job Profile'),
+                              content: Text('Please Enter Job Profile'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)

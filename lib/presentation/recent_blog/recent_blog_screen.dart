@@ -68,20 +68,20 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: CustomImageView(
-                        imagePath: ImageConstant.RightArrowWithBorder,
-                        height: 35,
-                        width: 35,
-                      )/* Icon(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: CustomImageView(
+                          imagePath: ImageConstant.RightArrowWithBorder,
+                          height: 35,
+                          width: 35,
+                        ) /* Icon(
                         1
                         Icons.arrow_back,
                         size: 35,
                         color: Colors.white,
                       ), */
-                    ),
+                        ),
                   ),
                   // Padding(
                   //   padding: const EdgeInsets.only(left: 350, top: 10),
@@ -102,7 +102,7 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                       Spacer(),
                       Container(
                         // height: _height / 2.8,
-                        height: _height / 14,
+                        height: _height / 13,
                         // width: _width / 1,
                         decoration: BoxDecoration(
                             color: Color.fromARGB(53, 255, 255, 255),
@@ -128,10 +128,11 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                               children: [
                                 Container(
                                   // color: Colors.amber,
-                                  // width: _width / 1.05,
-                                  // height: _height / 14,
+                                  width: _width / 1.1,
+                                  height: 45,
                                   child: Text(
                                     "${widget.title}",
+                                    overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
                                     style: TextStyle(
                                         fontFamily: 'outfit',
