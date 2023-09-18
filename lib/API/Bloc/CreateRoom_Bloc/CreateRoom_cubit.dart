@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../Model/CreateRoomModel/CreateRoom_Model.dart';
+
 import '../../Repo/repository.dart';
 import 'CreateRoom_state.dart';
 
@@ -15,7 +15,7 @@ class CreateRoomCubit extends Cubit<CreateRoomState> {
       if (PublicRModel.success == true) {
         emit(CreateRoomLoadedState(PublicRModel));
       }
-    } catch (e) {
+    } catch (e) { 
       emit(CreateRoomErrorState(PublicRModel));
     }
   }
