@@ -1,4 +1,3 @@
-import 'package:pds/presentation/history_screen/history_details_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../theme/theme_helper.dart';
@@ -22,13 +21,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
         backgroundColor: theme.colorScheme.onPrimary,
         centerTitle: true,
         elevation: 0,
-        leading: GestureDetector(
-          onTap: () {},
-          child: Icon(
-            Icons.arrow_back,
-            color: Colors.grey,
-          ),
-        ),
+        // leading: GestureDetector(
+        //   onTap: () {},
+        //   child: Icon(
+        //     Icons.arrow_back,
+        //     color: Colors.grey,
+        //   ),
+        // ),
         title: Text(
           "History",
           style: TextStyle(
