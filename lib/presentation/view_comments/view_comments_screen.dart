@@ -1,18 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-
-import 'package:pds/API/Model/coment/coment_model.dart';
-import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:pds/API/Model/coment/coment_model.dart';
+import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
@@ -24,7 +22,6 @@ import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
-import '../../widgets/emoji_picker_widget.dart';
 import '../../widgets/pagenation.dart';
 
 class ViewCommentScreen extends StatefulWidget {
@@ -238,9 +235,9 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                               width: _width / 1.2,
                               // color: Colors.amber,
                               child: Text(
-                                "${widget.Title}",
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
+                                "${widget.Title}  ",
+                                // overflow: TextOverflow.ellipsis,
+                                // maxLines: 2,
                                 style: TextStyle(
                                   fontFamily: 'outfit',
                                   fontSize: 15,
