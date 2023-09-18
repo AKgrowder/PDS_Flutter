@@ -85,7 +85,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          Future.delayed(const Duration(milliseconds: 900), () {
+          Future.delayed(const Duration(milliseconds: 300), () {
             Navigator.pop(context);
           });
         }
@@ -247,7 +247,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                       if (email.text.toString().isEmpty) {
                                        
                                         SnackBar snackBar = SnackBar(
-                                          content: Text('Please Enter email'),
+                                          content: Text('Please Enter Email'),
                                           backgroundColor:
                                               ColorConstant.primary_color,
                                         );
