@@ -14,6 +14,8 @@ class SherInviteCubit extends Cubit<SherInviteState> {
       sherInvite = await Repository().sherInvite(userRoomId, email, context);
       if (sherInvite.success == true) {
         emit(SherInviteLoadedState(sherInvite));
+      }else{
+         emit(SherInviteLoadedState(sherInvite));
       }
     } catch (e) {
       emit(SherInviteErrorState(sherInvite));
