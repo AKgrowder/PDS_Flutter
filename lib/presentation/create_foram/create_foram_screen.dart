@@ -42,6 +42,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
   double documentuploadsize = 0;
   String? dopcument;
   String? filepath;
+  bool? SubmitOneTime = false;
   ChooseDocument? chooseDocument;
 
   getDocumentSize() async {
@@ -94,6 +95,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
       body: BlocConsumer<CreatFourmCubit, CreatFourmState>(
         listener: (context, state) {
           if (state is CreatFourmErrorState) {
+            SubmitOneTime = false;
             SnackBar snackBar = SnackBar(
               content: Text(state.error),
               backgroundColor: ColorConstant.primary_color,
@@ -482,11 +484,12 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             'jobProfile': profile.text,
                           };
                           print('button-$params');
-                          BlocProvider.of<CreatFourmCubit>(context).CreatFourm(
-                              params,
-                              uplopdfile.text,
-                              filepath.toString(),
-                              context);
+                          if (SubmitOneTime == false) {
+                            SubmitOneTime = true;
+                            BlocProvider.of<CreatFourmCubit>(context)
+                                .CreatFourm(params, uplopdfile.text,
+                                    filepath.toString(), context);
+                          }
                         }
                         // if (name.text != null && name.text != "") {
                         //   if (profile.text != null && profile.text != "") {
@@ -542,97 +545,96 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                   Align(
-                            // alignment: Alignment.center,
-                            child: Container(
-                              // color: Colors.amber,
-                              // width: 330,
-                              margin: EdgeInsets.only(
-                                left: 10,
-                                top: 16,
-                                right: 0,
-                              ),
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text:
-                                          "By Submitting you are agreeing to ",
-                                      style: TextStyle(
-                                        color: appTheme.black900,
-                                        fontSize: 14,
-                                        fontFamily: 'Outfit',
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    // TextSpan(
-                                    //   text:
-                                    //       "Terms & Conditions  Privacy & Policy  of PDS Terms",
-                                    // style: TextStyle(
-                                    //   color: theme.colorScheme.primary,
-                                    //   fontSize: 14,
-                                    //   fontFamily: 'Outfit',
-                                    //   fontWeight: FontWeight.w500,
-                                    //   decoration: TextDecoration.underline,
-                                    // ),
-                                    // ),
-                                  ],
+                    Align(
+                      // alignment: Alignment.center,
+                      child: Container(
+                        // color: Colors.amber,
+                        // width: 330,
+                        margin: EdgeInsets.only(
+                          left: 10,
+                          top: 16,
+                          right: 0,
+                        ),
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: "By Submitting you are agreeing to ",
+                                style: TextStyle(
+                                  color: appTheme.black900,
+                                  fontSize: 14,
+                                  fontFamily: 'Outfit',
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                textAlign: TextAlign.center,
+                              ),
+                              // TextSpan(
+                              //   text:
+                              //       "Terms & Conditions  Privacy & Policy  of PDS Terms",
+                              // style: TextStyle(
+                              //   color: theme.colorScheme.primary,
+                              //   fontSize: 14,
+                              //   fontFamily: 'Outfit',
+                              //   fontWeight: FontWeight.w500,
+                              //   decoration: TextDecoration.underline,
+                              // ),
+                              // ),
+                            ],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Policies(
+                                    title: " ",
+                                    data: Policy_Data.turms_of_use,
+                                  ),
+                                ));
+                          },
+                          child: Text(
+                            "Terms & Conditions ",
+                            style: TextStyle(
+                              color: theme.colorScheme.primary,
+                              fontSize: 14,
+                              fontFamily: 'Outfit',
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Policies(
+                                      title: " ",
+                                      data: Policy_Data.privacy_policy1,
+                                    ),
+                                  ));
+                            },
+                            child: Text(
+                              "Privacy & Policy  of PDS Terms",
+                              style: TextStyle(
+                                color: theme.colorScheme.primary,
+                                fontSize: 14,
+                                fontFamily: 'Outfit',
+                                fontWeight: FontWeight.w500,
+                                decoration: TextDecoration.underline,
                               ),
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => Policies(
-                                              title: " ",
-                                              data: Policy_Data.turms_of_use,
-                                            ),
-                                          ));
-                                    },
-                                    child: Text(
-                                      "Terms & Conditions ",
-                                      style: TextStyle(
-                                        color: theme.colorScheme.primary,
-                                        fontSize: 14,
-                                        fontFamily: 'Outfit',
-                                        fontWeight: FontWeight.w500,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                    ),
-                                  ),
-                              Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Policies(
-                                            title: " ",
-                                            data: Policy_Data.privacy_policy1,
-                                          ),
-                                        ));
-                                  },
-                                  child: Text(
-                                    "Privacy & Policy  of PDS Terms",
-                                    style: TextStyle(
-                                      color: theme.colorScheme.primary,
-                                      fontSize: 14,
-                                      fontFamily: 'Outfit',
-                                      fontWeight: FontWeight.w500,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                        ),
+                      ],
+                    ),
                   ]),
             ),
           );
