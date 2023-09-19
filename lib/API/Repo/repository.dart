@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
 import 'package:pds/API/Model/RateUseModel/Rateuse_model.dart';
+import 'package:pds/API/Model/emailVerfiaction/emailVerfiaction.dart';
 import '../Model/SelectRoomModel/SelectRoom_Model.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/DeleteUserModel/DeleteUser_Model.dart';
@@ -20,7 +21,6 @@ import 'package:pds/API/Model/forget_password_model/forget_password_model.dart';
 import 'package:pds/API/Model/otpmodel/otpmodel.dart';
 import 'package:pds/API/Model/sherInviteModel/sherinviteModel.dart';
 import 'package:pds/API/Model/updateprofileModel/updateprofileModel.dart';
-
 import '../ApiService/ApiService.dart';
 import '../Const/const.dart';
 import '../Model/AddThread/CreateRoom_Model.dart';
@@ -60,7 +60,6 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
-
       default:
         return jsonString;
     }
@@ -728,9 +727,9 @@ class Repository {
     }
   }
 
-  DeleteUser(String uuid,String reason, BuildContext context) async {
-    final response =
-        await apiServices.getApiCall(Config.DeleteUser + uuid + "/${reason}", context);
+  DeleteUser(String uuid, String reason, BuildContext context) async {
+    final response = await apiServices.getApiCall(
+        Config.DeleteUser + uuid + "/${reason}", context);
     var jsonString = json.decode(response.body);
     print('Myaccount$jsonString');
     switch (response.statusCode) {
@@ -799,10 +798,25 @@ class Repository {
         return jsonString;
     }
   }
+
+  emailVerifaction(BuildContext context, String email) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.emailVerifaction}/${email}", context);
+    var jsonString = json.decode(response.body);
+    print('Myaccount$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return EmailVerifaction.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
 }
-
-
-
 
 
 // var headers = {
