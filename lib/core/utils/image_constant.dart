@@ -165,6 +165,10 @@ class ImageConstant {
   static String redphoneimage = 'assets/images/phoneimage.png';
   static String alertimage = 'assets/images/alertimage.png';
   static String RightArrowWithBorder = 'assets/images/RightArrowWithBorder.png';
+  static String notVerify = 'assets/images/close.png';
+  static String Verified = 'assets/images/yes.png';
+
+
   
 
 
