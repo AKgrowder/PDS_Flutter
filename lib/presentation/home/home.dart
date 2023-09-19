@@ -2760,7 +2760,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: _height / 10,
                                     // width: _width / 1.2,
                                     decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.7),
+                                        color: Colors.white.withOpacity(0.6),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              blurRadius: 25,
+                                              blurStyle: BlurStyle.outer,
+                                              offset: Offset.zero,
+                                              color: Colors.white)
+                                        ],
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     child: Column(children: [
