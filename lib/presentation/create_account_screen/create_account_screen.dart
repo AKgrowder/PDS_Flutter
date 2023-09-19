@@ -44,6 +44,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   bool Show_Password = true;
   bool isPhone = false;
   bool isPhonee = false;
+  bool SubmitOneTime = false;
   ImagePicker _imagePicker = ImagePicker();
   PermissionStatus _cameraPermissionStatus = PermissionStatus.denied;
   PermissionStatus _galleryPermissionStatus = PermissionStatus.denied;
@@ -89,6 +90,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   @override
   void dispose() {
+    SubmitOneTime = false;
     super.dispose();
   }
 
@@ -120,6 +122,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           content: Text(state.error),
                           backgroundColor: ColorConstant.primary_color,
                         );
+                        SubmitOneTime = false;
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                       if (state is RegisterLoadingState) {
@@ -164,7 +167,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                           Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Padding(
@@ -175,13 +178,16 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     },
                                     child: Icon(Icons.arrow_back)),
                               ),
+                              Spacer(),
+                              CustomImageView(
+                                imagePath: ImageConstant.imgImage248,
+                                height: 37,
+                                alignment: Alignment.center,
+                              ),
+                              Spacer(),
                             ],
                           ),
-                          CustomImageView(
-                            imagePath: ImageConstant.imgImage248,
-                            height: 37,
-                            alignment: Alignment.center,
-                          ),
+
                           Container(
                             alignment: Alignment.center,
                             height: 70,
@@ -712,22 +718,25 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              if (_formKey.currentState!.validate()) {
-                                var datapPassing = {
-                                  "name": nameController.text,
-                                  "userName":enteruseridController.text,
-                                  "email": emailAndMobileController.text,
-                                  "mobileNo": contectnumberController.text,
-                                  "password": passwordController.text,
-                                  "module": "EMPLOYEE",
-                                };
-                                if (chooseDocument?.object != null) {
-                                  datapPassing['profilePic'] =
-                                      '${chooseDocument?.object.toString()}';
+                              if (SubmitOneTime == false) {
+                                if (_formKey.currentState!.validate()) {
+                                  var datapPassing = {
+                                    "name": nameController.text,
+                                    "userName": enteruseridController.text,
+                                    "email": emailAndMobileController.text,
+                                    "mobileNo": contectnumberController.text,
+                                    "password": passwordController.text,
+                                    "module": "EMPLOYEE",
+                                  };
+                                  if (chooseDocument?.object != null) {
+                                    datapPassing['profilePic'] =
+                                        '${chooseDocument?.object.toString()}';
+                                  }
+                                  print('dataPassing-$datapPassing');
+                                  SubmitOneTime = true;
+                                  BlocProvider.of<RegisterCubit>(context)
+                                      .registerApi(datapPassing, context);
                                 }
-                                print('dataPassing-$datapPassing');
-                                BlocProvider.of<RegisterCubit>(context)
-                                    .registerApi(datapPassing, context);
                               }
                             },
                             child: Container(
@@ -820,27 +829,27 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => Policies(
-                                              title: " ",
-                                              data: Policy_Data.turms_of_use,
-                                            ),
-                                          ));
-                                    },
-                                    child: Text(
-                                      "Terms & Conditions ",
-                                      style: TextStyle(
-                                        color: theme.colorScheme.primary,
-                                        fontSize: 14,
-                                        fontFamily: 'Outfit',
-                                        fontWeight: FontWeight.w500,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                    ),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Policies(
+                                          title: " ",
+                                          data: Policy_Data.turms_of_use,
+                                        ),
+                                      ));
+                                },
+                                child: Text(
+                                  "Terms & Conditions ",
+                                  style: TextStyle(
+                                    color: theme.colorScheme.primary,
+                                    fontSize: 14,
+                                    fontFamily: 'Outfit',
+                                    fontWeight: FontWeight.w500,
+                                    decoration: TextDecoration.underline,
                                   ),
+                                ),
+                              ),
                               Center(
                                 child: GestureDetector(
                                   onTap: () {

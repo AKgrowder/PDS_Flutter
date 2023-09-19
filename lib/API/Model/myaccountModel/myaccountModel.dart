@@ -40,6 +40,7 @@ class Object {
   String? uuid;
   String? userProfilePic;
   List<Expertise>? expertise;
+  bool?isEmailVerified; 
 
   Object(
       {this.isApproved,
@@ -57,7 +58,9 @@ class Object {
       this.mobileNo,
       this.uuid,
       this.userProfilePic,
-      this.expertise});
+      this.expertise,
+      this.isEmailVerified
+      });
 
   Object.fromJson(Map<String, dynamic> json) {
     isApproved = json['isApproved'];
@@ -75,6 +78,7 @@ class Object {
     mobileNo = json['mobileNo'];
     uuid = json['uuid'];
     userProfilePic = json['userProfilePic'];
+    isEmailVerified = json['isEmailVerified'];
     if (json['expertise'] != null) {
       expertise = <Expertise>[];
       json['expertise'].forEach((v) {

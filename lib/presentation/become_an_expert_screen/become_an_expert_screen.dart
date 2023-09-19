@@ -32,7 +32,7 @@ class Expertise {
 
   Expertise(this.uid, this.expertiseName);
 }
-
+bool? SubmitOneTime = false;
 class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   double value2 = 0.0;
   double finalFileSize = 0;
@@ -152,6 +152,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
           }
 
           if (state is FetchExprtiseRoomErrorState) {
+            SubmitOneTime = false;
             SnackBar snackBar = SnackBar(
               content: Text(state.error),
               backgroundColor: ColorConstant.primary_color,
@@ -738,21 +739,25 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
-                          } else if (_endTime == null && _startTime == null) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please select Working Hours'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (_endTime == null && _startTime == null) {
+                          } else if (_startTime?.format(context).toString() ==
+                                  null 
+                             ) {
                             SnackBar snackBar = SnackBar(
                               content: Text('Please Selcte Working Hours'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
-                          } else if (dopcument == 'Upload Image') {
+                          }
+                          else if (_endTime?.format(context).toString() == null) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please Selcte Working Hours'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);  
+                          }
+                            else if (dopcument == 'Upload Image') {
                             SnackBar snackBar = SnackBar(
                               content: Text('Please Upload Image'),
                               backgroundColor: ColorConstant.primary_color,
@@ -761,11 +766,11 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 .showSnackBar(snackBar);
                           } else {
                             String time =
-                                '${_startTime!.format(context).toString()} to ${_endTime!.format(context).toString()}';
+                                '${_startTime?.format(context).toString()} to ${_endTime?.format(context).toString()}';
                             print(
                                 '_startTime${_startTime!.format(context).toString()}');
                             print(
-                                'endtime-${_endTime!.format(context).toString()}');
+                                'endtime-${_endTime?.format(context).toString()}');
                             print('Finaltime-$time');
                             print(
                                 'sddfsdm,gndfgj${chooseDocument?.object.toString()}');
@@ -784,6 +789,11 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             print('pwarems-$params');
                             BlocProvider.of<FetchExprtiseRoomCubit>(context)
                                 .addExpertProfile(params, context);
+                                 if (SubmitOneTime == false) {
+                              SubmitOneTime = true;
+                              BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                                  .addExpertProfile(params, context);
+                            }
                           }
                           /*     if (jobprofileController.text != null &&22
                               jobprofileController.text != "") {
@@ -874,118 +884,95 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                         ),
                       ),
                       Align(
-                            // alignment: Alignment.center,
-                            child: Container(
-                              // color: Colors.amber,
-                              // width: 330,
-                              margin: EdgeInsets.only(
-                                left: 10,
-                                top: 16,
-                                right: 0,
-                              ),
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text:
-                                          "By Submitting you are agreeing to ",
-                                      style: TextStyle(
-                                        color: appTheme.black900,
-                                        fontSize: 14,
-                                        fontFamily: 'Outfit',
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    // TextSpan(
-                                    //   text:
-                                    //       "Terms & Conditions  Privacy & Policy  of PDS Terms",
-                                    // style: TextStyle(
-                                    //   color: theme.colorScheme.primary,
-                                    //   fontSize: 14,
-                                    //   fontFamily: 'Outfit',
-                                    //   fontWeight: FontWeight.w500,
-                                    //   decoration: TextDecoration.underline,
-                                    // ),
-                                    // ),
-                                  ],
+                        // alignment: Alignment.center,
+                        child: Container(
+                          // color: Colors.amber,
+                          // width: 330,
+                          margin: EdgeInsets.only(
+                            left: 10,
+                            top: 16,
+                            right: 0,
+                          ),
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "By Submitting you are agreeing to ",
+                                  style: TextStyle(
+                                    color: appTheme.black900,
+                                    fontSize: 14,
+                                    fontFamily: 'Outfit',
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                                textAlign: TextAlign.center,
+                                // TextSpan(
+                                //   text:
+                                //       "Terms & Conditions  Privacy & Policy  of PDS Terms",
+                                // style: TextStyle(
+                                //   color: theme.colorScheme.primary,
+                                //   fontSize: 14,
+                                //   fontFamily: 'Outfit',
+                                //   fontWeight: FontWeight.w500,
+                                //   decoration: TextDecoration.underline,
+                                // ),
+                                // ),
+                              ],
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Policies(
+                                      title: " ",
+                                      data: Policy_Data.turms_of_use,
+                                    ),
+                                  ));
+                            },
+                            child: Text(
+                              "Terms & Conditions",
+                              style: TextStyle(
+                                color: theme.colorScheme.primary,
+                                fontSize: 14,
+                                fontFamily: 'Outfit',
+                                fontWeight: FontWeight.w500,
+                                decoration: TextDecoration.underline,
                               ),
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => Policies(
-                                              title: " ",
-                                              data: Policy_Data.turms_of_use,
-                                            ),
-                                          ));
-                                    },
-                                    child: Text(
-                                      "Terms & Conditions",
-                                      style: TextStyle(
-                                        color: theme.colorScheme.primary,
-                                        fontSize: 14,
-                                        fontFamily: 'Outfit',
-                                        fontWeight: FontWeight.w500,
-                                        decoration: TextDecoration.underline,
+                          Center(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Policies(
+                                        title: " ",
+                                        data: Policy_Data.privacy_policy1,
                                       ),
-                                    ),
-                                  ),
-                              Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Policies(
-                                            title: " ",
-                                            data: Policy_Data.privacy_policy1,
-                                          ),
-                                        ));
-                                  },
-                                  child: Text(
-                                    "Privacy & Policy of PDS Terms",
-                                    style: TextStyle(
-                                      color: theme.colorScheme.primary,
-                                      fontSize: 14,
-                                      fontFamily: 'Outfit',
-                                      fontWeight: FontWeight.w500,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                  ),
+                                    ));
+                              },
+                              child: Text(
+                                "Privacy & Policy of PDS Terms",
+                                style: TextStyle(
+                                  color: theme.colorScheme.primary,
+                                  fontSize: 14,
+                                  fontFamily: 'Outfit',
+                                  fontWeight: FontWeight.w500,
+                                  decoration: TextDecoration.underline,
                                 ),
                               ),
-                            ],
+                            ),
                           ),
+                        ],
+                      ),
                       SizedBox(
                         height: 20,
                       )

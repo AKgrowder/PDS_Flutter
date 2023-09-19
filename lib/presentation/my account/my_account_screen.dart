@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -173,6 +174,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         }
         if (state is MyAccountLoadedState) {
           myAccontDetails = state.myAccontDetails;
+          print('fbddbgvdfb-${myAccontDetails?.object?.isEmailVerified}');
           if (myAccontDetails?.object?.module == 'EXPERT') {
             BlocProvider.of<MyAccountCubit>(context).fetchExprties(context);
           }
@@ -260,6 +262,13 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           Navigator.pop(context);
         }
+        if (state is EmailVerifactionLoadedState) {
+          SnackBar snackBar = SnackBar(
+            content: Text(state.emailVerifaction.message.toString()),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
       },
       builder: (context, state) {
         return Scaffold(
@@ -305,7 +314,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                     alignment: Alignment.bottomCenter,
                                     child: Padding(
                                       padding: EdgeInsets.only(top: 22),
-                                      child:  myAccontDetails?.object?.module !=
+                                      child: myAccontDetails?.object?.module !=
                                               'EMPLOYEE'
                                           ? Row(
                                               mainAxisAlignment:
@@ -579,16 +588,78 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 36.0, top: 20),
-                      child: Text(
-                        "Email",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                            fontFamily: "outfit",
-                            fontSize: 15),
-                      ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 36.0, top: 20),
+                          child: Text(
+                            "Email",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                                fontFamily: "outfit",
+                                fontSize: 15),
+                          ),
+                        ),
+                        Spacer(),
+                        myAccontDetails?.object?.isEmailVerified == false
+                            ? Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 20,
+                                  right: 2,
+                                ),
+                                child: Text(
+                                  'Not Verified',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                      fontFamily: "outfit",
+                                      fontSize: 15),
+                                ),
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 20,
+                                  right: 2,
+                                ),
+                                child: Text(
+                                  'Verified',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                      fontFamily: "outfit",
+                                      fontSize: 15),
+                                ),
+                              ),
+                        myAccontDetails?.object?.isEmailVerified == false
+                            ? GestureDetector(
+                                onTap: () {
+                                  myAccontDetails?.object?.isEmailVerified =
+                                      true;
+                                  setState(() {});
+
+                                  BlocProvider.of<MyAccountCubit>(context)
+                                      .emailVerifaction(context,
+                                          "${myAccontDetails?.object?.email}");
+                                },
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 20, right: 38),
+                                  child: SizedBox(
+                                      height: 22,
+                                      child: Image.asset(
+                                          ImageConstant.closeimage)),
+                                ),
+                              )
+                            : Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 20, right: 38),
+                                child: SizedBox(
+                                    height: 22,
+                                    child:
+                                        Image.asset(ImageConstant.notVerify)),
+                              )
+                      ],
                     ),
                     SizedBox(
                       height: 5,

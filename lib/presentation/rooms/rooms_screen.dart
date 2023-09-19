@@ -1986,10 +1986,10 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                         controller: _DescriptionText,
                                         maxLines: 5,
                                         cursorColor: Colors.grey,
-                                        maxLength: 500,
-                                        // inputFormatters: [
-                                        //   LengthLimitingTextInputFormatter(500),
-                                        // ],
+                                        // maxLength: 500,
+                                        inputFormatters: [
+                                          LengthLimitingTextInputFormatter(500),
+                                        ],
                                         decoration: InputDecoration(
                                           // counterText: "",
                                           hintText:
