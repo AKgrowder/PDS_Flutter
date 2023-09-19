@@ -44,7 +44,7 @@ class ApiServices {
       final response = await post(Uri.parse(baseURL + APIurl),
           headers: headers1, body: json.encode(params));
       if (response.statusCode == 602) {
-    setLOGOUT(context);
+        setLOGOUT(context);
       } else {
         return response;
       }

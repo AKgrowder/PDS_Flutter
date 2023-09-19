@@ -16,8 +16,7 @@ class DeleteDilogScreen extends StatefulWidget {
 
 TextEditingController RateUSController = TextEditingController();
 
-class DeleteDilogScreenState extends State<DeleteDilogScreen>
-    with SingleTickerProviderStateMixin {
+class DeleteDilogScreenState extends State<DeleteDilogScreen> with SingleTickerProviderStateMixin {
   late AnimationController controller;
   late Animation<double> scaleAnimation;
 
