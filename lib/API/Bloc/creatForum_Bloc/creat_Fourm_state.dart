@@ -14,7 +14,7 @@ class CreatFourmLoadedState extends CreatFourmState {
 }
 
 class CreatFourmErrorState extends CreatFourmState {
-  final String error;
+  final dynamic error;
   CreatFourmErrorState(this.error);
 }
 

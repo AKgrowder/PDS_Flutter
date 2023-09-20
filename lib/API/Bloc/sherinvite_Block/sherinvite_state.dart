@@ -12,6 +12,6 @@ class SherInviteLoadedState extends SherInviteState {
 }
 
 class SherInviteErrorState extends SherInviteState {
-  final String error;
+  final dynamic error;
   SherInviteErrorState(this.error);
 }

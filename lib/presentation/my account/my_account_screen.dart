@@ -634,9 +634,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                         myAccontDetails?.object?.isEmailVerified == false
                             ? GestureDetector(
                                 onTap: () {
-                                  myAccontDetails?.object?.isEmailVerified =
+                                /*   myAccontDetails?.object?.isEmailVerified =
                                       true;
-                                  setState(() {});
+                                  setState(() {}); */
 
                                   BlocProvider.of<MyAccountCubit>(context)
                                       .emailVerifaction(context,
