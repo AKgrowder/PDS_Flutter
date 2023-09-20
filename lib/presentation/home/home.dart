@@ -15,6 +15,7 @@ import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_state.dart';
 import '../../API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../../API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
+import '../../API/Bloc/System_Config_Bloc/system_config_cubit.dart';
 import '../../API/Bloc/auth/register_Block.dart';
 import '../../API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
@@ -31,6 +32,7 @@ import '../add_threads/add_threads.dart';
 import '../create_foram/create_foram_screen.dart';
 import '../recent_blog/recent_blog_screen.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
+import '../splash_screen/splash_screen.dart';
 import '../view_comments/view_comments_screen.dart';
 import 'Invitation_Screen.dart';
 import 'PublicRoom.dart';
@@ -75,6 +77,7 @@ String? ipaIosRoutVersion;
 String? ipaIosMainversion;
 
 bool? ShowSoftAlert = false;
+bool? UpdateURLinSplash = false;
 
 List<String> aa = [
   "Baluran Wild The Savvanah Baluran Wild The \nSavvanah",
@@ -2761,12 +2764,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                     // width: _width / 1.2,
                                     decoration: BoxDecoration(
                                         color: Colors.white.withOpacity(0.6),
-                                        boxShadow: [
+                                       boxShadow: [
                                           BoxShadow(
                                               blurRadius: 25,
-                                              blurStyle: BlurStyle.outer,
-                                              offset: Offset.zero,
-                                              color: Colors.white)
+                                              blurStyle: BlurStyle.inner,
+                                              // offset: Offset.zero,
+                                              color:
+                                                  Colors.white.withOpacity(0.7))
                                         ],
                                         borderRadius:
                                             BorderRadius.circular(10)),
@@ -3142,6 +3146,8 @@ class _HomeScreenState extends State<HomeScreen> {
     ipaIosMainversion = prefs.getString(PreferencesKey.IPAIosMainversion);
 
     ShowSoftAlert = prefs.getBool(PreferencesKey.ShowSoftAlert);
+    UpdateURLinSplash = prefs.getBool(PreferencesKey.UpdateURLinSplash);
+
     VersionAlert();
   }
 
@@ -3169,6 +3175,9 @@ class _HomeScreenState extends State<HomeScreen> {
       if (int.parse(ApkRouteVersion ?? "") ==
           (int.parse(appApkRouteVersion ?? ""))) {
         print("same");
+        if (UpdateURLinSplash == false) {
+          setLOGOUT(context);
+        }
       }
     }
 
@@ -3189,6 +3198,9 @@ class _HomeScreenState extends State<HomeScreen> {
       if (int.parse(IosRoutVersion ?? "") ==
           (int.parse(ipaIosRoutVersion ?? ""))) {
         print("same");
+        if (UpdateURLinSplash == false) {
+          setLOGOUT(context);
+        }
       }
     }
   }
@@ -3405,5 +3417,126 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         });
+  }
+
+  setLOGOUT(BuildContext context) async {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(PreferencesKey.RoutURl, true);
+
+    Future.delayed(const Duration(seconds: 1), () async {
+      // Navigator.pop(context);
+      print("please again login");
+      await setLogOut(context);
+    });
+    await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: Dialog(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              child: Container(
+                height: height / 2,
+                width: width,
+                // color: Colors.white,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      ImageConstant.alertimage,
+                      height: height / 4.8,
+                      width: width,
+                      fit: BoxFit.fill,
+                    ),
+                    Container(
+                      height: height / 7,
+                      width: width,
+                      color: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "Please Login Again !",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: ColorConstant.primary_color,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Please Login Again, Thank You!",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.black),
+                          ),
+                          Text(
+                            "",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        height: 45,
+                        width: width,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10)),
+                            color: ColorConstant.primary_color),
+                        child: Center(
+                            child: Text(
+                          "Logout",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 17,
+                            color: Colors.white,
+                          ),
+                        )),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  setLogOut(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    await Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider<SystemConfigCubit>(
+                      create: (context) => SystemConfigCubit(),
+                    ),
+                  ],
+                  child: SplashScreen(),
+                )),
+        (route) => false);
   }
 }
