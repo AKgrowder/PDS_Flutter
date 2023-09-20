@@ -119,7 +119,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       if (state is RegisterErrorState) {
                         print("error");
                         SnackBar snackBar = SnackBar(
-                          content: Text(state.error),
+                          content: Text(state.error.message),
                           backgroundColor: ColorConstant.primary_color,
                         );
                         SubmitOneTime = false;

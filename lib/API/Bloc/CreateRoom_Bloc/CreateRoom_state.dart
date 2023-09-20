@@ -12,6 +12,6 @@ class CreateRoomLoadedState extends CreateRoomState {
 }
 
 class CreateRoomErrorState extends CreateRoomState {
-  final String error;
+  final dynamic error;
   CreateRoomErrorState(this.error);
 }

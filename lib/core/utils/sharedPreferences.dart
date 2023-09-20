@@ -38,17 +38,4 @@ class PreferencesKey {
 
   static const String ShowSoftAlert = 'ShowSoftAlert';
   static String rating = "UserRating";
-   
-
-
-
-  
-
-
-
-  
-
-
-
-
 }

@@ -26,6 +26,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   double? rateStar = 5.0;
+  bool SubmitOneTime = false;
   var IsGuestUserEnabled;
   var GetTimeSplash;
   @override
@@ -62,9 +63,10 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
       listener: (context, state) {
         if (state is SherInviteErrorState) {
           SnackBar snackBar = SnackBar(
-            content: Text(state.error),
+            content: Text(state.error.message),
             backgroundColor: ColorConstant.primary_color,
           );
+          SubmitOneTime = false;
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
         if (state is SherInviteLoadingState) {
@@ -245,7 +247,6 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
 
                                       // }
                                       if (email.text.toString().isEmpty) {
-                                       
                                         SnackBar snackBar = SnackBar(
                                           content: Text('Please Enter Email'),
                                           backgroundColor:
@@ -253,20 +254,16 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                         );
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackBar);
-                                      }
-                                      else if(email.text.trim().isEmpty ||
-                                  email.text.trim() == ''){
-
+                                      } else if (email.text.trim().isEmpty ||
+                                          email.text.trim() == '') {
                                         SnackBar snackBar = SnackBar(
-                                          content: Text('email can\'t be just blank spaces'),
+                                          content: Text(
+                                              'email can\'t be just blank spaces'),
                                           backgroundColor:
                                               ColorConstant.primary_color,
                                         );
                                         ScaffoldMessenger.of(context);
-                                        
-
-                                      }
-                                       else if (!emailRegExp
+                                      } else if (!emailRegExp
                                           .hasMatch(email.text.toString())) {
                                         SnackBar snackBar = SnackBar(
                                           content:
@@ -279,12 +276,15 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                       } else {
                                         print('uid-${widget.Room_UUID}');
                                         print('email -${email.text}');
-                                        BlocProvider.of<SherInviteCubit>(
-                                                context)
-                                            .sherInviteApi(
-                                                widget.Room_UUID.toString(),
-                                                email.text.toString(),
-                                                context);
+                                        if (SubmitOneTime == false) {
+                                          SubmitOneTime = true;
+                                          BlocProvider.of<SherInviteCubit>(
+                                                  context)
+                                              .sherInviteApi(
+                                                  widget.Room_UUID.toString(),
+                                                  email.text.toString(),
+                                                  context);
+                                        }
                                       }
                                       // if (_formKey.currentState!.validate()) {
                                     },
