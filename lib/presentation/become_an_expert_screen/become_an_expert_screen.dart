@@ -29,9 +29,9 @@ class BecomeExpertScreen extends StatefulWidget {
 class Expertise {
   final String uid;
   final String expertiseName;
-
-  Expertise(this.uid, this.expertiseName);
+ Expertise(this.uid, this.expertiseName);
 }
+
 bool? SubmitOneTime = false;
 class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   double value2 = 0.0;
@@ -40,7 +40,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   String? dopcument;
   String? filepath;
   FetchExprtise? _fetchExprtise;
-  String? selctedIndex;
+  String? selctedIndex; 
   List<Expertise> expertiseData = [];
   Expertise? selectedExpertise;
   // String selctedexpertiseData = "";
@@ -154,7 +154,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
           if (state is FetchExprtiseRoomErrorState) {
             SubmitOneTime = false;
             SnackBar snackBar = SnackBar(
-              content: Text(state.error),
+              content: Text(state.error.meassge),
               backgroundColor: ColorConstant.primary_color,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
