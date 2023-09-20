@@ -97,7 +97,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
           if (state is CreatFourmErrorState) {
             SubmitOneTime = false;
             SnackBar snackBar = SnackBar(
-              content: Text(state.error),
+              content: Text(state.error.message),
               backgroundColor: ColorConstant.primary_color,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);

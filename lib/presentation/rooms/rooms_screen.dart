@@ -55,6 +55,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
   List<bool> ExpertList = [];
   List ExpertList2 = [];
   var Show_Expert = false;
+  bool SubmitOneTime = false;
 
   @override
   void initState() {
@@ -1857,9 +1858,10 @@ class _RoomsScreenState extends State<RoomsScreen> {
                   if (state is CreateRoomErrorState) {
                     print('CreateRoomErrorState');
                     SnackBar snackBar = SnackBar(
-                      content: Text(state.error),
+                      content: Text(state.error.message),
                       backgroundColor: ColorConstant.primary_color,
                     );
+                    SubmitOneTime = false;
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
                 },
@@ -2065,9 +2067,12 @@ class _RoomsScreenState extends State<RoomsScreen> {
 
                                           print(params);
 
-                                          BlocProvider.of<CreateRoomCubit>(
-                                                  context)
-                                              .CreateRoomAPI(params, context);
+                                          if (SubmitOneTime == false) {
+                                            SubmitOneTime = true;
+                                            BlocProvider.of<CreateRoomCubit>(
+                                                    context)
+                                                .CreateRoomAPI(params, context);
+                                          }
                                         }
                                         // if (roomName.text == null ||
                                         //     roomName.text.isEmpty) {
