@@ -3176,7 +3176,7 @@ class _HomeScreenState extends State<HomeScreen> {
           (int.parse(appApkRouteVersion ?? ""))) {
         print("same");
         if (UpdateURLinSplash == false) {
-          setLOGOUT(context);
+          // setLOGOUT(context);
         }
       }
     }
@@ -3199,7 +3199,7 @@ class _HomeScreenState extends State<HomeScreen> {
           (int.parse(ipaIosRoutVersion ?? ""))) {
         print("same");
         if (UpdateURLinSplash == false) {
-          setLOGOUT(context);
+          // setLOGOUT(context);
         }
       }
     }
