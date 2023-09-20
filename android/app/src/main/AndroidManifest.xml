@@ -6,7 +6,7 @@
 
         
     <application
-        android:label="packagingservices"
+        android:label="PDS"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
