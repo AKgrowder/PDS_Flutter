@@ -12,7 +12,6 @@ var baseURL = "";
 
 /// late StompClient stompClient;
 void onConnect(StompFrame frame) {
-  getAPI();
   stompClient.subscribe(
     destination: "/topic/getMessage/${Room_ID_stomp}",
     // "user/topic/messages",
@@ -55,11 +54,11 @@ void onConnect(StompFrame frame) {
 
 final stompClient = StompClient(
   config: StompConfig(
-    url:
-        // 'ws://b71b-2405-201-200b-a0cf-e57b-ed1f-25d4-f1ec.ngrok.io/user/pdsChat',
-        'ws://192.168.29.100:8081/user/pdsChat',
-        // "ws://https://packagingdepot.store/user/pdsChat";
-        // "ws://https://uat.packagingdepot.store/user/pdsChat",
+    url: baseURL,
+    // 'ws://b71b-2405-201-200b-a0cf-e57b-ed1f-25d4-f1ec.ngrok.io/user/pdsChat',
+    // 'ws://192.168.29.17:8081/user/pdsChat',
+    // "ws://https://packagingdepot.store/user/pdsChat";
+    // "ws://https://uat.packagingdepot.store/user/pdsChat",
     // "${baseURL}",
     onConnect: onConnect,
     beforeConnect: () async {
@@ -77,13 +76,13 @@ final stompClient = StompClient(
   ),
 );
 
-getAPI() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  baseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
-  dynamic yes = [['xbvfsdvgfsdfg ']];
+// getAPI() async {
+//   final SharedPreferences prefs = await SharedPreferences.getInstance();
+//   baseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
+//   dynamic yes = [['xbvfsdvgfsdfg ']];
 
-  prefs.setStringList('key',yes);
-}
+//   prefs.setStringList('key',yes);
+// }
 
 onConnectCallback(StompFrame connectFrame) {
   // client is connected and ready

@@ -76,7 +76,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     // if (widget.Screen_name == "RoomChat") {
     // }
     getToken();
-    stompClient.activate();
+    
 
     keyboardVisibilityController.onChange.listen((bool isKeyboardVisible) {
       setState(() {
@@ -216,7 +216,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(
                           color: const Color.fromARGB(101, 158, 158, 158))),
-                  child: Column(children: [ 
+                  child: Column(children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
@@ -333,7 +333,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                               },
                                               offSet: (modelData
                                                   ?.object
-                                                ?.messageOutputList
+                                                  ?.messageOutputList
                                                   ?.pageable
                                                   ?.pageNumber),
                                               scrollController:
@@ -868,8 +868,6 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                     "userCode": "${UserCode}"
                                   }),
                                 );
-
-                     
                               }
                             } else {
                               SnackBar snackBar = SnackBar(
@@ -1030,6 +1028,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     Token = prefs.getString(PreferencesKey.loginJwt) ?? "";
     UserCode = prefs.getString(PreferencesKey.loginUserID) ?? "";
     User_Name = prefs.getString(PreferencesKey.ProfileUserName) ?? "";
+    baseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
+    stompClient.activate();
   }
 
   Future<void> camerapicker() async {

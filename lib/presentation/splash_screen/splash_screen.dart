@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
@@ -30,6 +31,20 @@ class _SplashScreenState extends State<SplashScreen> {
   var user_Module = "";
   var User_profile = "";
   var UserID = "";
+
+  String? appApkMinVersion;
+  String? appApkLatestVersion;
+  String? appApkRouteVersion;
+  String? ipaIosLatestVersion;
+  String? ipaIosRoutVersion;
+  String? ipaIosMainversion;
+
+  String? ApkMinVersion;
+  String? ApkLatestVersion;
+  String? ApkRouteVersion;
+  String? IosLatestVersion;
+  String? IosRoutVersion;
+  String? IosMainversion;
 
   SystemConfigModel? systemConfigModel;
 
@@ -216,5 +231,113 @@ class _SplashScreenState extends State<SplashScreen> {
         prefs.setString(PreferencesKey.SupportPhoneNumber, SupportPhoneNumber);
       }
     });
+    VersionControll();
   }
+
+  VersionControll() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    ApkMinVersion = prefs.getString(PreferencesKey.ApkMinVersion);
+    ApkLatestVersion = prefs.getString(PreferencesKey.ApkLatestVersion);
+    ApkRouteVersion = prefs.getString(PreferencesKey.ApkRouteVersion);
+
+    IosLatestVersion = prefs.getString(PreferencesKey.IosLatestVersion);
+    IosRoutVersion = prefs.getString(PreferencesKey.IosRoutVersion);
+    IosMainversion = prefs.getString(PreferencesKey.IosMainversion);
+
+    appApkRouteVersion = prefs.getString(PreferencesKey.appApkRouteVersion);
+    appApkLatestVersion = prefs.getString(PreferencesKey.appApkLatestVersion);
+    appApkMinVersion = prefs.getString(PreferencesKey.appApkMinVersion);
+
+    ipaIosLatestVersion = prefs.getString(PreferencesKey.IPAIosLatestVersion);
+    ipaIosRoutVersion = prefs.getString(PreferencesKey.IPAIosRoutVersion);
+    ipaIosMainversion = prefs.getString(PreferencesKey.IPAIosMainversion);
+
+    // ShowSoftAlert = prefs.getBool(PreferencesKey.ShowSoftAlert);
+    VersionAlert();
+  }
+
+  VersionAlert() {
+    if (Platform.isAndroid) {
+      // if (int.parse(ApkMinVersion ?? "") >
+      //     (int.parse(appApkMinVersion ?? ""))) {
+      //   print("Moti1");
+      //   // AlertHardUpdate();
+      // }
+
+      // if (int.parse(ApkLatestVersion ?? "") >
+      //     (int.parse(appApkLatestVersion ?? ""))) {
+      //   print("Moti2");
+      //   // if (ShowSoftAlert == false || ShowSoftAlert == null) {
+      //   //   // AlertSoftUpdate();
+      //   // }
+      // }
+
+      if (int.parse(ApkRouteVersion ?? "") ==
+          (int.parse(appApkRouteVersion ?? ""))) {
+        print("same");
+        setLOGOUT(context);
+      }
+    }
+
+    /// -----------------------------------------
+    if (Platform.isIOS) {
+      // if (int.parse(IosMainversion ?? "") >
+      //     (int.parse(ipaIosMainversion ?? ""))) {
+      //   print("Moti1");
+      //   // AlertHardUpdate();
+      // }
+
+      // if (int.parse(IosLatestVersion ?? "") >
+      //     (int.parse(ipaIosLatestVersion ?? ""))) {
+      //   print("Moti2");
+      //   // AlertSoftUpdate();
+      // }
+
+      if (int.parse(IosRoutVersion ?? "") ==
+          (int.parse(ipaIosRoutVersion ?? ""))) {
+        print("same");
+        setLOGOUT(context);
+      }
+    }
+  }
+
+  setLOGOUT(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // prefs.clear();
+
+    prefs.remove(PreferencesKey.loginUserID);
+    prefs.remove(PreferencesKey.loginJwt);
+    prefs.remove(PreferencesKey.module);
+    prefs.remove(PreferencesKey.UserProfile);
+
+    prefs.setBool(PreferencesKey.RoutURl, true);
+    prefs.setBool(PreferencesKey.UpdateURLinSplash, true);
+
+    if (UserID != "") {
+      BlocProvider.of<SystemConfigCubit>(context).UserModel(context);
+    }
+
+    BlocProvider.of<SystemConfigCubit>(context).SystemConfig(context);
+
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // setLogOut(context);
+  }
+
+  // setLogOut(BuildContext context) async {
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.clear();
+  //   await Navigator.pushAndRemoveUntil(
+  //       context,
+  //       MaterialPageRoute(
+  //           builder: (context) => MultiBlocProvider(
+  //                 providers: [
+  //                   BlocProvider<SystemConfigCubit>(
+  //                     create: (context) => SystemConfigCubit(),
+  //                   ),
+  //                 ],
+  //                 child: SplashScreen(),
+  //               )),
+  //       (route) => false);
+  // }
 }
