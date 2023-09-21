@@ -687,30 +687,6 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
           getFileSize(file.path!, 1, result.files.first, Index);
           return file.path!;
         }
-
-        /*     setState(() {
-          // fileparth = file.path!;
-
-          switch (Index) {
-            case 1:
-              GSTName = "";
-              // file.name;
-
-              break;
-            case 2:
-              PanName = file.name;
-
-              break;
-            case 3:
-              UdhyanName = file.name;
-
-              break;
-            default:
-          }
-
-          BlocProvider.of<DocumentUploadCubit>(context)
-              .documentUpload(file.path!);
-        });  */
       } else {}
     }
     return "";
