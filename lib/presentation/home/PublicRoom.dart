@@ -168,7 +168,7 @@ class _PublicRoomListState extends State<PublicRoomList> {
                                   Container(
                                     width: _width / 1.4,
                                     child: Text(
-                                      "${PublicRoomModelData?.object?[index].roomQuestion}",
+                                      "${PublicRoomModelData?.object?[index].description}",
                                       maxLines: 2,
                                       textScaleFactor: 1.0,
                                       style: TextStyle(
@@ -234,7 +234,8 @@ class _PublicRoomListState extends State<PublicRoomList> {
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 20, top: 2,right: 15),
+                          padding: const EdgeInsets.only(
+                              left: 20, top: 2, right: 15),
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(

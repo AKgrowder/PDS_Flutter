@@ -56,10 +56,20 @@ class _RoomsScreenState extends State<RoomsScreen> {
   List ExpertList2 = [];
   var Show_Expert = false;
   bool SubmitOneTime = false;
+  String? userId;
+
+  sherPerffrence() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = prefs.getString(
+      PreferencesKey.loginUserID,
+    );
+    setState(() {});
+  }
 
   @override
   void initState() {
     Show_NoData_Image = true;
+    sherPerffrence();
     // BlocProvider.of<GetAllPrivateRoomCubit>(context).GetAllPrivateRoomAPI();
     // BlocProvider.of<GetAllPrivateRoomCubit>(context).GetAllPrivateRoomAPI();
     // BlocProvider.of<GetAllPrivateRoomCubit>(context).chckUserStaus();
@@ -1358,42 +1368,47 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                 ),
                                                               );
                                                             },
-                                                            child: Container(
-                                                              width: 140,
-                                                              height: 22.51,
-                                                              decoration:
-                                                                  ShapeDecoration(
-                                                                color: Color(
-                                                                    0xFFFFD9DA),
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  side:
-                                                                      BorderSide(
-                                                                    width: 1,
-                                                                    color: Color(
-                                                                        0xFFED1C25),
-                                                                  ),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              50),
-                                                                ),
-                                                              ),
-                                                              child: Center(
-                                                                  child: Text(
-                                                                "Invite User",
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400,
-                                                                    color: Color(
-                                                                        0xFFED1C25),
-                                                                    fontFamily:
-                                                                        "outfit",
-                                                                    fontSize:
-                                                                        13),
-                                                              )),
-                                                            ),
+                                                            child: PriveateRoomData
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .createdBy ==
+                                                                    userId
+                                                                ? Container(
+                                                                    width: 140,
+                                                                    height:
+                                                                        22.51,
+                                                                    decoration:
+                                                                        ShapeDecoration(
+                                                                      color: Color(
+                                                                          0xFFFFD9DA),
+                                                                      shape:
+                                                                          RoundedRectangleBorder(
+                                                                        side:
+                                                                            BorderSide(
+                                                                          width:
+                                                                              1,
+                                                                          color:
+                                                                              Color(0xFFED1C25),
+                                                                        ),
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(50),
+                                                                      ),
+                                                                    ),
+                                                                    child: Center(
+                                                                        child: Text(
+                                                                      "Invite User",
+                                                                      style: TextStyle(
+                                                                          fontWeight: FontWeight
+                                                                              .w400,
+                                                                          color: Color(
+                                                                              0xFFED1C25),
+                                                                          fontFamily:
+                                                                              "outfit",
+                                                                          fontSize:
+                                                                              13),
+                                                                    )),
+                                                                  )
+                                                                : SizedBox(),
                                                           )
                                               ],
                                             ),
@@ -1851,9 +1866,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                       backgroundColor: ColorConstant.primary_color,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    SubmitOneTime = false;
                     Navigator.pop(context);
-
-                    // show_Icon_Flushbar(context,msg: state.PublicRoomData.message ?? "");
                   }
                   if (state is CreateRoomErrorState) {
                     print('CreateRoomErrorState');
@@ -1905,7 +1919,10 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                         ),
                                       ),
                                       GestureDetector(
-                                        onTap: () => Navigator.pop(context),
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                          SubmitOneTime = false;
+                                        },
                                         child: CustomImageView(
                                           imagePath: ImageConstant.closeimage,
                                           height: 40,
