@@ -122,8 +122,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           content: Text(state.error.message),
                           backgroundColor: ColorConstant.primary_color,
                         );
-                        SubmitOneTime = false;
+
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        SubmitOneTime = false;
                       }
                       if (state is RegisterLoadingState) {
                         Center(
@@ -138,6 +139,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         );
                       }
                       if (state is RegisterLoadedState) {
+                      
+                        SnackBar snackBar = SnackBar(
+                          content: Text(state.registerClass.message.toString()),
+                          backgroundColor: ColorConstant.primary_color,
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
