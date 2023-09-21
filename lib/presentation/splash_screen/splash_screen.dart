@@ -275,7 +275,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (int.parse(ApkRouteVersion ?? "") ==
           (int.parse(appApkRouteVersion ?? ""))) {
         print("same");
-        setLOGOUT(context);
+        // setLOGOUT(context);
       }
     }
 
@@ -296,7 +296,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (int.parse(IosRoutVersion ?? "") ==
           (int.parse(ipaIosRoutVersion ?? ""))) {
         print("same");
-        setLOGOUT(context);
+        // setLOGOUT(context);
       }
     }
   }
