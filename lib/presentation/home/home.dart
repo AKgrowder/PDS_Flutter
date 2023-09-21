@@ -2495,8 +2495,11 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                     "Please fill the necessary data before Registering as an Expert."),
-                TextButton(
-                  onPressed: () {
+                SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: () {
                     Navigator.of(ctx).pop();
                     print('no login');
                     Navigator.push(context,
@@ -2513,7 +2516,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Container(
                         // color: Colors.green,
-                        child: Text("Okay"),
+                        child: Text(
+                          "Okay",
+                          style: TextStyle(color: Colors.blue),
+                        ),
                       ),
                     ],
                   ),
@@ -2554,8 +2560,11 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               children: [
                 Text("Please fill your Company info before creation forum."),
-                TextButton(
-                  onPressed: () {
+                SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: () {
                     Navigator.of(ctx).pop();
                     print('no login');
                     Navigator.push(context,
@@ -2570,9 +2579,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      SizedBox(
+                        height: 20,
+                      ),
                       Container(
                         // color: Colors.green,
-                        child: Text("Okay"),
+                        child: Text(
+                          "Okay",
+                          style: TextStyle(color: Colors.blue),
+                        ),
                       ),
                     ],
                   ),
@@ -2764,7 +2779,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     // width: _width / 1.2,
                                     decoration: BoxDecoration(
                                         color: Colors.white.withOpacity(0.6),
-                                       boxShadow: [
+                                        boxShadow: [
                                           BoxShadow(
                                               blurRadius: 25,
                                               blurStyle: BlurStyle.inner,

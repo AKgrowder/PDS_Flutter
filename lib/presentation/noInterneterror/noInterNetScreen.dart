@@ -1,3 +1,4 @@
+import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:flutter/material.dart';
 
@@ -36,29 +37,47 @@ class NoInterNetScreen extends StatelessWidget {
                     fontSize: 12),
               ),
               SizedBox(height: _height * 0.02),
-              Padding(
-                padding: EdgeInsets.only(
-                    top: _height * 0.04,
-                    bottom: _height * 0.025,
-                    left: _width * 0.18,
-                    right: _width * 0.18),
-                // child: Button(
-                //   onPressed: () async {
-                //     final hasInternet = await checkInternet();
-                //     if (hasInternet == true) {
-                //       Get.back();
-                //       Get.back();
-                //       Get.back();
-                //     } else {
-                //       MyToasts().warningToast(toast: Validate.noInternet);
-                //     }
-                //   },
-                //   text: "Try Again",
-                //   fontWeight: FontWeight.w700,
-                //   fontSize: 13.sp,
-                //   textColor: Clr.bgColor,
-                // ),
-              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  height: 40,
+                  width: 100,
+                  decoration: BoxDecoration(
+                      color: ColorConstant.primary_color,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Center(
+                      child: Text(
+                    "Retry",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w600),
+                  )),
+                ),
+              )
+              // Padding(
+              //   padding: EdgeInsets.only(
+              //       top: _height * 0.04,
+              //       bottom: _height * 0.025,
+              //       left: _width * 0.18,
+              //       right: _width * 0.18),
+              //   // child: Button(
+              //   //   onPressed: () async {
+              //   //     final hasInternet = await checkInternet();
+              //   //     if (hasInternet == true) {
+              //   //       Get.back();
+              //   //       Get.back();
+              //   //       Get.back();
+              //   //     } else {
+              //   //       MyToasts().warningToast(toast: Validate.noInternet);
+              //   //     }
+              //   //   },
+              //   //   text: "Try Again",
+              //   //   fontWeight: FontWeight.w700,
+              //   //   fontSize: 13.sp,
+              //   //   textColor: Clr.bgColor,
+              //   // ),
+              // ),
             ],
           ),
         ),
