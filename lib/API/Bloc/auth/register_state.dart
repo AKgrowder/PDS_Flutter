@@ -13,7 +13,7 @@ class RegisterLoadedState extends RegisterState {
 }
 
 class RegisterErrorState extends RegisterState {
-  final String error;
+  final dynamic error;
   RegisterErrorState(this.error);
 }
 
