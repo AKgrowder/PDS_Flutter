@@ -763,6 +763,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                                                               fit: BoxFit.fill,
                                                                                             )),
                                                                                       ),
+                                                                                      // error get
                                                                                       Positioned(
                                                                                         left: 45.12,
                                                                                         top: 0,
@@ -771,7 +772,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                                                             height: 26.87,
                                                                                             decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
                                                                                             child: CustomImageView(
-                                                                                              url: InvitationRoomData?.object?[index].roomMembers?[3].userProfilePic?.isNotEmpty ?? false ? "${InvitationRoomData?.object?[index].roomMembers?[3].userProfilePic}" : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                                                              url: InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic?.isNotEmpty ?? false ? "${InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic}" : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
                                                                                               height: 20,
                                                                                               radius: BorderRadius.circular(20),
                                                                                               width: 20,

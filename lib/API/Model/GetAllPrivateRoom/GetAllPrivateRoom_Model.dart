@@ -184,6 +184,7 @@ class Object {
   String? roomType;
   String? createdDate;
   String? description;
+  String? createdBy;
   ExpertUserProfile? expertUserProfile;
   List<UsersList>? usersList;
 
@@ -200,6 +201,7 @@ class Object {
     uid = json['uid'];
     roomQuestion = json['roomQuestion'];
     roomType = json['roomType'];
+    createdBy = json['createdBy'];
     createdDate = json['createdDate'];
     description = json['description'];
     expertUserProfile = json['expertUserProfile'] != null

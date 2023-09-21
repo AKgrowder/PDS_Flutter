@@ -98,6 +98,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                         ));
                   }));
                   SnackBar snackBar = SnackBar(
+                    
                     content: Text(state.Forgetpassword.message.toString()),
                     backgroundColor: ColorConstant.primary_color,
                   );
