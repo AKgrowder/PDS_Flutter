@@ -34,9 +34,20 @@ class MyAccountScreen extends StatefulWidget {
 TextEditingController uplopdfile = TextEditingController();
 
 class _MyAccountScreenState extends State<MyAccountScreen> {
+  double documentuploadsize = 0;
+
   MyAccontDetails? myAccontDetails;
+  getDocumentSize() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? a = prefs.getInt(PreferencesKey.mediaSize);
+    documentuploadsize = double.parse("${a}");
+    print('scdhfggfgdf-$documentuploadsize.');
+    setState(() {});
+  }
+
   @override
   void initState() {
+    getDocumentSize();
     BlocProvider.of<MyAccountCubit>(context).MyAccount(context);
     localDataGet();
     super.initState();
@@ -130,12 +141,18 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     }
   }
 
-  bool _isGifOrSvg(String imagePath) {
+    bool _isGifOrSvg(String imagePath) {
+    // Check if the image file has a .gif or .svg extension
     final lowerCaseImagePath = imagePath.toLowerCase();
     return lowerCaseImagePath.endsWith('.gif') ||
-        lowerCaseImagePath.endsWith('.svg');
+        lowerCaseImagePath.endsWith('.svg') ||
+        lowerCaseImagePath.endsWith('.pdf') ||
+        lowerCaseImagePath.endsWith('.doc') ||
+        lowerCaseImagePath.endsWith('.mp4') ||
+        lowerCaseImagePath.endsWith('.mov') ||
+        lowerCaseImagePath.endsWith('.mp3') ||
+        lowerCaseImagePath.endsWith('.m4a');
   }
-
   Future<void> _selectEndTime(BuildContext context) async {
     TimeOfDay initialTime = TimeOfDay(hour: 0, minute: 0);
 
@@ -148,7 +165,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     if (time?.isNotEmpty ?? false) {
       end = time?.split(' ')[0];
       endAm = time?.split(' ')[1];
-    } else {  
+    } else {
       workignend =
           myAccontDetails?.object?.workingHours.toString().split(" to ").last;
       end = workignend?.split(' ')[0];
@@ -241,6 +258,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         if (state is chooseDocumentLoadedState) {
           chooseDocumentuploded = state.chooseDocumentuploded;
           myAccontDetails?.object?.userProfilePic = null;
+
           Navigator.pop(context);
         }
         if (state is chooseDocumentLoadedState2) {
@@ -1653,7 +1671,10 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                     : chooseDocumentuploded?.object != null
                                         ? chooseDocumentuploded?.object
                                             .toString()
-                                        : null
+                                        : null,
+                                        "email":email.text
+
+
                               };
 
                               BlocProvider.of<MyAccountCubit>(context)
@@ -1740,6 +1761,75 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     );
   } */
 
+  getUploadeProfile(
+      String filepath, int decimals, File file1, int Index) async {
+    var file = File(filepath);
+    int bytes = await file.length();
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    var i = (log(bytes) / log(1024)).floor();
+    var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
+    print('getFileSizevariable-${file1.path}');
+    value2 = double.parse(STR);
+    print(file1);
+    print(value2);
+    switch (i) {
+      case 0:
+        print("Done file size B");
+
+        print('xfjsdjfjfilenamecheckKB-${file1.path}');
+        BlocProvider.of<MyAccountCubit>(context)
+            .upoldeProfilePic(pickedImage!, context);
+        break;
+      case 1:
+        print("Done file size KB");
+
+        print('filenamecheckKB-${file1.path}');
+        BlocProvider.of<MyAccountCubit>(context)
+            .upoldeProfilePic(pickedImage!, context);
+        setState(() {});
+
+        break;
+      case 2:
+        if (value2 > documentuploadsize) {
+          print(
+              "this file size ${value2} ${suffixes[i]} Selected Max size ${documentuploadsize}MB");
+
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text("Max Size ${documentuploadsize}MB"),
+              content: Text(
+                  "This file size ${value2} ${suffixes[i]} Selected Max size ${documentuploadsize}MB"),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: Container(
+                    // color: Colors.green,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("Okay"),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          print("Done file Size 12MB");
+          print('filecheckPath-${file1.path}');
+          print('filecheckPath-${file1.path}');
+          BlocProvider.of<MyAccountCubit>(context)
+              .upoldeProfilePic(pickedImage!, context);
+        }
+
+        break;
+      default:
+    }
+
+    return STR;
+  }
+
   Future<void> _requestPermissions() async {
     final cameraStatus = await Permission.camera.request();
 
@@ -1756,8 +1846,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         if (!_isGifOrSvg(pickedFile!.path)) {
           pickedImage = File(pickedFile!.path);
           setState(() {});
-          BlocProvider.of<MyAccountCubit>(context)
-              .upoldeProfilePic(pickedImage!, context);
+          getUploadeProfile(pickedImage!.path, 1, pickedImage!, 0);
         } else {
           Navigator.pop(context);
           SnackBar snackBar = SnackBar(

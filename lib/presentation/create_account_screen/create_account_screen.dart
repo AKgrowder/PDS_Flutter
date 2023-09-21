@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/utils/utils.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,6 +54,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   ChooseDocument? chooseDocument;
   String? url;
   XFile? pickedFile;
+  double documentuploadsize = 0;
+  double value2 = 0.0;
 
   Future<void> _checkPermissions() async {
     final cameraStatus = await Permission.camera.status;
@@ -84,7 +88,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   @override
   void initState() {
     dataGet();
-    super.initState();
+    getDocumentSize();
     _requestPermissions();
   }
 
@@ -92,6 +96,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   void dispose() {
     SubmitOneTime = false;
     super.dispose();
+  }
+
+  getDocumentSize() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? a = prefs.getInt(PreferencesKey.mediaSize);
+    documentuploadsize = double.parse("${a}");
+    print('scdhfggfgdf-$documentuploadsize.');
+    setState(() {});
   }
 
   @override
@@ -139,7 +151,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         );
                       }
                       if (state is RegisterLoadedState) {
-                      
                         SnackBar snackBar = SnackBar(
                           content: Text(state.registerClass.message.toString()),
                           backgroundColor: ColorConstant.primary_color,
@@ -904,18 +915,35 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       if (pickedFile != null) {
         if (!_isGifOrSvg(pickedFile!.path)) {
           pickedImage = File(pickedFile!.path);
-          if (this.mounted) {
-            setState(() {});
-          }
-          BlocProvider.of<RegisterCubit>(context)
-              .upoldeProfilePic(pickedImage!, context);
+          getFileSize(pickedImage!.path, 1, pickedImage!, 0);
         } else {
           Navigator.pop(context);
-          SnackBar snackBar = SnackBar(
-            content: Text('GIF and SVG images are not allowed.'),
-            backgroundColor: ColorConstant.primary_color,
+
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text(
+                "Selected File Error",
+                textScaleFactor: 1.0,
+              ),
+              content: Text(
+                "Only PNG, JPG Supported.",
+                textScaleFactor: 1.0,
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: Container(
+                    // color: Colors.green,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("Okay"),
+                  ),
+                ),
+              ],
+            ),
           );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
       }
     } catch (e) {}
@@ -925,7 +953,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     // Check if the image file has a .gif or .svg extension
     final lowerCaseImagePath = imagePath.toLowerCase();
     return lowerCaseImagePath.endsWith('.gif') ||
-        lowerCaseImagePath.endsWith('.svg');
+        lowerCaseImagePath.endsWith('.svg') ||
+        lowerCaseImagePath.endsWith('.pdf') ||
+        lowerCaseImagePath.endsWith('.doc') ||
+        lowerCaseImagePath.endsWith('.mp4') ||
+        lowerCaseImagePath.endsWith('.mov') ||
+        lowerCaseImagePath.endsWith('.mp3') ||
+        lowerCaseImagePath.endsWith('.m4a');
   }
 
   Future<void> _openBottomSheet(BuildContext context) async {
@@ -953,6 +987,74 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     } else {
       _requestPermissions();
     }
+  }
+
+  getFileSize(String filepath, int decimals, File file1, int Index) async {
+    var file = File(filepath);
+    int bytes = await file.length();
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    var i = (log(bytes) / log(1024)).floor();
+    var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
+    print('getFileSizevariable-${file1.path}');
+    value2 = double.parse(STR);
+    print(file1);
+    print(value2);
+    switch (i) {
+      case 0:
+        print("Done file size B");
+
+        print('xfjsdjfjfilenamecheckKB-${file1.path}');
+        BlocProvider.of<RegisterCubit>(context)
+            .upoldeProfilePic(pickedImage!, context);
+        break;
+      case 1:
+        print("Done file size KB");
+
+        print('filenamecheckKB-${file1.path}');
+        BlocProvider.of<RegisterCubit>(context)
+            .upoldeProfilePic(pickedImage!, context);
+        setState(() {});
+
+        break;
+      case 2:
+        if (value2 > documentuploadsize) {
+          print(
+              "this file size ${value2} ${suffixes[i]} Selected Max size ${documentuploadsize}MB");
+
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text("Max Size ${documentuploadsize}MB"),
+              content: Text(
+                  "This file size ${value2} ${suffixes[i]} Selected Max size ${documentuploadsize}MB"),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: Container(
+                    // color: Colors.green,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("Okay"),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          print("Done file Size 12MB");
+          print('filecheckPath-${file1.path}');
+          print('filecheckPath-${file1.path}');
+          BlocProvider.of<RegisterCubit>(context)
+              .upoldeProfilePic(pickedImage!, context);
+        }
+
+        break;
+      default:
+    }
+
+    return STR;
   }
 }
 

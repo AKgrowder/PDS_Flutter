@@ -609,7 +609,8 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           dopcument == "Upload Image"
                               ? GestureDetector(
                                   onTap: () async {
-                                    filepath = await prepareTestPdf(0);
+                                    filepath = 
+                                    await prepareTestPdf(0);
                                     print(
                                         'dopcument.toString()${dopcument.toString()}');
                                   },
