@@ -112,9 +112,16 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     );
 
     String? time = pickedTime?.format(context);
+    if (time?.isNotEmpty ?? false) {
+      start = time?.split(' ')[0];
+      startAm = time?.split(' ')[1];
+    } else {
+      workignStart =
+          myAccontDetails?.object?.workingHours.toString().split(" to ").first;
 
-    start = time?.split(' ')[0];
-    startAm = time?.split(' ')[1];
+      start = workignStart?.split(' ')[0];
+      startAm = workignStart?.split(' ')[1];
+    }
 
     if (pickedTime != null && pickedTime != _startTime) {
       setState(() {
@@ -138,9 +145,15 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     );
 
     String? time = pickedTime?.format(context);
-
-    end = time?.split(' ')[0];
-    endAm = time?.split(' ')[1];
+    if (time?.isNotEmpty ?? false) {
+      end = time?.split(' ')[0];
+      endAm = time?.split(' ')[1];
+    } else {  
+      workignend =
+          myAccontDetails?.object?.workingHours.toString().split(" to ").last;
+      end = workignend?.split(' ')[0];
+      endAm = workignend?.split(' ')[1];
+    }
 
     if (pickedTime != null && pickedTime != _endTime) {
       setState(() {
@@ -603,18 +616,29 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                         ),
                         Spacer(),
                         myAccontDetails?.object?.isEmailVerified == false
-                            ? Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 20,
-                                  right: 2,
-                                ),
-                                child: Text(
-                                  'Not Verified',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.black,
-                                      fontFamily: "outfit",
-                                      fontSize: 15),
+                            ? GestureDetector(
+                                onTap: () {
+                                  /*   myAccontDetails?.object?.isEmailVerified =
+                                      true;
+                                  setState(() {}); */
+
+                                  BlocProvider.of<MyAccountCubit>(context)
+                                      .emailVerifaction(context,
+                                          "${myAccontDetails?.object?.email}");
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 20,
+                                    right: 2,
+                                  ),
+                                  child: Text(
+                                    'Not Verified',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black,
+                                        fontFamily: "outfit",
+                                        fontSize: 15),
+                                  ),
                                 ),
                               )
                             : Padding(
@@ -634,9 +658,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                         myAccontDetails?.object?.isEmailVerified == false
                             ? GestureDetector(
                                 onTap: () {
-                                  myAccontDetails?.object?.isEmailVerified =
+                                  /*   myAccontDetails?.object?.isEmailVerified =
                                       true;
-                                  setState(() {});
+                                  setState(() {}); */
 
                                   BlocProvider.of<MyAccountCubit>(context)
                                       .emailVerifaction(context,
@@ -648,7 +672,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   child: SizedBox(
                                       height: 22,
                                       child: Image.asset(
-                                          ImageConstant.closeimage)),
+                                        ImageConstant.closeimage,
+                                        color: Colors.red,
+                                      )),
                                 ),
                               )
                             : Padding(
@@ -656,8 +682,10 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                     const EdgeInsets.only(top: 20, right: 38),
                                 child: SizedBox(
                                     height: 22,
-                                    child:
-                                        Image.asset(ImageConstant.notVerify)),
+                                    child: Image.asset(
+                                      ImageConstant.notVerify,
+                                      color: Colors.green,
+                                    )),
                               )
                       ],
                     ),

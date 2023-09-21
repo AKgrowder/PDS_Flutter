@@ -105,7 +105,14 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                         height: _height / 13,
                         // width: _width / 1,
                         decoration: BoxDecoration(
-                            color: Color.fromARGB(53, 255, 255, 255),
+                            // color: Color.fromARGB(53, 255, 255, 255),
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 25,
+                                  blurStyle: BlurStyle.inner,
+                                  offset: Offset.zero,
+                                  color: Colors.white.withOpacity(0.7))
+                            ],
                             borderRadius: BorderRadius.circular(0)),
                         child: Column(children: [
                           Padding(
@@ -233,10 +240,10 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 20,bottom: 10),
+                padding: const EdgeInsets.only(left: 20, bottom: 10),
                 child: SingleChildScrollView(
                   child: Text(
-                    "${widget.description1} ",// maxLines: ,
+                    "${widget.description1} ", // maxLines: ,
                     style: TextStyle(
                         fontFamily: 'outfit',
                         fontSize: 15,

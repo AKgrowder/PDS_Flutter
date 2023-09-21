@@ -87,9 +87,9 @@ class _LoginScreenState extends State<LoginScreen> {
             child: BlocConsumer<LoginCubit, LoginState>(
               listener: (context, state) async {
                 if (state is LoginErrorState) {
-                  print("error");
+                  print("vxcvxcv-${state.error.message}");
                   SnackBar snackBar = SnackBar(
-                    content: Text(state.error),
+                    content: Text(state.error.message),
                     backgroundColor: ColorConstant.primary_color,
                   );
                   SubmitOneTime = false;
@@ -516,16 +516,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                 left: 30, right: 30, top: 10),
                             child: CustomElevatedButton(
                               onTap: () {
-                                if (SubmitOneTime == false) {
-                                  
-                                  if (_formKey.currentState!.validate()) {
-                                    Map<String, dynamic> dataPassing = {
-                                      "username": emailAndMobileController.text,
-                                      "password": passwordoneController.text,
-                                      "isFromAdmin": false
-                                    };
-                                    SubmitOneTime = true;
-                                    print('dataPassing-$dataPassing');
+                                if (_formKey.currentState!.validate()) {
+                                  Map<String, dynamic> dataPassing = {
+                                    "username": emailAndMobileController.text,
+                                    "password": passwordoneController.text,
+                                    "isFromAdmin": false
+                                  };
+                                 
+                                  print('dataPassing-$dataPassing');
+
+                                  if (SubmitOneTime == false) {
+                                     SubmitOneTime = true;
                                     BlocProvider.of<LoginCubit>(context)
                                         .loginApidata(dataPassing, context);
                                   }

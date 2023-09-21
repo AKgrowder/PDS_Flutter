@@ -17,15 +17,23 @@ import '../Bloc/System_Config_Bloc/system_config_cubit.dart';
 class ApiServices {
   var baseURL = "";
   var Token = "";
+  bool? checkURL = false;
   UpdateBaseURL() async {
-    baseURL =
-        // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
-        //  "https://uat.packagingdepot.store/";
-        // "https://packagingdepot.store/";
-        "http://192.168.29.100:8081/";
-    print(baseURL);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    checkURL = prefs.getBool(PreferencesKey.RoutURl);
     Token = prefs.getString(PreferencesKey.loginJwt) ?? "";
+    if (checkURL == true) {
+      /// UAT
+      baseURL = prefs.getString(PreferencesKey.RoutURL) ?? "";
+    } else {
+      baseURL =
+          // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
+          // "https://uatapi.packagingdepot.store/";
+          // "https://packagingdepot.store/";
+          "http://192.168.29.100:8081/";
+    }
+
+    print(baseURL);
   }
 
   postApiCall(
@@ -54,6 +62,13 @@ class ApiServices {
   getApiCall(String APIurl, BuildContext context) async {
     await UpdateBaseURL();
     print("API => ******** ${baseURL + APIurl}");
+    if (baseURL == "user/api/fetchSysConfig") {
+      baseURL =
+          // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
+          // "https://uatapi.packagingdepot.store/";
+          // "https://packagingdepot.store/";
+          "http://192.168.29.100:8081/";
+    }
     final hasInternet = await checkInternet();
     if (hasInternet == true) {
       final response = await get(
@@ -61,7 +76,7 @@ class ApiServices {
       );
 
       if (response.statusCode == 602) {
-       setLOGOUT(context);
+        setLOGOUT(context);
       } else {
         return response;
       }
@@ -86,7 +101,7 @@ class ApiServices {
       );
       print('respncebody-${response.body}');
       if (response.statusCode == 602) {
-       setLOGOUT(context);
+        setLOGOUT(context);
       } else {
         return response;
       }
@@ -114,7 +129,8 @@ class ApiServices {
     }
   }
 
-  multipartFile2(String APIurl, Map<String, dynamic>? params,BuildContext context ) async {
+  multipartFile2(
+      String APIurl, Map<String, dynamic>? params, BuildContext context) async {
     await UpdateBaseURL();
     var headers1 = {
       'Content-Type': 'application/json',
@@ -136,7 +152,7 @@ class ApiServices {
     var res = await response.send();
     print('responce stauscode-${res.statusCode.toString()}');
     if (res.statusCode == 602) {
-       setLOGOUT(context);
+      setLOGOUT(context);
     } else {
       var respond = await http.Response.fromStream(res);
       print('responsData-${respond.body}');
@@ -179,8 +195,7 @@ class ApiServices {
     var res = await response.send();
     print('responce stauscode-${res.statusCode.toString()}');
     if (res.statusCode == 602) {
-            setLOGOUT(context);
-
+      setLOGOUT(context);
     } else {
       var respond = await http.Response.fromStream(res);
       print('responsData-${respond.body}');
@@ -220,96 +235,96 @@ setLOGOUT(BuildContext context) async {
     await setLogOut(context);
   });
   await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return WillPopScope(
-            onWillPop: () async => false,
-            child: Dialog(
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              child: Container(
-                height: height / 2,
-                width: width,
-                // color: Colors.white,
-                child: Column(
-                  children: [
-                    Image.asset(
-                      ImageConstant.alertimage,
-                      height: height / 4.8,
-                      width: width,
-                      fit: BoxFit.fill,
-                    ),
-                    Container(
-                      height: height / 7,
-                      width: width,
-                      color: Colors.white,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "Please Login Again !",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: ColorConstant.primary_color,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            "Please Login Again, Thank You!",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 15,
-                                color: Colors.black),
-                          ),
-                          Text(
-                            "",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 15,
-                                color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        height: 45,
-                        width: width,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(10),
-                                bottomRight: Radius.circular(10)),
-                            color: ColorConstant.primary_color),
-                        child: Center(
-                            child: Text(
-                          "Logout",
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: Dialog(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Container(
+              height: height / 2,
+              width: width,
+              // color: Colors.white,
+              child: Column(
+                children: [
+                  Image.asset(
+                    ImageConstant.alertimage,
+                    height: height / 4.8,
+                    width: width,
+                    fit: BoxFit.fill,
+                  ),
+                  Container(
+                    height: height / 7,
+                    width: width,
+                    color: Colors.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Please Login Again !",
                           style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 17,
-                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: ColorConstant.primary_color,
                           ),
-                        )),
-                      ),
-                    )
-                  ],
-                ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Please Login Again, Thank You!",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              color: Colors.black),
+                        ),
+                        Text(
+                          "",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      height: 45,
+                      width: width,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
+                          color: ColorConstant.primary_color),
+                      child: Center(
+                          child: Text(
+                        "Logout",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 17,
+                          color: Colors.white,
+                        ),
+                      )),
+                    ),
+                  )
+                ],
               ),
             ),
-          );
-        });
- }
+          ),
+        );
+      });
+}
 
 setLogOut(BuildContext context) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -325,8 +340,5 @@ setLogOut(BuildContext context) async {
                 ],
                 child: SplashScreen(),
               )),
-      (route) => false); 
-
+      (route) => false);
 }
-
- 
