@@ -63,6 +63,7 @@ class Object {
       });
 
   Object.fromJson(Map<String, dynamic> json) {
+    
     isApproved = json['isApproved'];
     userDocument = json['userDocument'];
     companyName = json['companyName'];
