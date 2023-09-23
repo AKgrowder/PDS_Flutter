@@ -26,12 +26,11 @@ class ChangePasswordScreen extends StatefulWidget {
   State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
 }
 
-var Show_Password = true;
-var Show_Passwordd = true;
-TextEditingController newpasswordController = TextEditingController();
-TextEditingController conformpasswordController = TextEditingController();
-
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+  var Show_Password = true;
+  var Show_Passwordd = true;
+  TextEditingController newpasswordController = TextEditingController();
+  TextEditingController conformpasswordController = TextEditingController();
   String? userUid;
   @override
   void initState() {
@@ -40,6 +39,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,9 +183,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     child: Container(
                       child: GestureDetector(
                         onTap: () {
-                          setState(() {
-                            Show_Password = !Show_Password;
-                          });
+                          if (mounted) {
+                            setState(() {
+                              Show_Password = !Show_Password;
+                            });
+                          }
                         },
                         child: Show_Password
                             ? CustomImageView(
