@@ -1,6 +1,16 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
+import 'package:pds/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
+import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
+import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
+import 'package:pds/API/Bloc/auth/register_Block.dart';
+import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:flutter/material.dart';
+import 'package:pds/core/utils/internet_utils.dart';
+import 'package:pds/custom_bottom_bar/custom_bottom_bar.dart';
+import 'package:pds/presentation/home/home.dart';
 
 class NoInterNetScreen extends StatelessWidget {
   const NoInterNetScreen({Key? key}) : super(key: key);
@@ -39,7 +49,7 @@ class NoInterNetScreen extends StatelessWidget {
               SizedBox(height: _height * 0.02),
               GestureDetector(
                 onTap: () {
-                  Navigator.pop(context);
+                  interNetCheck(context);
                 },
                 child: Container(
                   height: 40,
@@ -83,5 +93,37 @@ class NoInterNetScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  interNetCheck(context) async {
+    final hasInternet = await checkInternet();
+    if (hasInternet == true) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return MultiBlocProvider(
+            providers: [
+              BlocProvider<FetchAllPublicRoomCubit>(
+                create: (context) => FetchAllPublicRoomCubit(),
+              ),
+              BlocProvider<CreatPublicRoomCubit>(
+                create: (context) => CreatPublicRoomCubit(),
+              ),
+              BlocProvider<senMSGCubit>(
+                create: (context) => senMSGCubit(),
+              ),
+              BlocProvider<RegisterCubit>(
+                create: (context) => RegisterCubit(),
+              ),
+              BlocProvider<GetAllPrivateRoomCubit>(
+                create: (context) => GetAllPrivateRoomCubit(),
+              ),
+              BlocProvider<InvitationCubit>(
+                create: (context) => InvitationCubit(),
+              ),
+            ],
+            child: BottombarPage(
+              buttomIndex: 0,
+            ));
+      }));
+    } else {}
   }
 }

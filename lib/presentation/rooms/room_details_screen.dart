@@ -34,7 +34,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
     return Scaffold(
         backgroundColor: theme.colorScheme.onPrimary,
         appBar: AppBar(
-          backgroundColor: theme.colorScheme.onPrimary,
+          backgroundColor:theme.colorScheme.onPrimary,
           centerTitle: true,
           elevation: 0,
           leading: GestureDetector(
