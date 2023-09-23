@@ -141,7 +141,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     }
   }
 
-    bool _isGifOrSvg(String imagePath) {
+  bool _isGifOrSvg(String imagePath) {
     // Check if the image file has a .gif or .svg extension
     final lowerCaseImagePath = imagePath.toLowerCase();
     return lowerCaseImagePath.endsWith('.gif') ||
@@ -153,6 +153,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         lowerCaseImagePath.endsWith('.mp3') ||
         lowerCaseImagePath.endsWith('.m4a');
   }
+
   Future<void> _selectEndTime(BuildContext context) async {
     TimeOfDay initialTime = TimeOfDay(hour: 0, minute: 0);
 
@@ -690,7 +691,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                   child: SizedBox(
                                       height: 22,
                                       child: Image.asset(
-                                        ImageConstant.closeimage,
+                                        ImageConstant.notVerify,
                                         color: Colors.red,
                                       )),
                                 ),
@@ -701,7 +702,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 child: SizedBox(
                                     height: 22,
                                     child: Image.asset(
-                                      ImageConstant.notVerify,
+                                      ImageConstant.Verified,
                                       color: Colors.green,
                                     )),
                               )
@@ -1672,9 +1673,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                         ? chooseDocumentuploded?.object
                                             .toString()
                                         : null,
-                                        "email":email.text
-
-
+                                "email": email.text
                               };
 
                               BlocProvider.of<MyAccountCubit>(context)

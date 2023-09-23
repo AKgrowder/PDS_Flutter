@@ -36,10 +36,7 @@ class PreferencesKey {
   static const String IPAIosRoutVersion = 'IPARoutVersion';
   static const String IPAIosMainversion = 'IPAMainversion';
   static const String RoutURl = 'RoutURl';
-  static const String UpdateURLinSplash = 'UpdateURLinSplash';
-
-
-
+  static const String UpdateURLinSplash = 'UpdateURLinSplash';  
   static const String ShowSoftAlert = 'ShowSoftAlert';
   static String rating = "UserRating";
 }

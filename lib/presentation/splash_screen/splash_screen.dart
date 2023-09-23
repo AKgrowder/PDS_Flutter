@@ -177,11 +177,7 @@ class _SplashScreenState extends State<SplashScreen> {
         var otpTimer = int.parse(element.value!);
         print(" otp timer  ${otpTimer}");
         prefs.setInt(PreferencesKey.otpTimer, otpTimer);
-      }
-
-      /// --------
-
-      else if (element.name == "ApkMinVersion") {
+      }else if (element.name == "ApkMinVersion") {
         var ApkMinVersion = element.value ?? "";
         print("ApkMinVersion  ${ApkMinVersion}");
         prefs.setString(PreferencesKey.ApkMinVersion, ApkMinVersion);
