@@ -28,9 +28,9 @@ class ApiServices {
     } else {
       baseURL =
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
-            // "https://uatapi.packagingdepot.store/";
+            "https://uatapi.packagingdepot.store/";
           // "https://packagingdepot.store/";
-          "http://192.168.29.17:8081/";
+          // "http://192.168.29.17:8081/";
     }
 
     print(baseURL);
@@ -65,9 +65,9 @@ class ApiServices {
     if (baseURL == "user/api/fetchSysConfig") {
       baseURL =
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
-          //    "https://uatapi.packagingdepot.store/";
+             "https://uatapi.packagingdepot.store/";
           // "https://packagingdepot.store/";
-          "http://192.168.29.17:8081/";
+          // "http://192.168.29.17:8081/";
     }
     final hasInternet = await checkInternet();
     if (hasInternet == true) {
