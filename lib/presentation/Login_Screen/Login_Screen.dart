@@ -320,7 +320,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 top: 41,
                               ),
                               child: Text(
-                                "User Name Or Mobile Number",
+                                "User Name / Mobile Number",
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
@@ -378,7 +378,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               bottom: 14,
                             ),
                             // textStyle: theme.textTheme.titleMedium!,
-                            hintText: "User Name Or Mobile Number",
+                            hintText: "User Name / Mobile Number",
                             hintStyle: TextStyle(
                                 fontFamily: 'outfit',
                                 fontSize: 15,
