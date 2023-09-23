@@ -126,7 +126,7 @@ class EditHomeDilogScreenState extends State<EditHomeDilogScreen>
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "Edit Room",
+                                    "Edit Public Forum",
                                     style: TextStyle(
                                       fontFamily: 'outfit',
                                       fontSize: 20,
@@ -150,7 +150,7 @@ class EditHomeDilogScreenState extends State<EditHomeDilogScreen>
                             Padding(
                               padding: const EdgeInsets.only(left: 22.0),
                               child: Text(
-                                "Edit Details",
+                                "Edit Public Forum",
                                 style: TextStyle(
                                   fontFamily: 'outfit',
                                   fontSize: 15,
@@ -229,7 +229,8 @@ class EditHomeDilogScreenState extends State<EditHomeDilogScreen>
                                     } else {
                                       print('uid-${widget.uid}');
                                       var params = {
-                                        "roomQuestion": editroom.text
+                                        // "roomQuestion": editroom.text
+                                        "description":editroom.text
                                       };
 
                                       print(params);
