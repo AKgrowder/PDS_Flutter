@@ -8,6 +8,7 @@ import '../../Model/HomeScreenModel/PublicRoomModel.dart';
 import '../../Model/HomeScreenModel/getLoginPublicRoom_model.dart';
 import '../../Model/System_Config_model/fetchUserModule_model.dart';
 import '../../Model/checkUserStatusModel/chekuserStausModel.dart';
+import '../../Model/delete_room_model/Delete_room_model.dart';
 
 abstract class FetchAllPublicRoomState {}
 
@@ -61,4 +62,9 @@ class GetUserProfileLoadedState extends FetchAllPublicRoomState {
   final MyAccontDetails myAccontDetails;
 
   GetUserProfileLoadedState(this.myAccontDetails);
+}
+
+class DeleteRoomLoadedState extends FetchAllPublicRoomState {
+  final DeleteRoomModel DeleteRoom;
+  DeleteRoomLoadedState(this.DeleteRoom);
 }
