@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:pds/API/Bloc/Edit_room_bloc/edit_room_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/presentation/become_an_expert_screen/become_an_expert_screen.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
+import 'package:pds/presentation/home/edit_dailog_home.dart';
 import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -1257,8 +1259,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         padding:
                                                             EdgeInsets.only(
                                                                 left: 8.0,
-                                                                top: 10,
-                                                                bottom: 10),
+                                                                bottom: 30),
                                                         child: Row(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
@@ -1302,6 +1303,202 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         "outfit",
                                                                     fontSize:
                                                                         16),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                right: 8.0,
+                                                                bottom: 30),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            GestureDetector(
+                                                              onTap: () {
+                                                                showDialog(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (context) =>
+                                                                          ScaffoldMessenger(
+                                                                    child:
+                                                                        Builder(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              Scaffold(
+                                                                        backgroundColor:
+                                                                            Colors.transparent,
+                                                                        body: MultiBlocProvider(
+                                                                            providers: [
+                                                                              BlocProvider<EditroomCubit>(
+                                                                                create: (context) => EditroomCubit(),
+                                                                              )
+                                                                            ],
+                                                                            child: EditHomeDilogScreen(
+                                                                              parentName: MyPublicRoomData?.object?[index].roomQuestion,
+                                                                              uid: MyPublicRoomData?.object?[index].uid.toString(),
+                                                                            )),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ).then((value) =>
+                                                                    saveUserProfile());
+                                                              },
+                                                              child:
+                                                                  CustomImageView(
+                                                                imagePath:
+                                                                    ImageConstant
+                                                                        .pen,
+                                                                height: 15,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            GestureDetector(
+                                                              onTap: () {
+                                                                showDialog(
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (context) {
+                                                                      return MultiBlocProvider(
+                                                                        providers: [
+                                                                          BlocProvider<
+                                                                              FetchAllPublicRoomCubit>(
+                                                                            create: (context) =>
+                                                                                FetchAllPublicRoomCubit(),
+                                                                          ),
+                                                                        ],
+                                                                        child:
+                                                                            Center(
+                                                                          child:
+                                                                              Container(
+                                                                            color:
+                                                                                Colors.white,
+                                                                            margin:
+                                                                                EdgeInsets.only(left: 20, right: 20),
+                                                                            height:
+                                                                                200,
+                                                                            width:
+                                                                                _width,
+                                                                            // color: Colors.amber,
+                                                                            child:
+                                                                                BlocConsumer<FetchAllPublicRoomCubit, FetchAllPublicRoomState>(
+                                                                              listener: (context, state) {
+                                                                                if (state is DeleteRoomLoadedState) {
+                                                                                  SnackBar snackBar = SnackBar(
+                                                                                    content: Text(state.DeleteRoom.message ?? ""),
+                                                                                    backgroundColor: ColorConstant.primary_color,
+                                                                                  );
+                                                                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                                  // NewApi();
+                                                                                  saveUserProfile();
+                                                                                  Navigator.pop(context);
+                                                                                }
+                                                                              },
+                                                                              builder: (context, state) {
+                                                                                return Column(
+                                                                                  children: [
+                                                                                    SizedBox(
+                                                                                      height: 10,
+                                                                                    ),
+                                                                                    Text(
+                                                                                      "Delete Forum",
+                                                                                      style: TextStyle(
+                                                                                        fontFamily: 'outfit',
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                      ),
+                                                                                    ),
+                                                                                    Divider(
+                                                                                      color: Colors.grey,
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      height: 5,
+                                                                                    ),
+                                                                                    Center(
+                                                                                        child: Text(
+                                                                                      "Are You Sure You Want To Delete Your Forum",
+                                                                                      style: TextStyle(
+                                                                                        fontFamily: 'outfit',
+                                                                                        fontSize: 15,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.w500,
+                                                                                      ),
+                                                                                    )),
+                                                                                    SizedBox(
+                                                                                      height: 50,
+                                                                                    ),
+                                                                                    Row(
+                                                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                                      children: [
+                                                                                        GestureDetector(
+                                                                                          onTap: () => Navigator.pop(context),
+                                                                                          child: Container(
+                                                                                            height: 43,
+                                                                                            width: _width / 3.5,
+                                                                                            decoration: BoxDecoration(color: Colors.transparent, border: Border.all(color: Colors.grey.shade400), borderRadius: BorderRadius.circular(10)),
+                                                                                            child: Center(
+                                                                                                child: Text(
+                                                                                              "Cancel",
+                                                                                              style: TextStyle(
+                                                                                                fontFamily: 'outfit',
+                                                                                                fontSize: 15,
+                                                                                                color: Color(0xFFED1C25),
+                                                                                                fontWeight: FontWeight.w400,
+                                                                                              ),
+                                                                                            )),
+                                                                                          ),
+                                                                                        ),
+                                                                                        GestureDetector(
+                                                                                          onTap: () {
+                                                                                            BlocProvider.of<FetchAllPublicRoomCubit>(context).DeleteRoomm(MyPublicRoomData?.object?[index].uid.toString() ?? '', context);
+                                                                                          },
+                                                                                          child: Container(
+                                                                                            height: 43,
+                                                                                            width: _width / 3.5,
+                                                                                            decoration: BoxDecoration(color: Color(0xFFED1C25), borderRadius: BorderRadius.circular(10)),
+                                                                                            child: Center(
+                                                                                                child: Text(
+                                                                                              "Delete",
+                                                                                              style: TextStyle(
+                                                                                                fontFamily: 'outfit',
+                                                                                                fontSize: 15,
+                                                                                                color: Colors.white,
+                                                                                                fontWeight: FontWeight.w400,
+                                                                                              ),
+                                                                                            )),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  ],
+                                                                                );
+                                                                              },
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      );
+                                                                    });
+                                                              },
+                                                              child:
+                                                                  CustomImageView(
+                                                                imagePath:
+                                                                    ImageConstant
+                                                                        .delete,
+                                                                height: 18,
+                                                                color: Colors
+                                                                    .black,
                                                               ),
                                                             ),
                                                           ],
@@ -1659,8 +1856,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ),
                                                   // Spacer(),
                                                   // Padding(
-                                                  //   padding: const EdgeInsets.only(
-                                                  //       right: 10),
+                                                  //   padding:
+                                                  //       const EdgeInsets.only(
+                                                  //           right: 10),
                                                   //   child: GestureDetector(
                                                   //     onTap: () {
                                                   //       // if (image?.contains(index) ??
@@ -1670,16 +1868,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   //       //   image?.add(index);
                                                   //       // }
                                                   //     },
-                                                  //     child: (image?.contains(index) ??
+                                                  //     child: (image?.contains(
+                                                  //                 index) ??
                                                   //             false)
                                                   //         ? CustomImageView(
-                                                  //             imagePath: ImageConstant
-                                                  //                 .selectedimage,
+                                                  //             imagePath:
+                                                  //                 ImageConstant
+                                                  //                     .selectedimage,
                                                   //             height: 17,
                                                   //           )
                                                   //         : CustomImageView(
-                                                  //             imagePath: ImageConstant
-                                                  //                 .unselectedimgVector,
+                                                  //             imagePath:
+                                                  //                 ImageConstant
+                                                  //                     .unselectedimgVector,
                                                   //             height: 17,
                                                   //           ),
                                                   //   ),
@@ -2050,8 +2251,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ),
                                                   // Spacer(),
                                                   // Padding(
-                                                  //   padding: const EdgeInsets.only(
-                                                  //       right: 10),
+                                                  //   padding:
+                                                  //       const EdgeInsets.only(
+                                                  //           right: 10),
                                                   //   child: GestureDetector(
                                                   //     onTap: () {
                                                   //       // if (image?.contains(index) ??
@@ -2061,16 +2263,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   //       //   image?.add(index);
                                                   //       // }
                                                   //     },
-                                                  //     child: (image?.contains(index) ??
+                                                  //     child: (image?.contains(
+                                                  //                 index) ??
                                                   //             false)
                                                   //         ? CustomImageView(
-                                                  //             imagePath: ImageConstant
-                                                  //                 .selectedimage,
+                                                  //             imagePath:
+                                                  //                 ImageConstant
+                                                  //                     .selectedimage,
                                                   //             height: 17,
                                                   //           )
                                                   //         : CustomImageView(
-                                                  //             imagePath: ImageConstant
-                                                  //                 .unselectedimgVector,
+                                                  //             imagePath:
+                                                  //                 ImageConstant
+                                                  //                     .unselectedimgVector,
                                                   //             height: 17,
                                                   //           ),
                                                   //   ),

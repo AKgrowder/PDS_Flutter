@@ -299,262 +299,266 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                 ? SizedBox()
                                                 : User_Mood == "EXPERT"
                                                     ? SizedBox()
-                                                    : Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                right: 35.0),
-                                                        child: GestureDetector(
-                                                          onTap: () {
-                                                            showDialog(
-                                                              context: context,
-                                                              builder: (context) =>
-                                                                  ScaffoldMessenger(
-                                                                child: Builder(
+                                                    : PriveateRoomData
+                                                                ?.object?[index]
+                                                                .createdBy ==
+                                                            userId
+                                                        ? Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    right:
+                                                                        35.0),
+                                                            child:
+                                                                GestureDetector(
+                                                              onTap: () {
+                                                                showDialog(
+                                                                  context:
+                                                                      context,
                                                                   builder:
                                                                       (context) =>
-                                                                          Scaffold(
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    body: MultiBlocProvider(
-                                                                        providers: [
-                                                                          BlocProvider<
-                                                                              EditroomCubit>(
-                                                                            create: (context) =>
-                                                                                EditroomCubit(),
-                                                                          )
-                                                                        ],
-                                                                        child: EditDilogScreen(
-                                                                          parentName: PriveateRoomData
-                                                                              ?.object?[index]
-                                                                              .roomQuestion,
-                                                                          uid: PriveateRoomData
-                                                                              ?.object?[index]
-                                                                              .uid
-                                                                              .toString(),
-                                                                        )),
+                                                                          ScaffoldMessenger(
+                                                                    child:
+                                                                        Builder(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              Scaffold(
+                                                                        backgroundColor:
+                                                                            Colors.transparent,
+                                                                        body: MultiBlocProvider(
+                                                                            providers: [
+                                                                              BlocProvider<EditroomCubit>(
+                                                                                create: (context) => EditroomCubit(),
+                                                                              )
+                                                                            ],
+                                                                            child: EditDilogScreen(
+                                                                              parentName: PriveateRoomData?.object?[index].roomQuestion,
+                                                                              uid: PriveateRoomData?.object?[index].uid.toString(),
+                                                                            )),
+                                                                      ),
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                              ),
-                                                            );
+                                                                );
 
-                                                            // showDialog(
-                                                            //   context: context,
-                                                            //   builder:
-                                                            //       (BuildContext context) {
-                                                            //     print(
-                                                            //         'uid print-${PublicRoomData?.object?[index].uid}');
-                                                            //     return MultiBlocProvider(
-                                                            //         providers: [
-                                                            //           BlocProvider<
-                                                            //               EditroomCubit>(
-                                                            //             create: (context) =>
-                                                            //                 EditroomCubit(),
-                                                            //           )
-                                                            //         ],
-                                                            //         child:
-                                                            //             EditDilogScreen(
-                                                            //           parentName:
-                                                            //               PublicRoomData
-                                                            //                   ?.object?[
-                                                            //                       index]
-                                                            //                   .roomQuestion,
-                                                            //           uid: PublicRoomData
-                                                            //               ?.object?[index]
-                                                            //               .uid
-                                                            //               .toString(),
-                                                            //         ));
-                                                            //   },
-                                                            // );
-                                                            // editProfile(PublicRoomData?.object?[index].uid.toString());
-                                                            // showDialog(
-                                                            //     context: context,
-                                                            //     builder: (_) =>
-                                                            //         EditDilogScreen());
-                                                          },
-                                                          child:
-                                                              CustomImageView(
-                                                            imagePath:
-                                                                ImageConstant
-                                                                    .pen,
-                                                            height: 15,
-                                                          ),
-                                                        ),
-                                                      ),
+                                                                // showDialog(
+                                                                //   context: context,
+                                                                //   builder:
+                                                                //       (BuildContext context) {
+                                                                //     print(
+                                                                //         'uid print-${PublicRoomData?.object?[index].uid}');
+                                                                //     return MultiBlocProvider(
+                                                                //         providers: [
+                                                                //           BlocProvider<
+                                                                //               EditroomCubit>(
+                                                                //             create: (context) =>
+                                                                //                 EditroomCubit(),
+                                                                //           )
+                                                                //         ],
+                                                                //         child:
+                                                                //             EditDilogScreen(
+                                                                //           parentName:
+                                                                //               PublicRoomData
+                                                                //                   ?.object?[
+                                                                //                       index]
+                                                                //                   .roomQuestion,
+                                                                //           uid: PublicRoomData
+                                                                //               ?.object?[index]
+                                                                //               .uid
+                                                                //               .toString(),
+                                                                //         ));
+                                                                //   },
+                                                                // );
+                                                                // editProfile(PublicRoomData?.object?[index].uid.toString());
+                                                                // showDialog(
+                                                                //     context: context,
+                                                                //     builder: (_) =>
+                                                                //         EditDilogScreen());
+                                                              },
+                                                              child:
+                                                                  CustomImageView(
+                                                                imagePath:
+                                                                    ImageConstant
+                                                                        .pen,
+                                                                height: 15,
+                                                              ),
+                                                            ),
+                                                          )
+                                                        : SizedBox(),
                                             checkuserdata ==
                                                     "PARTIALLY_REGISTERED"
                                                 ? SizedBox()
                                                 : User_Mood == "EXPERT"
                                                     ? SizedBox()
-                                                    : GestureDetector(
-                                                        onTap: () {
-                                                          showDialog(
-                                                              context: context,
-                                                              builder:
-                                                                  (context) {
-                                                                return MultiBlocProvider(
-                                                                  providers: [
-                                                                    BlocProvider<
-                                                                        GetAllPrivateRoomCubit>(
-                                                                      create: (context) =>
-                                                                          GetAllPrivateRoomCubit(),
-                                                                    ),
-                                                                  ],
-                                                                  child: Center(
-                                                                    child:
-                                                                        Container(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      margin: EdgeInsets.only(
-                                                                          left:
-                                                                              20,
-                                                                          right:
-                                                                              20),
-                                                                      height:
-                                                                          200,
-                                                                      width:
-                                                                          _width,
-                                                                      // color: Colors.amber,
-                                                                      child: BlocConsumer<
-                                                                          GetAllPrivateRoomCubit,
-                                                                          GetAllPrivateRoomState>(
-                                                                        listener:
-                                                                            (context,
-                                                                                state) {
-                                                                          if (state
-                                                                              is DeleteRoomLoadedState) {
-                                                                            SnackBar
-                                                                                snackBar =
-                                                                                SnackBar(
-                                                                              content: Text(state.DeleteRoom.message ?? ""),
-                                                                              backgroundColor: ColorConstant.primary_color,
-                                                                            );
-                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                    : PriveateRoomData
+                                                                ?.object?[index]
+                                                                .createdBy ==
+                                                            userId
+                                                        ? GestureDetector(
+                                                            onTap: () {
+                                                              showDialog(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (context) {
+                                                                    return MultiBlocProvider(
+                                                                      providers: [
+                                                                        BlocProvider<
+                                                                            GetAllPrivateRoomCubit>(
+                                                                          create: (context) =>
+                                                                              GetAllPrivateRoomCubit(),
+                                                                        ),
+                                                                      ],
+                                                                      child:
+                                                                          Center(
+                                                                        child:
+                                                                            Container(
+                                                                          color:
+                                                                              Colors.white,
+                                                                          margin: EdgeInsets.only(
+                                                                              left: 20,
+                                                                              right: 20),
+                                                                          height:
+                                                                              200,
+                                                                          width:
+                                                                              _width,
+                                                                          // color: Colors.amber,
+                                                                          child: BlocConsumer<
+                                                                              GetAllPrivateRoomCubit,
+                                                                              GetAllPrivateRoomState>(
+                                                                            listener:
+                                                                                (context, state) {
+                                                                              if (state is DeleteRoomLoadedState) {
+                                                                                SnackBar snackBar = SnackBar(
+                                                                                  content: Text(state.DeleteRoom.message ?? ""),
+                                                                                  backgroundColor: ColorConstant.primary_color,
+                                                                                );
+                                                                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-                                                                            method();
-                                                                            Navigator.pop(context);
-                                                                          }
-                                                                        },
-                                                                        builder:
-                                                                            (context,
-                                                                                state) {
-                                                                          return Column(
-                                                                            children: [
-                                                                              SizedBox(
-                                                                                height: 10,
-                                                                              ),
-                                                                              Text(
-                                                                                "Delete Room",
-                                                                                style: TextStyle(
-                                                                                  fontFamily: 'outfit',
-                                                                                  fontSize: 20,
-                                                                                  color: Colors.black,
-                                                                                  fontWeight: FontWeight.bold,
-                                                                                ),
-                                                                              ),
-                                                                              Divider(
-                                                                                color: Colors.grey,
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 5,
-                                                                              ),
-                                                                              Center(
-                                                                                  child: Text(
-                                                                                "Are You Sure You Want To Delete This Room",
-                                                                                style: TextStyle(
-                                                                                  fontFamily: 'outfit',
-                                                                                  fontSize: 15,
-                                                                                  color: Colors.black,
-                                                                                  fontWeight: FontWeight.w500,
-                                                                                ),
-                                                                              )),
-                                                                              SizedBox(
-                                                                                height: 50,
-                                                                              ),
-                                                                              Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                                method();
+                                                                                Navigator.pop(context);
+                                                                              }
+                                                                            },
+                                                                            builder:
+                                                                                (context, state) {
+                                                                              return Column(
                                                                                 children: [
-                                                                                  GestureDetector(
-                                                                                    onTap: () => Navigator.pop(context),
-                                                                                    child: Container(
-                                                                                      height: 43,
-                                                                                      width: _width / 3.5,
-                                                                                      decoration: BoxDecoration(color: Colors.transparent, border: Border.all(color: Colors.grey.shade400), borderRadius: BorderRadius.circular(10)),
-                                                                                      child: Center(
-                                                                                          child: Text(
-                                                                                        "Cancel",
-                                                                                        style: TextStyle(
-                                                                                          fontFamily: 'outfit',
-                                                                                          fontSize: 15,
-                                                                                          color: Color(0xFFED1C25),
-                                                                                          fontWeight: FontWeight.w400,
-                                                                                        ),
-                                                                                      )),
+                                                                                  SizedBox(
+                                                                                    height: 10,
+                                                                                  ),
+                                                                                  Text(
+                                                                                    "Delete Room",
+                                                                                    style: TextStyle(
+                                                                                      fontFamily: 'outfit',
+                                                                                      fontSize: 20,
+                                                                                      color: Colors.black,
+                                                                                      fontWeight: FontWeight.bold,
                                                                                     ),
                                                                                   ),
-                                                                                  GestureDetector(
-                                                                                    onTap: () {
-                                                                                      BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PriveateRoomData!.object![index].uid.toString(), context);
-                                                                                    },
-                                                                                    child: Container(
-                                                                                      height: 43,
-                                                                                      width: _width / 3.5,
-                                                                                      decoration: BoxDecoration(color: Color(0xFFED1C25), borderRadius: BorderRadius.circular(10)),
-                                                                                      child: Center(
-                                                                                          child: Text(
-                                                                                        "Delete",
-                                                                                        style: TextStyle(
-                                                                                          fontFamily: 'outfit',
-                                                                                          fontSize: 15,
-                                                                                          color: Colors.white,
-                                                                                          fontWeight: FontWeight.w400,
-                                                                                        ),
-                                                                                      )),
+                                                                                  Divider(
+                                                                                    color: Colors.grey,
+                                                                                  ),
+                                                                                  SizedBox(
+                                                                                    height: 5,
+                                                                                  ),
+                                                                                  Center(
+                                                                                      child: Text(
+                                                                                    "Are You Sure You Want To Delete This Room",
+                                                                                    style: TextStyle(
+                                                                                      fontFamily: 'outfit',
+                                                                                      fontSize: 15,
+                                                                                      color: Colors.black,
+                                                                                      fontWeight: FontWeight.w500,
                                                                                     ),
+                                                                                  )),
+                                                                                  SizedBox(
+                                                                                    height: 50,
+                                                                                  ),
+                                                                                  Row(
+                                                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                                    children: [
+                                                                                      GestureDetector(
+                                                                                        onTap: () => Navigator.pop(context),
+                                                                                        child: Container(
+                                                                                          height: 43,
+                                                                                          width: _width / 3.5,
+                                                                                          decoration: BoxDecoration(color: Colors.transparent, border: Border.all(color: Colors.grey.shade400), borderRadius: BorderRadius.circular(10)),
+                                                                                          child: Center(
+                                                                                              child: Text(
+                                                                                            "Cancel",
+                                                                                            style: TextStyle(
+                                                                                              fontFamily: 'outfit',
+                                                                                              fontSize: 15,
+                                                                                              color: Color(0xFFED1C25),
+                                                                                              fontWeight: FontWeight.w400,
+                                                                                            ),
+                                                                                          )),
+                                                                                        ),
+                                                                                      ),
+                                                                                      GestureDetector(
+                                                                                        onTap: () {
+                                                                                          BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PriveateRoomData!.object![index].uid.toString(), context);
+                                                                                        },
+                                                                                        child: Container(
+                                                                                          height: 43,
+                                                                                          width: _width / 3.5,
+                                                                                          decoration: BoxDecoration(color: Color(0xFFED1C25), borderRadius: BorderRadius.circular(10)),
+                                                                                          child: Center(
+                                                                                              child: Text(
+                                                                                            "Delete",
+                                                                                            style: TextStyle(
+                                                                                              fontFamily: 'outfit',
+                                                                                              fontSize: 15,
+                                                                                              color: Colors.white,
+                                                                                              fontWeight: FontWeight.w400,
+                                                                                            ),
+                                                                                          )),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
                                                                                   ),
                                                                                 ],
-                                                                              ),
-                                                                            ],
-                                                                          );
-                                                                        },
+                                                                              );
+                                                                            },
+                                                                          ),
+                                                                        ),
                                                                       ),
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              });
-                                                          // showDialog(
-                                                          //   context: context,
-                                                          //   builder:
-                                                          //       (BuildContext context) {
-                                                          //     return MultiBlocProvider(
-                                                          //         providers: [
-                                                          //           BlocProvider<
-                                                          //               DeleteRoomCubit>(
-                                                          //             create: (context) =>
-                                                          //                 DeleteRoomCubit(),
-                                                          //           )
-                                                          //         ],
-                                                          //         child:
-                                                          //             DeleteDilogScreen(
-                                                          //           userId:
-                                                          //               PublicRoomData
-                                                          //                   ?.object?[
-                                                          //                       index]
-                                                          //                   .uid
-                                                          //                   .toString(),
-                                                          //         ));
-                                                          //   },
-                                                          // );
-                                                        },
-                                                        child: CustomImageView(
-                                                          imagePath:
-                                                              ImageConstant
-                                                                  .delete,
-                                                          height: 20,
-                                                          color: Colors.black,
-                                                        ),
-                                                      ),
+                                                                    );
+                                                                  });
+                                                              // showDialog(
+                                                              //   context: context,
+                                                              //   builder:
+                                                              //       (BuildContext context) {
+                                                              //     return MultiBlocProvider(
+                                                              //         providers: [
+                                                              //           BlocProvider<
+                                                              //               DeleteRoomCubit>(
+                                                              //             create: (context) =>
+                                                              //                 DeleteRoomCubit(),
+                                                              //           )
+                                                              //         ],
+                                                              //         child:
+                                                              //             DeleteDilogScreen(
+                                                              //           userId:
+                                                              //               PublicRoomData
+                                                              //                   ?.object?[
+                                                              //                       index]
+                                                              //                   .uid
+                                                              //                   .toString(),
+                                                              //         ));
+                                                              //   },
+                                                              // );
+                                                            },
+                                                            child:
+                                                                CustomImageView(
+                                                              imagePath:
+                                                                  ImageConstant
+                                                                      .delete,
+                                                              height: 20,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                          )
+                                                        : SizedBox(),
                                             User_Mood == "EXPERT"
                                                 ? GestureDetector(
                                                     onTap: () {

@@ -744,7 +744,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   null 
                              ) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please Selcte Working Hours'),
+                              content: Text('Please select Working Hours'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -752,7 +752,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           }
                           else if (_endTime?.format(context).toString() == null) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please Selcte Working Hours'),
+                              content: Text('Please select Working Hours'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
