@@ -24,6 +24,7 @@ import 'package:pds/widgets/custom_elevated_button.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../../API/Bloc/UserReActivate_Bloc/UserReActivate_cubit.dart';
@@ -319,7 +320,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 top: 41,
                               ),
                               child: Text(
-                                "User Name",
+                                "User Name Or Mobile Number",
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
@@ -377,7 +378,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               bottom: 14,
                             ),
                             // textStyle: theme.textTheme.titleMedium!,
-                            hintText: "User Name",
+                            hintText: "User Name Or Mobile Number",
                             hintStyle: TextStyle(
                                 fontFamily: 'outfit',
                                 fontSize: 15,
