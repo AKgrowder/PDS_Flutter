@@ -183,6 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var _width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
           backgroundColor: theme.colorScheme.onPrimary,
           body: BlocConsumer<FetchAllPublicRoomCubit, FetchAllPublicRoomState>(
               listener: (context, state) async {
@@ -1140,12 +1141,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                   User_Module == "EMPLOYEE"
                               ? state is MyPublicRoom1LoadedState
                                   ? ListView.builder(
-                                      itemCount: (MyPublicRoomData
+                                      itemCount: /* (MyPublicRoomData
                                                       ?.object?.length ??
                                                   0) >
                                               5
                                           ? 5
-                                          : MyPublicRoomData?.object?.length,
+                                          : */
+                                          MyPublicRoomData?.object?.length,
                                       shrinkWrap: true,
                                       physics: NeverScrollableScrollPhysics(),
                                       itemBuilder: (context, index) {
@@ -1343,7 +1345,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                               )
                                                                             ],
                                                                             child: EditHomeDilogScreen(
-                                                                              parentName: MyPublicRoomData?.object?[index].roomQuestion,
+                                                                              parentName: MyPublicRoomData?.object?[index].description,
                                                                               uid: MyPublicRoomData?.object?[index].uid.toString(),
                                                                             )),
                                                                       ),
@@ -1379,15 +1381,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           ),
                                                                         ],
                                                                         child:
-                                                                            Center(
+                                                                             Center(
                                                                           child:
                                                                               Container(
-                                                                            color:
+                                                                          decoration: BoxDecoration(
+                                                                              color:
                                                                                 Colors.white,
+                                                                                borderRadius: BorderRadius.circular(10)
+                                                                          ),
                                                                             margin:
                                                                                 EdgeInsets.only(left: 20, right: 20),
                                                                             height:
-                                                                                200,
+                                                                               168,
                                                                             width:
                                                                                 _width,
                                                                             // color: Colors.amber,
@@ -1431,13 +1436,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                                       "Are You Sure You Want To Delete Your Forum",
                                                                                       style: TextStyle(
                                                                                         fontFamily: 'outfit',
-                                                                                        fontSize: 15,
+                                                                                        fontSize: 18,
                                                                                         color: Colors.black,
                                                                                         fontWeight: FontWeight.w500,
                                                                                       ),
                                                                                     )),
                                                                                     SizedBox(
-                                                                                      height: 50,
+                                                                                      height: 30,
                                                                                     ),
                                                                                     Row(
                                                                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1487,8 +1492,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                               },
                                                                             ),
                                                                           ),
-                                                                        ),
-                                                                      );
+                                                                        ),    );
                                                                     });
                                                               },
                                                               child:
@@ -2526,56 +2530,62 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 10,
                   ),
+                  PublicRoomModelData?.object?.length == 0
+                      ? SizedBox()
+                      : GestureDetector(
+                          onTap: () {
+                            print('FetchPublicRoomModelData');
+                            if (User_ID != null) {
+                              print('if User_ID != null');
+                              if (FetchPublicRoomModelData?.object?.length !=
+                                      0 ||
+                                  FetchPublicRoomModelData
+                                          ?.object?.isNotEmpty ==
+                                      true) {
+                                print("FetchPublicRoomModelData?.object? data");
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => PublicRoomList(
+                                          FetchPublicRoomModelData:
+                                              FetchPublicRoomModelData,
+                                        )));
+                              } else {
+                                print(
+                                    "FetchPublicRoomModelData?.object? no data");
+                              }
+                            } else {
+                              print('if User_ID == null');
+                              if (PublicRoomModelData?.object?.length != 0 ||
+                                  PublicRoomModelData?.object?.isNotEmpty ==
+                                      true) {
+                                print("PublicRoomModelData?.object? data");
 
-                  GestureDetector(
-                    onTap: () {
-                      print('FetchPublicRoomModelData');
-                      if (User_ID != null) {
-                        print('if User_ID != null');
-                        if (FetchPublicRoomModelData?.object?.length != 0 ||
-                            FetchPublicRoomModelData?.object?.isNotEmpty ==
-                                true) {
-                          print("FetchPublicRoomModelData?.object? data");
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => PublicRoomList(
-                                    FetchPublicRoomModelData:
-                                        FetchPublicRoomModelData,
-                                  )));
-                        } else {
-                          print("FetchPublicRoomModelData?.object? no data");
-                        }
-                      } else {
-                        print('if User_ID == null');
-                        if (PublicRoomModelData?.object?.length != 0 ||
-                            PublicRoomModelData?.object?.isNotEmpty == true) {
-                          print("PublicRoomModelData?.object? data");
-
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => PublicRoomList(
-                                    PublicRoomModelData: PublicRoomModelData,
-                                  )));
-                        } else {
-                          print("PublicRoomModelData?.object? no data");
-                        }
-                      }
-                    },
-                    child: Container(
-                      height: 50,
-                      width: _width / 1.2,
-                      decoration: BoxDecoration(
-                          color: Color(0XFFED1C25),
-                          borderRadius: BorderRadius.circular(6)),
-                      child: Center(
-                          child: Text(
-                        "View More",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white,
-                            fontFamily: "outfit",
-                            fontSize: 16),
-                      )),
-                    ),
-                  ),
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => PublicRoomList(
+                                          PublicRoomModelData:
+                                              PublicRoomModelData,
+                                        )));
+                              } else {
+                                print("PublicRoomModelData?.object? no data");
+                              }
+                            }
+                          },
+                          child: Container(
+                            height: 50,
+                            width: _width / 1.2,
+                            decoration: BoxDecoration(
+                                color: Color(0XFFED1C25),
+                                borderRadius: BorderRadius.circular(6)),
+                            child: Center(
+                                child: Text(
+                              "View More",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                  fontFamily: "outfit",
+                                  fontSize: 16),
+                            )),
+                          ),
+                        ),
 
                   getallBlogdata?.object?.length == 0 ||
                           getallBlogdata?.object?.isNotEmpty == false
