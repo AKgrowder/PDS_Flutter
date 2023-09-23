@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart' as foundation;
@@ -58,6 +59,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   ScrollController scrollController = ScrollController();
   ScrollController scrollController1 = ScrollController();
   bool isScroll = false;
+  File? _image;
   bool isEmojiVisible = false;
   bool isKeyboardVisible = false;
   FocusNode _focusNode = FocusNode();
@@ -76,7 +78,6 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     // if (widget.Screen_name == "RoomChat") {
     // }
     getToken();
-    
 
     keyboardVisibilityController.onChange.listen((bool isKeyboardVisible) {
       setState(() {
@@ -216,737 +217,751 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(
                           color: const Color.fromARGB(101, 158, 158, 158))),
-                  child: Column(children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 5.5, right: 5),
-                              child: CircleAvatar(
-                                backgroundColor: Colors.black,
-                                maxRadius: 4,
-                              ),
-                            ),
-                            Container(
-                              width: _width / 1.2,
-                              // color: Colors.amber,
-                              child: Text(
-                                "${widget.Title}  ",
-                                // overflow: TextOverflow.ellipsis,
-                                // maxLines: 2,
+                  child: Stack(
+                    children: [
+                      Column(children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 5.5, right: 5),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.black,
+                                    maxRadius: 4,
+                                  ),
+                                ),
+                                Container(
+                                  width: _width / 1.2,
+                                  // color: Colors.amber,
+                                  child: Text(
+                                    "${widget.Title}  ",
+                                    // overflow: TextOverflow.ellipsis,
+                                    // maxLines: 2,
+                                    style: TextStyle(
+                                      fontFamily: 'outfit',
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                                /*   GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (image?.contains(index) ?? false) {
+                                        image?.remove(index);
+                                      } else {
+                                        image?.add(index);
+                                      }
+                                    });
+                                  },
+                                  child: (image?.contains(index) ?? false)
+                                      ? CustomImageView(
+                                          imagePath:
+                                              ImageConstant.unselectedimgVector,
+                                          height: 20,
+                                        )
+                                      : CustomImageView(
+                                          imagePath: ImageConstant.selectedimage,
+                                          height: 20,
+                                        ),
+                                ), */
+                              ]),
+                        ),
+                        Divider(
+                          color: Color.fromARGB(53, 117, 117, 117),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "${formattedDate}",
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontFamily: 'outfit',
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
+                                  fontSize: 13,
+                                  color: Colors.grey.shade600,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
-                            ),
-                            /*   GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  if (image?.contains(index) ?? false) {
-                                    image?.remove(index);
-                                  } else {
-                                    image?.add(index);
-                                  }
-                                });
-                              },
-                              child: (image?.contains(index) ?? false)
-                                  ? CustomImageView(
-                                      imagePath:
-                                          ImageConstant.unselectedimgVector,
-                                      height: 20,
-                                    )
-                                  : CustomImageView(
-                                      imagePath: ImageConstant.selectedimage,
-                                      height: 20,
-                                    ),
-                            ), */
-                          ]),
-                    ),
-                    Divider(
-                      color: Color.fromARGB(53, 117, 117, 117),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "${formattedDate}",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontFamily: 'outfit',
-                              fontSize: 13,
-                              color: Colors.grey.shade600,
-                              fontWeight: FontWeight.w400,
-                            ),
+                              Text(
+                                "${modelData?.object?.messageOutputList?.content?.length != null ? modelData?.object?.messageOutputList?.content?.length : '0'} Comments",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontFamily: 'outfit',
+                                  fontSize: 13,
+                                  color: Colors.grey.shade600,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            "${modelData?.object?.messageOutputList?.content?.length != null ? modelData?.object?.messageOutputList?.content?.length : '0'} Comments",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontFamily: 'outfit',
-                              fontSize: 13,
-                              color: Colors.grey.shade600,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Divider(
-                      height: 5,
-                      color: Color.fromARGB(53, 117, 117, 117),
-                    ),
-                    Expanded(
-                      child: Container(
-                        // height: _height / 1.4,
-                        // color: Colors.red[200],
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: modelData != null
-                              ? modelData?.object?.roomUid == null ||
-                                      modelData?.object?.roomUid == ""
-                                  ? SizedBox()
-                                  : SingleChildScrollView(
-                                      controller: scrollController,
-                                      child: Column(
-                                        children: [
-                                          PaginationWidget(
-                                              onPagination: (p0) async {
-                                                print("-------------" +
-                                                    p0.toString());
+                        ),
+                        Divider(
+                          height: 5,
+                          color: Color.fromARGB(53, 117, 117, 117),
+                        ),
+                        Expanded(
+                          child: Container(
+                            // height: _height / 1.4,
+                            // color: Colors.red[200],
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: modelData != null
+                                  ? modelData?.object?.roomUid == null ||
+                                          modelData?.object?.roomUid == ""
+                                      ? SizedBox()
+                                      : SingleChildScrollView(
+                                          controller: scrollController,
+                                          child: Column(
+                                            children: [
+                                              PaginationWidget(
+                                                  onPagination: (p0) async {
+                                                    print("-------------" +
+                                                        p0.toString());
 
-                                                await BlocProvider.of<
-                                                        senMSGCubit>(context)
-                                                    .coomentPagePagenation(
-                                                        widget.Room_ID,
-                                                        context,
-                                                        p0.toString(),
-                                                        ShowLoader: true);
-                                              },
-                                              offSet: (modelData
-                                                  ?.object
-                                                  ?.messageOutputList
-                                                  ?.pageable
-                                                  ?.pageNumber),
-                                              scrollController:
-                                                  scrollController,
-                                              totalSize: modelData
-                                                  ?.object
-                                                  ?.messageOutputList
-                                                  ?.totalElements,
-                                              items: ListView.builder(
-                                                  // reverse: true,
-                                                  itemCount: (modelData
-                                                          ?.object
-                                                          ?.messageOutputList
-                                                          ?.content
-                                                          ?.length ??
-                                                      0),
-                                                  shrinkWrap: true,
-                                                  controller: scrollController1,
-                                                  physics:
-                                                      NeverScrollableScrollPhysics(),
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    DateTime parsedDateTime =
-                                                        DateTime.parse(
-                                                            '${modelData?.object?.messageOutputList?.content?[index].createdAt}');
-                                                    print(
-                                                        "check User name --> ${modelData?.object?.messageOutputList?.content?[index].userName} Login User Name --> ${User_Name}");
+                                                    await BlocProvider.of<
+                                                                senMSGCubit>(
+                                                            context)
+                                                        .coomentPagePagenation(
+                                                            widget.Room_ID,
+                                                            context,
+                                                            p0.toString(),
+                                                            ShowLoader: true);
+                                                  },
+                                                  offSet: (modelData
+                                                      ?.object
+                                                      ?.messageOutputList
+                                                      ?.pageable
+                                                      ?.pageNumber),
+                                                  scrollController:
+                                                      scrollController,
+                                                  totalSize: modelData
+                                                      ?.object
+                                                      ?.messageOutputList
+                                                      ?.totalElements,
+                                                  items: ListView.builder(
+                                                      // reverse: true,
+                                                      itemCount: (modelData
+                                                              ?.object
+                                                              ?.messageOutputList
+                                                              ?.content
+                                                              ?.length ??
+                                                          0),
+                                                      shrinkWrap: true,
+                                                      controller:
+                                                          scrollController1,
+                                                      physics:
+                                                          NeverScrollableScrollPhysics(),
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        DateTime
+                                                            parsedDateTime =
+                                                            DateTime.parse(
+                                                                '${modelData?.object?.messageOutputList?.content?[index].createdAt}');
+                                                        print(
+                                                            "check User name --> ${modelData?.object?.messageOutputList?.content?[index].userName} Login User Name --> ${User_Name}");
 
-                                                    if (isScroll == false) {
-                                                      Future.delayed(
-                                                          Duration(
-                                                              microseconds: 1),
-                                                          () {
-                                                        if (scrollController
-                                                            .hasClients) {
-                                                          for (int i = 0;
-                                                              i <
-                                                                  (modelData
-                                                                          ?.object
-                                                                          ?.messageOutputList
-                                                                          ?.content!
-                                                                          .length ??
-                                                                      0);
-                                                              i++)
-                                                            scrollController
-                                                                .jumpTo(
-                                                              scrollController
-                                                                  .position
-                                                                  .maxScrollExtent,
-                                                            );
-                                                        }
-                                                        // setState(() {
-                                                        isScroll = true;
-                                                        // });
-                                                      });
-                                                    } else {}
+                                                        if (isScroll == false) {
+                                                          Future.delayed(
+                                                              Duration(
+                                                                  microseconds:
+                                                                      1), () {
+                                                            if (scrollController
+                                                                .hasClients) {
+                                                              for (int i = 0;
+                                                                  i <
+                                                                      (modelData
+                                                                              ?.object
+                                                                              ?.messageOutputList
+                                                                              ?.content!
+                                                                              .length ??
+                                                                          0);
+                                                                  i++)
+                                                                scrollController
+                                                                    .jumpTo(
+                                                                  scrollController
+                                                                      .position
+                                                                      .maxScrollExtent,
+                                                                );
+                                                            }
+                                                            // setState(() {
+                                                            isScroll = true;
+                                                            // });
+                                                          });
+                                                        } else {}
 
-                                                    return modelData
-                                                                ?.object
-                                                                ?.messageOutputList
-                                                                ?.content?[
-                                                                    index]
-                                                                .userName !=
-                                                            User_Name
-                                                        ? Padding(
-                                                            padding: const EdgeInsets
-                                                                    .symmetric(
-                                                                /* horizontal: 35, vertical: 5 */),
-                                                            child:
-                                                                GestureDetector(
-                                                              onTap: () {},
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Row(
+                                                        return modelData
+                                                                    ?.object
+                                                                    ?.messageOutputList
+                                                                    ?.content?[
+                                                                        index]
+                                                                    .userName !=
+                                                                User_Name
+                                                            ? Padding(
+                                                                padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                    /* horizontal: 35, vertical: 5 */),
+                                                                child:
+                                                                    GestureDetector(
+                                                                  onTap: () {},
+                                                                  child: Column(
                                                                     crossAxisAlignment:
                                                                         CrossAxisAlignment
                                                                             .start,
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .start,
                                                                     children: [
-                                                                      Padding(
-                                                                        padding: const EdgeInsets.only(
-                                                                            left:
-                                                                                10,
-                                                                            right:
-                                                                                3),
-                                                                        child: modelData?.object?.messageOutputList?.content?[index].userName !=
-                                                                                null
-                                                                            ? CustomImageView(
-                                                                                url: "${modelData?.object?.messageOutputList?.content?[index].userProfilePic}",
-                                                                                height: 20,
-                                                                                radius: BorderRadius.circular(20),
-                                                                                width: 20,
-                                                                                fit: BoxFit.fill,
-                                                                              )
-                                                                            : CustomImageView(
-                                                                                imagePath: ImageConstant.tomcruse,
-                                                                                height: 20,
-                                                                              ),
-                                                                      ),
-                                                                      Text(
-                                                                        "${modelData?.object?.messageOutputList?.content?[index].userName}",
-                                                                        style: TextStyle(
-                                                                            fontWeight: FontWeight
-                                                                                .w400,
-                                                                            color: Colors
-                                                                                .black,
-                                                                            fontFamily:
-                                                                                "outfit",
-                                                                            fontSize:
-                                                                                14),
-                                                                      ),
-                                                                      Spacer(),
-                                                                      Padding(
-                                                                        padding:
-                                                                            const EdgeInsets.only(right: 16),
-                                                                        child:
-                                                                            Text(
-                                                                          customFormat(
-                                                                              parsedDateTime),
-                                                                          // maxLines: 3,
-                                                                          textScaleFactor:
-                                                                              1.0,
-                                                                          style: TextStyle(
-                                                                              fontWeight: FontWeight.bold,
-                                                                              color: Colors.grey,
-                                                                              fontFamily: "outfit",
-                                                                              fontSize: 12),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  SizedBox(
-                                                                    height: 10,
-                                                                  ),
-                                                                  /* index == 2
-                                        ? Padding(
-                                            padding: const EdgeInsets.only(
-                                              left: 8.0,
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                CustomImageView(
-                                                  imagePath: ImageConstant
-                                                      .viewcommentimage,
-                                                  height: 60,
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                CustomImageView(
-                                                  imagePath:
-                                                      ImageConstant.mobileman,
-                                                  height: 60,
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        : SizedBox(), */
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    children: [
-                                                                      Padding(
-                                                                        padding: EdgeInsets.only(
-                                                                            left:
-                                                                                8.0,
-                                                                            top:
-                                                                                5,
-                                                                            bottom:
-                                                                                10),
-                                                                        child:
-                                                                            Row(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.spaceBetween,
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            Padding(
-                                                                              padding: const EdgeInsets.only(left: 2.0, top: 5),
-                                                                              // child: CircleAvatar(
-                                                                              //     backgroundColor: Colors.black,
-                                                                              //     maxRadius: 3),
+                                                                      Row(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.start,
+                                                                        children: [
+                                                                          Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(left: 10, right: 3),
+                                                                            child: modelData?.object?.messageOutputList?.content?[index].userName != null
+                                                                                ? CustomImageView(
+                                                                                    url: "${modelData?.object?.messageOutputList?.content?[index].userProfilePic}",
+                                                                                    height: 20,
+                                                                                    radius: BorderRadius.circular(20),
+                                                                                    width: 20,
+                                                                                    fit: BoxFit.fill,
+                                                                                  )
+                                                                                : CustomImageView(
+                                                                                    imagePath: ImageConstant.tomcruse,
+                                                                                    height: 20,
+                                                                                  ),
+                                                                          ),
+                                                                          Text(
+                                                                            "${modelData?.object?.messageOutputList?.content?[index].userName}",
+                                                                            style: TextStyle(
+                                                                                fontWeight: FontWeight.w400,
+                                                                                color: Colors.black,
+                                                                                fontFamily: "outfit",
+                                                                                fontSize: 14),
+                                                                          ),
+                                                                          Spacer(),
+                                                                          Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(right: 16),
+                                                                            child:
+                                                                                Text(
+                                                                              customFormat(parsedDateTime),
+                                                                              // maxLines: 3,
+                                                                              textScaleFactor: 1.0,
+                                                                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
                                                                             ),
-                                                                            SizedBox(
-                                                                              width: 3,
-                                                                            ),
-                                                                            Container(
-                                                                              // height: 45,
-                                                                              width: _width / 1.3,
-                                                                              // color: Colors.amber,
-                                                                              child: Text(
-                                                                                modelData?.object?.messageOutputList?.content?[index].message ?? "",
-                                                                                // maxLines: 3,
-                                                                                textScaleFactor: 1.0,
-                                                                                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
+                                                                          ),
+                                                                        ],
                                                                       ),
-                                                                    ],
-                                                                  ),
-                                                                  Divider(
-                                                                    color: const Color
-                                                                            .fromARGB(
-                                                                        117,
-                                                                        0,
-                                                                        0,
-                                                                        0),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          )
-                                                        : Padding(
-                                                            padding: const EdgeInsets
-                                                                    .symmetric(
-                                                                /* horizontal: 35, vertical: 5 */),
-                                                            child:
-                                                                GestureDetector(
-                                                              onTap: () {},
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Row(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Padding(
-                                                                        padding:
-                                                                            const EdgeInsets.only(left: 16),
-                                                                        child:
-                                                                            Text(
-                                                                          customFormat(
-                                                                              parsedDateTime),
-                                                                          // maxLines: 3,
-                                                                          textScaleFactor:
-                                                                              1.0,
-                                                                          style: TextStyle(
-                                                                              fontWeight: FontWeight.bold,
-                                                                              color: Colors.grey,
-                                                                              fontFamily: "outfit",
-                                                                              fontSize: 12),
-                                                                        ),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            10,
                                                                       ),
-                                                                      Spacer(),
-                                                                      Text(
-                                                                        "${modelData?.object?.messageOutputList?.content?[index].userName}",
-                                                                        style: TextStyle(
-                                                                            fontWeight: FontWeight
-                                                                                .w400,
-                                                                            color: Colors
-                                                                                .black,
-                                                                            fontFamily:
-                                                                                "outfit",
-                                                                            fontSize:
-                                                                                14),
-                                                                      ),
-                                                                      Padding(
-                                                                        padding: const EdgeInsets.only(
-                                                                            left:
-                                                                                3,
-                                                                            right:
-                                                                                10),
-                                                                        child: modelData?.object?.messageOutputList?.content?[index].userProfilePic?.isNotEmpty ??
-                                                                                false
-                                                                            ? CustomImageView(
-                                                                                url: "${modelData?.object?.messageOutputList?.content?[index].userProfilePic}",
-                                                                                height: 20,
-                                                                                radius: BorderRadius.circular(20),
-                                                                                width: 20,
-                                                                                fit: BoxFit.fill,
-                                                                              )
-                                                                            : CustomImageView(
-                                                                                imagePath: ImageConstant.tomcruse,
-                                                                                height: 20,
-                                                                              ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  SizedBox(
-                                                                    height: 10,
-                                                                  ),
-                                                                  /* index == 2
-                                        ? Padding(
-                                            padding: const EdgeInsets.only(
-                                              left: 8.0,
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                CustomImageView(
-                                                  imagePath: ImageConstant
-                                                      .viewcommentimage,
-                                                  height: 60,
+                                                                      /* index == 2
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                  left: 8.0,
                                                 ),
-                                                SizedBox(
-                                                  width: 10,
+                                                child: Row(
+                                                  children: [
+                                                    CustomImageView(
+                                                      imagePath: ImageConstant
+                                                          .viewcommentimage,
+                                                      height: 60,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    CustomImageView(
+                                                      imagePath:
+                                                          ImageConstant.mobileman,
+                                                      height: 60,
+                                                    ),
+                                                  ],
                                                 ),
-                                                CustomImageView(
-                                                  imagePath:
-                                                      ImageConstant.mobileman,
-                                                  height: 60,
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        : SizedBox(), */
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    children: [
-                                                                      Spacer(),
-                                                                      Padding(
-                                                                        padding: EdgeInsets.only(
-                                                                            left:
-                                                                                8.0,
-                                                                            top:
-                                                                                5,
-                                                                            bottom:
-                                                                                10,
-                                                                            right:
-                                                                                12),
-                                                                        child:
-                                                                            Row(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.spaceBetween,
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            Padding(
-                                                                              padding: const EdgeInsets.only(left: 2.0, top: 5),
-                                                                              // child: CircleAvatar(
-                                                                              //     backgroundColor: Colors.black,
-                                                                              //     maxRadius: 3),
-                                                                            ),
-                                                                            SizedBox(
-                                                                              width: 3,
-                                                                            ),
-                                                                            Container(
-                                                                              // height: 45,
-                                                                              width: _width / 1.3,
-                                                                              // color: Colors.amber,
-                                                                              child: Align(
-                                                                                alignment: Alignment.topRight,
-                                                                                child: Text(
-                                                                                  modelData?.object?.messageOutputList?.content?[index].message ?? "",
-                                                                                  // maxLines: 3,
-                                                                                  textScaleFactor: 1.0,
-                                                                                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
+                                              )
+                                            : SizedBox(), */
+                                                                      Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceBetween,
+                                                                        children: [
+                                                                          Padding(
+                                                                            padding: EdgeInsets.only(
+                                                                                left: 8.0,
+                                                                                top: 5,
+                                                                                bottom: 10),
+                                                                            child:
+                                                                                Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              children: [
+                                                                                Padding(
+                                                                                  padding: const EdgeInsets.only(left: 2.0, top: 5),
+                                                                                  // child: CircleAvatar(
+                                                                                  //     backgroundColor: Colors.black,
+                                                                                  //     maxRadius: 3),
                                                                                 ),
-                                                                              ),
+                                                                                SizedBox(
+                                                                                  width: 3,
+                                                                                ),
+                                                                                Container(
+                                                                                  // height: 45,
+                                                                                  width: _width / 1.3,
+                                                                                  // color: Colors.amber,
+                                                                                  child: Text(
+                                                                                    modelData?.object?.messageOutputList?.content?[index].message ?? "",
+                                                                                    // maxLines: 3,
+                                                                                    textScaleFactor: 1.0,
+                                                                                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
+                                                                                  ),
+                                                                                ),
+                                                                              ],
                                                                             ),
-                                                                          ],
-                                                                        ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      Divider(
+                                                                        color: const Color.fromARGB(
+                                                                            117,
+                                                                            0,
+                                                                            0,
+                                                                            0),
                                                                       ),
                                                                     ],
                                                                   ),
-                                                                  Divider(
-                                                                    color: const Color
-                                                                            .fromARGB(
-                                                                        117,
-                                                                        0,
-                                                                        0,
-                                                                        0),
+                                                                ),
+                                                              )
+                                                            : Padding(
+                                                                padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                    /* horizontal: 35, vertical: 5 */),
+                                                                child:
+                                                                    GestureDetector(
+                                                                  onTap: () {},
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Row(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.start,
+                                                                        children: [
+                                                                          Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(left: 16),
+                                                                            child:
+                                                                                Text(
+                                                                              customFormat(parsedDateTime),
+                                                                              // maxLines: 3,
+                                                                              textScaleFactor: 1.0,
+                                                                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
+                                                                            ),
+                                                                          ),
+                                                                          Spacer(),
+                                                                          Text(
+                                                                            "${modelData?.object?.messageOutputList?.content?[index].userName}",
+                                                                            style: TextStyle(
+                                                                                fontWeight: FontWeight.w400,
+                                                                                color: Colors.black,
+                                                                                fontFamily: "outfit",
+                                                                                fontSize: 14),
+                                                                          ),
+                                                                          Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(left: 3, right: 10),
+                                                                            child: modelData?.object?.messageOutputList?.content?[index].userProfilePic?.isNotEmpty ?? false
+                                                                                ? CustomImageView(
+                                                                                    url: "${modelData?.object?.messageOutputList?.content?[index].userProfilePic}",
+                                                                                    height: 20,
+                                                                                    radius: BorderRadius.circular(20),
+                                                                                    width: 20,
+                                                                                    fit: BoxFit.fill,
+                                                                                  )
+                                                                                : CustomImageView(
+                                                                                    imagePath: ImageConstant.tomcruse,
+                                                                                    height: 20,
+                                                                                  ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            10,
+                                                                      ),
+                                                                      /* index == 2
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                  left: 8.0,
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    CustomImageView(
+                                                      imagePath: ImageConstant
+                                                          .viewcommentimage,
+                                                      height: 60,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    CustomImageView(
+                                                      imagePath:
+                                                          ImageConstant.mobileman,
+                                                      height: 60,
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            : SizedBox(), */
+                                                                      Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceBetween,
+                                                                        children: [
+                                                                          Spacer(),
+                                                                          Padding(
+                                                                            padding: EdgeInsets.only(
+                                                                                left: 8.0,
+                                                                                top: 5,
+                                                                                bottom: 10,
+                                                                                right: 12),
+                                                                            child:
+                                                                                Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              children: [
+                                                                                Padding(
+                                                                                  padding: const EdgeInsets.only(left: 2.0, top: 5),
+                                                                                  // child: CircleAvatar(
+                                                                                  //     backgroundColor: Colors.black,
+                                                                                  //     maxRadius: 3),
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: 3,
+                                                                                ),
+                                                                                Container(
+                                                                                  // height: 45,
+                                                                                  width: _width / 1.3,
+                                                                                  // color: Colors.amber,
+                                                                                  child: Align(
+                                                                                    alignment: Alignment.topRight,
+                                                                                    child: Text(
+                                                                                      modelData?.object?.messageOutputList?.content?[index].message ?? "",
+                                                                                      // maxLines: 3,
+                                                                                      textScaleFactor: 1.0,
+                                                                                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      Divider(
+                                                                        color: const Color.fromARGB(
+                                                                            117,
+                                                                            0,
+                                                                            0,
+                                                                            0),
+                                                                      ),
+                                                                    ],
                                                                   ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          );
-                                                    // }
-                                                  })),
+                                                                ),
+                                                              );
+                                                        // }
+                                                      })),
+                                            ],
+                                          ),
+                                        )
+                                  : SizedBox(),
+                            ),
+                          ),
+                        ),
+                        _image != null
+                            ? Container(
+                                height: 90,
+                                color: const Color.fromARGB(255, 255, 241, 240),
+                                width: _width,
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      height: 90,
+                                      width: 150,
+                                      child: Stack(
+                                        children: [
+                                          Image.file(
+                                            _image!,
+                                            height: 100,
+                                            width: 150,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                _image = null;
+                                              });
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 5, top: 5),
+                                              child: Align(
+                                                alignment: Alignment.topRight,
+                                                child: Container(
+                                                    height: 22,
+                                                    width: 20,
+                                                    child: Image.asset(
+                                                      ImageConstant.delete,
+                                                      color: Colors.red,
+                                                    )),
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
-                                    )
-                              : SizedBox(),
-                        ),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          height: 50,
-                          width: _width - 90,
-                          decoration: BoxDecoration(
-                              color: Color(0xFFF5F5F5),
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Row(children: [
-                            SizedBox(
-                              width: 10,
-                            ),
-
-                            Container(
-                              child: IconButton(
-                                icon: Icon(
-                                  isEmojiVisible
-                                      ? Icons.keyboard_rounded
-                                      : Icons.emoji_emotions_outlined,
+                                    ),
+                                  ],
                                 ),
-                                onPressed: onClickedEmoji,
-                              ),
-                            ),
-                            // GestureDetector(
-                            //   onTap: () {
-                            //     setState(() {
-                            //       emojiShowing = !emojiShowing;
-                            //     });
-                            //     // buildSticker();
-                            //     // buildSticker();
-                            //     // KeyboardEmojiPicker().pickEmoji();
-                            //   },
-                            //   child: Image.asset(
-                            //     "assets/images/ic_outline-emoji-emotions.png",
-                            //     height: 28,
-                            //   ),
-                            // ),
-                            SizedBox(
-                              width: 5,
-                            ),
+                              )
+                            : SizedBox(),
+                        Row(
+                          children: [
                             Container(
-                              width: _width / 1.7,
-                              child: TextField(
-                                controller: Add_Comment,
-                                cursorColor: Colors.grey,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Add Comment",
+                              height: 50,
+                              width: _width - 90,
+                              decoration: BoxDecoration(
+                                  color: Color(0xFFF5F5F5),
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: Row(children: [
+                                SizedBox(
+                                  width: 10,
                                 ),
-                              ),
-                            ),
-                            // Spacer(),
-                            // GestureDetector(
-                            //   onTap: () {
-                            //     pickProfileImage();
-                            //   },
-                            //   child: Image.asset(
-                            //     "assets/images/paperclip-2.png",
-                            //     height: 28,
-                            //   ),
-                            // ),
-                            // SizedBox(
-                            //   width: 10,
-                            // ),
-                            // GestureDetector(
-                            //   onTap: () {
-                            //     camerapicker();
-                            //   },
-                            //   child: Image.asset(
-                            //     "assets/images/Vector (12).png",
-                            //     height: 20,
-                            //   ),
-                            // ),
-                            // SizedBox(
-                            //   width: 8,
-                            // ),
-                          ]),
-                          // child: TextField(
-                          //   controller: Add_Comment,
-                          //   cursorColor: Colors.grey,
-                          //   decoration: InputDecoration(
-                          //     border: InputBorder.none,
-                          //     hintText: "Add Comment",
-                          //   ),
-                          // ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            if (Add_Comment.text.isNotEmpty) {
-                              if (Add_Comment.text.length >= 255) {
-                                SnackBar snackBar = SnackBar(
-                                  content: Text(
-                                      'One Time Message Lenght only for 255 Your Meassge -> ${Add_Comment.text.length}'),
-                                  backgroundColor: ColorConstant.primary_color,
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              } else {
-                                checkGuestUser();
-                                Room_ID_stomp = "${widget.Room_ID}";
-                                stompClient.subscribe(
-                                  destination:
-                                      "/topic/getMessage/${widget.Room_ID}",
-                                  callback: (StompFrame frame) {
-                                    Map<String, dynamic> jsonString =
-                                        json.decode(frame.body ?? "");
-                                    print('Add RealTime MSG --->$jsonString');
 
-                                    Content content1 =
-                                        Content.fromJson(jsonString['object']);
-                                    print(
-                                        "check MSG get Properly ---> ${content1.message}");
-                                    var msgUUID = content1.uid;
-
-                                    if (addmsg != msgUUID) {
-                                      print(
-                                          "please1 ---> ${modelData?.object?.messageOutputList?.content?.length}");
-
-                                      Content content = Content.fromJson(
-                                          jsonString['object']);
-                                      print("please2 ---> ${content.message}");
-                                      modelData
-                                          ?.object?.messageOutputList?.content
-                                          ?.add(content);
-
-                                      setState(() {
-                                        addmsg = content.uid ?? "";
-                                      });
-                                    }
-
-                                    print(
-                                        "please3 ---> ${modelData?.object?.messageOutputList?.content?.length}");
+                                Container(
+                                  child: IconButton(
+                                    icon: Icon(
+                                      isEmojiVisible
+                                          ? Icons.keyboard_rounded
+                                          : Icons.emoji_emotions_outlined,
+                                    ),
+                                    onPressed: onClickedEmoji,
+                                  ),
+                                ),
+                                // GestureDetector(
+                                //   onTap: () {
+                                //     setState(() {
+                                //       emojiShowing = !emojiShowing;
+                                //     });
+                                //     // buildSticker();
+                                //     // buildSticker();
+                                //     // KeyboardEmojiPicker().pickEmoji();
+                                //   },
+                                //   child: Image.asset(
+                                //     "assets/images/ic_outline-emoji-emotions.png",
+                                //     height: 28,
+                                //   ),
+                                // ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Container(
+                                  width: _width / 2.2,
+                                  // color: Colors.amber,
+                                  child: TextField(
+                                    controller: Add_Comment,
+                                    cursorColor: Colors.grey,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: "Add Comment",
+                                    ),
+                                  ),
+                                ),
+                                Spacer(),
+                                GestureDetector(
+                                  onTap: () {
+                                    pickProfileImage();
                                   },
-                                );
-                                stompClient.send(
-                                  destination: "/sendMessage/${widget.Room_ID}",
-                                  body: json.encode({
-                                    "message": "${Add_Comment.text}",
-                                    "messageType": "TEXT",
-                                    "roomUid": "${widget.Room_ID}",
-                                    "userCode": "${UserCode}"
-                                  }),
-                                );
-                              }
-                            } else {
-                              SnackBar snackBar = SnackBar(
-                                content: Text('Please Enter Comment'),
-                                backgroundColor: ColorConstant.primary_color,
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            }
-                          },
-                          child: Container(
-                            height: 50,
-                            // width: 50,
-                            decoration: BoxDecoration(
-                                color: Color(0xFFED1C25),
-                                borderRadius: BorderRadius.circular(25)),
-                            child: Image.asset(
-                              "assets/images/Vector (13).png",
-                              color: Colors.white,
+                                  child: Image.asset(
+                                    "assets/images/paperclip-2.png",
+                                    height: 22,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    camerapicker();
+                                  },
+                                  child: Image.asset(
+                                    "assets/images/Vector (12).png",
+                                    height: 20,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                              ]),
+                              // child: TextField(
+                              //   controller: Add_Comment,
+                              //   cursorColor: Colors.grey,
+                              //   decoration: InputDecoration(
+                              //     border: InputBorder.none,
+                              //     hintText: "Add Comment",
+                              //   ),
+                              // ),
                             ),
+                            GestureDetector(
+                              onTap: () {
+                                if (Add_Comment.text.isNotEmpty) {
+                                  if (Add_Comment.text.length >= 255) {
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text(
+                                          'One Time Message Lenght only for 255 Your Meassge -> ${Add_Comment.text.length}'),
+                                      backgroundColor:
+                                          ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } else {
+                                    checkGuestUser();
+                                    Room_ID_stomp = "${widget.Room_ID}";
+                                    stompClient.subscribe(
+                                      destination:
+                                          "/topic/getMessage/${widget.Room_ID}",
+                                      callback: (StompFrame frame) {
+                                        Map<String, dynamic> jsonString =
+                                            json.decode(frame.body ?? "");
+                                        print(
+                                            'Add RealTime MSG --->$jsonString');
 
-                            // width: width - 95,
-                          ),
-                        ),
-                      ],
-                    ),
-                    // Offstage(
-                    //   child:
-                    //       EmojiPicker(/* onEmojiSelected: onEmojiSelected */),
-                    //   offstage: !isEmojiVisible,
-                    // ),
-                    Offstage(
-                      offstage: !isEmojiVisible,
-                      child: SizedBox(
-                          height: 250,
-                          child: EmojiPicker(
-                            textEditingController: Add_Comment,
-                            onBackspacePressed: _onBackspacePressed,
-                            config: Config(
-                              columns: 7,
-                              // Issue: https://github.com/flutter/flutter/issues/28894
-                              emojiSizeMax: 32 *
-                                  (foundation.defaultTargetPlatform ==
-                                          TargetPlatform.iOS
-                                      ? 1.30
-                                      : 1.0),
-                              verticalSpacing: 0,
-                              horizontalSpacing: 0,
-                              gridPadding: EdgeInsets.zero,
-                              initCategory: Category.RECENT,
-                              bgColor: const Color(0xFFF2F2F2),
-                              indicatorColor: Colors.blue,
-                              iconColor: Colors.grey,
-                              iconColorSelected: Colors.blue,
-                              backspaceColor: Colors.blue,
-                              skinToneDialogBgColor: Colors.white,
-                              skinToneIndicatorColor: Colors.grey,
-                              enableSkinTones: true,
-                              recentTabBehavior: RecentTabBehavior.RECENT,
-                              recentsLimit: 28,
-                              replaceEmojiOnLimitExceed: false,
-                              noRecents: const Text(
-                                'No Recents',
-                                style: TextStyle(
-                                    fontSize: 20, color: Colors.black26),
-                                textAlign: TextAlign.center,
+                                        Content content1 = Content.fromJson(
+                                            jsonString['object']);
+                                        print(
+                                            "check MSG get Properly ---> ${content1.message}");
+                                        var msgUUID = content1.uid;
+
+                                        if (addmsg != msgUUID) {
+                                          print(
+                                              "please1 ---> ${modelData?.object?.messageOutputList?.content?.length}");
+
+                                          Content content = Content.fromJson(
+                                              jsonString['object']);
+                                          print(
+                                              "please2 ---> ${content.message}");
+                                          modelData?.object?.messageOutputList
+                                              ?.content
+                                              ?.add(content);
+
+                                          setState(() {
+                                            addmsg = content.uid ?? "";
+                                          });
+                                        }
+
+                                        print(
+                                            "please3 ---> ${modelData?.object?.messageOutputList?.content?.length}");
+                                      },
+                                    );
+                                    stompClient.send(
+                                      destination:
+                                          "/sendMessage/${widget.Room_ID}",
+                                      body: json.encode({
+                                        "message": "${Add_Comment.text}",
+                                        "messageType": "TEXT",
+                                        "roomUid": "${widget.Room_ID}",
+                                        "userCode": "${UserCode}"
+                                      }),
+                                    );
+                                  }
+                                } else {
+                                  SnackBar snackBar = SnackBar(
+                                    content: Text('Please Enter Comment'),
+                                    backgroundColor:
+                                        ColorConstant.primary_color,
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                }
+                              },
+                              child: Container(
+                                height: 50,
+                                // width: 50,
+                                decoration: BoxDecoration(
+                                    color: Color(0xFFED1C25),
+                                    borderRadius: BorderRadius.circular(25)),
+                                child: Image.asset(
+                                  "assets/images/Vector (13).png",
+                                  color: Colors.white,
+                                ),
+
+                                // width: width - 95,
                               ),
-                              loadingIndicator: const SizedBox.shrink(),
-                              tabIndicatorAnimDuration: kTabScrollDuration,
-                              categoryIcons: const CategoryIcons(),
-                              buttonMode: ButtonMode.MATERIAL,
-                              checkPlatformCompatibility: true,
                             ),
-                          )),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    )
-                  ]),
+                          ],
+                        ),
+                        // Offstage(
+                        //   child:
+                        //       EmojiPicker(/* onEmojiSelected: onEmojiSelected */),
+                        //   offstage: !isEmojiVisible,
+                        // ),
+                        Offstage(
+                          offstage: !isEmojiVisible,
+                          child: SizedBox(
+                              height: 250,
+                              child: EmojiPicker(
+                                textEditingController: Add_Comment,
+                                onBackspacePressed: _onBackspacePressed,
+                                config: Config(
+                                  columns: 7,
+                                  // Issue: https://github.com/flutter/flutter/issues/28894
+                                  emojiSizeMax: 32 *
+                                      (foundation.defaultTargetPlatform ==
+                                              TargetPlatform.iOS
+                                          ? 1.30
+                                          : 1.0),
+                                  verticalSpacing: 0,
+                                  horizontalSpacing: 0,
+                                  gridPadding: EdgeInsets.zero,
+                                  initCategory: Category.RECENT,
+                                  bgColor: const Color(0xFFF2F2F2),
+                                  indicatorColor: Colors.blue,
+                                  iconColor: Colors.grey,
+                                  iconColorSelected: Colors.blue,
+                                  backspaceColor: Colors.blue,
+                                  skinToneDialogBgColor: Colors.white,
+                                  skinToneIndicatorColor: Colors.grey,
+                                  enableSkinTones: true,
+                                  recentTabBehavior: RecentTabBehavior.RECENT,
+                                  recentsLimit: 28,
+                                  replaceEmojiOnLimitExceed: false,
+                                  noRecents: const Text(
+                                    'No Recents',
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.black26),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  loadingIndicator: const SizedBox.shrink(),
+                                  tabIndicatorAnimDuration: kTabScrollDuration,
+                                  categoryIcons: const CategoryIcons(),
+                                  buttonMode: ButtonMode.MATERIAL,
+                                  checkPlatformCompatibility: true,
+                                ),
+                              )),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        )
+                      ]),
+                    ],
+                  ),
                 ));
             // }
             // return Center(
@@ -1034,10 +1049,20 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
 
   Future<void> camerapicker() async {
     pickedImageFile = await picker.pickImage(source: ImageSource.camera);
+    if (pickedImageFile != null) {
+      setState(() {
+        _image = File(pickedImageFile!.path);
+      });
+    }
   }
 
   Future<void> pickProfileImage() async {
     pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImageFile != null) {
+      setState(() {
+        _image = File(pickedImageFile!.path);
+      });
+    }
   }
 
   void onClickedEmoji() async {

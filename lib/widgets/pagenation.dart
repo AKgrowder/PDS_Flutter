@@ -20,7 +20,7 @@ class PaginationWidget extends StatefulWidget {
   @override
   State<PaginationWidget> createState() => _PaginationWidgetState();
 }
-  
+
 class _PaginationWidgetState extends State<PaginationWidget> {
   int _offset = 0;
   List<int>? _offsetList;
