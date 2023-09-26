@@ -28,9 +28,9 @@ class ApiServices {
     } else {
       baseURL =
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
-            "https://uatapi.packagingdepot.store/";
+          // "https://uatapi.packagingdepot.store/";
           // "https://packagingdepot.store/";
-          // "http://192.168.29.17:8081/";
+          "http://192.168.29.100:8081/";
     }
 
     print(baseURL);
@@ -65,9 +65,9 @@ class ApiServices {
     if (baseURL == "user/api/fetchSysConfig") {
       baseURL =
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
-             "https://uatapi.packagingdepot.store/";
+          //  "https://uatapi.packagingdepot.store/";
           // "https://packagingdepot.store/";
-          // "http://192.168.29.17:8081/";
+          "http://192.168.29.100:8081/";
     }
     final hasInternet = await checkInternet();
     if (hasInternet == true) {
@@ -140,6 +140,7 @@ class ApiServices {
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
 
     response.headers.addAll(headers1);
+
     if (params != null) {
       response.fields["document"] = params['document'] ?? "";
       response.fields["companyName"] = params['companyName'] ?? "";
@@ -147,6 +148,7 @@ class ApiServices {
       response.fields["userProfilePic"] = params['userProfilePic'] ?? "";
       response.fields["uuid"] = params['uuid'] ?? "";
       response.fields["name"] = params['name'] ?? "";
+      response.fields["email"] = params['email'] ?? "";
     }
     print('response.fields-$response');
     var res = await response.send();
@@ -205,6 +207,27 @@ class ApiServices {
 
   multipartFileUserprofile(
       String APIurl, File imageFile, BuildContext context) async {
+    await UpdateBaseURL();
+    final response =
+        await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
+    print("API =>******${baseURL + APIurl}");
+    if (imageFile != null) {
+      response.files
+          .add(await http.MultipartFile.fromPath('image', imageFile.path));
+    }
+    var res = await response.send();
+    print('responce stauscode-${res.statusCode.toString()}');
+    if (res.statusCode == 602) {
+      setLOGOUT(context);
+    } else {
+      var respond = await http.Response.fromStream(res);
+      print('responsData-${respond.body}');
+      return respond;
+    }
+  }
+
+  multipartFileWithSoket(String APIurl, File imageFile, BuildContext context,
+      String roomId, String UserUid) async {
     await UpdateBaseURL();
     final response =
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
