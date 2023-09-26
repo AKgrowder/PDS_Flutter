@@ -65,6 +65,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   ScrollController scrollController = ScrollController();
   ScrollController scrollController1 = ScrollController();
   bool isScroll = false;
+  bool AddNewData = false;
   File? _image;
   bool isEmojiVisible = false;
   bool isKeyboardVisible = false;
@@ -220,6 +221,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
               Content content1 =
                   Content.fromJson(state.comentApiClass1['object']);
               print('sdfhdsghghfgh--${content1.createdAt}');
+              AddNewData = true;
               modelData?.object?.messageOutputList?.content?.add(content1);
             }
           }, builder: (context, state) {
@@ -492,26 +494,18 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                 fontFamily: "outfit",
                                                                                 fontSize: 14),
                                                                           ),
-                                                                          parsedDateTime != null
-                                                                              ? Padding(
-                                                                                  padding: const EdgeInsets.only(right: 16),
-                                                                                  child: Text(
-                                                                                    customFormat(parsedDateTime!),
-                                                                                    // maxLines: 3,
-                                                                                    textScaleFactor: 1.0,
-                                                                                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
-                                                                                  ),
-                                                                                )
-                                                                              : SizedBox(),
-                                                                          Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.only(right: 16),
+                                                                          Align(
+                                                                            alignment:
+                                                                                Alignment.centerRight,
                                                                             child:
-                                                                                Text(
-                                                                              customFormat(parsedDateTime),
-                                                                              // maxLines: 3,
-                                                                              textScaleFactor: 1.0,
-                                                                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(right: 16),
+                                                                              child: Text(
+                                                                                customFormat(parsedDateTime),
+                                                                                // maxLines: 3,
+                                                                                textScaleFactor: 1.0,
+                                                                                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
+                                                                              ),
                                                                             ),
                                                                           ),
                                                                         ],
@@ -544,44 +538,46 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                 ),
                                               )
                                             : SizedBox(), */
-                                                                      Row(
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.spaceBetween,
-                                                                        children: [
-                                                                          Padding(
-                                                                            padding: EdgeInsets.only(
-                                                                                left: 8.0,
-                                                                                top: 5,
-                                                                                bottom: 10),
-                                                                            child:
-                                                                                Row(
-                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                                              children: [
-                                                                                Padding(
-                                                                                  padding: const EdgeInsets.only(left: 2.0, top: 5),
-                                                                                  // child: CircleAvatar(
-                                                                                  //     backgroundColor: Colors.black,
-                                                                                  //     maxRadius: 3),
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: 3,
-                                                                                ),
-                                                                                Container(
-                                                                                  // height: 45,
-                                                                                  width: _width / 1.3,
-                                                                                  // color: Colors.amber,
-                                                                                  child: Text(
-                                                                                    modelData?.object?.messageOutputList?.content?[index].message ?? "",
-                                                                                    // maxLines: 3,
-                                                                                    textScaleFactor: 1.0,
-                                                                                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
+
+                                                                      Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.all(8.0),
+                                                                        child: modelData?.object?.messageOutputList?.content?[index].messageType !=
+                                                                                'IMAGE'
+                                                                            ? Row(
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.only(left: 8.0, top: 5, bottom: 10),
+                                                                                    child: Row(
+                                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                      children: [
+                                                                                        Container(
+                                                                                          // height: 45,
+                                                                                          width: _width / 1.3,
+                                                                                          // color: Colors.amber,
+                                                                                          child: Text(
+                                                                                            modelData?.object?.messageOutputList?.content?[index].message ?? "",
+                                                                                            // maxLines: 3,
+                                                                                            textScaleFactor: 1.0,
+                                                                                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              )
+                                                                            : Padding(
+                                                                                padding: EdgeInsets.only(right: 16),
+                                                                                child: Align(
+                                                                                  alignment: Alignment.centerLeft,
+                                                                                  child: Container(
+                                                                                    child: AnimatedNetworkImage(imageUrl: "${modelData?.object?.messageOutputList?.content?[index].message}"),
                                                                                   ),
                                                                                 ),
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                        ],
+                                                                              ),
                                                                       ),
                                                                       Divider(
                                                                         color: const Color.fromARGB(
@@ -611,18 +607,22 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                           MainAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                        parsedDateTime !=
-                                                                                null
-                                                                            ? Padding(
-                                                                                padding: const EdgeInsets.only(left: 16),
-                                                                                child: Text(
-                                                                                  customFormat(parsedDateTime!),
-                                                                                  // maxLines: 3,
-                                                                                  textScaleFactor: 1.0,
-                                                                                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
-                                                                                ),
-                                                                              )
-                                                                            : SizedBox(),
+                                                                        Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.only(left: 16),
+                                                                          child:
+                                                                              Text(
+                                                                            customFormat(parsedDateTime!),
+                                                                            // maxLines: 3,
+                                                                            textScaleFactor:
+                                                                                1.0,
+                                                                            style: TextStyle(
+                                                                                fontWeight: FontWeight.bold,
+                                                                                color: Colors.grey,
+                                                                                fontFamily: "outfit",
+                                                                                fontSize: 12),
+                                                                          ),
+                                                                        ),
                                                                         Spacer(),
                                                                         Text(
                                                                           "${modelData?.object?.messageOutputList?.content?[index].userName}",
@@ -685,7 +685,9 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                       print("check MSG get Properly ---> ${content1.message}");
 
                                                                                       var msgUUID = content1.uid;
-                                                                                      if (content1.isDeleted == true) {}
+                                                                                      if (content1.isDeleted == true) {
+                                                                                        BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "0", ShowLoader: true);
+                                                                                      }
 
                                                                                       // if (addmsg != msgUUID) {
                                                                                       //   print("please1 ---> ${modelData?.object?.messageOutputList?.content?.length}");
@@ -715,60 +717,50 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                 child: Container(
                                                                                   height: 20,
                                                                                   width: 20,
-                                                                                  color: Colors.red,
+                                                                                  child: Image.asset(
+                                                                                    ImageConstant.delete,
+                                                                                    color: Colors.red,
+                                                                                  ),
                                                                                 ))),
                                                                     modelData?.object?.messageOutputList?.content?[index].messageType !=
                                                                             'IMAGE'
-                                                                        ? Row(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.spaceBetween,
-                                                                            children: [
-                                                                              Spacer(),
-                                                                              Padding(
-                                                                                  padding: EdgeInsets.only(left: 8.0, top: 5, bottom: 10, right: 12),
-                                                                                  child: Row(
-                                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                    children: [
-                                                                                      GestureDetector(onTap: () {}, child: Icon(Icons.delete, size: 20)),
-                                                                                      Padding(
-                                                                                        padding: const EdgeInsets.only(left: 2.0, top: 5),
-                                                                                        // child: CircleAvatar(
-                                                                                        //     backgroundColor: Colors.black,
-                                                                                        //     maxRadius: 3),
-                                                                                      ),
-                                                                                      SizedBox(
-                                                                                        width: 3,
-                                                                                      ),
-                                                                                      Container(
-                                                                                        // height: 45,
-                                                                                        width: _width / 1.3,
-                                                                                        // color: Colors.amber,
-                                                                                        child: Align(
-                                                                                          alignment: Alignment.topRight,
-                                                                                          child: Text(
-                                                                                            modelData?.object?.messageOutputList?.content?[index].message ?? "",
-                                                                                            // maxLines: 3,
-                                                                                            textScaleFactor: 1.0,
-                                                                                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
-                                                                                          ),
-                                                                                        ),
-                                                                                      )
-                                                                                    ],
-                                                                                  )),
-                                                                            ],
-                                                                          )
-                                                                        : Row(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.start,
-                                                                            children: [
-                                                                              SizedBox(
-                                                                                width: 20,
-                                                                              ),
-                                                                              Container(
+                                                                        ? Padding(
+                                                                            padding: EdgeInsets.only(
+                                                                                left: 8.0,
+                                                                                top: 5,
+                                                                                bottom: 10,
+                                                                                right: 12),
+                                                                            child: Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              children: [
+                                                                                Spacer(),
+                                                                                Container(
+                                                                                  // height: 45,
+                                                                                  width: _width / 1.3,
+                                                                                  // color: Colors.amber,
+                                                                                  child: Align(
+                                                                                    alignment: Alignment.topRight,
+                                                                                    child: Text(
+                                                                                      "${modelData?.object?.messageOutputList?.content?[index].message ?? ""}",
+                                                                                      // maxLines: 3,
+                                                                                      textScaleFactor: 1.0,
+                                                                                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
+                                                                                    ),
+                                                                                  ),
+                                                                                )
+                                                                              ],
+                                                                            ))
+                                                                        : Padding(
+                                                                            padding:
+                                                                                EdgeInsets.only(right: 16),
+                                                                            child:
+                                                                                Align(
+                                                                              alignment: Alignment.centerRight,
+                                                                              child: Container(
                                                                                 child: AnimatedNetworkImage(imageUrl: "${modelData?.object?.messageOutputList?.content?[index].message}"),
-                                                                              )
-                                                                            ],
+                                                                              ),
+                                                                            ),
                                                                           ),
                                                                     Divider(
                                                                       color: const Color
@@ -958,23 +950,27 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                               "check MSG get Properly ---> ${content1.message}");
                                           var msgUUID = content1.uid;
 
-                                          if (addmsg != msgUUID) {
+                                          if (AddNewData == false) {
                                             print(
-                                                "please1 ---> ${modelData?.object?.messageOutputList?.content?.length}");
+                                                'check value --> $AddNewData');
+                                            if (addmsg != msgUUID) {
+                                              print(
+                                                  "please1 ---> ${modelData?.object?.messageOutputList?.content?.length}");
 
-                                            Content content = Content.fromJson(
-                                                jsonString['object']);
-                                            print(
-                                                "please2 ---> ${content.message}");
-                                            modelData?.object?.messageOutputList
-                                                ?.content
-                                                ?.add(content);
+                                              Content content =
+                                                  Content.fromJson(
+                                                      jsonString['object']);
+                                              print(
+                                                  "please2 ---> ${content.message}");
+                                              modelData?.object
+                                                  ?.messageOutputList?.content
+                                                  ?.add(content);
 
-                                            setState(() {
-                                              addmsg = content.uid ?? "";
-                                            });
+                                              setState(() {
+                                                addmsg = content.uid ?? "";
+                                              });
+                                            }
                                           }
-
                                           print(
                                               "please3 ---> ${modelData?.object?.messageOutputList?.content?.length}");
                                         },
