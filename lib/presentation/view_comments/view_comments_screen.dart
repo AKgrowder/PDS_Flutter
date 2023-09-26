@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
@@ -13,6 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:pds/API/Model/coment/coment_model.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stomp_dart_client/parser.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
 import '../../API/ApiService/socket.dart';
@@ -22,6 +24,7 @@ import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../../theme/theme_helper.dart';
+import '../../widgets/animatedwiget.dart';
 import '../../widgets/custom_image_view.dart';
 import '../../widgets/pagenation.dart';
 
@@ -54,6 +57,9 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   var Token = "";
   var UserCode = "";
   var User_Name = "";
+  String? userId;
+  DateTime? parsedDateTime;
+  String? UserLogin_ID;
   ImagePicker picker = ImagePicker();
   XFile? pickedImageFile;
   ScrollController scrollController = ScrollController();
@@ -77,17 +83,14 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
         .coomentPage(widget.Room_ID, context, "0", ShowLoader: true);
     // if (widget.Screen_name == "RoomChat") {
     // }
+    getUserID();
     getToken();
 
     keyboardVisibilityController.onChange.listen((bool isKeyboardVisible) {
-      setState(() {
-        this.isKeyboardVisible = isKeyboardVisible;
-      });
+      this.isKeyboardVisible = isKeyboardVisible;
 
       if (isKeyboardVisible && isEmojiVisible) {
-        setState(() {
-          isEmojiVisible = false;
-        });
+        isEmojiVisible = false;
       }
     });
 
@@ -138,6 +141,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   //  @override
   void dispose() {
     //  stompClient.deactivate();
+    // Delet_stompClient.deactivate();
     super.dispose();
   }
 
@@ -207,6 +211,16 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
             }
             if (state is ComentApiState) {
               modelData = state.comentApiClass;
+            }
+            if (state is ComentApiIntragtionWithChatState) {
+              print('second loaded state');
+
+              _image = null;
+              print('dfdfhsdfhsh-${state.comentApiClass1}');
+              Content content1 =
+                  Content.fromJson(state.comentApiClass1['object']);
+              print('sdfhdsghghfgh--${content1.createdAt}');
+              modelData?.object?.messageOutputList?.content?.add(content1);
             }
           }, builder: (context, state) {
             // if (state is ComentApiState) {
@@ -365,6 +379,39 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                             parsedDateTime =
                                                             DateTime.parse(
                                                                 '${modelData?.object?.messageOutputList?.content?[index].createdAt}');
+
+                                                        DateTime time =
+                                                            DateTime.now();
+                                                        var format =
+                                                            DateFormat("mm");
+                                                        var aa =
+                                                            format.format(time);
+
+                                                        var bb = format.format(
+                                                            parsedDateTime);
+
+                                                        var one =
+                                                            format.parse(bb);
+                                                        var two =
+                                                            format.parse(aa);
+                                                        var final_time =
+                                                            two.difference(one);
+
+                                                        var bbb = Duration(
+                                                            minutes: 10);
+
+                                                        var finalAPI_Time =
+                                                            int.parse(bbb
+                                                                .toString()
+                                                                .split(":")[1]);
+
+                                                        var FixTime = int.parse(
+                                                            final_time
+                                                                .toString()
+                                                                .split(":")[1]);
+
+                                                        // one.difference(two);
+
                                                         print(
                                                             "check User name --> ${modelData?.object?.messageOutputList?.content?[index].userName} Login User Name --> ${User_Name}");
 
@@ -396,7 +443,6 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                             // });
                                                           });
                                                         } else {}
-
                                                         return modelData
                                                                     ?.object
                                                                     ?.messageOutputList
@@ -446,7 +492,17 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                 fontFamily: "outfit",
                                                                                 fontSize: 14),
                                                                           ),
-                                                                          Spacer(),
+                                                                          parsedDateTime != null
+                                                                              ? Padding(
+                                                                                  padding: const EdgeInsets.only(right: 16),
+                                                                                  child: Text(
+                                                                                    customFormat(parsedDateTime!),
+                                                                                    // maxLines: 3,
+                                                                                    textScaleFactor: 1.0,
+                                                                                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
+                                                                                  ),
+                                                                                )
+                                                                              : SizedBox(),
                                                                           Padding(
                                                                             padding:
                                                                                 const EdgeInsets.only(right: 16),
@@ -542,139 +598,187 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                 padding: const EdgeInsets
                                                                         .symmetric(
                                                                     /* horizontal: 35, vertical: 5 */),
-                                                                child:
-                                                                    GestureDetector(
-                                                                  onTap: () {},
-                                                                  child: Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Row(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.start,
-                                                                        children: [
-                                                                          Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.only(left: 16),
-                                                                            child:
-                                                                                Text(
-                                                                              customFormat(parsedDateTime),
-                                                                              // maxLines: 3,
-                                                                              textScaleFactor: 1.0,
-                                                                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
-                                                                            ),
-                                                                          ),
-                                                                          Spacer(),
-                                                                          Text(
-                                                                            "${modelData?.object?.messageOutputList?.content?[index].userName}",
-                                                                            style: TextStyle(
-                                                                                fontWeight: FontWeight.w400,
-                                                                                color: Colors.black,
-                                                                                fontFamily: "outfit",
-                                                                                fontSize: 14),
-                                                                          ),
-                                                                          Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.only(left: 3, right: 10),
-                                                                            child: modelData?.object?.messageOutputList?.content?[index].userProfilePic?.isNotEmpty ?? false
-                                                                                ? CustomImageView(
-                                                                                    url: "${modelData?.object?.messageOutputList?.content?[index].userProfilePic}",
-                                                                                    height: 20,
-                                                                                    radius: BorderRadius.circular(20),
-                                                                                    width: 20,
-                                                                                    fit: BoxFit.fill,
-                                                                                  )
-                                                                                : CustomImageView(
-                                                                                    imagePath: ImageConstant.tomcruse,
-                                                                                    height: 20,
-                                                                                  ),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                      SizedBox(
-                                                                        height:
-                                                                            10,
-                                                                      ),
-                                                                      /* index == 2
-                                            ? Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 8.0,
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    CustomImageView(
-                                                      imagePath: ImageConstant
-                                                          .viewcommentimage,
-                                                      height: 60,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    CustomImageView(
-                                                      imagePath:
-                                                          ImageConstant.mobileman,
-                                                      height: 60,
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                            : SizedBox(), */
-                                                                      Row(
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.spaceBetween,
-                                                                        children: [
-                                                                          Spacer(),
-                                                                          Padding(
-                                                                            padding: EdgeInsets.only(
-                                                                                left: 8.0,
-                                                                                top: 5,
-                                                                                bottom: 10,
-                                                                                right: 12),
-                                                                            child:
-                                                                                Row(
-                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                                              children: [
-                                                                                Padding(
-                                                                                  padding: const EdgeInsets.only(left: 2.0, top: 5),
-                                                                                  // child: CircleAvatar(
-                                                                                  //     backgroundColor: Colors.black,
-                                                                                  //     maxRadius: 3),
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Row(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        parsedDateTime !=
+                                                                                null
+                                                                            ? Padding(
+                                                                                padding: const EdgeInsets.only(left: 16),
+                                                                                child: Text(
+                                                                                  customFormat(parsedDateTime!),
+                                                                                  // maxLines: 3,
+                                                                                  textScaleFactor: 1.0,
+                                                                                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
                                                                                 ),
-                                                                                SizedBox(
-                                                                                  width: 3,
+                                                                              )
+                                                                            : SizedBox(),
+                                                                        Spacer(),
+                                                                        Text(
+                                                                          "${modelData?.object?.messageOutputList?.content?[index].userName}",
+                                                                          style: TextStyle(
+                                                                              fontWeight: FontWeight.w400,
+                                                                              color: Colors.black,
+                                                                              fontFamily: "outfit",
+                                                                              fontSize: 14),
+                                                                        ),
+                                                                        Padding(
+                                                                          padding: const EdgeInsets.only(
+                                                                              left: 3,
+                                                                              right: 10),
+                                                                          child: modelData?.object?.messageOutputList?.content?[index].userProfilePic?.isNotEmpty ?? false
+                                                                              ? CustomImageView(
+                                                                                  url: "${modelData?.object?.messageOutputList?.content?[index].userProfilePic}",
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )
+                                                                              : CustomImageView(
+                                                                                  imagePath: ImageConstant.tomcruse,
+                                                                                  height: 20,
                                                                                 ),
-                                                                                Container(
-                                                                                  // height: 45,
-                                                                                  width: _width / 1.3,
-                                                                                  // color: Colors.amber,
-                                                                                  child: Align(
-                                                                                    alignment: Alignment.topRight,
-                                                                                    child: Text(
-                                                                                      modelData?.object?.messageOutputList?.content?[index].message ?? "",
-                                                                                      // maxLines: 3,
-                                                                                      textScaleFactor: 1.0,
-                                                                                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
-                                                                              ],
-                                                                            ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    Padding(
+                                                                        padding: EdgeInsets.only(
+                                                                            left:
+                                                                                16),
+                                                                        child: finalAPI_Time <
+                                                                                FixTime
+                                                                            ? SizedBox()
+                                                                            : GestureDetector(
+                                                                                onTap: () {
+                                                                                  print("delete msg");
+
+                                                                                  print(modelData?.object?.messageOutputList?.content?[index].uid);
+                                                                                  print(UserLogin_ID);
+                                                                                  // roomUid = "${widget.Room_ID}";
+                                                                                  // DeleteMSg_baseURL = " assas ";
+
+                                                                                  // var Delete_MEG_uid = "${modelData?.object?.messageOutputList?.content?[index].uid}";
+                                                                                  // var Login_userUID = "${UserLogin_ID}";
+
+                                                                                  // checkGuestUser();
+                                                                                  // roomUid = "${widget.Room_ID}";
+                                                                                  Room_ID_stomp = "${widget.Room_ID}";
+                                                                                  stompClient.subscribe(
+                                                                                    destination:
+                                                                                        // "ws://72c1-2405-201-200b-a0cf-210f-e5fe-f229-e899.ngrok.io",
+                                                                                        "/topic/getDeletedMessage/${widget.Room_ID}",
+                                                                                    callback: (StompFrame frame) {
+                                                                                      Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
+                                                                                      print('Add RealTime MSG --->$jsonString');
+
+                                                                                      Content content1 = Content.fromJson(jsonString['object']);
+                                                                                      print("check MSG get Properly ---> ${content1.message}");
+
+                                                                                      var msgUUID = content1.uid;
+                                                                                      if (content1.isDeleted == true) {}
+
+                                                                                      // if (addmsg != msgUUID) {
+                                                                                      //   print("please1 ---> ${modelData?.object?.messageOutputList?.content?.length}");
+
+                                                                                      //   Content content = Content.fromJson(jsonString['object']);
+                                                                                      //   print("please2 ---> ${content.message}");
+                                                                                      //   modelData?.object?.messageOutputList?.content?.add(content);
+
+                                                                                      //   setState(() {
+                                                                                      //     addmsg = content.uid ?? "";
+                                                                                      //   });
+                                                                                      // }
+
+                                                                                      // print("please3 ---> ${modelData?.object?.messageOutputList?.content?.length}");
+                                                                                    },
+                                                                                  );
+
+                                                                                  stompClient.send(
+                                                                                    destination: "/deleteMessage/${widget.Room_ID}",
+                                                                                    body: json.encode({
+                                                                                      "uid": "${modelData?.object?.messageOutputList?.content?[index].uid}",
+                                                                                      "userCode": "${UserLogin_ID}",
+                                                                                      "roomUid": "${widget.Room_ID}"
+                                                                                    }),
+                                                                                  );
+                                                                                },
+                                                                                child: Container(
+                                                                                  height: 20,
+                                                                                  width: 20,
+                                                                                  color: Colors.red,
+                                                                                ))),
+                                                                    modelData?.object?.messageOutputList?.content?[index].messageType !=
+                                                                            'IMAGE'
+                                                                        ? Row(
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.spaceBetween,
+                                                                            children: [
+                                                                              Spacer(),
+                                                                              Padding(
+                                                                                  padding: EdgeInsets.only(left: 8.0, top: 5, bottom: 10, right: 12),
+                                                                                  child: Row(
+                                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      GestureDetector(onTap: () {}, child: Icon(Icons.delete, size: 20)),
+                                                                                      Padding(
+                                                                                        padding: const EdgeInsets.only(left: 2.0, top: 5),
+                                                                                        // child: CircleAvatar(
+                                                                                        //     backgroundColor: Colors.black,
+                                                                                        //     maxRadius: 3),
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        width: 3,
+                                                                                      ),
+                                                                                      Container(
+                                                                                        // height: 45,
+                                                                                        width: _width / 1.3,
+                                                                                        // color: Colors.amber,
+                                                                                        child: Align(
+                                                                                          alignment: Alignment.topRight,
+                                                                                          child: Text(
+                                                                                            modelData?.object?.messageOutputList?.content?[index].message ?? "",
+                                                                                            // maxLines: 3,
+                                                                                            textScaleFactor: 1.0,
+                                                                                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
+                                                                                          ),
+                                                                                        ),
+                                                                                      )
+                                                                                    ],
+                                                                                  )),
+                                                                            ],
+                                                                          )
+                                                                        : Row(
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.start,
+                                                                            children: [
+                                                                              SizedBox(
+                                                                                width: 20,
+                                                                              ),
+                                                                              Container(
+                                                                                child: AnimatedNetworkImage(imageUrl: "${modelData?.object?.messageOutputList?.content?[index].message}"),
+                                                                              )
+                                                                            ],
                                                                           ),
-                                                                        ],
-                                                                      ),
-                                                                      Divider(
-                                                                        color: const Color.fromARGB(
-                                                                            117,
-                                                                            0,
-                                                                            0,
-                                                                            0),
-                                                                      ),
-                                                                    ],
-                                                                  ),
+                                                                    Divider(
+                                                                      color: const Color
+                                                                              .fromARGB(
+                                                                          117,
+                                                                          0,
+                                                                          0,
+                                                                          0),
+                                                                    ),
+                                                                  ],
                                                                 ),
                                                               );
                                                         // }
@@ -821,74 +925,80 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                if (Add_Comment.text.isNotEmpty) {
-                                  if (Add_Comment.text.length >= 255) {
+                                if (_image != null) {
+                                  BlocProvider.of<senMSGCubit>(context)
+                                      .chatImageMethod(widget.Room_ID, context,
+                                          userId.toString(), _image!);
+                                } else {
+                                  if (Add_Comment.text.isNotEmpty) {
+                                    if (Add_Comment.text.length >= 255) {
+                                      SnackBar snackBar = SnackBar(
+                                        content: Text(
+                                            'One Time Message Lenght only for 255 Your Meassge -> ${Add_Comment.text.length}'),
+                                        backgroundColor:
+                                            ColorConstant.primary_color,
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    } else {
+                                      checkGuestUser();
+                                      Room_ID_stomp = "${widget.Room_ID}";
+                                      stompClient.subscribe(
+                                        destination:
+                                            "/topic/getMessage/${widget.Room_ID}",
+                                        callback: (StompFrame frame) {
+                                          Map<String, dynamic> jsonString =
+                                              json.decode(frame.body ?? "");
+                                          print(
+                                              'Add RealTime MSG --->$jsonString');
+
+                                          Content content1 = Content.fromJson(
+                                              jsonString['object']);
+                                          print(
+                                              "check MSG get Properly ---> ${content1.message}");
+                                          var msgUUID = content1.uid;
+
+                                          if (addmsg != msgUUID) {
+                                            print(
+                                                "please1 ---> ${modelData?.object?.messageOutputList?.content?.length}");
+
+                                            Content content = Content.fromJson(
+                                                jsonString['object']);
+                                            print(
+                                                "please2 ---> ${content.message}");
+                                            modelData?.object?.messageOutputList
+                                                ?.content
+                                                ?.add(content);
+
+                                            setState(() {
+                                              addmsg = content.uid ?? "";
+                                            });
+                                          }
+
+                                          print(
+                                              "please3 ---> ${modelData?.object?.messageOutputList?.content?.length}");
+                                        },
+                                      );
+                                      stompClient.send(
+                                        destination:
+                                            "/sendMessage/${widget.Room_ID}",
+                                        body: json.encode({
+                                          "message": "${Add_Comment.text}",
+                                          "messageType": "TEXT",
+                                          "roomUid": "${widget.Room_ID}",
+                                          "userCode": "${UserCode}"
+                                        }),
+                                      );
+                                    }
+                                  } else {
                                     SnackBar snackBar = SnackBar(
-                                      content: Text(
-                                          'One Time Message Lenght only for 255 Your Meassge -> ${Add_Comment.text.length}'),
+                                      content: Text('Please Enter Comment'),
                                       backgroundColor:
                                           ColorConstant.primary_color,
                                     );
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(snackBar);
-                                  } else {
-                                    checkGuestUser();
-                                    Room_ID_stomp = "${widget.Room_ID}";
-                                    stompClient.subscribe(
-                                      destination:
-                                          "/topic/getMessage/${widget.Room_ID}",
-                                      callback: (StompFrame frame) {
-                                        Map<String, dynamic> jsonString =
-                                            json.decode(frame.body ?? "");
-                                        print(
-                                            'Add RealTime MSG --->$jsonString');
-
-                                        Content content1 = Content.fromJson(
-                                            jsonString['object']);
-                                        print(
-                                            "check MSG get Properly ---> ${content1.message}");
-                                        var msgUUID = content1.uid;
-
-                                        if (addmsg != msgUUID) {
-                                          print(
-                                              "please1 ---> ${modelData?.object?.messageOutputList?.content?.length}");
-
-                                          Content content = Content.fromJson(
-                                              jsonString['object']);
-                                          print(
-                                              "please2 ---> ${content.message}");
-                                          modelData?.object?.messageOutputList
-                                              ?.content
-                                              ?.add(content);
-
-                                          setState(() {
-                                            addmsg = content.uid ?? "";
-                                          });
-                                        }
-
-                                        print(
-                                            "please3 ---> ${modelData?.object?.messageOutputList?.content?.length}");
-                                      },
-                                    );
-                                    stompClient.send(
-                                      destination:
-                                          "/sendMessage/${widget.Room_ID}",
-                                      body: json.encode({
-                                        "message": "${Add_Comment.text}",
-                                        "messageType": "TEXT",
-                                        "roomUid": "${widget.Room_ID}",
-                                        "userCode": "${UserCode}"
-                                      }),
-                                    );
                                   }
-                                } else {
-                                  SnackBar snackBar = SnackBar(
-                                    content: Text('Please Enter Comment'),
-                                    backgroundColor:
-                                        ColorConstant.primary_color,
-                                  );
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
                                 }
                               },
                               child: Container(
@@ -995,9 +1105,14 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     );
   }
 
+  getUserID() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
+  }
+
   checkGuestUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    var UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
+    UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
 
     if (UserLogin_ID != null) {
       print("user login Mood");
@@ -1040,28 +1155,99 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
 
   getToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = prefs.getString(PreferencesKey.loginUserID) ?? "";
     Token = prefs.getString(PreferencesKey.loginJwt) ?? "";
     UserCode = prefs.getString(PreferencesKey.loginUserID) ?? "";
     User_Name = prefs.getString(PreferencesKey.ProfileUserName) ?? "";
     baseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
     stompClient.activate();
+    // Delet_stompClient.activate();
   }
 
   Future<void> camerapicker() async {
     pickedImageFile = await picker.pickImage(source: ImageSource.camera);
     if (pickedImageFile != null) {
-      setState(() {
-        _image = File(pickedImageFile!.path);
-      });
+      if (!_isGifOrSvg(pickedImageFile!.path)) {
+        setState(() {
+          _image = File(pickedImageFile!.path);
+        });
+      } else {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(
+              "Selected File Error",
+              textScaleFactor: 1.0,
+            ),
+            content: Text(
+              "Only PNG, JPG Supported.",
+              textScaleFactor: 1.0,
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                child: Container(
+                  // color: Colors.green,
+                  padding: const EdgeInsets.all(10),
+                  child: const Text("Okay"),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
     }
+  }
+
+  bool _isGifOrSvg(String imagePath) {
+    // Check if the image file has a .gif or .svg extension
+    final lowerCaseImagePath = imagePath.toLowerCase();
+    return lowerCaseImagePath.endsWith('.gif') ||
+        lowerCaseImagePath.endsWith('.svg') ||
+        lowerCaseImagePath.endsWith('.pdf') ||
+        lowerCaseImagePath.endsWith('.doc') ||
+        lowerCaseImagePath.endsWith('.mp4') ||
+        lowerCaseImagePath.endsWith('.mov') ||
+        lowerCaseImagePath.endsWith('.mp3') ||
+        lowerCaseImagePath.endsWith('.m4a');
   }
 
   Future<void> pickProfileImage() async {
     pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedImageFile != null) {
-      setState(() {
-        _image = File(pickedImageFile!.path);
-      });
+      if (!_isGifOrSvg(pickedImageFile!.path)) {
+        setState(() {
+          _image = File(pickedImageFile!.path);
+        });
+      } else {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(
+              "Selected File Error",
+              textScaleFactor: 1.0,
+            ),
+            content: Text(
+              "Only PNG, JPG Supported.",
+              textScaleFactor: 1.0,
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                child: Container(
+                  // color: Colors.green,
+                  padding: const EdgeInsets.all(10),
+                  child: const Text("Okay"),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 

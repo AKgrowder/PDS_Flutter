@@ -1586,6 +1586,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 params['name'] = userName.text;
                                 params['uuid'] =
                                     myAccontDetails?.object?.uuid.toString();
+
+                                params['email'] = email.text;
                                 BlocProvider.of<MyAccountCubit>(context)
                                     .cretaForumUpdate(params, context);
                               }
@@ -1732,33 +1734,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       },
     );
   }
-
-/*   void showPdfDialog(BuildContext context, pdfUrl) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('PDF Viewer'),
-          content: Container(
-            width: double.maxFinite,
-            height: 400, // Adjust the height as needed
-            child: SfPdfViewer.network(
-              pdfUrl,
-              // Customize the viewer with options here if needed
-            ),
-          ),
-          actions: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: Text('Close'),
-            ),
-          ],
-        );
-      },
-    );
-  } */
 
   getUploadeProfile(
       String filepath, int decimals, File file1, int Index) async {

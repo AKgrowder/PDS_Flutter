@@ -171,8 +171,8 @@ class Repository {
         return Config.loginerror;
       case 500:
         return Config.servernotreachable;
-        case 403:
-        return LoginModel.fromJson(jsonString); 
+      case 403:
+        return LoginModel.fromJson(jsonString);
       default:
         return LoginModel.fromJson(jsonString);
     }
@@ -814,6 +814,23 @@ class Repository {
       case 500:
         return Config.servernotreachable;
 
+      default:
+        return jsonString;
+    }
+  }
+
+  chatImage(BuildContext context, String room_Id, String userUid,File imageFile) async {
+    final response = await apiServices.multipartFileUserprofile(
+        "${Config.chatImage}/${room_Id}/${userUid}",imageFile, context,);
+    var jsonString = json.decode(response.body);
+    print('jasonnString$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return jsonString;
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
       default:
         return jsonString;
     }

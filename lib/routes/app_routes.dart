@@ -19,9 +19,7 @@ class AppRoutes {
   static const String forgetPasswordScreen = '/forget_password_screen';
 
   static const String createAccountScreen = '/create_account_screen';
- 
-
-  static Map<String, WidgetBuilder> routes = {
+    static Map<String, WidgetBuilder> routes = {
     splashScreen: (context) => SplashScreen(),
     registerCreateAccountScreen: (context) => RegisterCreateAccountScreen(),
     registerScreen: (context) => LoginScreen(),
