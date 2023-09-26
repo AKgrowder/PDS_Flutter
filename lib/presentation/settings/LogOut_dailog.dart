@@ -80,6 +80,7 @@ class LogOutdailogState extends State<LogOutdailog>
                       prefs.remove(PreferencesKey.loginUserID);
                       prefs.remove(PreferencesKey.loginJwt);
                       prefs.remove(PreferencesKey.module);
+                      prefs.remove(PreferencesKey.ProfileUserName);
 
                       SnackBar snackBar = SnackBar(
                         content: Text(state.LoginOutModel.message.toString()),
