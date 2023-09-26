@@ -66,6 +66,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   ScrollController scrollController1 = ScrollController();
   bool isScroll = false;
   bool AddNewData = false;
+  bool addDataSccesfully = false;
+
   File? _image;
   bool isEmojiVisible = false;
   bool isKeyboardVisible = false;
@@ -218,11 +220,13 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
 
               _image = null;
               print('dfdfhsdfhsh-${state.comentApiClass1}');
-              Content content1 =
-                  Content.fromJson(state.comentApiClass1['object']);
-              print('sdfhdsghghfgh--${content1.createdAt}');
-              AddNewData = true;
-              modelData?.object?.messageOutputList?.content?.add(content1);
+              if (addDataSccesfully == false) {
+                Content content1 =
+                    Content.fromJson(state.comentApiClass1['object']);
+                print('sdfhdsghghfgh--${content1.createdAt}');
+                AddNewData = true;
+                modelData?.object?.messageOutputList?.content?.add(content1);
+              }
             }
           }, builder: (context, state) {
             // if (state is ComentApiState) {
@@ -341,7 +345,6 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                   onPagination: (p0) async {
                                                     print("-------------" +
                                                         p0.toString());
-
                                                     await BlocProvider.of<
                                                                 senMSGCubit>(
                                                             context)
@@ -949,7 +952,6 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                           print(
                                               "check MSG get Properly ---> ${content1.message}");
                                           var msgUUID = content1.uid;
-
                                           if (AddNewData == false) {
                                             print(
                                                 'check value --> $AddNewData');
@@ -967,6 +969,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                   ?.add(content);
 
                                               setState(() {
+                                                addDataSccesfully = true;
                                                 addmsg = content.uid ?? "";
                                               });
                                             }
