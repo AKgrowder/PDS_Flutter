@@ -20,7 +20,7 @@ void onConnect(StompFrame frame) {
     },
   );
 
-   stompClient.subscribe(
+  stompClient.subscribe(
     destination: "/topic/getDeletedMessage/${Room_ID_stomp}",
     callback: (StompFrame frame) {
       print('Received message AA-: ${frame.body}');
@@ -37,21 +37,20 @@ void onConnect(StompFrame frame) {
       },
     );
 
-     stompClient.subscribe(
-    destination: "/topic/getDeletedMessage/${Room_ID_stomp}",
-    callback: (StompFrame frame) {
-
-      print('Received message AA-: ${frame.body}');
-      // Process the received message
-    },
-  );
+    stompClient.subscribe(
+      destination: "/topic/getDeletedMessage/${Room_ID_stomp}",
+      callback: (StompFrame frame) {
+        print('Received message AA-: ${frame.body}');
+        // Process the received message
+      },
+    );
   });
 }
 
 final stompClient = StompClient(
   config: StompConfig(
-    url: 
-    // "ws://72c1-2405-201-200b-a0cf-210f-e5fe-f229-e899.ngrok.io/user/pdsChat",
+    url:
+        // "ws://d91d-2405-201-200b-a0cf-d0c7-a57a-7eba-c736.ngrok.io/user/pdsChat",
     baseURL,
     onConnect: onConnect,
     beforeConnect: () async {
