@@ -1556,6 +1556,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                             "${PriveateRoomData?.object?[index].uid ?? ""}",
                                                         Title:
                                                             "${PriveateRoomData?.object?[index].roomQuestion ?? ""}",
+                                                            userUid: PriveateRoomData?.object?[index].uid,
                                                       ),
                                                     );
                                                   }));

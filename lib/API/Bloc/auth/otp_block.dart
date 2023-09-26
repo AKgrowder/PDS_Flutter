@@ -13,7 +13,7 @@ class OtpCubit extends Cubit<OtpState> {
       otpModel = await Repository().otpModel(OTP, userNumber, context);
       if (otpModel.success == true) {
         emit(OtpLoadedState(otpModel));
-      }else{
+      } else {
         emit(OtpErrorState(otpModel.message));
       }
     } catch (e) {
@@ -22,8 +22,7 @@ class OtpCubit extends Cubit<OtpState> {
     }
   }
 
-
-   Future<void> resendOtpApi(String userNumber, BuildContext context) async {
+  Future<void> resendOtpApi(String userNumber, BuildContext context) async {
     dynamic forgetpassword;
     try {
       emit(OtpLoadingState());
