@@ -14,52 +14,45 @@ var baseURL = "";
 void onConnect(StompFrame frame) {
   stompClient.subscribe(
     destination: "/topic/getMessage/${Room_ID_stomp}",
-    // "user/topic/messages",
-    //  'user/topic/getMessage/${Room_ID}',
     callback: (StompFrame frame) {
       print('Received message AA-: ${frame.body}');
       // Process the received message
     },
   );
-//   stompClient.subscribe(
-//     destination: '/topic/messages',
-//     callback: (frame) {
-//       List<dynamic>? result = json.decode(frame.body!);
-//       print(result);
-//     },
-//   );
+
+   stompClient.subscribe(
+    destination: "/topic/getDeletedMessage/${Room_ID_stomp}",
+    callback: (StompFrame frame) {
+      print('Received message AA-: ${frame.body}');
+      // Process the received message
+    },
+  );
 
   Timer.periodic(Duration(seconds: 5), (_) {
-    print("Call Send++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    print("Room Socket ++++++++++++++++++++++++++++++++++++++++++++++++++++");
     stompClient.subscribe(
       destination: "/topic/getMessage/${Room_ID_stomp}",
-      // "user/topic/messages",
-      //  'user/topic/getMessage/${Room_ID}',
       callback: (StompFrame frame) {
         print('Received message AA-: ${frame.body}');
-        // Process the received message
       },
     );
-    // stompClient.send(
-    //   destination: "/chat",
-    //   // 'user/app/sendMessage/${Room_ID}',
-    //   body: json.encode({
-    //     "message": "Archit 1",
-    //     "messageType": "asd",
-    //     "roomUid": "${Room_ID}"
-    //   }),
-    // );
+
+     stompClient.subscribe(
+    destination: "/topic/getDeletedMessage/${Room_ID_stomp}",
+    callback: (StompFrame frame) {
+
+      print('Received message AA-: ${frame.body}');
+      // Process the received message
+    },
+  );
   });
 }
 
 final stompClient = StompClient(
   config: StompConfig(
-    url: baseURL,
-    // 'ws://b71b-2405-201-200b-a0cf-e57b-ed1f-25d4-f1ec.ngrok.io/user/pdsChat',
-    // 'ws://192.168.29.17:8081/user/pdsChat',
-    // "ws://https://packagingdepot.store/user/pdsChat";
-    // "ws://https://uat.packagingdepot.store/user/pdsChat",
-    // "${baseURL}",
+    url: 
+    // "ws://72c1-2405-201-200b-a0cf-210f-e5fe-f229-e899.ngrok.io/user/pdsChat",
+    baseURL,
     onConnect: onConnect,
     beforeConnect: () async {
       print('waiting to connect...');
@@ -71,18 +64,8 @@ final stompClient = StompClient(
     onWebSocketError: (dynamic error) => print(
       error.toString(),
     ),
-    // stompConnectHeaders: {'Authorization': 'Bearer yourToken'},
-    // webSocketConnectHeaders: {'Authorization': 'Bearer yourToken'},
   ),
 );
-
-// getAPI() async {
-//   final SharedPreferences prefs = await SharedPreferences.getInstance();
-//   baseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
-//   dynamic yes = [['xbvfsdvgfsdfg ']];
-
-//   prefs.setStringList('key',yes);
-// }
 
 onConnectCallback(StompFrame connectFrame) {
   // client is connected and ready
@@ -95,8 +78,60 @@ onErrorCallback(dynamic error) {
   // Handle connection error
 }
 
-///set in On_Tap()
-//  stompClient.send(
-//                   destination: '/chat',
-//                   body: json.encode({'from': "123", "text": userInput.text}),
-//                 );
+/// ------------------------------------------------------------------------------------------------------------------------------------------------------------
+/* 
+var roomUid = "";
+var DeleteMSg_baseURL = "";
+
+
+
+/// late StompClient stompClient;
+void Delet_onConnect(StompFrame frame) {
+  stompClient.subscribe(
+    destination: "/topic/getDeletedMessage/{$roomUid}",
+    callback: (StompFrame frame) {
+      print('Received message AA-: ${frame.body}');
+      // Process the received message
+    },
+  );
+
+  Timer.periodic(Duration(seconds: 8), (_) {
+    print(
+        "Delete MSG Socket -------------------------------------------------");
+    stompClient.subscribe(
+      destination: "/topic/getDeletedMessage/{$roomUid}",
+      callback: (StompFrame frame) {
+        print('Received message AA-: ${frame.body}');
+      },
+    );
+  });
+}
+
+final Delet_stompClient = StompClient(
+  config: StompConfig(
+      url: "/topic/getDeletedMessage/${roomUid}",
+      onConnect: Delet_onConnect,
+      beforeConnect: () async {
+        print('Delete MSG Socket waiting to connect...');
+        await Future.delayed(Duration(
+          milliseconds: 200,
+        ));
+        print('Delete MSG Socket connecting...');
+      },
+      onWebSocketError: (dynamic error) => {
+            print("Delete MSG Socket issue"),
+            print(error.toString()),
+          }),
+);
+
+Delet_onConnectCallback(StompFrame connectFrame) {
+  // client is connected and ready
+  print("client is connected and ready");
+  // stompClient.activate();
+}
+
+Delet_onErrorCallback(dynamic error) {
+  print('Error connecting to STOMP server: $error');
+  // Handle connection error
+}
+ */
