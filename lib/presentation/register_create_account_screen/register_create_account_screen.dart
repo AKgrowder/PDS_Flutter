@@ -2,7 +2,6 @@ import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:pds/API/Bloc/auth/register_Block.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
-import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/custom_bottom_bar/custom_bottom_bar.dart';
 import 'package:pds/presentation/Login_Screen/Login_Screen.dart';
@@ -22,7 +21,7 @@ class RegisterCreateAccountScreen extends StatefulWidget {
 }
 
 class _RegisterCreateAccountScreenState
-    extends State<RegisterCreateAccountScreen> {
+extends State<RegisterCreateAccountScreen> {
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
@@ -34,11 +33,8 @@ class _RegisterCreateAccountScreenState
           Stack(
             children: [
               Container(
-                //-----------------------------
                 height: _height / 2.5,
-                //----------------------------
                 width: _width,
-                // color: Colors.red,
                 child: CustomImageView(
                   imagePath: ImageConstant.register,
                   fit: BoxFit.fill,
@@ -135,7 +131,6 @@ class _RegisterCreateAccountScreenState
                   )
                 ], child: CreateAccountScreen());
               }));
-          
             },
             child: Padding(
               padding: EdgeInsets.only(left: 30, right: 30, bottom: 30),

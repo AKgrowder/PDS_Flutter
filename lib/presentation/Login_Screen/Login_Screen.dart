@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: Image.asset(ImageConstant.loader,
-                            fit: BoxFit.cover,height: 100.0, width: 100),
+                            fit: BoxFit.cover, height: 100.0, width: 100),
                       ),
                     ),
                   );
@@ -523,11 +523,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                     "password": passwordoneController.text,
                                     "isFromAdmin": false
                                   };
-                                 
+
                                   print('dataPassing-$dataPassing');
 
                                   if (SubmitOneTime == false) {
-                                     SubmitOneTime = true;
+                                    SubmitOneTime = true;
                                     BlocProvider.of<LoginCubit>(context)
                                         .loginApidata(dataPassing, context);
                                   }
@@ -651,7 +651,7 @@ class _LoginScreenState extends State<LoginScreen> {
     prefs.setString(
         PreferencesKey.ProfileName, "${getUserDataModelData?.object?.name}");
     prefs.setString(
-        PreferencesKey.ProfileEmail, "${getUserDataModelData?.object?.email}");
+        PreferencesKey.ProfileEmail,"${getUserDataModelData?.object?.email}");
     prefs.setString(PreferencesKey.ProfileModule,
         "${getUserDataModelData?.object?.module}");
     prefs.setString(PreferencesKey.ProfileMobileNo,
