@@ -24,6 +24,7 @@ import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../../theme/theme_helper.dart';
+import '../../widgets/animatedwiget.dart';
 import '../../widgets/custom_image_view.dart';
 import '../../widgets/pagenation.dart';
 
