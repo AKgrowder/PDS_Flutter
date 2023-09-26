@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,7 +48,9 @@ class senMSGCubit extends Cubit<senMSGState> {
       emit(senMSGErrorState(comentApiClass));
     }
   }
-  Future<void> coomentPagePagenation(String Room_ID, BuildContext context, String currentPage,
+
+  Future<void> coomentPagePagenation(
+      String Room_ID, BuildContext context, String currentPage,
       {bool ShowLoader = true}) async {
     print('roomId-$Room_ID');
     dynamic comentApiClassPagenation;
@@ -73,6 +77,31 @@ class senMSGCubit extends Cubit<senMSGState> {
     } catch (e) {
       print('Catthceroor-${e.toString()}');
       emit(senMSGErrorState(comentApiClassPagenation));
+    }
+  }
+
+  Future<void> chatImageMethod(
+    String Room_ID,
+    BuildContext context,
+    String userUid,
+    File imageFile,
+  ) async {
+    print('roomId-$Room_ID');
+    print("userUid-$userUid");
+    dynamic responce;
+    try {
+      responce =
+          await Repository().chatImage(context, Room_ID, userUid, imageFile);
+         print('dfbsdfhsdf-$responce'); 
+      if (responce['success'] == true) {
+        print("comentApiClass.sucuess-");
+        emit(ComentApiIntragtionWithChatState(responce));
+      } else {
+        emit(senMSGErrorState('No Data Found!'));
+      }
+    } catch (e) {
+      print('Catthceroor-${e.toString()}');
+      emit(senMSGErrorState(responce['message']));
     }
   }
 }

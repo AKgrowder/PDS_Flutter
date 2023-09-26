@@ -357,10 +357,11 @@ class Content {
   String? message;
   String? messageType;
   String? userName;
-  Null? messageCount;
+  String? messageCount;
   String? userCode;
   String? userProfilePic;
   String? createdAt;
+  bool? isDeleted;
 
   Content(
       {this.uid,
@@ -370,7 +371,7 @@ class Content {
       this.messageCount,
       this.userCode,
       this.userProfilePic,
-      this.createdAt});
+      this.createdAt,this.isDeleted});
 
   Content.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
@@ -381,6 +382,7 @@ class Content {
     userCode = json['userCode'];
     userProfilePic = json['userProfilePic'];
     createdAt = json['createdAt'];
+    isDeleted = json['isDeleted'];
   }
 
   Map<String, dynamic> toJson() {
@@ -393,6 +395,7 @@ class Content {
     data['userCode'] = this.userCode;
     data['userProfilePic'] = this.userProfilePic;
     data['createdAt'] = this.createdAt;
+    data['isDeleted'] = this.isDeleted;
     return data;
   }
 }
