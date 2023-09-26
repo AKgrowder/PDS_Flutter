@@ -47,5 +47,7 @@ class Config {
   static const String loginerror = "Please Login With UserName";
   static const String RateUs = "guest/addRating";
   static const String emailVerifaction= "user/api/send_email_verify";
+  static const String chatImage = "user/sendImageInChat";
+
 
 }

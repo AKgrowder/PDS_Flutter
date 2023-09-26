@@ -23,5 +23,9 @@ class ComentApiState extends senMSGState {
   final ComentApiModel comentApiClass;
 
   ComentApiState(this.comentApiClass);
- 
+}
+
+class ComentApiIntragtionWithChatState extends senMSGState {
+  final dynamic comentApiClass1;
+  ComentApiIntragtionWithChatState(this.comentApiClass1);
 }
