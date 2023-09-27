@@ -170,14 +170,14 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                               ),
                               Center(
                                 child: Container(
-                                  height: 40,
+                                  // height: 40,
                                   width: width / 1.45,
                                   decoration: BoxDecoration(
                                       border: Border.all(color: Colors.grey),
                                       borderRadius: BorderRadius.circular(5)),
                                   child: Padding(
                                     padding: const EdgeInsets.only(
-                                        top: 8.0, left: 10),
+                                        top: 0.0, left: 10),
                                     child: TextFormField(
                                       // validator: (value) {
                                       //   final RegExp emailRegExp = RegExp(
