@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class PublicRoomModel {
   String? message;
   List<Object>? object;
@@ -50,6 +52,7 @@ class Object {
       this.createdAt});
 
   Object.fromJson(Map<String, dynamic> json) {
+    log("message");
     uid = json['uid'];
     roomQuestion = json['roomQuestion'];
     description = json['description'];
