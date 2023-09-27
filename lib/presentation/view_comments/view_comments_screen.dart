@@ -88,6 +88,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     // }
     getUserID();
     getToken();
+    getDocumentSize();
 
     keyboardVisibilityController.onChange.listen((bool isKeyboardVisible) {
       this.isKeyboardVisible = isKeyboardVisible;
@@ -139,6 +140,16 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
       default:
         return '';
     }
+  }
+
+  double documentuploadsize = 0;
+
+  getDocumentSize() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? a = prefs.getInt(PreferencesKey.mediaSize);
+    documentuploadsize = double.parse("${a}");
+    print('scdhfggfgdf-$documentuploadsize.');
+    setState(() {});
   }
 
   //  @override
@@ -395,25 +406,29 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                         var bb = format.format(
                                                             parsedDateTime);
 
-                                                        var one =
-                                                            format.parse(bb);
-                                                        var two =
-                                                            format.parse(aa);
-                                                        var final_time =
-                                                            two.difference(one);
+                                                        // var one =
+                                                        //     format.parse(bb);
+                                                        // var two =
+                                                        //     format.parse(aa);
+                                                        // var final_time =
+                                                        //     two.difference(one);
 
-                                                        var bbb = Duration(
-                                                            minutes: 10);
+                                                        // var bbb = Duration(
+                                                        //     minutes: 10);
 
-                                                        var finalAPI_Time =
-                                                            int.parse(bbb
-                                                                .toString()
-                                                                .split(":")[1]);
+                                                        // var finalAPI_Time =
+                                                        //     int.parse(bbb
+                                                        //         .toString()
+                                                        //         .split(":")[1]);
 
-                                                        var FixTime = int.parse(
-                                                            final_time
-                                                                .toString()
-                                                                .split(":")[1]);
+                                                        // var FixTime = int.parse(
+                                                        //     final_time
+                                                        //         .toString()
+                                                        //         .split(":")[1]);
+
+                                                        var ara = getTime(
+                                                            parsedDateTime);
+                                                        print(ara);
 
                                                         // one.difference(two);
 
@@ -655,76 +670,209 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                       ],
                                                                     ),
                                                                     Padding(
-                                                                        padding: EdgeInsets.only(
-                                                                            left:
-                                                                                16),
-                                                                        child: finalAPI_Time <
-                                                                                FixTime
-                                                                            ? SizedBox()
-                                                                            : GestureDetector(
-                                                                                onTap: () {
-                                                                                  print("delete msg");
+                                                                      padding: EdgeInsets.only(
+                                                                          left:
+                                                                              16),
+                                                                      child: ara ==
+                                                                              null
+                                                                          ? GestureDetector(
+                                                                              onTap: () {
+                                                                                print("delete msg");
 
-                                                                                  print(modelData?.object?.messageOutputList?.content?[index].uid);
-                                                                                  print(UserLogin_ID);
-                                                                                  // roomUid = "${widget.Room_ID}";
-                                                                                  // DeleteMSg_baseURL = " assas ";
+                                                                                print(modelData?.object?.messageOutputList?.content?[index].uid);
+                                                                                print(UserLogin_ID);
+                                                                                // roomUid = "${widget.Room_ID}";
+                                                                                // DeleteMSg_baseURL = " assas ";
 
-                                                                                  // var Delete_MEG_uid = "${modelData?.object?.messageOutputList?.content?[index].uid}";
-                                                                                  // var Login_userUID = "${UserLogin_ID}";
+                                                                                // var Delete_MEG_uid = "${modelData?.object?.messageOutputList?.content?[index].uid}";
+                                                                                // var Login_userUID = "${UserLogin_ID}";
 
-                                                                                  // checkGuestUser();
-                                                                                  // roomUid = "${widget.Room_ID}";
-                                                                                  Room_ID_stomp = "${widget.Room_ID}";
-                                                                                  stompClient.subscribe(
-                                                                                    destination:
-                                                                                        // "ws://72c1-2405-201-200b-a0cf-210f-e5fe-f229-e899.ngrok.io",
-                                                                                        "/topic/getDeletedMessage/${widget.Room_ID}",
-                                                                                    callback: (StompFrame frame) {
-                                                                                      Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
-                                                                                      print('Add RealTime MSG --->$jsonString');
+                                                                                // checkGuestUser();
+                                                                                // roomUid = "${widget.Room_ID}";
+                                                                                Room_ID_stomp = "${widget.Room_ID}";
+                                                                                stompClient.subscribe(
+                                                                                  destination:
+                                                                                      // "ws://72c1-2405-201-200b-a0cf-210f-e5fe-f229-e899.ngrok.io",
+                                                                                      "/topic/getDeletedMessage/${widget.Room_ID}",
+                                                                                  callback: (StompFrame frame) {
+                                                                                    Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
+                                                                                    print('Add RealTime MSG --->$jsonString');
 
-                                                                                      Content content1 = Content.fromJson(jsonString['object']);
-                                                                                      print("check MSG get Properly ---> ${content1.message}");
+                                                                                    Content content1 = Content.fromJson(jsonString['object']);
+                                                                                    print("check MSG get Properly ---> ${content1.message}");
 
-                                                                                      var msgUUID = content1.uid;
-                                                                                      if (content1.isDeleted == true) {
-                                                                                        BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "0", ShowLoader: true);
-                                                                                      }
+                                                                                    var msgUUID = content1.uid;
+                                                                                    if (content1.isDeleted == true) {
+                                                                                      BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "0", ShowLoader: true);
+                                                                                    }
 
-                                                                                      // if (addmsg != msgUUID) {
-                                                                                      //   print("please1 ---> ${modelData?.object?.messageOutputList?.content?.length}");
+                                                                                    // if (addmsg != msgUUID) {
+                                                                                    //   print("please1 ---> ${modelData?.object?.messageOutputList?.content?.length}");
 
-                                                                                      //   Content content = Content.fromJson(jsonString['object']);
-                                                                                      //   print("please2 ---> ${content.message}");
-                                                                                      //   modelData?.object?.messageOutputList?.content?.add(content);
+                                                                                    //   Content content = Content.fromJson(jsonString['object']);
+                                                                                    //   print("please2 ---> ${content.message}");
+                                                                                    //   modelData?.object?.messageOutputList?.content?.add(content);
 
-                                                                                      //   setState(() {
-                                                                                      //     addmsg = content.uid ?? "";
-                                                                                      //   });
-                                                                                      // }
+                                                                                    //   setState(() {
+                                                                                    //     addmsg = content.uid ?? "";
+                                                                                    //   });
+                                                                                    // }
 
-                                                                                      // print("please3 ---> ${modelData?.object?.messageOutputList?.content?.length}");
-                                                                                    },
-                                                                                  );
+                                                                                    // print("please3 ---> ${modelData?.object?.messageOutputList?.content?.length}");
+                                                                                  },
+                                                                                );
 
-                                                                                  stompClient.send(
-                                                                                    destination: "/deleteMessage/${widget.Room_ID}",
-                                                                                    body: json.encode({
-                                                                                      "uid": "${modelData?.object?.messageOutputList?.content?[index].uid}",
-                                                                                      "userCode": "${UserLogin_ID}",
-                                                                                      "roomUid": "${widget.Room_ID}"
-                                                                                    }),
-                                                                                  );
-                                                                                },
-                                                                                child: Container(
-                                                                                  height: 20,
-                                                                                  width: 20,
-                                                                                  child: Image.asset(
-                                                                                    ImageConstant.delete,
-                                                                                    color: Colors.red,
-                                                                                  ),
-                                                                                ))),
+                                                                                stompClient.send(
+                                                                                  destination: "/deleteMessage/${widget.Room_ID}",
+                                                                                  body: json.encode({
+                                                                                    "uid": "${modelData?.object?.messageOutputList?.content?[index].uid}",
+                                                                                    "userCode": "${UserLogin_ID}",
+                                                                                    "roomUid": "${widget.Room_ID}"
+                                                                                  }),
+                                                                                );
+                                                                              },
+                                                                              child: Container(
+                                                                                height: 20,
+                                                                                width: 20,
+                                                                                child: Image.asset(
+                                                                                  ImageConstant.delete,
+                                                                                  color: Colors.red,
+                                                                                ),
+                                                                              ))
+                                                                          : ara.split(" ")[1] == "hours" || ara.split(" ")[1] == "days"
+                                                                              ? SizedBox()
+                                                                              : ara == "a few seconds ago" || ara == null
+                                                                                  ? GestureDetector(
+                                                                                      onTap: () {
+                                                                                        print("delete msg");
+
+                                                                                        print(modelData?.object?.messageOutputList?.content?[index].uid);
+                                                                                        print(UserLogin_ID);
+                                                                                        // roomUid = "${widget.Room_ID}";
+                                                                                        // DeleteMSg_baseURL = " assas ";
+
+                                                                                        // var Delete_MEG_uid = "${modelData?.object?.messageOutputList?.content?[index].uid}";
+                                                                                        // var Login_userUID = "${UserLogin_ID}";
+
+                                                                                        // checkGuestUser();
+                                                                                        // roomUid = "${widget.Room_ID}";
+                                                                                        Room_ID_stomp = "${widget.Room_ID}";
+                                                                                        stompClient.subscribe(
+                                                                                          destination:
+                                                                                              // "ws://72c1-2405-201-200b-a0cf-210f-e5fe-f229-e899.ngrok.io",
+                                                                                              "/topic/getDeletedMessage/${widget.Room_ID}",
+                                                                                          callback: (StompFrame frame) {
+                                                                                            Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
+                                                                                            print('Add RealTime MSG --->$jsonString');
+
+                                                                                            Content content1 = Content.fromJson(jsonString['object']);
+                                                                                            print("check MSG get Properly ---> ${content1.message}");
+
+                                                                                            var msgUUID = content1.uid;
+                                                                                            if (content1.isDeleted == true) {
+                                                                                              BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "0", ShowLoader: true);
+                                                                                            }
+
+                                                                                            // if (addmsg != msgUUID) {
+                                                                                            //   print("please1 ---> ${modelData?.object?.messageOutputList?.content?.length}");
+
+                                                                                            //   Content content = Content.fromJson(jsonString['object']);
+                                                                                            //   print("please2 ---> ${content.message}");
+                                                                                            //   modelData?.object?.messageOutputList?.content?.add(content);
+
+                                                                                            //   setState(() {
+                                                                                            //     addmsg = content.uid ?? "";
+                                                                                            //   });
+                                                                                            // }
+
+                                                                                            // print("please3 ---> ${modelData?.object?.messageOutputList?.content?.length}");
+                                                                                          },
+                                                                                        );
+
+                                                                                        stompClient.send(
+                                                                                          destination: "/deleteMessage/${widget.Room_ID}",
+                                                                                          body: json.encode({
+                                                                                            "uid": "${modelData?.object?.messageOutputList?.content?[index].uid}",
+                                                                                            "userCode": "${UserLogin_ID}",
+                                                                                            "roomUid": "${widget.Room_ID}"
+                                                                                          }),
+                                                                                        );
+                                                                                      },
+                                                                                      child: Container(
+                                                                                        height: 20,
+                                                                                        width: 20,
+                                                                                        child: Image.asset(
+                                                                                          ImageConstant.delete,
+                                                                                          color: Colors.red,
+                                                                                        ),
+                                                                                      ))
+                                                                                  : int.parse(ara.split(" ")[0]) <= 10
+                                                                                      ? GestureDetector(
+                                                                                          onTap: () {
+                                                                                            print("delete msg");
+
+                                                                                            print(modelData?.object?.messageOutputList?.content?[index].uid);
+                                                                                            print(UserLogin_ID);
+                                                                                            // roomUid = "${widget.Room_ID}";
+                                                                                            // DeleteMSg_baseURL = " assas ";
+
+                                                                                            // var Delete_MEG_uid = "${modelData?.object?.messageOutputList?.content?[index].uid}";
+                                                                                            // var Login_userUID = "${UserLogin_ID}";
+
+                                                                                            // checkGuestUser();
+                                                                                            // roomUid = "${widget.Room_ID}";
+                                                                                            Room_ID_stomp = "${widget.Room_ID}";
+                                                                                            stompClient.subscribe(
+                                                                                              destination:
+                                                                                                  // "ws://72c1-2405-201-200b-a0cf-210f-e5fe-f229-e899.ngrok.io",
+                                                                                                  "/topic/getDeletedMessage/${widget.Room_ID}",
+                                                                                              callback: (StompFrame frame) {
+                                                                                                Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
+                                                                                                print('Add RealTime MSG --->$jsonString');
+
+                                                                                                Content content1 = Content.fromJson(jsonString['object']);
+                                                                                                print("check MSG get Properly ---> ${content1.message}");
+
+                                                                                                var msgUUID = content1.uid;
+                                                                                                if (content1.isDeleted == true) {
+                                                                                                  BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "0", ShowLoader: true);
+                                                                                                }
+
+                                                                                                // if (addmsg != msgUUID) {
+                                                                                                //   print("please1 ---> ${modelData?.object?.messageOutputList?.content?.length}");
+
+                                                                                                //   Content content = Content.fromJson(jsonString['object']);
+                                                                                                //   print("please2 ---> ${content.message}");
+                                                                                                //   modelData?.object?.messageOutputList?.content?.add(content);
+
+                                                                                                //   setState(() {
+                                                                                                //     addmsg = content.uid ?? "";
+                                                                                                //   });
+                                                                                                // }
+
+                                                                                                // print("please3 ---> ${modelData?.object?.messageOutputList?.content?.length}");
+                                                                                              },
+                                                                                            );
+
+                                                                                            stompClient.send(
+                                                                                              destination: "/deleteMessage/${widget.Room_ID}",
+                                                                                              body: json.encode({
+                                                                                                "uid": "${modelData?.object?.messageOutputList?.content?[index].uid}",
+                                                                                                "userCode": "${UserLogin_ID}",
+                                                                                                "roomUid": "${widget.Room_ID}"
+                                                                                              }),
+                                                                                            );
+                                                                                          },
+                                                                                          child: Container(
+                                                                                            height: 20,
+                                                                                            width: 20,
+                                                                                            child: Image.asset(
+                                                                                              ImageConstant.delete,
+                                                                                              color: Colors.red,
+                                                                                            ),
+                                                                                          ))
+                                                                                      : SizedBox(),
+                                                                    ),
                                                                     modelData?.object?.messageOutputList?.content?[index].messageType !=
                                                                             'IMAGE'
                                                                         ? Padding(
@@ -1163,13 +1311,35 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     // Delet_stompClient.activate();
   }
 
-  Future<void> camerapicker() async {
+ Future<void> camerapicker() async {
     pickedImageFile = await picker.pickImage(source: ImageSource.camera);
     if (pickedImageFile != null) {
       if (!_isGifOrSvg(pickedImageFile!.path)) {
         setState(() {
           _image = File(pickedImageFile!.path);
         });
+        final sizeInBytes = await _image!.length();
+        final sizeInMB = sizeInBytes / (1024 * 1024);
+        if (sizeInMB > documentuploadsize) {
+          print('documentuploadsize-$documentuploadsize');
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text("Image Size Exceeded"),
+                  content:
+                      Text("Selected image size exceeds $documentuploadsize."),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("OK"),
+                    ),
+                  ],
+                );
+              });
+        }
       } else {
         showDialog(
           context: context,
@@ -1213,6 +1383,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
         lowerCaseImagePath.endsWith('.m4a');
   }
 
+  
   Future<void> pickProfileImage() async {
     pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedImageFile != null) {
@@ -1220,6 +1391,32 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
         setState(() {
           _image = File(pickedImageFile!.path);
         });
+        final sizeInBytes = await _image!.length();
+        final sizeInMB = sizeInBytes / (1024 * 1024);
+        print('documentuploadsize-$documentuploadsize');
+
+        if (sizeInMB > documentuploadsize) {
+          setState(() {
+            _image = null;
+          });
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text("Image Size Exceeded"),
+                  content:
+                      Text("Selected image size exceeds $documentuploadsize."),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("OK"),
+                    ),
+                  ],
+                );
+              });
+        }
       } else {
         showDialog(
           context: context,
@@ -1282,5 +1479,19 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     }
 
     return Future.value(false);
+  }
+
+  getTime(time) {
+    if (!DateTime.now().difference(time).isNegative) {
+      if (DateTime.now().difference(time).inMinutes < 1) {
+        return "a few seconds ago";
+      } else if (DateTime.now().difference(time).inMinutes < 60) {
+        return "${DateTime.now().difference(time).inMinutes} minutes ago";
+      } else if (DateTime.now().difference(time).inMinutes < 1440) {
+        return "${DateTime.now().difference(time).inHours} hours ago";
+      } else if (DateTime.now().difference(time).inMinutes > 1440) {
+        return "${DateTime.now().difference(time).inDays} days ago";
+      }
+    }
   }
 }
