@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/view_comments/view_comments_screen.dart';
+import 'package:pds/widgets/animatedwiget.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import '../../API/Model/HomeScreenModel/PublicRoomModel.dart';
 import '../../API/Model/HomeScreenModel/getLoginPublicRoom_model.dart';
@@ -31,7 +32,7 @@ class _PublicRoomListState extends State<PublicRoomList> {
     } else {
       PublicRoomModelData = widget.PublicRoomModelData;
       print('else condsion work');
-      print('PublicRoomModelData-$PublicRoomModelData');
+      print('PublicRoomModelData111-$PublicRoomModelData');
     }
   }
 
@@ -233,21 +234,35 @@ class _PublicRoomListState extends State<PublicRoomList> {
                                           )),
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20, top: 2, right: 15),
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              "${PublicRoomModelData?.object?[index].message?.message ?? ""}",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black,
-                                  fontFamily: "outfit",
-                                  fontSize: 16),
-                            ),
-                          ),
-                        ),
+                        PublicRoomModelData
+                                    ?.object?[index].message?.messageType ==
+                                'TEXT'
+                            ? Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, top: 2, right: 15),
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    "${PublicRoomModelData?.object?[index].message?.message ?? ""}",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black,
+                                        fontFamily: "outfit",
+                                        fontSize: 16),
+                                  ),
+                                ),
+                              )
+                            : Padding(
+                                padding: EdgeInsets.only(right: 10),
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Container(
+                                    child: AnimatedNetworkImage(
+                                        imageUrl:
+                                            "${PublicRoomModelData?.object?[index].message?.message}"),
+                                  ),
+                                ),
+                              ),
                         Divider(
                           color: Colors.black,
                         ),

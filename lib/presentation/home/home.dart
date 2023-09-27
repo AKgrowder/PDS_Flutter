@@ -10,6 +10,7 @@ import 'package:pds/presentation/become_an_expert_screen/become_an_expert_screen
 import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:pds/presentation/home/edit_dailog_home.dart';
 import 'package:pds/presentation/rooms/rooms_screen.dart';
+import 'package:pds/widgets/animatedwiget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
@@ -183,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var _width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset: false,
           backgroundColor: theme.colorScheme.onPrimary,
           body: BlocConsumer<FetchAllPublicRoomCubit, FetchAllPublicRoomState>(
               listener: (context, state) async {
@@ -1381,18 +1382,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           ),
                                                                         ],
                                                                         child:
-                                                                             Center(
+                                                                            Center(
                                                                           child:
                                                                               Container(
-                                                                          decoration: BoxDecoration(
-                                                                              color:
-                                                                                Colors.white,
-                                                                                borderRadius: BorderRadius.circular(10)
-                                                                          ),
+                                                                            decoration:
+                                                                                BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
                                                                             margin:
                                                                                 EdgeInsets.only(left: 20, right: 20),
                                                                             height:
-                                                                               168,
+                                                                                168,
                                                                             width:
                                                                                 _width,
                                                                             // color: Colors.amber,
@@ -1492,7 +1490,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                               },
                                                                             ),
                                                                           ),
-                                                                        ),    );
+                                                                        ),
+                                                                      );
                                                                     });
                                                               },
                                                               child:
@@ -2419,14 +2418,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                               FetchPublicRoomModelData
                                                           ?.object?[index]
                                                           .message
-                                                          ?.message !=
-                                                      null
+                                                          ?.messageType ==
+                                                      'TEXT'
                                                   ? Padding(
                                                       padding:
                                                           const EdgeInsets.only(
                                                               left: 35,
                                                               top: 2,
-                                                              right: 15),
+                                                              right: 5),
                                                       child: Align(
                                                         alignment: Alignment
                                                             .centerRight,
@@ -2444,7 +2443,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         ),
                                                       ),
                                                     )
-                                                  : SizedBox(),
+                                                  : Padding(
+                                                      padding: EdgeInsets.only(
+                                                          right: 5),
+                                                      child: Align(
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        child: Container(
+                                                          child: AnimatedNetworkImage(
+                                                              imageUrl:
+                                                                  "${FetchPublicRoomModelData?.object?[index].message?.message}"),
+                                                        ),
+                                                      ),
+                                                    ),
                                               Divider(
                                                 color: Colors.black,
                                               ),
