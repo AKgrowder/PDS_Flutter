@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pds/core/app_export.dart';
+import 'package:pds/widgets/ImageView_screen.dart';
 
 class AnimatedNetworkImage extends StatefulWidget {
   final String imageUrl;
@@ -40,17 +41,26 @@ class _AnimatedNetworkImageState extends State<AnimatedNetworkImage> {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
-      child: Container(
-        height: 90,
-        width: 150,
-        child: AnimatedOpacity(
-          opacity: _opacity,
-          duration: widget.animationDuration,
-          curve: Curves.easeInOut,
-          child: CachedNetworkImage(
-            imageUrl: widget.imageUrl,
-            fit: BoxFit.cover,
-            errorWidget: (context, url, error) => Icon(Icons.error),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return ImageViewScreen(
+              path: widget.imageUrl,
+            );
+          }));
+        },
+        child: Container(
+          height: 90,
+          width: 150,
+          child: AnimatedOpacity(
+            opacity: _opacity,
+            duration: widget.animationDuration,
+            curve: Curves.easeInOut,
+            child: CachedNetworkImage(
+              imageUrl: widget.imageUrl,
+              fit: BoxFit.cover,
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            ),
           ),
         ),
       ),
