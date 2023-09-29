@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/Edit_room_bloc/edit_room_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
+import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/presentation/become_an_expert_screen/become_an_expert_screen.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
@@ -50,6 +51,8 @@ class HomeScreen extends StatefulWidget {
 int selectedIndex = 0;
 int? isselectedimage = -1;
 List? image = [];
+List? image2 = [];
+
 dynamic _CallBackCheck;
 String? User_Name;
 String? User_Module = "";
@@ -81,7 +84,7 @@ String? ipaIosMainversion;
 
 bool? ShowSoftAlert = false;
 bool? UpdateURLinSplash = false;
-
+int? mexcount;
 List<String> aa = [
   "Baluran Wild The Savvanah Baluran Wild The \nSavvanah",
   "Baluran Wild The Savvanah Baluran Wild The \nSavvanah",
@@ -157,7 +160,10 @@ var checkuserdata = "";
 GetallBlogModel? getallBlogdata;
 DateTime? parsedDateTime;
 
+GetCountOfSavedRoomModel? getCountOfSavedRoomModel;
+
 class _HomeScreenState extends State<HomeScreen> {
+  bool meesageFlag = false;
   @override
   void initState() {
     refresh = false;
@@ -166,6 +172,8 @@ class _HomeScreenState extends State<HomeScreen> {
     BlocProvider.of<FetchAllPublicRoomCubit>(context)
         .FetchAllExpertsAPI(context);
     BlocProvider.of<FetchAllPublicRoomCubit>(context).GetallBlog(context);
+    BlocProvider.of<FetchAllPublicRoomCubit>(context)
+        .getCountOfSavedRoom(context);
     super.initState();
   }
 
@@ -286,6 +294,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
               //  saveUserProfile();
               User_Module = user_Module;
+            }
+            if (state is SelectedDataPinAndUnpin) {
+              SnackBar snackBar = SnackBar(
+                content: meesageFlag == true
+                    ? Text(state.unPinModel.message.toString())
+                    : Text(state.unPinModel.object.toString()),
+                backgroundColor: ColorConstant.primary_color,
+              );
+               ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+            if (state is GetTotalSavedataCount) {
+              print("dataCheckDataGet-${state.getCountOfSavedRoomModel.object}");
+              mexcount = state.getCountOfSavedRoomModel.object;
+              getCountOfSavedRoomModel = state.getCountOfSavedRoomModel;
+              /*   SnackBar snackBar = SnackBar(
+                content: Text(state.getCountOfSavedRoomModel.object.toString()),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar); */
             }
           }, builder: (context, state) {
             return SingleChildScrollView(
@@ -1202,8 +1229,75 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment.start,
+                                                        MainAxisAlignment.end,
                                                     children: [
+                                                      // Spacer(),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                right: 10),
+                                                        child: GestureDetector(
+                                                          onTap: () {
+                                                            if (image2?.contains(
+                                                                    index) ??
+                                                                false) {
+                                                              image2?.remove(
+                                                                  index);
+                                                              meesageFlag =
+                                                                  false;
+                                                              setState(() {});
+                                                              BlocProvider.of<
+                                                                          FetchAllPublicRoomCubit>(
+                                                                      context)
+                                                                  .pinAndunPinMethod(
+                                                                      context,
+                                                                      "${MyPublicRoomData?.object?[index].uid.toString()}");
+                                                              BlocProvider.of<
+                                                                          FetchAllPublicRoomCubit>(
+                                                                      context)
+                                                                  .getCountOfSavedRoom(
+                                                                      context);
+                                                             } else {
+                                                              print("IF THIS WORKINGN -->");
+
+
+                                                              //  
+                                                              image2
+                                                                  ?.add(index);
+                                                              meesageFlag =
+                                                                  true;
+                                                              setState(() {});
+                                                              BlocProvider.of<
+                                                                          FetchAllPublicRoomCubit>(
+                                                                      context)
+                                                                  .pinAndunPinMethod(
+                                                                      context,
+                                                                      "${MyPublicRoomData?.object?[index].uid.toString()}");
+                                                              BlocProvider.of<
+                                                                          FetchAllPublicRoomCubit>(
+                                                                      context)
+                                                                  .getCountOfSavedRoom(
+                                                                      context);
+                                                            }
+                                                          },
+                                                          child: (image2?.contains(
+                                                                      index) ??
+                                                                  false)
+                                                              ? CustomImageView(
+                                                                  imagePath:
+                                                                      ImageConstant
+                                                                          .selectedimage,
+                                                                  height: 17,
+                                                                )
+                                                              : CustomImageView(
+                                                                  imagePath:
+                                                                      ImageConstant
+                                                                          .unselectedimgVector,
+                                                                  height: 17,
+                                                                ),
+                                                        ),
+                                                      ),
                                                       // Padding(
                                                       //     padding:
                                                       //         const EdgeInsets
@@ -1252,6 +1346,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       //   ),
                                                       // ),
                                                     ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5,
                                                   ),
                                                   Row(
                                                     mainAxisAlignment:
@@ -1857,37 +1954,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12),
                                                     ),
                                                   ),
-                                                  // Spacer(),
-                                                  // Padding(
-                                                  //   padding:
-                                                  //       const EdgeInsets.only(
-                                                  //           right: 10),
-                                                  //   child: GestureDetector(
-                                                  //     onTap: () {
-                                                  //       // if (image?.contains(index) ??
-                                                  //       //     false) {
-                                                  //       //   image?.remove(index);
-                                                  //       // } else {
-                                                  //       //   image?.add(index);
-                                                  //       // }
-                                                  //     },
-                                                  //     child: (image?.contains(
-                                                  //                 index) ??
-                                                  //             false)
-                                                  //         ? CustomImageView(
-                                                  //             imagePath:
-                                                  //                 ImageConstant
-                                                  //                     .selectedimage,
-                                                  //             height: 17,
-                                                  //           )
-                                                  //         : CustomImageView(
-                                                  //             imagePath:
-                                                  //                 ImageConstant
-                                                  //                     .unselectedimgVector,
-                                                  //             height: 17,
-                                                  //           ),
-                                                  //   ),
-                                                  // ),
                                                 ],
                                               ),
                                               Row(
@@ -2031,8 +2097,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               PublicRoomModelData
                                                           ?.object?[index]
                                                           .message
-                                                          ?.message !=
-                                                      null
+                                                          ?.messageType ==
+                                                      'TEXT'
                                                   ? Padding(
                                                       padding:
                                                           const EdgeInsets.only(
@@ -2056,7 +2122,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         ),
                                                       ),
                                                     )
-                                                  : SizedBox(),
+                                                  : Padding(
+                                                      padding: EdgeInsets.only(
+                                                          right: 5),
+                                                      child: Align(
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        child: Container(
+                                                          child: AnimatedNetworkImage(
+                                                              imageUrl:
+                                                                  "${FetchPublicRoomModelData?.object?[index].message?.message}"),
+                                                        ),
+                                                      ),
+                                                    ),
                                               Divider(
                                                 color: Colors.black,
                                               ),
@@ -2252,37 +2330,115 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           fontSize: 12),
                                                     ),
                                                   ),
-                                                  // Spacer(),
-                                                  // Padding(
-                                                  //   padding:
-                                                  //       const EdgeInsets.only(
-                                                  //           right: 10),
-                                                  //   child: GestureDetector(
-                                                  //     onTap: () {
-                                                  //       // if (image?.contains(index) ??
-                                                  //       //     false) {
-                                                  //       //   image?.remove(index);
-                                                  //       // } else {
-                                                  //       //   image?.add(index);
-                                                  //       // }
-                                                  //     },
-                                                  //     child: (image?.contains(
-                                                  //                 index) ??
-                                                  //             false)
-                                                  //         ? CustomImageView(
-                                                  //             imagePath:
-                                                  //                 ImageConstant
-                                                  //                     .selectedimage,
-                                                  //             height: 17,
-                                                  //           )
-                                                  //         : CustomImageView(
-                                                  //             imagePath:
-                                                  //                 ImageConstant
-                                                  //                     .unselectedimgVector,
-                                                  //             height: 17,
-                                                  //           ),
-                                                  //   ),
-                                                  // ),
+                                                  Spacer(),
+                                                  /* IconButton(
+                                                    onPressed: () {
+                                                      //ANkur
+                                                      /*   togglePin(index); */
+                                                    },
+                                                    icon: Icon(
+                                                     Icons.push_pin
+                                                          
+                                                      /* color: item.isPinned
+                                                          ? Colors.blue
+                                                          : Colors.grey, */
+                                                    ),
+                                                  ), */
+                                                  Spacer(),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 10),
+                                                    child: GestureDetector(
+                                                      onTap: () async {
+                                                        if (FetchPublicRoomModelData
+                                                                ?.object?[index]
+                                                                .saved ==
+                                                            true) {
+                                                          image?.add(index);
+                                                          setState(() {});
+                                                        }
+                                                        if ((mexcount ?? 0) <
+                                                            3) {
+                                                          print(
+                                                              "mexcount --> $mexcount");
+
+                                                          print(
+                                                              "else codison working");
+                                                          image?.add(index);
+                                                          meesageFlag = true;
+                                                          setState(() {});
+
+                                                          // index add
+                                                          await BlocProvider.of<
+                                                                      FetchAllPublicRoomCubit>(
+                                                                  context)
+                                                              .pinAndunPinMethod(
+                                                                  context,
+                                                                  "${FetchPublicRoomModelData?.object?[index].uid.toString()}");
+                                                          await BlocProvider.of<
+                                                                      FetchAllPublicRoomCubit>(
+                                                                  context)
+                                                              .getCountOfSavedRoom(
+                                                                  context);
+                                                        } else if (image
+                                                                ?.contains(
+                                                                    index) ??
+                                                            false) {
+                                                          print(
+                                                              'if condison working');
+                                                          image?.remove(index);
+                                                          meesageFlag = false;
+                                                          setState(() {});
+                                                          await BlocProvider.of<
+                                                                      FetchAllPublicRoomCubit>(
+                                                                  context)
+                                                              .pinAndunPinMethod(
+                                                                  context,
+                                                                  "${FetchPublicRoomModelData?.object?[index].uid.toString()}");
+                                                          await BlocProvider.of<
+                                                                      FetchAllPublicRoomCubit>(
+                                                                  context)
+                                                              .getCountOfSavedRoom(context);
+                                                        } else {
+                                                          print(
+                                                              'else data check -->${image}');
+                                                          SnackBar snackBar =
+                                                              SnackBar(
+                                                            content: Text(
+                                                                "Mex 3 Pin Allowed"),
+                                                            backgroundColor:
+                                                                ColorConstant
+                                                                    .primary_color,
+                                                          );
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                                  snackBar);
+                                                        }
+                                                      },
+                                                      child: (image?.contains(
+                                                                      index) ??
+                                                                  false) ||
+                                                              FetchPublicRoomModelData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .saved ==
+                                                                  true
+                                                          ? CustomImageView(
+                                                              imagePath:
+                                                                  ImageConstant
+                                                                      .selectedimage,
+                                                              height: 17,
+                                                            )
+                                                          : CustomImageView(
+                                                              imagePath:
+                                                                  ImageConstant
+                                                                      .unselectedimgVector,
+                                                              height: 17,
+                                                            ),
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
                                               Row(
@@ -2338,6 +2494,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 fontSize: 16),
                                                           ),
                                                         ),
+
+                                                        /* Container(
+                                                          height: 10,
+                                                          alignment: Alignment.centerRight,
+                                                          /* height: 50, */
+                                                          width: 20,
+                                                          color: Colors.amber,
+                                                        ) */
                                                       ],
                                                     ),
                                                   ),

@@ -1,5 +1,7 @@
 import 'package:pds/API/Bloc/my_account_Bloc/my_account_state.dart';
+import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
 import 'package:pds/API/Model/myaccountModel/myaccountModel.dart';
+import 'package:pds/API/Model/pinAndUnpinModel/pinAndUnpinModel.dart';
 
 import '../../Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import '../../Model/Get_all_blog_Model/get_all_blog_model.dart';
@@ -67,4 +69,15 @@ class GetUserProfileLoadedState extends FetchAllPublicRoomState {
 class DeleteRoomLoadedState extends FetchAllPublicRoomState {
   final DeleteRoomModel DeleteRoom;
   DeleteRoomLoadedState(this.DeleteRoom);
+}
+
+
+class SelectedDataPinAndUnpin extends FetchAllPublicRoomState {
+  final UnPinModel unPinModel;
+  SelectedDataPinAndUnpin(this.unPinModel);
+}
+
+class GetTotalSavedataCount extends FetchAllPublicRoomState {
+  final GetCountOfSavedRoomModel getCountOfSavedRoomModel;
+  GetTotalSavedataCount(this.getCountOfSavedRoomModel);
 }

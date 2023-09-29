@@ -39,6 +39,8 @@ class Object {
   String? ownerUserUid;
   Message? message;
   String? createdAt;
+  String? messageType;
+
 
   Object(
       {this.uid,
@@ -49,7 +51,9 @@ class Object {
       this.ownerUsreProfilePic,
       this.ownerUserUid,
       this.message,
-      this.createdAt});
+      this.createdAt,
+      this.messageType,
+      });
 
   Object.fromJson(Map<String, dynamic> json) {
     log("message");
@@ -63,6 +67,7 @@ class Object {
     message =
         json['message'] != null ? new Message.fromJson(json['message']) : null;
     createdAt = json['createdAt'];
+    messageType = json['messageType'];
   }
 
   Map<String, dynamic> toJson() {
