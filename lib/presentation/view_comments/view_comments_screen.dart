@@ -1020,7 +1020,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   width: 5,
                                 ),
                                 Container(
-                                  width: _width / 2.2,
+                                  width: _width / 2.35,
                                   // color: Colors.amber,
                                   child: TextField(
                                     controller: Add_Comment,
@@ -1031,7 +1031,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                     ),
                                   ),
                                 ),
-                                Spacer(),
+                        
                                 GestureDetector(
                                   onTap: () {
                                     pickProfileImage();
@@ -1042,7 +1042,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 10,
+                                  width: 7,
                                 ),
                                 GestureDetector(
                                   onTap: () {
