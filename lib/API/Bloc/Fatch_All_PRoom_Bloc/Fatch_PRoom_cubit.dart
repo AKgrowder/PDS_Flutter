@@ -110,18 +110,48 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
     }
   }
 
-    Future<void> DeleteRoomm(String roomuId, BuildContext context) async {
+  Future<void> DeleteRoomm(String roomuId, BuildContext context) async {
     dynamic GetAllPrivateRoom;
     try {
       emit(FetchAllPublicRoomLoadingState());
       GetAllPrivateRoom = await Repository().DeleteRoomApi(roomuId, context);
       if (GetAllPrivateRoom.success == true) {
         emit(DeleteRoomLoadedState(GetAllPrivateRoom));
-      }else{
+      } else {
         emit(FetchAllPublicRoomErrorState(GetAllPrivateRoom.message));
       }
     } catch (e) {
       emit(FetchAllPublicRoomErrorState(GetAllPrivateRoom));
+    }
+  }
+
+  Future<void> pinAndunPinMethod(BuildContext context, String uuid) async {
+    dynamic pinAndUnPin;
+    try {
+      emit(FetchAllPublicRoomLoadingState());
+      pinAndUnPin = await Repository().pinAndUnPin(context, uuid);
+      if (pinAndUnPin.success == true) {
+        emit(SelectedDataPinAndUnpin(pinAndUnPin));
+      } else {
+        emit(FetchAllPublicRoomErrorState(pinAndUnPin.message));
+      }
+    } catch (e) {
+      emit(FetchAllPublicRoomErrorState(pinAndUnPin));
+    }
+  }
+
+  Future<void>  getCountOfSavedRoom(BuildContext context,) async {
+    dynamic pinAndUnPin;
+    try {
+      emit(FetchAllPublicRoomLoadingState());
+      pinAndUnPin = await Repository().getCountOfSavedRoomMethod(context);
+      if (pinAndUnPin.success == true) {
+        emit(GetTotalSavedataCount(pinAndUnPin));
+      } else {
+        emit(FetchAllPublicRoomErrorState(pinAndUnPin.message));
+      }
+    } catch (e) {
+      emit(FetchAllPublicRoomErrorState(pinAndUnPin));
     }
   }
 }

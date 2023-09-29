@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_state.dart';
@@ -179,6 +180,9 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                     padding: const EdgeInsets.only(
                                         top: 0.0, left: 10),
                                     child: TextFormField(
+                                      inputFormatters: [
+                                         LengthLimitingTextInputFormatter(50),
+                                      ],
                                       // validator: (value) {
                                       //   final RegExp emailRegExp = RegExp(
                                       //       r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
