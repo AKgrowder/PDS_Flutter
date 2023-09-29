@@ -2,7 +2,7 @@ class Config {
   static const String somethingWentWrong =
       "Something Went Wrong, Try After Some Time.";
   static const String mobileNumberIsNotvaild = "Your Number is Not Register";
-      // "your number is not vaild Please Enter correct Number";
+  // "your number is not vaild Please Enter correct Number";
   static const String servernotreachable =
       "Servar Not Rechable, Try After Some Time.";
   static const String FetchAllPublicRoom = "guest/api/fetchAllPublicRoom";
@@ -22,7 +22,8 @@ class Config {
   static const String Invitations = "user/api/getRoomInvitations";
   static const String fetchallmembers = "user/api/fetchAllMembers/";
   static const String editroom = "user/api/updateRoom";
-  static const String acceptRejectInvitationAPI = "user/api/acceptRejectInvitation";
+  static const String acceptRejectInvitationAPI =
+      "user/api/acceptRejectInvitation";
   static const String DeleteRoom = "user/api/deleteRoom";
   static const String checkUserActive = "user/api/isForumCreated";
   static const String uploadfile = 'user/api/uploadFIle';
@@ -46,8 +47,9 @@ class Config {
   static const String SelectRoomList = "user/api/fetchOwnerRoom";
   static const String loginerror = "Please Login With UserName";
   static const String RateUs = "guest/addRating";
-  static const String emailVerifaction= "user/api/send_email_verify";
+  static const String emailVerifaction = "user/api/send_email_verify";
   static const String chatImage = "user/sendImageInChat";
-
-
+  static const String unPin = "user/saveRoom";
+  static const String unSavePin = "user/unsaveRoom";
+  static const String getCountOfSavedRoom = "user/getCountOfSavedRoom";
 }
