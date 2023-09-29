@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
 import 'package:pds/API/Model/RateUseModel/Rateuse_model.dart';
 import 'package:pds/API/Model/emailVerfiaction/emailVerfiaction.dart';
+import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
+import 'package:pds/API/Model/pinAndUnpinModel/pinAndUnpinModel.dart';
 import '../Model/SelectRoomModel/SelectRoom_Model.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/DeleteUserModel/DeleteUser_Model.dart';
@@ -819,9 +821,13 @@ class Repository {
     }
   }
 
-  chatImage(BuildContext context, String room_Id, String userUid,File imageFile) async {
+  chatImage(BuildContext context, String room_Id, String userUid,
+      File imageFile) async {
     final response = await apiServices.multipartFileUserprofile(
-        "${Config.chatImage}/${room_Id}/${userUid}",imageFile, context,);
+      "${Config.chatImage}/${room_Id}/${userUid}",
+      imageFile,
+      context,
+    );
     var jsonString = json.decode(response.body);
     print('jasonnString$jsonString');
     switch (response.statusCode) {
@@ -835,8 +841,41 @@ class Repository {
         return jsonString;
     }
   }
-}
 
+  pinAndUnPin(BuildContext context, String uuid) async {
+    final responce = await apiServices.postApiCalla(
+        '${Config.unPin}/${uuid.toString()}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    switch (responce.statusCode) {
+      case 200:
+        return UnPinModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  getCountOfSavedRoomMethod(BuildContext context) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.getCountOfSavedRoom}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    switch (responce.statusCode) {
+      case 200:
+        return GetCountOfSavedRoomModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+}
 
 // var headers = {
 //   'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc1ZlcmlmaWVkIjp0cnVlLCJtb2R1bGUiOiJFTVBMT1lFRSIsImlzQWN0aXZlIjp0cnVlLCJ1dWlkIjoiODYwMWViNTItNzk4NS00MWU3LTgwOTAtYmMyMjQ0MjkwZjkzIiwidXNlcm5hbWUiOiJBTiIsInN1YiI6IkFOIiwiaWF0IjoxNjkxMTUyODIxLCJleHAiOjE2OTIyMzI4MjF9.AjSlFxHlTU9opgsyXaqVh_sMQuv7f-fKGmIGle6879MD-OAGTNcPN5r9ZW8Go1124YE2BbSrc1Lj5GuspgilWg'
