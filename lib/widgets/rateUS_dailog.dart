@@ -217,7 +217,7 @@ class rateUSdialogState extends State<rateUSdialog>
                                     .RateUsApi(params, context);
                                 SnackBar snackBar = SnackBar(
                                   content:
-                                      Text("Your Rate Is Successfully Submit!"),
+                                      Text("Your Rate is Successfully Submit!"),
                                   backgroundColor: ColorConstant.primary_color,
                                 );
                                 ScaffoldMessenger.of(context)
