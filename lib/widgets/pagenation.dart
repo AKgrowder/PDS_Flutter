@@ -75,6 +75,7 @@ class _PaginationWidgetState extends State<PaginationWidget> {
       for (int i = 1; i <= (widget.offSet ?? 0); i++) {
         _offsetList?.add(i);
       }
+      print("dsfhfgh-$_offsetList");
     }
     return Column(children: [
       widget.items ?? SizedBox(),

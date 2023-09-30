@@ -163,7 +163,8 @@ DateTime? parsedDateTime;
 GetCountOfSavedRoomModel? getCountOfSavedRoomModel;
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool meesageFlag = false;
+  /*  bool meesageFlag = false; */
+  bool? apiflag;
   @override
   void initState() {
     refresh = false;
@@ -296,16 +297,23 @@ class _HomeScreenState extends State<HomeScreen> {
               User_Module = user_Module;
             }
             if (state is SelectedDataPinAndUnpin) {
+              if (apiflag == true) {
+                print("fhdgfgdfgggfggfgfg");
+                saveUserProfile();
+              } else {
+                await BlocProvider.of<FetchAllPublicRoomCubit>(context)
+                    .FetchPublicRoom("${User_ID}", context);
+              }
+
               SnackBar snackBar = SnackBar(
-                content: meesageFlag == true
-                    ? Text(state.unPinModel.message.toString())
-                    : Text(state.unPinModel.object.toString()),
+                content: Text(state.unPinModel.object.toString()),
                 backgroundColor: ColorConstant.primary_color,
               );
-               ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
             if (state is GetTotalSavedataCount) {
-              print("dataCheckDataGet-${state.getCountOfSavedRoomModel.object}");
+              print(
+                  "dataCheckDataGet-${state.getCountOfSavedRoomModel.object}");
               mexcount = state.getCountOfSavedRoomModel.object;
               getCountOfSavedRoomModel = state.getCountOfSavedRoomModel;
               /*   SnackBar snackBar = SnackBar(
@@ -1238,52 +1246,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     .only(
                                                                 right: 10),
                                                         child: GestureDetector(
-                                                          onTap: () {
-                                                            if (image2?.contains(
-                                                                    index) ??
-                                                                false) {
-                                                              image2?.remove(
-                                                                  index);
-                                                              meesageFlag =
-                                                                  false;
-                                                              setState(() {});
-                                                              BlocProvider.of<
-                                                                          FetchAllPublicRoomCubit>(
-                                                                      context)
-                                                                  .pinAndunPinMethod(
-                                                                      context,
-                                                                      "${MyPublicRoomData?.object?[index].uid.toString()}");
-                                                              BlocProvider.of<
-                                                                          FetchAllPublicRoomCubit>(
-                                                                      context)
-                                                                  .getCountOfSavedRoom(
-                                                                      context);
-                                                             } else {
-                                                              print("IF THIS WORKINGN -->");
-
-
-                                                              //  
-                                                              image2
-                                                                  ?.add(index);
-                                                              meesageFlag =
-                                                                  true;
-                                                              setState(() {});
-                                                              BlocProvider.of<
-                                                                          FetchAllPublicRoomCubit>(
-                                                                      context)
-                                                                  .pinAndunPinMethod(
-                                                                      context,
-                                                                      "${MyPublicRoomData?.object?[index].uid.toString()}");
-                                                              BlocProvider.of<
-                                                                          FetchAllPublicRoomCubit>(
-                                                                      context)
-                                                                  .getCountOfSavedRoom(
-                                                                      context);
-                                                            }
+                                                          onTap: () async {
+                                                            apiflag = true;
+                                                            setState(() {});
+                                                            pinanDUnPinMethod(
+                                                                MyPublicRoomData
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .saved ??
+                                                                    false,
+                                                                '${MyPublicRoomData?.object?[index].uid}',
+                                                                mexcount ?? 0);
+                                                            //  sdffsfsdfdf
                                                           },
-                                                          child: (image2?.contains(
-                                                                      index) ??
-                                                                  false)
+                                                          child: MyPublicRoomData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .saved ==
+                                                                  true
                                                               ? CustomImageView(
                                                                   imagePath:
                                                                       ImageConstant
@@ -2100,28 +2080,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           ?.messageType ==
                                                       'TEXT'
                                                   ? Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 35,
-                                                              top: 2,
-                                                              right: 15),
-                                                      child: Align(
-                                                        alignment: Alignment
-                                                            .centerRight,
-                                                        child: Text(
-                                                          "${PublicRoomModelData?.object?[index].message?.message ?? ""}",
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color:
-                                                                  Colors.black,
-                                                              fontFamily:
-                                                                  "outfit",
-                                                              fontSize: 16),
-                                                        ),
+                                                    padding:
+                                                        const EdgeInsets
+                                                                .only(
+                                                            left: 35,
+                                                            top: 2,
+                                                            right: 15),
+                                                    child: Align(
+                                                      alignment: Alignment
+                                                          .centerRight,
+                                                      child: Text(
+                                                        "${PublicRoomModelData?.object?[index].message?.message ?? ""}",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w400,
+                                                            color: Colors
+                                                                .black,
+                                                            fontFamily:
+                                                                "outfit",
+                                                            fontSize: 16),
                                                       ),
-                                                    )
+                                                    ),
+                                                  )
                                                   : Padding(
                                                       padding: EdgeInsets.only(
                                                           right: 5),
@@ -2351,92 +2332,35 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             right: 10),
                                                     child: GestureDetector(
                                                       onTap: () async {
-                                                        if (FetchPublicRoomModelData
-                                                                ?.object?[index]
-                                                                .saved ==
-                                                            true) {
-                                                          image?.add(index);
-                                                          setState(() {});
-                                                        }
-                                                        if ((mexcount ?? 0) <
-                                                            3) {
-                                                          print(
-                                                              "mexcount --> $mexcount");
-
-                                                          print(
-                                                              "else codison working");
-                                                          image?.add(index);
-                                                          meesageFlag = true;
-                                                          setState(() {});
-
-                                                          // index add
-                                                          await BlocProvider.of<
-                                                                      FetchAllPublicRoomCubit>(
-                                                                  context)
-                                                              .pinAndunPinMethod(
-                                                                  context,
-                                                                  "${FetchPublicRoomModelData?.object?[index].uid.toString()}");
-                                                          await BlocProvider.of<
-                                                                      FetchAllPublicRoomCubit>(
-                                                                  context)
-                                                              .getCountOfSavedRoom(
-                                                                  context);
-                                                        } else if (image
-                                                                ?.contains(
-                                                                    index) ??
-                                                            false) {
-                                                          print(
-                                                              'if condison working');
-                                                          image?.remove(index);
-                                                          meesageFlag = false;
-                                                          setState(() {});
-                                                          await BlocProvider.of<
-                                                                      FetchAllPublicRoomCubit>(
-                                                                  context)
-                                                              .pinAndunPinMethod(
-                                                                  context,
-                                                                  "${FetchPublicRoomModelData?.object?[index].uid.toString()}");
-                                                          await BlocProvider.of<
-                                                                      FetchAllPublicRoomCubit>(
-                                                                  context)
-                                                              .getCountOfSavedRoom(context);
-                                                        } else {
-                                                          print(
-                                                              'else data check -->${image}');
-                                                          SnackBar snackBar =
-                                                              SnackBar(
-                                                            content: Text(
-                                                                "Mex 3 Pin Allowed"),
-                                                            backgroundColor:
-                                                                ColorConstant
-                                                                    .primary_color,
-                                                          );
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                                  snackBar);
-                                                        }
+                                                        apiflag = false;
+                                                        setState(() {});
+                                                        pinanDUnPinMethod(
+                                                            FetchPublicRoomModelData
+                                                                    ?.object?[
+                                                                        index]
+                                                                    .saved ??
+                                                                false,
+                                                            '${FetchPublicRoomModelData?.object?[index].uid}',
+                                                            mexcount ?? 0);
                                                       },
-                                                      child: (image?.contains(
-                                                                      index) ??
-                                                                  false) ||
-                                                              FetchPublicRoomModelData
+                                                      child:
+                                                          FetchPublicRoomModelData
                                                                       ?.object?[
                                                                           index]
                                                                       .saved ==
                                                                   true
-                                                          ? CustomImageView(
-                                                              imagePath:
-                                                                  ImageConstant
-                                                                      .selectedimage,
-                                                              height: 17,
-                                                            )
-                                                          : CustomImageView(
-                                                              imagePath:
-                                                                  ImageConstant
-                                                                      .unselectedimgVector,
-                                                              height: 17,
-                                                            ),
+                                                              ? CustomImageView(
+                                                                  imagePath:
+                                                                      ImageConstant
+                                                                          .selectedimage,
+                                                                  height: 17,
+                                                                )
+                                                              : CustomImageView(
+                                                                  imagePath:
+                                                                      ImageConstant
+                                                                          .unselectedimgVector,
+                                                                  height: 17,
+                                                                ),
                                                     ),
                                                   ),
                                                 ],
@@ -2705,7 +2629,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  PublicRoomModelData?.object?.length == 0
+                  PublicRoomModelData?.object?.length == 0 ||  PublicRoomModelData?.object == null
                       ? SizedBox()
                       : GestureDetector(
                           onTap: () {
@@ -3068,7 +2992,7 @@ class _HomeScreenState extends State<HomeScreen> {
     await BlocProvider.of<FetchAllPublicRoomCubit>(context)
         .FetchPublicRoom("${User_ID}", context);
     await BlocProvider.of<FetchAllPublicRoomCubit>(context)
-        .MyPublicRoom("${User_ID}", context);
+        .MyPublicRoom("${User_ID}", context, loder: true);
   }
 
   setUserStatusFunction({String? acticueUser, String? rejectionReason}) async {
@@ -3926,6 +3850,32 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         });
+  }
+
+  pinanDUnPinMethod(
+    bool isSaved,
+    String uuid,
+    int mexcount,
+  ) async {
+    if (isSaved == true) {
+      await BlocProvider.of<FetchAllPublicRoomCubit>(context)
+          .pinAndunPinMethod(context, uuid);
+      await BlocProvider.of<FetchAllPublicRoomCubit>(context)
+          .getCountOfSavedRoom(context);
+    } else {
+      if (mexcount < 3) {
+        await BlocProvider.of<FetchAllPublicRoomCubit>(context)
+            .pinAndunPinMethod(context, uuid);
+        await BlocProvider.of<FetchAllPublicRoomCubit>(context)
+            .getCountOfSavedRoom(context);
+      } else {
+        SnackBar snackBar = SnackBar(
+          content: Text("Mex Pin Is 3 allowed"),
+          backgroundColor: ColorConstant.primary_color,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    }
   }
 
   setLogOut(BuildContext context) async {

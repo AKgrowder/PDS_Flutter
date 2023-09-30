@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class MyPublicRoom {
   String? message;
   List<Object>? object;
@@ -37,6 +39,7 @@ class Object {
   String? ownerUserUid;
   Message? message;
   String? createdAt;
+  bool? saved;
 
   Object(
       {this.uid,
@@ -47,7 +50,9 @@ class Object {
       this.ownerUsreProfilePic,
       this.ownerUserUid,
       this.message,
-      this.createdAt});
+      this.createdAt,
+      this.saved
+      });
 
   Object.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
@@ -57,6 +62,7 @@ class Object {
     ownerUserName = json['ownerUserName'];
     ownerUsreProfilePic = json['ownerUsreProfilePic'];
     ownerUserUid = json['ownerUserUid'];
+    saved = json['saved'];
     message =
         json['message'] != null ? new Message.fromJson(json['message']) : null;
     createdAt = json['createdAt'];
