@@ -76,7 +76,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   KeyboardVisibilityController keyboardVisibilityController =
       KeyboardVisibilityController();
 
-  ComentApiModel? modelData;
+  ComentApiModel? AllChatmodelData;
   TextEditingController Add_Comment = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
@@ -224,7 +224,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
               //     .coomentPage(widget.Room_ID, context, ShowLoader: true);
             }
             if (state is ComentApiState) {
-              modelData = state.comentApiClass;
+              AllChatmodelData = state.comentApiClass;
             }
             if (state is ComentApiIntragtionWithChatState) {
               print('second loaded state');
@@ -236,7 +236,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                     Content.fromJson(state.comentApiClass1['object']);
                 print('sdfhdsghghfgh--${content1.createdAt}');
                 AddNewData = true;
-                modelData?.object?.messageOutputList?.content?.add(content1);
+                AllChatmodelData?.object?.messageOutputList?.content?.add(content1);
               }
             }
           }, builder: (context, state) {
@@ -322,7 +322,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 ),
                               ),
                               Text(
-                                "${modelData?.object?.messageOutputList?.content?.length != null ? modelData?.object?.messageOutputList?.content?.length : '0'} Comments",
+                                "${AllChatmodelData?.object?.messageOutputList?.content?.length != null ? AllChatmodelData?.object?.messageOutputList?.content?.length : '0'} Comments",
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontFamily: 'outfit',
@@ -344,9 +344,9 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                             // color: Colors.red[200],
                             child: Padding(
                               padding: const EdgeInsets.only(top: 5),
-                              child: modelData != null
-                                  ? modelData?.object?.roomUid == null ||
-                                          modelData?.object?.roomUid == ""
+                              child: AllChatmodelData != null
+                                  ? AllChatmodelData?.object?.roomUid == null ||
+                                          AllChatmodelData?.object?.roomUid == ""
                                       ? SizedBox()
                                       : SingleChildScrollView(
                                           controller: scrollController,
@@ -365,20 +365,20 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                             p0.toString(),
                                                             ShowLoader: true);
                                                   },
-                                                  offSet: (modelData
+                                                  offSet: (AllChatmodelData
                                                       ?.object
                                                       ?.messageOutputList
                                                       ?.pageable
                                                       ?.pageNumber),
                                                   scrollController:
                                                       scrollController,
-                                                  totalSize: modelData
+                                                  totalSize: AllChatmodelData
                                                       ?.object
                                                       ?.messageOutputList
                                                       ?.totalElements,
                                                   items: ListView.builder(
                                                       // reverse: true,
-                                                      itemCount: (modelData
+                                                      itemCount: (AllChatmodelData
                                                               ?.object
                                                               ?.messageOutputList
                                                               ?.content
@@ -394,7 +394,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                         DateTime
                                                             parsedDateTime =
                                                             DateTime.parse(
-                                                                '${modelData?.object?.messageOutputList?.content?[index].createdAt}');
+                                                                '${AllChatmodelData?.object?.messageOutputList?.content?[index].createdAt}');
 
                                                         DateTime time =
                                                             DateTime.now();
@@ -433,7 +433,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                         // one.difference(two);
 
                                                         print(
-                                                            "check User name --> ${modelData?.object?.messageOutputList?.content?[index].userName} Login User Name --> ${User_Name}");
+                                                            "check User name --> ${AllChatmodelData?.object?.messageOutputList?.content?[index].userName} Login User Name --> ${User_Name}");
 
                                                         if (isScroll == false) {
                                                           Future.delayed(
@@ -444,7 +444,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                 .hasClients) {
                                                               for (int i = 0;
                                                                   i <
-                                                                      (modelData
+                                                                      (AllChatmodelData
                                                                               ?.object
                                                                               ?.messageOutputList
                                                                               ?.content!
@@ -463,7 +463,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                             // });
                                                           });
                                                         } else {}
-                                                        return modelData
+                                                        return AllChatmodelData
                                                                     ?.object
                                                                     ?.messageOutputList
                                                                     ?.content?[
@@ -491,9 +491,9 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                           Padding(
                                                                             padding:
                                                                                 const EdgeInsets.only(left: 10, right: 3),
-                                                                            child: modelData?.object?.messageOutputList?.content?[index].userName != null
+                                                                            child: AllChatmodelData?.object?.messageOutputList?.content?[index].userName != null
                                                                                 ? CustomImageView(
-                                                                                    url: "${modelData?.object?.messageOutputList?.content?[index].userProfilePic}",
+                                                                                    url: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic}",
                                                                                     height: 20,
                                                                                     radius: BorderRadius.circular(20),
                                                                                     width: 20,
@@ -505,7 +505,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                   ),
                                                                           ),
                                                                           Text(
-                                                                            "${modelData?.object?.messageOutputList?.content?[index].userName}",
+                                                                            "${AllChatmodelData?.object?.messageOutputList?.content?[index].userName}",
                                                                             style: TextStyle(
                                                                                 fontWeight: FontWeight.w400,
                                                                                 color: Colors.black,
@@ -560,7 +560,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                       Padding(
                                                                         padding:
                                                                             const EdgeInsets.all(8.0),
-                                                                        child: modelData?.object?.messageOutputList?.content?[index].messageType !=
+                                                                        child: AllChatmodelData?.object?.messageOutputList?.content?[index].messageType !=
                                                                                 'IMAGE'
                                                                             ? Row(
                                                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -576,7 +576,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                           width: _width / 1.3,
                                                                                           // color: Colors.amber,
                                                                                           child: Text(
-                                                                                            modelData?.object?.messageOutputList?.content?[index].message ?? "",
+                                                                                            AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "",
                                                                                             // maxLines: 3,
                                                                                             textScaleFactor: 1.0,
                                                                                             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
@@ -592,7 +592,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                 child: Align(
                                                                                   alignment: Alignment.centerLeft,
                                                                                   child: Container(
-                                                                                    child: AnimatedNetworkImage(imageUrl: "${modelData?.object?.messageOutputList?.content?[index].message}"),
+                                                                                    child: AnimatedNetworkImage(imageUrl: "${AllChatmodelData?.object?.messageOutputList?.content?[index].message}"),
                                                                                   ),
                                                                                 ),
                                                                               ),
@@ -643,7 +643,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                         ),
                                                                         Spacer(),
                                                                         Text(
-                                                                          "${modelData?.object?.messageOutputList?.content?[index].userName}",
+                                                                          "${AllChatmodelData?.object?.messageOutputList?.content?[index].userName}",
                                                                           style: TextStyle(
                                                                               fontWeight: FontWeight.w400,
                                                                               color: Colors.black,
@@ -654,9 +654,9 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                           padding: const EdgeInsets.only(
                                                                               left: 3,
                                                                               right: 10),
-                                                                          child: modelData?.object?.messageOutputList?.content?[index].userProfilePic?.isNotEmpty ?? false
+                                                                          child: AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic?.isNotEmpty ?? false
                                                                               ? CustomImageView(
-                                                                                  url: "${modelData?.object?.messageOutputList?.content?[index].userProfilePic}",
+                                                                                  url: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic}",
                                                                                   height: 20,
                                                                                   radius: BorderRadius.circular(20),
                                                                                   width: 20,
@@ -679,7 +679,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                               onTap: () {
                                                                                 print("delete msg");
 
-                                                                                print(modelData?.object?.messageOutputList?.content?[index].uid);
+                                                                                print(AllChatmodelData?.object?.messageOutputList?.content?[index].uid);
                                                                                 print(UserLogin_ID);
                                                                                 // roomUid = "${widget.Room_ID}";
                                                                                 // DeleteMSg_baseURL = " assas ";
@@ -725,7 +725,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                 stompClient.send(
                                                                                   destination: "/deleteMessage/${widget.Room_ID}",
                                                                                   body: json.encode({
-                                                                                    "uid": "${modelData?.object?.messageOutputList?.content?[index].uid}",
+                                                                                    "uid": "${AllChatmodelData?.object?.messageOutputList?.content?[index].uid}",
                                                                                     "userCode": "${UserLogin_ID}",
                                                                                     "roomUid": "${widget.Room_ID}"
                                                                                   }),
@@ -746,7 +746,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                       onTap: () {
                                                                                         print("delete msg");
 
-                                                                                        print(modelData?.object?.messageOutputList?.content?[index].uid);
+                                                                                        print(AllChatmodelData?.object?.messageOutputList?.content?[index].uid);
                                                                                         print(UserLogin_ID);
                                                                                         // roomUid = "${widget.Room_ID}";
                                                                                         // DeleteMSg_baseURL = " assas ";
@@ -792,7 +792,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                         stompClient.send(
                                                                                           destination: "/deleteMessage/${widget.Room_ID}",
                                                                                           body: json.encode({
-                                                                                            "uid": "${modelData?.object?.messageOutputList?.content?[index].uid}",
+                                                                                            "uid": "${AllChatmodelData?.object?.messageOutputList?.content?[index].uid}",
                                                                                             "userCode": "${UserLogin_ID}",
                                                                                             "roomUid": "${widget.Room_ID}"
                                                                                           }),
@@ -811,7 +811,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                           onTap: () {
                                                                                             print("delete msg");
 
-                                                                                            print(modelData?.object?.messageOutputList?.content?[index].uid);
+                                                                                            print(AllChatmodelData?.object?.messageOutputList?.content?[index].uid);
                                                                                             print(UserLogin_ID);
                                                                                             // roomUid = "${widget.Room_ID}";
                                                                                             // DeleteMSg_baseURL = " assas ";
@@ -857,7 +857,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                             stompClient.send(
                                                                                               destination: "/deleteMessage/${widget.Room_ID}",
                                                                                               body: json.encode({
-                                                                                                "uid": "${modelData?.object?.messageOutputList?.content?[index].uid}",
+                                                                                                "uid": "${AllChatmodelData?.object?.messageOutputList?.content?[index].uid}",
                                                                                                 "userCode": "${UserLogin_ID}",
                                                                                                 "roomUid": "${widget.Room_ID}"
                                                                                               }),
@@ -873,7 +873,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                           ))
                                                                                       : SizedBox(),
                                                                     ),
-                                                                    modelData?.object?.messageOutputList?.content?[index].messageType !=
+                                                                    AllChatmodelData?.object?.messageOutputList?.content?[index].messageType !=
                                                                             'IMAGE'
                                                                         ? Padding(
                                                                             padding: EdgeInsets.only(
@@ -893,7 +893,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                   child: Align(
                                                                                     alignment: Alignment.topRight,
                                                                                     child: Text(
-                                                                                      "${modelData?.object?.messageOutputList?.content?[index].message ?? ""}",
+                                                                                      "${AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? ""}",
                                                                                       // maxLines: 3,
                                                                                       textScaleFactor: 1.0,
                                                                                       style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
@@ -909,7 +909,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                 Align(
                                                                               alignment: Alignment.centerRight,
                                                                               child: Container(
-                                                                                child: AnimatedNetworkImage(imageUrl: "${modelData?.object?.messageOutputList?.content?[index].message}"),
+                                                                                child: AnimatedNetworkImage(imageUrl: "${AllChatmodelData?.object?.messageOutputList?.content?[index].message}"),
                                                                               ),
                                                                             ),
                                                                           ),
@@ -983,7 +983,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                           children: [
                             Container(
                               height: 50,
-                              width: _width - 90,
+                              // width: _width - 90,
                               decoration: BoxDecoration(
                                   color: Color(0xFFF5F5F5),
                                   borderRadius: BorderRadius.circular(20)),
@@ -993,13 +993,64 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 ),
 
                                 Container(
-                                  child: IconButton(
-                                    icon: Icon(
-                                      isEmojiVisible
-                                          ? Icons.keyboard_rounded
-                                          : Icons.emoji_emotions_outlined,
-                                    ),
-                                    onPressed: onClickedEmoji,
+                                  width: _width /1.32,
+                                  // color: Colors.amber,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        // color: Colors.amber,
+                                        child: IconButton(
+                                          icon: Icon(
+                                            isEmojiVisible
+                                                ? Icons.keyboard_rounded
+                                                : Icons.emoji_emotions_outlined,
+                                          ),
+                                          onPressed: onClickedEmoji,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Container(
+                                        width: _width / 2.35,
+                                        // color: Colors.red,
+                                        child: TextField(
+                                          controller: Add_Comment,
+                                          cursorColor: Colors.grey,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText: "Add Comment",
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          pickProfileImage();
+                                        },
+                                        child: Image.asset(
+                                          "assets/images/paperclip-2.png",
+                                          height: 23,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 13,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          camerapicker();
+                                        },
+                                        child: Image.asset(
+                                          "assets/images/Vector (12).png",
+                                          height: 20,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 8,
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 // GestureDetector(
@@ -1016,46 +1067,6 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 //     height: 28,
                                 //   ),
                                 // ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Container(
-                                  width: _width / 2.35,
-                                  // color: Colors.amber,
-                                  child: TextField(
-                                    controller: Add_Comment,
-                                    cursorColor: Colors.grey,
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: "Add Comment",
-                                    ),
-                                  ),
-                                ),
-                        
-                                GestureDetector(
-                                  onTap: () {
-                                    pickProfileImage();
-                                  },
-                                  child: Image.asset(
-                                    "assets/images/paperclip-2.png",
-                                    height: 22,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 7,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    camerapicker();
-                                  },
-                                  child: Image.asset(
-                                    "assets/images/Vector (12).png",
-                                    height: 20,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 8,
-                                ),
                               ]),
                               // child: TextField(
                               //   controller: Add_Comment,
@@ -1105,14 +1116,14 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                 'check value --> $AddNewData');
                                             if (addmsg != msgUUID) {
                                               print(
-                                                  "please1 ---> ${modelData?.object?.messageOutputList?.content?.length}");
+                                                  "please1 ---> ${AllChatmodelData?.object?.messageOutputList?.content?.length}");
 
                                               Content content =
                                                   Content.fromJson(
                                                       jsonString['object']);
                                               print(
                                                   "please2 ---> ${content.message}");
-                                              modelData?.object
+                                              AllChatmodelData?.object
                                                   ?.messageOutputList?.content
                                                   ?.add(content);
 
@@ -1123,7 +1134,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                             }
                                           }
                                           print(
-                                              "please3 ---> ${modelData?.object?.messageOutputList?.content?.length}");
+                                              "please3 ---> ${AllChatmodelData?.object?.messageOutputList?.content?.length}");
                                         },
                                       );
                                       stompClient.send(
