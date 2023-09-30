@@ -71,7 +71,6 @@ class ApiServices {
     }
     final hasInternet = await checkInternet();
     if (hasInternet == true) {
-    
       final response = await get(
         Uri.parse(baseURL + APIurl), /*  headers: headers1 */
       );
@@ -249,7 +248,7 @@ class ApiServices {
   }
 }
 
-  setLOGOUT(BuildContext context) async {
+setLOGOUT(BuildContext context) async {
   var height = MediaQuery.of(context).size.height;
   var width = MediaQuery.of(context).size.width;
 

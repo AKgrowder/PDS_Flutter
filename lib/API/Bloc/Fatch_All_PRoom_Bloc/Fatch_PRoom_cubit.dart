@@ -58,10 +58,11 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
     }
   }
 
-  Future<void> MyPublicRoom(String uuid, BuildContext context) async {
+  Future<void> MyPublicRoom(String uuid, BuildContext context,
+      {bool loder = true}) async {
     dynamic FetchPublicRoomModel;
     try {
-      emit(FetchAllPublicRoomLoadingState());
+      loder == true ? SizedBox() : emit(FetchAllPublicRoomLoadingState());
       FetchPublicRoomModel = await Repository().MyPublicRoom1(uuid, context);
       if (FetchPublicRoomModel.success == true) {
         emit(MyPublicRoom1LoadedState(FetchPublicRoomModel));
@@ -71,7 +72,9 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
     }
   }
 
-  Future<void> UserModel(BuildContext context) async {
+  Future<void> UserModel(
+    BuildContext context,
+  ) async {
     dynamic systemConfigModel;
     try {
       emit(FetchAllPublicRoomLoadingState());
@@ -140,7 +143,9 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
     }
   }
 
-  Future<void>  getCountOfSavedRoom(BuildContext context,) async {
+  Future<void> getCountOfSavedRoom(
+    BuildContext context,
+  ) async {
     dynamic pinAndUnPin;
     try {
       emit(FetchAllPublicRoomLoadingState());
