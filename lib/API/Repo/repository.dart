@@ -624,10 +624,11 @@ class Repository {
   }
 
   FetchPublicRoom(String uuid, BuildContext context) async {
+    print("FetchPublicRoom uuid-->$uuid");
     final response =
         await apiServices.getApiCall(Config.FetchPublicRoom + uuid, context);
     var jsonString = json.decode(response.body);
-    print(jsonString);
+    print("jsonString120->$jsonString");
     switch (response.statusCode) {
       case 200:
         return LoginPublicRoomModel.fromJson(jsonString);
@@ -642,6 +643,7 @@ class Repository {
   }
 
   MyPublicRoom1(String uuid, BuildContext context) async {
+    print("uuid-->$uuid");
     final response =
         await apiServices.getApiCall(Config.fetchMyPublicRoom + uuid, context);
     var jsonString = json.decode(response.body);

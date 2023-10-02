@@ -74,7 +74,7 @@ String? SocketLink;
 String? RoutURL;
 String? SupportEmailId;
 String? SupportPhoneNumber;
-
+String? maxPublicRoomSave;
 String? appApkMinVersion;
 String? appApkLatestVersion;
 String? appApkRouteVersion;
@@ -1243,8 +1243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       Padding(
                                                         padding:
                                                             const EdgeInsets
-                                                                    .only(
-                                                                right: 10),
+                                                                .only(right: 7),
                                                         child: GestureDetector(
                                                           onTap: () async {
                                                             apiflag = true;
@@ -1267,13 +1266,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               ? CustomImageView(
                                                                   imagePath:
                                                                       ImageConstant
-                                                                          .selectedimage,
+                                                                          .savedPin,
                                                                   height: 17,
                                                                 )
                                                               : CustomImageView(
                                                                   imagePath:
                                                                       ImageConstant
-                                                                          .unselectedimgVector,
+                                                                          .pin,
                                                                   height: 17,
                                                                 ),
                                                         ),
@@ -1467,7 +1466,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                             margin:
                                                                                 EdgeInsets.only(left: 20, right: 20),
                                                                             height:
-                                                                                168,
+                                                                                200,
                                                                             width:
                                                                                 _width,
                                                                             // color: Colors.amber,
@@ -1489,7 +1488,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                                 return Column(
                                                                                   children: [
                                                                                     SizedBox(
-                                                                                      height: 10,
+                                                                                      height: 8,
                                                                                     ),
                                                                                     Text(
                                                                                       "Delete Forum",
@@ -1504,20 +1503,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                                       color: Colors.grey,
                                                                                     ),
                                                                                     SizedBox(
-                                                                                      height: 5,
+                                                                                      height: 15,
                                                                                     ),
                                                                                     Center(
                                                                                         child: Text(
                                                                                       "Are You Sure You Want To Delete Your Forum",
                                                                                       style: TextStyle(
                                                                                         fontFamily: 'outfit',
-                                                                                        fontSize: 18,
+                                                                                        fontSize: 15,
                                                                                         color: Colors.black,
                                                                                         fontWeight: FontWeight.w500,
                                                                                       ),
                                                                                     )),
                                                                                     SizedBox(
-                                                                                      height: 30,
+                                                                                      height: 40,
                                                                                     ),
                                                                                     Row(
                                                                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1665,8 +1664,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   MyPublicRoomData
                                                               ?.object?[index]
                                                               .message
-                                                              ?.message !=
-                                                          null
+                                                              ?.messageType ==
+                                                          'TEXT'
                                                       ? Padding(
                                                           padding:
                                                               const EdgeInsets
@@ -1691,7 +1690,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             ),
                                                           ),
                                                         )
-                                                      : SizedBox(),
+                                                      : MyPublicRoomData
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .message
+                                                                  ?.messageType !=
+                                                              null
+                                                          ? Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      right: 5),
+                                                              child: Align(
+                                                                alignment: Alignment
+                                                                    .centerRight,
+                                                                child:
+                                                                    Container(
+                                                                  child: AnimatedNetworkImage(
+                                                                      imageUrl:
+                                                                          "${MyPublicRoomData?.object?[index].message?.message}"),
+                                                                ),
+                                                              ),
+                                                            )
+                                                          : SizedBox(),
                                                   Divider(
                                                     color: Colors.black,
                                                   ),
@@ -1702,6 +1722,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     children: [
                                                       GestureDetector(
                                                         onTap: () {
+                                                          print('check totalPage-${MyPublicRoomData?.object?[index].totalPage}');
                                                           Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
@@ -1719,6 +1740,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     "${MyPublicRoomData?.object?[index].uid ?? ""}",
                                                                 Title:
                                                                     "${MyPublicRoomData?.object?[index].description ?? ""}",
+                                                                    pageNumber:(MyPublicRoomData?.object?[index].totalPage ) ?? 0 ,
                                                               ),
                                                             );
                                                           })).then((value) {
@@ -2080,42 +2102,48 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           ?.messageType ==
                                                       'TEXT'
                                                   ? Padding(
-                                                    padding:
-                                                        const EdgeInsets
-                                                                .only(
-                                                            left: 35,
-                                                            top: 2,
-                                                            right: 15),
-                                                    child: Align(
-                                                      alignment: Alignment
-                                                          .centerRight,
-                                                      child: Text(
-                                                        "${PublicRoomModelData?.object?[index].message?.message ?? ""}",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400,
-                                                            color: Colors
-                                                                .black,
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 16),
-                                                      ),
-                                                    ),
-                                                  )
-                                                  : Padding(
-                                                      padding: EdgeInsets.only(
-                                                          right: 5),
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 35,
+                                                              top: 2,
+                                                              right: 15),
                                                       child: Align(
                                                         alignment: Alignment
                                                             .centerRight,
-                                                        child: Container(
-                                                          child: AnimatedNetworkImage(
-                                                              imageUrl:
-                                                                  "${FetchPublicRoomModelData?.object?[index].message?.message}"),
+                                                        child: Text(
+                                                          "${PublicRoomModelData?.object?[index].message?.message ?? ""}",
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontFamily:
+                                                                  "outfit",
+                                                              fontSize: 16),
                                                         ),
                                                       ),
-                                                    ),
+                                                    )
+                                                  : PublicRoomModelData
+                                                              ?.object?[index]
+                                                              .message
+                                                              ?.messageType !=
+                                                          null
+                                                      ? Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right: 5),
+                                                          child: Align(
+                                                            alignment: Alignment
+                                                                .centerRight,
+                                                            child: Container(
+                                                              child: AnimatedNetworkImage(
+                                                                  imageUrl:
+                                                                      "${FetchPublicRoomModelData?.object?[index].message?.message}"),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : SizedBox(),
                                               Divider(
                                                 color: Colors.black,
                                               ),
@@ -2352,13 +2380,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               ? CustomImageView(
                                                                   imagePath:
                                                                       ImageConstant
-                                                                          .selectedimage,
+                                                                          .savedPin,
                                                                   height: 17,
                                                                 )
                                                               : CustomImageView(
                                                                   imagePath:
                                                                       ImageConstant
-                                                                          .unselectedimgVector,
+                                                                          .pin,
                                                                   height: 17,
                                                                 ),
                                                     ),
@@ -2531,19 +2559,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         ),
                                                       ),
                                                     )
-                                                  : Padding(
-                                                      padding: EdgeInsets.only(
-                                                          right: 5),
-                                                      child: Align(
-                                                        alignment: Alignment
-                                                            .centerRight,
-                                                        child: Container(
-                                                          child: AnimatedNetworkImage(
-                                                              imageUrl:
-                                                                  "${FetchPublicRoomModelData?.object?[index].message?.message}"),
-                                                        ),
-                                                      ),
-                                                    ),
+                                                  : FetchPublicRoomModelData
+                                                              ?.object?[index]
+                                                              .message
+                                                              ?.messageType ==
+                                                          null
+                                                      ? Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right: 5),
+                                                          child: Align(
+                                                            alignment: Alignment
+                                                                .centerRight,
+                                                            child: Container(
+                                                              child: AnimatedNetworkImage(
+                                                                  imageUrl:
+                                                                      "${FetchPublicRoomModelData?.object?[index].message?.message}"),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : SizedBox(),
                                               Divider(
                                                 color: Colors.black,
                                               ),
@@ -2629,7 +2664,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  PublicRoomModelData?.object?.length == 0 ||  PublicRoomModelData?.object == null
+                  PublicRoomModelData?.object?.length == 0 ||
+                          PublicRoomModelData?.object == null
                       ? SizedBox()
                       : GestureDetector(
                           onTap: () {
@@ -2950,6 +2986,8 @@ class _HomeScreenState extends State<HomeScreen> {
         BlocProvider.of<FetchAllPublicRoomCubit>(context).UserModel(context);
       }
     }
+    maxPublicRoomSave = prefs.getString(PreferencesKey.MaxPublicRoomSave);
+    print("maxPublicRoomSave->$maxPublicRoomSave");
     UserProfile = prefs.getString(PreferencesKey.UserProfile);
     prefs.setBool(PreferencesKey.OpenProfile, false);
     var Token = prefs.getString(PreferencesKey.loginJwt);
@@ -3863,14 +3901,15 @@ class _HomeScreenState extends State<HomeScreen> {
       await BlocProvider.of<FetchAllPublicRoomCubit>(context)
           .getCountOfSavedRoom(context);
     } else {
-      if (mexcount < 3) {
+      if (mexcount < int.parse(maxPublicRoomSave.toString())) {
+        //mexCount is savde
         await BlocProvider.of<FetchAllPublicRoomCubit>(context)
             .pinAndunPinMethod(context, uuid);
         await BlocProvider.of<FetchAllPublicRoomCubit>(context)
             .getCountOfSavedRoom(context);
       } else {
         SnackBar snackBar = SnackBar(
-          content: Text("Mex Pin Is 3 allowed"),
+          content: Text("Max Pin is 3 allowed"),
           backgroundColor: ColorConstant.primary_color,
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
