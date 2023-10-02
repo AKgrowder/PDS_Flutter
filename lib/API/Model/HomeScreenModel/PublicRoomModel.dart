@@ -8,6 +8,7 @@ class PublicRoomModel {
   PublicRoomModel({this.message, this.object, this.success});
 
   PublicRoomModel.fromJson(Map<String, dynamic> json) {
+    print("PublicRoomModel-->$json");
     message = json['message'];
     if (json['object'] != null) {
       object = <Object>[];

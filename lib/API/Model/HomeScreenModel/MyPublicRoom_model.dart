@@ -8,6 +8,7 @@ class MyPublicRoom {
   MyPublicRoom({this.message, this.object, this.success});
 
   MyPublicRoom.fromJson(Map<String, dynamic> json) {
+    log("MyPublicRoom->$json");
     message = json['message'];
     if (json['object'] != null) {
       object = <Object>[];
@@ -40,7 +41,7 @@ class Object {
   Message? message;
   String? createdAt;
   bool? saved;
-
+  int? totalPage;
   Object(
       {this.uid,
       this.roomQuestion,
@@ -51,7 +52,8 @@ class Object {
       this.ownerUserUid,
       this.message,
       this.createdAt,
-      this.saved
+      this.saved,
+      this.totalPage
       });
 
   Object.fromJson(Map<String, dynamic> json) {
@@ -66,6 +68,7 @@ class Object {
     message =
         json['message'] != null ? new Message.fromJson(json['message']) : null;
     createdAt = json['createdAt'];
+    totalPage = json['totalPage'];
   }
 
   Map<String, dynamic> toJson() {

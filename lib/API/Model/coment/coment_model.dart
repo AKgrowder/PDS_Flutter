@@ -215,6 +215,8 @@
 //     return data;
 //   }
 // }
+import 'dart:developer';
+
 
 class ComentApiModel {
   String? message;
@@ -224,6 +226,7 @@ class ComentApiModel {
   ComentApiModel({this.message, this.object, this.success});
 
   ComentApiModel.fromJson(Map<String, dynamic> json) {
+    log("ComentApiModel->$json");
     message = json['message'];
     object =
         json['object'] != null ? new Object.fromJson(json['object']) : null;
@@ -371,7 +374,8 @@ class Content {
       this.messageCount,
       this.userCode,
       this.userProfilePic,
-      this.createdAt,this.isDeleted});
+      this.createdAt,
+      this.isDeleted});
 
   Content.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
