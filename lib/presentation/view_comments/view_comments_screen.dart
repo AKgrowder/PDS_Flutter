@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:ffi';
 import 'dart:io';
 
@@ -33,8 +34,12 @@ class ViewCommentScreen extends StatefulWidget {
   final Title;
   String? Screen_name;
   String? createdDate;
+  int? pageNumber;
   ViewCommentScreen(
-      {required this.Room_ID, required this.Title, this.Screen_name});
+      {required this.Room_ID,
+      required this.Title,
+      this.Screen_name,
+      this.pageNumber});
 
   @override
   State<ViewCommentScreen> createState() => _ViewCommentScreenState();
@@ -67,6 +72,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   bool isScroll = false;
   bool AddNewData = false;
   bool addDataSccesfully = false;
+  bool SubmitOneTime = false;
 
   File? _image;
   bool isEmojiVisible = false;
@@ -79,11 +85,27 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   ComentApiModel? AllChatmodelData;
   TextEditingController Add_Comment = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  int? Pagenumber;
+  pageNumberMethod() async {
+    if ((widget.pageNumber ?? 0) != 0) {
+      Pagenumber = (widget.pageNumber ?? 0) - 1;
+      setState(() {});
+    } else {
+      Pagenumber = 0;
+      setState(() {});
+    }
+    await BlocProvider.of<senMSGCubit>(context).coomentPage(
+        widget.Room_ID, context, "${0}",
+        ShowLoader: true);
+  }
+
   @override
   void initState() {
+    print("aaaaaaa-${widget.pageNumber ?? 0}");
+    pageNumberMethod();
+    print("bbbbbbbb-${(widget.pageNumber ?? 0) - 1}");
     print('bbbbbbbbbbbbb ${widget.Room_ID}');
-    BlocProvider.of<senMSGCubit>(context)
-        .coomentPage(widget.Room_ID, context, "0", ShowLoader: true);
+
     // if (widget.Screen_name == "RoomChat") {
     // }
     getUserID();
@@ -228,6 +250,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
             }
             if (state is ComentApiIntragtionWithChatState) {
               print('second loaded state');
+              SubmitOneTime = false;
 
               _image = null;
               print('dfdfhsdfhsh-${state.comentApiClass1}');
@@ -236,11 +259,16 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                     Content.fromJson(state.comentApiClass1['object']);
                 print('sdfhdsghghfgh--${content1.createdAt}');
                 AddNewData = true;
-                AllChatmodelData?.object?.messageOutputList?.content?.add(content1);
+                AllChatmodelData?.object?.messageOutputList?.content
+                    ?.add(content1);
               }
             }
           }, builder: (context, state) {
             // if (state is ComentApiState) {
+          /*   AllChatmodelData?.object?.messageOutputList?.content =
+                AllChatmodelData?.object?.messageOutputList?.content?.reversed
+                    .toList(); */
+
             return Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16),
                 child: Container(
@@ -346,7 +374,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                               padding: const EdgeInsets.only(top: 5),
                               child: AllChatmodelData != null
                                   ? AllChatmodelData?.object?.roomUid == null ||
-                                          AllChatmodelData?.object?.roomUid == ""
+                                          AllChatmodelData?.object?.roomUid ==
+                                              ""
                                       ? SizedBox()
                                       : SingleChildScrollView(
                                           controller: scrollController,
@@ -354,6 +383,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                             children: [
                                               PaginationWidget(
                                                   onPagination: (p0) async {
+                                                    log("PaginationWidget iwant Check--${AllChatmodelData}");
                                                     print("-------------" +
                                                         p0.toString());
                                                     await BlocProvider.of<
@@ -391,6 +421,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                           NeverScrollableScrollPhysics(),
                                                       itemBuilder:
                                                           (context, index) {
+                                                        print(
+                                                            "AllChatmodelData DataCheck-${AllChatmodelData?.object?.messageOutputList?.content?[index].message}");
                                                         DateTime
                                                             parsedDateTime =
                                                             DateTime.parse(
@@ -993,7 +1025,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 ),
 
                                 Container(
-                                  width: _width /1.32,
+                                  width: _width / 1.32,
                                   // color: Colors.amber,
                                   child: Row(
                                     children: [
@@ -1080,9 +1112,16 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                             GestureDetector(
                               onTap: () {
                                 if (_image != null) {
-                                  BlocProvider.of<senMSGCubit>(context)
-                                      .chatImageMethod(widget.Room_ID, context,
-                                          userId.toString(), _image!);
+                                  print("SubmitOneTime-->$SubmitOneTime");
+                                  if (SubmitOneTime == false) {
+                                    BlocProvider.of<senMSGCubit>(context)
+                                        .chatImageMethod(
+                                            widget.Room_ID,
+                                            context,
+                                            userId.toString(),
+                                            _image!);
+                                    SubmitOneTime = true;
+                                  }
                                 } else {
                                   if (Add_Comment.text.isNotEmpty) {
                                     if (Add_Comment.text.length >= 255) {
@@ -1322,7 +1361,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     // Delet_stompClient.activate();
   }
 
- Future<void> camerapicker() async {
+  Future<void> camerapicker() async {
     pickedImageFile = await picker.pickImage(source: ImageSource.camera);
     if (pickedImageFile != null) {
       if (!_isGifOrSvg(pickedImageFile!.path)) {
@@ -1394,7 +1433,6 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
         lowerCaseImagePath.endsWith('.m4a');
   }
 
-  
   Future<void> pickProfileImage() async {
     pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedImageFile != null) {

@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:pds/core/app_export.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:pds/widgets/ImageView_screen.dart';
 
 class AnimatedNetworkImage extends StatefulWidget {
@@ -23,7 +23,7 @@ class _AnimatedNetworkImageState extends State<AnimatedNetworkImage> {
   void initState() {
     super.initState();
     _mounted = true;
-    Future.delayed(Duration(milliseconds: 100), () {
+    Future.delayed(Duration(milliseconds: 150), () {
       if (_mounted) {
         setState(() {
           _opacity = 1.0;
@@ -58,6 +58,7 @@ class _AnimatedNetworkImageState extends State<AnimatedNetworkImage> {
             curve: Curves.easeInOut,
             child: CachedNetworkImage(
               imageUrl: widget.imageUrl,
+              placeholder: (context, url) => GFLoader(type: GFLoaderType.ios),
               fit: BoxFit.cover,
               errorWidget: (context, url, error) => Icon(Icons.error),
             ),

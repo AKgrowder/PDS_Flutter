@@ -32,6 +32,7 @@ dependencies:
   share_plus: 
   carousel_slider: ^4.2.1
   dots_indicator: ^3.0.0 
+  getwidget:
    
   # keyboard_emoji_picker: ^1.0.3
   flutter_markdown:

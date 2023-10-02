@@ -39,4 +39,6 @@ class PreferencesKey {
   static const String UpdateURLinSplash = 'UpdateURLinSplash';  
   static const String ShowSoftAlert = 'ShowSoftAlert';
   static String rating = "UserRating";
+  static String MaxPublicRoomSave = "MaxPublicRoomSave";
+
 }
