@@ -22,8 +22,7 @@ class Config {
   static const String Invitations = "user/api/getRoomInvitations";
   static const String fetchallmembers = "user/api/fetchAllMembers/";
   static const String editroom = "user/api/updateRoom";
-  static const String acceptRejectInvitationAPI =
-      "user/api/acceptRejectInvitation";
+  static const String acceptRejectInvitationAPI = "user/api/acceptRejectInvitation";
   static const String DeleteRoom = "user/api/deleteRoom";
   static const String checkUserActive = "user/api/isForumCreated";
   static const String uploadfile = 'user/api/uploadFIle';
