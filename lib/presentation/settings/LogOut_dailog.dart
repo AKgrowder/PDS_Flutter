@@ -7,10 +7,8 @@ import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:pds/API/Bloc/auth/register_Block.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/core/utils/color_constant.dart';
-import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/custom_bottom_bar/custom_bottom_bar.dart';
-import 'package:pds/widgets/custom_text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/logOut_bloc/LogOut_state.dart';
@@ -40,13 +38,14 @@ class LogOutdailogState extends State<LogOutdailog>
     controller.addListener(() {
       setState(() {});
     });
-  controller.forward();
+    controller.forward();
   }
 
   @override
   Widget build(BuildContext context) {
     // double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
 
     return Center(
       child: Material(
@@ -114,9 +113,19 @@ class LogOutdailogState extends State<LogOutdailog>
                     }
                   }, builder: (context, state) {
                     return AlertDialog(
-                      title: const Text('Logout'),
+                      title: const Text(
+                        'Logout',
+                        style: TextStyle(
+                          fontFamily: "outfit",
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       content: const Text(
                         'Do You Want To Logout ?',
+                        style: TextStyle(
+                          fontFamily: "outfit",
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                       actions: <Widget>[
                         Row(
@@ -125,9 +134,9 @@ class LogOutdailogState extends State<LogOutdailog>
                               child: Container(
                                 decoration: BoxDecoration(
                                     color: Colors.grey,
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(10),
-                                        topLeft: Radius.circular(10))),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    )),
                                 height: 50,
                                 child: TextButton(
                                   style: TextButton.styleFrom(),
@@ -141,13 +150,16 @@ class LogOutdailogState extends State<LogOutdailog>
                                 ),
                               ),
                             ),
+                            SizedBox(
+                              width: 20,
+                            ),
                             Expanded(
                               child: Container(
                                 decoration: BoxDecoration(
                                     color: ColorConstant.primary_color,
-                                    borderRadius: BorderRadius.only(
-                                        bottomRight: Radius.circular(10),
-                                        topRight: Radius.circular(10))),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    )),
                                 height: 50,
                                 child: TextButton(
                                   style: TextButton.styleFrom(),

@@ -98,7 +98,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                         ));
                   }));
                   SnackBar snackBar = SnackBar(
-                    
                     content: Text(state.Forgetpassword.message.toString()),
                     backgroundColor: ColorConstant.primary_color,
                   );
@@ -166,17 +165,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                   Container(
                                     width: _width / 1.4,
                                     child: CustomTextFormField(
-                                      validator: (value) {
-                                        final RegExp phoneRegExp =
-                                            RegExp(r'^(?!0+$)[0-9]{10}$');
-                                        if (value!.isEmpty) {
-                                          return 'Please Enter Mobile Number';
-                                        } else if (!phoneRegExp
-                                            .hasMatch(value)) {
-                                          return 'Invalid Mobile Number';
-                                        }
-                                        return null;
-                                      },
                                       onChanged: (value) {
                                         print("onchange");
                                         final RegExp regex = RegExp('[a-zA-Z]');
@@ -223,8 +211,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                               CustomElevatedButton(
                                 onTap: () {
                                   final RegExp phoneRegExp =
-                                      RegExp(r'^(?!0+$)[0-9]{10}$');
-                                  print('gbdfbgfh');
+                                      RegExp(r'^[6-9]\d{9}$');
+
                                   if (contectnumberrController.text.isEmpty) {
                                     show_Icon_Flushbar(context,
                                         msg: "Please Enter Mobile Number");
