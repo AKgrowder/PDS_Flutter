@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/utils/utils.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -589,7 +588,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 child: CustomTextFormField(
                                   validator: (value) {
                                     final RegExp phoneRegExp =
-                                        RegExp(r'^(?!0+$)[0-9]{10}$');
+                                         RegExp(r'^[6-9]\d{9}$');
                                     if (value!.isEmpty) {
                                       return 'Please Enter Mobile Number';
                                     } else if (!phoneRegExp.hasMatch(value)) {

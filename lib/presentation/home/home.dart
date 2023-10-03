@@ -1735,7 +1735,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     "${MyPublicRoomData?.object?[index].uid ?? ""}",
                                                                 Title:
                                                                     "${MyPublicRoomData?.object?[index].description ?? ""}",
-                                                              
+
                                                               ),
                                                             );
                                                           })).then((value) {

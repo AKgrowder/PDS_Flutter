@@ -51,9 +51,9 @@ List<String> experts = [
 class _ExpertsScreenState extends State<ExpertsScreen> {
   var _containerColor;
 
-  void initState() { 
-     getUserID();
- 
+  void initState() {
+    getUserID();
+
     super.initState();
   }
 
@@ -227,33 +227,20 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Stack(
-                                      children: [
-                                        // Container(
-                                        //   child: Image.asset(
-                                        //     userData["userData"][index]["image"],
-                                        //   ),
-                                        // ),
-                                        // index == 1
-                                        // ? CustomImageView(
-                                        //     imagePath: ImageConstant.expert2,
-                                        //     radius: BorderRadius.circular(10),
-                                        //   )
-                                        // :
-                                        // CustomImageView(
-                                        //   imagePath: ImageConstant.experts,
-                                        //   radius: BorderRadius.circular(10),
-                                        // ),
-                                        CustomImageView(
-                                          url:
-                                              "${FetchAllExpertsData?.object?[index].profilePic}",
-                                          height: _height / 4.8,
-                                          width: _width,
-                                          fit: BoxFit.fill,
-                                          radius: BorderRadius.circular(10),
-                                        )
+                                    FetchAllExpertsData?.object?[index]
+                                                    .profilePic ==
+                                                "" ||
+                                            FetchAllExpertsData?.object?[index]
+                                                    .profilePic ==
+                                                null
+                                        ? Stack(
+                                            children: [
+                                              CustomImageView(
+                                                imagePath:
+                                                    ImageConstant.brandlogo,   
+                                              ),
 
-                                        /* index == 1
+                                              /* index == 1
                                         ? Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Container(
@@ -320,8 +307,22 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                               ]),
                                             ),
                                           ), */
-                                      ],
-                                    ),
+                                            ],
+                                          )
+                                        : Stack(
+                                            children: [
+                                              CustomImageView(
+                                                url:
+                                                    "${FetchAllExpertsData?.object?[index].profilePic}",
+                                                height: _height / 4.8,
+                                                width: _width,
+                                                fit: BoxFit.fill,
+                                                radius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            ],
+                                          ),
+
                                     Row(
                                       children: [
                                         Text(
@@ -457,7 +458,10 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                                               SelectedRoomCubit(),
                                                         ),
                                                       ],
-                                                      child: RoomSelection(ExperID: "${FetchAllExpertsData?.object?[index].userEmail}",));
+                                                      child: RoomSelection(
+                                                        ExperID:
+                                                            "${FetchAllExpertsData?.object?[index].userEmail}",
+                                                      ));
                                                 }))
                                               : Navigator.of(context).push(
                                                   MaterialPageRoute(

@@ -62,7 +62,8 @@ class senMSGCubit extends Cubit<senMSGState> {
         print("comentApiClass.sucuess-");
 
         comentApiClass.object.messageOutputList.content
-            .addAll(comentApiClassPagenation.object.messageOutputList.content);
+            .insertAll(0,comentApiClassPagenation.object.messageOutputList.content.reversed
+                        .toList());
 
         comentApiClass.object.messageOutputList.pageable.pageNumber =
             comentApiClassPagenation
@@ -71,6 +72,7 @@ class senMSGCubit extends Cubit<senMSGState> {
             comentApiClassPagenation.object.messageOutputList.totalElements;
 
         emit(ComentApiState(comentApiClass));
+        // emit(ComentApiClassPagenation(comentApiClassPagenation));
       } /* else {
         emit(senMSGErrorState('No Data Found!'));
       } */
@@ -92,7 +94,7 @@ class senMSGCubit extends Cubit<senMSGState> {
     try {
       responce =
           await Repository().chatImage(context, Room_ID, userUid, imageFile);
-         print('dfbsdfhsdf-$responce'); 
+      print('dfbsdfhsdf-$responce');
       if (responce['success'] == true) {
         print("comentApiClass.sucuess-");
         emit(ComentApiIntragtionWithChatState(responce));
