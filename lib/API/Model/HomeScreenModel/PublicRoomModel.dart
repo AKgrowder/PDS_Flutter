@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
+
 class PublicRoomModel {
   String? message;
   List<Object>? object;
@@ -41,7 +43,7 @@ class Object {
   Message? message;
   String? createdAt;
   String? messageType;
-
+  int? totalPage;
 
   Object(
       {this.uid,
@@ -53,6 +55,7 @@ class Object {
       this.ownerUserUid,
       this.message,
       this.createdAt,
+      this.totalPage,
       this.messageType,
       });
 
@@ -68,6 +71,7 @@ class Object {
     message =
         json['message'] != null ? new Message.fromJson(json['message']) : null;
     createdAt = json['createdAt'];
+    totalPage = json["totalPage"];
     messageType = json['messageType'];
   }
 
@@ -80,6 +84,7 @@ class Object {
     data['ownerUserName'] = this.ownerUserName;
     data['ownerUsreProfilePic'] = this.ownerUsreProfilePic;
     data['ownerUserUid'] = this.ownerUserUid;
+    data["totalPage"] = this.totalPage;
     if (this.message != null) {
       data['message'] = this.message!.toJson();
     }

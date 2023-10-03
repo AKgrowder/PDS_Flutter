@@ -40,5 +40,7 @@ class PreferencesKey {
   static const String ShowSoftAlert = 'ShowSoftAlert';
   static String rating = "UserRating";
   static String MaxPublicRoomSave = "MaxPublicRoomSave";
+  static String RoomPageCount = "RoomPageCount";
+
 
 }
