@@ -29,10 +29,11 @@ class BecomeExpertScreen extends StatefulWidget {
 class Expertise {
   final String uid;
   final String expertiseName;
- Expertise(this.uid, this.expertiseName);
+  Expertise(this.uid, this.expertiseName);
 }
 
 bool? SubmitOneTime = false;
+
 class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   double value2 = 0.0;
   double finalFileSize = 0;
@@ -40,7 +41,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   String? dopcument;
   String? filepath;
   FetchExprtise? _fetchExprtise;
-  String? selctedIndex; 
+  String? selctedIndex;
   List<Expertise> expertiseData = [];
   Expertise? selectedExpertise;
   // String selctedexpertiseData = "";
@@ -609,10 +610,8 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           dopcument == "Upload Image"
                               ? GestureDetector(
                                   onTap: () async {
-                                    filepath = 
-                                    await prepareTestPdf(0);
-                                    print(
-                                        'dopcument.toString()${dopcument.toString()}');
+                                    filepath = await prepareTestPdf(0);
+                                    print('dopcument.toString()--${dopcument.toString()}');
                                   },
                                   child: Container(
                                     height: 50,
@@ -741,24 +740,22 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
                           } else if (_startTime?.format(context).toString() ==
-                                  null 
-                             ) {
+                              null) {
                             SnackBar snackBar = SnackBar(
                               content: Text('Please select Working Hours'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
-                          }
-                          else if (_endTime?.format(context).toString() == null) {
+                          } else if (_endTime?.format(context).toString() ==
+                              null) {
                             SnackBar snackBar = SnackBar(
                               content: Text('Please select Working Hours'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);  
-                          }
-                            else if (dopcument == 'Upload Image') {
+                                .showSnackBar(snackBar);
+                          } else if (dopcument == 'Upload Image') {
                             SnackBar snackBar = SnackBar(
                               content: Text('Please Upload Image'),
                               backgroundColor: ColorConstant.primary_color,
@@ -790,7 +787,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             print('pwarems-$params');
                             BlocProvider.of<FetchExprtiseRoomCubit>(context)
                                 .addExpertProfile(params, context);
-                                 if (SubmitOneTime == false) {
+                            if (SubmitOneTime == false) {
                               SubmitOneTime = true;
                               BlocProvider.of<FetchExprtiseRoomCubit>(context)
                                   .addExpertProfile(params, context);
