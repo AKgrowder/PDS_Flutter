@@ -168,5 +168,6 @@ class ImageConstant {
   static String notVerify = 'assets/images/yes.png';
   static String Verified = 'assets/images/close.png';
   static String savedPin = 'assets/images/savedPin.png';
+  static String brandlogo = 'assets/images/brandlogo.png';
 
 }
