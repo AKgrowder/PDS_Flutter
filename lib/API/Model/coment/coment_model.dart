@@ -215,7 +215,6 @@
 //     return data;
 //   }
 // }
-import 'dart:developer';
 
 
 class ComentApiModel {
@@ -226,7 +225,7 @@ class ComentApiModel {
   ComentApiModel({this.message, this.object, this.success});
 
   ComentApiModel.fromJson(Map<String, dynamic> json) {
-    log("ComentApiModel->$json");
+  
     message = json['message'];
     object =
         json['object'] != null ? new Object.fromJson(json['object']) : null;
