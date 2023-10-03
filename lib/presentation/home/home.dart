@@ -1740,7 +1740,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     "${MyPublicRoomData?.object?[index].uid ?? ""}",
                                                                 Title:
                                                                     "${MyPublicRoomData?.object?[index].description ?? ""}",
-                                                                    pageNumber:(MyPublicRoomData?.object?[index].totalPage ) ?? 0 ,
+                                                                    
                                                               ),
                                                             );
                                                           })).then((value) {
