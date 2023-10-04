@@ -34,11 +34,11 @@ class ViewCommentScreen extends StatefulWidget {
   final Title;
   String? Screen_name;
   String? createdDate;
-  ViewCommentScreen(
-      {required this.Room_ID,
-      required this.Title,
-      this.Screen_name,
-      });
+  ViewCommentScreen({
+    required this.Room_ID,
+    required this.Title,
+    this.Screen_name,
+  });
 
   @override
   State<ViewCommentScreen> createState() => _ViewCommentScreenState();
@@ -77,6 +77,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   bool isEmojiVisible = false;
   bool isKeyboardVisible = false;
   bool ReverseBool = false;
+  bool OneTimeDelete = false;
   FocusNode _focusNode = FocusNode();
   final focusNode = FocusNode();
   KeyboardVisibilityController keyboardVisibilityController =
@@ -100,13 +101,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
 
   @override
   void initState() {
-    // print("aaaaaaa-${widget.pageNumber}");
     pageNumberMethod();
-    // print("bbbbbbbb-${(widget.pageNumber ?? 0) - 1}");
-    print('bbbbbbbbbbbbb ${widget.Room_ID}');
-
-    // if (widget.Screen_name == "RoomChat") {
-    // }
+    print('Room UID :-----> ${widget.Room_ID}');
     getUserID();
     getToken();
     getDocumentSize();
@@ -174,7 +170,6 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? a = prefs.getInt(PreferencesKey.mediaSize);
     documentuploadsize = double.parse("${a}");
-    print('scdhfggfgdf-$documentuploadsize.');
     setState(() {});
   }
 
@@ -233,22 +228,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
 
-            if (state is senMSGLoadingState) {
-              // Center(
-              //   child: Container(
-              //     margin: EdgeInsets.only(bottom: 100),
-              //     child: ClipRRect(
-              //       borderRadius: BorderRadius.circular(20),
-              //       child: Image.asset(ImageConstant.loader,
-              //           fit: BoxFit.cover, height: 100.0, width: 100),
-              //     ),
-              //   ),
-              // );
-            }
-            if (state is senMSGLoadedState) {
-              // BlocProvider.of<senMSGCubit>(context)
-              //     .coomentPage(widget.Room_ID, context, ShowLoader: true);
-            }
+            if (state is senMSGLoadingState) {}
+            if (state is senMSGLoadedState) {}
 
             if (state is ComentApiState) {
               AllChatmodelData = state.comentApiClass;
@@ -257,32 +238,16 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                     AllChatmodelData
                         ?.object?.messageOutputList?.content?.reversed
                         .toList();
-                print("biji varr avi u ");
                 ReverseBool = true;
               }
             }
-
-            // if (state is ComentApiClassPagenation) {
-            //   AllChatmodelData.object.messageOutputList.content.addAll(state
-            //       .comentApiClassPagenation.object?.messageOutputList?.content);
-
-            //   comentApiClass.object.messageOutputList.pageable.pageNumber =
-            //       comentApiClassPagenation
-            //           .object.messageOutputList.pageable.pageNumber;
-            //   comentApiClass.object.messageOutputList.totalElements =
-            //       comentApiClassPagenation
-            //           .object.messageOutputList.totalElements;
-            // }
             if (state is ComentApiIntragtionWithChatState) {
-              print('second loaded state');
               SubmitOneTime = false;
 
               _image = null;
-              print('dfdfhsdfhsh-${state.comentApiClass1}');
               if (addDataSccesfully == false) {
                 Content content1 =
                     Content.fromJson(state.comentApiClass1['object']);
-                print('sdfhdsghghfgh--${content1.createdAt}');
                 AddNewData = true;
                 AllChatmodelData?.object?.messageOutputList?.content
                     ?.add(content1);
@@ -320,11 +285,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 ),
                                 Container(
                                   width: _width / 1.2,
-                                  // color: Colors.amber,
                                   child: Text(
                                     "${widget.Title}  ",
-                                    // overflow: TextOverflow.ellipsis,
-                                    // maxLines: 2,
                                     style: TextStyle(
                                       fontFamily: 'outfit',
                                       fontSize: 15,
@@ -333,27 +295,6 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                     ),
                                   ),
                                 ),
-                                /*   GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (image?.contains(index) ?? false) {
-                                        image?.remove(index);
-                                      } else {
-                                        image?.add(index);
-                                      }
-                                    });
-                                  },
-                                  child: (image?.contains(index) ?? false)
-                                      ? CustomImageView(
-                                          imagePath:
-                                              ImageConstant.unselectedimgVector,
-                                          height: 20,
-                                        )
-                                      : CustomImageView(
-                                          imagePath: ImageConstant.selectedimage,
-                                          height: 20,
-                                        ),
-                                ), */
                               ]),
                         ),
                         Divider(
@@ -393,8 +334,6 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                         ),
                         Expanded(
                           child: Container(
-                            // height: _height / 1.4,
-                            // color: Colors.red[200],
                             child: Padding(
                               padding: const EdgeInsets.only(top: 5),
                               child: AllChatmodelData != null
@@ -404,16 +343,10 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                       ? SizedBox()
                                       : SingleChildScrollView(
                                           controller: scrollController,
-                                          // physics: BouncingScrollPhysics(),
                                           child: Column(
                                             children: [
                                               PaginationWidget(
-
-                                                  // PageCount: widget.pageNumber,
                                                   onPagination: (p0) async {
-                                                    log("PaginationWidget iwant Check--${AllChatmodelData}");
-                                                    print("-------------" +
-                                                        p0.toString());
                                                     await BlocProvider.of<
                                                                 senMSGCubit>(
                                                             context)
@@ -449,51 +382,13 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                           NeverScrollableScrollPhysics(),
                                                       itemBuilder:
                                                           (context, index) {
-                                                        print(
-                                                            "AllChatmodelData DataCheck-${AllChatmodelData?.object?.messageOutputList?.content?[index].message}");
                                                         DateTime
                                                             parsedDateTime =
                                                             DateTime.parse(
                                                                 '${AllChatmodelData?.object?.messageOutputList?.content?[index].createdAt}');
 
-                                                        DateTime time =
-                                                            DateTime.now();
-                                                        var format =
-                                                            DateFormat("mm");
-                                                        var aa =
-                                                            format.format(time);
-
-                                                        var bb = format.format(
-                                                            parsedDateTime);
-
-                                                        // var one =
-                                                        //     format.parse(bb);
-                                                        // var two =
-                                                        //     format.parse(aa);
-                                                        // var final_time =
-                                                        //     two.difference(one);
-
-                                                        // var bbb = Duration(
-                                                        //     minutes: 10);
-
-                                                        // var finalAPI_Time =
-                                                        //     int.parse(bbb
-                                                        //         .toString()
-                                                        //         .split(":")[1]);
-
-                                                        // var FixTime = int.parse(
-                                                        //     final_time
-                                                        //         .toString()
-                                                        //         .split(":")[1]);
-
                                                         var ara = getTime(
                                                             parsedDateTime);
-                                                        print(ara);
-
-                                                        // one.difference(two);
-
-                                                        print(
-                                                            "check User name --> ${AllChatmodelData?.object?.messageOutputList?.content?[index].userName} Login User Name --> ${User_Name}");
 
                                                         if (isScroll == false) {
                                                           Future.delayed(
@@ -593,31 +488,6 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                         height:
                                                                             10,
                                                                       ),
-                                                                      /* index == 2
-                                            ? Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 8.0,
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    CustomImageView(
-                                                      imagePath: ImageConstant
-                                                          .viewcommentimage,
-                                                      height: 60,
-                                                    ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    CustomImageView(
-                                                      imagePath:
-                                                          ImageConstant.mobileman,
-                                                      height: 60,
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                            : SizedBox(), */
-
                                                                       Padding(
                                                                         padding:
                                                                             const EdgeInsets.all(8.0),
@@ -670,9 +540,9 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                 ),
                                                               )
                                                             : Padding(
-                                                                padding: const EdgeInsets
-                                                                        .symmetric(
-                                                                    /* horizontal: 35, vertical: 5 */),
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .symmetric(),
                                                                 child: Column(
                                                                   crossAxisAlignment:
                                                                       CrossAxisAlignment
@@ -691,8 +561,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                               const EdgeInsets.only(left: 16),
                                                                           child:
                                                                               Text(
-                                                                            customFormat(parsedDateTime!),
-                                                                            // maxLines: 3,
+                                                                            customFormat(parsedDateTime),
                                                                             textScaleFactor:
                                                                                 1.0,
                                                                             style: TextStyle(
@@ -738,18 +607,9 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                               null
                                                                           ? GestureDetector(
                                                                               onTap: () {
-                                                                                print("delete msg 1");
-
+                                                                                OneTimeDelete = false;
                                                                                 print(AllChatmodelData?.object?.messageOutputList?.content?[index].uid);
                                                                                 print(UserLogin_ID);
-                                                                                // roomUid = "${widget.Room_ID}";
-                                                                                // DeleteMSg_baseURL = " assas ";
-
-                                                                                // var Delete_MEG_uid = "${modelData?.object?.messageOutputList?.content?[index].uid}";
-                                                                                // var Login_userUID = "${UserLogin_ID}";
-
-                                                                                // checkGuestUser();
-                                                                                // roomUid = "${widget.Room_ID}";
                                                                                 Room_ID_stomp = "${widget.Room_ID}";
                                                                                 stompClient.subscribe(
                                                                                   destination:
@@ -757,32 +617,23 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                       "/topic/getDeletedMessage/${widget.Room_ID}",
                                                                                   callback: (StompFrame frame) {
                                                                                     Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
-                                                                                    print('Add RealTime MSG --->$jsonString');
 
                                                                                     Content content1 = Content.fromJson(jsonString['object']);
-                                                                                    print("check MSG get Properly ---> ${content1.message}");
-
+                                                                                    print("AAAAAAAAA ->>>>>> ${content1}");
+                                                                                    print("delete 11");
                                                                                     var msgUUID = content1.uid;
                                                                                     if (content1.isDeleted == true) {
-                                                                                      AllChatmodelData?.object?.messageOutputList?.content?.removeAt(index);
-                                                                                      setState(() {});
-                                                                                      // BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
-                                                                                      // ReverseBool = false;
+                                                                                      // AllChatmodelData?.object?.messageOutputList?.content?.removeAt(index);
+
+                                                                                      if (OneTimeDelete == false) {
+                                                                                        OneTimeDelete = true;
+                                                                                        setState(() {
+                                                                                          AllChatmodelData?.object?.messageOutputList?.content = AllChatmodelData?.object?.messageOutputList?.content?.reversed.toList();
+                                                                                          ReverseBool = false;
+                                                                                          BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
+                                                                                        });
+                                                                                      }
                                                                                     }
-
-                                                                                    // if (addmsg != msgUUID) {
-                                                                                    //   print("please1 ---> ${modelData?.object?.messageOutputList?.content?.length}");
-
-                                                                                    //   Content content = Content.fromJson(jsonString['object']);
-                                                                                    //   print("please2 ---> ${content.message}");
-                                                                                    //   modelData?.object?.messageOutputList?.content?.add(content);
-
-                                                                                    //   setState(() {
-                                                                                    //     addmsg = content.uid ?? "";
-                                                                                    //   });
-                                                                                    // }
-
-                                                                                    // print("please3 ---> ${modelData?.object?.messageOutputList?.content?.length}");
                                                                                   },
                                                                                 );
 
@@ -808,52 +659,33 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                               : ara == "a few seconds ago" || ara == null
                                                                                   ? GestureDetector(
                                                                                       onTap: () {
-                                                                                        print("delete msg 2");
-                                                                                        print("ha aviyo ahiya");
-
+                                                                                        OneTimeDelete = false;
                                                                                         print(AllChatmodelData?.object?.messageOutputList?.content?[index].uid);
                                                                                         print(UserLogin_ID);
-                                                                                        // roomUid = "${widget.Room_ID}";
-                                                                                        // DeleteMSg_baseURL = " assas ";
-
-                                                                                        // var Delete_MEG_uid = "${modelData?.object?.messageOutputList?.content?[index].uid}";
-                                                                                        // var Login_userUID = "${UserLogin_ID}";
-
-                                                                                        // checkGuestUser();
-                                                                                        // roomUid = "${widget.Room_ID}";
                                                                                         Room_ID_stomp = "${widget.Room_ID}";
                                                                                         stompClient.subscribe(
-                                                                                          destination:
-                                                                                              // "ws://72c1-2405-201-200b-a0cf-210f-e5fe-f229-e899.ngrok.io",
-                                                                                              "/topic/getDeletedMessage/${widget.Room_ID}",
+                                                                                          destination: "/topic/getDeletedMessage/${widget.Room_ID}",
                                                                                           callback: (StompFrame frame) {
                                                                                             Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
-                                                                                            print('Add RealTime MSG --->$jsonString');
 
                                                                                             Content content1 = Content.fromJson(jsonString['object']);
-                                                                                            print("check MSG get Properly ---> ${content1.message}");
-
+                                                                                            print("delete 22");
+                                                                                            print("BBBBBBBBB ->>>>>> ${content1}");
                                                                                             var msgUUID = content1.uid;
-                                                                                            if (content1.isDeleted == true) {
-                                                                                              // AllChatmodelData?.object?.messageOutputList?.content?.removeAt(index);
-                                                                                              // setState(() {});
-                                                                                              BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
-                                                                                              ReverseBool = false;
+                                                                                            if (content1.userCode == "") {
+
+                                                                                            } else {
+                                                                                              if (content1.isDeleted == true) {
+                                                                                                if (OneTimeDelete == false) {
+                                                                                                  OneTimeDelete = true;
+                                                                                                  setState(() {
+                                                                                                    AllChatmodelData?.object?.messageOutputList?.content = AllChatmodelData?.object?.messageOutputList?.content?.reversed.toList();
+                                                                                                    ReverseBool = false;
+                                                                                                    BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
+                                                                                                  });
+                                                                                                }
+                                                                                              }
                                                                                             }
-
-                                                                                            // if (addmsg != msgUUID) {
-                                                                                            //   print("please1 ---> ${modelData?.object?.messageOutputList?.content?.length}");
-
-                                                                                            //   Content content = Content.fromJson(jsonString['object']);
-                                                                                            //   print("please2 ---> ${content.message}");
-                                                                                            //   modelData?.object?.messageOutputList?.content?.add(content);
-
-                                                                                            //   setState(() {
-                                                                                            //     addmsg = content.uid ?? "";
-                                                                                            //   });
-                                                                                            // }
-
-                                                                                            // print("please3 ---> ${modelData?.object?.messageOutputList?.content?.length}");
                                                                                           },
                                                                                         );
 
@@ -877,18 +709,10 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                   : int.parse(ara.split(" ")[0]) <= 10
                                                                                       ? GestureDetector(
                                                                                           onTap: () {
-                                                                                            print("delete msg 3");
-
+                                                                                            OneTimeDelete = false;
                                                                                             print(AllChatmodelData?.object?.messageOutputList?.content?[index].uid);
                                                                                             print(UserLogin_ID);
-                                                                                            // roomUid = "${widget.Room_ID}";
-                                                                                            // DeleteMSg_baseURL = " assas ";
 
-                                                                                            // var Delete_MEG_uid = "${modelData?.object?.messageOutputList?.content?[index].uid}";
-                                                                                            // var Login_userUID = "${UserLogin_ID}";
-
-                                                                                            // checkGuestUser();
-                                                                                            // roomUid = "${widget.Room_ID}";
                                                                                             Room_ID_stomp = "${widget.Room_ID}";
                                                                                             stompClient.subscribe(
                                                                                               destination:
@@ -896,33 +720,20 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                                   "/topic/getDeletedMessage/${widget.Room_ID}",
                                                                                               callback: (StompFrame frame) {
                                                                                                 Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
-                                                                                                print('Add RealTime MSG --->$jsonString');
 
                                                                                                 Content content1 = Content.fromJson(jsonString['object']);
-                                                                                                print("check MSG get Properly ---> ${content1.message}");
-
+                                                                                                print("CCCCCCCC ->>>>>> ${content1}");
                                                                                                 var msgUUID = content1.uid;
                                                                                                 if (content1.isDeleted == true) {
-                                                                                                  // AllChatmodelData?.object?.messageOutputList?.content?.removeAt(index);
-                                                                                                  // setState(() {});
-                                                                                                  BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
-                                                                                                  ReverseBool = false;
-                                                                                                  AllChatmodelData?.object?.messageOutputList?.content = AllChatmodelData?.object?.messageOutputList?.content?.reversed.toList();
+                                                                                                  if (OneTimeDelete == false) {
+                                                                                                    OneTimeDelete = true;
+                                                                                                    setState(() {
+                                                                                                      AllChatmodelData?.object?.messageOutputList?.content = AllChatmodelData?.object?.messageOutputList?.content?.reversed.toList();
+                                                                                                      ReverseBool = false;
+                                                                                                      BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
+                                                                                                    });
+                                                                                                  }
                                                                                                 }
-
-                                                                                                // if (addmsg != msgUUID) {
-                                                                                                //   print("please1 ---> ${modelData?.object?.messageOutputList?.content?.length}");
-
-                                                                                                //   Content content = Content.fromJson(jsonString['object']);
-                                                                                                //   print("please2 ---> ${content.message}");
-                                                                                                //   modelData?.object?.messageOutputList?.content?.add(content);
-
-                                                                                                //   setState(() {
-                                                                                                //     addmsg = content.uid ?? "";
-                                                                                                //   });
-                                                                                                // }
-
-                                                                                                // print("please3 ---> ${modelData?.object?.messageOutputList?.content?.length}");
                                                                                               },
                                                                                             );
 
@@ -959,9 +770,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                               children: [
                                                                                 Spacer(),
                                                                                 Container(
-                                                                                  // height: 45,
                                                                                   width: _width / 1.3,
-                                                                                  // color: Colors.amber,
                                                                                   child: Align(
                                                                                     alignment: Alignment.topRight,
                                                                                     child: Text(
@@ -1063,7 +872,6 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 SizedBox(
                                   width: 10,
                                 ),
-
                                 Container(
                                   width: _width / 1.32,
                                   // color: Colors.amber,
@@ -1125,43 +933,13 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                     ],
                                   ),
                                 ),
-                                // GestureDetector(
-                                //   onTap: () {
-                                //     setState(() {
-                                //       emojiShowing = !emojiShowing;
-                                //     });
-                                //     // buildSticker();
-                                //     // buildSticker();
-                                //     // KeyboardEmojiPicker().pickEmoji();
-                                //   },
-                                //   child: Image.asset(
-                                //     "assets/images/ic_outline-emoji-emotions.png",
-                                //     height: 28,
-                                //   ),
-                                // ),
                               ]),
-                              // child: TextField(
-                              //   controller: Add_Comment,
-                              //   cursorColor: Colors.grey,
-                              //   decoration: InputDecoration(
-                              //     border: InputBorder.none,
-                              //     hintText: "Add Comment",
-                              //   ),
-                              // ),
                             ),
                             GestureDetector(
                               onTap: () async {
                                 if (_image != null) {
-                                  print("SubmitOneTime-->$SubmitOneTime");
                                   if (SubmitOneTime == false) {
                                     await checkGuestUser();
-                                    BlocProvider.of<senMSGCubit>(context)
-                                        .chatImageMethod(
-                                            widget.Room_ID,
-                                            context,
-                                            userId.toString(),
-                                            _image!);
-                                    SubmitOneTime = true;
                                   }
                                 } else {
                                   if (Add_Comment.text.isNotEmpty) {
@@ -1183,26 +961,17 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                         callback: (StompFrame frame) {
                                           Map<String, dynamic> jsonString =
                                               json.decode(frame.body ?? "");
-                                          print(
-                                              'Add RealTime MSG --->$jsonString');
 
                                           Content content1 = Content.fromJson(
                                               jsonString['object']);
-                                          print(
-                                              "check MSG get Properly ---> ${content1.message}");
+
                                           var msgUUID = content1.uid;
                                           if (AddNewData == false) {
-                                            print(
-                                                'check value --> $AddNewData');
                                             if (addmsg != msgUUID) {
-                                              print(
-                                                  "please1 ---> ${AllChatmodelData?.object?.messageOutputList?.content?.length}");
-
                                               Content content =
                                                   Content.fromJson(
                                                       jsonString['object']);
-                                              print(
-                                                  "please2 ---> ${content.message}");
+
                                               AllChatmodelData?.object
                                                   ?.messageOutputList?.content
                                                   ?.add(content);
@@ -1219,8 +988,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                               });
                                             }
                                           }
-                                          print(
-                                              "please3 ---> ${AllChatmodelData?.object?.messageOutputList?.content?.length}");
+                                          // print(
+                                          //     "please3 ---> ${AllChatmodelData?.object?.messageOutputList?.content?.length}");
                                         },
                                       );
                                       stompClient.send(
@@ -1344,7 +1113,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                 : 1.0),
       ),
       onEmojiSelected: (emoji, category) {
-        print(emoji);
+        // print(emoji);
       },
     );
   }
@@ -1359,12 +1128,16 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
 
     if (UserLogin_ID != null) {
-      print("user login Mood");
+      // print("user login Mood");
       if (Add_Comment.text.isNotEmpty) {
         // setState(() {
         addmsg = "";
         Add_Comment.text = '';
         // });
+      } else if (_image != null) {
+        BlocProvider.of<senMSGCubit>(context).chatImageMethod(
+            widget.Room_ID, context, userId.toString(), _image!);
+        SubmitOneTime = true;
       } else {
         if (UserLogin_ID != null) {
           Navigator.of(context).push(MaterialPageRoute(
@@ -1378,7 +1151,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
         }
       }
     } else {
-      print("User guest Mood on");
+      // print("User guest Mood on");
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => RegisterCreateAccountScreen()));
     }
@@ -1418,14 +1191,14 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
         final sizeInBytes = await _image!.length();
         final sizeInMB = sizeInBytes / (1024 * 1024);
         if (sizeInMB > documentuploadsize) {
-          print('documentuploadsize-$documentuploadsize');
+          // print('documentuploadsize-$documentuploadsize');
           showDialog(
               context: context,
               builder: (context) {
                 return AlertDialog(
                   title: Text("Image Size Exceeded"),
                   content:
-                      Text("Selected image size exceeds $documentuploadsize."),
+                      Text("Selected image size exceeds $documentuploadsize MB."),
                   actions: [
                     TextButton(
                       onPressed: () {
@@ -1489,7 +1262,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
         });
         final sizeInBytes = await _image!.length();
         final sizeInMB = sizeInBytes / (1024 * 1024);
-        print('documentuploadsize-$documentuploadsize');
+        // print('documentuploadsize-$documentuploadsize');
 
         if (sizeInMB > documentuploadsize) {
           setState(() {
@@ -1501,7 +1274,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                 return AlertDialog(
                   title: Text("Image Size Exceeded"),
                   content:
-                      Text("Selected image size exceeds $documentuploadsize."),
+                      Text("Selected image size exceeds $documentuploadsize MB."),
                   actions: [
                     TextButton(
                       onPressed: () {

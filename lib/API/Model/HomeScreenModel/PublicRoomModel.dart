@@ -44,6 +44,7 @@ class Object {
   String? createdAt;
   String? messageType;
   int? totalPage;
+  bool? saved;
 
   Object(
       {this.uid,
@@ -56,6 +57,7 @@ class Object {
       this.message,
       this.createdAt,
       this.totalPage,
+      this.saved,
       this.messageType,
       });
 

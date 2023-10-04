@@ -774,6 +774,11 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
 
             default:
           }
+
+          setState(() {
+            uplopdfile.text = file1.name;
+            dopcument = file1.name;
+          });
           print('filecheckPath-${file1.path}');
           BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
               dopcument.toString(), file1.path!, context);

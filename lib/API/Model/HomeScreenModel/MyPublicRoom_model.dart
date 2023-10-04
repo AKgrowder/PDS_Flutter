@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 class MyPublicRoom {
   String? message;
@@ -8,7 +7,6 @@ class MyPublicRoom {
   MyPublicRoom({this.message, this.object, this.success});
 
   MyPublicRoom.fromJson(Map<String, dynamic> json) {
-    log("MyPublicRoom->$json");
     message = json['message'];
     if (json['object'] != null) {
       object = <Object>[];
