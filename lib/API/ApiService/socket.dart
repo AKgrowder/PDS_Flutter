@@ -15,7 +15,7 @@ void onConnect(StompFrame frame) {
   stompClient.subscribe(
     destination: "/topic/getMessage/${Room_ID_stomp}",
     callback: (StompFrame frame) {
-      print('Received message AA-: ${frame.body}');
+      print('Received message AA <->: ${frame.body}');
       // Process the received message
     },
   );
@@ -23,7 +23,7 @@ void onConnect(StompFrame frame) {
   stompClient.subscribe(
     destination: "/topic/getDeletedMessage/${Room_ID_stomp}",
     callback: (StompFrame frame) {
-      print('Received message AA-: ${frame.body}');
+      print('Received message Delete-: ${frame.body}');
       // Process the received message
     },
   );
@@ -33,14 +33,14 @@ void onConnect(StompFrame frame) {
     stompClient.subscribe(
       destination: "/topic/getMessage/${Room_ID_stomp}",
       callback: (StompFrame frame) {
-        print('Received message AA-: ${frame.body}');
+        print('Received message AA ---->: ${frame.body}');
       },
     );
 
     stompClient.subscribe(
       destination: "/topic/getDeletedMessage/${Room_ID_stomp}",
       callback: (StompFrame frame) {
-        print('Received message AA-: ${frame.body}');
+        print('Received message Delete --->: ${frame.body}');
         // Process the received message
       },
     );
