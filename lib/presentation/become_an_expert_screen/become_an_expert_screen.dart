@@ -611,7 +611,8 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                               ? GestureDetector(
                                   onTap: () async {
                                     filepath = await prepareTestPdf(0);
-                                    print('dopcument.toString()--${dopcument.toString()}');
+                                    print(
+                                        'dopcument.toString()--${dopcument.toString()}');
                                   },
                                   child: Container(
                                     height: 50,
@@ -731,10 +732,12 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
-                          } else if (feesController.text == null ||
-                              feesController.text == '') {
+                          } else if (feesController.text.isNotEmpty &&
+                              feesController.text[0] == '.') {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please select Fees'),
+                              content: Text(
+                                'Please enter a number other than dot (.) as the first .',
+                              ),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -1069,7 +1072,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
     print('getFileSizevariable-${file1.path}');
     value2 = double.parse(STR);
 
-    print(value2);
+    print("value2-->$value2");
     switch (i) {
       case 0:
         print("Done file size B");
@@ -1092,6 +1095,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         print("Done file size KB");
         switch (Index) {
           case 0:
+            print("file1.name-->${file1.name}");
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
               setState(() {
                 uplopdfile.text = file1.name;
@@ -1110,6 +1114,9 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
 
         break;
       case 2:
+        print("value2check-->$value2");
+        print("finalFileSize-->$finalFileSize");
+
         if (value2 > finalFileSize) {
           print(
               "this file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB");
@@ -1136,19 +1143,22 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
           );
         } else {
           print("Done file Size 12MB");
-
+          print("file1.namedata-->${file1.name}");
           switch (Index) {
             case 1:
               setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
+              print("DOCUMENT IN MB ---->$dopcument");
               break;
-
             default:
           }
-          print('filecheckPath-${file1.path}');
-          print('filecheckPath-${file1.path}');
+          print('filecheckPath1-${file1.name}');
+          setState(() {
+            uplopdfile.text = file1.name;
+            dopcument = file1.name;
+          });
           BlocProvider.of<FetchExprtiseRoomCubit>(context)
               .chooseDocumentprofile(
                   dopcument.toString(), file1.path!, context);
