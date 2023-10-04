@@ -25,6 +25,12 @@ class ComentApiState extends senMSGState {
   ComentApiState(this.comentApiClass);
 }
 
+// class ComentApiClassPagenation extends senMSGState {
+//   final ComentApiModel comentApiClassPagenation;
+
+//   ComentApiClassPagenation(this.comentApiClassPagenation);
+// }
+
 class ComentApiIntragtionWithChatState extends senMSGState {
   final dynamic comentApiClass1;
   ComentApiIntragtionWithChatState(this.comentApiClass1);

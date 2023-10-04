@@ -157,6 +157,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   controller: newpasswordController,
                   textStyle: theme.textTheme.titleMedium!,
                   hintText: "New Password",
+                  maxLength: 50,
                   hintStyle: theme.textTheme.titleMedium!,
                   textInputType: TextInputType.visiblePassword,
                   errorMaxLines: 3,
@@ -227,7 +228,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   controller: conformpasswordController,
 
                   textStyle: theme.textTheme.titleMedium!,
-                  hintText: "Confirm Password",
+                  hintText: "Confirm Password", maxLength: 50,
                   hintStyle: theme.textTheme.titleMedium!,
                   textInputType: TextInputType.visiblePassword,
                   inputFormatters: [

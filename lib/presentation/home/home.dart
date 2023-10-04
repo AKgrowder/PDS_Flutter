@@ -164,7 +164,7 @@ GetCountOfSavedRoomModel? getCountOfSavedRoomModel;
 
 class _HomeScreenState extends State<HomeScreen> {
   /*  bool meesageFlag = false; */
-  bool? apiflag;
+
   @override
   void initState() {
     refresh = false;
@@ -297,13 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
               User_Module = user_Module;
             }
             if (state is SelectedDataPinAndUnpin) {
-              if (apiflag == true) {
-                print("fhdgfgdfgggfggfgfg");
-                saveUserProfile();
-              } else {
-                await BlocProvider.of<FetchAllPublicRoomCubit>(context)
-                    .FetchPublicRoom("${User_ID}", context);
-              }
+              saveUserProfile();
 
               SnackBar snackBar = SnackBar(
                 content: Text(state.unPinModel.object.toString()),
@@ -446,7 +440,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: UserProfile == "" || UserProfile == null
                                     ? CustomImageView(
                                         imagePath: ImageConstant
-                                            .tomcruse, // url: UserProfile,
+                                            .brandlogo, // url: UserProfile,
                                         height: 50,
                                         width: 50,
                                         fit: BoxFit.fill,
@@ -1050,8 +1044,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               10),
                                                     )
                                                   : CustomImageView(
-                                                      imagePath:
-                                                          ImageConstant.experts,
+                                                      imagePath: ImageConstant
+                                                          .brandlogo,
                                                       // height: 50,
                                                       // width: _width/1.2,
                                                       fit: BoxFit.fill,
@@ -1246,8 +1240,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 .only(right: 7),
                                                         child: GestureDetector(
                                                           onTap: () async {
-                                                            apiflag = true;
-                                                            setState(() {});
                                                             pinanDUnPinMethod(
                                                                 MyPublicRoomData
                                                                         ?.object?[
@@ -1722,7 +1714,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     children: [
                                                       GestureDetector(
                                                         onTap: () {
-                                                          print('check totalPage-${MyPublicRoomData?.object?[index].totalPage}');
+                                                          print(
+                                                              'check totalPage-${MyPublicRoomData?.object?[index].totalPage}');
                                                           Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
@@ -1740,7 +1733,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     "${MyPublicRoomData?.object?[index].uid ?? ""}",
                                                                 Title:
                                                                     "${MyPublicRoomData?.object?[index].description ?? ""}",
-                                                                    pageNumber:(MyPublicRoomData?.object?[index].totalPage ) ?? 0 ,
                                                               ),
                                                             );
                                                           })).then((value) {
@@ -2129,17 +2121,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               .message
                                                               ?.messageType !=
                                                           null
-                                                      ? Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  right: 5),
-                                                          child: Align(
-                                                            alignment: Alignment
-                                                                .centerRight,
-                                                            child: Container(
-                                                              child: AnimatedNetworkImage(
-                                                                  imageUrl:
-                                                                      "${FetchPublicRoomModelData?.object?[index].message?.message}"),
+                                                      ? InkWell(
+                                                          onTap: () {
+                                                            print(
+                                                                "sdfgdfgf-${PublicRoomModelData?.object?[index].message?.message}");
+                                                          },
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    right: 5),
+                                                            child: Align(
+                                                              alignment: Alignment
+                                                                  .centerRight,
+                                                              child: Container(
+                                                                child: AnimatedNetworkImage(
+                                                                    imageUrl:
+                                                                        "${FetchPublicRoomModelData?.object?[index].message?.message}"),
+                                                              ),
                                                             ),
                                                           ),
                                                         )
@@ -2360,8 +2358,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             right: 10),
                                                     child: GestureDetector(
                                                       onTap: () async {
-                                                        apiflag = false;
-                                                        setState(() {});
                                                         pinanDUnPinMethod(
                                                             FetchPublicRoomModelData
                                                                     ?.object?[
@@ -2678,11 +2674,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ?.object?.isNotEmpty ==
                                       true) {
                                 print("FetchPublicRoomModelData?.object? data");
-                                Navigator.of(context).push(MaterialPageRoute(
+
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return MultiBlocProvider(
+                                      providers: [
+                                        BlocProvider<FetchAllPublicRoomCubit>(
+                                          create: (context) =>
+                                              FetchAllPublicRoomCubit(),
+                                        )
+                                      ],
+                                      child: PublicRoomList(
+                                        FetchPublicRoomModelData:
+                                            FetchPublicRoomModelData,
+                                      ));
+                                }));
+
+                                /*    Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => PublicRoomList(
                                           FetchPublicRoomModelData:
                                               FetchPublicRoomModelData,
-                                        )));
+                                        ))); */
                               } else {
                                 print(
                                     "FetchPublicRoomModelData?.object? no data");
@@ -2693,12 +2705,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                   PublicRoomModelData?.object?.isNotEmpty ==
                                       true) {
                                 print("PublicRoomModelData?.object? data");
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return MultiBlocProvider(
+                                      providers: [
+                                        BlocProvider<FetchAllPublicRoomCubit>(
+                                          create: (context) =>
+                                              FetchAllPublicRoomCubit(),
+                                        )
+                                      ],
+                                      child: PublicRoomList(
+                                        PublicRoomModelData:
+                                            PublicRoomModelData,
+                                      ));
+                                }));
 
-                                Navigator.of(context).push(MaterialPageRoute(
+                                /*    Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => PublicRoomList(
                                           PublicRoomModelData:
                                               PublicRoomModelData,
-                                        )));
+                                        ))); */
                               } else {
                                 print("PublicRoomModelData?.object? no data");
                               }

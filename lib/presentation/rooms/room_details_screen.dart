@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/Fetchroomdetails_Bloc/Fetchroomdetails_stat.dart';
+import 'package:pds/API/Model/InvitationModel/Invitation_Model.dart';
 import 'package:pds/API/Model/fetch_room_detail_model/fetch_room_detail_model.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/widgets/commentPdf.dart';
@@ -19,9 +20,11 @@ class RoomDetailScreen extends StatefulWidget {
 
 class _RoomDetailScreenState extends State<RoomDetailScreen> {
   FetchRoomDetailModel? fetchRoomDetailModel;
+  InvitationModel? InvitationRoomData;
 
   @override
   void initState() {
+  
     BlocProvider.of<FetchRoomDetailCubit>(context)
         .Fetchroomdetails(widget.uuid.toString(), context);
     super.initState();

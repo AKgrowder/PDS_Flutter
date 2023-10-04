@@ -24,7 +24,6 @@ import '../../API/Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
-import '../../dialogs/assigh_adminn_dilog..dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
 import '../create_foram/create_foram_screen.dart';
@@ -186,6 +185,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
             );
           }
           if (state is GetAllPrivateRoomLoadedState) {
+            print("GetAllPrivateRoomLoadedState");
             PriveateRoomData = state.PublicRoomData;
             if (PriveateRoomData?.object?.length == 0 ||
                 PriveateRoomData?.object?.length == null) {
@@ -562,6 +562,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             User_Mood == "EXPERT"
                                                 ? GestureDetector(
                                                     onTap: () {
+                                                      print('EXPERT');
+                                                      print(
+                                                          "check UserId Print-->${PriveateRoomData?.object?[index].uid.toString()}");
                                                       Navigator.push(context,
                                                           MaterialPageRoute(
                                                         builder: (context) {
