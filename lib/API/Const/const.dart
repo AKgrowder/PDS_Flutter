@@ -4,7 +4,7 @@ class Config {
   static const String mobileNumberIsNotvaild = "Your Number is Not Register";
   // "your number is not vaild Please Enter correct Number";
   static const String servernotreachable =
-      "Servar Not Rechable, Try After Some Time.";
+      "Server Not Rechable, Try After Some Time.";
   static const String FetchAllPublicRoom = "guest/api/fetchAllPublicRoom";
   static const String CreateRoom = "guest/api/createRoom";
   static const String loginApi = "auth/auth/authenticate";

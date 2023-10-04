@@ -227,6 +227,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
                                           ),
                                           child: GestureDetector(
                                             onTap: () {
+                                              
                                               Navigator.push(context,
                                                   MaterialPageRoute(
                                                 builder: (context) {
@@ -239,8 +240,8 @@ class _InvitationScreenState extends State<InvitationScreen> {
                                                         ),
                                                       ],
                                                       child: RoomDetailScreen(
-                                                        uuid: PriveateRoomData
-                                                            ?.object?[index].uid
+                                                        uuid:InvitationRoomData
+                                                            ?.object?[index].roomUid
                                                             .toString(),
                                                       ));
                                                 },
