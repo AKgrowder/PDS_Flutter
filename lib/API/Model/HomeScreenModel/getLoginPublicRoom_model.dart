@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 class LoginPublicRoomModel {
   String? message;
@@ -8,8 +7,6 @@ class LoginPublicRoomModel {
   LoginPublicRoomModel({this.message, this.object, this.success});
 
   LoginPublicRoomModel.fromJson(Map<String, dynamic> json) {
-    
-    log("LoginPublicRoomModel-->$json");
     message = json['message'];
     if (json['object'] != null) {
       object = <Object>[];
@@ -42,6 +39,7 @@ class Object {
   Message? message;
   String? createdAt;
   bool? saved;
+  int? totalPage;
 
   Object(
       {this.uid,
@@ -53,6 +51,7 @@ class Object {
       this.ownerUserUid,
       this.message,
       this.createdAt,
+      this.totalPage,
       this.saved});
 
   Object.fromJson(Map<String, dynamic> json) {
@@ -66,6 +65,7 @@ class Object {
     message =
         json['message'] != null ? new Message.fromJson(json['message']) : null;
     createdAt = json['createdAt'];
+    totalPage = json["totalPage"];
     saved = json['saved'];
   }
 
@@ -81,6 +81,7 @@ class Object {
     if (this.message != null) {
       data['message'] = this.message!.toJson();
     }
+    data["totalPage"] = this.totalPage;
     data['createdAt'] = this.createdAt;
     return data;
   }

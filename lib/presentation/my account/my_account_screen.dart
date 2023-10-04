@@ -637,13 +637,11 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                         myAccontDetails?.object?.isEmailVerified == false
                             ? GestureDetector(
                                 onTap: () {
-                                  /*   myAccontDetails?.object?.isEmailVerified =
-                                      true;
-                                  setState(() {}); */
-
-                                  BlocProvider.of<MyAccountCubit>(context)
-                                      .emailVerifaction(context,
-                                          "${myAccontDetails?.object?.email}");
+                                  if (isupdate == false) {
+                                    BlocProvider.of<MyAccountCubit>(context)
+                                        .emailVerifaction(context,
+                                            "${myAccontDetails?.object?.email}");
+                                  }
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(
@@ -681,9 +679,11 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                       true;
                                   setState(() {}); */
 
-                                  BlocProvider.of<MyAccountCubit>(context)
-                                      .emailVerifaction(context,
-                                          "${myAccontDetails?.object?.email}");
+                                  if (isupdate == false) {
+                                    BlocProvider.of<MyAccountCubit>(context)
+                                        .emailVerifaction(context,
+                                            "${myAccontDetails?.object?.email}");
+                                  }
                                 },
                                 child: Padding(
                                   padding:

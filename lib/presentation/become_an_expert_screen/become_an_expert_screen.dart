@@ -29,10 +29,11 @@ class BecomeExpertScreen extends StatefulWidget {
 class Expertise {
   final String uid;
   final String expertiseName;
- Expertise(this.uid, this.expertiseName);
+  Expertise(this.uid, this.expertiseName);
 }
 
 bool? SubmitOneTime = false;
+
 class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   double value2 = 0.0;
   double finalFileSize = 0;
@@ -40,7 +41,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   String? dopcument;
   String? filepath;
   FetchExprtise? _fetchExprtise;
-  String? selctedIndex; 
+  String? selctedIndex;
   List<Expertise> expertiseData = [];
   Expertise? selectedExpertise;
   // String selctedexpertiseData = "";
@@ -609,10 +610,9 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           dopcument == "Upload Image"
                               ? GestureDetector(
                                   onTap: () async {
-                                    filepath = 
-                                    await prepareTestPdf(0);
+                                    filepath = await prepareTestPdf(0);
                                     print(
-                                        'dopcument.toString()${dopcument.toString()}');
+                                        'dopcument.toString()--${dopcument.toString()}');
                                   },
                                   child: Container(
                                     height: 50,
@@ -732,33 +732,33 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
-                          } else if (feesController.text == null ||
-                              feesController.text == '') {
+                          } else if (feesController.text.isNotEmpty &&
+                              feesController.text[0] == '.') {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please select Fees'),
+                              content: Text(
+                                'Please enter a number other than dot (.) as the first .',
+                              ),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
                           } else if (_startTime?.format(context).toString() ==
-                                  null 
-                             ) {
+                              null) {
                             SnackBar snackBar = SnackBar(
                               content: Text('Please select Working Hours'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
-                          }
-                          else if (_endTime?.format(context).toString() == null) {
+                          } else if (_endTime?.format(context).toString() ==
+                              null) {
                             SnackBar snackBar = SnackBar(
                               content: Text('Please select Working Hours'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);  
-                          }
-                            else if (dopcument == 'Upload Image') {
+                                .showSnackBar(snackBar);
+                          } else if (dopcument == 'Upload Image') {
                             SnackBar snackBar = SnackBar(
                               content: Text('Please Upload Image'),
                               backgroundColor: ColorConstant.primary_color,
@@ -790,7 +790,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             print('pwarems-$params');
                             BlocProvider.of<FetchExprtiseRoomCubit>(context)
                                 .addExpertProfile(params, context);
-                                 if (SubmitOneTime == false) {
+                            if (SubmitOneTime == false) {
                               SubmitOneTime = true;
                               BlocProvider.of<FetchExprtiseRoomCubit>(context)
                                   .addExpertProfile(params, context);
@@ -1072,7 +1072,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
     print('getFileSizevariable-${file1.path}');
     value2 = double.parse(STR);
 
-    print(value2);
+    print("value2-->$value2");
     switch (i) {
       case 0:
         print("Done file size B");
@@ -1095,6 +1095,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         print("Done file size KB");
         switch (Index) {
           case 0:
+            print("file1.name-->${file1.name}");
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
               setState(() {
                 uplopdfile.text = file1.name;
@@ -1113,6 +1114,9 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
 
         break;
       case 2:
+        print("value2check-->$value2");
+        print("finalFileSize-->$finalFileSize");
+
         if (value2 > finalFileSize) {
           print(
               "this file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB");
@@ -1139,19 +1143,22 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
           );
         } else {
           print("Done file Size 12MB");
-
+          print("file1.namedata-->${file1.name}");
           switch (Index) {
             case 1:
               setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
+              print("DOCUMENT IN MB ---->$dopcument");
               break;
-
             default:
           }
-          print('filecheckPath-${file1.path}');
-          print('filecheckPath-${file1.path}');
+          print('filecheckPath1-${file1.name}');
+          setState(() {
+            uplopdfile.text = file1.name;
+            dopcument = file1.name;
+          });
           BlocProvider.of<FetchExprtiseRoomCubit>(context)
               .chooseDocumentprofile(
                   dopcument.toString(), file1.path!, context);
