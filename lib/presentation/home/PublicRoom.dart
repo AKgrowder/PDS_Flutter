@@ -466,7 +466,7 @@ class _PublicRoomListState extends State<PublicRoomList> {
             .getCountOfSavedRoom(context);
       } else {
         SnackBar snackBar = SnackBar(
-          content: Text("Max Pin is 3 allowed"),
+          content: Text("Max 3 Pin is allowed"),
           backgroundColor: ColorConstant.primary_color,
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);

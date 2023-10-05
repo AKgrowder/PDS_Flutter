@@ -1,6 +1,4 @@
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
-import 'package:pds/API/Bloc/auth/register_Block.dart';
-
 import 'package:pds/presentation/splash_screen/splash_screen.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,7 +24,7 @@ void main() async {
 
   FirebaseMessaging.onBackgroundMessage(_messageHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-    print("onMessageOpenedApp: $message");
+    print("/* onMessageOpenedApp: */ $message");
 
     // if (message.data["navigation"] == "/your_route") {
     //   int _yourId = int.tryParse(message.data["id"]) ?? 0;
