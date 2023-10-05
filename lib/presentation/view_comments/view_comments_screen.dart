@@ -162,7 +162,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   double documentuploadsize = 0;
 
   void _goToElement(int index) {
-    scrollController.animateTo((100.0 * index),
+    scrollController.animateTo((1000.0 * index),
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
   }
 

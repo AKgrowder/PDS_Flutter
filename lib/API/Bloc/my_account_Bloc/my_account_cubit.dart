@@ -107,11 +107,12 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       emit(MyAccountErrorState(updateProfile));
     }
   }
-  Future<void> emailVerifaction(BuildContext context,String email) async {
+
+  Future<void> emailVerifaction(BuildContext context, String email) async {
     dynamic emailVerifaction;
     try {
       emit(MyAccountLoadingState());
-      emailVerifaction = await Repository().emailVerifaction(context,email);
+      emailVerifaction = await Repository().emailVerifaction(context, email);
       if (emailVerifaction.success == true) {
         emit(EmailVerifactionLoadedState(emailVerifaction));
       }
@@ -119,5 +120,4 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       emit(MyAccountErrorState(emailVerifaction));
     }
   }
-
 }

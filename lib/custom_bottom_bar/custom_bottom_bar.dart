@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:async';
 
 import 'package:pds/core/utils/sharedPreferences.dart';
@@ -5,10 +7,8 @@ import 'package:pds/presentation/home/home.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 // import 'package:growder/presentation/Buy_Screen/Buy_screen.dart';
 // import 'package:growder/presentation/Profile_Screen/Profile_screen.dart';
-
 import '../connection_status/connection_status_singleton.dart';
 import '../core/utils/image_constant.dart';
 import '../presentation/history_screen/history_screen.dart';
@@ -53,7 +53,7 @@ class _BottombarPageState extends State<BottombarPage> {
 
   bool isOffline = false;
   @override
-  initState() {
+   void initState() {
     super.initState();
     checkGuestUser();
     ConnectionStatusSingleton connectionStatus =
