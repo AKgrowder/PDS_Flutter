@@ -13,7 +13,6 @@ import 'package:pds/presentation/home/edit_dailog_home.dart';
 import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:pds/widgets/animatedwiget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_state.dart';
 import '../../API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
@@ -306,8 +305,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
             if (state is GetTotalSavedataCount) {
-              print(
-                  "dataCheckDataGet-${state.getCountOfSavedRoomModel.object}");
               mexcount = state.getCountOfSavedRoomModel.object;
               getCountOfSavedRoomModel = state.getCountOfSavedRoomModel;
               /*   SnackBar snackBar = SnackBar(
@@ -2121,23 +2118,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               .message
                                                               ?.messageType !=
                                                           null
-                                                      ? InkWell(
-                                                          onTap: () {
-                                                            print(
-                                                                "sdfgdfgf-${PublicRoomModelData?.object?[index].message?.message}");
-                                                          },
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    right: 5),
-                                                            child: Align(
-                                                              alignment: Alignment
-                                                                  .centerRight,
-                                                              child: Container(
-                                                                child: AnimatedNetworkImage(
-                                                                    imageUrl:
-                                                                        "${FetchPublicRoomModelData?.object?[index].message?.message}"),
-                                                              ),
+                                                      ? Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right: 5),
+                                                          child: Align(
+                                                            alignment: Alignment
+                                                                .centerRight,
+                                                            child: Container(
+                                                              child: AnimatedNetworkImage(
+                                                                  imageUrl:
+                                                                      "${PublicRoomModelData?.object?[index].message?.message}"),
                                                             ),
                                                           ),
                                                         )
@@ -2558,7 +2549,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   : FetchPublicRoomModelData
                                                               ?.object?[index]
                                                               .message
-                                                              ?.messageType ==
+                                                              ?.messageType !=
                                                           null
                                                       ? Padding(
                                                           padding:
@@ -3935,7 +3926,7 @@ class _HomeScreenState extends State<HomeScreen> {
             .getCountOfSavedRoom(context);
       } else {
         SnackBar snackBar = SnackBar(
-          content: Text("Max Pin is 3 allowed"),
+          content: Text("Max 3 Pin is allowed"),
           backgroundColor: ColorConstant.primary_color,
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
