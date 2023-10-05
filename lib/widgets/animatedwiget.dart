@@ -60,7 +60,9 @@ class _AnimatedNetworkImageState extends State<AnimatedNetworkImage> {
               imageUrl: widget.imageUrl,
               placeholder: (context, url) => GFLoader(type: GFLoaderType.ios),
               fit: BoxFit.cover,
-              errorWidget: (context, url, error) => Icon(Icons.error),
+              errorWidget: (context, url, error) {
+                return Icon(Icons.error);
+              },
             ),
           ),
         ),
