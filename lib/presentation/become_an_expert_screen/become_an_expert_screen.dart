@@ -736,7 +736,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                               feesController.text[0] == '.') {
                             SnackBar snackBar = SnackBar(
                               content: Text(
-                                'Please enter a number other than dot (.) as the first .',
+                                'Please enter a number other than dot (.)',
                               ),
                               backgroundColor: ColorConstant.primary_color,
                             );
