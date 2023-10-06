@@ -1346,6 +1346,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                         ? SizedBox()
                                                         : GestureDetector(
                                                             onTap: () {
+
+                                                              print("Room invited Link --> " + "${PriveateRoomData?.object?[index].roomLink}");
+
                                                               showDialog(
                                                                 context:
                                                                     context,
@@ -1369,6 +1372,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                           child: InviteDilogScreen(
                                                                             Room_UUID:
                                                                                 "${PriveateRoomData?.object?[index].uid}",
+                                                                                Room_Link: PriveateRoomData?.object?[index].roomLink,
                                                                           )),
                                                                     ),
                                                                   ),

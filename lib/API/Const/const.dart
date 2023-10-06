@@ -51,4 +51,6 @@ class Config {
   static const String unPin = "user/saveRoom";
   static const String unSavePin = "user/unsaveRoom";
   static const String getCountOfSavedRoom = "user/getCountOfSavedRoom";
+  static const String AutoCheckINRoom = "user/api/member_joined_through_link/";
+
 }

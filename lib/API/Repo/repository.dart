@@ -877,6 +877,23 @@ class Repository {
         return jsonString;
     }
   }
+
+  AutoEnterinAPI(BuildContext context,String RoomID) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.AutoCheckINRoom}?invitedRoomLink=${RoomID}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    switch (responce.statusCode) {
+      case 200:
+        return GetCountOfSavedRoomModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
 }
 
 // var headers = {
