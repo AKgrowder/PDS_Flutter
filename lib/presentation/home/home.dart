@@ -57,7 +57,9 @@ String? User_Name;
 String? User_Module = "";
 String? UserProfile;
 String? User_ID;
+String? AutoSetRoomID;
 bool refresh = false;
+bool isLogin = false;
 PublicRoomModel? PublicRoomModelData;
 LoginPublicRoomModel? FetchPublicRoomModelData;
 MyPublicRoom? MyPublicRoomData;
@@ -304,6 +306,16 @@ class _HomeScreenState extends State<HomeScreen> {
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
+            if (state is AutoEnterinLoadedState) {
+              print("Auto Inter in Room Done");
+              print(state.AutoEnterinData.object);
+              SnackBar snackBar = SnackBar(
+                content: Text(state.AutoEnterinData.object ?? ""),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              saveAutoEnterINRoom();
+            }
             if (state is GetTotalSavedataCount) {
               mexcount = state.getCountOfSavedRoomModel.object;
               getCountOfSavedRoomModel = state.getCountOfSavedRoomModel;
@@ -317,6 +329,11 @@ class _HomeScreenState extends State<HomeScreen> {
             return SingleChildScrollView(
               child: Column(
                 children: [
+                  /* Container(
+                    color: Colors.red,
+                    height: 50,
+                    child: Text(AutoSetRoomID ?? "a -"),
+                  ), */
                   SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.only(left: 16, right: 16),
@@ -2987,6 +3004,34 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  LoginCheck() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    AutoSetRoomID = prefs.getString(PreferencesKey.AutoSetRoomID);
+    if (AutoSetRoomID == "Done") {
+      print("Auto Enter in Room");
+    } else {
+      if (User_ID != null) {
+        print("User is Login!!${isLogin}");
+        BlocProvider.of<FetchAllPublicRoomCubit>(context)
+            .AutoEnterinRoom(context, AutoSetRoomID ?? "");
+      }/*  else {
+        if (AutoSetRoomID != "Done") {
+          print("User is not Login!!${isLogin}");
+          SnackBar snackBar = SnackBar(
+            content: Text("After that login, you can go to the Room."),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      } */
+    }
+  }
+
+  saveAutoEnterINRoom() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(PreferencesKey.AutoSetRoomID, "Done");
+  }
+
   saveUserProfile() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -3014,6 +3059,8 @@ class _HomeScreenState extends State<HomeScreen> {
     print("User Token :--- " + "${Token}");
 
     print('usrId-$User_ID');
+
+    LoginCheck();
 
     // prefs.getString(PreferencesKey.ProfileEmail);
     // prefs.getString(PreferencesKey.ProfileModule);
