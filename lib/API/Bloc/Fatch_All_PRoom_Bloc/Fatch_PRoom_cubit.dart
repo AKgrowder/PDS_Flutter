@@ -158,4 +158,22 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
       emit(FetchAllPublicRoomErrorState(pinAndUnPin));
     }
   }
+
+   Future<void> AutoEnterinRoom(
+    BuildContext context,
+    String RoomID
+  ) async {
+    dynamic AutoEnterRoom;
+    try {
+      emit(FetchAllPublicRoomLoadingState());
+      AutoEnterRoom = await Repository().AutoEnterinAPI(context,RoomID);
+      if (AutoEnterRoom.success == true) {
+        emit(AutoEnterinLoadedState(AutoEnterRoom));
+      } else {
+        emit(FetchAllPublicRoomErrorState(AutoEnterRoom.message));
+      }
+    } catch (e) {
+      emit(FetchAllPublicRoomErrorState(AutoEnterRoom));
+    }
+  }
 }

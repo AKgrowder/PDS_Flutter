@@ -77,6 +77,11 @@ class SelectedDataPinAndUnpin extends FetchAllPublicRoomState {
   SelectedDataPinAndUnpin(this.unPinModel);
 }
 
+class AutoEnterinLoadedState extends FetchAllPublicRoomState {
+  final AutoEnterRoomModel AutoEnterinData;
+  AutoEnterinLoadedState(this.AutoEnterinData);
+}
+
 class GetTotalSavedataCount extends FetchAllPublicRoomState {
   final GetCountOfSavedRoomModel getCountOfSavedRoomModel;
   GetTotalSavedataCount(this.getCountOfSavedRoomModel);

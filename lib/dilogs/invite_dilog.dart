@@ -12,7 +12,8 @@ import '../widgets/custom_image_view.dart';
 
 class InviteDilogScreen extends StatefulWidget {
   String? Room_UUID;
-  InviteDilogScreen({this.Room_UUID});
+  String? Room_Link;
+  InviteDilogScreen({required this.Room_UUID, required this.Room_Link});
   @override
   State<StatefulWidget> createState() => _InviteDilogScreenState();
 }
@@ -115,8 +116,8 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                     children: [
                       Center(
                         child: Container(
-                          height: 230,
-                          // height: 280
+                          // height: 230,
+                          height: 280,
                           width: width / 1.25,
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -181,7 +182,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                         top: 0.0, left: 10),
                                     child: TextFormField(
                                       inputFormatters: [
-                                         LengthLimitingTextInputFormatter(50),
+                                        LengthLimitingTextInputFormatter(50),
                                       ],
                                       // validator: (value) {
                                       //   final RegExp emailRegExp = RegExp(
@@ -313,35 +314,51 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                   ),
                                 ],
                               ),
-                              // SizedBox(
-                              //   height: 8,
-                              // ),
-                              // Divider(
-                              //   color: Colors.black,
-                              // ),
-                              // Padding(
-                              //   padding: const EdgeInsets.only(left: 10.0),
-                              //   child: Row(
-                              //     children: [
-                              //       CustomImageView(
-                              //         imagePath: ImageConstant.copyimage,
-                              //         height: 20,
-                              //       ),
-                              //       Padding(
-                              //         padding: const EdgeInsets.all(8.0),
-                              //         child: Text(
-                              //           "Copy Link",
-                              //           style: TextStyle(
-                              //             fontFamily: 'outfit',
-                              //             fontSize: 15,
-                              //             color: Color(0xFFED1C25),
-                              //             fontWeight: FontWeight.w400,
-                              //           ),
-                              //         ),
-                              //       )
-                              //     ],
-                              //   ),
-                              // )
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Divider(
+                                color: Colors.black,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Clipboard.setData(ClipboardData(
+                                      text: "${widget.Room_Link}"));
+                                  SnackBar snackBar = SnackBar(
+                                    content: Text("Copy Room Link."),
+                                    backgroundColor:
+                                        ColorConstant.primary_color,
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                },
+                                child: Container(
+                                  color: Colors.transparent,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    child: Row(
+                                      children: [
+                                        CustomImageView(
+                                          imagePath: ImageConstant.copyimage,
+                                          height: 20,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "Copy Link",
+                                            style: TextStyle(
+                                              fontFamily: 'outfit',
+                                              fontSize: 15,
+                                              color: Color(0xFFED1C25),
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                         ),

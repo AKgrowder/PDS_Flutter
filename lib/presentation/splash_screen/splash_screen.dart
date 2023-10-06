@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
@@ -31,6 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
   var user_Module = "";
   var User_profile = "";
   var UserID = "";
+  var deepLink1 = "";
 
   String? appApkMinVersion;
   String? appApkLatestVersion;
@@ -64,6 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    initDynamicLinks(context);
     getData();
     startTimer();
   }
@@ -254,6 +257,23 @@ class _SplashScreenState extends State<SplashScreen> {
 
     // ShowSoftAlert = prefs.getBool(PreferencesKey.ShowSoftAlert);
     VersionAlert();
+  }
+
+  initDynamicLinks(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final PendingDynamicLinkData? initialLink =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+    if (initialLink != null) {
+      final Uri deepLink = initialLink.link;
+      deepLink1 = deepLink.toString().split("=")[1];
+      // deepLink2 = deepLink1.toString().split("&")[0];
+
+      print('Deeplinks uri:${deepLink.path}');
+      setState(() {
+        prefs.setString(PreferencesKey.AutoSetRoomID, deepLink1);
+      });
+    }
   }
 
   VersionAlert() {
