@@ -30,6 +30,7 @@ void onConnect(StompFrame frame) {
 
   Timer.periodic(Duration(seconds: 5), (_) {
     print("Room Socket ++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
     stompClient.subscribe(
       destination: "/topic/getMessage/${Room_ID_stomp}",
       callback: (StompFrame frame) {
@@ -40,6 +41,7 @@ void onConnect(StompFrame frame) {
     stompClient.subscribe(
       destination: "/topic/getDeletedMessage/${Room_ID_stomp}",
       callback: (StompFrame frame) {
+        print("Delete Meassge --------------------------------------------------------------------");
         print('Received message Delete --->: ${frame.body}');
         // Process the received message
       },

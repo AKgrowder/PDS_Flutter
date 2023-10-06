@@ -185,6 +185,7 @@ class Object {
   String? createdDate;
   String? description;
   String? createdBy;
+  String? roomLink;
   int? totalPage;
   ExpertUserProfile? expertUserProfile;
   List<UsersList>? usersList;
@@ -197,6 +198,7 @@ class Object {
       this.description,
       this.expertUserProfile,
       this.totalPage,
+      this.roomLink,
       this.usersList});
 
   Object.fromJson(Map<String, dynamic> json) {
@@ -207,6 +209,7 @@ class Object {
     createdDate = json['createdDate'];
     description = json['description'];
     totalPage = json["totalPage"];
+    roomLink = json['roomLink'];
     expertUserProfile = json['expertUserProfile'] != null
         ? new ExpertUserProfile.fromJson(json['expertUserProfile'])
         : null;
@@ -226,6 +229,7 @@ class Object {
     data['createdDate'] = this.createdDate;
     data['description'] = this.description;
     data["totalPage"] = this.totalPage;
+    data['roomLink'] = this.roomLink;
     if (this.expertUserProfile != null) {
       data['expertUserProfile'] = this.expertUserProfile!.toJson();
     }

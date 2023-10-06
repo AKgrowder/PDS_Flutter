@@ -88,13 +88,6 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   int? Pagenumber;
   pageNumberMethod() async {
-    // if ((widget.pageNumber) != 0) {
-    //   Pagenumber = (widget.pageNumber ?? 0) - 1;
-    //   // setState(() {});
-    // } else {
-    //   Pagenumber = 0;
-    //   // setState(() {});
-    // }
     await BlocProvider.of<senMSGCubit>(context)
         .coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
   }
@@ -673,7 +666,6 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                             print("BBBBBBBBB ->>>>>> ${content1}");
                                                                                             var msgUUID = content1.uid;
                                                                                             if (content1.userCode == "") {
-
                                                                                             } else {
                                                                                               if (content1.isDeleted == true) {
                                                                                                 if (OneTimeDelete == false) {
@@ -956,42 +948,60 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                       checkGuestUser();
                                       Room_ID_stomp = "${widget.Room_ID}";
                                       stompClient.subscribe(
-                                        destination:
-                                            "/topic/getMessage/${widget.Room_ID}",
-                                        callback: (StompFrame frame) {
-                                          Map<String, dynamic> jsonString =
-                                              json.decode(frame.body ?? "");
+                                          destination:
+                                              "/topic/getMessage/${widget.Room_ID}",
+                                          callback: (StompFrame frame) {
+                                            Map<String, dynamic> jsonString =
+                                                json.decode(frame.body ?? "");
 
-                                          Content content1 = Content.fromJson(
-                                              jsonString['object']);
+                                            Content content1 = Content.fromJson(
+                                                jsonString['object']);
 
-                                          var msgUUID = content1.uid;
-                                          if (AddNewData == false) {
-                                            if (addmsg != msgUUID) {
-                                              Content content =
-                                                  Content.fromJson(
-                                                      jsonString['object']);
+                                            var msgUUID = content1.uid;
+                                            if (AddNewData == false) {
+                                              print(
+                                                  "Array length count 0000000000000000000");
+                                              print(AllChatmodelData
+                                                  ?.object
+                                                  ?.messageOutputList
+                                                  ?.content
+                                                  ?.length);
+                                              if (AllChatmodelData
+                                                      ?.object
+                                                      ?.messageOutputList
+                                                      ?.content ==
+                                                  null) {
+                                                BlocProvider.of<senMSGCubit>(
+                                                        context)
+                                                    .coomentPage(widget.Room_ID,
+                                                        context, "${0}",
+                                                        ShowLoader: true);
+                                              } else {
+                                                if (addmsg != msgUUID) {
+                                                  Content content =
+                                                      Content.fromJson(
+                                                          jsonString['object']);
 
-                                              AllChatmodelData?.object
-                                                  ?.messageOutputList?.content
-                                                  ?.add(content);
-                                              _goToElement(AllChatmodelData
+                                                  AllChatmodelData
                                                       ?.object
                                                       ?.messageOutputList
                                                       ?.content
-                                                      ?.length ??
-                                                  0);
+                                                      ?.add(content);
+                                                  _goToElement(AllChatmodelData
+                                                          ?.object
+                                                          ?.messageOutputList
+                                                          ?.content
+                                                          ?.length ??
+                                                      0);
 
-                                              setState(() {
-                                                addDataSccesfully = true;
-                                                addmsg = content.uid ?? "";
-                                              });
+                                                  setState(() {
+                                                    addDataSccesfully = true;
+                                                    addmsg = content.uid ?? "";
+                                                  });
+                                                }
+                                              }
                                             }
-                                          }
-                                          // print(
-                                          //     "please3 ---> ${AllChatmodelData?.object?.messageOutputList?.content?.length}");
-                                        },
-                                      );
+                                          });
                                       stompClient.send(
                                         destination:
                                             "/sendMessage/${widget.Room_ID}",
@@ -1197,8 +1207,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
               builder: (context) {
                 return AlertDialog(
                   title: Text("Image Size Exceeded"),
-                  content:
-                      Text("Selected image size exceeds $documentuploadsize MB."),
+                  content: Text(
+                      "Selected image size exceeds $documentuploadsize MB."),
                   actions: [
                     TextButton(
                       onPressed: () {
@@ -1273,8 +1283,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
               builder: (context) {
                 return AlertDialog(
                   title: Text("Image Size Exceeded"),
-                  content:
-                      Text("Selected image size exceeds $documentuploadsize MB."),
+                  content: Text(
+                      "Selected image size exceeds $documentuploadsize MB."),
                   actions: [
                     TextButton(
                       onPressed: () {
