@@ -17,8 +17,15 @@ class RoomMembersScreen extends StatefulWidget {
   String room_Id;
   var roomname;
   var roomdescription;
+  bool RoomOwner;
+  String? CreateUserID;
   RoomMembersScreen(
-      {Key? key, required this.room_Id, this.roomname, this.roomdescription})
+      {Key? key,
+      required this.room_Id,
+      this.roomname,
+      this.roomdescription,
+      this.CreateUserID,
+      required this.RoomOwner})
       : super(key: key);
 
   @override
@@ -154,7 +161,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                         fontSize: 15),
                                   ),
                                 ),
-                               /*  _data?.object?.length == 1
+                                /*  _data?.object?.length == 1
                                     ? Container(
                                         width: 99,
                                         height: 27.88,
@@ -455,7 +462,8 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                   ],
                                                 ),
                                               ),
-                             */  ],
+                             */
+                              ],
                             ),
                           ),
                           Padding(
@@ -535,26 +543,35 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                               //       )
                               //     : SizedBox(),
                               Spacer(),
-                              GestureDetector(
-                                onTapDown: (details) {
-                                  _showPopupMenu(
-                                      details.globalPosition, context);
-                                },
-                                child: Container(
-                                  height: 50,
-                                  color: Colors.white,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: Container(
-                                      child: CustomImageView(
-                                        imagePath: ImageConstant.popupimage,
-                                        height: 20,
-                                        fit: BoxFit.fill,
+                              widget.CreateUserID !=
+                                      _data?.object?[index].userUuid
+                                  ? GestureDetector(
+                                      onTapDown: (details) {
+                                        _showPopupMenu(
+                                            details.globalPosition, context);
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        color: Colors.white,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(15.0),
+                                          child: Container(
+                                            child: CustomImageView(
+                                              imagePath:
+                                                  ImageConstant.popupimage,
+                                              height: 20,
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                              )
+                                    )
+                                  : Container(
+                                      height: 50,
+                                      child: Align(
+                                          alignment: Alignment.center,
+                                          child: Text("Room Owner")),
+                                    )
                             ],
                           ),
                         ),
@@ -598,58 +615,89 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
         50,
         10,
       ),
-      items: [
-        PopupMenuItem(
-            onTap: () {
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: (context) => ViewDetailsScreen(),
-              //     ));
-            },
-            enabled: true,
-            child: Container(
-              width: 150,
-              child: Row(
-                children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.infoimage,
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "View Details",
-                      style: TextStyle(color: Colors.black),
-                      textScaleFactor: 1.0,
+      items: widget.RoomOwner == true
+          ? [
+              PopupMenuItem(
+                  onTap: () {
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => ViewDetailsScreen(),
+                    //     ));
+                  },
+                  enabled: true,
+                  child: Container(
+                    width: 150,
+                    child: Row(
+                      children: [
+                        CustomImageView(
+                          imagePath: ImageConstant.infoimage,
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "View Details",
+                            style: TextStyle(color: Colors.black),
+                            textScaleFactor: 1.0,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            )),
-        PopupMenuItem(
-            // onTap: () {},
-            enabled: true,
-            child: Container(
-              width: 100,
-              child: Row(
-                children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.arrowleftimage,
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "Leave",
-                      style: TextStyle(color: Colors.black),
-                      textScaleFactor: 1.0,
+                  )),
+              PopupMenuItem(
+                  // onTap: () {},
+                  enabled: true,
+                  child: Container(
+                    width: 100,
+                    child: Row(
+                      children: [
+                        CustomImageView(
+                          imagePath: ImageConstant.arrowleftimage,
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Remove",
+                            style: TextStyle(color: Colors.black),
+                            textScaleFactor: 1.0,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            )),
-      ],
+                  )),
+            ]
+          : [
+              PopupMenuItem(
+                  onTap: () {
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => ViewDetailsScreen(),
+                    //     ));
+                  },
+                  enabled: true,
+                  child: Container(
+                    width: 150,
+                    child: Row(
+                      children: [
+                        CustomImageView(
+                          imagePath: ImageConstant.infoimage,
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "View Details",
+                            style: TextStyle(color: Colors.black),
+                            textScaleFactor: 1.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+            ],
     );
   }
 }
