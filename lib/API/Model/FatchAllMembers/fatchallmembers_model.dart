@@ -31,6 +31,7 @@ class Object {
   String? userName;
   String? fullName;
   String? userProfilePic;
+  String? userUuid;
   bool? isExpert;
 
   Object({this.userName, this.fullName, this.userProfilePic, this.isExpert});
@@ -39,6 +40,7 @@ class Object {
     userName = json['userName'];
     fullName = json['fullName'];
     userProfilePic = json['userProfilePic'];
+    userUuid = json['userUuid'];
     isExpert = json['isExpert'];
   }
 
@@ -47,6 +49,7 @@ class Object {
     data['userName'] = this.userName;
     data['fullName'] = this.fullName;
     data['userProfilePic'] = this.userProfilePic;
+    data['userUuid'] = this.userUuid;
     data['isExpert'] = this.isExpert;
     return data;
   }
