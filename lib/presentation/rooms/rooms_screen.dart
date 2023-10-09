@@ -1042,6 +1042,14 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   child: RoomMembersScreen(
                                                       roomname:
                                                           "${PriveateRoomData?.object?[index].roomQuestion}",
+                                                      RoomOwner: PriveateRoomData
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .createdBy ==
+                                                              userId
+                                                          ? true
+                                                          : false,
+                                                          CreateUserID : userId,
                                                       roomdescription:
                                                           "${PriveateRoomData?.object?[index].description}",
                                                       room_Id:
@@ -1346,8 +1354,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                         ? SizedBox()
                                                         : GestureDetector(
                                                             onTap: () {
-
-                                                              print("Room invited Link --> " + "${PriveateRoomData?.object?[index].roomLink}");
+                                                              print("Room invited Link --> " +
+                                                                  "${PriveateRoomData?.object?[index].roomLink}");
 
                                                               showDialog(
                                                                 context:
@@ -1372,7 +1380,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                           child: InviteDilogScreen(
                                                                             Room_UUID:
                                                                                 "${PriveateRoomData?.object?[index].uid}",
-                                                                                Room_Link: PriveateRoomData?.object?[index].roomLink,
+                                                                            Room_Link:
+                                                                                PriveateRoomData?.object?[index].roomLink,
                                                                           )),
                                                                     ),
                                                                   ),
