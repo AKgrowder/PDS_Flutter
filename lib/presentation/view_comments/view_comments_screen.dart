@@ -1189,6 +1189,29 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     baseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
     stompClient.activate();
     // Delet_stompClient.activate();
+
+    stompClient.subscribe(
+      destination:
+          // "ws://72c1-2405-201-200b-a0cf-210f-e5fe-f229-e899.ngrok.io",
+          "/topic/getDeletedMessage/${widget.Room_ID}",
+      callback: (StompFrame frame) {
+        Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
+
+        Content content1 = Content.fromJson(jsonString['object']);
+        print("CCCCCCCC ->>>>>> ${content1}");
+        var msgUUID = content1.uid;
+        if (content1.isDeleted == true) {
+          setState(() {
+            AllChatmodelData?.object?.messageOutputList?.content =
+                AllChatmodelData?.object?.messageOutputList?.content?.reversed
+                    .toList();
+            ReverseBool = false;
+            BlocProvider.of<senMSGCubit>(context)
+                .coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
+          });
+        }
+      },
+    );
   }
 
   Future<void> camerapicker() async {

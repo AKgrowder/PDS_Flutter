@@ -625,6 +625,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                                 child: RoomMembersScreen(
                                                                     roomname:
                                                                         "${InvitationRoomData?.object?[index].roomQuestion}",
+                                                                        RoomOwner: false,
                                                                     roomdescription:
                                                                         "${InvitationRoomData?.object?[index].description}",
                                                                     room_Id:
