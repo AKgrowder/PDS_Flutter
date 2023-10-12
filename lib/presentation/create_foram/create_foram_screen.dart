@@ -17,6 +17,7 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/custom_bottom_bar/custom_bottom_bar.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
@@ -148,7 +149,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                 BlocProvider<InvitationCubit>(
                   create: (context) => InvitationCubit(),
                 ),
-              ], child: BottombarPage(buttomIndex: 0));
+              ], child: NewBottomBar(buttomIndex: 0));
             }));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             print('check Status--${state.createForm.success}');

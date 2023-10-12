@@ -12,9 +12,9 @@ import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/custom_bottom_bar/custom_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
@@ -131,7 +131,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     create: (context) => InvitationCubit(),
                   ),
                 ],
-                child: BottombarPage(buttomIndex: 0),
+                child: NewBottomBar(buttomIndex: 0),
               );
             },
           ), (route) => false);

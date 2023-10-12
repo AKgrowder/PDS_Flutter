@@ -42,6 +42,8 @@ class PreferencesKey {
   static String MaxPublicRoomSave = "MaxPublicRoomSave";
   static String RoomPageCount = "RoomPageCount";
   static String AutoSetRoomID = "AutoSetRoomID";
+  static String tabSelction = "tabSelction";
+
 
 
 
