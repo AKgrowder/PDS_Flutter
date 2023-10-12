@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
 import 'package:pds/API/Model/RateUseModel/Rateuse_model.dart';
+import 'package:pds/API/Model/ViewDetails_Model/ViewDetails_model.dart';
 import 'package:pds/API/Model/emailVerfiaction/emailVerfiaction.dart';
 import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
 import 'package:pds/API/Model/pinAndUnpinModel/pinAndUnpinModel.dart';
@@ -37,6 +38,7 @@ import '../Model/InvitationModel/Invitation_Model.dart';
 import '../Model/SendMSG/SendMSG_Model.dart';
 import '../Model/System_Config_model/fetchUserModule_model.dart';
 import '../Model/System_Config_model/system_config_model.dart';
+import '../Model/ViewDetails_Model/RemoveMember_model.dart';
 import '../Model/acceptRejectInvitaionModel/acceptRejectInvitaion.dart';
 import '../Model/coment/coment_model.dart';
 import '../Model/creat_form/creat_form_Model.dart';
@@ -878,7 +880,7 @@ class Repository {
     }
   }
 
-  AutoEnterinAPI(BuildContext context,String RoomID) async {
+  AutoEnterinAPI(BuildContext context, String RoomID) async {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.AutoCheckINRoom}?invitedRoomLink=${RoomID}', context);
     var jsonString = json.decode(responce.body);
@@ -886,6 +888,43 @@ class Repository {
     switch (responce.statusCode) {
       case 200:
         return GetCountOfSavedRoomModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  ViewDetails(String UUid, BuildContext context) async {
+    final responce =
+        await apiServices.getApiCall('${Config.ViewDetails}/${UUid}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    switch (responce.statusCode) {
+      case 200:
+        return ViewDetailsModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  RemoveUser(String roomID, String? memberUesrID,
+      BuildContext context) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.RemoveUser}?roomUid=${roomID}&memberUserUid=${memberUesrID}',
+        context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return RemoveUserModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
