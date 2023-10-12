@@ -31,9 +31,10 @@ class MyAccountScreen extends StatefulWidget {
   State<MyAccountScreen> createState() => _MyAccountScreenState();
 }
 
-TextEditingController uplopdfile = TextEditingController();
+
 
 class _MyAccountScreenState extends State<MyAccountScreen> {
+  TextEditingController uplopdfile = TextEditingController();
   double documentuploadsize = 0;
 
   MyAccontDetails? myAccontDetails;
