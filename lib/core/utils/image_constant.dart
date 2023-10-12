@@ -169,5 +169,47 @@ class ImageConstant {
   static String Verified = 'assets/images/close.png';
   static String savedPin = 'assets/images/savedPin.png';
   static String brandlogo = 'assets/images/brandlogo.png';
+  static String person_add_alt_1 = 'assets/images/person_add_alt_1 (1).png';
+  static String placeholder = 'assets/images/placeholder.jpeg';
+  static String placeholder2 = "assets/images/Ellipse 13.png";
+  static String Rectangle = "assets/images/Rectangle 23.png";
+  static String thumShup = "assets/images/tumshp.png";
+  static String meesage = "assets/images/meesage.png";
+  static String vector2 = "assets/images/Vector (1).png";
+  static String savePin = "assets/images/savePin.png";
+  static String placeholder4 = "assets/images/plachodelr4.png";
+  static String Star = "assets/images/Star 7.png";
+  static String beg = "assets/images/bag.png";
+  static String huge = 'assets/images/Huge-icon.png';
+  static String rendom = 'assets/images/unsplash_xX3T2C8ff1o.png';
+  static String myprofile = 'assets/images/myprofile.png';
+  static String camera = 'assets/images/Camera icon.png';
+  static String palchoder4 = 'assets/images/palchoder4.png';
+  static String backArrow = 'assets/images/backArrow.png';
+  static String seetingIcon = 'assets/images/seeting.png';
+  //
+  static String post1 = 'assets/images/post1.png';
+  static String post2 = 'assets/images/post2.png';
+  static String post3 = 'assets/images/post3.png';
+  static String post4 = 'assets/images/post4.png';
+  static String post5 = 'assets/images/post5.png';
+  static String post6 = 'assets/images/post6.png';
+  static String design = 'assets/images/design.png';
+
+  static String dummyImage = 'assets/images/dummy_360.png';
+  static String save_icon_360 = 'assets/images/save_icon_360.png';
+  static String like_icon_360 = 'assets/images/like_icon_360.png';
+  //////
+  static String homePng = 'assets/images/home.png';
+  static String groupPng = 'assets/images/groups.png';
+  static String serchpng = 'assets/images/search.png';
+  static String meesagePng = 'assets/images/meesage1.png';
+  static String nottifactionpng = 'assets/images/notifaction1.png';
+  static String deleteIcon = 'assets/images/deleet.png';
+  static String addIcon = 'assets/images/Add icon.png';
+  static String gridImage = 'assets/images/Rectangle 24.png';
+ static String  cameraData = 'assets/images/caemra_img.png';
+ static String  pin_icon =  "assets/images/pin_icon.png";
+
 
 }
