@@ -9,8 +9,7 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:pds/core/utils/internet_utils.dart';
-import 'package:pds/custom_bottom_bar/custom_bottom_bar.dart';
-import 'package:pds/presentation/home/home.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 
 class NoInterNetScreen extends StatelessWidget {
   const NoInterNetScreen({Key? key}) : super(key: key);
@@ -120,7 +119,7 @@ class NoInterNetScreen extends StatelessWidget {
                 create: (context) => InvitationCubit(),
               ),
             ],
-            child: BottombarPage(
+            child: NewBottomBar(
               buttomIndex: 0,
             ));
       }));

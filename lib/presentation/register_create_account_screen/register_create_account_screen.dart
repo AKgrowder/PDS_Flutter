@@ -3,7 +3,7 @@ import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:pds/API/Bloc/auth/register_Block.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/core/app_export.dart';
-import 'package:pds/custom_bottom_bar/custom_bottom_bar.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/Login_Screen/Login_Screen.dart';
 import 'package:pds/widgets/app_bar/appbar_image.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +72,7 @@ extends State<RegisterCreateAccountScreen> {
                           BlocProvider<InvitationCubit>(
                             create: (context) => InvitationCubit(),
                           ),
-                        ], child: BottombarPage(buttomIndex: 0));
+                        ], child: NewBottomBar(buttomIndex: 0));
                       }));
                     }),
               ),

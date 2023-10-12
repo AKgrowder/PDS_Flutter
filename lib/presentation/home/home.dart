@@ -7,6 +7,7 @@ import 'package:pds/API/Bloc/Edit_room_bloc/edit_room_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
 import 'package:pds/core/app_export.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/become_an_expert_screen/become_an_expert_screen.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:pds/presentation/home/edit_dailog_home.dart';
@@ -448,7 +449,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       BlocProvider<InvitationCubit>(
                                         create: (context) => InvitationCubit(),
                                       ),
-                                    ], child: BottombarPage(buttomIndex: 4));
+                                    ], child: NewBottomBar(buttomIndex: 4));
                                   }));
                                 },
                                 child: UserProfile == "" || UserProfile == null
@@ -528,7 +529,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           create: (context) =>
                                               InvitationCubit(),
                                         ),
-                                      ], child: BottombarPage(buttomIndex: 4));
+                                      ], child: NewBottomBar(buttomIndex: 4));
                                     }));
                                   },
                                   child: Container(
@@ -594,7 +595,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               InvitationCubit(),
                                                         ),
                                                       ],
-                                                      child: BottombarPage(
+                                                      child: NewBottomBar(
                                                           buttomIndex: 4));
                                                 }));
                                               },
@@ -828,7 +829,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               InvitationCubit(),
                                                         ),
                                                       ],
-                                                      child: BottombarPage(
+                                                      child: NewBottomBar(
                                                           buttomIndex: 4));
                                                 }));
                                               },
