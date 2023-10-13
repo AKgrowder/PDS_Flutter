@@ -210,6 +210,8 @@ class ImageConstant {
   static String gridImage = 'assets/images/Rectangle 24.png';
  static String  cameraData = 'assets/images/caemra_img.png';
  static String  pin_icon =  "assets/images/pin_icon.png";
+ static String  uplodimage =  "assets/images/uplodimage.png";
+ static String  galleryimage =  "assets/images/gallery.png";
 
 
 }
