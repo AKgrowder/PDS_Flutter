@@ -414,7 +414,6 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
         if (kDebugMode) {
           print("selected==>$value");
         }
-
         if (value == 0) {
           print(
               "object object object object object object object object object ");
