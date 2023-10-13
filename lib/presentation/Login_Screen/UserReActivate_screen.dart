@@ -14,8 +14,8 @@ import 'package:pds/API/Bloc/UserReActivate_Bloc/UserReActivate_state.dart';
 import 'package:pds/API/Bloc/auth/register_Block.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/core/utils/color_constant.dart';
-import 'package:pds/core/utils/image_constant.dart';
-import 'package:pds/custom_bottom_bar/new_Bottembar.dart';
+import 'package:pds/core/utils/image_constant.dart'; 
+import 'package:pds/presentation/%20new/newbottembar.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
