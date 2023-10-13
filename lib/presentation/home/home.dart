@@ -7,7 +7,7 @@ import 'package:pds/API/Bloc/Edit_room_bloc/edit_room_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
 import 'package:pds/core/app_export.dart';
-import 'package:pds/custom_bottom_bar/new_Bottembar.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/become_an_expert_screen/become_an_expert_screen.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:pds/presentation/home/edit_dailog_home.dart';
@@ -3015,7 +3015,7 @@ class _HomeScreenState extends State<HomeScreen> {
         print("User is Login!!${isLogin}");
         BlocProvider.of<FetchAllPublicRoomCubit>(context)
             .AutoEnterinRoom(context, AutoSetRoomID ?? "");
-      }/*  else {
+      } /*  else {
         if (AutoSetRoomID != "Done") {
           print("User is not Login!!${isLogin}");
           SnackBar snackBar = SnackBar(
