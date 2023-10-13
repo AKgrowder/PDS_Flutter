@@ -67,30 +67,30 @@ class _MyProfileScreenCustomState extends State<MyProfileScreenCustom> {
                   ),
                 ),
               ),
-              Positioned(
-                  bottom: 70,
-                  right: 5,
-                  child: userProfile != 'soicalScreen'
-                      ? GestureDetector(
-                          onTap: () {
-                            _settingModalBottomSheet(context);
-                          },
-                          child: Container(
-                            height: 45,
-                            width: 45,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Color(0xffFFFFFF), width: 4),
-                              shape: BoxShape.circle,
-                              color: Color(0xffFBD8D9),
-                            ),
-                            child: Icon(
-                              Icons.camera_alt_outlined,
-                              color: Colors.red,
-                            ),
-                          ),
-                        )
-                      : SizedBox()),
+              // Positioned(
+              //     bottom: 70,
+              //     right: 5,
+              //     child: userProfile != 'soicalScreen'
+              //         ? GestureDetector(
+              //             onTap: () {
+              //               _settingModalBottomSheet(context);
+              //             },
+              //             child: Container(
+              //               height: 45,
+              //               width: 45,
+              //               decoration: BoxDecoration(
+              //                 border: Border.all(
+              //                     color: Color(0xffFFFFFF), width: 4),
+              //                 shape: BoxShape.circle,
+              //                 color: Color(0xffFBD8D9),
+              //               ),
+              //               child: Icon(
+              //                 Icons.camera_alt_outlined,
+              //                 color: Colors.red,
+              //               ),
+              //             ),
+              //           )
+              //         : SizedBox()),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
@@ -104,31 +104,31 @@ class _MyProfileScreenCustomState extends State<MyProfileScreenCustom> {
                         padding: const EdgeInsets.all(4.0),
                         child: Image.asset(ImageConstant.palchoder4),
                       ),
-                      userProfile != 'soicalScreen'
-                          ? Positioned(
-                              bottom: 7,
-                              right: -0,
-                              child: GestureDetector(
-                                onTap: () {
-                                  _settingModalBottomSheet(context);
-                                },
-                                child: Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Color(0xffFFFFFF), width: 4),
-                                    shape: BoxShape.circle,
-                                    color: Color(0xffFBD8D9),
-                                  ),
-                                  child: Icon(
-                                    Icons.camera_alt_outlined,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ),
-                            )
-                          : SizedBox()
+                      // userProfile != 'soicalScreen'
+                      //     ? Positioned(
+                      //         bottom: 7,
+                      //         right: -0,
+                      //         child: GestureDetector(
+                      //           onTap: () {
+                      //             _settingModalBottomSheet(context);
+                      //           },
+                      //           child: Container(
+                      //             height: 40,
+                      //             width: 40,
+                      //             decoration: BoxDecoration(
+                      //               border: Border.all(
+                      //                   color: Color(0xffFFFFFF), width: 4),
+                      //               shape: BoxShape.circle,
+                      //               color: Color(0xffFBD8D9),
+                      //             ),
+                      //             child: Icon(
+                      //               Icons.camera_alt_outlined,
+                      //               color: Colors.red,
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       )
+                      //     : SizedBox()
                     ],
                   ),
                 ),
