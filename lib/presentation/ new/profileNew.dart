@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pds/core/utils/image_constant.dart';
 
 import 'mypofiileScreencustom.dart';
 
