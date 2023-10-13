@@ -15,6 +15,7 @@ import 'package:pds/presentation/register_create_account_screen/register_create_
 import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:pds/presentation/settings/setting_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'SearchBar_screen.dart';
 
 import 'new_notification_screen.dart';
 import 'newsettingScreen.dart';
@@ -46,7 +47,8 @@ class _NewBottomBarState extends State<NewBottomBar> {
     // HomeScreen(),
    HomeScreenNew(),
     RoomsScreen(),
-    HistoryScreen(),
+    // HistoryScreen(),
+    SearchBarScreen(value2: 1),
     // NotificationsScreen(),
    
     InboxScreen(),
@@ -93,14 +95,14 @@ class _NewBottomBarState extends State<NewBottomBar> {
                 children: [],
               ),
               bottomNavigationBar: BottomAppBar(
-                // color: Color(0xFFFFFFFF),
-                color: Theme.of(context).brightness == Brightness.light
-                    ? const Color(0xFFFFFFFF)
-                    : const Color(0xFF0D0D0D),
-                height: 70,
+                // color: Colors.amber,
+                // color: Theme.of(context).brightness == Brightness.light
+                //     ? const Color(0xFFFFFFFF)
+                //     : const Color(0xFF0D0D0D),
+                height: 65,
                 shape: const CircularNotchedRectangle(),
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 15, bottom: 0),
+                  padding: const EdgeInsets.only(top: 0, bottom: 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
