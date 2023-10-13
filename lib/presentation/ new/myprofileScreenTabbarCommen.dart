@@ -109,6 +109,7 @@ class _MyAcoountTabbarScreenState extends State<MyAcoountTabbarScreen>
           // Use a Column to display TabBar and TabBarView
           children: <Widget>[
             TabBar(
+                  indicatorColor: Colors.black,
                 unselectedLabelColor: Color(0xff444444),
                 labelColor: Color(0xff000000),
                 controller: _tabController,
@@ -189,6 +190,16 @@ class _MyAcoountTabbarScreenState extends State<MyAcoountTabbarScreen>
                           ),
                           /*  child: expertUser(_height, _width) */
                           child: expertUser(_height, _width),
+                        ),
+                        Card(
+                          color: Colors.white,
+                          borderOnForeground: true,
+                          elevation: 10,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          /*  child: expertUser(_height, _width) */
+                          child: compnayUser(_height, _width),
                         )
                       ],
                     ),
