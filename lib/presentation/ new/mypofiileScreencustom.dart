@@ -1,18 +1,32 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:flutter/material.dart';
-import 'package:pds/core/utils/image_constant.dart';
-import 'package:pds/presentation/%20new/newsettingScreen.dart';
+import 'dart:io';
 
-import 'customcamerawiget.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/presentation/%20new/stroycommenwoget.dart';
+import 'package:pds/presentation/settings/setting_screen.dart';
+import 'package:pds/widgets/ImageView_screen.dart';
+
 import 'editproilescreen.dart';
 import 'myprofileScreenTabbarCommen.dart';
 
-class MyProfileScreenCustom extends StatelessWidget {
+class MyProfileScreenCustom extends StatefulWidget {
   String userProfile;
   List<String> tabData;
+
   MyProfileScreenCustom({required this.tabData, required this.userProfile});
 
+  @override
+  State<MyProfileScreenCustom> createState() => _MyProfileScreenCustomState();
+}
+
+File? _image;
+// double documentuploadsize = 0;
+var userProfile;
+
+class _MyProfileScreenCustomState extends State<MyProfileScreenCustom> {
   @override
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
@@ -25,53 +39,92 @@ class MyProfileScreenCustom extends StatelessWidget {
           // color: Colors.amber,
           child: Stack(
             children: [
-              Image.asset(
-                ImageConstant.myprofile,
-                fit: BoxFit.contain,
+              Container(
+                // color: Colors.red,
+                child: Image.asset(
+                  ImageConstant.myprofile,
+                  fit: BoxFit.contain,
+                ),
               ),
-              GestureDetector(
-                onTap: (){
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  margin: EdgeInsets.only(left: 15, top: 25),
-                  height: 40,
-                  width: 35,
-                  color: Color.fromRGBO(255, 255, 255, 0.3),
-                  child: Image.asset(ImageConstant.backArrow),
+              Padding(
+                padding: EdgeInsets.only(top: 55, left: 16),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    height: 30,
+                    width: 30,
+                    color: Color.fromRGBO(255, 255, 255, 0.3),
+                    child: Center(
+                      child: Image.asset(
+                        ImageConstant.backArrow,
+                        fit: BoxFit.fill,
+                        height: 25,
+                        width: 25,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               Positioned(
                   bottom: 70,
                   right: 5,
                   child: userProfile != 'soicalScreen'
-                      ? cameraPicture()
+                      ? GestureDetector(
+                          onTap: () {
+                            _settingModalBottomSheet(context);
+                          },
+                          child: Container(
+                            height: 45,
+                            width: 45,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Color(0xffFFFFFF), width: 4),
+                              shape: BoxShape.circle,
+                              color: Color(0xffFBD8D9),
+                            ),
+                            child: Icon(
+                              Icons.camera_alt_outlined,
+                              color: Colors.red,
+                            ),
+                          ),
+                        )
                       : SizedBox()),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   height: 150,
                   width: 150,
-                  decoration: BoxDecoration(shape: BoxShape.circle),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.white),
                   child: Stack(
                     children: [
-                      Image.asset(ImageConstant.palchoder4),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Image.asset(ImageConstant.palchoder4),
+                      ),
                       userProfile != 'soicalScreen'
                           ? Positioned(
-                              bottom: 5,
-                              right: -5,
-                              child: Container(
-                                height: 50,
-                                width: 45,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Color(0xffFFFFFF), width: 4),
-                                  shape: BoxShape.circle,
-                                  color: Color(0xffFBD8D9),
-                                ),
-                                child: Icon(
-                                  Icons.camera_alt_outlined,
-                                  color: Colors.red,
+                              bottom: 7,
+                              right: -0,
+                              child: GestureDetector(
+                                onTap: () {
+                                  _settingModalBottomSheet(context);
+                                },
+                                child: Container(
+                                  height: 40,
+                                  width: 40,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Color(0xffFFFFFF), width: 4),
+                                    shape: BoxShape.circle,
+                                    color: Color(0xffFBD8D9),
+                                  ),
+                                  child: Icon(
+                                    Icons.camera_alt_outlined,
+                                    color: Colors.red,
+                                  ),
                                 ),
                               ),
                             )
@@ -123,7 +176,7 @@ class MyProfileScreenCustom extends StatelessWidget {
         SizedBox(
           height: 10,
         ),
-        userProfile != 'soicalScreen'
+        widget.userProfile != 'soicalScreen'
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -157,7 +210,7 @@ class MyProfileScreenCustom extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SettingScreenNew()));
+                              builder: (context) => SettingScreen()));
                     },
                     child: Container(
                       margin: EdgeInsets.only(left: 10),
@@ -324,10 +377,202 @@ class MyProfileScreenCustom extends StatelessWidget {
         ),
         Expanded(
             child: MyAcoountTabbarScreen(
-          tabScreen: tabData,
-          userProfile: userProfile,
+          tabScreen: widget.tabData,
+          userProfile: widget.userProfile,
         ))
       ],
     );
   }
-}
+
+  bool _isGifOrSvg(String imagePath) {
+    // Check if the image file has a .gif or .svg extension
+    final lowerCaseImagePath = imagePath.toLowerCase();
+    return lowerCaseImagePath.endsWith('.gif') ||
+        lowerCaseImagePath.endsWith('.svg') ||
+        lowerCaseImagePath.endsWith('.pdf') ||
+        lowerCaseImagePath.endsWith('.doc') ||
+        lowerCaseImagePath.endsWith('.mp4') ||
+        lowerCaseImagePath.endsWith('.mov') ||
+        lowerCaseImagePath.endsWith('.mp3') ||
+        lowerCaseImagePath.endsWith('.m4a');
+  }
+
+  Future<void> camerapicker() async {
+    pickedImageFile = await picker.pickImage(source: ImageSource.camera);
+    // if (pickedImageFile != null) {
+    //   if (!_isGifOrSvg(pickedImageFile!.path)) {
+    //     setState(() {
+    //       _image = File(pickedImageFile!.path);
+    //     });
+    //     final sizeInBytes = await _image!.length();
+    //     final sizeInMB = sizeInBytes / (1024 * 1024);
+        // if (sizeInMB > documentuploadsize) {
+        //   // print('documentuploadsize-$documentuploadsize');
+        //   showDialog(
+        //       context: context,
+        //       builder: (context) {
+        //         return AlertDialog(
+        //           title: Text("Image Size Exceeded"),
+        //           content: Text(
+        //               "Selected image size exceeds $documentuploadsize MB."),
+        //           actions: [
+        //             TextButton(
+        //               onPressed: () {
+        //                 Navigator.of(context).pop();
+        //               },
+        //               child: Text("OK"),
+        //             ),
+        //           ],
+        //         );
+        //       });
+        // }
+      // } else {
+      //   showDialog(
+      //     context: context,
+      //     builder: (ctx) => AlertDialog(
+      //       title: Text(
+      //         "Selected File Error",
+      //         textScaleFactor: 1.0,
+      //       ),
+      //       content: Text(
+      //         "Only PNG, JPG Supported.",
+      //         textScaleFactor: 1.0,
+      //       ),
+      //       actions: <Widget>[
+      //         TextButton(
+      //           onPressed: () {
+      //             Navigator.of(ctx).pop();
+      //           },
+      //           child: Container(
+      //             // color: Colors.green,
+      //             padding: const EdgeInsets.all(10),
+      //             child: const Text("Okay"),
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //   );
+      // }
+    }
+  }
+
+  Future<void> gallerypicker() async {
+    pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
+    // if (pickedImageFile != null) {
+    //   if (!_isGifOrSvg(pickedImageFile!.path)) {
+    //     setState(() {
+    //       _image = File(pickedImageFile!.path);
+    //     });
+    //     final sizeInBytes = await _image!.length();
+    //     final sizeInMB = sizeInBytes / (1024 * 1024);
+      //   if (sizeInMB > documentuploadsize) {
+      //     // print('documentuploadsize-$documentuploadsize');
+      //     showDialog(
+      //         context: context,
+      //         builder: (context) {
+      //           return AlertDialog(
+      //             title: Text("Image Size Exceeded"),
+      //             content: Text(
+      //                 "Selected image size exceeds $documentuploadsize MB."),
+      //             actions: [
+      //               TextButton(
+      //                 onPressed: () {
+      //                   Navigator.of(context).pop();
+      //                 },
+      //                 child: Text("OK"),
+      //               ),
+      //             ],
+      //           );
+      //         });
+      //   }
+      // } else {
+        // showDialog(
+        //   context: context,
+        //   builder: (ctx) => AlertDialog(
+        //     title: Text(
+        //       "Selected File Error",
+        //       textScaleFactor: 1.0,
+        //     ),
+        //     content: Text(
+        //       "Only PNG, JPG Supported.",
+        //       textScaleFactor: 1.0,
+        //     ),
+        //     actions: <Widget>[
+        //       TextButton(
+        //         onPressed: () {
+        //           Navigator.of(ctx).pop();
+        //         },
+        //         child: Container(
+        //           // color: Colors.green,
+        //           padding: const EdgeInsets.all(10),
+        //           child: const Text("Okay"),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // );
+      }
+  //   }
+  // }
+
+  void _settingModalBottomSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            height: 180,
+            child: new Wrap(
+              children: [
+                Container(
+                  height: 20,
+                  width: 50,
+                  color: Colors.transparent,
+                ),
+                Center(
+                    child: Container(
+                  height: 5,
+                  width: 150,
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(25)),
+                )),
+                SizedBox(
+                  height: 35,
+                ),
+                Center(
+                  child: new ListTile(
+                      leading: new Image.asset(
+                        ImageConstant.uplodimage,
+                        height: 45,
+                      ),
+                      title: new Text('See Profile Picture'),
+                      onTap: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ImageViewScreen(
+                                      path: "assets/images/palchoder4.png"),
+                                ))
+                          }),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Center(
+                  child: new ListTile(
+                    leading: new Image.asset(
+                      ImageConstant.galleryimage,
+                      height: 45,
+                    ),
+                    title: new Text('Upload Profile Picture'),
+                    onTap: () => {
+                      gallerypicker(),
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+// }
