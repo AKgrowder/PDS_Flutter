@@ -212,6 +212,14 @@ class ImageConstant {
  static String  pin_icon =  "assets/images/pin_icon.png";
  static String  uplodimage =  "assets/images/uplodimage.png";
  static String  galleryimage =  "assets/images/gallery.png";
+ static String  Post_Close =  "assets/images/Post Close.png";
+ static String  downarrow =  "assets/images/downarrow.png";
+ static String  Cameraicon =  "assets/images/Cameraicon.png";
+
+ 
+
+  
+
 
 
 }
