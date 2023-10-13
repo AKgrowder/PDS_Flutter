@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/%20new/stroycommenwoget.dart';
+import 'package:pds/presentation/Create_Post_Screen/Ceratepost_Screen.dart';
 
 class HomeScreenNew extends StatefulWidget {
   const HomeScreenNew({Key? key}) : super(key: key);
@@ -13,7 +14,7 @@ class HomeScreenNew extends StatefulWidget {
 class _HomeScreenNewState extends State<HomeScreenNew> {
   List a = ['1', '2', '3', '4'];
   List<String> data1 = ['Create Forum', 'Become an Expert'];
-   int indexx = 0;
+  int indexx = 0;
   List<String> image = [
     ImageConstant.placeholder4,
     ImageConstant.placeholder4,
@@ -27,7 +28,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           backgroundColor: Color(0xffED1C25),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => CreateNewPost()));
+          },
           child: Image.asset(
             ImageConstant.huge,
             height: 30,
@@ -105,7 +109,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                   child:
                                       Image.asset(ImageConstant.splashImage)),
                               Spacer(),
-                        GestureDetector(
+                              GestureDetector(
                                 onTapDown: (TapDownDetails details) {
                                   _showPopupMenu(
                                     details.globalPosition,
@@ -753,7 +757,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           ),
         ),
         position: RelativeRect.fromRect(
-          position & const Size(40, 40),  
+          position & const Size(40, 40),
           Offset.zero & overlay.size,
         ),
         items: List.generate(
@@ -763,7 +767,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                   setState(() {
                     indexx = index;
                   });
-              },
+                },
                 child: Container(
                   decoration: BoxDecoration(
                       color: indexx == index
