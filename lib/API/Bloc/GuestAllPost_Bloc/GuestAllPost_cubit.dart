@@ -19,10 +19,13 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     }
   }
 
-  Future<void> GetUserAllPostAPI(BuildContext context) async {
+  Future<void> GetUserAllPostAPI(BuildContext context,
+      {bool showAlert = false}) async {
     dynamic PublicRModel;
     try {
-      emit(GetGuestAllPostLoadingState());
+
+      print("showAlert-->$showAlert");
+      showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       PublicRModel = await Repository().GetUserAllPost(context);
       if (PublicRModel.success == true) {
         emit(GetGuestAllPostLoadedState(PublicRModel));
@@ -30,6 +33,49 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     } catch (e) {
       // print('errorstate-$e');
       emit(GetGuestAllPostErrorState(PublicRModel));
+    }
+  }
+
+  Future<void> like_post(String? postUid, BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic likepost;
+    try {
+      // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
+      likepost = await Repository().likePostMethod(postUid, context);
+      if (likepost.success == true) {
+        emit(PostLikeLoadedState(likepost));
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(GetGuestAllPostErrorState(likepost));
+    }
+  }
+   Future<void> savedData(String? postUid, BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic likepost;
+    try {
+      // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
+      likepost = await Repository().savedPostMethod(postUid, context);
+      if (likepost.success == true) {
+        emit(PostLikeLoadedState(likepost));
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(GetGuestAllPostErrorState(likepost));
+    }
+  }
+  Future<void> followWIngMethod(String? followedToUid, BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic likepost;
+    try {
+      // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
+      likepost = await Repository().folliwingMethod(followedToUid, context);
+      if (likepost.success == true) {
+        emit(PostLikeLoadedState(likepost));
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(GetGuestAllPostErrorState(likepost));
     }
   }
 }

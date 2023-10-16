@@ -459,7 +459,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               } else if (value.contains('..')) {
                                 return 'username does not contain is correct';
                               }
-
                               return null;
                             },
                             // focusNode: FocusNode(),
@@ -679,11 +678,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             validator: (value) {
                               String pattern =
                                   r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$%^&*(),.?":{}|<>])[A-Za-z0-9!@#\$%^&*(),.?":{}|<>]{8,}$';
-
                               if (value!.isEmpty) {
                                 return 'Please Enter Password';
                               }
-
                               if (!RegExp(pattern).hasMatch(value)) {
                                 return 'Password should contain at least 1 uppercase, 1 lowercase, 1 digit, 1 special character and be at least 8 characters long';
                               }

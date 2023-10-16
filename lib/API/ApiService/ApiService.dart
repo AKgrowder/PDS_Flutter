@@ -97,9 +97,11 @@ class ApiServices {
     final hasInternet = await checkInternet();
     if (hasInternet == true) {
       final response = await get(
-        Uri.parse(baseURL + APIurl),
+           Uri.parse(baseURL + APIurl),
         headers: headers1,
+        
       );
+      
       print('respncebody-${response.body}');
       if (response.statusCode == 602) {
         setLOGOUT(context);

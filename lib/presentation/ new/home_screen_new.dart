@@ -10,18 +10,20 @@ import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
 import 'package:pds/API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
+import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_utils.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
-import 'package:pds/presentation/%20new/stroycommenwoget.dart';
 import 'package:pds/presentation/Create_Post_Screen/Ceratepost_Screen.dart';
 import 'package:pds/presentation/create_story/create_story.dart';
 import 'package:pds/presentation/create_story/full_story_page.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pds/API/Bloc/GuestAllPost_Bloc/GetPostAllLike_Bloc/GetPostAllLike_cubit.dart';
+import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 
 class HomeScreenNew extends StatefulWidget {
   const HomeScreenNew({Key? key}) : super(key: key);
@@ -44,6 +46,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     ImageConstant.placeholder4,
     ImageConstant.placeholder4,
   ];
+  LikePost? likePost;
   GetGuestAllPostModel? AllGuestPostRoomData;
 
   String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
@@ -151,7 +154,23 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     print("1111111111111${User_ID}");
     // /user/api/get_all_post
     await BlocProvider.of<GetGuestAllPostCubit>(context)
-        .GetUserAllPostAPI(context);
+        .GetUserAllPostAPI(context, showAlert: true);
+  }
+
+  loginFunction({String? apiName, int? index}) async {
+    if (uuid == null) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => RegisterCreateAccountScreen()));
+    } else if (apiName == 'Follow') {
+      await BlocProvider.of<GetGuestAllPostCubit>(context).followWIngMethod(
+          AllGuestPostRoomData?.object?[index ?? 0].userUid, context);
+    } else if (apiName == 'like_post') {
+      await BlocProvider.of<GetGuestAllPostCubit>(context).like_post(
+          AllGuestPostRoomData?.object?[index ?? 0].postUid, context);
+    } else if (apiName == 'savedata') {
+      await BlocProvider.of<GetGuestAllPostCubit>(context).savedData(
+          AllGuestPostRoomData?.object?[index ?? 0].postUid, context);
+    }
   }
 
   @override
@@ -160,6 +179,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     var _width = MediaQuery.of(context).size.width;
 
     var TotleDataCount;
+    bool apiCalingdone =false;
 
     return Scaffold(
         floatingActionButton: FloatingActionButton(
@@ -214,11 +234,16 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             print(TotleDataCount);
             print(AllGuestPostRoomData?.object?[0].description);
+            apiCalingdone =true;
+          }
+          if (state is PostLikeLoadedState) {
+            likePost = state.likePost;
+            await BlocProvider.of<GetGuestAllPostCubit>(context)
+                .GetUserAllPostAPI(context);
           }
         }, builder: (context, state) {
-          if (state is GetGuestAllPostLoadedState) {
-            TotleDataCount = state.GetGuestAllPostRoomData.object?.length ?? 0;
-            return SingleChildScrollView(
+         
+            return  apiCalingdone == true?  SingleChildScrollView(
               child: Column(
                 children: [
                   Stack(
@@ -341,6 +366,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                               height: 90,
                               margin: EdgeInsets.symmetric(horizontal: 16),
                               child: ListView.separated(
+                                padding: EdgeInsets.zero,
                                 itemBuilder: (context, index) {
                                   if (index == 0) {
                                     return GestureDetector(
@@ -504,43 +530,60 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   ),
                                                 ],
                                               ),
-                                              trailing: Container(
-                                                height: 25,
-                                                alignment: Alignment.center,
-                                                width: 65,
-                                                margin:
-                                                    EdgeInsets.only(bottom: 5),
-                                                decoration: BoxDecoration(
-                                                    color: Color(0xffED1C25),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4)),
-                                                child: AllGuestPostRoomData
-                                                            ?.object?[index]
-                                                            .isFollowing ==
-                                                        false
-                                                    ? Text(
-                                                        'Follow',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color:
-                                                                Colors.white),
-                                                      )
-                                                    : Text(
-                                                        'Following',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color:
-                                                                Colors.white),
-                                                      ),
+                                              trailing: GestureDetector(
+                                                onTap: () async {
+                                                  print("indexssss-->$index");
+                                                  print("check Data1222-->${AllGuestPostRoomData
+                                                              ?.object?[index]
+                                                              .isFollowing}");
+                                                              print("check Data000-->${AllGuestPostRoomData
+                                                              ?.object?[index +=1]
+                                                              .isFollowing}");
+                                                              
+                                                  await loginFunction(
+                                                      apiName: 'Follow',
+                                                      index: index);
+                                                },
+                                                child: Container(
+                                                  height: 25,
+                                                  alignment: Alignment.center,
+                                                  width: 65,
+                                                  margin: EdgeInsets.only(
+                                                      bottom: 5),
+                                                  decoration: BoxDecoration(
+                                                      color: Color(0xffED1C25),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4)),
+                                                  child: AllGuestPostRoomData
+                                                              ?.object?[index]
+                                                              .isFollowing ==
+                                                          false
+                                                      ? Text(
+                                                          'Follow',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  "outfit",
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.white),
+                                                        )
+                                                      : Text(
+                                                          'Following',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  "outfit",
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -612,18 +655,63 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 SizedBox(
                                                   width: 14,
                                                 ),
-                                                Image.asset(
-                                                  ImageConstant.thumShup,
-                                                  height: 20,
+                                                GestureDetector(
+                                                  onTap: () async {
+                                                    await loginFunction(
+                                                        apiName: 'like_post',
+                                                        index: index);
+                                                  },
+                                                  child: AllGuestPostRoomData
+                                                              ?.object?[index]
+                                                              .isLiked !=
+                                                          true
+                                                      ? Image.asset(
+                                                          ImageConstant
+                                                              .thumShup,
+                                                          height: 20,
+                                                        )
+                                                      : Image.asset(
+                                                          ImageConstant.like,
+                                                          height: 20,
+                                                        ),
                                                 ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
-                                                Text(
-                                                  "${AllGuestPostRoomData?.object?[index].likedCount}",
-                                                  style: TextStyle(
-                                                      fontFamily: "outfit",
-                                                      fontSize: 14),
+                                              GestureDetector(
+                                                  onTap: () {
+                                                    /* Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                            
+                                                                ShowAllPostLike("${AllGuestPostRoomData?.object?[index].postUid}"))); */
+
+                                                    Navigator.push(context,
+                                                        MaterialPageRoute(
+                                                      builder: (context) {
+                                                        return MultiBlocProvider(
+                                                          providers: [
+                                                            BlocProvider(
+                                                              create: (context) =>
+                                                                  GetPostAllLikeCubit(),
+                                                            ),
+                                                          ],
+                                                          child: ShowAllPostLike(
+                                                              "${AllGuestPostRoomData?.object?[index].postUid}"),
+                                                        );
+                                                      },
+                                                    ));
+                                                  },
+                                                  child: Container(
+                                                    color: Colors.red,
+                                                    child: Text(
+                                                      "${AllGuestPostRoomData?.object?[index].likedCount}",
+                                                      style: TextStyle(
+                                                          fontFamily: "outfit",
+                                                          fontSize: 14),
+                                                    ),
+                                                  ),
                                                 ),
                                                 SizedBox(
                                                   width: 18,
@@ -658,14 +746,22 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       fontSize: 14),
                                                 ),
                                                 Spacer(),
-                                                Image.asset(
-                                                  AllGuestPostRoomData
-                                                              ?.object?[index]
-                                                              .isSaved ==
-                                                          false
-                                                      ? ImageConstant.savePin
-                                                      : ImageConstant.Savefill,
-                                                  height: 16,
+                                                GestureDetector(
+                                                  onTap: () async {
+                                                    await loginFunction(
+                                                        apiName: 'savedata',
+                                                        index: index);
+                                                  },
+                                                  child: Image.asset(
+                                                    AllGuestPostRoomData
+                                                                ?.object?[index]
+                                                                .isSaved ==
+                                                            false
+                                                        ? ImageConstant.savePin
+                                                        : ImageConstant
+                                                            .Savefill,
+                                                    height: 16,
+                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -1113,9 +1209,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                   ),
                 ],
               ),
-            );
-          }
-          return Center(
+            ):Center(
             child: Container(
               margin: EdgeInsets.only(bottom: 100),
               child: ClipRRect(
@@ -1125,6 +1219,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               ),
             ),
           );
+        
+      
+          /* Center(
+            child: Container(
+              margin: EdgeInsets.only(bottom: 100),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.asset(ImageConstant.loader,
+                    fit: BoxFit.cover, height: 100.0, width: 100),
+              ),
+            ),
+          ); */
         }));
   }
 

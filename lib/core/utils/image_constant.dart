@@ -219,4 +219,6 @@ class ImageConstant {
   static String gallery = "assets/images/galleryIcon.png";
  static String Gif_icon =  'assets/images/Gif icon.png';
   static String  Savefill =  "assets/images/Savefill.png";
+  static String like =  "assets/images/like 1.png";
+
 }
