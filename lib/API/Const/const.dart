@@ -59,4 +59,9 @@ class Config {
   static const String UserGetAllPost = "user/api/get_all_post";
   static const String addPost = "user/api/add_post";
   static const String upload_data = "user/api/upload_data";
+  static const String like_post = "user/api/like_post";
+  static const String save_post = "user/api/save_post";
+  static const String follow_user = "user/api/follow_user";
+ static const String postLike = "Post unliked successfully";
+  static const String GetPostAllLike = "user/api/get_all_likes";
 }

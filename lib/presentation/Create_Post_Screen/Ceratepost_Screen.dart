@@ -101,7 +101,6 @@ class _CreateNewPostState extends State<CreateNewPost> {
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
           Navigator.pop(context);
         }
       },
