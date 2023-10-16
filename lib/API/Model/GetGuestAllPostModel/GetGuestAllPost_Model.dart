@@ -35,11 +35,11 @@ class Object {
   String? userProfilePic;
   String? description;
   String? postData;
-  String? postType;
+  String? postDataType;
   bool? isLiked;
   bool? isSaved;
   bool? isFollowing;
-  String? type;
+  String? postType;
   int? likedCount;
   int? commentCount;
 
@@ -51,11 +51,11 @@ class Object {
       this.userProfilePic,
       this.description,
       this.postData,
-      this.postType,
+      this.postDataType,
       this.isLiked,
       this.isSaved,
       this.isFollowing,
-      this.type,
+      this.postType,
       this.likedCount,
       this.commentCount});
 
@@ -67,11 +67,11 @@ class Object {
     userProfilePic = json['userProfilePic'];
     description = json['description'];
     postData = json['postData'];
-    postType = json['postType'];
+    postDataType = json['postDataType'];
     isLiked = json['isLiked'];
     isSaved = json['isSaved'];
     isFollowing = json['isFollowing'];
-    type = json['type'];
+    postType = json['postType'];
     likedCount = json['likedCount'];
     commentCount = json['commentCount'];
   }
@@ -85,11 +85,11 @@ class Object {
     data['userProfilePic'] = this.userProfilePic;
     data['description'] = this.description;
     data['postData'] = this.postData;
-    data['postType'] = this.postType;
+    data['postDataType'] = this.postDataType;
     data['isLiked'] = this.isLiked;
     data['isSaved'] = this.isSaved;
     data['isFollowing'] = this.isFollowing;
-    data['type'] = this.type;
+    data['postType'] = this.postType;
     data['likedCount'] = this.likedCount;
     data['commentCount'] = this.commentCount;
     return data;
