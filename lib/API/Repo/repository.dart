@@ -3,6 +3,9 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
+import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
+import 'package:pds/API/Model/Add_PostModel/Add_PostModel.dart';
+import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
 import 'package:pds/API/Model/RateUseModel/Rateuse_model.dart';
 import 'package:pds/API/Model/ViewDetails_Model/ViewDetails_model.dart';
 import 'package:pds/API/Model/emailVerfiaction/emailVerfiaction.dart';
@@ -914,8 +917,7 @@ class Repository {
     }
   }
 
-  RemoveUser(String roomID, String? memberUesrID,
-      BuildContext context) async {
+  RemoveUser(String roomID, String? memberUesrID, BuildContext context) async {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.RemoveUser}?roomUid=${roomID}&memberUserUid=${memberUesrID}',
         context);
@@ -925,6 +927,103 @@ class Repository {
     switch (responce.statusCode) {
       case 200:
         return RemoveUserModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  GetGuestAllPost(BuildContext context) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.GuestGetAllPost}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return GetGuestAllPostModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  GetUserAllPost(BuildContext context) async {
+    final responce =
+        await apiServices.getApiCall('${Config.UserGetAllPost}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return GetGuestAllPostModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  AddPostApiCalling(
+    BuildContext context,
+    Map<String, dynamic> params,
+  ) async {
+    final response =
+        await apiServices.postApiCall(Config.addPost, params, context);
+    print('AddPost$response');
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return AddPost.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+  // ImageDataPost
+
+  AddPostImageUploded(
+    BuildContext context,
+    String fileName,
+    String file,
+  ) async {
+    final response = await apiServices.multipartFile(
+        Config.upload_data, fileName, file, context,
+        AadPost: true);
+    print('AddPost$response');
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return ImageDataPost.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+  userProfile1(File imageFile, BuildContext context) async {
+    final response = await apiServices.multipartFileWith1(
+        '${Config.upload_data}', imageFile, context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return ImageDataPost.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:

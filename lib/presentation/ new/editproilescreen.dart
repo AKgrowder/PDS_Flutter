@@ -388,7 +388,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         padding: EdgeInsets.only(left: 12),
         child: TextFormField(
           controller: controller,
-          autofocus: true,  
+          autofocus: false, 
           cursorColor: ColorConstant.primary_color,
           decoration: InputDecoration(
             hintText: hintText,

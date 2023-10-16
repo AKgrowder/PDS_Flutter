@@ -22,3 +22,4 @@ class AcceptRejectInvitationModelLoadedState extends InvitationState {
   final AcceptRejectInvitationModel acceptRejectInvitationModel;
   AcceptRejectInvitationModelLoadedState(this.acceptRejectInvitationModel);
 }
+

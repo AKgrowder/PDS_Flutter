@@ -588,7 +588,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 child: CustomTextFormField(
                                   validator: (value) {
                                     final RegExp phoneRegExp =
-                                         RegExp(r'^[6-9]\d{9}$');
+                                        RegExp(r'^[6-9]\d{9}$');
                                     if (value!.isEmpty) {
                                       return 'Please Enter Mobile Number';
                                     } else if (!phoneRegExp.hasMatch(value)) {
@@ -774,35 +774,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               ),
                             ),
                           ),
-                          // CustomElevatedButton(
-                          //   onTap: () {
-                          //     if (_formKey.currentState!.validate()) {
-                          //       var datapPassing = {
-                          //         "name": nameController.text,
-                          //         "userName": nameController.text,
-                          //         "email": emailAndMobileController.text,
-                          //         "mobileNo": contectnumberController.text,
-                          //         "password": passwordController.text,
-                          //         "module": "EMPLOYEE"
-                          //       };
-                          //       print('dataoassing-$datapPassing');
-                          //       BlocProvider.of<RegisterCubit>(context)
-                          //           .registerApi(datapPassing);
-                          //     }
-                          //   },
-                          //   text: "Submit",
-                          //   margin: EdgeInsets.only(
-                          //     top: 18,
-                          //   ),
-                          //   buttonStyle: ButtonThemeHelper
-                          //       .outlineOrangeA7000c
-                          //       .copyWith(
-                          //           fixedSize:
-                          //               MaterialStateProperty.all<Size>(
-                          //                   Size(double.maxFinite, 50))),
-                          //   buttonTextStyle:
-                          //       TextThemeHelper.titleMediumOnPrimary,
-                          // ),
+
                           Align(
                             // alignment: Alignment.center,
                             child: Container(
