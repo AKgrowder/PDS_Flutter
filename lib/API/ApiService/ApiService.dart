@@ -30,7 +30,7 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.packagingdepot.store/";
           // "https://packagingdepot.store/";
-          "http://192.168.29.17:8081/";
+          "http://192.168.29.100:8081/";
     }
 
     print(baseURL);
@@ -54,6 +54,7 @@ class ApiServices {
       if (response.statusCode == 602) {
         setLOGOUT(context);
       } else {
+        print("responce-->$response");
         return response;
       }
     } else {}
@@ -67,7 +68,7 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           //  "https://uatapi.packagingdepot.store/";
           // "https://packagingdepot.store/";
-          "http://192.168.29.17:8081/";
+          "http://192.168.29.100:8081/";
     }
     final hasInternet = await checkInternet();
     if (hasInternet == true) {
@@ -164,17 +165,26 @@ class ApiServices {
 
   multipartFile(
       String APIurl, String fileName, String file, BuildContext context,
-      {String? apiName, Map<String, dynamic>? params}) async {
+      {String? apiName, Map<String, dynamic>? params, bool? AadPost}) async {
     await UpdateBaseURL();
     print('fileApi-$file');
     print('fileName-$fileName');
-    print('token-$params');
 
-    var headers1 = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${Token}'
-    };
+    var headers1;
+    if (AadPost == true) {
+      print("this hader true");
+      headers1 = {'document': '', 'Authorization': 'Bearer ${Token}'};
+    } else {
+      print("else hader");
+      headers1 = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${Token}'
+      };
+    }
+
+    print("Token-->$Token");
     print("API =>******${baseURL + APIurl}");
+    print("header full Print-->$headers1");
     final response =
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
     response.headers.addAll(headers1);
@@ -188,7 +198,8 @@ class ApiServices {
       }
     }
 
-    if (apiName == 'create forum') {
+    print("paramesa-->$params");
+    if (apiName == 'create forum' || AadPost == true) {
       print('this is the get');
       response.files.add(await http.MultipartFile.fromPath('document', file));
     }
@@ -205,8 +216,8 @@ class ApiServices {
     }
   }
 
-  multipartFileUserprofile(
-      String APIurl, File imageFile, BuildContext context) async {
+  multipartFileUserprofile(String APIurl, File imageFile, BuildContext context,
+      {bool? ImageDatasetup}) async {
     await UpdateBaseURL();
     final response =
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
@@ -236,6 +247,35 @@ class ApiServices {
       response.files
           .add(await http.MultipartFile.fromPath('image', imageFile.path));
     }
+    var res = await response.send();
+    print('responce stauscode-${res.statusCode.toString()}');
+    if (res.statusCode == 602) {
+      setLOGOUT(context);
+    } else {
+      var respond = await http.Response.fromStream(res);
+      print('responsData-${respond.body}');
+      return respond;
+    }
+  }
+
+  multipartFileWith1(
+    String APIurl,
+    File imageFile,
+    BuildContext context,
+  ) async {
+    await UpdateBaseURL();
+    final headers1 = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${Token}'
+    };
+    final response =
+        await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
+    print("API =>******${baseURL + APIurl}");
+    if (imageFile != null) {
+      response.files
+          .add(await http.MultipartFile.fromPath('document', imageFile.path));
+    }
+    response.headers.addAll(headers1);
     var res = await response.send();
     print('responce stauscode-${res.statusCode.toString()}');
     if (res.statusCode == 602) {
