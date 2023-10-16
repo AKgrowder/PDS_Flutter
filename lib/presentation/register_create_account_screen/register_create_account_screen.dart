@@ -1,4 +1,5 @@
 import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
+import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:pds/API/Bloc/auth/register_Block.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
@@ -72,6 +73,10 @@ extends State<RegisterCreateAccountScreen> {
                           BlocProvider<InvitationCubit>(
                             create: (context) => InvitationCubit(),
                           ),
+                          /// ---------------------------------------------------------------------------
+                  BlocProvider<GetGuestAllPostCubit>(
+                    create: (context) => GetGuestAllPostCubit(),
+                  ),
                         ], child: NewBottomBar(buttomIndex: 0));
                       }));
                     }),
