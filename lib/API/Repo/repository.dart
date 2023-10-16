@@ -937,7 +937,7 @@ class Repository {
   }
 
   GetGuestAllPost(BuildContext context) async {
-    final responce = await apiServices.getApiCallWithToken(
+    final responce = await apiServices.getApiCall(
         '${Config.GuestGetAllPost}', context);
     var jsonString = json.decode(responce.body);
     print('jasonnString$jsonString');
@@ -956,7 +956,7 @@ class Repository {
 
   GetUserAllPost(BuildContext context) async {
     final responce =
-        await apiServices.getApiCall('${Config.UserGetAllPost}', context);
+        await apiServices.getApiCallWithToken('${Config.UserGetAllPost}', context);
     var jsonString = json.decode(responce.body);
     print('jasonnString$jsonString');
     print('respnse ${responce.statusCode}');
