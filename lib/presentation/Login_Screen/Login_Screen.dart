@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_cubit.dart';
+import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:pds/API/Bloc/auth/login_Block.dart';
 import 'package:pds/API/Bloc/auth/login_state.dart';
@@ -173,6 +174,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               BlocProvider<InvitationCubit>(
                                 create: (context) => InvitationCubit(),
                               ),
+                              /// ---------------------------------------------------------------------------
+                  BlocProvider<GetGuestAllPostCubit>(
+                    create: (context) => GetGuestAllPostCubit(),
+                  ),
                             ],
                             child: NewBottomBar(
                               buttomIndex: 0,
@@ -227,6 +232,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             BlocProvider<InvitationCubit>(
                               create: (context) => InvitationCubit(),
                             ),
+                            /// ---------------------------------------------------------------------------
+                  BlocProvider<GetGuestAllPostCubit>(
+                    create: (context) => GetGuestAllPostCubit(),
+                  ),
                           ],
                           child: NewBottomBar(
                             buttomIndex: 0,

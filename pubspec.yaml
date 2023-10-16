@@ -41,6 +41,9 @@ dependencies:
   flutter_markdown:
   file_picker: 
   permission_handler:
+  dotted_border: ^2.1.0
+  stories_editor:
+    path: ./stories_editor
   photo_view: ^0.14.0
   
   
@@ -48,6 +51,10 @@ dependencies:
 dev_dependencies: 
   flutter_test: 
     sdk: flutter
+dependency_overrides:
+  path_drawing: ^0.5.1
+  xml: ^6.0.1
+  
 flutter: 
   uses-material-design: true
   assets: 

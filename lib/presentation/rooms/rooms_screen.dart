@@ -1622,26 +1622,20 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                             child:
                                                                 GestureDetector(
                                                               onTap: () {
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                      builder: (context) => MultiBlocProvider(
-                                                                          providers: [
-                                                                            BlocProvider<SherInviteCubit>(
-                                                                              create: (_) => SherInviteCubit(),
-                                                                            ),
-                                                                          ],
-                                                                          child:
-                                                                              ExpertsScreen(RoomUUID: PriveateRoomData?.object?[index].uid)),
-                                                                      // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
-                                                                    ));
-                                                                // showDialog(
-                                                                //   context: context,
-                                                                //   builder: (BuildContext
-                                                                //       context) {
-                                                                //     return AssignAdminScreenn();
-                                                                //   },
-                                                                // );
+                                                                // Navigator.push(
+                                                                //     context,
+                                                                //     MaterialPageRoute(
+                                                                //       builder: (context) => MultiBlocProvider(
+                                                                //           providers: [
+                                                                //             BlocProvider<SherInviteCubit>(
+                                                                //               create: (_) => SherInviteCubit(),
+                                                                //             ),
+                                                                //           ],
+                                                                //           child:
+                                                                //               ExpertsScreen(RoomUUID: PriveateRoomData?.object?[index].uid)),
+                                                                //       // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
+                                                                //     ));
+                                                            
                                                               },
                                                               child: Container(
                                                                 height: 40,
