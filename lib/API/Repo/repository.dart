@@ -10,6 +10,7 @@ import 'package:pds/API/Model/RateUseModel/Rateuse_model.dart';
 import 'package:pds/API/Model/ViewDetails_Model/ViewDetails_model.dart';
 import 'package:pds/API/Model/emailVerfiaction/emailVerfiaction.dart';
 import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
+import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/pinAndUnpinModel/pinAndUnpinModel.dart';
 import '../Model/SelectRoomModel/SelectRoom_Model.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
@@ -51,7 +52,7 @@ import '../Model/forget_password_model/change_password_model.dart';
 import '../Model/myaccountModel/myaccountModel.dart';
 import 'package:pds/API/Model/LogOutModel/LogOut_model.dart';
 import '../Model/HomeScreenModel/getLoginPublicRoom_model.dart';
-
+import 'package:pds/API/Model/GetGuestAllPostModel/GetPostLike_Model.dart';
 class Repository {
   ApiServices apiServices = ApiServices();
 
@@ -937,8 +938,8 @@ class Repository {
   }
 
   GetGuestAllPost(BuildContext context) async {
-    final responce = await apiServices.getApiCall(
-        '${Config.GuestGetAllPost}', context);
+    final responce =
+        await apiServices.getApiCall('${Config.GuestGetAllPost}', context);
     var jsonString = json.decode(responce.body);
     print('jasonnString$jsonString');
     print('respnse ${responce.statusCode}');
@@ -955,8 +956,8 @@ class Repository {
   }
 
   GetUserAllPost(BuildContext context) async {
-    final responce =
-        await apiServices.getApiCallWithToken('${Config.UserGetAllPost}', context);
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.UserGetAllPost}', context);
     var jsonString = json.decode(responce.body);
     print('jasonnString$jsonString');
     print('respnse ${responce.statusCode}');
@@ -1016,6 +1017,7 @@ class Repository {
         return jsonString;
     }
   }
+
   userProfile1(File imageFile, BuildContext context) async {
     final response = await apiServices.multipartFileWith1(
         '${Config.upload_data}', imageFile, context);
@@ -1024,6 +1026,74 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return ImageDataPost.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  likePostMethod(String? postUid, BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.like_post}?postUid=${postUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return LikePost.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  savedPostMethod(String? postUid, BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.save_post}?postUid=${postUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return LikePost.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+   folliwingMethod(String? followedToUid, BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.follow_user}?followedToUid=${followedToUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return LikePost.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+  GetPostAllLike(BuildContext context,String PostUID) async {
+    final responce =
+        await apiServices.getApiCallWithToken('${Config.GetPostAllLike}?postUid=${PostUID}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return GetPostLikeModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:

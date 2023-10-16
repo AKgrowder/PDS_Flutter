@@ -1,6 +1,5 @@
-
-
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
+import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 
 abstract class GetGuestAllPostState {}
 
@@ -18,4 +17,7 @@ class GetGuestAllPostErrorState extends GetGuestAllPostState {
   GetGuestAllPostErrorState(this.error);
 }
 
- 
+class PostLikeLoadedState extends GetGuestAllPostState {
+  final LikePost likePost;
+  PostLikeLoadedState(this.likePost);
+}

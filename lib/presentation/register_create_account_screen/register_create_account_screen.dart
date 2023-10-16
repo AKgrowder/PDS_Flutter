@@ -42,6 +42,8 @@ extends State<RegisterCreateAccountScreen> {
                 ),
               ),
               Container(
+                
+             
                 alignment: Alignment.topLeft,
                 child: AppbarImage(
                     height: 23,
