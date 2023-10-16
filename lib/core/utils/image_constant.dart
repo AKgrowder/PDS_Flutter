@@ -208,18 +208,15 @@ class ImageConstant {
   static String deleteIcon = 'assets/images/deleet.png';
   static String addIcon = 'assets/images/Add icon.png';
   static String gridImage = 'assets/images/Rectangle 24.png';
- static String  cameraData = 'assets/images/caemra_img.png';
- static String  pin_icon =  "assets/images/pin_icon.png";
- static String  uplodimage =  "assets/images/uplodimage.png";
- static String  galleryimage =  "assets/images/gallery.png";
- static String  Post_Close =  "assets/images/Post Close.png";
- static String  downarrow =  "assets/images/downarrow.png";
- static String  Cameraicon =  "assets/images/Cameraicon.png";
-
- 
-
-  
-
-
-
+  static String cameraData = 'assets/images/caemra_img.png';
+  static String pin_icon = "assets/images/pin_icon.png";
+  static String uplodimage = "assets/images/uplodimage.png";
+  static String galleryimage = "assets/images/gallery.png";
+  static String Post_Close = "assets/images/Post Close.png";
+  static String downarrow = "assets/images/downarrow.png";
+  static String Cameraicon = "assets/images/Cameraicon.png";
+  static String aTTACHMENT = "assets/images/ATTACHMENT.png";
+  static String gallery = "assets/images/galleryIcon.png";
+ static String Gif_icon =  'assets/images/Gif icon.png';
+  static String  Savefill =  "assets/images/Savefill.png";
 }

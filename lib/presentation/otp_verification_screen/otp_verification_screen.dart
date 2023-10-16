@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_cubit.dart';
+import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/auth/login_Block.dart';
 import 'package:pds/API/Bloc/auth/otp_block.dart';
 import 'package:pds/API/Bloc/auth/otp_state.dart';
@@ -253,6 +254,10 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         BlocProvider<InvitationCubit>(
                           create: (context) => InvitationCubit(),
                         ),
+                        /// ---------------------------------------------------------------------------
+                  BlocProvider<GetGuestAllPostCubit>(
+                    create: (context) => GetGuestAllPostCubit(),
+                  ),
                       ], child: NewBottomBar(buttomIndex: 0));
                     }));
                   }
