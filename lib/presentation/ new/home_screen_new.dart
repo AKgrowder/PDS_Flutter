@@ -8,6 +8,7 @@ import 'package:flutter_instagram_storyboard/flutter_instagram_storyboard.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
+import 'package:pds/API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
@@ -18,6 +19,7 @@ import 'package:pds/presentation/%20new/stroycommenwoget.dart';
 import 'package:pds/presentation/Create_Post_Screen/Ceratepost_Screen.dart';
 import 'package:pds/presentation/create_story/create_story.dart';
 import 'package:pds/presentation/create_story/full_story_page.dart';
+import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -49,7 +51,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   @override
   void initState() {
     Get_UserToken();
-    getDataUserFunction();
     for (int i = 0; i < 10; i++) {
       buttonDatas.add(StoryButtonData(
         timelineBackgroundColor: Colors.grey,
@@ -133,6 +134,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     User_ID = prefs.getString(PreferencesKey.loginUserID);
     User_Name = prefs.getString(PreferencesKey.ProfileName);
     User_Module = prefs.getString(PreferencesKey.module);
+    uuid = prefs.getString(PreferencesKey.loginUserID);
 
     print("---------------------->> : ${FCMToken}");
     print("User Token :--- " + "${Token}");
@@ -140,14 +142,16 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     User_ID == null ? api() : NewApi();
   }
 
-  api() {
-    BlocProvider.of<GetGuestAllPostCubit>(context).GetGuestAllPostAPI(context);
+  api() async {
+    await BlocProvider.of<GetGuestAllPostCubit>(context)
+        .GetGuestAllPostAPI(context);
   }
 
   NewApi() async {
     print("1111111111111${User_ID}");
     // /user/api/get_all_post
-    BlocProvider.of<GetGuestAllPostCubit>(context).GetUserAllPostAPI(context);
+    await BlocProvider.of<GetGuestAllPostCubit>(context)
+        .GetUserAllPostAPI(context);
   }
 
   @override
@@ -557,30 +561,46 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                           ),
                                           // index == 0
                                           AllGuestPostRoomData?.object?[index]
-                                                      .postType ==
-                                                  "IMAGE"
-                                              ? Container(
-                                                  margin: EdgeInsets.only(
-                                                      left: 16,
-                                                      top: 15,
-                                                      right: 16),
-                                                  child: Center(
-                                                      child: CustomImageView(
-                                                    url:
-                                                        "${AllGuestPostRoomData?.object?[index].postData}",
-                                                  ) /*  Image.asset(
+                                                      .postDataType ==
+                                                  null
+                                              ? SizedBox()
+                                              : AllGuestPostRoomData
+                                                          ?.object?[index]
+                                                          .postDataType ==
+                                                      "IMAGE"
+                                                  ? Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: 16,
+                                                          top: 15,
+                                                          right: 16),
+                                                      child: Center(
+                                                          child:
+                                                              CustomImageView(
+                                                        url:
+                                                            "${AllGuestPostRoomData?.object?[index].postData}",
+                                                      ) /*  Image.asset(
                                                         ImageConstant
                                                             .placeholder), */
+                                                          ),
+                                                    )
+                                                  : Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: 16,
+                                                          top: 15,
+                                                          right: 16),
+                                                      child: Center(
+                                                        child: Image.asset(
+                                                            ImageConstant
+                                                                .placeholder),
                                                       ),
-                                                )
-                                              : Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 13),
-                                                  child: Divider(
-                                                    thickness: 1,
-                                                  ),
-                                                ),
+                                                    ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 13),
+                                            child: Divider(
+                                              thickness: 1,
+                                            ),
+                                          ),
                                           SizedBox(
                                             height: 5,
                                           ),
@@ -1193,13 +1213,5 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       default:
         return '';
     }
-  }
-
-  getDataUserFunction() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    uuid = prefs.getString(
-      PreferencesKey.loginUserID,
-    );
-    setState(() {});
   }
 }
