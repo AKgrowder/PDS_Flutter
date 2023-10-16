@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'package:pds/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
+import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:pds/API/Bloc/auth/register_Block.dart';
 import 'package:pds/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
@@ -148,6 +149,10 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                 BlocProvider<InvitationCubit>(
                   create: (context) => InvitationCubit(),
                 ),
+                /// ---------------------------------------------------------------------------
+                  BlocProvider<GetGuestAllPostCubit>(
+                    create: (context) => GetGuestAllPostCubit(),
+                  ),
               ], child: NewBottomBar(buttomIndex: 0));
             }));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
