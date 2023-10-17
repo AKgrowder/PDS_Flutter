@@ -2,9 +2,7 @@ class GetPostLikeModel {
   String? message;
   List<Object>? object;
   bool? success;
-
   GetPostLikeModel({this.message, this.object, this.success});
-
   GetPostLikeModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     if (json['object'] != null) {
@@ -28,6 +26,7 @@ class GetPostLikeModel {
 }
 
 class Object {
+  String? userUid;
   String? likeUid;
   String? profilePic;
   String? userName;
@@ -35,7 +34,8 @@ class Object {
   bool? isFollowing;
 
   Object(
-      {this.likeUid,
+      {this.userUid,
+      this.likeUid,
       this.profilePic,
       this.userName,
       this.likedAt,
@@ -47,6 +47,7 @@ class Object {
     userName = json['userName'];
     likedAt = json['likedAt'];
     isFollowing = json['isFollowing'];
+    userUid = json['userUid'];
   }
 
   Map<String, dynamic> toJson() {
