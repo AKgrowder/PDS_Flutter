@@ -63,6 +63,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
       PreferencesKey.loginUserID,
     );
     setState(() {});
+
   }
 
   @override
@@ -140,8 +141,6 @@ class _RoomsScreenState extends State<RoomsScreen> {
     var _width = MediaQuery.of(context).size.width;
     var _height = MediaQuery.of(context).size.height;
 
-    Object? index;
-
     return Scaffold(
         backgroundColor: theme.colorScheme.onPrimary,
         appBar: AppBar(
@@ -195,36 +194,11 @@ class _RoomsScreenState extends State<RoomsScreen> {
             }
 
             print(PriveateRoomData?.message);
-
-            //     ExpertList2.add(ExpertList);
-            //   });
-            //   ExpertList.removeAt(0);
-            //   // ExpertList2 = ExpertList2.removeAt(0);
-            // }
-
-            // print(ExpertList2.length);
-            // print(ExpertList.length);
           }
-          // if (state is DeleteRoomLoadedState) {
-          //   SnackBar snackBar = SnackBar(
-          //     content: Text(state.DeleteRoom.message.toString()),
-          //     backgroundColor: ColorConstant.primary_color,
-          //   );
-          //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          //   Navigator.pop(context);
-          //   // method();
-          // }
+
           if (state is CheckuserLoadedState) {
             print('User Create Forum -${state.checkUserStausModel.object}');
             checkuserdata = state.checkUserStausModel.object ?? "";
-
-            // SnackBar snackBar = SnackBar(
-            //   content: Text(state.checkUserStausModel.message.toString()),
-            //   backgroundColor: ColorConstant.primary_color,
-            // );
-            // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-            // method();
           }
         }, builder: (context, state) {
           print('hear this builder can build');
@@ -1049,14 +1023,14 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                               userId
                                                           ? true
                                                           : false,
-                                                          CreateUserID : userId,
+                                                      CreateUserID: userId,
                                                       roomdescription:
                                                           "${PriveateRoomData?.object?[index].description}",
                                                       room_Id:
                                                           '${PriveateRoomData?.object?[index].uid.toString()}'),
                                                 );
                                               },
-                                            ));
+                                            )).then((value) =>  method());
                                           },
                                           child: Padding(
                                             padding: const EdgeInsets.only(
@@ -1635,7 +1609,6 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                 //               ExpertsScreen(RoomUUID: PriveateRoomData?.object?[index].uid)),
                                                                 //       // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
                                                                 //     ));
-                                                            
                                                               },
                                                               child: Container(
                                                                 height: 40,
