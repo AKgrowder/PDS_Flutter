@@ -20,17 +20,32 @@ class ViewDetailsCubit extends Cubit<ViewDeatilsState> {
 
   Future<void> ReamoveMemberAPI(
     String roomID,
-     
     String? memberUesrID,
     BuildContext context,
   ) async {
     dynamic removeMemberModel;
     try {
       emit(ViewDeatilsLoadingState());
-      removeMemberModel = await Repository()
-          .RemoveUser(roomID,  memberUesrID, context);
+      removeMemberModel =
+          await Repository().RemoveUser(roomID, memberUesrID, context);
       if (removeMemberModel.success == true) {
         emit(RemoveUserLoadedState(removeMemberModel));
+      }
+    } catch (e) {
+      emit(ViewDeatilsErrorState(removeMemberModel));
+    }
+  }
+
+  Future<void> ExituserAPI(
+    String roomID,
+    BuildContext context,
+  ) async {
+    dynamic removeMemberModel;
+    try {
+      emit(ViewDeatilsLoadingState());
+      removeMemberModel = await Repository().Exituser(roomID, context);
+      if (removeMemberModel.success == true) {
+        emit(ExitUserLoadedState(removeMemberModel));
       }
     } catch (e) {
       emit(ViewDeatilsErrorState(removeMemberModel));

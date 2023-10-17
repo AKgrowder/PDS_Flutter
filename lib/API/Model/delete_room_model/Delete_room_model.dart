@@ -1,6 +1,6 @@
 class DeleteRoomModel {
   String? message;
-  bool? object;
+  String? object;
   bool? success;
 
   DeleteRoomModel({this.message, this.object, this.success});

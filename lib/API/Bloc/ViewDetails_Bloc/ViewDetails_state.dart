@@ -18,6 +18,11 @@ class RemoveUserLoadedState extends ViewDeatilsState {
   RemoveUserLoadedState(this.removeUserModel);
 }
 
+class ExitUserLoadedState extends ViewDeatilsState {
+  final RemoveUserModel ExitUserModel;
+  ExitUserLoadedState(this.ExitUserModel);
+}
+
 class ViewDeatilsErrorState extends ViewDeatilsState {
   final dynamic error;
   ViewDeatilsErrorState(this.error);
