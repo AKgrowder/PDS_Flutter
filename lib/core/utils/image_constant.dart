@@ -220,5 +220,6 @@ class ImageConstant {
  static String Gif_icon =  'assets/images/Gif icon.png';
   static String  Savefill =  "assets/images/Savefill.png";
   static String like =  "assets/images/like 1.png";
-
+   static String commentarrow =  "assets/images/Vector (30).png";
+  static String ExitRoom =  "assets/images/ExitRoom.png"; 
 }
