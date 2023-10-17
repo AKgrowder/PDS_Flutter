@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'package:pds/API/Bloc/postData_Bloc/postData_state.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/example/lib/main.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
@@ -96,12 +98,14 @@ class _CreateNewPostState extends State<CreateNewPost> {
           print("imageDataPost-->${imageDataPost?.object.toString()}");
         }
         if (state is AddPostLoadedState) {
+          print("lodedSate-->");
           SnackBar snackBar = SnackBar(
             content: Text(state.addPost.object.toString()),
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          Navigator.pop(context);
+         Navigator.pop(context);
+
         }
       },
       builder: (context, state) {
@@ -208,7 +212,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                           padding: EdgeInsets.only(left: 7),
                                           child: Center(
                                             child: Text(
-                                              "Public/Followers",
+                                              soicalData[indexx].toString(),
                                               style: TextStyle(
                                                 fontFamily: "outfit",
                                                 fontSize: 15,

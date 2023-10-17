@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GetPostAllLike_Bloc/GetPostAllLike_cubit.dart';
@@ -5,7 +7,10 @@ import 'package:pds/API/Bloc/GuestAllPost_Bloc/GetPostAllLike_Bloc/GetPostAllLik
 import 'package:pds/API/Model/GetGuestAllPostModel/GetPostLike_Model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/theme/theme_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class ShowAllPostLike extends StatefulWidget {
   String? PostID;
@@ -17,8 +22,16 @@ class ShowAllPostLike extends StatefulWidget {
 
 class _ShowAllPostLikeState extends State<ShowAllPostLike> {
   GetPostLikeModel? GetPostAllLikeRoomData;
+  String? User_ID;
+  getLoginUserData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    User_ID = prefs.getString(PreferencesKey.loginUserID);
+    setState(() {});
+  }
+
   @override
   void initState() {
+    getLoginUserData();
     BlocProvider.of<GetPostAllLikeCubit>(context)
         .GetPostAllLikeAPI(context, "${widget.PostID}");
     super.initState();
@@ -132,38 +145,37 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
                             // ),
                           ],
                         ),
-                        trailing: Container(
-                          height: 25,
-                          alignment: Alignment.center,
-                          width: 65,
-                          margin: EdgeInsets.only(bottom: 5),
-                          decoration: BoxDecoration(
-                              color: Color(0xffED1C25),
-                              borderRadius: BorderRadius.circular(4)),
-                          child:   GetPostAllLikeRoomData
-                                      ?.object?[index].isFollowing ==
-                                                        false
-                                                    ? Text(
-                                                        'Follow',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color:
-                                                                Colors.white),
-                                                      )
-                                                    :  
-                              Text(
-                            'Follow',
-                            style: TextStyle(
-                                fontFamily: "outfit",
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                        ),
+                        trailing: User_ID ==
+                                GetPostAllLikeRoomData?.object?[index].userUid
+                            ? SizedBox()
+                            : Container(
+                                height: 25,
+                                alignment: Alignment.center,
+                                width: 65,
+                                margin: EdgeInsets.only(bottom: 5),
+                                decoration: BoxDecoration(
+                                    color: Color(0xffED1C25),
+                                    borderRadius: BorderRadius.circular(4)),
+                                child: GetPostAllLikeRoomData
+                                            ?.object?[index].isFollowing ==
+                                        false
+                                    ? Text(
+                                        'Follow',
+                                        style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      )
+                                    : Text(
+                                        'Follow',
+                                        style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ),
+                              ),
                       ),
                     );
                   });
