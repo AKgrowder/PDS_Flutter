@@ -53,6 +53,7 @@ import '../Model/myaccountModel/myaccountModel.dart';
 import 'package:pds/API/Model/LogOutModel/LogOut_model.dart';
 import '../Model/HomeScreenModel/getLoginPublicRoom_model.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetPostLike_Model.dart';
+
 class Repository {
   ApiServices apiServices = ApiServices();
 
@@ -411,7 +412,7 @@ class Repository {
 
   DeleteRoomApi(String roomuId, BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
-        "${Config.DeleteRoom}/${roomuId}", context);
+        "${Config.DeleteRoom}?roomUid=${roomuId}", context);
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -937,6 +938,24 @@ class Repository {
     }
   }
 
+  Exituser(String roomID, BuildContext context) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.RemoveUser}?roomUid=${roomID}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return RemoveUserModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
   GetGuestAllPost(BuildContext context) async {
     final responce =
         await apiServices.getApiCall('${Config.GuestGetAllPost}', context);
@@ -1069,7 +1088,7 @@ class Repository {
     }
   }
 
-   folliwingMethod(String? followedToUid, BuildContext context) async {
+  folliwingMethod(String? followedToUid, BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
         "${Config.follow_user}?followedToUid=${followedToUid}", context);
     var jsonString = json.decode(response.body);
@@ -1085,9 +1104,10 @@ class Repository {
         return jsonString;
     }
   }
-  GetPostAllLike(BuildContext context,String PostUID) async {
-    final responce =
-        await apiServices.getApiCallWithToken('${Config.GetPostAllLike}?postUid=${PostUID}', context);
+
+  GetPostAllLike(BuildContext context, String PostUID) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.GetPostAllLike}?postUid=${PostUID}', context);
     var jsonString = json.decode(responce.body);
     print('jasonnString$jsonString');
     print('respnse ${responce.statusCode}');
