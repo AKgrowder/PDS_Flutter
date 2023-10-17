@@ -12,14 +12,15 @@ class InboxScreen extends StatefulWidget {
 }
 
 class _InboxScreenState extends State<InboxScreen> {
-  TextEditingController searchController = TextEditingController();
+TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+          },
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -42,6 +43,7 @@ class _InboxScreenState extends State<InboxScreen> {
                 SizedBox(
                   height: height * 0.06,
                 ),
+              
                 Text(
                   "Inbox",
                   style: TextStyle(
@@ -90,6 +92,7 @@ class _InboxScreenState extends State<InboxScreen> {
                               children: [
                                 GestureDetector(
                                   onTap: () {},
+
                                   child: Container(
                                     margin: EdgeInsets.only(left: 20, top: 5),
                                     height: 50,
@@ -133,7 +136,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                               shape: BoxShape.circle,
                                             ),
                                             child: Image.asset(
-                                               ImageConstant.placeholder2),
+                                                ImageConstant.placeholder2),
                                           ),
                                           Positioned(
                                               bottom: 1,
