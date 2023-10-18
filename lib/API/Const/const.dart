@@ -64,4 +64,5 @@ class Config {
   static const String follow_user = "user/api/follow_user";
  static const String postLike = "Post unliked successfully";
   static const String GetPostAllLike = "user/api/get_all_likes";
+  static const String Addcomments = "guest/api/get_comments_on_post";
 }
