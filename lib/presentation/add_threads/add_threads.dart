@@ -21,7 +21,7 @@ class AddThreadsScreen extends StatefulWidget {
 
 enum TextMode {
   normal,
-  bold,
+  bold, 
   italic,
   lineThrough,
   bullet,

@@ -58,7 +58,7 @@ class ApiServices {
         return response;
       }
     } else {}
-  }
+  }                       
 
   getApiCall(String APIurl, BuildContext context) async {
     await UpdateBaseURL();
