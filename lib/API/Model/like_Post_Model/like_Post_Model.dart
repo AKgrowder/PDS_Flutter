@@ -1,11 +1,11 @@
-class DeleteRoomModel {
+class LikePost {
   String? message;
   String? object;
   bool? success;
 
-  DeleteRoomModel({this.message, this.object, this.success});
+  LikePost({this.message, this.object, this.success});
 
-  DeleteRoomModel.fromJson(Map<String, dynamic> json) {
+  LikePost.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     object = json['object'];
     success = json['success'];

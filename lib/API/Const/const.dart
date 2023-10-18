@@ -24,7 +24,7 @@ class Config {
   static const String editroom = "user/api/updateRoom";
   static const String acceptRejectInvitationAPI =
       "user/api/acceptRejectInvitation";
-  static const String DeleteRoom = "user/api/deleteRoom";
+  static const String DeleteRoom = "user/api/room_closed_by_owner";
   static const String checkUserActive = "user/api/isForumCreated";
   static const String uploadfile = 'user/api/uploadFIle';
   static const String uploadProfile = 'user/api/uploadProfilePic';
@@ -54,9 +54,15 @@ class Config {
   static const String getCountOfSavedRoom = "user/getCountOfSavedRoom";
   static const String AutoCheckINRoom = "user/api/member_joined_through_link/";
   static const String ViewDetails = "user/api/fetch_room_member_details";
-  static const String RemoveUser = "user/api/member_removed_from_room";
+  static const String RemoveUser = "user/api/member_exit_remove";
   static const String GuestGetAllPost = "guest/api/get_all_post";
   static const String UserGetAllPost = "user/api/get_all_post";
   static const String addPost = "user/api/add_post";
   static const String upload_data = "user/api/upload_data";
+  static const String like_post = "user/api/like_post";
+  static const String save_post = "user/api/save_post";
+  static const String follow_user = "user/api/follow_user";
+ static const String postLike = "Post unliked successfully";
+  static const String GetPostAllLike = "user/api/get_all_likes";
+  static const String Addcomments = "guest/api/get_comments_on_post";
 }
