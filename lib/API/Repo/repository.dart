@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
@@ -974,9 +975,14 @@ class Repository {
     }
   }
 
-  GetUserAllPost(BuildContext context) async {
+  GetUserAllPost(
+    BuildContext context,
+    String pageNumber,
+    String numberOfRecords,
+  ) async {
     final responce = await apiServices.getApiCallWithToken(
-        '${Config.UserGetAllPost}', context);
+        '${Config.UserGetAllPost}/?pageNumber=$pageNumber&numberOfRecords=$numberOfRecords',
+        context);
     var jsonString = json.decode(responce.body);
     print('jasonnString$jsonString');
     print('respnse ${responce.statusCode}');
@@ -1114,6 +1120,23 @@ class Repository {
     switch (responce.statusCode) {
       case 200:
         return GetPostLikeModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+  Addcomment(BuildContext context, String PostUID) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.Addcomments}?postUid=${PostUID}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return AddCommentModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:

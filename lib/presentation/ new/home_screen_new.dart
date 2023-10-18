@@ -24,7 +24,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GetPostAllLike_Bloc/GetPostAllLike_cubit.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
-import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comments_screen.dart';
 
 class HomeScreenNew extends StatefulWidget {
@@ -158,7 +157,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     print("1111111111111${User_ID}");
     // /user/api/get_all_post
     await BlocProvider.of<GetGuestAllPostCubit>(context)
-        .GetUserAllPostAPI(context, showAlert: true);
+        .GetUserAllPostAPI(context,'1','10', showAlert: true);
   }
 
   loginFunction({String? apiName, int? index}) async {
@@ -167,13 +166,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           builder: (context) => RegisterCreateAccountScreen()));
     } else if (apiName == 'Follow') {
       await BlocProvider.of<GetGuestAllPostCubit>(context).followWIngMethod(
-          AllGuestPostRoomData?.object?[index ?? 0].userUid, context);
+         AllGuestPostRoomData?.object?.content?[index ?? 0].userUid, context);
     } else if (apiName == 'like_post') {
       await BlocProvider.of<GetGuestAllPostCubit>(context).like_post(
-          AllGuestPostRoomData?.object?[index ?? 0].postUid, context);
+        AllGuestPostRoomData?.object?.content?[index ?? 0].postUid, context);
     } else if (apiName == 'savedata') {
       await BlocProvider.of<GetGuestAllPostCubit>(context).savedData(
-          AllGuestPostRoomData?.object?[index ?? 0].postUid, context);
+        AllGuestPostRoomData?.object?.content?[index ?? 0].postUid, context);
     }
   }
 
@@ -238,17 +237,17 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           }
           if (state is GetGuestAllPostLoadedState) {
             AllGuestPostRoomData = state.GetGuestAllPostRoomData;
-            TotleDataCount = state.GetGuestAllPostRoomData.object?.length ?? 0;
+            TotleDataCount = state.GetGuestAllPostRoomData.object?.content?.length ?? 0;
             print(
                 "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             print(TotleDataCount);
-            print(AllGuestPostRoomData?.object?[0].description);
+            print(AllGuestPostRoomData?.object?.content?[0].description);
             apiCalingdone = true;
           }
           if (state is PostLikeLoadedState) {
             likePost = state.likePost;
             await BlocProvider.of<GetGuestAllPostCubit>(context)
-                .GetUserAllPostAPI(context);
+                .GetUserAllPostAPI(context ,"1","10");
           }
         }, builder: (context, state) {
           print("TotleDataCount-->$TotleDataCount");
@@ -260,7 +259,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                         children: [
                           Container(
                             height: double.tryParse(
-                                "${300 * (TotleDataCount + 110)}"),
+                                "${200 * (20 )}"),
                             // 300 * TotleDataCount,
                             child: ListView.builder(
                                 primary: true,
@@ -309,7 +308,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                       ))),
                           ),
                           Container(
-                            height: double.tryParse("${500 * TotleDataCount}"),
+                          height: double.tryParse(
+                                "${200 * (20)}"),
                             // color: Colors.amber,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -475,18 +475,22 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                 SizedBox(
                                   height: 30,
                                 ),
-                                Expanded(
+                               AllGuestPostRoomData?.object?.content?.length == 0 ||
+                                          AllGuestPostRoomData?.object?.content?.isNotEmpty ==
+                                            false
+                                    ?  Expanded(
                                   child: ListView.separated(
                                     padding: EdgeInsets.zero,
                                     physics: NeverScrollableScrollPhysics(),
                                     primary: true,
                                     itemCount:
-                                        AllGuestPostRoomData?.object?.length ??
+                                        AllGuestPostRoomData?.object?.content?.length ??
                                             0,
                                     shrinkWrap: true,
                                     itemBuilder: (context, index) {
                                       DateTime parsedDateTime = DateTime.parse(
-                                          '${AllGuestPostRoomData?.object?[index].createdAt ?? ""}');
+                                          '${AllGuestPostRoomData?.object?.content
+                                          ?[index].createdAt ?? ""}');
                                       return Padding(
                                         padding: EdgeInsets.only(
                                             left: 16, right: 16),
@@ -511,12 +515,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 height: 50,
                                                 child: ListTile(
                                                   leading: CircleAvatar(
-                                                    backgroundImage: AllGuestPostRoomData
-                                                                ?.object?[index]
-                                                                .userProfilePic !=
-                                                            null
+                                                    backgroundImage:AllGuestPostRoomData?.object?.content?[index].userProfilePic !=
+                                                            null 
                                                         ? NetworkImage(
-                                                            "${AllGuestPostRoomData?.object?[index].userProfilePic}")
+                                                            "${AllGuestPostRoomData?.object?.content?[index].userProfilePic }")
                                                         : NetworkImage(
                                                             "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"),
                                                     radius: 25,
@@ -530,7 +532,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         height: 6,
                                                       ),
                                                       Text(
-                                                        "${AllGuestPostRoomData?.object?[index].postUserName}",
+                                                        "${AllGuestPostRoomData?.object?.content?[index].postUserName}",
                                                         style: TextStyle(
                                                             fontSize: 20,
                                                             fontFamily:
@@ -550,8 +552,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     ],
                                                   ),
                                                   trailing: User_ID ==
-                                                          AllGuestPostRoomData
-                                                              ?.object?[index]
+                                                          AllGuestPostRoomData?.object?.content?[index]
                                                               .userUid
                                                       ? SizedBox()
                                                       : GestureDetector(
@@ -576,9 +577,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     BorderRadius
                                                                         .circular(
                                                                             4)),
-                                                            child: AllGuestPostRoomData
-                                                                        ?.object?[
-                                                                            index]
+                                                            child: AllGuestPostRoomData?.object?.content?[index]
                                                                         .isFollowing ==
                                                                     false
                                                                 ? Text(
@@ -614,8 +613,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                               SizedBox(
                                                 height: 10,
                                               ),
-                                              AllGuestPostRoomData
-                                                          ?.object?[index]
+                                            AllGuestPostRoomData?.object?.content?[index]
                                                           .description !=
                                                       null
                                                   ? Padding(
@@ -623,7 +621,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           const EdgeInsets.only(
                                                               left: 16),
                                                       child: Text(
-                                                        '${AllGuestPostRoomData?.object?[index].description}',
+                                                        '${AllGuestPostRoomData?.object?.content?[index].description}',
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 "outfit",
@@ -636,13 +634,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     )
                                                   : SizedBox(),
                                               // index == 0
-                                              AllGuestPostRoomData
-                                                          ?.object?[index]
+                                             AllGuestPostRoomData?.object?.content?[index]
                                                           .postDataType ==
                                                       null
                                                   ? SizedBox()
-                                                  : AllGuestPostRoomData
-                                                              ?.object?[index]
+                                                  : AllGuestPostRoomData?.object?.content?[index]
                                                               .postDataType ==
                                                           "IMAGE"
                                                       ? Container(
@@ -655,7 +651,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               child:
                                                                   CustomImageView(
                                                             url:
-                                                                "${AllGuestPostRoomData?.object?[index].postData}",
+                                                                "${AllGuestPostRoomData?.object?.content?[index].postData}",
                                                           ) /*  Image.asset(
                                                         ImageConstant
                                                             .placeholder), */
@@ -698,9 +694,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 'like_post',
                                                             index: index);
                                                       },
-                                                      child: AllGuestPostRoomData
-                                                                  ?.object?[
-                                                                      index]
+                                                      child: AllGuestPostRoomData?.object?.content?[index]
                                                                   .isLiked !=
                                                               true
                                                           ? Image.asset(
@@ -737,13 +731,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 ),
                                                               ],
                                                               child: ShowAllPostLike(
-                                                                  "${AllGuestPostRoomData?.object?[index].postUid}"),
+                                                                  "${AllGuestPostRoomData?.object?.content?[index].postUid}"),
                                                             );
                                                           },
                                                         ));
                                                       },
                                                       child: Text(
-                                                        "${AllGuestPostRoomData?.object?[index].likedCount}",
+                                                        "${AllGuestPostRoomData?.object?.content?[index].likedCount}",
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 "outfit",
@@ -771,7 +765,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       width: 5,
                                                     ),
                                                     Text(
-                                                      "${AllGuestPostRoomData?.object?[index].commentCount}",
+                                                      "${AllGuestPostRoomData?.object?.content?[index].commentCount}",
                                                       style: TextStyle(
                                                           fontFamily: "outfit",
                                                           fontSize: 14),
@@ -800,9 +794,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             index: index);
                                                       },
                                                       child: Image.asset(
-                                                        AllGuestPostRoomData
-                                                                    ?.object?[
-                                                                        index]
+                                                        AllGuestPostRoomData?.object?.content?[index]
                                                                     .isSaved ==
                                                                 false
                                                             ? ImageConstant
@@ -1270,7 +1262,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                       }
                                     },
                                   ),
-                                ),
+                                ):SizedBox(),
                               ],
                             ),
 

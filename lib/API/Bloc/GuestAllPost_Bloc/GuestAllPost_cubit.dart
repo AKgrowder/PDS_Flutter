@@ -14,19 +14,20 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
         emit(GetGuestAllPostLoadedState(PublicRModel));
       }
     } catch (e) {
-      // print('errorstate-$e');
+      print('errorstate-$e');
       emit(GetGuestAllPostErrorState(PublicRModel));
     }
   }
 
-  Future<void> GetUserAllPostAPI(BuildContext context,
+  Future<void> GetUserAllPostAPI(
+      BuildContext context, String pageNumber, String numberOfRecords,
       {bool showAlert = false}) async {
     dynamic PublicRModel;
     try {
-
       print("showAlert-->$showAlert");
       showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
-      PublicRModel = await Repository().GetUserAllPost(context);
+      PublicRModel = await Repository()
+          .GetUserAllPost(context, pageNumber, numberOfRecords);
       if (PublicRModel.success == true) {
         emit(GetGuestAllPostLoadedState(PublicRModel));
       }
@@ -50,7 +51,8 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostErrorState(likepost));
     }
   }
-   Future<void> savedData(String? postUid, BuildContext context,
+
+  Future<void> savedData(String? postUid, BuildContext context,
       {bool showAlert = false}) async {
     dynamic likepost;
     try {
@@ -64,6 +66,7 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostErrorState(likepost));
     }
   }
+
   Future<void> followWIngMethod(String? followedToUid, BuildContext context,
       {bool showAlert = false}) async {
     dynamic likepost;
