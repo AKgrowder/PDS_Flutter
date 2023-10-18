@@ -967,7 +967,7 @@
 //                                                                 GestureDetector(
 //                                                               onTap: () {
 //                                                                 BlocProvider.of<
-//                                                                             InvitationCubit>(
+//                                                                              InvitationCubit>(
 //                                                                         context)
 //                                                                     .GetRoomInvitations(
 //                                                                         true,
