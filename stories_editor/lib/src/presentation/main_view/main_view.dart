@@ -373,6 +373,7 @@ class _MainViewState extends State<MainView> {
                   pathList: (path) {
                     controlNotifier.mediaPath = path.first.path!.toString();
                     if (controlNotifier.mediaPath.isNotEmpty) {
+                    
                       itemProvider.draggableWidget.insert(
                           0,
                           EditableItem()

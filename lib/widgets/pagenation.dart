@@ -32,7 +32,7 @@ class _PaginationWidgetState extends State<PaginationWidget> {
 
     widget.scrollController?.addListener(() {
       if (widget.scrollController?.position.pixels ==
-              widget.scrollController?.position.minScrollExtent &&
+              widget.scrollController?.position.maxScrollExtent &&
           widget.totalSize != null &&
           !_isLoading &&
           widget.isPagination) {
