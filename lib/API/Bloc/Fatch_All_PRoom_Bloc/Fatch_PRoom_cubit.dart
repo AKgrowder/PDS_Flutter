@@ -18,18 +18,7 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
     }
   }
 
-  Future<void> FetchAllExpertsAPI(BuildContext context) async {
-    dynamic PublicRModel;
-    try {
-      emit(FetchAllPublicRoomLoadingState());
-      PublicRModel = await Repository().FetchAllExpertsAPI(context);
-      if (PublicRModel.success == true) {
-        emit(FetchAllExpertsLoadedState(PublicRModel));
-      }
-    } catch (e) {
-      emit(FetchAllPublicRoomErrorState(PublicRModel));
-    }
-  }
+  
 
   Future<void> chckUserStaus(BuildContext context) async {
     dynamic checkUserStausModel;

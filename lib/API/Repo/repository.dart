@@ -4,6 +4,7 @@ import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
 import 'package:pds/API/Model/Add_comment_model/get_comments_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
+import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_PostModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
@@ -1178,6 +1179,25 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return CreateStoryModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+   NewProfileAPI(
+    BuildContext context,
+  ) async {
+    final response =
+        await apiServices.getApiCallWithToken(Config.NewfetchUserProfile, context);
+    print('AddPost$response');
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return NewProfileScreen_Model.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:

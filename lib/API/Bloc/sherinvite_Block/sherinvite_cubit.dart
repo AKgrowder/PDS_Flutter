@@ -21,6 +21,18 @@ class SherInviteCubit extends Cubit<SherInviteState> {
       emit(SherInviteErrorState(sherInvite));
     }
   }
+    Future<void> FetchAllExpertsAPI(BuildContext context) async {
+    dynamic PublicRModel;
+    try {
+      emit(SherInviteLoadingState());
+      PublicRModel = await Repository().FetchAllExpertsAPI(context);
+      if (PublicRModel.success == true) {
+        emit(FetchAllExpertsLoadedState(PublicRModel));
+      }
+    } catch (e) {
+      emit(SherInviteErrorState(PublicRModel));
+    }
+  }
 }
 
 
