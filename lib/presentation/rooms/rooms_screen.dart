@@ -27,7 +27,6 @@ import '../../core/utils/sharedPreferences.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
 import '../create_foram/create_foram_screen.dart';
-import '../experts/experts_screen.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
 
 class RoomsScreen extends StatefulWidget {
@@ -63,7 +62,6 @@ class _RoomsScreenState extends State<RoomsScreen> {
       PreferencesKey.loginUserID,
     );
     setState(() {});
-
   }
 
   @override
@@ -1030,7 +1028,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                           '${PriveateRoomData?.object?[index].uid.toString()}'),
                                                 );
                                               },
-                                            )).then((value) =>  method());
+                                            )).then((value) => method());
                                           },
                                           child: Padding(
                                             padding: const EdgeInsets.only(
@@ -1697,8 +1695,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                       CreatRoom(_height, _width);
                                     },
                                     child: CustomImageView(
-                                      imagePath: ImageConstant.addimage,
-                                      height: 60,
+                                      imagePath: ImageConstant.addroomimage,
+                                      height: 55,
                                       alignment: Alignment.bottomRight,
                                     ),
                                   ),
@@ -1752,7 +1750,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                               : showAlert1();
                                 },
                                 child: CustomImageView(
-                                  imagePath: ImageConstant.addimage,
+                                  imagePath: ImageConstant.addroomimage,
                                   height: 55,
                                   alignment: Alignment.bottomRight,
                                 ),
