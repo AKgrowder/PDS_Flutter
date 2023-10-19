@@ -1,16 +1,10 @@
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
-import 'package:pds/presentation/%20new/TabBar_screen.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'presentation/ new/Inbox_screen.dart';
-import 'presentation/ new/editproilescreen.dart';
-import 'presentation/ new/searchScreen.dart';
-import 'presentation/ new/select_rooms_screen.dart';
 import 'presentation/splash_screen/splash_screen.dart';
 
 Future<void> _messageHandler(RemoteMessage message) async {
@@ -31,7 +25,6 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(_messageHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
     print("/* onMessageOpenedApp: */ $message");
-
     // if (message.data["navigation"] == "/your_route") {
     //   int _yourId = int.tryParse(message.data["id"]) ?? 0;
     //   Navigator.push(
