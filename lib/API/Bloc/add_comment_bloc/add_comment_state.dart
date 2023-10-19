@@ -1,6 +1,5 @@
 import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
-
- 
+import 'package:pds/API/Model/Add_comment_model/get_comments_model.dart';
 
 abstract class AddCommentState {}
 
@@ -14,6 +13,13 @@ class AddCommentLoadedState extends AddCommentState {
 }
 
 class AddCommentErrorState extends AddCommentState {
-  final dynamic error;
+  final String error;
   AddCommentErrorState(this.error);
+}
+
+//-------------------------
+
+class AddnewCommentLoadedState extends AddCommentState {
+  final dynamic addnewCommentsModeldata;
+  AddnewCommentLoadedState(this.addnewCommentsModeldata);
 }

@@ -4,12 +4,18 @@ import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
 import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/add_comment_bloc/add_comment_state.dart';
 import '../../theme/theme_helper.dart';
+import '../../widgets/custom_image_view.dart';
 
 class CommentsScreen extends StatefulWidget {
-  const CommentsScreen({Key? key}) : super(key: key);
+  String PostUID;
+
+  CommentsScreen({Key? key, required this.PostUID}) : super(key: key);
 
   @override
   State<CommentsScreen> createState() => _CommentsScreenState();
@@ -17,11 +23,27 @@ class CommentsScreen extends StatefulWidget {
 
 class _CommentsScreenState extends State<CommentsScreen> {
   AddCommentModel? addCommentModeldata;
-  dynamic PostUID;
+  final TextEditingController addcomment = TextEditingController();
+  final ScrollController scroll = ScrollController();
+  String? User_ID;
+  savedataFunction() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    User_ID = prefs.getString(PreferencesKey.loginUserID);
+    setState(() {});
+  }
+
   @override
   initState() {
-    BlocProvider.of<AddcommentCubit>(context).Addcomment(context, PostUID);
+    savedataFunction();
+    print("PostUID-->${widget.PostUID}");
+    BlocProvider.of<AddcommentCubit>(context)
+        .Addcomment(context, widget.PostUID);
     super.initState();
+  }
+
+  void _goToElement() {
+    scroll.animateTo((1000 * 20),
+        duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
   }
 
   @override
@@ -57,9 +79,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
           if (state is AddCommentLoadedState) {
             addCommentModeldata = state.commentdata;
           }
-          if (state is AddCommentLoadedState) {
-            addCommentModeldata = state.commentdata;
-          }
+
           if (state is AddCommentErrorState) {
             SnackBar snackBar = SnackBar(
               content: Text(state.error),
@@ -67,8 +87,31 @@ class _CommentsScreenState extends State<CommentsScreen> {
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
+
+          if (state is AddnewCommentLoadedState) {
+            addcomment.clear();
+            Object object =
+                Object.fromJson(state.addnewCommentsModeldata['object']);
+
+            addCommentModeldata?.object?.add(object);
+            print(
+                "cghfdgfgghgh->${addCommentModeldata?.object?.last.runtimeType}");
+            _goToElement();
+          }
         },
         builder: (context, state) {
+          if (state is AddCommentLoadingState) {
+            return Center(
+              child: Container(
+                margin: EdgeInsets.only(bottom: 100),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(ImageConstant.loader,
+                      fit: BoxFit.cover, height: 100.0, width: 100),
+                ),
+              ),
+            );
+          }
           return SingleChildScrollView(
             child: Column(children: [
               Container(
@@ -77,7 +120,13 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 child: ListView.builder(
                   itemCount: addCommentModeldata?.object?.length,
                   shrinkWrap: true,
+                  controller: scroll,
                   itemBuilder: (context, index) {
+                    // ListTile( );
+                    // DateTime parsedDateTime = DateTime.parse(
+                    //     '${addCommentModeldata?.object?[index].createdAt}');
+
+                    // var ara = getTime(parsedDateTime);
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -94,9 +143,13 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                         borderRadius:
                                             BorderRadius.circular(15)),
                                     child: Row(children: [
-                                      Image.asset(
-                                        ImageConstant.expertone,
-                                        height: 65,
+                                      CustomImageView(
+                                        radius: BorderRadius.circular(50),
+                                        url:
+                                            "${addCommentModeldata?.object?[index].profilePic}",
+                                        fit: BoxFit.fill,
+                                        height: 50,
+                                        width: 50,
                                       ),
                                       SizedBox(
                                         width: 10,
@@ -121,6 +174,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                                 width: 5,
                                               ),
                                               Text("1w",
+                                                  // customFormat(parsedDateTime),
                                                   style: TextStyle(
                                                       fontFamily: 'outfit',
                                                       fontSize: 13,
@@ -128,12 +182,21 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                                           FontWeight.w500)),
                                             ],
                                           ),
-                                          Text(
-                                              "${addCommentModeldata?.object?[index].comment}",
-                                              style: TextStyle(
-                                                  fontFamily: 'outfit',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400)),
+                                          Container(
+                                            width: _width / 1.6,
+                                            height: 50,
+                                            // color: Colors.amber,
+                                            child: Text(
+                                                "${addCommentModeldata?.object?[index].comment}",
+                                                maxLines: 2,
+                                                style: TextStyle(
+                                                    fontFamily: 'outfit',
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w400)),
+                                          ),
                                         ],
                                       ),
                                       SizedBox(
@@ -152,10 +215,24 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                         borderRadius:
                                             BorderRadius.circular(15)),
                                     child: Row(children: [
-                                      Image.asset(
-                                        ImageConstant.expertone,
-                                        height: 45,
-                                      ),
+                                      addCommentModeldata
+                                                  ?.object?[index].profilePic ==
+                                              null
+                                          ? CustomImageView(
+                                              radius: BorderRadius.circular(50),
+                                              imagePath: ImageConstant.pdslogo,
+                                              fit: BoxFit.fill,
+                                              height: 40,
+                                              width: 40,
+                                            )
+                                          : CustomImageView(
+                                              radius: BorderRadius.circular(50),
+                                              url:
+                                                  "${addCommentModeldata?.object?[index].profilePic}",
+                                              fit: BoxFit.fill,
+                                              height: 40,
+                                              width: 40,
+                                            ),
                                       SizedBox(
                                         width: 10,
                                       ),
@@ -179,6 +256,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                                 width: 5,
                                               ),
                                               Text("1w",
+                                                  // customFormat(parsedDateTime),
                                                   style: TextStyle(
                                                       fontFamily: 'outfit',
                                                       fontSize: 13,
@@ -231,6 +309,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 10.0),
                       child: TextField(
+                        controller: addcomment,
                         cursorColor: ColorConstant.primary_color,
                         decoration: InputDecoration(
                             border: InputBorder.none,
@@ -245,13 +324,37 @@ class _CommentsScreenState extends State<CommentsScreen> {
                   SizedBox(
                     width: 5,
                   ),
-                  CircleAvatar(
-                    maxRadius: 25,
-                    backgroundColor: ColorConstant.primary_color,
-                    child: Center(
-                      child: Image.asset(
-                        ImageConstant.commentarrow,
-                        height: 18,
+                  GestureDetector(
+                    onTap: () {
+                      if (User_ID == null) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                RegisterCreateAccountScreen()));
+                      } else if (addcomment.text == null ||
+                          addcomment.text.isEmpty) {
+                        SnackBar snackBar = SnackBar(
+                          content: Text('Please Add Comment'),
+                          backgroundColor: ColorConstant.primary_color,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      } else {
+                        Map<String, dynamic> params = {
+                          "comment": addcomment.text,
+                          "postUid": widget.PostUID,
+                        };
+
+                        BlocProvider.of<AddcommentCubit>(context)
+                            .AddPostApiCalling(context, params);
+                      }
+                    },
+                    child: CircleAvatar(
+                      maxRadius: 25,
+                      backgroundColor: ColorConstant.primary_color,
+                      child: Center(
+                        child: Image.asset(
+                          ImageConstant.commentarrow,
+                          height: 18,
+                        ),
                       ),
                     ),
                   )
