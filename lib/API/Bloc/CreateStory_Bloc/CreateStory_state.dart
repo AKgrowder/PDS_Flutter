@@ -1,4 +1,6 @@
 
+import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
+
 import '../../Model/Add_PostModel/Add_postModel_Image.dart';
 import '../../Model/CreateStory_Model/CreateStory_model.dart';
 
@@ -21,6 +23,11 @@ class CreateStoryErrorState extends CreateStoryState {
 class AddPostImaegState extends CreateStoryState {
  final ImageDataPost imageDataPost;
   AddPostImaegState(this.imageDataPost);
+}
+
+class GetAllStoryLoadedState extends CreateStoryState {
+  final GetAllStoryModel getAllStoryModel;
+  GetAllStoryLoadedState(this.getAllStoryModel);
 }
 
  
