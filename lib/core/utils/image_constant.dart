@@ -223,5 +223,6 @@ class ImageConstant {
    static String commentarrow =  "assets/images/Vector (30).png";
   static String ExitRoom =  "assets/images/ExitRoom.png";
   static String likewithout =  "assets/images/likewitoutcolor.png";
+  static String addroomimage =  "assets/images/Plus button.png";
    
 }

@@ -3,7 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
 import 'package:pds/API/Repo/repository.dart';
 
+import '../../Model/coment/coment_model.dart';
+
 class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
+  dynamic gestUserData;
   GetGuestAllPostCubit() : super(GetGuestAllPostInitialState()) {}
   Future<void> GetGuestAllPostAPI(BuildContext context) async {
     dynamic PublicRModel;
@@ -19,21 +22,43 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     }
   }
 
-  Future<void> GetUserAllPostAPI(
-      BuildContext context, String pageNumber, String numberOfRecords,
+  Future<void> GetUserAllPostAPI(BuildContext context, String pageNumber,
       {bool showAlert = false}) async {
-    dynamic PublicRModel;
     try {
       print("showAlert-->$showAlert");
       showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
-      PublicRModel = await Repository()
-          .GetUserAllPost(context, pageNumber, numberOfRecords);
-      if (PublicRModel.success == true) {
-        emit(GetGuestAllPostLoadedState(PublicRModel));
+      gestUserData = await Repository().GetUserAllPost(context, pageNumber);
+      if (gestUserData.success == true) {
+        emit(GetGuestAllPostLoadedState(gestUserData));
       }
     } catch (e) {
       // print('errorstate-$e');
-      emit(GetGuestAllPostErrorState(PublicRModel));
+      emit(GetGuestAllPostErrorState(gestUserData));
+    }
+  }
+
+  Future<void> GetUserAllPostAPIPagantion(
+      BuildContext context, String pageNumber,
+      {bool showAlert = false}) async {
+    dynamic gestUserDatasetUp;
+    try {
+      print("showAlert-->$showAlert");
+      showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
+      gestUserDatasetUp =
+          await Repository().GetUserAllPost(context, pageNumber);
+      if (gestUserDatasetUp.success == true) {
+        if (gestUserDatasetUp.object != null) {
+          gestUserData.object.content.addAll(gestUserDatasetUp.object.content);
+           gestUserData.object.pageable.pageNumber =
+              gestUserDatasetUp.object.pageable.pageNumber;
+          gestUserData.object.totalElements =
+              gestUserDatasetUp.object.totalElements;
+        }
+        emit(GetGuestAllPostLoadedState(gestUserData));
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(GetGuestAllPostErrorState(gestUserData));
     }
   }
 
