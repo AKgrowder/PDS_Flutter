@@ -327,7 +327,7 @@ String customFormat(DateTime date) {
                       ),
                     ),
                     SizedBox(
-                      height: 25,
+                      height: 5,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
