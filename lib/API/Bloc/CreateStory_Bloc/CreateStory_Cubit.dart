@@ -37,16 +37,5 @@ class CreateStoryCubit extends Cubit<CreateStoryState> {
     }
   }
 
-  Future<void> GetAllStoryAPI(BuildContext context) async {
-    dynamic getAllStoryModel;
-    try {
-      emit(CreateStoryLoadingState());
-      getAllStoryModel = await Repository().GetAllStory(context);
-      if (getAllStoryModel.success == true) {
-        emit(GetAllStoryLoadedState(getAllStoryModel));
-      }
-    } catch (e) {
-      emit(CreateStoryErrorState(getAllStoryModel));
-    }
-  }
+  
 }
