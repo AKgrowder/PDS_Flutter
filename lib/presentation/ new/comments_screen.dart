@@ -208,7 +208,7 @@ String customFormat(DateTime date) {
           }
           return Stack(
             children: [
-              SingleChildScrollView(
+              SingleChildScrollView(physics: BouncingScrollPhysics(),
                 child: Column(
                   children: [
                     SizedBox(
@@ -401,10 +401,10 @@ String customFormat(DateTime date) {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 50),
+                padding: const EdgeInsets.only(left: 20),
                 child: Container(
                   height: 80,
-                  width: _width / 1.2,
+                  // width: _width / 1.2,
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(15)),
@@ -456,7 +456,7 @@ String customFormat(DateTime date) {
                               maxLines: 2,
                               style: TextStyle(
                                   fontFamily: 'outfit',
-                                  // overflow: TextOverflow.ellipsis,
+                                  overflow: TextOverflow.ellipsis,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400)),
                         ),
