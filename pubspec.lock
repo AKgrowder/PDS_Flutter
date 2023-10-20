@@ -616,6 +616,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  hashtagable:
+    dependency: "direct main"
+    description:
+      name: hashtagable
+      sha256: "6f35f1f320a9cbb9138ee22b25db8abeebee19d8aedc87f8c298956d4e27b2ed"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.0+1"
   html:
     dependency: transitive
     description:

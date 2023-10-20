@@ -63,7 +63,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   @override
   void initState() {
     Get_UserToken();
-    BlocProvider.of<CreateStoryCubit>(context).GetAllStoryAPI(context);
+    /*   BlocProvider.of<CreateStoryCubit>(context).GetAllStoryAPI(context); */
     for (int i = 0; i < 10; i++) {
       buttonDatas.add(StoryButtonData(
         timelineBackgroundColor: Colors.grey,
@@ -348,251 +348,226 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                           ],
                         ),
                       ),
-                      // SizedBox(
-                      //   height: 20,
-                      // ),
                       SizedBox(
                         height: 30,
                       ),
-                      BlocConsumer<CreateStoryCubit, CreateStoryState>(
-                          builder: (context, state) {
-                            return Container(
-                              height: 90,
-                              margin: EdgeInsets.symmetric(horizontal: 16),
-                              child: ListView.separated(
-                                itemBuilder: (context, index) {
-                                  if (index == 0) {
-                                    if (!storyAdded)
-                                      return GestureDetector(
-                                        onTap: () async {
-                                          if (Platform.isAndroid) {
-                                            final info =
-                                                await DeviceInfoPlugin()
-                                                    .androidInfo;
-                                            if (num.parse(await info
-                                                        .version.release)
-                                                    .toInt() >=
-                                                13) {
-                                              if (await permissionHandler(
-                                                      context,
-                                                      Permission.photos) ??
-                                                  false) {
-                                                CreateStoryModel
-                                                    crateStoryModel =
-                                                    await Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (_) => BlocProvider<
-                                                                    CreateStoryCubit>(
-                                                                create: (context) =>
-                                                                    CreateStoryCubit(),
-                                                                child:
-                                                                    CreateStoryPage())));
-                                                if (crateStoryModel != null) {
-                                                  StoryButtonData buttonData =
-                                                      StoryButtonData(
-                                                    timelineBackgroundColor:
-                                                        Colors.grey,
-                                                    buttonDecoration:
-                                                        BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      image: DecorationImage(
-                                                        image: AssetImage(
-                                                          'assets/images/expert3.png',
-                                                        ),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              5.0),
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .end,
-                                                        children: [
-                                                          Text(
-                                                            '',
-                                                            style:
-                                                                const TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    borderDecoration:
-                                                        BoxDecoration(
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                              .all(
-                                                        Radius.circular(60.0),
-                                                      ),
-                                                      border:
-                                                          Border.fromBorderSide(
-                                                        BorderSide(
-                                                          color: Colors.red,
-                                                          width: 1.5,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    storyPages: [
-                                                      FullStoryPage(
-                                                        text:
-                                                            '${crateStoryModel.message!}',
-                                                        imageName:
-                                                            crateStoryModel
-                                                                .object!,
-                                                      )
-                                                    ],
-                                                    segmentDuration:
-                                                        const Duration(
-                                                            seconds: 3),
-                                                  );
-                                                  buttonDatas.insert(
-                                                      0, buttonData);
-                                                  storyButtons[0] = StoryButton(
-                                                      onPressed: (data) {
-                                                        Navigator.of(
-                                                                storycontext!)
-                                                            .push(
-                                                          StoryRoute(
-                                                            storyContainerSettings:
-                                                                StoryContainerSettings(
-                                                              buttonData:
-                                                                  buttonData,
-                                                              tapPosition:
-                                                                  buttonData
-                                                                      .buttonCenterPosition!,
-                                                              curve: buttonData
-                                                                  .pageAnimationCurve,
-                                                              allButtonDatas:
-                                                                  buttonDatas,
-                                                              pageTransform:
-                                                                  StoryPage3DTransform(),
-                                                              storyListScrollController:
-                                                                  ScrollController(),
-                                                            ),
-                                                            duration: buttonData
-                                                                .pageAnimationDuration,
-                                                          ),
-                                                        );
-                                                      },
-                                                      buttonData: buttonData,
-                                                      allButtonDatas:
-                                                          buttonDatas,
-                                                      storyListViewController:
-                                                          ScrollController());
-                                                  if (mounted)
-                                                    setState(() {
-                                                      storyAdded = true;
-                                                    });
-                                                }
-                                              }
-                                            } else if (await permissionHandler(
-                                                    context,
-                                                    Permission.storage) ??
-                                                false) {
-                                              var crateStoryModel = await Navigator.push(
-                                                  context,
+                      Container(
+                        height: 90,
+                        margin: EdgeInsets.symmetric(horizontal: 16),
+                        child: ListView.separated(
+                          itemBuilder: (context, index) {
+                            if (index == 0) {
+                              if (!storyAdded)
+                                return GestureDetector(
+                                  onTap: () async {
+                                    if (Platform.isAndroid) {
+                                      final info =
+                                          await DeviceInfoPlugin().androidInfo;
+                                      if (num.parse(await info.version.release)
+                                              .toInt() >=
+                                          13) {
+                                        if (await permissionHandler(
+                                                context, Permission.photos) ??
+                                            false) {
+                                          CreateStoryModel crateStoryModel =
+                                              await Navigator.push(context,
                                                   MaterialPageRoute(
-                                                      builder: (_) => BlocProvider<
-                                                              CreateStoryCubit>(
-                                                          create: (context) =>
-                                                              CreateStoryCubit(),
-                                                          child:
-                                                              CreateStoryPage())));
-                                            }
-                                          }
-                                        },
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            DottedBorder(
-                                              borderType: BorderType.Circle,
-                                              dashPattern: [5, 5, 5, 5],
-                                              color:
-                                                  ColorConstant.primary_color,
-                                              child: Container(
-                                                height: 67,
-                                                width: 67,
-                                                decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: Color(0x4CED1C25)),
-                                                child: Icon(
-                                                  Icons
-                                                      .add_circle_outline_rounded,
-                                                  color: ColorConstant
-                                                      .primary_color,
+                                                      builder: (context) {
+                                            return MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider<CreateStoryCubit>(
+                                                  create: (context) =>
+                                                      CreateStoryCubit(),
+                                                )
+                                              ],
+                                              child: CreateStoryPage(),
+                                            );
+                                          }));
+
+                                          if (crateStoryModel != null) {
+                                            StoryButtonData buttonData =
+                                                StoryButtonData(
+                                              timelineBackgroundColor:
+                                                  Colors.grey,
+                                              buttonDecoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(
+                                                  image: AssetImage(
+                                                    'assets/images/expert3.png',
+                                                  ),
+                                                  fit: BoxFit.cover,
                                                 ),
                                               ),
-                                            ),
-                                            Text(
-                                              'Share Story',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 16),
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    else
-                                      return SizedBox(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Expanded(
-                                              child: storyButtons[index]!,
-                                              flex: 1,
-                                            ),
-                                            Text(
-                                              'Jones $index',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 16),
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                  } else {
-                                    return SizedBox(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Expanded(
-                                            child: storyButtons[index]!,
-                                            flex: 1,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Text(
+                                                      '',
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              borderDecoration: BoxDecoration(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(60.0),
+                                                ),
+                                                border: Border.fromBorderSide(
+                                                  BorderSide(
+                                                    color: Colors.red,
+                                                    width: 1.5,
+                                                  ),
+                                                ),
+                                              ),
+                                              storyPages: [
+                                                FullStoryPage(
+                                                  text:
+                                                      '${crateStoryModel.message!}',
+                                                  imageName:
+                                                      crateStoryModel.object!,
+                                                )
+                                              ],
+                                              segmentDuration:
+                                                  const Duration(seconds: 3),
+                                            );
+                                            buttonDatas.insert(0, buttonData);
+                                            storyButtons[0] = StoryButton(
+                                                onPressed: (data) {
+                                                  Navigator.of(storycontext!)
+                                                      .push(
+                                                    StoryRoute(
+                                                      storyContainerSettings:
+                                                          StoryContainerSettings(
+                                                        buttonData: buttonData,
+                                                        tapPosition: buttonData
+                                                            .buttonCenterPosition!,
+                                                        curve: buttonData
+                                                            .pageAnimationCurve,
+                                                        allButtonDatas:
+                                                            buttonDatas,
+                                                        pageTransform:
+                                                            StoryPage3DTransform(),
+                                                        storyListScrollController:
+                                                            ScrollController(),
+                                                      ),
+                                                      duration: buttonData
+                                                          .pageAnimationDuration,
+                                                    ),
+                                                  );
+                                                },
+                                                buttonData: buttonData,
+                                                allButtonDatas: buttonDatas,
+                                                storyListViewController:
+                                                    ScrollController());
+                                            if (mounted)
+                                              setState(() {
+                                                storyAdded = true;
+                                              });
+                                          }
+                                        }
+                                      } else if (await permissionHandler(
+                                              context, Permission.storage) ??
+                                          false) {
+                                        CreateStoryModel crateStoryModel =
+                                            await Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                          return MultiBlocProvider(
+                                            providers: [
+                                              BlocProvider<CreateStoryCubit>(
+                                                create: (context) =>
+                                                    CreateStoryCubit(),
+                                              )
+                                            ],
+                                            child: CreateStoryPage(),
+                                          );
+                                        }));
+                                      }
+                                    }
+                                  },
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      DottedBorder(
+                                        borderType: BorderType.Circle,
+                                        dashPattern: [5, 5, 5, 5],
+                                        color: ColorConstant.primary_color,
+                                        child: Container(
+                                          height: 67,
+                                          width: 67,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Color(0x4CED1C25)),
+                                          child: Icon(
+                                            Icons.add_circle_outline_rounded,
+                                            color: ColorConstant.primary_color,
                                           ),
-                                          Text(
-                                            'Jones $index',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16),
-                                          )
-                                        ],
+                                        ),
                                       ),
-                                    );
-                                  }
-                                },
-                                separatorBuilder: (context, index) {
-                                  return SizedBox(
-                                    width: 8,
-                                  );
-                                },
-                                itemCount: storyButtons.length,
-                                scrollDirection: Axis.horizontal,
-                              ),
+                                      Text(
+                                        'Share Story',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 16),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              else
+                                return SizedBox(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Expanded(
+                                        child: storyButtons[index]!,
+                                        flex: 1,
+                                      ),
+                                      Text(
+                                        'Jones $index',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 16),
+                                      )
+                                    ],
+                                  ),
+                                );
+                            } else {
+                              return SizedBox(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Expanded(
+                                      child: storyButtons[index]!,
+                                      flex: 1,
+                                    ),
+                                    Text(
+                                      'Jones $index',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16),
+                                    )
+                                  ],
+                                ),
+                              );
+                            }
+                          },
+                          separatorBuilder: (context, index) {
+                            return SizedBox(
+                              width: 8,
                             );
                           },
-                          listener: (context, state) {}),
-
+                          itemCount: storyButtons.length,
+                          scrollDirection: Axis.horizontal,
+                        ),
+                      ),
                       SizedBox(
                         height: 30,
                       ),
@@ -1300,7 +1275,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                  .only(
+                                                                      .only(
                                                                   left: 10,
                                                                   top: 3),
                                                           child: Text(
@@ -1332,7 +1307,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                  .only(
+                                                                      .only(
                                                                   top: 4,
                                                                   left: 1),
                                                           child: Text(
@@ -1350,7 +1325,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                  .only(
+                                                                      .only(
                                                                   left: 7,
                                                                   top: 4),
                                                           child: index != 0
@@ -1371,7 +1346,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           child: Padding(
                                                             padding:
                                                                 const EdgeInsets
-                                                                    .only(
+                                                                        .only(
                                                                     top: 2),
                                                             child: Image.asset(
                                                                 ImageConstant
@@ -1384,7 +1359,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           child: Padding(
                                                             padding:
                                                                 const EdgeInsets
-                                                                    .only(
+                                                                        .only(
                                                                     top: 6),
                                                             child: Image.asset(
                                                                 ImageConstant
