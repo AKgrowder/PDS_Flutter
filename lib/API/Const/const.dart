@@ -67,5 +67,6 @@ class Config {
   static const String Addcomments = "guest/api/get_comments_on_post";
    static const String CreateStory = "user/api/create_story";
 static const String getcomments = "user/api/add_comment";
-
+static const String NewfetchUserProfile = "user/api/fetchUserProfile";
+static const String getAllStory = "user/api/get_all_story";
 }

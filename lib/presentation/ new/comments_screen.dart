@@ -44,7 +44,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
   }
 
   @override
-  initState() {
+  void initState() {
     savedataFunction();
     print("PostUID-->${widget.PostUID}");
     BlocProvider.of<AddcommentCubit>(context)
@@ -327,7 +327,7 @@ String customFormat(DateTime date) {
                       ),
                     ),
                     SizedBox(
-                      height: 25,
+                      height: 5,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

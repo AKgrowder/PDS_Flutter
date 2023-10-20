@@ -46,8 +46,8 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                             child: Container(
                               height: 240,
                               width: 150,
-                              margin: EdgeInsets.only(
-                                  top: index == 0 ? 0 : 600),
+                              margin:
+                                  EdgeInsets.only(top: index == 0 ? 0 : 600),
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   //  color: Colors.amber,
@@ -103,8 +103,8 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                     height: 10,
                   ),
                   Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey)),
+                     decoration:
+                        BoxDecoration(border: Border.all(color: Colors.grey)),
                     child: TabBar(
                       onTap: (value) {},
                       controller: _tabController,
@@ -184,13 +184,13 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                       children: [
                         Container(
                           // color: Colors.red,
-                          height: MediaQuery.of(context).size.height * 0.746,
+                          height: _height /0.900,
                           child: TabBarView(children: [
                             Center(child: Text('Tab 1 Content')),
                             RequestOrderClass(),
                             MultiBlocProvider(providers: [
                               BlocProvider<InvitationCubit>(
-                            create: (context) => InvitationCubit(),
+                                create: (context) => InvitationCubit(),
                               ),
                             ], child: InviationClass())
                           ]),
@@ -426,8 +426,7 @@ class _InviationClassState extends State<InviationClass> {
         }
         if (state is AcceptRejectInvitationModelLoadedState) {
           SnackBar snackBar = SnackBar(
-            content:
-                Text(state.acceptRejectInvitationModel.message.toString()),
+            content: Text(state.acceptRejectInvitationModel.message.toString()),
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -507,8 +506,8 @@ class _InviationClassState extends State<InviationClass> {
                                             MainAxisAlignment.start,
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10),
+                                            padding:
+                                                const EdgeInsets.only(left: 10),
                                             child: Text(
                                               "${InvitationRoomData?.object?[index].companyName}",
                                               style: TextStyle(
@@ -530,16 +529,15 @@ class _InviationClassState extends State<InviationClass> {
                                             MainAxisAlignment.start,
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10),
+                                            padding:
+                                                const EdgeInsets.only(left: 10),
                                             child: Container(
                                               // color: Colors.amber,
                                               width: _width / 1.3,
                                               child: Text(
                                                 "${InvitationRoomData?.object?[index].roomQuestion}",
                                                 style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold,
+                                                    fontWeight: FontWeight.bold,
                                                     color: Colors.black,
                                                     fontFamily: "outfit",
                                                     fontSize: 14),
@@ -555,8 +553,8 @@ class _InviationClassState extends State<InviationClass> {
                                           "${InvitationRoomData?.object?[index].description}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w400,
-                                              color: Colors.black
-                                                  .withOpacity(0.5),
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
                                               fontFamily: "outfit",
                                               fontSize: 14),
                                         ),
@@ -593,8 +591,7 @@ class _InviationClassState extends State<InviationClass> {
                                               left: 10.0, right: 10),
                                           child: Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               InvitationRoomData
                                                               ?.object?[index]
@@ -620,24 +617,31 @@ class _InviationClassState extends State<InviationClass> {
                                                               Positioned(
                                                                 left: 0,
                                                                 top: 0,
-                                                                child: Container(
-                                                                    width: 26.88,
-                                                                    height: 26.87,
-                                                                    decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                    child: CustomImageView(
-                                                                      url: InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ??
-                                                                              false
-                                                                          ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
-                                                                          : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                      height:
-                                                                          20,
-                                                                      radius:
-                                                                          BorderRadius.circular(20),
-                                                                      width:
-                                                                          20,
-                                                                      fit: BoxFit
-                                                                          .fill,
-                                                                    )),
+                                                                child:
+                                                                    Container(
+                                                                        width:
+                                                                            26.88,
+                                                                        height:
+                                                                            26.87,
+                                                                        decoration: BoxDecoration(
+                                                                            color: ColorConstant
+                                                                                .primary_color,
+                                                                            shape: BoxShape
+                                                                                .circle),
+                                                                        child:
+                                                                            CustomImageView(
+                                                                          url: InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ?? false
+                                                                              ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
+                                                                              : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                                          height:
+                                                                              20,
+                                                                          radius:
+                                                                              BorderRadius.circular(20),
+                                                                          width:
+                                                                              20,
+                                                                          fit: BoxFit
+                                                                              .fill,
+                                                                        )),
                                                               ),
                                                             ],
                                                           ),
@@ -670,13 +674,12 @@ class _InviationClassState extends State<InviationClass> {
                                                                               BorderRadius.circular(20),
                                                                           width:
                                                                               20,
-                                                                          fit:
-                                                                              BoxFit.fill,
+                                                                          fit: BoxFit
+                                                                              .fill,
                                                                         )),
                                                                   ),
                                                                   Positioned(
-                                                                    left:
-                                                                        22.56,
+                                                                    left: 22.56,
                                                                     top: 0,
                                                                     child: Container(
                                                                         width: 26.88,
@@ -692,8 +695,8 @@ class _InviationClassState extends State<InviationClass> {
                                                                               BorderRadius.circular(20),
                                                                           width:
                                                                               20,
-                                                                          fit:
-                                                                              BoxFit.fill,
+                                                                          fit: BoxFit
+                                                                              .fill,
                                                                         )),
                                                                   ),
                                                                 ],
@@ -707,16 +710,12 @@ class _InviationClassState extends State<InviationClass> {
                                                                   3
                                                               ? Container(
                                                                   width: 99,
-                                                                  height:
-                                                                      27.88,
-                                                                  child:
-                                                                      Stack(
+                                                                  height: 27.88,
+                                                                  child: Stack(
                                                                     children: [
                                                                       Positioned(
-                                                                        left:
-                                                                            0,
-                                                                        top:
-                                                                            0,
+                                                                        left: 0,
+                                                                        top: 0,
                                                                         child: Container(
                                                                             width: 26.88,
                                                                             height: 26.87,
@@ -732,8 +731,7 @@ class _InviationClassState extends State<InviationClass> {
                                                                       Positioned(
                                                                         left:
                                                                             22.56,
-                                                                        top:
-                                                                            0,
+                                                                        top: 0,
                                                                         child: Container(
                                                                             width: 26.88,
                                                                             height: 26.87,
@@ -750,8 +748,7 @@ class _InviationClassState extends State<InviationClass> {
                                                                       Positioned(
                                                                         left:
                                                                             45.12,
-                                                                        top:
-                                                                            0,
+                                                                        top: 0,
                                                                         child: Container(
                                                                             width: 26.88,
                                                                             height: 26.87,
@@ -769,16 +766,12 @@ class _InviationClassState extends State<InviationClass> {
                                                                 )
                                                               : Container(
                                                                   width: 99,
-                                                                  height:
-                                                                      27.88,
-                                                                  child:
-                                                                      Stack(
+                                                                  height: 27.88,
+                                                                  child: Stack(
                                                                     children: [
                                                                       Positioned(
-                                                                        left:
-                                                                            0,
-                                                                        top:
-                                                                            0,
+                                                                        left: 0,
+                                                                        top: 0,
                                                                         child: Container(
                                                                             width: 26.88,
                                                                             height: 26.87,
@@ -794,8 +787,7 @@ class _InviationClassState extends State<InviationClass> {
                                                                       Positioned(
                                                                         left:
                                                                             22.56,
-                                                                        top:
-                                                                            0,
+                                                                        top: 0,
                                                                         child: Container(
                                                                             width: 26.88,
                                                                             height: 26.87,
@@ -811,8 +803,7 @@ class _InviationClassState extends State<InviationClass> {
                                                                       Positioned(
                                                                         left:
                                                                             45.12,
-                                                                        top:
-                                                                            0,
+                                                                        top: 0,
                                                                         child: Container(
                                                                             width: 26.88,
                                                                             height: 26.87,
@@ -828,8 +819,7 @@ class _InviationClassState extends State<InviationClass> {
                                                                       Positioned(
                                                                         left:
                                                                             78,
-                                                                        top:
-                                                                            7,
+                                                                        top: 7,
                                                                         child:
                                                                             SizedBox(
                                                                           width:
@@ -839,7 +829,8 @@ class _InviationClassState extends State<InviationClass> {
                                                                           child:
                                                                               Text(
                                                                             "+${(InvitationRoomData?.object?[index].roomMembers?.length ?? 0) - 3}",
-                                                                            style: TextStyle(
+                                                                            style:
+                                                                                TextStyle(
                                                                               color: Color(0xFF2A2A2A),
                                                                               fontSize: 14,
                                                                               fontFamily: 'Outfit',
@@ -874,8 +865,7 @@ class _InviationClassState extends State<InviationClass> {
                                                     .GetRoomInvitations(
                                                         false,
                                                         InvitationRoomData
-                                                                ?.object?[
-                                                                    index]
+                                                                ?.object?[index]
                                                                 .invitationLink
                                                                 .toString() ??
                                                             "",
@@ -889,8 +879,8 @@ class _InviationClassState extends State<InviationClass> {
                                                     color: Color(0XFF9B9B9B),
                                                     borderRadius:
                                                         BorderRadius.only(
-                                                            bottomLeft: Radius
-                                                                .circular(
+                                                            bottomLeft:
+                                                                Radius.circular(
                                                                     4))),
                                                 child: Center(
                                                   child: Text(
@@ -919,8 +909,7 @@ class _InviationClassState extends State<InviationClass> {
                                                     .GetRoomInvitations(
                                                         true,
                                                         InvitationRoomData
-                                                                ?.object?[
-                                                                    index]
+                                                                ?.object?[index]
                                                                 .invitationLink
                                                                 .toString() ??
                                                             "",

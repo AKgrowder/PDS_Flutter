@@ -18,9 +18,14 @@ class _FullStoryPageState extends State<FullStoryPage> {
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
-          image: DecorationImage(
+          image: widget.imageName.contains("car")?DecorationImage(
             image: AssetImage(
               "assets/images/expert4.png",
+            ),
+            fit: BoxFit.cover,
+          ):DecorationImage(
+            image: NetworkImage(
+              "${widget.imageName}",
             ),
             fit: BoxFit.cover,
           ),
