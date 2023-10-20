@@ -44,7 +44,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
   }
 
   @override
-  initState() {
+  void initState() {
     savedataFunction();
     print("PostUID-->${widget.PostUID}");
     BlocProvider.of<AddcommentCubit>(context)
