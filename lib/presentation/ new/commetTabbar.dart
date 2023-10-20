@@ -165,6 +165,7 @@ class _MyWidgetState extends State<MyWidget> {
           ),
           Expanded(
             child: ListView.builder(
+               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return Container(
                   margin: EdgeInsets.all(10),
