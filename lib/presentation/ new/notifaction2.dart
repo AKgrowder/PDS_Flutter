@@ -30,175 +30,117 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
       child: SafeArea(
         child: Scaffold(
           backgroundColor: Colors.white,
-          body: Stack(
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: _height / 1,
-                child: ListView.builder(
-                    primary: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: 5,
-                    shrinkWrap: true,
-                    itemBuilder: ((context, index) => index % 2 == 0
-                        ? Transform.translate(
-                            offset: Offset(index == 0 ? -300 : -350,
-                                index == 0 ? -90 : 150),
-                            child: Container(
-                              height: 240,
-                              width: 150,
-                              margin:
-                                  EdgeInsets.only(top: index == 0 ? 0 : 600),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  //  color: Colors.amber,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        // color: Colors.black,
-                                        color: Color(0xffFFE9E9),
-                                        blurRadius: 70,
-                                        spreadRadius: 150),
-                                  ]),
-                            ),
-                          )
-                        : Transform.translate(
-                            offset: Offset(index == 0 ? 50 : 290, 90),
-                            child: Container(
-                              height: 190,
-                              width: 150,
-                              margin: EdgeInsets.only(top: 400),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  // color: Colors.red,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        // color: Colors.red,
-                                        color: Color(0xffFFE9E9),
-                                        blurRadius: 70.0,
-                                        spreadRadius: 110),
-                                  ]),
-                            ),
-                          ))),
+              SizedBox(
+                height: 10,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 10,
+              Center(
+                child: Text(
+                  'Notifications',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 22,
+                    fontFamily: "outfit",
+                    fontWeight: FontWeight.w600,
                   ),
-                  Center(
-                    child: Text(
-                      'Notifications',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 22,
-                        fontFamily: "outfit",
-                        fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey)
+                ),
+                child: TabBar(
+                  onTap: (value) {},
+                  controller: _tabController,
+                  unselectedLabelStyle: TextStyle(
+                    color: Colors.black,
+                  ),
+                  unselectedLabelColor: Colors.black,
+                  indicator: BoxDecoration(
+                      // borderRadius: BorderRadius.circular(8.0),
+                      color: Color(0xFFED1C25)),
+                  tabs: [
+                    Container(
+                      width: 150,
+                      height: 50,
+                      // color: Color(0xFFED1C25),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Spacer(),
+                            Text(
+                              "All",
+                              textScaleFactor: 1.0,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: 'Outfit',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Spacer(),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                     decoration:
-                        BoxDecoration(border: Border.all(color: Colors.grey)),
-                    child: TabBar(
-                      onTap: (value) {},
-                      controller: _tabController,
-                      unselectedLabelStyle: TextStyle(
-                        color: Colors.black,
+                    Container(
+                      height: 50,
+                      // color: Color(0xFFED1C25),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Requests",
+                              textScaleFactor: 1.0,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: 'Outfit',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
-                      unselectedLabelColor: Colors.black,
-                      indicator: BoxDecoration(
-                          // borderRadius: BorderRadius.circular(8.0),
-                          color: Color(0xFFED1C25)),
-                      tabs: [
-                        Container(
-                          width: 150,
-                          height: 50,
-                          // color: Color(0xFFED1C25),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Spacer(),
-                                Text(
-                                  "All",
-                                  textScaleFactor: 1.0,
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontFamily: 'Outfit',
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Spacer(),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 50,
-                          // color: Color(0xFFED1C25),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Requests",
-                                  textScaleFactor: 1.0,
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontFamily: 'Outfit',
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 50,
-                          // color: Color(0xFFED1C25),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Invitations",
-                                  textScaleFactor: 1.0,
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontFamily: 'Outfit',
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
                     ),
-                  ),
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Container(
-                          // color: Colors.red,
-                          height: _height /0.900,
-                          child: TabBarView(children: [
-                            Center(child: Text('Tab 1 Content')),
-                            RequestOrderClass(),
-                            MultiBlocProvider(providers: [
-                              BlocProvider<InvitationCubit>(
-                                create: (context) => InvitationCubit(),
-                              ),
-                            ], child: InviationClass())
-                          ]),
+                    Container(
+                      height: 50,
+                      // color: Color(0xFFED1C25),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Invitations",
+                              textScaleFactor: 1.0,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: 'Outfit',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              ),
+              Expanded(
+                child: TabBarView(children: [
+                  Center(child: Text('Tab 1 Content')),
+                  RequestOrderClass(),
+                  MultiBlocProvider(providers: [
+                    BlocProvider<InvitationCubit>(
+                      create: (context) => InvitationCubit(),
+                    ),
+                  ], child: InviationClass())
+                ]),
               ),
             ],
           ),

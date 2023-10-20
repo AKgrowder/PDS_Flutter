@@ -1209,7 +1209,7 @@ class Repository {
     }
   }
 
-  GetAllStory( BuildContext context) async {
+  GetAllStory(BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
         "${Config.getAllStory}", context);
     var jsonString = json.decode(response.body);

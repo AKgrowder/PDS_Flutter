@@ -9,12 +9,10 @@ import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/Inbox_screen.dart';
 import 'package:pds/presentation/%20new/home_screen_new.dart';
 import 'package:pds/presentation/%20new/notifaction2.dart';
- import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
+import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'SearchBar_screen.dart';
-import 'new_notification_screen.dart';
 
 // import 'package:growder/presentation/Buy_Screen/Buy_screen.dart';
 // import 'package:growder/presentation/Profile_Screen/Profile_screen.dart';
