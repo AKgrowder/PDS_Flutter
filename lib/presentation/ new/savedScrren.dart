@@ -141,6 +141,7 @@ class BlogScreen extends StatelessWidget {
             child: Container(
               height: 130,
               decoration: BoxDecoration(
+                
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(color: Colors.grey, width: 0.5)),
               child: Padding(
