@@ -70,12 +70,12 @@ class StoryData {
 
   StoryData(
       {this.storyUid,
-        this.storyData,
-        this.userUid,
-        this.profilePic,
-        this.userName,
-        this.createdAt,
-        this.isLoggedIn});
+      this.storyData,
+      this.userUid,
+      this.profilePic,
+      this.userName,
+      this.createdAt,
+      this.isLoggedIn});
 
   StoryData.fromJson(Map<String, dynamic> json) {
     storyUid = json['storyUid'];

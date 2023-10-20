@@ -25,9 +25,4 @@ class AddPostImaegState extends CreateStoryState {
   AddPostImaegState(this.imageDataPost);
 }
 
-class GetAllStoryLoadedState extends CreateStoryState {
-  final GetAllStoryModel getAllStoryModel;
-  GetAllStoryLoadedState(this.getAllStoryModel);
-}
 
- 

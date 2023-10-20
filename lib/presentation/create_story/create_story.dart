@@ -24,7 +24,6 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
   double finalFileSize = 0;
   ImageDataPost? imageDataPost;
   CreateStoryModel? createForm;
-  String? URL;
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CreateStoryCubit, CreateStoryState>(
@@ -36,22 +35,10 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
-        if (state is CreateStoryLoadedState) {
-          createForm = state.createForm;
-          SnackBar snackBar = SnackBar(
-            content: Text(state.createForm.object ?? ''),
-            backgroundColor: ColorConstant.primary_color,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          print("${state.createForm.object}");
-          Navigator.pop(context, createForm);
-        }
+
         if (state is AddPostImaegState) {
           imageDataPost = state.imageDataPost;
-          URL = state.imageDataPost.object;
-          var params = {"storyData": URL};
-          BlocProvider.of<CreateStoryCubit>(context)
-              .CreateStoryAPI(params, context);
+          Navigator.pop(context, imageDataPost);
         }
       },
       builder: (context, state) {
