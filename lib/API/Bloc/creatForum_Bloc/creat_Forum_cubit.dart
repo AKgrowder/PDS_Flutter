@@ -56,4 +56,17 @@ class CreatFourmCubit extends Cubit<CreatFourmState> {
       emit(CreatFourmErrorState(createForm));
     }
   }
+
+    Future<void> IndustryTypeAPI(BuildContext context) async {
+    dynamic industryType;
+    try {
+      emit(CreatFourmLoadingState());
+      industryType = await Repository().IndustryType(context);
+      if (industryType.success == true) {
+        emit(IndustryTypeLoadedState(industryType));
+      }
+    } catch (e) {
+      emit(CreatFourmErrorState(industryType));
+    }
+  }
 }

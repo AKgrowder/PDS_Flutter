@@ -32,6 +32,12 @@ class Expertise {
   Expertise(this.uid, this.expertiseName);
 }
 
+class IndustryType {
+  final String industryTypeUid;
+  final String industryTypeName;
+  IndustryType(this.industryTypeUid, this.industryTypeName);
+}
+
 bool? SubmitOneTime = false;
 
 class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
@@ -44,6 +50,8 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   String? selctedIndex;
   List<Expertise> expertiseData = [];
   Expertise? selectedExpertise;
+  List<IndustryType> industryTypeData = [];
+  IndustryType? SelectIndustryType;
   // String selctedexpertiseData = "";
 
   @override
@@ -105,6 +113,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
     super.initState();
     getDocumentSize();
     BlocProvider.of<FetchExprtiseRoomCubit>(context).fetchExprties(context);
+    BlocProvider.of<FetchExprtiseRoomCubit>(context).IndustryTypeAPI(context);
     dopcument = 'Upload Image';
   }
 
@@ -183,6 +192,13 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
 
             // selectedExpertise =
             //     expertiseData.isNotEmpty ? expertiseData[0] : null;
+          }
+          if (state is IndustryTypeLoadedState) {
+            industryTypeData = state.industryTypeModel.object!
+                .map((industryType) => IndustryType(
+                    industryType.industryTypeUid ?? '',
+                    industryType.industryTypeName ?? ''))
+                .toList();
           }
 
           if (state is AddExportLoadedState) {
@@ -319,6 +335,53 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 return DropdownMenuItem<Expertise>(
                                   value: expertise,
                                   child: Text(expertise.expertiseName),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 18,
+                        ),
+                        child: Text(
+                          "Industry Type",
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontFamily: 'outfit',
+                            fontWeight: FontWeight.w500,
+                          ),
+                          // style: theme.textTheme.bodyLarge,
+                        ),
+                      ),
+                      Container(
+                        height: 50,
+                        width: _width,
+                        decoration: BoxDecoration(color: Color(0xffEFEFEF)),
+                        child: DropdownButtonHideUnderline(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 12),
+                            child: DropdownButton<IndustryType>(
+                              value: SelectIndustryType,
+                              hint: Text('Industry Type'),
+                              onChanged: (IndustryType? newValue) {
+                                // When the user selects an option from the dropdown.
+                                if (newValue != null) {
+                                  setState(() {
+                                    SelectIndustryType = newValue;
+                                    print(
+                                        "SelectIndustryType: ${newValue.industryTypeUid}");
+                                  });
+                                }
+                              },
+                              items: industryTypeData
+                                  .map<DropdownMenuItem<IndustryType>>(
+                                      (IndustryType industry) {
+                                return DropdownMenuItem<IndustryType>(
+                                  value: industry,
+                                  child: Text(industry.industryTypeName),
                                 );
                               }).toList(),
                             ),
@@ -778,13 +841,13 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             var params = {
                               "document":
                                   "${chooseDocument?.object.toString()}",
-                              "expertUId": [
-                                "${selectedExpertise?.uid.toString()}"
-                              ],
+                              "expertUId": ["${selectedExpertise?.uid}"],
                               "fees": feesController.text,
                               "jobProfile": jobprofileController.text,
                               "uid": userid.toString(),
                               "workingHours": time.toString(),
+                              "industryTypesUid":
+                                  "${SelectIndustryType?.industryTypeUid}"
                             };
                             print('working time-$time');
                             print('pwarems-$params');
