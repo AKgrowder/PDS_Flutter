@@ -3,11 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/auth/login_Block.dart';
 import 'package:pds/API/Bloc/auth/otp_block.dart';
 import 'package:pds/API/Bloc/auth/otp_state.dart';
+import 'package:pds/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/custom_bottom_bar/custom_bottom_bar.dart';
@@ -257,7 +259,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         /// ---------------------------------------------------------------------------
                   BlocProvider<GetGuestAllPostCubit>(
                     create: (context) => GetGuestAllPostCubit(),
-                  ),
+                  ),BlocProvider<CreatFourmCubit>(
+                    create: (context) => CreatFourmCubit(),
+                  ),BlocProvider<FetchExprtiseRoomCubit>(
+                          create: (context) => FetchExprtiseRoomCubit(),
+                        ),
                       ], child: NewBottomBar(buttomIndex: 0));
                     }));
                   }
