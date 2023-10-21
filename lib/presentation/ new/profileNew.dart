@@ -5,7 +5,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
-import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/%20new/commetTabbar.dart';
 import 'package:pds/presentation/%20new/editproilescreen.dart';
 import 'package:pds/presentation/%20new/savedScrren.dart';
@@ -19,6 +18,14 @@ class ProfileScreen extends StatefulWidget {
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class NotificationModel {
+  int id;
+  String title;
+  bool isSelected;
+
+  NotificationModel(this.id, this.title, {this.isSelected = false});
 }
 
 class _ProfileScreenState extends State<ProfileScreen>
@@ -46,6 +53,26 @@ class _ProfileScreenState extends State<ProfileScreen>
   TextEditingController FeesContrller = TextEditingController();
   TextEditingController uplopdfile = TextEditingController();
   TextEditingController CompanyName = TextEditingController();
+
+  var arrNotiyTypeList = [
+    NotificationModel(
+      1,
+      " ",
+      isSelected: true,
+    ),
+    NotificationModel(
+      2,
+      " ",
+    ),
+    NotificationModel(
+      3,
+      " ",
+    ),
+    NotificationModel(
+      4,
+      " ",
+    ),
+  ];
 
   @override
   void initState() {
@@ -352,152 +379,385 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ),
               ),
             ),
+            // SizedBox(
+            //   height: 50,
+            // child: TabBar(
+            //     indicatorColor: Colors.black,
+            //     unselectedLabelColor: Color(0xff444444),
+            //     labelColor: Color(0xff000000),
+            //     controller: _tabController,
+            //     tabs: List.generate(
+            //         tabData.length,
+            //         (index) => Tab(
+            //                 child: Text(
+            //               tabData[index].toString(),
+            //               style: TextStyle(
+            //                 fontWeight: FontWeight.bold,
+            //                 fontFamily: "outfit",
+            //                 fontSize: 14,
+            //               ),
+            //             )))),
+            // ),
             SizedBox(
-              height: 50,
-              child: TabBar(
-                  indicatorColor: Colors.black,
-                  unselectedLabelColor: Color(0xff444444),
-                  labelColor: Color(0xff000000),
-                  controller: _tabController,
-                  tabs: List.generate(
-                      tabData.length,
-                      (index) => Tab(
-                              child: Text(
-                            tabData[index].toString(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "outfit",
-                              fontSize: 14,
-                            ),
-                          )))),
+              height: 30,
             ),
-            Container(
-              height: _height * 2,
-              child: TabBarView(
-                controller: _tabController,
-                children: <Widget>[
-                  /// Content of Tab 1
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 16, right: 16, top: 14),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: GestureDetector(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Card(
-                            color: Colors.white,
-                            borderOnForeground: true,
-                            elevation: 10,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: ListTile(
-                              leading: Container(
-                                width: 35,
-                                height: 35,
-                                decoration: ShapeDecoration(
-                                  color: Color(0xFFED1C25),
-                                  shape: OvalBorder(),
+                        Container(
+                          height: 40,
+                          // color: arrNotiyTypeList[0].isSelected
+                          //     ? Color(0xFFED1C25)
+                          //     : Theme.of(context).brightness == Brightness.light
+                          //         ? Colors.white
+                          //         : Colors.black,
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    const Spacer(),
+                                    Text("Details",
+                                        textScaleFactor: 1.0,
+                                        style: TextStyle(
+                                            // color: arrNotiyTypeList[3].isSelected
+                                            //     ? Colors.white
+                                            //     : Colors.black,
+                                            fontSize: 18,
+                                            fontFamily: 'Outfit',
+                                            fontWeight: FontWeight.bold)),
+                                    Spacer(),
+                                  ],
                                 ),
-                              ),
-                              title: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                arrNotiyTypeList[0].isSelected
+                                    ? Divider(
+                                        endIndent: 20,
+                                        indent: 20,
+                                        color: Colors.black,
+                                      )
+                                    : SizedBox(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      setState(() {
+                        updateType();
+                        arrNotiyTypeList[0].isSelected = true;
+                        print("abcd");
+                      });
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 40,
+                          // color: arrNotiyTypeList[1].isSelected
+                          //     ? Color(0xFFED1C25)
+                          //     : Theme.of(context).brightness == Brightness.light
+                          //         ? Colors.white
+                          //         : Colors.black,
+                          child: Column(
+                            children: [
+                              Row(
                                 children: [
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  Text(
-                                    'About Me',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fringilla natoque id aenean.',
-                                  ),
-                                  SizedBox(
-                                    height: 12,
-                                  ),
+                                  const Spacer(),
+                                  Text("Post",
+                                      textScaleFactor: 1.0,
+                                      style: TextStyle(
+                                          // color: arrNotiyTypeList[3].isSelected
+                                          //     ? Colors.white
+                                          //     : Colors.black,
+                                          fontSize: 18,
+                                          fontFamily: 'Outfit',
+                                          fontWeight: FontWeight.bold)),
+                                  Spacer(),
                                 ],
                               ),
-                              trailing: Icon(
-                                Icons.edit,
-                                color: Colors.black,
-                              ),
-                            )),
-                        Card(
-                          color: Colors.white,
-                          borderOnForeground: true,
-                          elevation: 10,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+                              arrNotiyTypeList[1].isSelected
+                                  ? Divider(
+                                      endIndent: 30,
+                                      indent: 30,
+                                      color: Colors.black,
+                                    )
+                                  : SizedBox(),
+                            ],
                           ),
-                          /*  child: expertUser(_height, _width) */
-                          child: expertUser(_height, _width),
-                        ),
-                        Card(
-                          color: Colors.white,
-                          borderOnForeground: true,
-                          elevation: 10,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          /*  child: expertUser(_height, _width) */
-                          child: compnayUser(_height, _width),
                         )
                       ],
                     ),
+                    onTap: () {
+                      setState(() {
+                        updateType();
+                        arrNotiyTypeList[1].isSelected = true;
+                        print("abcd");
+                      });
+                    },
                   ),
+                ),
+                Container(
+                  height: 1,
+                  color: Colors.black12,
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    child: Column(
+                      children: [
+                        Container(
+                            height: 40,
+                            alignment: Alignment.center,
+                            // color: arrNotiyTypeList[2].isSelected
+                            //     ? Color(0xFFED1C25)
+                            //     : Theme.of(context).brightness == Brightness.light
+                            //         ? Colors.white
+                            //         : Colors.black,
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Spacer(),
+                                      Text("Comments",
+                                          textScaleFactor: 1.0,
+                                          style: TextStyle(
+                                              // color: arrNotiyTypeList[3].isSelected
+                                              //     ? Colors.white
+                                              //     : Colors.black,
+                                              fontSize: 18,
+                                              fontFamily: 'Outfit',
+                                              fontWeight: FontWeight.bold)),
+                                      Spacer(),
+                                    ],
+                                  ),
+                                  arrNotiyTypeList[2].isSelected
+                                      ? Divider(
+                                          endIndent: 5,
+                                          indent: 5,
+                                          color: Colors.black,
+                                        )
+                                      : SizedBox(),
+                                ],
+                              ),
+                            )),
+                      ],
+                    ),
+                    onTap: () {
+                      setState(() {
+                        updateType();
+                        arrNotiyTypeList[2].isSelected = true;
+                      });
+                      print("abcd");
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    child: Container(
+                        height: 40,
+                        alignment: Alignment.center,
+                        // color: arrNotiyTypeList[3].isSelected
+                        //     ? Color(0xFFED1C25)
+                        //     : Theme.of(context).brightness == Brightness.light
+                        //         ? Colors.white
+                        //         : Colors.black,
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  const Spacer(),
+                                  Text("Saved",
+                                      textScaleFactor: 1.0,
+                                      style: TextStyle(
+                                          // color: arrNotiyTypeList[3].isSelected
+                                          //     ? Colors.white
+                                          //     : Colors.black,
+                                          fontSize: 18,
+                                          fontFamily: 'Outfit',
+                                          fontWeight: FontWeight.bold)),
+                                  Spacer(),
+                                ],
+                              ),
+                              arrNotiyTypeList[3].isSelected
+                                  ? Divider(
+                                      endIndent: 25,
+                                      indent: 25,
+                                      color: Colors.black,
+                                    )
+                                  : SizedBox(),
+                            ],
+                          ),
+                        )),
+                    onTap: () {
+                      setState(() {
+                        updateType();
+                        arrNotiyTypeList[3].isSelected = true;
+                      });
+                      print("abcd");
+                    },
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              // color: Colors.red,
+              height: _height * 1.35,
+              // width: _width,
+              child: Column(
+                // controller: _tabController,
+                children: <Widget>[
+                  /// Content of Tab 1
+                  arrNotiyTypeList[0].isSelected
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                              left: 16, right: 16, top: 14),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Card(
+                                  color: Colors.white,
+                                  borderOnForeground: true,
+                                  elevation: 10,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: ListTile(
+                                    leading: Container(
+                                      width: 35,
+                                      height: 35,
+                                      decoration: ShapeDecoration(
+                                        color: Color(0xFFED1C25),
+                                        shape: OvalBorder(),
+                                      ),
+                                    ),
+                                    title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Text(
+                                          'About Me',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fringilla natoque id aenean.',
+                                        ),
+                                        SizedBox(
+                                          height: 12,
+                                        ),
+                                      ],
+                                    ),
+                                    trailing: Icon(
+                                      Icons.edit,
+                                      color: Colors.black,
+                                    ),
+                                  )),
+                              Card(
+                                color: Colors.white,
+                                borderOnForeground: true,
+                                elevation: 10,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                /*  child: expertUser(_height, _width) */
+                                child: expertUser(_height, _width),
+                              ),
+                              Card(
+                                color: Colors.white,
+                                borderOnForeground: true,
+                                elevation: 10,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                /*  child: expertUser(_height, _width) */
+                                child: compnayUser(_height, _width),
+                              )
+                            ],
+                          ),
+                        )
+                      : SizedBox(),
 
                   /// Content of Tab 2
                   // PostTabbarView(image: image),
 
-                  Padding(
-                    padding: EdgeInsets.only(left: 16, right: 16, top: 14),
-                    child: GridView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      padding: EdgeInsets.zero,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, // Number of columns
-                        mainAxisSpacing: 0.0, // Vertical spacing between items
-                        crossAxisSpacing:
-                            20, // Horizontal spacing between items
-                      ),
-                      itemCount: image.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: 10, top: 10),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12.0),
-                            child: Container(
-                              margin: EdgeInsets.all(0.0),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                      20)), // Remove margin
-                              child: Image.asset(
-                                image[index],
-                                fit: BoxFit.cover,
+                  arrNotiyTypeList[1].isSelected
+                      ? Container(
+                          height: _height / 1.5,
+                          child: Padding(
+                            padding:
+                                EdgeInsets.only(left: 16, right: 16, top: 14),
+                            child: GridView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.zero,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2, // Number of columns
+                                mainAxisSpacing:
+                                    0.0, // Vertical spacing between items
+                                crossAxisSpacing:
+                                    20, // Horizontal spacing between items
                               ),
+                              itemCount: image.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: EdgeInsets.only(bottom: 10, top: 10),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    child: Container(
+                                      margin: EdgeInsets.all(0.0),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                              20)), // Remove margin
+                                      child: Image.asset(
+                                        image[index],
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ) /*  GridItem(imagePath: image[index]) */,
+                                );
+                              },
                             ),
-                          ) /*  GridItem(imagePath: image[index]) */,
-                        );
-                      },
-                    ),
-                  ),
+                          ),
+                        )
+                      : SizedBox(),
 
                   /// Content of Tab 3
-                  MyWidget(
-                      selctedValue: selctedValue,
-                      selctedValue1: selctedValue1,
-                      selctedValue2: selctedValue2),
+                  arrNotiyTypeList[2].isSelected
+                      ? Container(
+                        height: _height,
+                        child: MyWidget(
+                            selctedValue: selctedValue,
+                            selctedValue1: selctedValue1,
+                            selctedValue2: selctedValue2),
+                      )
+                      : SizedBox(),
 
                   /// Content of Tab 4
                   if ("soicalScreens" != 'soicalScreen')
-                    ListSaveScreen(tabs: SaveList, value2: 1, image: image)
+                    arrNotiyTypeList[3].isSelected
+                        ? Container(height: _height,
+                          child: ListSaveScreen(
+                              tabs: SaveList, value2: 1, image: image),
+                        )
+                        : SizedBox(),
                 ],
               ),
             ),
@@ -1367,5 +1627,11 @@ class _ProfileScreenState extends State<ProfileScreen>
     }
 
     return STR;
+  }
+
+  updateType() {
+    arrNotiyTypeList.forEach((element) {
+      element.isSelected = false;
+    });
   }
 }
