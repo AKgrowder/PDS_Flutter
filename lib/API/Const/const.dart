@@ -62,11 +62,13 @@ class Config {
   static const String like_post = "user/api/like_post";
   static const String save_post = "user/api/save_post";
   static const String follow_user = "user/api/follow_user";
- static const String postLike = "Post unliked successfully";
+  static const String postLike = "Post unliked successfully";
   static const String GetPostAllLike = "user/api/get_all_likes";
   static const String Addcomments = "guest/api/get_comments_on_post";
-   static const String CreateStory = "user/api/create_story";
-static const String getcomments = "user/api/add_comment";
-static const String NewfetchUserProfile = "user/api/fetchUserProfile";
-static const String getAllStory = "user/api/get_all_story";
+  //  static const String CreateStory = "user/api/create_story";
+  static const String getcomments = "user/api/add_comment";
+  static const String NewfetchUserProfile = "user/api/fetchUserProfile";
+  static const String getAllStory = "user/api/get_all_story";
+  static const String crateStroyCheck = "user/api/create_story";
+  static const String industryType = "user/api/get_all_industry_types";
 }
