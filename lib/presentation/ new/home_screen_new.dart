@@ -12,6 +12,7 @@ import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
 import 'package:pds/API/Bloc/postData_Bloc/postData_Bloc.dart';
+import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
 import 'package:pds/API/Model/CreateStory_Model/CreateStory_model.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
@@ -59,11 +60,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   bool showDraggableSheet = false;
   bool storyAdded = false;
   BuildContext? storycontext;
+  List<Widget> storyPagedata = [];
 
   @override
   void initState() {
     Get_UserToken();
-    BlocProvider.of<CreateStoryCubit>(context).GetAllStoryAPI(context);
+
     for (int i = 0; i < 10; i++) {
       buttonDatas.add(StoryButtonData(
         timelineBackgroundColor: Colors.grey,
@@ -135,6 +137,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           storyListViewController: ScrollController()));
     }
     storycontext = context;
+
     super.initState();
   }
 
@@ -166,6 +169,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     // /user/api/get_all_post
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .GetUserAllPostAPI(context, '1', showAlert: true);
+    await BlocProvider.of<GetGuestAllPostCubit>(context).get_all_story(
+      context,
+    );
   }
 
   loginFunction({String? apiName, int? index}) async {
@@ -263,6 +269,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
+          if (state is GetAllStoryLoadedState) {
+                   
+            SnackBar snackBar = SnackBar(
+              content: Text(state.getAllStoryModel.message.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
 
           if (state is GetGuestAllPostLoadingState) {
             Center(
@@ -348,251 +362,313 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                           ],
                         ),
                       ),
-                      // SizedBox(
-                      //   height: 20,
-                      // ),
                       SizedBox(
                         height: 30,
                       ),
-                      BlocConsumer<CreateStoryCubit, CreateStoryState>(
-                          builder: (context, state) {
-                            return Container(
-                              height: 90,
-                              margin: EdgeInsets.symmetric(horizontal: 16),
-                              child: ListView.separated(
-                                itemBuilder: (context, index) {
-                                  if (index == 0) {
-                                    if (!storyAdded)
-                                      return GestureDetector(
-                                        onTap: () async {
-                                          if (Platform.isAndroid) {
-                                            final info =
-                                                await DeviceInfoPlugin()
-                                                    .androidInfo;
-                                            if (num.parse(await info
-                                                        .version.release)
-                                                    .toInt() >=
-                                                13) {
-                                              if (await permissionHandler(
-                                                      context,
-                                                      Permission.photos) ??
-                                                  false) {
-                                                CreateStoryModel
-                                                    crateStoryModel =
-                                                    await Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (_) => BlocProvider<
-                                                                    CreateStoryCubit>(
-                                                                create: (context) =>
-                                                                    CreateStoryCubit(),
-                                                                child:
-                                                                    CreateStoryPage())));
-                                                if (crateStoryModel != null) {
-                                                  StoryButtonData buttonData =
-                                                      StoryButtonData(
-                                                    timelineBackgroundColor:
-                                                        Colors.grey,
-                                                    buttonDecoration:
-                                                        BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      image: DecorationImage(
-                                                        image: AssetImage(
-                                                          'assets/images/expert3.png',
-                                                        ),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              5.0),
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .end,
-                                                        children: [
-                                                          Text(
-                                                            '',
-                                                            style:
-                                                                const TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    borderDecoration:
-                                                        BoxDecoration(
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                              .all(
-                                                        Radius.circular(60.0),
-                                                      ),
-                                                      border:
-                                                          Border.fromBorderSide(
-                                                        BorderSide(
-                                                          color: Colors.red,
-                                                          width: 1.5,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    storyPages: [
-                                                      FullStoryPage(
-                                                        text:
-                                                            '${crateStoryModel.message!}',
-                                                        imageName:
-                                                            crateStoryModel
-                                                                .object!,
-                                                      )
-                                                    ],
-                                                    segmentDuration:
-                                                        const Duration(
-                                                            seconds: 3),
-                                                  );
-                                                  buttonDatas.insert(
-                                                      0, buttonData);
-                                                  storyButtons[0] = StoryButton(
-                                                      onPressed: (data) {
-                                                        Navigator.of(
-                                                                storycontext!)
-                                                            .push(
-                                                          StoryRoute(
-                                                            storyContainerSettings:
-                                                                StoryContainerSettings(
-                                                              buttonData:
-                                                                  buttonData,
-                                                              tapPosition:
-                                                                  buttonData
-                                                                      .buttonCenterPosition!,
-                                                              curve: buttonData
-                                                                  .pageAnimationCurve,
-                                                              allButtonDatas:
-                                                                  buttonDatas,
-                                                              pageTransform:
-                                                                  StoryPage3DTransform(),
-                                                              storyListScrollController:
-                                                                  ScrollController(),
-                                                            ),
-                                                            duration: buttonData
-                                                                .pageAnimationDuration,
-                                                          ),
-                                                        );
-                                                      },
-                                                      buttonData: buttonData,
-                                                      allButtonDatas:
-                                                          buttonDatas,
-                                                      storyListViewController:
-                                                          ScrollController());
-                                                  if (mounted)
-                                                    setState(() {
-                                                      storyAdded = true;
-                                                    });
-                                                }
-                                              }
-                                            } else if (await permissionHandler(
-                                                    context,
-                                                    Permission.storage) ??
-                                                false) {
-                                              var crateStoryModel = await Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (_) => BlocProvider<
-                                                              CreateStoryCubit>(
-                                                          create: (context) =>
-                                                              CreateStoryCubit(),
-                                                          child:
-                                                              CreateStoryPage())));
-                                            }
-                                          }
-                                        },
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            DottedBorder(
-                                              borderType: BorderType.Circle,
-                                              dashPattern: [5, 5, 5, 5],
-                                              color:
-                                                  ColorConstant.primary_color,
-                                              child: Container(
-                                                height: 67,
-                                                width: 67,
-                                                decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: Color(0x4CED1C25)),
-                                                child: Icon(
-                                                  Icons
-                                                      .add_circle_outline_rounded,
-                                                  color: ColorConstant
-                                                      .primary_color,
+                      Container(
+                        height: 90,
+                        margin: EdgeInsets.symmetric(horizontal: 16),
+                        child: ListView.separated(
+                          itemBuilder: (context, index) {
+                            if (index == 0) {
+                              if (!storyAdded)
+                                return GestureDetector(
+                                  onTap: () async {
+                                    ImageDataPost? imageDataPost;
+                                    if (Platform.isAndroid) {
+                                      final info =
+                                          await DeviceInfoPlugin().androidInfo;
+                                      if (num.parse(await info.version.release)
+                                              .toInt() >=
+                                          13) {
+                                        if (await permissionHandler(
+                                                context, Permission.photos) ??
+                                            false) {
+                                          imageDataPost = await Navigator.push(
+                                              context, MaterialPageRoute(
+                                                  builder: (context) {
+                                            return MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider<CreateStoryCubit>(
+                                                  create: (context) =>
+                                                      CreateStoryCubit(),
+                                                )
+                                              ],
+                                              child: CreateStoryPage(),
+                                            );
+                                          }));
+                                        }
+                                      } else if (await permissionHandler(
+                                              context, Permission.storage) ??
+                                          false) {
+                                        imageDataPost = await Navigator.push(
+                                            context, MaterialPageRoute(
+                                                builder: (context) {
+                                          return MultiBlocProvider(
+                                            providers: [
+                                              BlocProvider<CreateStoryCubit>(
+                                                create: (context) =>
+                                                    CreateStoryCubit(),
+                                              )
+                                            ],
+                                            child: CreateStoryPage(),
+                                          );
+                                        }));
+                                      }
+                                    }
+                                    print(
+                                        "imageDataPost?.object-->${imageDataPost?.object}");
+                                    if (imageDataPost?.object != null) {
+                                      print("else condison working");
+                                      StoryButtonData buttonData =
+                                          StoryButtonData(
+                                        timelineBackgroundColor: Colors.grey,
+                                        buttonDecoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                            image: AssetImage(
+                                              'assets/images/expert3.png',
+                                            ),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                '',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
                                                 ),
                                               ),
-                                            ),
-                                            Text(
-                                              'Share Story',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 16),
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    else
-                                      return SizedBox(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Expanded(
-                                              child: storyButtons[index]!,
-                                              flex: 1,
-                                            ),
-                                            Text(
-                                              'Jones $index',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 16),
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                  } else {
-                                    return SizedBox(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Expanded(
-                                            child: storyButtons[index]!,
-                                            flex: 1,
+                                            ],
                                           ),
-                                          Text(
-                                            'Jones $index',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16),
+                                        ),
+                                        borderDecoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.circular(60.0),
+                                          ),
+                                          border: Border.fromBorderSide(
+                                            BorderSide(
+                                              color: Colors.red,
+                                              width: 1.5,
+                                            ),
+                                          ),
+                                        ),
+                                        storyPages: [
+                                          FullStoryPage(
+                                            imageName:
+                                                '${imageDataPost?.object.toString()}',
                                           )
                                         ],
+                                        segmentDuration:
+                                            const Duration(seconds: 3),
+                                      );
+                                      buttonDatas.insert(0, buttonData);
+                                      storyButtons[0] = StoryButton(
+                                          onPressed: (data) {
+                                            Navigator.of(storycontext!).push(
+                                              StoryRoute(
+                                                storyContainerSettings:
+                                                    StoryContainerSettings(
+                                                  buttonData: buttonData,
+                                                  tapPosition: buttonData
+                                                      .buttonCenterPosition!,
+                                                  curve: buttonData
+                                                      .pageAnimationCurve,
+                                                  allButtonDatas: buttonDatas,
+                                                  pageTransform:
+                                                      StoryPage3DTransform(),
+                                                  storyListScrollController:
+                                                      ScrollController(),
+                                                ),
+                                                duration: buttonData
+                                                    .pageAnimationDuration,
+                                              ),
+                                            );
+                                          },
+                                          buttonData: buttonData,
+                                          allButtonDatas: buttonDatas,
+                                          storyListViewController:
+                                              ScrollController());
+                                      if (mounted)
+                                        setState(() {
+                                          storyAdded = true;
+                                        });
+                                    }
+                                  },
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      DottedBorder(
+                                        borderType: BorderType.Circle,
+                                        dashPattern: [5, 5, 5, 5],
+                                        color: ColorConstant.primary_color,
+                                        child: Container(
+                                          height: 67,
+                                          width: 67,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Color(0x4CED1C25)),
+                                          child: Icon(
+                                            Icons.add_circle_outline_rounded,
+                                            color: ColorConstant.primary_color,
+                                          ),
+                                        ),
                                       ),
-                                    );
-                                  }
-                                },
-                                separatorBuilder: (context, index) {
-                                  return SizedBox(
-                                    width: 8,
-                                  );
-                                },
-                                itemCount: storyButtons.length,
-                                scrollDirection: Axis.horizontal,
-                              ),
+                                      Text(
+                                        'Share Story',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 16),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              else
+                                return SizedBox(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Expanded(
+                                        child: Stack(
+                                          children: [
+                                            storyButtons[index]!,
+                                            Positioned(
+                                              bottom: 0,
+                                              right: 0,
+                                              child: GestureDetector(
+                                                onTap: () async {
+                                                  ImageDataPost? imageDataPost;
+                                                  if (Platform.isAndroid) {
+                                                    final info =
+                                                        await DeviceInfoPlugin()
+                                                            .androidInfo;
+                                                    if (num.parse(await info
+                                                                .version
+                                                                .release)
+                                                            .toInt() >=
+                                                        13) {
+                                                      if (await permissionHandler(
+                                                              context,
+                                                              Permission
+                                                                  .photos) ??
+                                                          false) {
+                                                        imageDataPost =
+                                                            await Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) {
+                                                          return MultiBlocProvider(
+                                                            providers: [
+                                                              BlocProvider<
+                                                                  CreateStoryCubit>(
+                                                                create: (context) =>
+                                                                    CreateStoryCubit(),
+                                                              )
+                                                            ],
+                                                            child:
+                                                                CreateStoryPage(),
+                                                          );
+                                                        }));
+                                                      }
+                                                    } else if (await permissionHandler(
+                                                            context,
+                                                            Permission
+                                                                .storage) ??
+                                                        false) {
+                                                      imageDataPost =
+                                                          await Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) {
+                                                        return MultiBlocProvider(
+                                                          providers: [
+                                                            BlocProvider<
+                                                                CreateStoryCubit>(
+                                                              create: (context) =>
+                                                                  CreateStoryCubit(),
+                                                            )
+                                                          ],
+                                                          child:
+                                                              CreateStoryPage(),
+                                                        );
+                                                      }));
+                                                    }
+                                                  }
+
+                                                  if (imageDataPost?.object !=
+                                                      null) {
+                                                    buttonDatas[0]
+                                                        .storyPages
+                                                        .add(FullStoryPage(
+                                                          imageName:
+                                                              '${imageDataPost?.object}',
+                                                        ));
+                                                    if (mounted)
+                                                      setState(() {
+                                                        storyAdded = true;
+                                                      });
+                                                  }
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      shape: BoxShape.circle),
+                                                  child: Icon(
+                                                    Icons.add_circle_rounded,
+                                                    color: ColorConstant
+                                                        .primary_color,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        flex: 1,
+                                      ),
+                                      Text(
+                                        'Jones $index',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                            } else {
+                              return SizedBox(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Expanded(
+                                      child: storyButtons[index]!,
+                                      flex: 1,
+                                    ),
+                                    Text(
+                                      'Jones $index',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16),
+                                    )
+                                  ],
+                                ),
+                              );
+                            }
+                          },
+                          separatorBuilder: (context, index) {
+                            return SizedBox(
+                              width: 8,
                             );
                           },
-                          listener: (context, state) {}),
-
+                          itemCount: storyButtons.length,
+                          scrollDirection: Axis.horizontal,
+                        ),
+                      ),
                       SizedBox(
                         height: 30,
                       ),
@@ -1300,7 +1376,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                  .only(
+                                                                      .only(
                                                                   left: 10,
                                                                   top: 3),
                                                           child: Text(
@@ -1332,7 +1408,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                  .only(
+                                                                      .only(
                                                                   top: 4,
                                                                   left: 1),
                                                           child: Text(
@@ -1350,7 +1426,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                  .only(
+                                                                      .only(
                                                                   left: 7,
                                                                   top: 4),
                                                           child: index != 0
@@ -1371,7 +1447,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           child: Padding(
                                                             padding:
                                                                 const EdgeInsets
-                                                                    .only(
+                                                                        .only(
                                                                     top: 2),
                                                             child: Image.asset(
                                                                 ImageConstant
@@ -1384,7 +1460,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           child: Padding(
                                                             padding:
                                                                 const EdgeInsets
-                                                                    .only(
+                                                                        .only(
                                                                     top: 6),
                                                             child: Image.asset(
                                                                 ImageConstant

@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
 import 'package:pds/API/Repo/repository.dart';
 
-import '../../Model/coment/coment_model.dart';
-
 class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
   dynamic gestUserData;
   GetGuestAllPostCubit() : super(GetGuestAllPostInitialState()) {}
@@ -49,7 +47,7 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       if (gestUserDatasetUp.success == true) {
         if (gestUserDatasetUp.object != null) {
           gestUserData.object.content.addAll(gestUserDatasetUp.object.content);
-           gestUserData.object.pageable.pageNumber =
+          gestUserData.object.pageable.pageNumber =
               gestUserDatasetUp.object.pageable.pageNumber;
           gestUserData.object.totalElements =
               gestUserDatasetUp.object.totalElements;
@@ -104,6 +102,21 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     } catch (e) {
       // print('errorstate-$e');
       emit(GetGuestAllPostErrorState(likepost));
+    }
+  }
+
+  Future<void> get_all_story(BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic getAllStory;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      getAllStory = await Repository().GetAllStory(context);
+      if (getAllStory.success == true) {
+        emit(GetAllStoryLoadedState(getAllStory));
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(GetGuestAllPostErrorState(getAllStory));
     }
   }
 }

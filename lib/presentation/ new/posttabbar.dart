@@ -7,8 +7,9 @@ class PostTabbarView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10),
+      padding: EdgeInsets.only(left: 10, right: 10),
       child: GridView.builder(
+        physics: NeverScrollableScrollPhysics(),
         padding: EdgeInsets.zero,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, // Number of columns
@@ -18,7 +19,7 @@ class PostTabbarView extends StatelessWidget {
         itemCount: image.length,
         itemBuilder: (context, index) {
           return Padding(
-            padding: const EdgeInsets.only(bottom: 10, top: 10),
+            padding: EdgeInsets.only(bottom: 10, top: 10),
             child: GridItem(imagePath: image[index]),
           );
         },
