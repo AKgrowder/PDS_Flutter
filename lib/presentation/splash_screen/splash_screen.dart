@@ -9,6 +9,7 @@ import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_state.dart';
 import 'package:pds/API/Bloc/auth/register_Block.dart';
+import 'package:pds/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
 import 'package:pds/core/utils/color_constant.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../../core/utils/image_constant.dart';
 
@@ -135,7 +137,11 @@ class _SplashScreenState extends State<SplashScreen> {
                   /// ---------------------------------------------------------------------------
                   BlocProvider<GetGuestAllPostCubit>(
                     create: (context) => GetGuestAllPostCubit(),
-                  ),
+                  ),BlocProvider<CreatFourmCubit>(
+                    create: (context) => CreatFourmCubit(),
+                  ),BlocProvider<FetchExprtiseRoomCubit>(
+                          create: (context) => FetchExprtiseRoomCubit(),
+                        ),
                 ],
                 child: NewBottomBar(buttomIndex: 0),
               );

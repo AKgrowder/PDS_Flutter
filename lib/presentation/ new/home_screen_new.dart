@@ -1,21 +1,22 @@
 import 'dart:io';
 import 'package:pds/API/Bloc/CreateStory_Bloc/CreateStory_Cubit.dart';
-
+import 'package:pds/API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
+import 'package:pds/widgets/commentPdf.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_instagram_storyboard/flutter_instagram_storyboard.dart';
 import 'package:intl/intl.dart';
-import 'package:pds/API/Bloc/CreateStory_Bloc/CreateStory_state.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
 import 'package:pds/API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
-import 'package:pds/API/Model/CreateStory_Model/CreateStory_model.dart';
+import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
+import 'package:pds/API/Repo/repository.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_utils.dart';
@@ -31,6 +32,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GetPostAllLike_Bloc/GetPostAllLike_cubit.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comments_screen.dart';
+import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
+import 'package:pds/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
+import 'package:pds/presentation/create_foram/create_foram_screen.dart';
+import '../become_an_expert_screen/become_an_expert_screen.dart';
+
+
+
 
 class HomeScreenNew extends StatefulWidget {
   const HomeScreenNew({Key? key}) : super(key: key);
@@ -61,6 +69,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   bool storyAdded = false;
   BuildContext? storycontext;
   List<Widget> storyPagedata = [];
+  GetAllStoryModel? getAllStoryModel;
+    FetchAllExpertsModel? AllExperData;
 
   @override
   void initState() {
@@ -172,6 +182,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     await BlocProvider.of<GetGuestAllPostCubit>(context).get_all_story(
       context,
     );
+     await BlocProvider.of<GetGuestAllPostCubit>(context)
+        .FetchAllExpertsAPI(context);
   }
 
   loginFunction({String? apiName, int? index}) async {
@@ -269,15 +281,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
-          if (state is GetAllStoryLoadedState) {
-                   
-            SnackBar snackBar = SnackBar(
-              content: Text(state.getAllStoryModel.message.toString()),
-              backgroundColor: ColorConstant.primary_color,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          if (state is FetchAllExpertsLoadedState) {
+            AllExperData = state.AllExperData;
           }
-
           if (state is GetGuestAllPostLoadingState) {
             Center(
               child: Container(
@@ -290,13 +296,96 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               ),
             );
           }
+
+          if (state is GetAllStoryLoadedState) {
+            print(
+                "state GetAllStoryLoadedState--${state.getAllStoryModel.object?.length}");
+            if (state.getAllStoryModel.object != null ||
+                (state.getAllStoryModel.object?.isNotEmpty ?? false)) {
+              print("User_id check---$User_ID");
+              state.getAllStoryModel.object?.forEach((element) {
+                print("User_id check1---${element.userUid}");
+
+                if (element.userUid == User_ID) {
+                  print("this condison working");
+                  buttonDatas.insert(
+                      0,
+                      StoryButtonData(
+                        timelineBackgroundColor: Colors.grey,
+                        buttonDecoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: AssetImage(
+                              'assets/images/expert3.png',
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                '',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        borderDecoration: BoxDecoration(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(60.0),
+                          ),
+                          border: Border.fromBorderSide(
+                            BorderSide(
+                              color: Colors.red,
+                              width: 1.5,
+                            ),
+                          ),
+                        ),
+                        storyPages: List.generate(
+                            element.storyData?.length ?? 0, (index) {
+                          return FullStoryPage(
+                            imageName: '${element.storyData?[index].storyData}',
+                          );
+                        }),
+                        segmentDuration: const Duration(seconds: 3),
+                      ));
+                  print("buttondatatadddchecl--${buttonDatas.length}");
+
+                  storyButtons[0] = (StoryButton(
+                      onPressed: (data) {
+                        Navigator.of(storycontext!).push(
+                          StoryRoute(
+                            storyContainerSettings: StoryContainerSettings(
+                              buttonData: buttonDatas[0],
+                              tapPosition: buttonDatas[0].buttonCenterPosition!,
+                              curve: buttonDatas[0].pageAnimationCurve,
+                              allButtonDatas: buttonDatas,
+                              pageTransform: StoryPage3DTransform(),
+                              storyListScrollController: ScrollController(),
+                            ),
+                            duration: buttonDatas[0].pageAnimationDuration,
+                          ),
+                        );
+                      },
+                      buttonData: buttonDatas[0],
+                      allButtonDatas: buttonDatas,
+                      storyListViewController: ScrollController()));
+                  print("stroybuttondata chek --${storyButtons.length}");
+                  storyAdded = true;
+                } else {}
+              });
+            }
+          }
           if (state is GetGuestAllPostLoadedState) {
             AllGuestPostRoomData = state.GetGuestAllPostRoomData;
-            TotleDataCount =
-                state.GetGuestAllPostRoomData.object?.content?.length ?? 0;
-            print(
-                "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-            print(TotleDataCount);
+
             print(AllGuestPostRoomData?.object?.content?[0].description);
             apiCalingdone = true;
           }
@@ -304,7 +393,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             likePost = state.likePost;
           }
         }, builder: (context, state) {
-          print("TotleDataCount-->$TotleDataCount");
           return apiCalingdone == true
               ? SingleChildScrollView(
                   controller: scrollController,
@@ -397,6 +485,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                               child: CreateStoryPage(),
                                             );
                                           }));
+                                          print(
+                                              "dfhsdfhsdfsdhf--${imageDataPost?.object}");
+                                          var parmes = {
+                                            "storyData":
+                                                imageDataPost?.object.toString()
+                                          };
+                                          await Repository()
+                                              .cretateStoryApi(context, parmes);
                                         }
                                       } else if (await permissionHandler(
                                               context, Permission.storage) ??
@@ -414,12 +510,17 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                             child: CreateStoryPage(),
                                           );
                                         }));
+                                        var parmes = {
+                                          "storyData":
+                                              imageDataPost?.object.toString()
+                                        };
+                                        await Repository()
+                                            .cretateStoryApi(context, parmes);
                                       }
                                     }
-                                    print(
-                                        "imageDataPost?.object-->${imageDataPost?.object}");
+
                                     if (imageDataPost?.object != null) {
-                                      print("else condison working");
+                                      List<StoryButtonData> sunButtonData = [];
                                       StoryButtonData buttonData =
                                           StoryButtonData(
                                         timelineBackgroundColor: Colors.grey,
@@ -469,6 +570,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                         segmentDuration:
                                             const Duration(seconds: 3),
                                       );
+                                      /*   if(buttonDatas.){
+
+                                      } */
                                       buttonDatas.insert(0, buttonData);
                                       storyButtons[0] = StoryButton(
                                           onPressed: (data) {
@@ -576,6 +680,19 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 CreateStoryPage(),
                                                           );
                                                         }));
+                                                        print(
+                                                            "imageData--${imageDataPost?.object.toString()}");
+                                                        var parmes = {
+                                                          "storyData":
+                                                              imageDataPost
+                                                                  ?.object
+                                                                  .toString()
+                                                        };
+
+                                                        Repository()
+                                                            .cretateStoryApi(
+                                                                context,
+                                                                parmes);
                                                       }
                                                     } else if (await permissionHandler(
                                                             context,
@@ -600,6 +717,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               CreateStoryPage(),
                                                         );
                                                       }));
+                                                      var parmes = {
+                                                        "storyData":
+                                                            imageDataPost
+                                                                ?.object
+                                                                .toString()
+                                                      };
+                                                      Repository()
+                                                          .cretateStoryApi(
+                                                              context, parmes);
                                                     }
                                                   }
 
@@ -871,17 +997,24 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 .placeholder), */
                                                           ),
                                                     )
-                                                  : Container(
-                                                      margin: EdgeInsets.only(
-                                                          left: 16,
-                                                          top: 15,
-                                                          right: 16),
-                                                      child: Center(
-                                                        child: Image.asset(
-                                                            ImageConstant
-                                                                .placeholder),
-                                                      ),
-                                                    ),
+                                                   : AllGuestPostRoomData
+                                                              ?.object
+                                                              ?.content?[index]
+                                                              .postDataType ==
+                                                          "ATTACHMENT"
+                                                      ? Container(
+                                                          height: 400,
+                                                          width: _width,
+                                                          child:
+                                                              DocumentViewScreen1(
+                                                            path:
+                                                                AllGuestPostRoomData
+                                                                    ?.object
+                                                                    ?.content?[
+                                                                        index]
+                                                                    .postData,
+                                                          ))
+                                                      : SizedBox(),
                                           Padding(
                                             padding:
                                                 const EdgeInsets.only(left: 13),
@@ -1096,193 +1229,224 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                           ],
                                         ),
                                         Container(
+                                          // color: Colors.green,
                                           height: 230,
                                           width: _width,
                                           child: ListView.builder(
-                                            itemCount: image.length,
+                                            itemCount:
+                                                AllExperData?.object?.length,
                                             scrollDirection: Axis.horizontal,
                                             itemBuilder: (context, index) {
-                                              return Stack(
-                                                children: [
-                                                  Column(
-                                                    children: [
-                                                      Container(
-                                                        height: 170,
-                                                        margin:
-                                                            EdgeInsets.all(10),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                border:
-                                                                    Border.all(
-                                                                  width: 3,
-                                                                  color: Color(
-                                                                      0xffED1C25),
-                                                                ),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            14)),
-                                                        child: Image.asset(
-                                                          image[index],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Positioned(
-                                                    top: 15,
-                                                    left: 30,
-                                                    child: Container(
-                                                      height: 24,
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: 80,
-                                                      decoration: BoxDecoration(
+                                              return Center(
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: index == 0 ? 16 : 4,
+                                                      right: 4),
+                                                  child: Container(
+                                                    height: 190,
+                                                    width: 130,
+                                                    decoration: BoxDecoration(
+                                                        // color: Colors.red,
+                                                        border: Border.all(
+                                                            color: Colors.red,
+                                                            width: 3),
                                                         borderRadius:
-                                                            BorderRadius.only(
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  8),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  8),
+                                                            BorderRadius
+                                                                .circular(14)),
+                                                    child: Stack(
+                                                      children: [
+                                                        CustomImageView(
+                                                          height: 180,
+                                                          width: 128,
+                                                          radius:
+                                                              BorderRadius.only(
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          10),
+                                                                  topRight: Radius
+                                                                      .circular(
+                                                                          10)),
+                                                          url:
+                                                              "${AllExperData?.object?[index].profilePic}",
+                                                          fit: BoxFit.cover,
                                                         ),
-                                                        color: Color.fromRGBO(
-                                                            237, 28, 37, 0.5),
-                                                      ),
-                                                      child: Row(
-                                                        children: [
-                                                          SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Icon(
-                                                            Icons
-                                                                .person_add_alt,
-                                                            size: 16,
-                                                            color: Colors.white,
-                                                          ),
-                                                          SizedBox(
-                                                            width: 4,
-                                                          ),
-                                                          Text(
-                                                            'Follow',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    "outfit",
-                                                                fontSize: 12,
-                                                                color: Colors
-                                                                    .white,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    bottom: 55,
-                                                    /*  right: 2,
-                                    left: 2, */
-                                                    left: 14,
-                                                    child: Align(
-                                                      alignment:
-                                                          Alignment.bottomRight,
-                                                      child: Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        height: 25,
-                                                        width: 115,
-                                                        color:
-                                                            Color(0xffED1C25),
-                                                        child: Text(
-                                                          'Invite',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  "outfit",
-                                                              fontSize: 13,
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    bottom: 70,
-                                                    left: 15,
-                                                    child: Container(
-                                                      height: 40,
-                                                      width: 115,
-                                                      // color: Colors.amber,
-                                                      child: Column(
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              SizedBox(
-                                                                width: 5,
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .topCenter,
+                                                          child: Container(
+                                                            height: 24,
+                                                            alignment: Alignment
+                                                                .center,
+                                                            width: 70,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .only(
+                                                                bottomLeft: Radius
+                                                                    .circular(
+                                                                        8),
+                                                                bottomRight:
+                                                                    Radius
+                                                                        .circular(
+                                                                            8),
                                                               ),
-                                                              Text(
-                                                                "Kriston Watshon",
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        11,
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      237,
+                                                                      28,
+                                                                      37,
+                                                                      0.5),
+                                                            ),
+                                                            child: Row(
+                                                              children: [
+                                                                Padding(
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              8,
+                                                                          right:
+                                                                              4),
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .person_add_alt,
+                                                                    size: 16,
                                                                     color: Colors
                                                                         .white,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  'Follow',
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          "outfit",
+                                                                      fontSize:
+                                                                          12,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 25),
+                                                          child: Align(
+                                                            alignment: Alignment
+                                                                .bottomCenter,
+                                                            child: Container(
+                                                              height: 40,
+                                                              width: 115,
+                                                              // color: Colors.amber,
+                                                              child: Column(
+                                                                children: [
+                                                                  Row(
+                                                                    children: [
+                                                                      Text(
+                                                                        "${AllExperData?.object?[index].userName}",
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                11,
+                                                                            color: Colors
+                                                                                .white,
+                                                                            fontFamily:
+                                                                                "outfit",
+                                                                            fontWeight:
+                                                                                FontWeight.bold),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            2,
+                                                                      ),
+                                                                      Image
+                                                                          .asset(
+                                                                        ImageConstant
+                                                                            .Star,
+                                                                        height:
+                                                                            11,
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  Row(
+                                                                    children: [
+                                                                      SizedBox(
+                                                                          height:
+                                                                              13,
+                                                                          child:
+                                                                              Image.asset(ImageConstant.beg)),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            2,
+                                                                      ),
+                                                                      Text(
+                                                                        'Expertise in ${AllExperData?.object?[index].expertise?[0].expertiseName}',
+                                                                        maxLines:
+                                                                            1,
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                "outfit",
+                                                                            fontSize:
+                                                                                11,
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
+                                                                            color: Colors.white,
+                                                                            fontWeight: FontWeight.bold),
+                                                                      ),
+                                                                    ],
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .bottomCenter,
+                                                          child: Container(
+                                                            height: 25,
+                                                            width: 130,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .only(
+                                                                bottomLeft: Radius
+                                                                    .circular(
+                                                                        8),
+                                                                bottomRight:
+                                                                    Radius
+                                                                        .circular(
+                                                                            8),
+                                                              ),
+                                                              color: Color(
+                                                                  0xffED1C25),
+                                                            ),
+                                                            child: Center(
+                                                              child: Text(
+                                                                'Invite',
+                                                                style: TextStyle(
                                                                     fontFamily:
                                                                         "outfit",
+                                                                    fontSize:
+                                                                        13,
+                                                                    color: Colors
+                                                                        .white,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .bold),
                                                               ),
-                                                              SizedBox(
-                                                                width: 2,
-                                                              ),
-                                                              Image.asset(
-                                                                ImageConstant
-                                                                    .Star,
-                                                                height: 11,
-                                                              ),
-                                                            ],
+                                                            ),
                                                           ),
-                                                          Row(
-                                                            children: [
-                                                              SizedBox(
-                                                                width: 5,
-                                                              ),
-                                                              SizedBox(
-                                                                  height: 14,
-                                                                  child: Image.asset(
-                                                                      ImageConstant
-                                                                          .beg)),
-                                                              SizedBox(
-                                                                width: 2,
-                                                              ),
-                                                              Text(
-                                                                'Expertise in....',
-                                                                maxLines: 1,
-                                                                style: TextStyle(
-                                                                    fontFamily:
-                                                                        "outfit",
-                                                                    fontSize:
-                                                                        11,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              ),
-                                                            ],
-                                                          )
-                                                        ],
-                                                      ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
-                                                ],
+                                                ),
                                               );
                                             },
                                           ),
@@ -1290,6 +1454,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                       ],
                                     );
                                   }
+
                                   if (index == 4) {
                                     print("index check$index");
                                     return Column(
@@ -1543,6 +1708,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                   setState(() {
                     indexx = index;
                   });
+                  index == 0 ? CreateForum() : becomeAnExport();
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -1600,6 +1766,150 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         return 'th December';
       default:
         return '';
+    }
+  }
+
+  CreateForum() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
+
+    if (UserLogin_ID == null) {
+      print("user login Mood");
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => RegisterCreateAccountScreen()));
+    } else {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text("Create Forum"),
+          content: Container(
+            height: 87,
+            //color: Colors.amber,
+            child: Column(
+              children: [
+                Text("Please fill your Company info before creation forum."),
+                SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    print('no login');
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return MultiBlocProvider(providers: [
+                        BlocProvider<CreatFourmCubit>(
+                          create: (context) => CreatFourmCubit(),
+                        ),
+                      ], child: CreateForamScreen());
+                    }));
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        // color: Colors.green,
+                        child: Text(
+                          "Okay",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          /*   actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+                print('no login');
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return MultiBlocProvider(providers: [
+                    BlocProvider<CreatFourmCubit>(
+                      create: (context) => CreatFourmCubit(),
+                    ),
+                  ], child: CreateForamScreen());
+                }));
+              },
+              child: Container(
+                // color: Colors.green,
+                child: Text("Okay"),
+              ),
+            ),
+          ], */
+        ),
+      );
+    }
+  }
+
+  becomeAnExport() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
+
+    if (UserLogin_ID == null) {
+      print("user login Mood");
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => RegisterCreateAccountScreen()));
+    } else {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text("Create Expert"),
+          content: Container(
+            height: 87,
+            child: Column(
+              children: [
+                Text(
+                    "Please fill the necessary data before Registering as an Expert."),
+                SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    print('no login');
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return MultiBlocProvider(providers: [
+                        BlocProvider<FetchExprtiseRoomCubit>(
+                          create: (context) => FetchExprtiseRoomCubit(),
+                        ),
+                      ], child: BecomeExpertScreen());
+                    }));
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        // color: Colors.green,
+                        child: Text(
+                          "Okay",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      // print('no login');
+      // Navigator.push(context, MaterialPageRoute(builder: (context) {
+      //   return MultiBlocProvider(providers: [
+      //     BlocProvider<FetchExprtiseRoomCubit>(
+      //       create: (context) => FetchExprtiseRoomCubit(),
+      //     ),
+      //   ], child: BecomeExpertScreen());
+      // }));
     }
   }
 }

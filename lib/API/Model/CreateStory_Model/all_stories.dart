@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class GetAllStoryModel {
   String? message;
   List<Object>? object;
@@ -6,6 +8,7 @@ class GetAllStoryModel {
   GetAllStoryModel({this.message, this.object, this.success});
 
   GetAllStoryModel.fromJson(Map<String, dynamic> json) {
+    log('message$json');
     message = json['message'];
     if (json['object'] != null) {
       object = <Object>[];

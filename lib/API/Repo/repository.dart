@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:pds/API/Model/IndustrytypeModel/Industrytype_Model.dart';
 import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
 import 'package:pds/API/Model/Add_comment_model/get_comments_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +12,7 @@ import 'package:pds/API/Model/Add_PostModel/Add_PostModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
 import 'package:pds/API/Model/RateUseModel/Rateuse_model.dart';
 import 'package:pds/API/Model/ViewDetails_Model/ViewDetails_model.dart';
+import 'package:pds/API/Model/createStroyModel/createStroyModel.dart';
 import 'package:pds/API/Model/emailVerfiaction/emailVerfiaction.dart';
 import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
@@ -57,6 +59,7 @@ import 'package:pds/API/Model/LogOutModel/LogOut_model.dart';
 import '../Model/HomeScreenModel/getLoginPublicRoom_model.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetPostLike_Model.dart';
 import 'package:pds/API/Model/CreateStory_Model/CreateStory_model.dart';
+
 class Repository {
   ApiServices apiServices = ApiServices();
 
@@ -980,7 +983,6 @@ class Repository {
   GetUserAllPost(
     BuildContext context,
     String pageNumber,
-  
   ) async {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.UserGetAllPost}?pageNumber=$pageNumber&numberOfRecords=10',
@@ -1130,7 +1132,7 @@ class Repository {
         return jsonString;
     }
   }
-  
+
   Addcomment(BuildContext context, String PostUID) async {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.Addcomments}?postUid=${PostUID}', context);
@@ -1148,7 +1150,8 @@ class Repository {
         return jsonString;
     }
   }
-   AddNewcomment(
+
+  AddNewcomment(
     BuildContext context,
     Map<String, dynamic> params,
   ) async {
@@ -1168,32 +1171,12 @@ class Repository {
         return jsonString;
     }
   }
-  
-  CreateStory(
-    Map<String, dynamic> params,
-    BuildContext context,
-  ) async {
-    final response =
-        await apiServices.postApiCall(Config.CreateStory, params, context);
-    print('AddPost$response');
-    var jsonString = json.decode(response.body);
-    switch (response.statusCode) {
-      case 200:
-        return CreateStoryModel.fromJson(jsonString);
-      case 404:
-        return Config.somethingWentWrong;
-      case 500:
-        return Config.servernotreachable;
 
-      default:
-        return jsonString;
-    }
-  }
-   NewProfileAPI(
+  NewProfileAPI(
     BuildContext context,
   ) async {
-    final response =
-        await apiServices.getApiCallWithToken(Config.NewfetchUserProfile, context);
+    final response = await apiServices.getApiCallWithToken(
+        Config.NewfetchUserProfile, context);
     print('AddPost$response');
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -1210,8 +1193,8 @@ class Repository {
   }
 
   GetAllStory(BuildContext context) async {
-    final response = await apiServices.getApiCallWithToken(
-        "${Config.getAllStory}", context);
+    final response =
+        await apiServices.getApiCallWithToken("${Config.getAllStory}", context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
@@ -1225,6 +1208,38 @@ class Repository {
         return jsonString;
     }
   }
+
+  cretateStoryApi(BuildContext context, Map<String, dynamic> params) async {
+    final response = await apiServices.postApiCall(
+        "${Config.crateStroyCheck}",params,context);
+    var jsonString = json.decode(response.body);
+    print("cretateStoryApi$jsonString");
+    switch (response.statusCode) {
+      case 200:
+        return CreateStroy.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+  IndustryType(BuildContext context) async {
+    final response =
+        await apiServices.getApiCall(Config.industryType, context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return IndustryTypeModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
 }
 
 // var headers = {
