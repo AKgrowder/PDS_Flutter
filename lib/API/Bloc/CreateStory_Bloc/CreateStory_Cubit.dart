@@ -5,19 +5,6 @@ import 'package:pds/API/Repo/repository.dart';
 
 class CreateStoryCubit extends Cubit<CreateStoryState> {
   CreateStoryCubit() : super(CreateStoryInitialState()) {}
-  Future<void> CreateStoryAPI(
-      Map<String, dynamic> params, BuildContext context) async {
-    dynamic createForm;
-    try {
-      emit(CreateStoryLoadingState());
-      createForm = await Repository().CreateStory(params, context);
-      if (createForm.success == true) {
-        emit(CreateStoryLoadedState(createForm));
-      }
-    } catch (e) {
-      emit(CreateStoryErrorState(createForm));
-    }
-  }
 
   Future<void> UplodeImageAPI(
     BuildContext context,
@@ -36,6 +23,4 @@ class CreateStoryCubit extends Cubit<CreateStoryState> {
       emit(CreateStoryErrorState(addPostImageUploded));
     }
   }
-
-  
 }
