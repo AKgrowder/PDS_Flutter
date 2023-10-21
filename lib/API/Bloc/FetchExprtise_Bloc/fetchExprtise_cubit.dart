@@ -49,4 +49,16 @@ class FetchExprtiseRoomCubit extends Cubit<FetchExprtiseRoomState> {
       emit(FetchExprtiseRoomErrorState(createForm));
     }
   }
+   Future<void> IndustryTypeAPI(BuildContext context) async {
+    dynamic industryType;
+    try {
+      emit(FetchExprtiseRoomLoadingState());
+      industryType = await Repository().IndustryType(context);
+      if (industryType.success == true) {
+        emit(IndustryTypeLoadedState(industryType));
+      }
+    } catch (e) {
+      emit(FetchExprtiseRoomErrorState(industryType));
+    }
+  }
 }

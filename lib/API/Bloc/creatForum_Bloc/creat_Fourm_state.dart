@@ -1,3 +1,4 @@
+import 'package:pds/API/Model/IndustrytypeModel/Industrytype_Model.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 
 import '../../Model/creat_form/creat_form_Model.dart';
@@ -22,3 +23,9 @@ class ChooseDocumeentLoadedState extends CreatFourmState {
   final ChooseDocument chooseDocument;
   ChooseDocumeentLoadedState(this.chooseDocument);
 }
+
+class IndustryTypeLoadedState extends CreatFourmState {
+  final IndustryTypeModel industryTypeModel;
+  IndustryTypeLoadedState(this.industryTypeModel);
+}
+

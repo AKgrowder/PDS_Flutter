@@ -1,5 +1,6 @@
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
+import 'package:pds/API/Model/IndustrytypeModel/Industrytype_Model.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Model/sherInviteModel/sherinviteModel.dart';
 
@@ -33,4 +34,8 @@ class chooseDocumentLoadedextends extends FetchExprtiseRoomState {
   final ChooseDocument chooseDocumentuploded;
 
   chooseDocumentLoadedextends(this.chooseDocumentuploded);
+}
+class IndustryTypeLoadedState extends FetchExprtiseRoomState {
+  final IndustryTypeModel industryTypeModel;
+  IndustryTypeLoadedState(this.industryTypeModel);
 }
