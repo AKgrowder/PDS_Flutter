@@ -1,10 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
+import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import 'package:pds/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:pds/API/Bloc/auth/register_Block.dart';
+import 'package:pds/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
@@ -122,7 +124,11 @@ class NoInterNetScreen extends StatelessWidget {
               /// ---------------------------------------------------------------------------
                   BlocProvider<GetGuestAllPostCubit>(
                     create: (context) => GetGuestAllPostCubit(),
-                  ),
+                  ),BlocProvider<CreatFourmCubit>(
+                    create: (context) => CreatFourmCubit(),
+                  ),BlocProvider<FetchExprtiseRoomCubit>(
+                          create: (context) => FetchExprtiseRoomCubit(),
+                        ),
             ],
             child: NewBottomBar(
               buttomIndex: 0,

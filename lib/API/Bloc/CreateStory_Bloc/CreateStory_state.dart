@@ -10,10 +10,7 @@ class CreateStoryLoadingState extends CreateStoryState {}
 
 class CreateStoryInitialState extends CreateStoryState {}
 
-class CreateStoryLoadedState extends CreateStoryState {
-  final CreateStoryModel createForm;
-  CreateStoryLoadedState(this.createForm);
-}
+
 
 class CreateStoryErrorState extends CreateStoryState {
   final dynamic error;
@@ -24,5 +21,6 @@ class AddPostImaegState extends CreateStoryState {
  final ImageDataPost imageDataPost;
   AddPostImaegState(this.imageDataPost);
 }
+
 
 

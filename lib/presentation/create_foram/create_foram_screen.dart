@@ -5,7 +5,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multiselect/multiselect.dart';
 import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
+import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import 'package:pds/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
@@ -17,7 +19,7 @@ import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/%20new/newbottembar.dart'; 
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
@@ -30,6 +32,12 @@ class CreateForamScreen extends StatefulWidget {
 
   @override
   State<CreateForamScreen> createState() => _CreateForamScreenState();
+}
+
+class IndustryType {
+  String industryTypeUid;
+  String industryTypeName;
+  IndustryType(this.industryTypeUid, this.industryTypeName);
 }
 
 class _CreateForamScreenState extends State<CreateForamScreen> {
@@ -45,6 +53,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
   String? filepath;
   bool? SubmitOneTime = false;
   ChooseDocument? chooseDocument;
+  List<IndustryType> industryTypeData = [];
+  IndustryType? SelectIndustryType;
 
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -61,6 +71,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
     // TODO: implement initState
     super.initState();
     getDocumentSize();
+    BlocProvider.of<CreatFourmCubit>(context).IndustryTypeAPI(context);
     dopcument = 'Upload Image';
   }
 
@@ -124,6 +135,13 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             // );
             // ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
+          if (state is IndustryTypeLoadedState) {
+            industryTypeData = state.industryTypeModel.object!
+                .map((industryType) => IndustryType(
+                    industryType.industryTypeUid ?? '',
+                    industryType.industryTypeName ?? ''))
+                .toList();
+          }
           if (state is CreatFourmLoadedState) {
             SnackBar snackBar = SnackBar(
               content: Text(state.createForm.message ?? ""),
@@ -149,10 +167,17 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                 BlocProvider<InvitationCubit>(
                   create: (context) => InvitationCubit(),
                 ),
+
                 /// ---------------------------------------------------------------------------
-                  BlocProvider<GetGuestAllPostCubit>(
-                    create: (context) => GetGuestAllPostCubit(),
-                  ),
+                BlocProvider<GetGuestAllPostCubit>(
+                  create: (context) => GetGuestAllPostCubit(),
+                ),
+                BlocProvider<CreatFourmCubit>(
+                  create: (context) => CreatFourmCubit(),
+                ),
+                BlocProvider<FetchExprtiseRoomCubit>(
+                  create: (context) => FetchExprtiseRoomCubit(),
+                ),
               ], child: NewBottomBar(buttomIndex: 0));
             }));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -302,6 +327,53 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                               hintText: 'Job Profile',
                               counterText: '',
                               border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 18, left: 35, bottom: 5),
+                      child: Text(
+                        "Industry Type",
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontFamily: 'outfit',
+                          fontWeight: FontWeight.w500,
+                        ),
+                        // style: theme.textTheme.bodyLarge,
+                      ),
+                    ),
+                    Center(
+                      child: Container(
+                        height: 50,
+                        width: _width / 1.2,
+                        decoration: BoxDecoration(color: Color(0xffEFEFEF)),
+                        child: DropdownButtonHideUnderline(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 12),
+                            child: DropdownButton<IndustryType>(
+                              value: SelectIndustryType,
+                              hint: Text('Industry Type'),
+                              onChanged: (IndustryType? newValue) {
+                                // When the user selects an option from the dropdown.
+                                if (newValue != null) {
+                                  setState(() {
+                                    SelectIndustryType = newValue;
+                                    print(
+                                        "SelectIndustryType: ${newValue.industryTypeUid}");
+                                  });
+                                }
+                              },
+                              items: industryTypeData
+                                  .map<DropdownMenuItem<IndustryType>>(
+                                      (IndustryType industry) {
+                                return DropdownMenuItem<IndustryType>(
+                                  value: industry,
+                                  child: Text(industry.industryTypeName),
+                                );
+                              }).toList(),
                             ),
                           ),
                         ),
@@ -487,6 +559,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             'document': chooseDocument?.object.toString(),
                             'companyName': name.text,
                             'jobProfile': profile.text,
+                            "industryTypesUid":
+                                "${SelectIndustryType?.industryTypeUid}"
                           };
                           print('button-$params');
                           if (SubmitOneTime == false) {
