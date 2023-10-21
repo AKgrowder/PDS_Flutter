@@ -25,7 +25,8 @@ class CommentsScreen extends StatefulWidget {
       required this.PostUID,
       this.image,
       this.userName,
-      this.description,this.date})
+      this.description,
+      this.date})
       : super(key: key);
 
   @override
@@ -56,7 +57,8 @@ class _CommentsScreenState extends State<CommentsScreen> {
     scroll.animateTo((1000 * 20),
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
   }
-String customFormat(DateTime date) {
+
+  String customFormat(DateTime date) {
     String day = date.day.toString();
     String month = _getMonthName(date.month);
     String year = date.year.toString();
@@ -96,6 +98,7 @@ String customFormat(DateTime date) {
         return '';
     }
   }
+
   @override
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
@@ -208,7 +211,8 @@ String customFormat(DateTime date) {
           }
           return Stack(
             children: [
-              SingleChildScrollView(physics: BouncingScrollPhysics(),
+              SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
                 child: Column(
                   children: [
                     SizedBox(
@@ -224,7 +228,7 @@ String customFormat(DateTime date) {
                         controller: scroll,
                         itemBuilder: (context, index) {
                           DateTime parsedDateTime = DateTime.parse(
-                                      '${addCommentModeldata?.object?[index]. createdAt ?? ""}');
+                              '${addCommentModeldata?.object?[index].createdAt ?? ""}');
                           // ListTile( );
                           // DateTime parsedDateTime = DateTime.parse(
                           //     '${addCommentModeldata?.object?[index].createdAt}');
@@ -234,7 +238,7 @@ String customFormat(DateTime date) {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(top:15.0),
+                                padding: const EdgeInsets.only(top: 15.0),
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 35.0),
                                   child: Container(
@@ -244,80 +248,86 @@ String customFormat(DateTime date) {
                                         // color: Colors.grey,
                                         borderRadius:
                                             BorderRadius.circular(15)),
-                                    child: Row(crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                      addCommentModeldata
-                                                  ?.object?[index].profilePic ==
-                                              null
-                                          ? CustomImageView(
-                                              radius: BorderRadius.circular(50),
-                                              imagePath: ImageConstant.pdslogo,
-                                              fit: BoxFit.fill,
-                                              height: 35,
-                                              width: 35,
-                                            )
-                                          : CustomImageView(
-                                              radius: BorderRadius.circular(50),
-                                              url:
-                                                  "${addCommentModeldata?.object?[index].profilePic}",
-                                              fit: BoxFit.fill,
-                                              height: 35,
-                                              width: 35,
-                                            ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Column(
+                                    child: Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
                                         children: [
-                                          Row(
+                                          addCommentModeldata?.object?[index]
+                                                      .profilePic ==
+                                                  null
+                                              ? CustomImageView(
+                                                  radius:
+                                                      BorderRadius.circular(50),
+                                                  imagePath:
+                                                      ImageConstant.pdslogo,
+                                                  fit: BoxFit.fill,
+                                                  height: 35,
+                                                  width: 35,
+                                                )
+                                              : CustomImageView(
+                                                  radius:
+                                                      BorderRadius.circular(50),
+                                                  url:
+                                                      "${addCommentModeldata?.object?[index].profilePic}",
+                                                  fit: BoxFit.fill,
+                                                  height: 35,
+                                                  width: 35,
+                                                ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
-                                              Text(
-                                                "${addCommentModeldata?.object?[index].userName}",
-                                                style: TextStyle(
-                                                    fontFamily: 'outfit',
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "${addCommentModeldata?.object?[index].userName}",
+                                                    style: TextStyle(
+                                                        fontFamily: 'outfit',
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  Text(
+                                                      // "1w",
+                                                      customFormat(
+                                                          parsedDateTime),
+                                                      style: TextStyle(
+                                                          fontFamily: 'outfit',
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                              FontWeight.w500)),
+                                                ],
                                               ),
-                                              SizedBox(
-                                                width: 5,
+                                              Container(
+                                                width: _width / 1.4,
+                                                // height: 50,
+                                                // color: Colors.amber,
+                                                child: Text(
+                                                    "${addCommentModeldata?.object?[index].comment}",
+                                                    // maxLines: 2,
+
+                                                    style: TextStyle(
+                                                        fontFamily: 'outfit',
+                                                        overflow: TextOverflow
+                                                            .visible,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w400)),
                                               ),
-                                              Text(
-                                                // "1w",
-                                                  customFormat(parsedDateTime),
-                                                  style: TextStyle(
-                                                      fontFamily: 'outfit',
-                                                      fontSize: 13,
-                                                      fontWeight:
-                                                          FontWeight.w500)),
                                             ],
                                           ),
-                                          Container(
-                                            width:_width /1.4,
-                                            // height: 50,
-                                            // color: Colors.amber,
-                                            child: Text(
-                                                "${addCommentModeldata?.object?[index].comment}",
-                                                // maxLines: 2,
-                                            
-                                                style: TextStyle(
-                                                    fontFamily: 'outfit',
-                                                    overflow:
-                                                        TextOverflow.visible,
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.w400)),
+                                          SizedBox(
+                                            width: 15,
                                           ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        width: 15,
-                                      ),
-                                    ]),
+                                        ]),
                                   ),
                                 ),
                               ),
@@ -406,66 +416,63 @@ String customFormat(DateTime date) {
                   height: 80,
                   // width: _width / 1.2,
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      // color: Colors.grey,
                       borderRadius: BorderRadius.circular(15)),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                    CustomImageView(
-                      radius: BorderRadius.circular(50),
-                      url: widget.image,
-                      fit: BoxFit.fill,
-                      height: 50,
-                      width: 50,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Row(
+                        CustomImageView(
+                          radius: BorderRadius.circular(50),
+                          url: widget.image,
+                          fit: BoxFit.fill,
+                          height: 50,
+                          width: 50,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              widget.userName ?? "",
-                              style: TextStyle(
-                                  fontFamily: 'outfit',
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
+                            Row(
+                              children: [
+                                Text(
+                                  widget.userName ?? "",
+                                  style: TextStyle(
+                                      fontFamily: 'outfit',
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text("1w",
+                                    // customFormat(parsedDateTime),
+                                    style: TextStyle(
+                                        fontFamily: 'outfit',
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500)),
+                              ],
                             ),
-                            SizedBox(
-                              width: 5,
+                            Container(
+                              width: _width / 1.4,
+                              // height: 50,
+                              // color: Colors.amber,
+                              child: Text(widget.description ?? "",
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                      fontFamily: 'outfit',
+                                      overflow: TextOverflow.ellipsis,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400)),
                             ),
-                            Text(
-                              "1w",
-                                // customFormat(parsedDateTime),
-                                style: TextStyle(
-                                    fontFamily: 'outfit',
-                                    fontSize: 13, 
-                                    fontWeight: FontWeight.w500)),
                           ],
                         ),
-                        Container(
-                          width: _width / 1.6,
-                          // height: 50,
-                          // color: Colors.amber,
-                          child: Text(
-                            widget.description ?? "",
-                       
-                              maxLines: 2,
-                              style: TextStyle(
-                                  fontFamily: 'outfit',
-                                  overflow: TextOverflow.ellipsis,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400)),
+                        SizedBox(
+                          width: 15,
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                  ]),
+                      ]),
                 ),
               ),
             ],
