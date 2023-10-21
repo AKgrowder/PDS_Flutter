@@ -119,4 +119,32 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostErrorState(getAllStory));
     }
   }
+
+    Future<void> FetchAllExpertsAPI(BuildContext context) async {
+    dynamic PublicRModel;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      PublicRModel = await Repository().FetchAllExpertsAPI(context);
+      if (PublicRModel.success == true) {
+        emit(FetchAllExpertsLoadedState(PublicRModel));
+      }
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(PublicRModel));
+    }
+  }
+  
+  Future<void> create_story(
+      BuildContext context, Map<String, dynamic> params) async {
+    dynamic create_story;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      create_story = await Repository().cretateStoryApi(context, params);
+      if (create_story.success == true) {
+        emit(GetAllStoryLoadedState(create_story));
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(GetGuestAllPostErrorState(create_story));
+    }
+  }
 }
