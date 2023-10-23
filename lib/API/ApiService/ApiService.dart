@@ -190,10 +190,12 @@ class ApiServices {
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
     response.headers.addAll(headers1);
     if (params != null) {
+ 
       if (apiName != 'create forum') {
         response.fields["document"] = params['document'] ?? "";
         response.fields["companyName"] = params['companyName'] ?? "";
         response.fields["jobProfile"] = params['jobProfile'] ?? "";
+        response.fields["industryTypesUid"] = params['industryTypesUid'] ?? [];
 
         print('params-$params');
       }
