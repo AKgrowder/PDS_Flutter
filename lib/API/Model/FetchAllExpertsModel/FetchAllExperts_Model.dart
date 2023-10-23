@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class FetchAllExpertsModel {
   String? message;
   List<Object>? object;
@@ -6,6 +8,7 @@ class FetchAllExpertsModel {
   FetchAllExpertsModel({this.message, this.object, this.success});
 
   FetchAllExpertsModel.fromJson(Map<String, dynamic> json) {
+    log("FetchAllExpertsModel$json");
     message = json['message'];
     if (json['object'] != null) {
       object = <Object>[];

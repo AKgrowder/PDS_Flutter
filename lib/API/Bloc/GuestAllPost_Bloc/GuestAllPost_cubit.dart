@@ -115,7 +115,7 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
         emit(GetAllStoryLoadedState(getAllStory));
       }
     } catch (e) {
-      // print('errorstate-$e');
+      print('errorstate-$e');
       emit(GetGuestAllPostErrorState(getAllStory));
     }
   }
