@@ -56,6 +56,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   double documentuploadsize = 0;
   double value2 = 0.0;
 
+
   Future<void> _checkPermissions() async {
     final cameraStatus = await Permission.camera.status;
     if (this.mounted) {
@@ -916,6 +917,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       }
     } catch (e) {}
   }
+
+
 
   bool _isGifOrSvg(String imagePath) {
     // Check if the image file has a .gif or .svg extension
