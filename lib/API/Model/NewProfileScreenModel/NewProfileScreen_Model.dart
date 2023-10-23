@@ -26,7 +26,7 @@ class NewProfileScreen_Model {
 class Object {
   Null? isApproved;
   String? userDocument;
-  String? companyName;
+  Null? companyName;
   String? jobProfile;
   int? fees;
   String? workingHours;
@@ -40,7 +40,7 @@ class Object {
   String? uuid;
   String? userProfilePic;
   Null? userBackgroundPic;
-  Null? industryTypes;
+  List<IndustryTypes>? industryTypes;
   List<Expertise>? expertise;
   Null? isEmailVerified;
   Null? aboutMe;
@@ -92,7 +92,12 @@ class Object {
     uuid = json['uuid'];
     userProfilePic = json['userProfilePic'];
     userBackgroundPic = json['userBackgroundPic'];
-    industryTypes = json['industryTypes'];
+    if (json['industryTypes'] != null) {
+      industryTypes = <IndustryTypes>[];
+      json['industryTypes'].forEach((v) {
+        industryTypes!.add(new IndustryTypes.fromJson(v));
+      });
+    }
     if (json['expertise'] != null) {
       expertise = <Expertise>[];
       json['expertise'].forEach((v) {
@@ -125,7 +130,10 @@ class Object {
     data['uuid'] = this.uuid;
     data['userProfilePic'] = this.userProfilePic;
     data['userBackgroundPic'] = this.userBackgroundPic;
-    data['industryTypes'] = this.industryTypes;
+    if (this.industryTypes != null) {
+      data['industryTypes'] =
+          this.industryTypes!.map((v) => v.toJson()).toList();
+    }
     if (this.expertise != null) {
       data['expertise'] = this.expertise!.map((v) => v.toJson()).toList();
     }
@@ -135,6 +143,25 @@ class Object {
     data['followersCount'] = this.followersCount;
     data['followingCount'] = this.followingCount;
     data['postCount'] = this.postCount;
+    return data;
+  }
+}
+
+class IndustryTypes {
+  String? industryTypeUid;
+  String? industryTypeName;
+
+  IndustryTypes({this.industryTypeUid, this.industryTypeName});
+
+  IndustryTypes.fromJson(Map<String, dynamic> json) {
+    industryTypeUid = json['industryTypeUid'];
+    industryTypeName = json['industryTypeName'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['industryTypeUid'] = this.industryTypeUid;
+    data['industryTypeName'] = this.industryTypeName;
     return data;
   }
 }
