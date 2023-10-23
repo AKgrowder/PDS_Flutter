@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_state.dart';
 import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
@@ -50,9 +51,6 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   String? selctedIndex;
   List<Expertise> expertiseData = [];
   Expertise? selectedExpertise;
-  List<IndustryType> industryTypeData = [];
-  IndustryType? SelectIndustryType;
-  // String selctedexpertiseData = "";
 
   @override
   List<String> working_houres = [
@@ -67,6 +65,10 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
   ChooseDocument? chooseDocument;
+  List<MultiSelectItem<IndustryType>>? _industryTypes = [];
+  List<IndustryType> selectedIndustryTypes = [];
+  List<String> industryUUID = [];
+
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TimeOfDay initialTime = TimeOfDay(hour: 0, minute: 0);
   Future<void> _selectStartTime(BuildContext context) async {
@@ -194,10 +196,15 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             //     expertiseData.isNotEmpty ? expertiseData[0] : null;
           }
           if (state is IndustryTypeLoadedState) {
-            industryTypeData = state.industryTypeModel.object!
+            List<IndustryType> industryTypeData1 = state
+                .industryTypeModel.object!
                 .map((industryType) => IndustryType(
                     industryType.industryTypeUid ?? '',
                     industryType.industryTypeName ?? ''))
+                .toList();
+            _industryTypes = industryTypeData1
+                .map((industryType) => MultiSelectItem(
+                    industryType, industryType.industryTypeName))
                 .toList();
           }
 
@@ -357,33 +364,24 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                         ),
                       ),
                       Container(
-                        height: 50,
                         width: _width,
                         decoration: BoxDecoration(color: Color(0xffEFEFEF)),
                         child: DropdownButtonHideUnderline(
                           child: Padding(
                             padding: EdgeInsets.only(left: 12),
-                            child: DropdownButton<IndustryType>(
-                              value: SelectIndustryType,
-                              hint: Text('Industry Type'),
-                              onChanged: (IndustryType? newValue) {
-                                // When the user selects an option from the dropdown.
-                                if (newValue != null) {
-                                  setState(() {
-                                    SelectIndustryType = newValue;
-                                    print(
-                                        "SelectIndustryType: ${newValue.industryTypeUid}");
-                                  });
-                                }
+                            child: MultiSelectDialogField<IndustryType>(
+                              items: _industryTypes!,
+                              listType: MultiSelectListType.LIST,
+                              onConfirm: (values) {
+                                selectedIndustryTypes = values;
+                                selectedIndustryTypes.forEach((element) {
+                                  print(
+                                      "sxfgsdfghdfghdfgh${element.industryTypeUid.runtimeType}");
+                                  industryUUID
+                                      .add("${element.industryTypeUid}");
+                                });
+                                setState(() {});
                               },
-                              items: industryTypeData
-                                  .map<DropdownMenuItem<IndustryType>>(
-                                      (IndustryType industry) {
-                                return DropdownMenuItem<IndustryType>(
-                                  value: industry,
-                                  child: Text(industry.industryTypeName),
-                                );
-                              }).toList(),
                             ),
                           ),
                         ),
@@ -836,9 +834,8 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             print(
                                 'endtime-${_endTime?.format(context).toString()}');
                             print('Finaltime-$time');
-                            print(
-                                'sddfsdm,gndfgj${chooseDocument?.object.toString()}');
-                            var params = {
+                            print('dartatset${industryUUID}');
+                            Map<String, dynamic> params = {
                               "document":
                                   "${chooseDocument?.object.toString()}",
                               "expertUId": ["${selectedExpertise?.uid}"],
@@ -846,8 +843,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                               "jobProfile": jobprofileController.text,
                               "uid": userid.toString(),
                               "workingHours": time.toString(),
-                              "industryTypesUid":
-                                  "${SelectIndustryType?.industryTypeUid}"
+                              "industryTypesUid": industryUUID
                             };
                             print('working time-$time');
                             print('pwarems-$params');
