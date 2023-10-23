@@ -5,7 +5,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:multiselect/multiselect.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import 'package:pds/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
@@ -53,8 +55,9 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
   String? filepath;
   bool? SubmitOneTime = false;
   ChooseDocument? chooseDocument;
-  List<IndustryType> industryTypeData = [];
-  IndustryType? SelectIndustryType;
+  List<MultiSelectItem<IndustryType>>? _industryTypes = [];
+  List<IndustryType> selectedIndustryTypes = [];
+  List<String> industryUUID = [];
 
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -136,10 +139,15 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             // ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
           if (state is IndustryTypeLoadedState) {
-            industryTypeData = state.industryTypeModel.object!
+            List<IndustryType> industryTypeData1 = state
+                .industryTypeModel.object!
                 .map((industryType) => IndustryType(
                     industryType.industryTypeUid ?? '',
                     industryType.industryTypeName ?? ''))
+                .toList();
+            _industryTypes = industryTypeData1
+                .map((industryType) => MultiSelectItem(
+                    industryType, industryType.industryTypeName))
                 .toList();
           }
           if (state is CreatFourmLoadedState) {
@@ -347,33 +355,24 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                     ),
                     Center(
                       child: Container(
-                        height: 50,
                         width: _width / 1.2,
                         decoration: BoxDecoration(color: Color(0xffEFEFEF)),
                         child: DropdownButtonHideUnderline(
                           child: Padding(
                             padding: EdgeInsets.only(left: 12),
-                            child: DropdownButton<IndustryType>(
-                              value: SelectIndustryType,
-                              hint: Text('Industry Type'),
-                              onChanged: (IndustryType? newValue) {
-                                // When the user selects an option from the dropdown.
-                                if (newValue != null) {
-                                  setState(() {
-                                    SelectIndustryType = newValue;
-                                    print(
-                                        "SelectIndustryType: ${newValue.industryTypeUid}");
-                                  });
-                                }
+                            child: MultiSelectDialogField<IndustryType>(
+                              items: _industryTypes!,
+                              listType: MultiSelectListType.LIST,
+                              onConfirm: (values) {
+                                selectedIndustryTypes = values;
+                                selectedIndustryTypes.forEach((element) {
+                                  print(
+                                      "sxfgsdfghdfghdfgh${element.industryTypeUid.runtimeType}");
+                                  industryUUID
+                                      .add("${element.industryTypeUid}");
+                                });
+                                setState(() {});
                               },
-                              items: industryTypeData
-                                  .map<DropdownMenuItem<IndustryType>>(
-                                      (IndustryType industry) {
-                                return DropdownMenuItem<IndustryType>(
-                                  value: industry,
-                                  child: Text(industry.industryTypeName),
-                                );
-                              }).toList(),
                             ),
                           ),
                         ),
@@ -550,18 +549,15 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         } else {
-                          final SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          String? jwtToken =
-                              await prefs.getString(PreferencesKey.loginJwt);
-                          print('jwttokenGet -$jwtToken');
+                          String industryType = industryUUID.join(', ');
+                          print("sdgfsdfghdfgsdfgsdgf-${industryType}");
                           Map<String, dynamic> params = {
                             'document': chooseDocument?.object.toString(),
                             'companyName': name.text,
                             'jobProfile': profile.text,
-                            "industryTypesUid":
-                                "${SelectIndustryType?.industryTypeUid}"
+                            'industryTypesUid': industryType
                           };
+
                           print('button-$params');
                           if (SubmitOneTime == false) {
                             SubmitOneTime = true;
@@ -570,35 +566,6 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                     filepath.toString(), context);
                           }
                         }
-                        // if (name.text != null && name.text != "") {
-                        //   if (profile.text != null && profile.text != "") {
-                        //     if (uplopdfile.text != null &&
-                        //         uplopdfile.text != "") {
-                        //     } else {
-                        //       SnackBar snackBar = SnackBar(
-                        //         content: Text('Please upload Document'),
-                        //         backgroundColor: ColorConstant.primary_color,
-                        //       );
-                        //       ScaffoldMessenger.of(context)
-                        //           .showSnackBar(snackBar);
-                        //     }
-                        //   } else {
-                        //     SnackBar snackBar = SnackBar(
-                        //       content: Text('Please Profile Name'),
-                        //       backgroundColor: ColorConstant.primary_color,
-                        //     );
-                        //     ScaffoldMessenger.of(context)
-                        //         .showSnackBar(snackBar);
-                        //   }
-                        //   print('vaildate');
-
-                        // } else {
-                        //   SnackBar snackBar = SnackBar(
-                        //     content: Text('Please Enter Company Name'),
-                        //     backgroundColor: ColorConstant.primary_color,
-                        //   );
-                        //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        // }
                       },
                       child: Center(
                         child: Container(
