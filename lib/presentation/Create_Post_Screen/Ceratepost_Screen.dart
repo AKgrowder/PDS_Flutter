@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:pds/API/Bloc/postData_Bloc/postData_state.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/main.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/example/lib/main.dart';
@@ -19,6 +21,7 @@ import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/phot
 import 'package:pds/presentation/room_members/room_members_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -53,7 +56,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   ImageDataPost? imageDataPost;
   String? userUiid;
   double _opacity = 0.0;
-  bool _mounted = false;
+  // bool _mounted = false;
 
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -71,18 +74,13 @@ class _CreateNewPostState extends State<CreateNewPost> {
     getDocumentSize();
     initAsync();
     Future.delayed(Duration(milliseconds: 150), () {
-      if (_mounted) {
+      if (mounted) {
         setState(() {
           _opacity = 1.0;
         });
       }
     });
     super.initState();
-  }
-
-  void dispose() {
-    _mounted = false;
-    super.dispose();
   }
 
   List<String> soicalData = ["Following", "Public"];
@@ -104,8 +102,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-         Navigator.pop(context);
-
+          Navigator.pop(context);
         }
       },
       builder: (context, state) {
@@ -243,8 +240,6 @@ class _CreateNewPostState extends State<CreateNewPost> {
                           padding:
                               EdgeInsets.only(left: 16, right: 16, top: 15),
                           child: SizedBox(
-                            // color: Colors.red[100],
-                            // height: _height / 3.5,
                             width: _width,
                             child: Column(
                               children: [
@@ -304,7 +299,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                 ? medium1?.mediumType ==
                                                         MediumType.image
                                                     ? GestureDetector(
-                                                        onTap: () async {},
+                                                        onTap: () async {
+                                                          print("fgfgfhg");
+                                                        },
                                                         child: FadeInImage(
                                                           fit: BoxFit.cover,
                                                           placeholder: MemoryImage(
@@ -350,22 +347,30 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                 height: 90,
                                 width: 90,
                                 child: Center(
-                                  child: Container(
-                                    // margin: EdgeInsets.all(8),
-                                    height: 80,
-                                    width: 80,
-                                    decoration: BoxDecoration(
-                                      // color: Color.fromARGB(255, 0, 0, 0),
-                                      border: Border.all(
-                                          color: Color.fromARGB(
-                                              255, 174, 174, 174),
-                                          width: 2),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Center(
-                                      child: Image.asset(
-                                        ImageConstant.Cameraicon,
-                                        height: 30,
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      print("asdfdfgdfg");
+                                      _getImageFromSource(ImageSource.camera);
+
+                                      // _getImageFromSource();
+                                    },
+                                    child: Container(
+                                      // margin: EdgeInsets.all(8),
+                                      height: 80,
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                        // color: Color.fromARGB(255, 0, 0, 0),
+                                        border: Border.all(
+                                            color: Color.fromARGB(
+                                                255, 174, 174, 174),
+                                            width: 2),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Center(
+                                        child: Image.asset(
+                                          ImageConstant.Cameraicon,
+                                          height: 30,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -508,7 +513,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  _getImageFromSource();
+                                  _getImageFromSource(ImageSource.gallery);
                                 },
                                 child: Image.asset(
                                   ImageConstant.gallery,
@@ -550,9 +555,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
         lowerCaseImagePath.endsWith('.m4a');
   }
 
-  Future<void> _getImageFromSource() async {
+  Future<void> _getImageFromSource(ImageSource source) async {
     try {
-      pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery);
+      pickedFile = await _imagePicker.pickImage(source: source);
 
       if (pickedFile != null) {
         if (!_isGifOrSvg(pickedFile!.path)) {
@@ -824,64 +829,92 @@ class _CreateNewPostState extends State<CreateNewPost> {
   ////
 
   dataPostFucntion() {
-    if (postText.text.isNotEmpty && file?.path != null) {
-      Map<String, dynamic> param = {
-        "description": postText.text,
-        "postData": imageDataPost?.object.toString(),
-        "postDataType": "IMAGE",
-        "postType": soicalData[indexx].toString().toUpperCase()
-      };
-      BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
-    } else if (postText.text.isNotEmpty && file12?.path != null) {
-      Map<String, dynamic> param = {
-        "description": postText.text,
-        "postData": imageDataPost?.object.toString(),
-        "postDataType": "ATTACHMENT",
-        "postType": soicalData[indexx].toString().toUpperCase()
-      };
-      BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
-    } else if (postText.text.isNotEmpty && pickedImage?.path != null) {
-      Map<String, dynamic> param = {
-        "description": postText.text,
-        "postData": imageDataPost?.object.toString(),
-        "postDataType": "IMAGE",
-        "postType": soicalData[indexx].toString().toUpperCase()
-      };
-      BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
+    print("dfhghghfhgh-${pickedFile?.path}");
+    print("FBSDFNFBDBFSBF--${postText.text.length}");
+    if (postText.text.length >= 1000) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please enter less than 1000 letter!!'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
-      if (postText.text.isNotEmpty) {
+      if (postText.text.isNotEmpty && file?.path != null) {
         Map<String, dynamic> param = {
           "description": postText.text,
+          "postData": imageDataPost?.object.toString(),
+          "postDataType": "IMAGE",
           "postType": soicalData[indexx].toString().toUpperCase()
         };
         BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
-      } else if (file?.path != null) {
+      } else if (postText.text.isNotEmpty && file12?.path != null) {
         Map<String, dynamic> param = {
-          "postData": imageDataPost?.object.toString(),
-          "postDataType": "IMAGE",
-          "postType": soicalData[indexx].toString().toUpperCase(),
-        };
-        BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
-      } else if (file12?.path != null) {
-        Map<String, dynamic> param = {
+          "description": postText.text,
           "postData": imageDataPost?.object.toString(),
           "postDataType": "ATTACHMENT",
-          "postType": soicalData[indexx].toString().toUpperCase(),
+          "postType": soicalData[indexx].toString().toUpperCase()
         };
         BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
-      } else if (pickedImage?.path != null) {
+      } else if (postText.text.isNotEmpty && pickedImage?.path != null) {
         Map<String, dynamic> param = {
+          "description": postText.text,
           "postData": imageDataPost?.object.toString(),
           "postDataType": "IMAGE",
-          "postType": soicalData[indexx].toString().toUpperCase(),
+          "postType": soicalData[indexx].toString().toUpperCase()
+        };
+        BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
+      } else if (pickedFile?.path != null && postText.text.isNotEmpty) {
+        Map<String, dynamic> param = {
+          "description": postText.text,
+          "postData": imageDataPost?.object.toString(),
+          "postDataType": "IMAGE",
+          "postType": soicalData[indexx].toString().toUpperCase()
         };
         BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
       } else {
-        SnackBar snackBar = SnackBar(
-          content: Text('please select image either fill Text'),
-          backgroundColor: ColorConstant.primary_color,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        if (postText.text.isNotEmpty) {
+          Map<String, dynamic> param = {
+            "description": postText.text,
+            "postType": soicalData[indexx].toString().toUpperCase()
+          };
+          BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
+        } else if (file?.path != null) {
+          Map<String, dynamic> param = {
+            "postData": imageDataPost?.object.toString(),
+            "postDataType": "IMAGE",
+            "postType": soicalData[indexx].toString().toUpperCase(),
+          };
+          BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
+        }
+        else if(pickedFile?.path != null){
+          Map<String, dynamic> param = {
+            "postData": imageDataPost?.object.toString(),
+            "postDataType": "IMAGE",
+            "postType": soicalData[indexx].toString().toUpperCase(),
+          };
+          BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
+        } 
+        
+        else if (file12?.path != null) {
+          Map<String, dynamic> param = {
+            "postData": imageDataPost?.object.toString(),
+            "postDataType": "ATTACHMENT",
+            "postType": soicalData[indexx].toString().toUpperCase(),
+          };
+          BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
+        } else if (pickedImage?.path != null) {
+          Map<String, dynamic> param = {
+            "postData": imageDataPost?.object.toString(),
+            "postDataType": "IMAGE",
+            "postType": soicalData[indexx].toString().toUpperCase(),
+          };
+          BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
+        } else {
+          SnackBar snackBar = SnackBar(
+            content: Text('please select image either fill Text'),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
       }
     }
   }

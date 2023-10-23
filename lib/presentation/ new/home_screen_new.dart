@@ -36,10 +36,7 @@ import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import 'package:pds/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import 'package:pds/presentation/create_foram/create_foram_screen.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
-
-
-
-
+import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 class HomeScreenNew extends StatefulWidget {
   const HomeScreenNew({Key? key}) : super(key: key);
 
@@ -70,84 +67,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   BuildContext? storycontext;
   List<Widget> storyPagedata = [];
   GetAllStoryModel? getAllStoryModel;
-    FetchAllExpertsModel? AllExperData;
+  FetchAllExpertsModel? AllExperData;
 
   @override
   void initState() {
     Get_UserToken();
-
-    for (int i = 0; i < 10; i++) {
-      buttonDatas.add(StoryButtonData(
-        timelineBackgroundColor: Colors.grey,
-        buttonDecoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: DecorationImage(
-            image: AssetImage(
-              'assets/images/expert3.png',
-            ),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                '',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-        borderDecoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(60.0),
-          ),
-          border: Border.fromBorderSide(
-            BorderSide(
-              color: Colors.red,
-              width: 1.5,
-            ),
-          ),
-        ),
-        storyPages: List.generate(3, (index) {
-          return FullStoryPage(
-            text:
-                'Want to buy a new car? Get our loan for the rest of your life!',
-            imageName: 'car',
-          );
-        }),
-        segmentDuration: const Duration(seconds: 3),
-      ));
-    }
-    for (var buttonData in buttonDatas) {
-      storyButtons.add(StoryButton(
-          onPressed: (data) {
-            Navigator.of(context).push(
-              StoryRoute(
-                storyContainerSettings: StoryContainerSettings(
-                  buttonData: buttonData,
-                  tapPosition: buttonData.buttonCenterPosition!,
-                  curve: buttonData.pageAnimationCurve,
-                  allButtonDatas: buttonDatas,
-                  pageTransform: StoryPage3DTransform(),
-                  storyListScrollController: ScrollController(),
-                ),
-                duration: buttonData.pageAnimationDuration,
-              ),
-            );
-          },
-          buttonData: buttonData,
-          allButtonDatas: buttonDatas,
-          storyListViewController: ScrollController()));
-    }
     storycontext = context;
-
     super.initState();
   }
 
@@ -182,25 +107,28 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     await BlocProvider.of<GetGuestAllPostCubit>(context).get_all_story(
       context,
     );
-     await BlocProvider.of<GetGuestAllPostCubit>(context)
+    await BlocProvider.of<GetGuestAllPostCubit>(context)
         .FetchAllExpertsAPI(context);
   }
 
   loginFunction({String? apiName, int? index}) async {
+    print("fghdfghdfgh");
     if (uuid == null) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => RegisterCreateAccountScreen()));
     } else if (apiName == 'Follow') {
+      print("dfhsdfhsdfhsdgf");
       await BlocProvider.of<GetGuestAllPostCubit>(context).followWIngMethod(
           AllGuestPostRoomData?.object?.content?[index ?? 0].userUid, context);
 
       if (AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing ==
           true) {
+        print("indexxx check");
         AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing = false;
+       
       } else {
         AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing = true;
       }
-      AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing = true;
     } else if (apiName == 'like_post') {
       await BlocProvider.of<GetGuestAllPostCubit>(context).like_post(
           AllGuestPostRoomData?.object?.content?[index ?? 0].postUid, context);
@@ -229,9 +157,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       } else {
         AllGuestPostRoomData?.object?.content?[index ?? 0].isSaved = true;
       }
-    } else {
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => RegisterCreateAccountScreen()));
     }
   }
 
@@ -244,8 +169,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     methodtoReffrser();
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-
-    var TotleDataCount;
     bool apiCalingdone = false;
 
     return Scaffold(
@@ -298,28 +221,31 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           }
 
           if (state is GetAllStoryLoadedState) {
-            print(
-                "state GetAllStoryLoadedState--${state.getAllStoryModel.object?.length}");
-            if (state.getAllStoryModel.object != null ||
-                (state.getAllStoryModel.object?.isNotEmpty ?? false)) {
-              print("User_id check---$User_ID");
-              state.getAllStoryModel.object?.forEach((element) {
-                print("User_id check1---${element.userUid}");
+            buttonDatas.clear();
+            storyButtons.clear();
+            storyButtons = List.filled(1, null, growable: true);
 
+            if (state.getAllStoryModel.object != null ||
+                ((state.getAllStoryModel.object?.isNotEmpty == true) ??
+                    false)) {
+              state.getAllStoryModel.object?.forEach((element) {
                 if (element.userUid == User_ID) {
-                  print("this condison working");
                   buttonDatas.insert(
                       0,
                       StoryButtonData(
                         timelineBackgroundColor: Colors.grey,
                         buttonDecoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: AssetImage(
-                              'assets/images/expert3.png',
-                            ),
-                            fit: BoxFit.cover,
-                          ),
+                          image: element.profilePic != ''
+                              ? DecorationImage(
+                                  image: NetworkImage(
+                                      element.profilePic.toString()))
+                              : DecorationImage(
+                                  image: AssetImage(
+                                    'assets/images/expert3.png',
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(5.0),
@@ -356,7 +282,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                         }),
                         segmentDuration: const Duration(seconds: 3),
                       ));
-                  print("buttondatatadddchecl--${buttonDatas.length}");
 
                   storyButtons[0] = (StoryButton(
                       onPressed: (data) {
@@ -377,9 +302,84 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                       buttonData: buttonDatas[0],
                       allButtonDatas: buttonDatas,
                       storyListViewController: ScrollController()));
-                  print("stroybuttondata chek --${storyButtons.length}");
+
                   storyAdded = true;
-                } else {}
+                } else {
+                  StoryButtonData buttonData1 = StoryButtonData(
+                    timelineBackgroundColor: Colors.grey,
+                    buttonDecoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: element.profilePic != null ||
+                              element.profilePic != ''
+                          ? DecorationImage(
+                              image:
+                                  NetworkImage(element.profilePic.toString()))
+                          : DecorationImage(
+                              image: AssetImage(
+                                'assets/images/expert3.png',
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            '',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    borderDecoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(60.0),
+                      ),
+                      border: Border.fromBorderSide(
+                        BorderSide(
+                          color: Colors.red,
+                          width: 1.5,
+                        ),
+                      ),
+                    ),
+                    storyPages:
+                        List.generate(element.storyData?.length ?? 0, (index) {
+                      return FullStoryPage(
+                        imageName: '${element.storyData?[index].storyData}',
+                      );
+                    }),
+                    segmentDuration: const Duration(seconds: 3),
+                  );
+                  buttonDatas.add(buttonData1);
+
+                  storyButtons.add(StoryButton(
+                      onPressed: (data) {
+                        Navigator.of(storycontext!).push(
+                          StoryRoute(
+                            storyContainerSettings: StoryContainerSettings(
+                              buttonData: buttonData1,
+                              tapPosition: buttonData1.buttonCenterPosition!,
+                              curve: buttonData1.pageAnimationCurve,
+                              allButtonDatas: buttonDatas,
+                              pageTransform: StoryPage3DTransform(),
+                              storyListScrollController: ScrollController(),
+                            ),
+                            duration: buttonData1.pageAnimationDuration,
+                          ),
+                        );
+                      },
+                      buttonData: buttonData1,
+                      allButtonDatas: buttonDatas,
+                      storyListViewController: ScrollController()));
+
+                  storyAdded = true;
+                }
               });
             }
           }
@@ -393,6 +393,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             likePost = state.likePost;
           }
         }, builder: (context, state) {
+         print("this is value check-->$apiCalingdone");
           return apiCalingdone == true
               ? SingleChildScrollView(
                   controller: scrollController,
@@ -433,11 +434,23 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ProfileScreen()));
-                              },
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return MultiBlocProvider(
+                                    providers: [
+                                      BlocProvider<NewProfileSCubit>(
+                                        create: (context) => NewProfileSCubit(),
+                                      )
+                                    ],
+                                    child: ProfileScreen(),
+                                  );
+                                }));
+
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => ProfileScreen()));
+                              },,
                               child: SizedBox(
                                 height: 50,
                                 width: 50,
@@ -798,7 +811,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                       SizedBox(
                         height: 30,
                       ),
-                      AllGuestPostRoomData?.object?.content?.length == 0 ||
+                      AllGuestPostRoomData?.object?.content?.length != 0 ||
                               AllGuestPostRoomData
                                       ?.object?.content?.isNotEmpty ==
                                   true
@@ -846,7 +859,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                             height: 10,
                                           ),
                                           Container(
-                                            height: 50,
+                                            height: 60,
                                             child: ListTile(
                                               leading: CircleAvatar(
                                                 backgroundImage: AllGuestPostRoomData
@@ -864,9 +877,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  SizedBox(
-                                                    height: 6,
-                                                  ),
+                                                  // SizedBox(
+                                                  //   height: 6,
+                                                  // ),
                                                   Text(
                                                     "${AllGuestPostRoomData?.object?.content?[index].postUserName}",
                                                     style: TextStyle(
@@ -882,6 +895,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       fontSize: 12,
                                                       fontFamily: "outfit",
                                                     ),
+                                                  ),
+                                                  Text(
+                                                    "${AllGuestPostRoomData?.object?.content?[index].postType}",
+                                                    style: TextStyle(
+                                                        fontSize: 10,
+                                                        fontFamily: "outfit",
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
                                                 ],
                                               ),
@@ -918,31 +939,31 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     .isFollowing ==
                                                                 false
                                                             ? Text(
-                                                                'Follow',
-                                                                style: TextStyle(
-                                                                    fontFamily:
-                                                                        "outfit",
-                                                                    fontSize:
-                                                                        12,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Colors
-                                                                        .white),
-                                                              )
+                                                              'Follow',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      "outfit",
+                                                                  fontSize:
+                                                                      12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .white),
+                                                            )
                                                             : Text(
-                                                                'Following',
-                                                                style: TextStyle(
-                                                                    fontFamily:
-                                                                        "outfit",
-                                                                    fontSize:
-                                                                        12,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Colors
-                                                                        .white),
-                                                              ),
+                                                              'Following',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      "outfit",
+                                                                  fontSize:
+                                                                      12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .white),
+                                                            ),
                                                       ),
                                                     ),
                                             ),
@@ -997,7 +1018,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 .placeholder), */
                                                           ),
                                                     )
-                                                   : AllGuestPostRoomData
+                                                  : AllGuestPostRoomData
                                                               ?.object
                                                               ?.content?[index]
                                                               .postDataType ==
@@ -1668,16 +1689,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                   ),
                 );
 
-          /* Center(
-            child: Container(
-              margin: EdgeInsets.only(bottom: 100),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.asset(ImageConstant.loader,
-                    fit: BoxFit.cover, height: 100.0, width: 100),
-              ),
-            ),
-          ); */
+         
         }));
   }
 

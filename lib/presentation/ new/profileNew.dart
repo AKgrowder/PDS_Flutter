@@ -3,6 +3,10 @@ import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
+import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_state.dart';
+import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/%20new/commetTabbar.dart';
@@ -53,6 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   TextEditingController FeesContrller = TextEditingController();
   TextEditingController uplopdfile = TextEditingController();
   TextEditingController CompanyName = TextEditingController();
+  NewProfileScreen_Model? PublicRoomData;
 
   var arrNotiyTypeList = [
     NotificationModel(
@@ -77,6 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   void initState() {
     _tabController = TabController(length: tabData.length, vsync: this);
+    BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context);
     super.initState();
   }
 
@@ -90,7 +96,717 @@ class _ProfileScreenState extends State<ProfileScreen>
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-    return Scaffold(
+    return BlocConsumer<NewProfileSCubit, NewProfileSState>(
+        listener: (context, state) async {
+      if (state is NewProfileSErrorState) {
+        SnackBar snackBar = SnackBar(
+          content: Text(state.error),
+          backgroundColor: ColorConstant.primary_color,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+
+      if (state is NewProfileSLoadingState) {
+        Center(
+          child: Container(
+            margin: EdgeInsets.only(bottom: 100),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.asset(ImageConstant.loader,
+                  fit: BoxFit.cover, height: 100.0, width: 100),
+            ),
+          ),
+        );
+      }
+
+      if (state is NewProfileSLoadedState) {
+        PublicRoomData = state.PublicRoomData;
+        print(
+            "++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++");
+        print(PublicRoomData?.object?.module);
+      }
+    }, builder: (context, state) {
+      return Scaffold(
+          body: DefaultTabController(
+        length: tabData.length,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                height: _height / 2.6,
+                child: Stack(
+                  children: [
+                    Container(
+                      child: Image.asset(
+                        ImageConstant.myprofile,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 55, left: 16),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          height: 30,
+                          width: 30,
+                          color: Color.fromRGBO(255, 255, 255, 0.3),
+                          child: Center(
+                            child: Image.asset(
+                              ImageConstant.backArrow,
+                              fit: BoxFit.fill,
+                              height: 25,
+                              width: 25,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: 150,
+                        width: 150,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: Colors.white),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Image.asset(ImageConstant.palchoder4),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: Center(
+                  child: Text(
+                    'Kriston Watshon',
+                    style: TextStyle(
+                        fontSize: 26,
+                        fontFamily: "outfit",
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Center(
+                child: Text(
+                  '@Kriston_Watshon',
+                  style: TextStyle(
+                      fontFamily: "outfit",
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xff444444)),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Center(
+                child: Text(
+                  'About...Lorem ipsum dolor sit amet',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: "outfit",
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xff444444)),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              "soicalScreens" != 'soicalScreen'
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EditProfileScreen()));
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            height: 45,
+                            width: _width / 3,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Color(0xffED1C25))),
+                            child: Text(
+                              'Edit Profile',
+                              style: TextStyle(
+                                  fontFamily: "outfit",
+                                  fontSize: 18,
+                                  color: Color(0xffED1C25),
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SettingScreen()));
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(left: 10),
+                            height: 45,
+                            width: 50,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Color(0XFFED1C25)),
+                            child: Icon(
+                              Icons.settings,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(
+                      alignment: Alignment.center,
+                      height: 45,
+                      width: _width / 3,
+                      decoration: BoxDecoration(
+                        color: Color(0xffED1C25),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        'Follow',
+                        style: TextStyle(
+                            fontFamily: "outfit",
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+              SizedBox(
+                height: 12,
+              ),
+              Center(
+                child: Container(
+                  height: 80,
+                  width: _width / 1.1,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: Color(0xffD2D2D2),
+                      )),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 35,
+                      ),
+                      Container(
+                        // height: 55,
+                        width: 55,
+                        // color: Colors.amber,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              '50',
+                              style: TextStyle(
+                                  fontFamily: "outfit",
+                                  fontSize: 25,
+                                  color: Color(0xff000000),
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              'Post',
+                              style: TextStyle(
+                                  fontFamily: "outfit",
+                                  fontSize: 16,
+                                  color: Color(0xff444444),
+                                  fontWeight: FontWeight.w500),
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20, bottom: 20),
+                        child: VerticalDivider(
+                          thickness: 1.5,
+                          color: Color(0xffC2C2C2),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 25,
+                      ),
+                      Container(
+                        // height: 55,
+                        width: 90,
+                        // color: Colors.amber,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 11,
+                            ),
+                            Text(
+                              '5k',
+                              style: TextStyle(
+                                  fontFamily: "outfit",
+                                  fontSize: 25,
+                                  color: Color(0xff000000),
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              'Followers',
+                              style: TextStyle(
+                                  fontFamily: "outfit",
+                                  fontSize: 16,
+                                  color: Color(0xff444444),
+                                  fontWeight: FontWeight.w500),
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20, bottom: 20),
+                        child: VerticalDivider(
+                          thickness: 1.5,
+                          color: Color(0xffC2C2C2),
+                        ),
+                      ),
+                      Container(
+                        // height: 55,
+                        width: 90,
+                        // color: Colors.amber,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 11,
+                            ),
+                            Text(
+                              '3k',
+                              style: TextStyle(
+                                  fontFamily: "outfit",
+                                  fontSize: 25,
+                                  color: Color(0xff000000),
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              'Following',
+                              style: TextStyle(
+                                  fontFamily: "outfit",
+                                  fontSize: 16,
+                                  color: Color(0xff444444),
+                                  fontWeight: FontWeight.w500),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // SizedBox(
+              //   height: 50,
+              // child: TabBar(
+              //     indicatorColor: Colors.black,
+              //     unselectedLabelColor: Color(0xff444444),
+              //     labelColor: Color(0xff000000),
+              //     controller: _tabController,
+              //     tabs: List.generate(
+              //         tabData.length,
+              //         (index) => Tab(
+              //                 child: Text(
+              //               tabData[index].toString(),
+              //               style: TextStyle(
+              //                 fontWeight: FontWeight.bold,
+              //                 fontFamily: "outfit",
+              //                 fontSize: 14,
+              //               ),
+              //             )))),
+              // ),
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 40,
+                            // color: arrNotiyTypeList[0].isSelected
+                            //     ? Color(0xFFED1C25)
+                            //     : Theme.of(context).brightness == Brightness.light
+                            //         ? Colors.white
+                            //         : Colors.black,
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Spacer(),
+                                      Text("Details",
+                                          textScaleFactor: 1.0,
+                                          style: TextStyle(
+                                              // color: arrNotiyTypeList[3].isSelected
+                                              //     ? Colors.white
+                                              //     : Colors.black,
+                                              fontSize: 18,
+                                              fontFamily: 'Outfit',
+                                              fontWeight: FontWeight.bold)),
+                                      Spacer(),
+                                    ],
+                                  ),
+                                  arrNotiyTypeList[0].isSelected
+                                      ? Divider(
+                                          endIndent: 20,
+                                          indent: 20,
+                                          color: Colors.black,
+                                        )
+                                      : SizedBox(),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                        setState(() {
+                          updateType();
+                          arrNotiyTypeList[0].isSelected = true;
+                          print("abcd");
+                        });
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 40,
+                            // color: arrNotiyTypeList[1].isSelected
+                            //     ? Color(0xFFED1C25)
+                            //     : Theme.of(context).brightness == Brightness.light
+                            //         ? Colors.white
+                            //         : Colors.black,
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    const Spacer(),
+                                    Text("Post",
+                                        textScaleFactor: 1.0,
+                                        style: TextStyle(
+                                            // color: arrNotiyTypeList[3].isSelected
+                                            //     ? Colors.white
+                                            //     : Colors.black,
+                                            fontSize: 18,
+                                            fontFamily: 'Outfit',
+                                            fontWeight: FontWeight.bold)),
+                                    Spacer(),
+                                  ],
+                                ),
+                                arrNotiyTypeList[1].isSelected
+                                    ? Divider(
+                                        endIndent: 30,
+                                        indent: 30,
+                                        color: Colors.black,
+                                      )
+                                    : SizedBox(),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      onTap: () {
+                        setState(() {
+                          updateType();
+                          arrNotiyTypeList[1].isSelected = true;
+                          print("abcd");
+                        });
+                      },
+                    ),
+                  ),
+                  Container(
+                    height: 1,
+                    color: Colors.black12,
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      child: Column(
+                        children: [
+                          Container(
+                              height: 40,
+                              alignment: Alignment.center,
+                              // color: arrNotiyTypeList[2].isSelected
+                              //     ? Color(0xFFED1C25)
+                              //     : Theme.of(context).brightness == Brightness.light
+                              //         ? Colors.white
+                              //         : Colors.black,
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Spacer(),
+                                        Text("Comments",
+                                            textScaleFactor: 1.0,
+                                            style: TextStyle(
+                                                // color: arrNotiyTypeList[3].isSelected
+                                                //     ? Colors.white
+                                                //     : Colors.black,
+                                                fontSize: 18,
+                                                fontFamily: 'Outfit',
+                                                fontWeight: FontWeight.bold)),
+                                        Spacer(),
+                                      ],
+                                    ),
+                                    arrNotiyTypeList[2].isSelected
+                                        ? Divider(
+                                            endIndent: 5,
+                                            indent: 5,
+                                            color: Colors.black,
+                                          )
+                                        : SizedBox(),
+                                  ],
+                                ),
+                              )),
+                        ],
+                      ),
+                      onTap: () {
+                        setState(() {
+                          updateType();
+                          arrNotiyTypeList[2].isSelected = true;
+                        });
+                        print("abcd");
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      child: Container(
+                          height: 40,
+                          alignment: Alignment.center,
+                          // color: arrNotiyTypeList[3].isSelected
+                          //     ? Color(0xFFED1C25)
+                          //     : Theme.of(context).brightness == Brightness.light
+                          //         ? Colors.white
+                          //         : Colors.black,
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    const Spacer(),
+                                    Text("Saved",
+                                        textScaleFactor: 1.0,
+                                        style: TextStyle(
+                                            // color: arrNotiyTypeList[3].isSelected
+                                            //     ? Colors.white
+                                            //     : Colors.black,
+                                            fontSize: 18,
+                                            fontFamily: 'Outfit',
+                                            fontWeight: FontWeight.bold)),
+                                    Spacer(),
+                                  ],
+                                ),
+                                arrNotiyTypeList[3].isSelected
+                                    ? Divider(
+                                        endIndent: 25,
+                                        indent: 25,
+                                        color: Colors.black,
+                                      )
+                                    : SizedBox(),
+                              ],
+                            ),
+                          )),
+                      onTap: () {
+                        setState(() {
+                          updateType();
+                          arrNotiyTypeList[3].isSelected = true;
+                        });
+                        print("abcd");
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                color: Colors.red,
+                height: _height * 1.35,
+                child: Column(
+                  children: <Widget>[
+                    /// Content of Tab 1
+                    arrNotiyTypeList[0].isSelected
+                        ? Padding(
+                            padding: const EdgeInsets.only(
+                                left: 16, right: 16, top: 14),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Card(
+                                    color: Colors.white,
+                                    borderOnForeground: true,
+                                    elevation: 10,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    child: ListTile(
+                                      leading: Container(
+                                        width: 35,
+                                        height: 35,
+                                        decoration: ShapeDecoration(
+                                          color: Color(0xFFED1C25),
+                                          shape: OvalBorder(),
+                                        ),
+                                      ),
+                                      title: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Text(
+                                            'About Me',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fringilla natoque id aenean.',
+                                          ),
+                                          SizedBox(
+                                            height: 12,
+                                          ),
+                                        ],
+                                      ),
+                                      trailing: Icon(
+                                        Icons.edit,
+                                        color: Colors.black,
+                                      ),
+                                    )),
+                                Card(
+                                  color: Colors.white,
+                                  borderOnForeground: true,
+                                  elevation: 10,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  /*  child: expertUser(_height, _width) */
+                                  child: expertUser(_height, _width),
+                                ),
+                                Card(
+                                  color: Colors.white,
+                                  borderOnForeground: true,
+                                  elevation: 10,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  /*  child: expertUser(_height, _width) */
+                                  child: compnayUser(_height, _width),
+                                )
+                              ],
+                            ),
+                          )
+                        : SizedBox(),
+
+                    /// Content of Tab 2
+                    // PostTabbarView(image: image),
+
+                    arrNotiyTypeList[1].isSelected
+                        ? Container(
+                            height: _height / 1.5,
+                            child: Padding(
+                              padding:
+                                  EdgeInsets.only(left: 16, right: 16, top: 14),
+                              child: GridView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.zero,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2, // Number of columns
+                                  mainAxisSpacing:
+                                      0.0, // Vertical spacing between items
+                                  crossAxisSpacing:
+                                      20, // Horizontal spacing between items
+                                ),
+                                itemCount: image.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding:
+                                        EdgeInsets.only(bottom: 10, top: 10),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      child: Container(
+                                        margin: EdgeInsets.all(0.0),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                                20)), // Remove margin
+                                        child: Image.asset(
+                                          image[index],
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ) /*  GridItem(imagePath: image[index]) */,
+                                  );
+                                },
+                              ),
+                            ),
+                          )
+                        : SizedBox(),
+
+                    /// Content of Tab 3
+                    arrNotiyTypeList[2].isSelected
+                        ? Container(
+                            height: _height,
+                            child: MyWidget(
+                                selctedValue: selctedValue,
+                                selctedValue1: selctedValue1,
+                                selctedValue2: selctedValue2),
+                          )
+                        : SizedBox(),
+
+                    /// Content of Tab 4
+                    if ("soicalScreens" != 'soicalScreen')
+                      arrNotiyTypeList[3].isSelected
+                          ? Container(
+                              height: _height,
+                              child: ListSaveScreen(
+                                  tabs: SaveList, value2: 1, image: image),
+                            )
+                          : SizedBox(),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              )
+            ],
+          ),
+        ),
+      ));
+    });
+
+    /*  Scaffold(
         body: DefaultTabController(
       length: tabData.length,
       child: SingleChildScrollView(
@@ -609,11 +1325,9 @@ class _ProfileScreenState extends State<ProfileScreen>
               ],
             ),
             Container(
-              // color: Colors.red,
+              color: Colors.red,
               height: _height * 1.35,
-              // width: _width,
               child: Column(
-                // controller: _tabController,
                 children: <Widget>[
                   /// Content of Tab 1
                   arrNotiyTypeList[0].isSelected
@@ -742,21 +1456,22 @@ class _ProfileScreenState extends State<ProfileScreen>
                   /// Content of Tab 3
                   arrNotiyTypeList[2].isSelected
                       ? Container(
-                        height: _height,
-                        child: MyWidget(
-                            selctedValue: selctedValue,
-                            selctedValue1: selctedValue1,
-                            selctedValue2: selctedValue2),
-                      )
+                          height: _height,
+                          child: MyWidget(
+                              selctedValue: selctedValue,
+                              selctedValue1: selctedValue1,
+                              selctedValue2: selctedValue2),
+                        )
                       : SizedBox(),
 
                   /// Content of Tab 4
                   if ("soicalScreens" != 'soicalScreen')
                     arrNotiyTypeList[3].isSelected
-                        ? Container(height: _height,
-                          child: ListSaveScreen(
-                              tabs: SaveList, value2: 1, image: image),
-                        )
+                        ? Container(
+                            height: _height,
+                            child: ListSaveScreen(
+                                tabs: SaveList, value2: 1, image: image),
+                          )
                         : SizedBox(),
                 ],
               ),
@@ -768,6 +1483,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         ),
       ),
     ));
+  */
   }
 
   Widget expertUser(_height, _width) {

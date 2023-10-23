@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,7 +11,7 @@ import 'presentation/splash_screen/splash_screen.dart';
 Future<void> _messageHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('background message ${message.notification!.body}');
-}
+} 
 
 void main() async {
   await WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,7 @@ void main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+    
 
   ///Please update theme as per your need if required.
   ThemeHelper().changeTheme('primary');
