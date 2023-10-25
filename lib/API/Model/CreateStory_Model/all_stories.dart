@@ -33,7 +33,7 @@ class GetAllStoryModel {
 class Object {
   String? userName;
   String? userUid;
-  String? profilePic;
+  dynamic profilePic;
   List<StoryData>? storyData;
 
   Object({this.userName, this.userUid, this.profilePic, this.storyData});
@@ -66,7 +66,7 @@ class StoryData {
   String? storyUid;
   String? storyData;
   String? userUid;
-  String? profilePic;
+  dynamic profilePic;
   String? userName;
   String? createdAt;
   bool? isLoggedIn;

@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,7 +46,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   PlatformFile? file12;
   XFile? pickedFile;
   ImagePicker _imagePicker = ImagePicker();
-  File? pickedImage;
+  List<File> pickedImage = [];
 
   Medium? medium1;
   bool selectImage = false;
@@ -93,7 +92,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
       listener: (context, state) {
         if (state is AddPostImaegState) {
           imageDataPost = state.imageDataPost;
-          print("imageDataPost-->${imageDataPost?.object.toString()}");
+          print("imageDataPost-->${imageDataPost?.object?.data}");
         }
         if (state is AddPostLoadedState) {
           print("lodedSate-->");
@@ -279,18 +278,35 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                               path: imageDataPost?.object
                                                   .toString(),
                                             ))
-                                        : pickedImage?.path != null
-                                            ? Container(
-                                                width: _width,
-                                                child: FittedBox(
-                                                  // fit: BoxFit.cover,
-                                                  child: CachedNetworkImage(
-                                                    imageUrl:
-                                                        '${imageDataPost?.object.toString()}',
-                                                    fit: BoxFit.cover,
-                                                    errorWidget:
-                                                        (context, url, error) {
-                                                      return Icon(Icons.error);
+                                        : pickedImage.isNotEmpty
+                                            ? Expanded(
+                                                child: SizedBox(
+                                                  height: _height,
+                                                  width: _width,
+                                                  child: ListView.builder(
+                                                    padding: EdgeInsets.zero,
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    itemCount: imageDataPost
+                                                        ?.object?.data?.length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          imageUrl:
+                                                              '${imageDataPost?.object?.data?[index]}',
+                                                          fit: BoxFit.cover,
+                                                          errorWidget: (context,
+                                                              url, error) {
+                                                            return Icon(
+                                                                Icons.error);
+                                                          },
+                                                        ),
+                                                      );
                                                     },
                                                   ),
                                                 ),
@@ -350,9 +366,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                   child: GestureDetector(
                                     onTap: () async {
                                       print("asdfdfgdfg");
-                                      _getImageFromSource(ImageSource.camera);
-
-                                      // _getImageFromSource();
+                                      _getImageFromCamera();
                                     },
                                     child: Container(
                                       // margin: EdgeInsets.all(8),
@@ -432,7 +446,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                                     .image,
                                                           );
                                                           file12 = null;
-                                                          pickedImage = null;
+                                                          pickedImage.isEmpty;
                                                           setState(() {});
                                                           print(
                                                               "medium1!.id--.${medium1?.filename}");
@@ -513,7 +527,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  _getImageFromSource(ImageSource.gallery);
+                                  _getImageFromSource();
                                 },
                                 child: Image.asset(
                                   ImageConstant.gallery,
@@ -555,15 +569,14 @@ class _CreateNewPostState extends State<CreateNewPost> {
         lowerCaseImagePath.endsWith('.m4a');
   }
 
-  Future<void> _getImageFromSource(ImageSource source) async {
+  Future<void> _getImageFromCamera() async {
     try {
-      pickedFile = await _imagePicker.pickImage(source: source);
+      pickedFile = await _imagePicker.pickImage(source: ImageSource.camera);
 
       if (pickedFile != null) {
         if (!_isGifOrSvg(pickedFile!.path)) {
-          pickedImage = File(pickedFile!.path);
-          setState(() {});
-          getFileSize1(pickedImage!.path, 1, pickedImage!, 0);
+          pickedImage.add(File(pickedFile!.path));
+          getFileSize1(pickedImage[0].path, 1, pickedImage[0], 0);
         } else {
           Navigator.pop(context);
 
@@ -593,6 +606,58 @@ class _CreateNewPostState extends State<CreateNewPost> {
             ),
           );
         }
+      }
+    } catch (e) {}
+  }
+
+  Future<void> _getImageFromSource() async {
+    try {
+      final pickedFile = await _imagePicker.pickMultiImage();
+      List<XFile> xFilePicker = pickedFile;
+
+      if (xFilePicker.isNotEmpty) {
+        for (var i = 0; i < xFilePicker.length; i++) {
+          if (!_isGifOrSvg(xFilePicker[i].path)) {
+            pickedImage.add(File(xFilePicker[i].path));
+            setState(() {});
+            getFileSize1(pickedImage[i].path, 1, pickedImage[i], 0);
+          }
+          print("xFilePickerxFilePicker - ${xFilePicker[i].path}");
+        }
+      }
+      /*   if (!_isGifOrSvg(pickedFile!.path)) {
+          pickedImage = File(pickedFile!.path);
+          setState(() {});
+          getFileSize1(pickedImage!.path, 1, pickedImage!, 0);
+        } */
+      else {
+        Navigator.pop(context);
+
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(
+              "Selected File Error",
+              textScaleFactor: 1.0,
+            ),
+            content: Text(
+              "Only PNG, JPG Supported.",
+              textScaleFactor: 1.0,
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                child: Container(
+                  // color: Colors.green,
+                  padding: const EdgeInsets.all(10),
+                  child: const Text("Okay"),
+                ),
+              ),
+            ],
+          ),
+        );
       }
     } catch (e) {}
   }
@@ -674,7 +739,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
         print('filenamecheckKB-${file1.path}');
         BlocProvider.of<AddPostCubit>(context).UplodeImageAPIImane(
           context,
-          pickedImage!,
+          pickedImage,
         );
         setState(() {});
 
@@ -710,7 +775,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
           print('filecheckPath-${file1.path}');
           BlocProvider.of<AddPostCubit>(context).UplodeImageAPIImane(
             context,
-            pickedImage!,
+            pickedImage,
           );
         }
 
@@ -841,7 +906,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
       if (postText.text.isNotEmpty && file?.path != null) {
         Map<String, dynamic> param = {
           "description": postText.text,
-          "postData": imageDataPost?.object.toString(),
+          "postData": imageDataPost?.object?.data,
           "postDataType": "IMAGE",
           "postType": soicalData[indexx].toString().toUpperCase()
         };
@@ -849,15 +914,15 @@ class _CreateNewPostState extends State<CreateNewPost> {
       } else if (postText.text.isNotEmpty && file12?.path != null) {
         Map<String, dynamic> param = {
           "description": postText.text,
-          "postData": imageDataPost?.object.toString(),
+          "postData": imageDataPost?.object?.data,
           "postDataType": "ATTACHMENT",
           "postType": soicalData[indexx].toString().toUpperCase()
         };
         BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
-      } else if (postText.text.isNotEmpty && pickedImage?.path != null) {
+      } else if (postText.text.isNotEmpty && pickedImage.isNotEmpty) {
         Map<String, dynamic> param = {
           "description": postText.text,
-          "postData": imageDataPost?.object.toString(),
+          "postData": imageDataPost?.object?.data,
           "postDataType": "IMAGE",
           "postType": soicalData[indexx].toString().toUpperCase()
         };
@@ -865,7 +930,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
       } else if (pickedFile?.path != null && postText.text.isNotEmpty) {
         Map<String, dynamic> param = {
           "description": postText.text,
-          "postData": imageDataPost?.object.toString(),
+          "postData": imageDataPost?.object?.data,
           "postDataType": "IMAGE",
           "postType": soicalData[indexx].toString().toUpperCase()
         };
@@ -879,31 +944,28 @@ class _CreateNewPostState extends State<CreateNewPost> {
           BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
         } else if (file?.path != null) {
           Map<String, dynamic> param = {
-            "postData": imageDataPost?.object.toString(),
+            "postData": imageDataPost?.object?.data,
             "postDataType": "IMAGE",
             "postType": soicalData[indexx].toString().toUpperCase(),
           };
           BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
-        }
-        else if(pickedFile?.path != null){
+        } else if (pickedFile?.path != null) {
           Map<String, dynamic> param = {
-            "postData": imageDataPost?.object.toString(),
+            "postData": imageDataPost?.object?.data,
             "postDataType": "IMAGE",
             "postType": soicalData[indexx].toString().toUpperCase(),
           };
           BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
-        } 
-        
-        else if (file12?.path != null) {
+        } else if (file12?.path != null) {
           Map<String, dynamic> param = {
-            "postData": imageDataPost?.object.toString(),
+            "postData": imageDataPost?.object?.data,
             "postDataType": "ATTACHMENT",
             "postType": soicalData[indexx].toString().toUpperCase(),
           };
           BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
-        } else if (pickedImage?.path != null) {
+        } else if (pickedImage.isNotEmpty) {
           Map<String, dynamic> param = {
-            "postData": imageDataPost?.object.toString(),
+            "postData": imageDataPost?.object?.data,
             "postDataType": "IMAGE",
             "postType": soicalData[indexx].toString().toUpperCase(),
           };

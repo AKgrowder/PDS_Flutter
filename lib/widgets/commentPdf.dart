@@ -63,8 +63,9 @@ class DocumentViewScreen extends StatelessWidget {
 class DocumentViewScreen1 extends StatelessWidget {
   String? path;
   String? title;
+
   bool? dataHowToDislay;
-  DocumentViewScreen1({Key? key, this.path, this.title, this.dataHowToDislay})
+  DocumentViewScreen1({Key? key, this.path, this.title, this.dataHowToDislay,})
       : super(key: key);
 
   @override
