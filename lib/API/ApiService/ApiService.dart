@@ -190,7 +190,6 @@ class ApiServices {
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
     response.headers.addAll(headers1);
     if (params != null) {
- 
       if (apiName != 'create forum') {
         response.fields["document"] = params['document'] ?? "";
         response.fields["companyName"] = params['companyName'] ?? "";
@@ -263,7 +262,7 @@ class ApiServices {
 
   multipartFileWith1(
     String APIurl,
-    File imageFile,
+    List<File> imageFile,
     BuildContext context,
   ) async {
     await UpdateBaseURL();
@@ -274,9 +273,11 @@ class ApiServices {
     final response =
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
     print("API =>******${baseURL + APIurl}");
-    if (imageFile != null) {
-      response.files
-          .add(await http.MultipartFile.fromPath('document', imageFile.path));
+    if (imageFile.isNotEmpty) {
+      imageFile.forEach((element) async {
+        response.files
+            .add(await http.MultipartFile.fromPath('document', element.path));
+      });
     }
     response.headers.addAll(headers1);
     var res = await response.send();

@@ -27,11 +27,12 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       gestUserData = await Repository().GetUserAllPost(context, pageNumber);
       if (gestUserData.success == true) {
+        print("GetUserAllPostAPI data get");
         emit(GetGuestAllPostLoadedState(gestUserData));
       }
     } catch (e) {
-      // print('errorstate-$e');
-      emit(GetGuestAllPostErrorState(gestUserData));
+      print('aaaaaaaa-$e');
+      emit(GetGuestAllPostErrorState(e.toString()));
     }
   }
 
@@ -112,15 +113,15 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostLoadingState());
       getAllStory = await Repository().GetAllStory(context);
       if (getAllStory.success == true) {
-        emit(GetAllStoryLoadedState(getAllStory));
+         emit(GetAllStoryLoadedState(getAllStory));
       }
     } catch (e) {
       print('errorstate-$e');
-      emit(GetGuestAllPostErrorState(getAllStory));
+      emit(GetGuestAllPostErrorState(e));
     }
   }
 
-    Future<void> FetchAllExpertsAPI(BuildContext context) async {
+  Future<void> FetchAllExpertsAPI(BuildContext context) async {
     dynamic PublicRModel;
     try {
       emit(GetGuestAllPostLoadingState());
@@ -132,7 +133,7 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostErrorState(PublicRModel));
     }
   }
-  
+
   Future<void> create_story(
       BuildContext context, Map<String, dynamic> params) async {
     dynamic create_story;

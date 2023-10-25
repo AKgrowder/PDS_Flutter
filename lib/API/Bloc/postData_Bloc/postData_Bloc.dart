@@ -42,7 +42,7 @@ class AddPostCubit extends Cubit<AddPostState> {
     }
   }
 
-  Future<void> UplodeImageAPIImane(BuildContext context, File imageFile) async {
+  Future<void> UplodeImageAPIImane(BuildContext context, List<File> imageFile) async {
     dynamic addPostImageUploded;
     try {
       emit(AddPostLoadingState());
