@@ -1,4 +1,3 @@
-import 'package:camera/camera.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:firebase_core/firebase_core.dart';

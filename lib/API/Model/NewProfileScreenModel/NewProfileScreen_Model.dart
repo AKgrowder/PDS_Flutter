@@ -24,13 +24,13 @@ class NewProfileScreen_Model {
 }
 
 class Object {
-  Null? isApproved;
+  String? isApproved;
   String? userDocument;
-  Null? companyName;
+  String? companyName;
   String? jobProfile;
-  int? fees;
+  double? fees;
   String? workingHours;
-  Null? rejectionReason;
+  String? rejectionReason;
   String? userName;
   String? name;
   String? email;
@@ -39,11 +39,11 @@ class Object {
   String? mobileNo;
   String? uuid;
   String? userProfilePic;
-  Null? userBackgroundPic;
+  String? userBackgroundPic;
   List<IndustryTypes>? industryTypes;
   List<Expertise>? expertise;
-  Null? isEmailVerified;
-  Null? aboutMe;
+  bool? isEmailVerified;
+  String? aboutMe;
   bool? isFollowing;
   int? followersCount;
   int? followingCount;
