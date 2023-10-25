@@ -247,10 +247,10 @@ class _MyAcoountTabbarScreenState extends State<MyAcoountTabbarScreen>
 
                   /// Content of Tab 3
 
-                  MyWidget(
-                      selctedValue: selctedValue,
-                      selctedValue1: selctedValue1,
-                      selctedValue2: selctedValue2),
+                  // MyWidget(
+                  //     selctedValue: selctedValue,
+                  //     selctedValue1: selctedValue1,
+                  //     selctedValue2: selctedValue2),
 
                   Container(
                     height: _height / 3,
