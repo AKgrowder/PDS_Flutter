@@ -101,7 +101,7 @@ class Content {
   String? postUserName;
   String? userProfilePic;
   String? description;
-  String? postData;
+  List<String>? postData;
   String? postDataType;
   String? postType;
   bool? isLiked;
@@ -133,7 +133,7 @@ class Content {
     postUserName = json['postUserName'];
     userProfilePic = json['userProfilePic'];
     description = json['description'];
-    postData = json['postData'];
+     postData = json['postData'].cast<String>();
     postDataType = json['postDataType'];
     postType = json['postType'];
     isLiked = json['isLiked'];
