@@ -1047,9 +1047,9 @@ class Repository {
     }
   }
 
-  userProfile1(File imageFile, BuildContext context) async {
+  userProfile1(List<File> imageFile, BuildContext context) async {
     final response = await apiServices.multipartFileWith1(
-        '${Config.upload_data}', imageFile, context);
+        '${Config.upload_data}', imageFile , context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
