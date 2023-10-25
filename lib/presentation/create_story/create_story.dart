@@ -38,8 +38,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
 
         if (state is AddPostImaegState) {
           imageDataPost = state.imageDataPost;
-
-          Navigator.pop(context, imageDataPost);
+           Navigator.pop(context, imageDataPost);
         }
       },
       builder: (context, state) {

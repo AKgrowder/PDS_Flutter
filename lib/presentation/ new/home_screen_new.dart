@@ -37,6 +37,7 @@ import 'package:pds/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import 'package:pds/presentation/create_foram/create_foram_screen.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
+
 class HomeScreenNew extends StatefulWidget {
   const HomeScreenNew({Key? key}) : super(key: key);
 
@@ -68,6 +69,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   List<Widget> storyPagedata = [];
   GetAllStoryModel? getAllStoryModel;
   FetchAllExpertsModel? AllExperData;
+  bool apiCalingdone = false;
 
   @override
   void initState() {
@@ -111,7 +113,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         .FetchAllExpertsAPI(context);
   }
 
-  loginFunction({String? apiName, int? index}) async {
+  soicalFunation({String? apiName, int? index}) async {
     print("fghdfghdfgh");
     if (uuid == null) {
       Navigator.of(context).push(MaterialPageRoute(
@@ -125,7 +127,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           true) {
         print("indexxx check");
         AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing = false;
-       
       } else {
         AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing = true;
       }
@@ -161,15 +162,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   }
 
   methodtoReffrser() {
+    print("method calling");
+    print("user id-$User_ID");
     User_ID == null ? api() : NewApi();
   }
 
   @override
   Widget build(BuildContext context) {
-    methodtoReffrser();
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-    bool apiCalingdone = false;
 
     return Scaffold(
         floatingActionButton: FloatingActionButton(
@@ -198,6 +199,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         body: BlocConsumer<GetGuestAllPostCubit, GetGuestAllPostState>(
             listener: (context, state) async {
           if (state is GetGuestAllPostErrorState) {
+            print("this is the loded state--${state.error}");
+
             SnackBar snackBar = SnackBar(
               content: Text(state.error),
               backgroundColor: ColorConstant.primary_color,
@@ -236,13 +239,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                         timelineBackgroundColor: Colors.grey,
                         buttonDecoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          image: element.profilePic != ''
+                          image: element.profilePic != null
                               ? DecorationImage(
-                                  image: NetworkImage(
-                                      element.profilePic.toString()))
+                                  image: NetworkImage(element.profilePic))
                               : DecorationImage(
                                   image: AssetImage(
-                                    'assets/images/expert3.png',
+                                    ImageConstant.placeholder2,
                                   ),
                                   fit: BoxFit.cover,
                                 ),
@@ -312,8 +314,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                       image: element.profilePic != null ||
                               element.profilePic != ''
                           ? DecorationImage(
-                              image:
-                                  NetworkImage(element.profilePic.toString()))
+                              image: NetworkImage(element.profilePic.toString()))
                           : DecorationImage(
                               image: AssetImage(
                                 'assets/images/expert3.png',
@@ -384,16 +385,16 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             }
           }
           if (state is GetGuestAllPostLoadedState) {
-            AllGuestPostRoomData = state.GetGuestAllPostRoomData;
-
-            print(AllGuestPostRoomData?.object?.content?[0].description);
             apiCalingdone = true;
+            print("gsfgsdfgsdfgg-$apiCalingdone");
+            print("GetGuestAllPostLoadedStateloded");
+            AllGuestPostRoomData = state.GetGuestAllPostRoomData;
           }
           if (state is PostLikeLoadedState) {
             likePost = state.likePost;
           }
         }, builder: (context, state) {
-         print("this is value check-->$apiCalingdone");
+          print("this is value check-->$apiCalingdone");
           return apiCalingdone == true
               ? SingleChildScrollView(
                   controller: scrollController,
@@ -445,12 +446,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                     child: ProfileScreen(),
                                   );
                                 }));
-
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => ProfileScreen()));
-                              },,
+                              },
                               child: SizedBox(
                                 height: 50,
                                 width: 50,
@@ -914,7 +910,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   ? SizedBox()
                                                   : GestureDetector(
                                                       onTap: () async {
-                                                        await loginFunction(
+                                                        await soicalFunation(
                                                             apiName: 'Follow',
                                                             index: index);
                                                       },
@@ -939,31 +935,31 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     .isFollowing ==
                                                                 false
                                                             ? Text(
-                                                              'Follow',
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      "outfit",
-                                                                  fontSize:
-                                                                      12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .white),
-                                                            )
+                                                                'Follow',
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        "outfit",
+                                                                    fontSize:
+                                                                        12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .white),
+                                                              )
                                                             : Text(
-                                                              'Following',
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      "outfit",
-                                                                  fontSize:
-                                                                      12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .white),
-                                                            ),
+                                                                'Following',
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        "outfit",
+                                                                    fontSize:
+                                                                        12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .white),
+                                                              ),
                                                       ),
                                                     ),
                                             ),
@@ -1023,18 +1019,26 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               ?.content?[index]
                                                               .postDataType ==
                                                           "ATTACHMENT"
-                                                      ? Container(
-                                                          height: 400,
-                                                          width: _width,
-                                                          child:
-                                                              DocumentViewScreen1(
-                                                            path:
-                                                                AllGuestPostRoomData
+                                                      ? (AllGuestPostRoomData
+                                                                  ?.object
+                                                                  ?.content?[
+                                                                      index]
+                                                                  .postData
+                                                                  ?.isNotEmpty ==
+                                                              true)
+                                                          ? Container(
+                                                              height: 400,
+                                                              width: _width,
+                                                              child:
+                                                                  DocumentViewScreen1(
+                                                                path: AllGuestPostRoomData
                                                                     ?.object
                                                                     ?.content?[
                                                                         index]
-                                                                    .postData,
-                                                          ))
+                                                                    .postData?[0]
+                                                                    .toString(),
+                                                              ))
+                                                          : SizedBox()
                                                       : SizedBox(),
                                           Padding(
                                             padding:
@@ -1056,7 +1060,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 ),
                                                 GestureDetector(
                                                   onTap: () async {
-                                                    await loginFunction(
+                                                    await soicalFunation(
                                                         apiName: 'like_post',
                                                         index: index);
                                                   },
@@ -1188,7 +1192,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 Spacer(),
                                                 GestureDetector(
                                                   onTap: () async {
-                                                    await loginFunction(
+                                                    await soicalFunation(
                                                         apiName: 'savedata',
                                                         index: index);
                                                   },
@@ -1688,8 +1692,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                     ),
                   ),
                 );
-
-         
         }));
   }
 
