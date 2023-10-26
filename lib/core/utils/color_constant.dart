@@ -11,6 +11,7 @@ class ColorConstant {
 
   static Color primary_color = fromHex('#ED1C25');
   static Color primaryLight_color = fromHex('#FBD8D9');
+  static Color HasTagColor = fromHex('#1A9ED7');
 
   
 }
