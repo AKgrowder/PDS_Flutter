@@ -113,7 +113,7 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostLoadingState());
       getAllStory = await Repository().GetAllStory(context);
       if (getAllStory.success == true) {
-         emit(GetAllStoryLoadedState(getAllStory));
+        emit(GetAllStoryLoadedState(getAllStory));
       }
     } catch (e) {
       print('errorstate-$e');
@@ -146,6 +146,22 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     } catch (e) {
       // print('errorstate-$e');
       emit(GetGuestAllPostErrorState(create_story));
+    }
+  }
+
+  Future<void> DeletePost(String postUid, BuildContext context) async {
+    dynamic Deletepost;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      Deletepost = await Repository().Deletepost(postUid, context);
+      if (Deletepost.success == true) {
+        emit(DeletePostLoadedState(Deletepost));
+        Navigator.pop(context);
+      } else {
+        emit(GetGuestAllPostErrorState(Deletepost.message));
+      }
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(Deletepost));
     }
   }
 }

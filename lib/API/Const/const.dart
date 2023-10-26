@@ -71,4 +71,5 @@ class Config {
   static const String getAllStory = "user/api/get_all_story";
   static const String crateStroyCheck = "user/api/create_story";
   static const String industryType = "user/api/get_all_industry_types";
+  static const String Deletepost= "user/api/delete_post";
 }

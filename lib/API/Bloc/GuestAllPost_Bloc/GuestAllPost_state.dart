@@ -1,4 +1,5 @@
 import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
+import 'package:pds/API/Model/Delete_Api_model/delete_api_model.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:pds/API/Model/createStroyModel/createStroyModel.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
@@ -37,6 +38,11 @@ class GetAllStoryLoadedState extends GetGuestAllPostState {
 class CreateStoryLodedState extends GetGuestAllPostState {
   final CreateStroy createStroy;
   CreateStoryLodedState(this.createStroy);
+}
+
+class DeletePostLoadedState extends GetGuestAllPostState {
+  final DeletePostModel DeletePost;
+  DeletePostLoadedState(this.DeletePost);
 }
 
  
