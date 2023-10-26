@@ -50,6 +50,14 @@ class _ProfileScreenState extends State<ProfileScreen>
     ImageConstant.post2,
     ImageConstant.post2,
     ImageConstant.post2,
+    ImageConstant.post1,
+    ImageConstant.post1,
+    ImageConstant.post1,
+    ImageConstant.post1,
+    ImageConstant.post1,
+    ImageConstant.post1,
+    ImageConstant.post1,
+    ImageConstant.post1,
     ImageConstant.post2,
     ImageConstant.post2,
     ImageConstant.post2,
@@ -76,6 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   int CommentsPostCount = 15;
   int FinalSavePostCount = 0;
   int SavePostCount = 0;
+  int SaveBlogCount = 10;
 
   int? value1;
   dynamic dataSetup;
@@ -385,7 +394,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               height: 10,
                             ),
                             Text(
-                              '50',
+                              '${NewProfileData?.object?.postCount}',
                               style: TextStyle(
                                   fontFamily: "outfit",
                                   fontSize: 25,
@@ -426,7 +435,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               height: 11,
                             ),
                             Text(
-                              '5k',
+                              '${NewProfileData?.object?.followersCount}',
                               style: TextStyle(
                                   fontFamily: "outfit",
                                   fontSize: 25,
@@ -464,7 +473,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               height: 11,
                             ),
                             Text(
-                              '3k',
+                              '${NewProfileData?.object?.followingCount}',
                               style: TextStyle(
                                   fontFamily: "outfit",
                                   fontSize: 25,
@@ -716,7 +725,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ],
               ),
               Container(
-                color: Colors.red,
+                // color: Colors.red,
                 height: arrNotiyTypeList[0].isSelected == true
                     ? NewProfileData?.object?.module == "EMPLOYEE"
                         ? _height / 3
@@ -728,9 +737,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                     : arrNotiyTypeList[1].isSelected == true
                         ? FinalPostCount * 190
                         : arrNotiyTypeList[2].isSelected == true
-                            ? CommentsPostCount * 300 + 100
+                            ? CommentsPostCount * 310 + 100
                             : arrNotiyTypeList[3].isSelected == true
-                                ? FinalSavePostCount * 220
+                                ? value1 == 0
+                                    ? FinalSavePostCount * 210
+                                    : SaveBlogCount * 145 + 100
                                 : 10,
                 child: Column(
                   children: <Widget>[
@@ -872,7 +883,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     arrNotiyTypeList[2].isSelected
                         ? Container(
                             // color: Colors.green,
-                            height: CommentsPostCount * 300 + 100,
+                            height: CommentsPostCount * 310 + 100,
                             child: Padding(
                               padding: const EdgeInsets.only(
                                   left: 16, right: 16, top: 10),
@@ -1054,297 +1065,297 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       itemCount: CommentsPostCount,
                                       itemBuilder: (context, index) {
                                         return Container(
-                                          // margin: EdgeInsets.all(10),
-                                          height: 300,
-                                          width: _width,
-                                          decoration: ShapeDecoration(
-                                            shape: RoundedRectangleBorder(
-                                              side: BorderSide(
-                                                  width: 1,
-                                                  color: Color(0xFFD3D3D3)),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                          ),
-                                          child: Column(
-                                            children: [
-                                              Expanded(
-                                                child: Container(
-                                                    // color: Colors.amber,
-                                                    child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      width: 50,
-                                                      height: 50,
-                                                      margin: EdgeInsets.only(
-                                                          left: 5, top: 10),
-                                                      decoration:
-                                                          ShapeDecoration(
-                                                        image: DecorationImage(
-                                                          image: AssetImage(
-                                                              ImageConstant
-                                                                  .placeholder2),
-                                                          fit: BoxFit.fill,
-                                                        ),
-                                                        shape: OvalBorder(),
-                                                      ),
-                                                    ),
-                                                    Column(
+                                          height: 310,
+                                          child: Center(
+                                            child: Container(
+                                              // margin: EdgeInsets.all(10),
+                                              height: 300,
+                                              width: _width,
+                                              decoration: ShapeDecoration(
+                                                // color: Colors.green,
+                                                shape: RoundedRectangleBorder(
+                                                  side: BorderSide(
+                                                      width: 1,
+                                                      color: Color(0xFFD3D3D3)),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  Expanded(
+                                                    child: Container(
+                                                        // color: Colors.amber,
+                                                        child: Row(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        SizedBox(
-                                                          height: 15,
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 10),
-                                                          child: Text(
-                                                            'Kriston Watshon',
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 16,
-                                                              fontFamily:
-                                                                  'outfit',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
+                                                        Container(
+                                                          width: 50,
+                                                          height: 50,
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  left: 5,
+                                                                  top: 10),
+                                                          decoration:
+                                                              ShapeDecoration(
+                                                            image:
+                                                                DecorationImage(
+                                                              image: AssetImage(
+                                                                  ImageConstant
+                                                                      .placeholder2),
+                                                              fit: BoxFit.fill,
                                                             ),
+                                                            shape: OvalBorder(),
                                                           ),
                                                         ),
-                                                        Expanded(
-                                                          child: Container(
-                                                            margin:
-                                                                EdgeInsets.only(
-                                                                    left: 10),
-                                                            width: _width / 1.9,
-                                                            // color: Colors.red,
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Text(
-                                                                  'Lorem ipsum dolor sit amet, dolor consectetur adip.',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontFamily:
-                                                                        'outfit',
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400,
-                                                                  ),
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            SizedBox(
+                                                              height: 15,
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left: 10),
+                                                              child: Text(
+                                                                'Kriston Watshon',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontFamily:
+                                                                      'outfit',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
                                                                 ),
-                                                                Text('....'),
-                                                                Text(
-                                                                  '1w',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Color(
-                                                                        0xFF8F8F8F),
-                                                                    fontSize:
-                                                                        12,
-                                                                    fontFamily:
-                                                                        'outfit',
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400,
-                                                                  ),
-                                                                ),
-                                                                Container(
-                                                                  height:
-                                                                      _height /
-                                                                          4.57,
-                                                                  width: _width,
-                                                                  // color: Colors.amber,
-                                                                  child: Column(
-                                                                    children: [
-                                                                      Row(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          Container(
-                                                                            width:
-                                                                                45,
-                                                                            height:
-                                                                                45,
-                                                                            margin:
-                                                                                EdgeInsets.only(top: 15),
-                                                                            decoration:
-                                                                                ShapeDecoration(
-                                                                              image: DecorationImage(
-                                                                                image: AssetImage(ImageConstant.placeholder2),
-                                                                                fit: BoxFit.fill,
-                                                                              ),
-                                                                              shape: OvalBorder(),
-                                                                            ),
-                                                                          ),
-                                                                          Padding(
-                                                                            padding: const EdgeInsets.only(
-                                                                                left: 8,
-                                                                                top: 5,
-                                                                                right: 3),
-                                                                            child:
-                                                                                Column(
-                                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                                              children: [
-                                                                                SizedBox(
-                                                                                  height: 10,
-                                                                                ),
-                                                                                Text(
-                                                                                  'Kriston Watshon',
-                                                                                  style: TextStyle(
-                                                                                    color: Colors.black,
-                                                                                    fontSize: 16,
-                                                                                    fontFamily: "outfit",
-                                                                                    fontWeight: FontWeight.w600,
-                                                                                  ),
-                                                                                ),
-                                                                                Container(
-                                                                                  width: 160,
-                                                                                  child: Text(
-                                                                                    'Lorem ipsum dolor sit..',
-                                                                                    maxLines: 1,
-                                                                                    style: TextStyle(
-                                                                                      overflow: TextOverflow.ellipsis,
-                                                                                      color: Colors.black,
-                                                                                      fontSize: 16,
-                                                                                      fontFamily: "outfit",
-                                                                                      fontWeight: FontWeight.w600,
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
-                                                                                Text(
-                                                                                  '1w',
-                                                                                  style: TextStyle(
-                                                                                    color: Color(0xFF8F8F8F),
-                                                                                    fontSize: 12,
-                                                                                    fontFamily: "outfit",
-                                                                                    fontWeight: FontWeight.w400,
-                                                                                  ),
-                                                                                )
-                                                                              ],
-                                                                            ),
-                                                                          )
-                                                                        ],
+                                                              ),
+                                                            ),
+                                                            Expanded(
+                                                              child: Container(
+                                                                margin: EdgeInsets
+                                                                    .only(
+                                                                        left:
+                                                                            10),
+                                                                width: _width /
+                                                                    1.9,
+                                                                // color: Colors.red,
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Lorem ipsum dolor sit amet, dolor consectetur adip.',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontFamily:
+                                                                            'outfit',
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
                                                                       ),
-                                                                      Row(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
+                                                                    ),
+                                                                    Text(
+                                                                        '....'),
+                                                                    Text(
+                                                                      '1w',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: Color(
+                                                                            0xFF8F8F8F),
+                                                                        fontSize:
+                                                                            12,
+                                                                        fontFamily:
+                                                                            'outfit',
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                      ),
+                                                                    ),
+                                                                    Container(
+                                                                      height:
+                                                                          _height /
+                                                                              4.57,
+                                                                      width:
+                                                                          _width,
+                                                                      // color: Colors.amber,
+                                                                      child:
+                                                                          Column(
                                                                         children: [
-                                                                          Container(
-                                                                            width:
-                                                                                45,
-                                                                            height:
-                                                                                45,
-                                                                            margin:
-                                                                                EdgeInsets.only(top: 15),
-                                                                            decoration:
-                                                                                ShapeDecoration(
-                                                                              image: DecorationImage(
-                                                                                image: AssetImage(ImageConstant.placeholder2),
-                                                                                fit: BoxFit.fill,
+                                                                          Row(
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            children: [
+                                                                              Container(
+                                                                                width: 45,
+                                                                                height: 45,
+                                                                                margin: EdgeInsets.only(top: 15),
+                                                                                decoration: ShapeDecoration(
+                                                                                  image: DecorationImage(
+                                                                                    image: AssetImage(ImageConstant.placeholder2),
+                                                                                    fit: BoxFit.fill,
+                                                                                  ),
+                                                                                  shape: OvalBorder(),
+                                                                                ),
                                                                               ),
-                                                                              shape: OvalBorder(),
-                                                                            ),
-                                                                          ),
-                                                                          Padding(
-                                                                            padding: const EdgeInsets.only(
-                                                                                left: 8,
-                                                                                top: 5,
-                                                                                right: 3),
-                                                                            child:
-                                                                                Container(
-                                                                              child: Column(
-                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                children: [
-                                                                                  SizedBox(
-                                                                                    height: 10,
-                                                                                  ),
-                                                                                  Text(
-                                                                                    'Kriston Watshon',
-                                                                                    style: TextStyle(
-                                                                                      color: Colors.black,
-                                                                                      fontSize: 16,
-                                                                                      fontFamily: "outfit",
-                                                                                      fontWeight: FontWeight.w600,
+                                                                              Padding(
+                                                                                padding: const EdgeInsets.only(left: 8, top: 5, right: 3),
+                                                                                child: Column(
+                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                  children: [
+                                                                                    SizedBox(
+                                                                                      height: 10,
                                                                                     ),
-                                                                                  ),
-                                                                                  Container(
-                                                                                    height: 50,
-                                                                                    width: 160,
-                                                                                    child: Text(
-                                                                                      'Lorem ipsum dolor sit amet, dolor consectetur adip.',
-                                                                                      maxLines: 2,
+                                                                                    Text(
+                                                                                      'Kriston Watshon',
                                                                                       style: TextStyle(
-                                                                                        overflow: TextOverflow.ellipsis,
                                                                                         color: Colors.black,
                                                                                         fontSize: 16,
                                                                                         fontFamily: "outfit",
                                                                                         fontWeight: FontWeight.w600,
                                                                                       ),
                                                                                     ),
-                                                                                  ),
-                                                                                  Text(
-                                                                                    '1ww',
-                                                                                    style: TextStyle(
-                                                                                      color: Color(0xFF8F8F8F),
-                                                                                      fontSize: 12,
-                                                                                      fontFamily: "outfit",
-                                                                                      fontWeight: FontWeight.w400,
+                                                                                    Container(
+                                                                                      width: 160,
+                                                                                      child: Text(
+                                                                                        'Lorem ipsum dolor sit..',
+                                                                                        maxLines: 1,
+                                                                                        style: TextStyle(
+                                                                                          overflow: TextOverflow.ellipsis,
+                                                                                          color: Colors.black,
+                                                                                          fontSize: 16,
+                                                                                          fontFamily: "outfit",
+                                                                                          fontWeight: FontWeight.w600,
+                                                                                        ),
+                                                                                      ),
                                                                                     ),
-                                                                                  )
-                                                                                ],
+                                                                                    Text(
+                                                                                      '1w',
+                                                                                      style: TextStyle(
+                                                                                        color: Color(0xFF8F8F8F),
+                                                                                        fontSize: 12,
+                                                                                        fontFamily: "outfit",
+                                                                                        fontWeight: FontWeight.w400,
+                                                                                      ),
+                                                                                    )
+                                                                                  ],
+                                                                                ),
+                                                                              )
+                                                                            ],
+                                                                          ),
+                                                                          Row(
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            children: [
+                                                                              Container(
+                                                                                width: 45,
+                                                                                height: 45,
+                                                                                margin: EdgeInsets.only(top: 15),
+                                                                                decoration: ShapeDecoration(
+                                                                                  image: DecorationImage(
+                                                                                    image: AssetImage(ImageConstant.placeholder2),
+                                                                                    fit: BoxFit.fill,
+                                                                                  ),
+                                                                                  shape: OvalBorder(),
+                                                                                ),
                                                                               ),
-                                                                            ),
-                                                                          )
+                                                                              Padding(
+                                                                                padding: const EdgeInsets.only(left: 8, top: 5, right: 3),
+                                                                                child: Container(
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      SizedBox(
+                                                                                        height: 10,
+                                                                                      ),
+                                                                                      Text(
+                                                                                        'Kriston Watshon',
+                                                                                        style: TextStyle(
+                                                                                          color: Colors.black,
+                                                                                          fontSize: 16,
+                                                                                          fontFamily: "outfit",
+                                                                                          fontWeight: FontWeight.w600,
+                                                                                        ),
+                                                                                      ),
+                                                                                      Container(
+                                                                                        height: 50,
+                                                                                        width: 160,
+                                                                                        child: Text(
+                                                                                          'Lorem ipsum dolor sit amet, dolor consectetur adip.',
+                                                                                          maxLines: 2,
+                                                                                          style: TextStyle(
+                                                                                            overflow: TextOverflow.ellipsis,
+                                                                                            color: Colors.black,
+                                                                                            fontSize: 16,
+                                                                                            fontFamily: "outfit",
+                                                                                            fontWeight: FontWeight.w600,
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                      Text(
+                                                                                        '1ww',
+                                                                                        style: TextStyle(
+                                                                                          color: Color(0xFF8F8F8F),
+                                                                                          fontSize: 12,
+                                                                                          fontFamily: "outfit",
+                                                                                          fontWeight: FontWeight.w400,
+                                                                                        ),
+                                                                                      )
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              )
+                                                                            ],
+                                                                          ),
                                                                         ],
                                                                       ),
-                                                                    ],
-                                                                  ),
-                                                                  // color: Colors.amber,
-                                                                )
-                                                              ],
+                                                                      // color: Colors.amber,
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              ),
                                                             ),
-                                                          ),
+                                                          ],
                                                         ),
-                                                      ],
-                                                    ),
-                                                    Container(
-                                                      width: 60,
-                                                      height: 60,
-                                                      margin: EdgeInsets.only(
-                                                          left: 10, top: 5),
-                                                      decoration:
-                                                          ShapeDecoration(
-                                                        image: DecorationImage(
-                                                          image: AssetImage(
-                                                              ImageConstant
-                                                                  .design),
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                        shape:
-                                                            RoundedRectangleBorder(
+                                                        Container(
+                                                          width: 60,
+                                                          height: 60,
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  left: 10,
+                                                                  top: 5),
+                                                          decoration:
+                                                              ShapeDecoration(
+                                                            image:
+                                                                DecorationImage(
+                                                              image: AssetImage(
+                                                                  ImageConstant
+                                                                      .design),
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                            shape: RoundedRectangleBorder(
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(
                                                                             4)),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
+                                            ),
                                           ),
                                         );
                                       },
@@ -1360,8 +1371,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                     if ("soicalScreens" != 'soicalScreen')
                       arrNotiyTypeList[3].isSelected
                           ? Container(
-                              height: FinalSavePostCount * 220,
-                              color: Colors.green,
+                              height: value1 == 0
+                                  ? FinalSavePostCount * 210
+                                  : SaveBlogCount * 145 + 100,
+                              // color: Colors.green,
                               child: DefaultTabController(
                                 length: SaveList.length,
                                 child: Padding(
@@ -2126,7 +2139,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget NavagtionPassing() {
-  /*   if (dataSetup != null) {
+    /*   if (dataSetup != null) {
       if (dataSetup == 0) {
         return Expanded(
             child: Padding(
@@ -2274,160 +2287,164 @@ class _ProfileScreenState extends State<ProfileScreen>
         );
       }
     } else { */
-      if (value1 != null) {
-        if (value1 == 0) {
-          return Expanded(
-              child: Padding(
-            padding: EdgeInsets.only(left: 10, right: 10),
-            child: GridView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.zero,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 0.0,
-                crossAxisSpacing: 20,
-              ),
-              itemCount: SaveUserPost.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 10, top: 10),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12.0),
-                    child: Container(
-                      margin: EdgeInsets.all(0.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Image.asset(
-                        SaveUserPost[index],
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                );
-              },
+    if (value1 != null) {
+      if (value1 == 0) {
+        return Expanded(
+            child: Padding(
+          padding: EdgeInsets.only(left: 10, right: 10),
+          child: GridView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 20,
+              crossAxisSpacing: 20,
             ),
-          ));
-        } else {
-          return Expanded(
-            child: ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: 1,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.only(
-                      left: 10, right: 10, top: 10, bottom: 10),
+            itemCount: SaveUserPost.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: 0, top: 0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12.0),
                   child: Container(
-                    height: 130,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: Colors.grey, width: 0.5)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Row(
-                        children: [
-                          Stack(
-                            children: [
-                              Image.asset(
-                                ImageConstant.dummyImage,
-                                width: 135,
-                              ),
-                              Positioned(
-                                  top: 8,
-                                  left: 8,
-                                  child: Container(
-                                    height: 25,
-                                    width: 25,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: Colors.white),
-                                    child: Center(
-                                        child: Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Image.asset(
-                                          ImageConstant.save_icon_360),
-                                    )),
-                                  ))
-                            ],
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 5),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    children: [
-                                      Text(
-                                        "Guide to Professional looking packaing desigm",
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black),
-                                      ),
-                                      Text(
-                                        "Lectus scelerisque vulputate tortor pellentesque ac. Fringilla cras ut facilisis amet imperdiet...",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.grey),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "27th June 2020",
-                                        style: TextStyle(
-                                            fontSize: 9.5,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.grey),
-                                      ),
-                                      Text(
-                                        "10:47 pm",
-                                        style: TextStyle(
-                                            fontSize: 9.5,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.grey),
-                                      ),
-                                      Text(
-                                        "12.3K Views",
-                                        style: TextStyle(
-                                            fontSize: 9.5,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.grey),
-                                      ),
-                                      Image.asset(
-                                        ImageConstant.like_icon_360,
-                                        height: 15,
-                                      ),
-                                      Image.asset(
-                                        ImageConstant.arrowright,
-                                        height: 15,
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
+                    margin: EdgeInsets.all(0.0),
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                    child: Image.asset(
+                      SaveUserPost[index],
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ));
+      } else {
+        return Expanded(
+          child: ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: SaveBlogCount,
+            itemBuilder: (context, index) {
+              return Container(
+                height: 140,
+                // color: Colors.red,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: Center(
+                    child: Container(
+                      height: 130,
+                      decoration: BoxDecoration(
+                          // color: Colors.green,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: Colors.grey, width: 0.5)),
+                      child: Padding(
+                        padding: EdgeInsets.all(5.0),
+                        child: Row(
+                          children: [
+                            Stack(
+                              children: [
+                                Image.asset(
+                                  ImageConstant.dummyImage,
+                                  width: 135,
+                                ),
+                                Positioned(
+                                    top: 8,
+                                    left: 8,
+                                    child: Container(
+                                      height: 25,
+                                      width: 25,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          color: Colors.white),
+                                      child: Center(
+                                          child: Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Image.asset(
+                                            ImageConstant.save_icon_360),
+                                      )),
+                                    ))
+                              ],
                             ),
-                          )
-                        ],
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 5),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Text(
+                                          "Guide to Professional looking packaing desigm",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black),
+                                        ),
+                                        Text(
+                                          "Lectus scelerisque vulputate tortor pellentesque ac. Fringilla cras ut facilisis amet imperdiet...",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.grey),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "27th June 2020",
+                                          style: TextStyle(
+                                              fontSize: 9.5,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.grey),
+                                        ),
+                                        Text(
+                                          "10:47 pm",
+                                          style: TextStyle(
+                                              fontSize: 9.5,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.grey),
+                                        ),
+                                        Text(
+                                          "12.3K Views",
+                                          style: TextStyle(
+                                              fontSize: 9.5,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.grey),
+                                        ),
+                                        Image.asset(
+                                          ImageConstant.like_icon_360,
+                                          height: 15,
+                                        ),
+                                        Image.asset(
+                                          ImageConstant.arrowright,
+                                          height: 15,
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                );
-              },
-            ),
-          );
-        }
+                ),
+              );
+            },
+          ),
+        );
       }
+    }
     // }
-    return Expanded(
-        child: Container(
-      color: Colors.white,
-    ));
+    return SizedBox();
   }
 
   Widget expertUser(_height, _width) {
