@@ -110,6 +110,25 @@ class ApiServices {
     } else {}
   }
 
+  Future<Response?> deleteApiCall(
+      String APIurl, Map<String, dynamic> params, BuildContext context) async {
+    await UpdateBaseURL();
+
+    final headers1 = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${Token}'
+    };
+    print("API =>******${baseURL + APIurl}");
+    final response = await delete(Uri.parse(baseURL + APIurl),
+        headers: headers1, body: json.encode(params));
+
+    if (response.statusCode == 602) {
+      await setLOGOUT(context);
+    } else {
+      return response;
+    }
+  }
+
   postApiCalla(String APIurl, BuildContext context) async {
     await UpdateBaseURL();
     final headers1 = {
