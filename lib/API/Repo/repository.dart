@@ -1,38 +1,40 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:pds/API/Model/IndustrytypeModel/Industrytype_Model.dart';
-import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
-import 'package:pds/API/Model/Add_comment_model/get_comments_model.dart';
+
 import 'package:flutter/cupertino.dart';
-import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
-import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
-import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart';
-import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
+import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_PostModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
-import 'package:pds/API/Model/RateUseModel/Rateuse_model.dart';
-import 'package:pds/API/Model/ViewDetails_Model/ViewDetails_model.dart';
-import 'package:pds/API/Model/createStroyModel/createStroyModel.dart';
-import 'package:pds/API/Model/emailVerfiaction/emailVerfiaction.dart';
-import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
-import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
-import 'package:pds/API/Model/pinAndUnpinModel/pinAndUnpinModel.dart';
-import '../Model/SelectRoomModel/SelectRoom_Model.dart';
-import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
+import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
+import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
 import 'package:pds/API/Model/DeleteUserModel/DeleteUser_Model.dart';
+import 'package:pds/API/Model/Delete_Api_model/delete_api_model.dart';
 import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
+import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
+import 'package:pds/API/Model/GetGuestAllPostModel/GetPostLike_Model.dart';
 import 'package:pds/API/Model/Get_all_blog_Model/get_all_blog_model.dart';
+import 'package:pds/API/Model/IndustrytypeModel/Industrytype_Model.dart';
+import 'package:pds/API/Model/LogOutModel/LogOut_model.dart';
+import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart';
+import 'package:pds/API/Model/RateUseModel/Rateuse_model.dart';
 import 'package:pds/API/Model/UserReActivateModel/UserReActivate_model.dart';
+import 'package:pds/API/Model/ViewDetails_Model/ViewDetails_model.dart';
 import 'package:pds/API/Model/authModel/getUserDetailsMdoel.dart';
 import 'package:pds/API/Model/authModel/loginModel.dart';
 import 'package:pds/API/Model/authModel/registerModel.dart';
 import 'package:pds/API/Model/checkUserStatusModel/chekuserStausModel.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
+import 'package:pds/API/Model/createStroyModel/createStroyModel.dart';
 import 'package:pds/API/Model/deviceInfo/deviceInfo_model.dart';
+import 'package:pds/API/Model/emailVerfiaction/emailVerfiaction.dart';
 import 'package:pds/API/Model/forget_password_model/forget_password_model.dart';
+import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
+import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/otpmodel/otpmodel.dart';
+import 'package:pds/API/Model/pinAndUnpinModel/pinAndUnpinModel.dart';
 import 'package:pds/API/Model/sherInviteModel/sherinviteModel.dart';
 import 'package:pds/API/Model/updateprofileModel/updateprofileModel.dart';
+
 import '../ApiService/ApiService.dart';
 import '../Const/const.dart';
 import '../Model/AddThread/CreateRoom_Model.dart';
@@ -43,7 +45,9 @@ import '../Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import '../Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
 import '../Model/HomeScreenModel/MyPublicRoom_model.dart';
 import '../Model/HomeScreenModel/PublicRoomModel.dart';
+import '../Model/HomeScreenModel/getLoginPublicRoom_model.dart';
 import '../Model/InvitationModel/Invitation_Model.dart';
+import '../Model/SelectRoomModel/SelectRoom_Model.dart';
 import '../Model/SendMSG/SendMSG_Model.dart';
 import '../Model/System_Config_model/fetchUserModule_model.dart';
 import '../Model/System_Config_model/system_config_model.dart';
@@ -55,10 +59,6 @@ import '../Model/delete_room_model/Delete_room_model.dart';
 import '../Model/fetch_room_detail_model/fetch_room_detail_model.dart';
 import '../Model/forget_password_model/change_password_model.dart';
 import '../Model/myaccountModel/myaccountModel.dart';
-import 'package:pds/API/Model/LogOutModel/LogOut_model.dart';
-import '../Model/HomeScreenModel/getLoginPublicRoom_model.dart';
-import 'package:pds/API/Model/GetGuestAllPostModel/GetPostLike_Model.dart';
-import 'package:pds/API/Model/CreateStory_Model/CreateStory_model.dart';
 
 class Repository {
   ApiServices apiServices = ApiServices();
@@ -1049,7 +1049,7 @@ class Repository {
 
   userProfile1(List<File> imageFile, BuildContext context) async {
     final response = await apiServices.multipartFileWith1(
-        '${Config.upload_data}', imageFile , context);
+        '${Config.upload_data}', imageFile, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
@@ -1211,7 +1211,7 @@ class Repository {
 
   cretateStoryApi(BuildContext context, Map<String, dynamic> params) async {
     final response = await apiServices.postApiCall(
-        "${Config.crateStroyCheck}",params,context);
+        "${Config.crateStroyCheck}", params, context);
     var jsonString = json.decode(response.body);
     print("cretateStoryApi$jsonString");
     switch (response.statusCode) {
@@ -1225,9 +1225,9 @@ class Repository {
         return jsonString;
     }
   }
+
   IndustryType(BuildContext context) async {
-    final response =
-        await apiServices.getApiCall(Config.industryType, context);
+    final response = await apiServices.getApiCall(Config.industryType, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
@@ -1240,7 +1240,26 @@ class Repository {
       default:
         return jsonString;
     }
-}
+  }
+
+
+   Deletepost(String postUid, BuildContext context) async {
+    final response = await apiServices.deleteApiCall(
+        "${Config.Deletepost}?postUid=${postUid}",{},context);
+    print(response);
+    var jsonString = json.decode(response!.body);
+    switch (response.statusCode) {
+      case 200:
+        return DeletePostModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
 }
 // var headers = {
 //   'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc1ZlcmlmaWVkIjp0cnVlLCJtb2R1bGUiOiJFTVBMT1lFRSIsImlzQWN0aXZlIjp0cnVlLCJ1dWlkIjoiODYwMWViNTItNzk4NS00MWU3LTgwOTAtYmMyMjQ0MjkwZjkzIiwidXNlcm5hbWUiOiJBTiIsInN1YiI6IkFOIiwiaWF0IjoxNjkxMTUyODIxLCJleHAiOjE2OTIyMzI4MjF9.AjSlFxHlTU9opgsyXaqVh_sMQuv7f-fKGmIGle6879MD-OAGTNcPN5r9ZW8Go1124YE2BbSrc1Lj5GuspgilWg'

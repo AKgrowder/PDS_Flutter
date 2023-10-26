@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:pds/API/Bloc/CreateStory_Bloc/CreateStory_Cubit.dart';
 import 'package:pds/API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import 'package:pds/widgets/commentPdf.dart';
@@ -70,7 +72,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   GetAllStoryModel? getAllStoryModel;
   FetchAllExpertsModel? AllExperData;
   bool apiCalingdone = false;
-
+  int sliderCurrentPosition = 0;
+  String? myUserId;
   @override
   void initState() {
     Get_UserToken();
@@ -158,6 +161,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       } else {
         AllGuestPostRoomData?.object?.content?[index ?? 0].isSaved = true;
       }
+    } else if (apiName == 'Deletepost') {
+      await BlocProvider.of<GetGuestAllPostCubit>(context).DeletePost(
+          '${AllGuestPostRoomData?.object?.content?[index ?? 0].postUid}',
+          context);
+      AllGuestPostRoomData?.object?.content?.removeAt(index ?? 0);
     }
   }
 
@@ -195,7 +203,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           ),
           elevation: 0,
         ),
-        // backgroundColor: Colors.red,
         body: BlocConsumer<GetGuestAllPostCubit, GetGuestAllPostState>(
             listener: (context, state) async {
           if (state is GetGuestAllPostErrorState) {
@@ -207,6 +214,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
+
           if (state is FetchAllExpertsLoadedState) {
             AllExperData = state.AllExperData;
           }
@@ -222,17 +230,24 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               ),
             );
           }
-
+          if (state is DeletePostLoadedState) {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.DeletePost.message.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
           if (state is GetAllStoryLoadedState) {
+            getAllStoryModel = state.getAllStoryModel;
             buttonDatas.clear();
             storyButtons.clear();
             storyButtons = List.filled(1, null, growable: true);
-
             if (state.getAllStoryModel.object != null ||
                 ((state.getAllStoryModel.object?.isNotEmpty == true) ??
                     false)) {
               state.getAllStoryModel.object?.forEach((element) {
                 if (element.userUid == User_ID) {
+                  myUserId = element.userName;
                   buttonDatas.insert(
                       0,
                       StoryButtonData(
@@ -314,7 +329,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                       image: element.profilePic != null ||
                               element.profilePic != ''
                           ? DecorationImage(
-                              image: NetworkImage(element.profilePic.toString()))
+                              image:
+                                  NetworkImage(element.profilePic.toString()))
                           : DecorationImage(
                               image: AssetImage(
                                 'assets/images/expert3.png',
@@ -358,7 +374,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                     segmentDuration: const Duration(seconds: 3),
                   );
                   buttonDatas.add(buttonData1);
-
                   storyButtons.add(StoryButton(
                       onPressed: (data) {
                         Navigator.of(storycontext!).push(
@@ -386,8 +401,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           }
           if (state is GetGuestAllPostLoadedState) {
             apiCalingdone = true;
-            print("gsfgsdfgsdfgg-$apiCalingdone");
-            print("GetGuestAllPostLoadedStateloded");
+
             AllGuestPostRoomData = state.GetGuestAllPostRoomData;
           }
           if (state is PostLikeLoadedState) {
@@ -435,26 +449,42 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return MultiBlocProvider(
-                                    providers: [
-                                      BlocProvider<NewProfileSCubit>(
-                                        create: (context) => NewProfileSCubit(),
-                                      )
-                                    ],
-                                    child: ProfileScreen(),
-                                  );
-                                }));
+                                if (uuid == null) {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          RegisterCreateAccountScreen()));
+                                } else {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return MultiBlocProvider(
+                                      providers: [
+                                        BlocProvider<NewProfileSCubit>(
+                                          create: (context) =>
+                                              NewProfileSCubit(),
+                                        )
+                                      ],
+                                      child: ProfileScreen(),
+                                    );
+                                  }));
+                                }
                               },
-                              child: SizedBox(
-                                height: 50,
-                                width: 50,
-                                child: CircleAvatar(
-                                  backgroundImage:
-                                      AssetImage(ImageConstant.placeholder),
-                                ),
-                              ),
+                              child: uuid == null
+                                  ? Text(
+                                      'Login',
+                                      style: TextStyle(
+                                          fontFamily: "outfit",
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: ColorConstant.primary_color),
+                                    )
+                                  : SizedBox(
+                                      height: 50,
+                                      width: 50,
+                                      child: CircleAvatar(
+                                        backgroundImage: AssetImage(
+                                            ImageConstant.placeholder),
+                                      ),
+                                    ),
                             ),
                           ],
                         ),
@@ -579,9 +609,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                         segmentDuration:
                                             const Duration(seconds: 3),
                                       );
-                                      /*   if(buttonDatas.){
 
-                                      } */
                                       buttonDatas.insert(0, buttonData);
                                       storyButtons[0] = StoryButton(
                                           onPressed: (data) {
@@ -769,7 +797,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                         flex: 1,
                                       ),
                                       Text(
-                                        'Jones $index',
+                                        myUserId.toString(),
                                         style: TextStyle(
                                             color: Colors.black, fontSize: 16),
                                       ),
@@ -786,7 +814,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                       flex: 1,
                                     ),
                                     Text(
-                                      'Jones $index',
+                                      '${getAllStoryModel?.object?[index].userName}',
                                       style: TextStyle(
                                           color: Colors.black, fontSize: 16),
                                     )
@@ -876,13 +904,53 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   // SizedBox(
                                                   //   height: 6,
                                                   // ),
-                                                  Text(
-                                                    "${AllGuestPostRoomData?.object?.content?[index].postUserName}",
-                                                    style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontFamily: "outfit",
-                                                        fontWeight:
-                                                            FontWeight.bold),
+                                                  Container(
+                                                    // color: Colors.amber,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          "${AllGuestPostRoomData?.object?.content?[index].postUserName}",
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              fontFamily:
+                                                                  "outfit",
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        User_ID ==
+                                                                AllGuestPostRoomData
+                                                                    ?.object
+                                                                    ?.content?[
+                                                                        index]
+                                                                    .userUid
+                                                            ? GestureDetector(
+                                                                onTapDown:
+                                                                    (TapDownDetails
+                                                                        details) {
+                                                                  delete_dilog_menu(
+                                                                    details
+                                                                        .globalPosition,
+                                                                    context,
+                                                                  );
+                                                                },
+                                                                // Deletedilog(AllGuestPostRoomData
+                                                                //         ?.object
+                                                                //         ?.content?[
+                                                                //             index]
+                                                                //         .postUid ??
+                                                                //     "");
+
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .more_vert_rounded,
+                                                                ))
+                                                            : SizedBox()
+                                                      ],
+                                                    ),
                                                   ),
                                                   Text(
                                                     customFormat(
@@ -988,6 +1056,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 )
                                               : SizedBox(),
                                           // index == 0
+
                                           AllGuestPostRoomData
                                                       ?.object
                                                       ?.content?[index]
@@ -997,49 +1066,155 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                               : AllGuestPostRoomData
                                                           ?.object
                                                           ?.content?[index]
-                                                          .postDataType ==
-                                                      "IMAGE"
-                                                  ? Container(
-                                                      margin: EdgeInsets.only(
-                                                          left: 16,
-                                                          top: 15,
-                                                          right: 16),
-                                                      child: Center(
-                                                          child:
-                                                              CustomImageView(
-                                                        url:
-                                                            "${AllGuestPostRoomData?.object?.content?[index].postData}",
-                                                      ) /*  Image.asset(
-                                            ImageConstant
-                                                .placeholder), */
-                                                          ),
-                                                    )
-                                                  : AllGuestPostRoomData
+                                                          .postData
+                                                          ?.length ==
+                                                      1
+                                                  ? (AllGuestPostRoomData
                                                               ?.object
                                                               ?.content?[index]
                                                               .postDataType ==
-                                                          "ATTACHMENT"
-                                                      ? (AllGuestPostRoomData
+                                                          "IMAGE"
+                                                      ? Container(
+                                                          width: _width,
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  left: 16,
+                                                                  top: 15,
+                                                                  right: 16),
+                                                          child: Center(
+                                                              child:
+                                                                  CustomImageView(
+                                                            url:
+                                                                "${AllGuestPostRoomData?.object?.content?[index].postData?[0]}",
+                                                          )),
+                                                        )
+                                                      : AllGuestPostRoomData
                                                                   ?.object
                                                                   ?.content?[
                                                                       index]
-                                                                  .postData
-                                                                  ?.isNotEmpty ==
-                                                              true)
-                                                          ? Container(
-                                                              height: 400,
-                                                              width: _width,
-                                                              child:
-                                                                  DocumentViewScreen1(
-                                                                path: AllGuestPostRoomData
-                                                                    ?.object
-                                                                    ?.content?[
-                                                                        index]
-                                                                    .postData?[0]
-                                                                    .toString(),
-                                                              ))
-                                                          : SizedBox()
-                                                      : SizedBox(),
+                                                                  .postDataType ==
+                                                              "ATTACHMENT"
+                                                          ? (AllGuestPostRoomData
+                                                                      ?.object
+                                                                      ?.content?[
+                                                                          index]
+                                                                      .postData
+                                                                      ?.isNotEmpty ==
+                                                                  true)
+                                                              ? Container(
+                                                                  height: 400,
+                                                                  width: _width,
+                                                                  child:
+                                                                      DocumentViewScreen1(
+                                                                    path: AllGuestPostRoomData
+                                                                        ?.object
+                                                                        ?.content?[
+                                                                            index]
+                                                                        .postData?[
+                                                                            0]
+                                                                        .toString(),
+                                                                  ))
+                                                              : SizedBox()
+                                                          : SizedBox())
+                                                  : Column(
+                                                      children: [
+                                                        Stack(
+                                                          children: [
+                                                            SizedBox(
+                                                              // height: 180,
+                                                              child: ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                                child:
+                                                                    ExcludeSemantics(
+                                                                  child: CarouselSlider.builder(
+                                                                      options: CarouselOptions(
+                                                                          height: 350.00,
+                                                                          initialPage: 0,
+                                                                          viewportFraction: 1.0,
+                                                                          enableInfiniteScroll: false,
+                                                                          scrollDirection: Axis.horizontal,
+                                                                          onPageChanged: (index, reason) {
+                                                                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                                              setState(() {
+                                                                                sliderCurrentPosition = index;
+                                                                              });
+                                                                            });
+                                                                          }),
+                                                                      itemCount: AllGuestPostRoomData?.object?.content?[index].postData?.length,
+                                                                      itemBuilder: (context, index1, realIndex) {
+                                                                        return AllGuestPostRoomData?.object?.content?[index].postDataType == null ||
+                                                                                AllGuestPostRoomData?.object?.content?[index].postData?.length == 1
+                                                                            ? SizedBox()
+                                                                            : AllGuestPostRoomData?.object?.content?[index].postDataType == "IMAGE"
+                                                                                ? Container(
+                                                                                    width: _width,
+                                                                                    margin: EdgeInsets.only(left: 16, top: 15, right: 16),
+                                                                                    child: Center(
+                                                                                        child: CustomImageView(
+                                                                                      url: "${AllGuestPostRoomData?.object?.content?[index].postData?[index1]}",
+                                                                                    )),
+                                                                                  )
+                                                                                : AllGuestPostRoomData?.object?.content?[index].postDataType == "ATTACHMENT"
+                                                                                    ? (AllGuestPostRoomData?.object?.content?[index].postData?.isNotEmpty == true)
+                                                                                        ? Container(
+                                                                                            height: 400,
+                                                                                            width: _width,
+                                                                                            child: DocumentViewScreen1(
+                                                                                              path: AllGuestPostRoomData?.object?.content?[index].postData?[index1].toString(),
+                                                                                            ))
+                                                                                        : SizedBox()
+                                                                                    : SizedBox();
+                                                                      }),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Positioned(
+                                                                bottom: 5,
+                                                                left: 0,
+                                                                right: 0,
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      top: 0),
+                                                                  child:
+                                                                      Container(
+                                                                    height: 20,
+                                                                    child:
+                                                                        DotsIndicator(
+                                                                      dotsCount: AllGuestPostRoomData?.object?.content?[index].postDataType == null ||
+                                                                              AllGuestPostRoomData?.object?.content?[index].postData?.length ==
+                                                                                  1
+                                                                          ? 0
+                                                                          : AllGuestPostRoomData?.object?.content?[index].postData?.length ??
+                                                                              0,
+                                                                      position:
+                                                                          0,
+                                                                      decorator:
+                                                                          DotsDecorator(
+                                                                        size: const Size(
+                                                                            10.0,
+                                                                            7.0),
+                                                                        activeSize: const Size(
+                                                                            10.0,
+                                                                            10.0),
+                                                                        spacing:
+                                                                            const EdgeInsets.symmetric(horizontal: 2),
+                                                                        activeColor:
+                                                                            Color(0xffED1C25),
+                                                                        color: Color(
+                                                                            0xff6A6A6A),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ))
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+
                                           Padding(
                                             padding:
                                                 const EdgeInsets.only(left: 13),
@@ -1860,6 +2035,118 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         ),
       );
     }
+  }
+
+  void delete_dilog_menu(
+    Offset position,
+    BuildContext context,
+  ) async {
+    List<String> ankur = [
+      "Delete Post",
+    ];
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    final selectedOption = await showMenu(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        position: RelativeRect.fromRect(
+          position & const Size(40, 40),
+          Offset.zero & overlay.size,
+        ),
+        items: List.generate(
+            ankur.length,
+            (index) => PopupMenuItem(
+                enabled: true,
+                onTap: () {
+                  setState(() {
+                    indexx = index;
+                  });
+                },
+                child: GestureDetector(
+                  onTap: () {
+                    Deletedilog(
+                        AllGuestPostRoomData?.object?.content?[index].postUid ??
+                            "",
+                        index);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: indexx == index
+                            ? Color(0xffED1C25)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(5)),
+                    width: 130,
+                    height: 40,
+                    child: Center(
+                      child: Text(
+                        ankur[index],
+                        style: TextStyle(
+                            color:
+                                indexx == index ? Colors.white : Colors.black),
+                      ),
+                    ),
+                  ),
+                ))));
+  }
+  Deletedilog(String PostUID, int index) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        // title: const Text("Create Expert"),
+        content: Container(
+          height: 80,
+          child: Column(
+            children: [
+              Text("Are You Sure You Want To delete This Post."),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      await soicalFunation(apiName: 'Deletepost', index: index);
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      // color: Colors.green,
+                      child: Text(
+                        "Yas",
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      // color: Colors.green,
+                      child: Text(
+                        "No",
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    // return showDialog(
+    //   context: context,
+
+    //   builder: (ctx) =>
+    // );
   }
 
   becomeAnExport() async {
