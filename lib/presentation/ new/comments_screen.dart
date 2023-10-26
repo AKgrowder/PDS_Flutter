@@ -151,8 +151,8 @@ class _CommentsScreenState extends State<CommentsScreen> {
       // ),
       appBar: AppBar(
         leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
+          onTap: () { 
+            Navigator.pop(context,);
           },
           child: Icon(
             Icons.arrow_back,
@@ -263,7 +263,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                       alignment: Alignment.centerLeft,
                                       child: Text(
                                           widget.description ??
-                                              "iun iusbiun iusbiun iusbiun iusbiun iusbiun iusbiun iusbiun iusbiun iusbiun iusbiun iusbiun iusbiun iusbiun iusbiun iusbiun iusbiun iusbiun iusb ",
+                                              "",
                                           // maxLines: 2,
                                           style: TextStyle(
                                               fontFamily: 'outfit',
