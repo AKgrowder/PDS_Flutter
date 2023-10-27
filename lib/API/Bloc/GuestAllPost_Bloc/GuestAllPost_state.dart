@@ -4,6 +4,8 @@ import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:pds/API/Model/createStroyModel/createStroyModel.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
+import 'package:pds/API/Model/myaccountModel/myaccountModel.dart';
+import '../../Model/Get_all_blog_Model/get_all_blog_model.dart';
 abstract class GetGuestAllPostState {}
 
 class GetGuestAllPostLoadingState extends GetGuestAllPostState {}
@@ -45,4 +47,13 @@ class DeletePostLoadedState extends GetGuestAllPostState {
   DeletePostLoadedState(this.DeletePost);
 }
 
- 
+ class GetUserProfileLoadedState extends GetGuestAllPostState {
+  final MyAccontDetails myAccontDetails;
+
+  GetUserProfileLoadedState(this.myAccontDetails);
+}
+
+class GetallblogsLoadedState extends GetGuestAllPostState {
+  final GetallBlogModel getallBlogdata;
+  GetallblogsLoadedState(this.getallBlogdata);
+}

@@ -491,14 +491,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                                                                               MaterialPageRoute(
                                                                             builder:
                                                                                 (context) {
-                                                                              return MultiBlocProvider(
-                                                                                providers: [
-                                                                                  BlocProvider(
-                                                                                    create: (context) => FatchAllMembersCubit(),
-                                                                                  ),
-                                                                                ],
-                                                                                child: RoomMembersScreen(roomname: "${InvitationRoomData?.object?[index].roomQuestion}", RoomOwner: false, roomdescription: "${InvitationRoomData?.object?[index].description}", room_Id: '${InvitationRoomData?.object?[index].roomUid.toString()}'),
-                                                                              );
+                                                                              return RoomMembersScreen(roomname: "${InvitationRoomData?.object?[index].roomQuestion}", RoomOwner: false, roomdescription: "${InvitationRoomData?.object?[index].description}", room_Id: '${InvitationRoomData?.object?[index].roomUid.toString()}');
                                                                             },
                                                                           ));
                                                                         },

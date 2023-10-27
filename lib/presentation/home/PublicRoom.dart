@@ -128,18 +128,11 @@ class _PublicRoomListState extends State<PublicRoomList> {
                       onTap: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return MultiBlocProvider(
-                            providers: [
-                              BlocProvider(
-                                create: (context) => senMSGCubit(),
-                              ),
-                            ],
-                            child: ViewCommentScreen(
-                              Room_ID:
-                                  "${PublicRoomModelData?.object?[index].uid ?? ""}",
-                              Title:
-                                  "${PublicRoomModelData?.object?[index].roomQuestion ?? ""}",
-                            ),
+                          return ViewCommentScreen(
+                            Room_ID:
+                                "${PublicRoomModelData?.object?[index].uid ?? ""}",
+                            Title:
+                                "${PublicRoomModelData?.object?[index].roomQuestion ?? ""}",
                           );
                         }));
                       },
@@ -386,18 +379,11 @@ class _PublicRoomListState extends State<PublicRoomList> {
                                   onTap: () {
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {
-                                      return MultiBlocProvider(
-                                        providers: [
-                                          BlocProvider(
-                                              create: (context) =>
-                                                  senMSGCubit())
-                                        ],
-                                        child: ViewCommentScreen(
-                                          Room_ID:
-                                              "${PublicRoomModelData?.object?[index].uid ?? ""}",
-                                          Title:
-                                              "${PublicRoomModelData?.object?[index].roomQuestion ?? ""}",
-                                        ),
+                                      return ViewCommentScreen(
+                                        Room_ID:
+                                            "${PublicRoomModelData?.object?[index].uid ?? ""}",
+                                        Title:
+                                            "${PublicRoomModelData?.object?[index].roomQuestion ?? ""}",
                                       );
                                     }));
                                   },
