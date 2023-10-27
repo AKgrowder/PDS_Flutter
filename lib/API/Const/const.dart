@@ -72,4 +72,11 @@ class Config {
   static const String crateStroyCheck = "user/api/create_story";
   static const String industryType = "user/api/get_all_industry_types";
   static const String Deletepost= "user/api/delete_post";
+  static const String GetAppPost= "user/api/get_all_posts_by_uid";
+  static const String GetPostCommetAPI= "user/api/get_list_of_post_with_comments";
+  static const String GetSavePostAPI= "user/api/get_all_saved_posts";
+  static const String uploadStroy = "user/api/upload_story";
+  static const String HashTagForYou = "user/api/hashtag_names_and_post_count";
+  static const String HashTagView ="user/api/get_posts_by_hashtag";
+  static const String getalluser= "user/api/get_all_user_list_for_hashtag";
 }

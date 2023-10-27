@@ -1,3 +1,8 @@
+
+import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
+import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
+import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
+
 import 'dart:io';
 import 'dart:math';
 
@@ -10,16 +15,10 @@ import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart'
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/%20new/commetTabbar.dart';
 import 'package:pds/presentation/%20new/editproilescreen.dart';
-import 'package:pds/presentation/%20new/savedScrren.dart';
 import 'package:pds/presentation/settings/setting_screen.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'mypofiileScreencustom.dart';
-import 'posttabbar.dart';
-
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
@@ -44,25 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     "Comments",
   ];
   List<String> SaveList = ["Post", "Blog"];
-  List<String> SaveUserPost = [
-    ImageConstant.post1,
-    ImageConstant.post1,
-    ImageConstant.post2,
-    ImageConstant.post2,
-    ImageConstant.post2,
-    ImageConstant.post1,
-    ImageConstant.post1,
-    ImageConstant.post1,
-    ImageConstant.post1,
-    ImageConstant.post1,
-    ImageConstant.post1,
-    ImageConstant.post1,
-    ImageConstant.post1,
-    ImageConstant.post2,
-    ImageConstant.post2,
-    ImageConstant.post2,
-    ImageConstant.post2,
-  ];
+
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
   String? dopcument;
@@ -79,13 +60,16 @@ class _ProfileScreenState extends State<ProfileScreen>
   TextEditingController uplopdfile = TextEditingController();
   TextEditingController CompanyName = TextEditingController();
   NewProfileScreen_Model? NewProfileData;
-  int UserProfilePostCount = 3;
+  GetAppUserPostModel? GetAllPostData;
+  GetUserPostCommetModel? GetUserPostCommetData;
+  GetSavePostModel? GetSavePostData;
+  int UserProfilePostCount = 0;
   int FinalPostCount = 0;
-  int CommentsPostCount = 15;
+  int CommentsPostCount = 0;
   int FinalSavePostCount = 0;
   int SavePostCount = 0;
-  int SaveBlogCount = 10;
-
+  int SaveBlogCount = 0;
+  // String? User_ID;
   int? value1;
   dynamic dataSetup;
 
@@ -113,11 +97,17 @@ class _ProfileScreenState extends State<ProfileScreen>
   void initState() {
     _tabController = TabController(length: tabData.length, vsync: this);
     BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context);
+    // getUserSavedData();
     dataSetup = null;
     value1 = 0;
-    SavePostCount = SaveUserPost.length;
+    // SavePostCount = SaveUserPost.length;
     super.initState();
   }
+
+  // getUserSavedData() async {
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   User_ID = prefs.getString(PreferencesKey.loginUserID);
+  // }
 
   @override
   void dispose() {
@@ -157,6 +147,20 @@ class _ProfileScreenState extends State<ProfileScreen>
         print(
             "++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++");
         print(NewProfileData?.object?.module);
+        BlocProvider.of<NewProfileSCubit>(context)
+            .GetAppPostAPI(context, "${NewProfileData?.object?.uuid}");
+
+        BlocProvider.of<NewProfileSCubit>(context)
+            .GetSavePostAPI(context, "${NewProfileData?.object?.uuid}");
+
+        BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
+            context, "${NewProfileData?.object?.uuid}", "desc");
+      }
+      if (state is GetAppPostByUserLoadedState) {
+        print(state.GetAllPost);
+        GetAllPostData = state.GetAllPost;
+        UserProfilePostCount = GetAllPostData?.object?.length ?? 0;
+
         if (UserProfilePostCount.isOdd) {
           UserProfilePostCount = UserProfilePostCount + 1;
           var PostCount = UserProfilePostCount / 2;
@@ -172,33 +176,28 @@ class _ProfileScreenState extends State<ProfileScreen>
           int? y = int.parse(aa.split('.')[0]);
           FinalPostCount = y;
         }
-
+      }
+      if (state is GetUserPostCommetLoadedState) {
+        print(
+            "Get Comment Get Comment Get Comment Get Comment Get Comment Get Comment Get Comment ");
+        print(state.GetUserPostCommet);
+        GetUserPostCommetData = state.GetUserPostCommet;
+        CommentsPostCount = GetUserPostCommetData?.object?.length ?? 0;
+      }
+      if (state is GetSavePostLoadedState) {
+        GetSavePostData = state.GetSavePost;
+        SavePostCount = GetSavePostData?.object?.length ?? 0;
         if (SavePostCount.isOdd) {
           SavePostCount = SavePostCount + 1;
-          print("${SavePostCount}" +
-              " Array leanth Array leanth Array leanth Array leanth Array leanth Array leanth");
           var PostCount = SavePostCount / 2;
-          print(
-              "PostCunt  PostCunt  PostCunt  PostCunt  PostCunt  PostCunt  PostCunt  PostCunt  PostCunt  ");
-
-          print(PostCount);
           var aa = "${PostCount}";
           int? y = int.parse(aa.split('.')[0]);
-          print("${y}" +
-              " FinalSavePostCount FinalSavePostCount FinalSavePostCount FinalSavePostCount FinalSavePostCount FinalSavePostCount FinalSavePostCount");
-
           FinalSavePostCount = y;
           SavePostCount = SavePostCount - 1;
         } else {
-          print("${SavePostCount}" +
-              "1 Array leanth Array leanth Array leanth Array leanth Array leanth Array leanth");
           var PostCount = SavePostCount / 2;
-          print("${PostCount}" +
-              "1 PostCunt  PostCunt  PostCunt  PostCunt  PostCunt  PostCunt  PostCunt  PostCunt  PostCunt ");
           var aa = "${PostCount}";
           int? y = int.parse(aa.split('.')[0]);
-          print("${y}" +
-              "1 FinalSavePostCount FinalSavePostCount FinalSavePostCount FinalSavePostCount FinalSavePostCount FinalSavePostCount FinalSavePostCount");
           FinalSavePostCount = y;
         }
       }
@@ -214,13 +213,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                 child: Stack(
                   children: [
                     Container(
-                      color: Colors.red,
+                      // color: Colors.red,
                       height: _height / 3.4,
                       width: _width,
-                      child: CustomImageView(
-                        url: "${NewProfileData?.object?.userBackgroundPic}",
-                        fit: BoxFit.cover,
-                      ),
+                      child: NewProfileData?.object?.userBackgroundPic == null
+                          ? Image.asset(ImageConstant.pdslogo)
+                          : CustomImageView(
+                              url:
+                                  "${NewProfileData?.object?.userBackgroundPic}",
+                              fit: BoxFit.cover,
+                              radius: BorderRadius.only(
+                                  bottomRight: Radius.circular(20),
+                                  bottomLeft: Radius.circular(20))
+                              // BorderRadius.circular(25),
+                              ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 55, left: 16),
@@ -252,7 +258,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                             shape: BoxShape.circle, color: Colors.white),
                         child: Padding(
                           padding: const EdgeInsets.all(4.0),
-                          child: Image.asset(ImageConstant.palchoder4),
+                          child: NewProfileData?.object?.userProfilePic == null
+                              ? Image.asset(ImageConstant.pdslogo)
+                              : CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      "${NewProfileData?.object?.userProfilePic}"),
+                                  radius: 25,
+                                ),
                         ),
                       ),
                     ),
@@ -740,7 +752,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             ? CommentsPostCount * 310 + 100
                             : arrNotiyTypeList[3].isSelected == true
                                 ? value1 == 0
-                                    ? FinalSavePostCount * 210
+                                    ? FinalSavePostCount * 230
                                     : SaveBlogCount * 145 + 100
                                 : 10,
                 child: Column(
@@ -853,7 +865,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   crossAxisSpacing:
                                       20, // Horizontal spacing between items
                                 ),
-                                itemCount: UserProfilePostCount,
+                                itemCount: GetAllPostData?.object?.length,
                                 itemBuilder: (context, index) {
                                   return Padding(
                                     padding:
@@ -861,17 +873,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(12.0),
                                       child: Container(
-                                        margin: EdgeInsets.all(0.0),
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                                20)), // Remove margin
+                                          margin: EdgeInsets.all(0.0),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      20)), // Remove margin
 
-                                        child: Image.asset(
-                                          ImageConstant.post1,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ) /*  GridItem(imagePath: image[index]) */,
+                                          child: CustomImageView(
+                                            fit: BoxFit.cover,
+                                            url:
+                                                "${GetAllPostData?.object?[index].postData?[0]}",
+                                          )),
+                                    ),
                                   );
                                 },
                               ),
@@ -911,10 +924,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               // Step 4.
                                               items: <String>[
                                                 'Newest to oldest',
-                                                '1',
-                                                '2',
-                                                '3',
-                                                '4'
+                                                'oldest to Newest'
                                               ].map<DropdownMenuItem<String>>(
                                                   (String value) {
                                                 return DropdownMenuItem<String>(
@@ -940,13 +950,32 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               // Step 5.
                                               onChanged: (String? newValue) {
                                                 setState(() {
+                                                  if (newValue ==
+                                                      "Newest to oldest") {
+                                                    BlocProvider.of<
+                                                                NewProfileSCubit>(
+                                                            context)
+                                                        .GetPostCommetAPI(
+                                                            context,
+                                                            "${NewProfileData?.object?.uuid}",
+                                                            "desc");
+                                                  } else if (newValue ==
+                                                      "oldest to Newest") {
+                                                    BlocProvider.of<
+                                                                NewProfileSCubit>(
+                                                            context)
+                                                        .GetPostCommetAPI(
+                                                            context,
+                                                            "${NewProfileData?.object?.uuid}",
+                                                            "asc");
+                                                  }
                                                   selctedValue = newValue!;
                                                 });
                                               },
                                             ),
                                           ),
                                         ),
-                                        SizedBox(
+                                        /* SizedBox(
                                           width: 10,
                                         ),
                                         Container(
@@ -1055,14 +1084,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               },
                                             ),
                                           ),
-                                        ),
+                                        ), */
                                       ],
                                     ),
                                   ),
                                   Expanded(
                                     child: ListView.builder(
                                       physics: NeverScrollableScrollPhysics(),
-                                      itemCount: CommentsPostCount,
+                                      itemCount:
+                                          GetUserPostCommetData?.object?.length,
                                       itemBuilder: (context, index) {
                                         return Container(
                                           height: 310,
@@ -1098,17 +1128,23 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               EdgeInsets.only(
                                                                   left: 5,
                                                                   top: 10),
-                                                          decoration:
-                                                              ShapeDecoration(
-                                                            image:
-                                                                DecorationImage(
-                                                              image: AssetImage(
-                                                                  ImageConstant
-                                                                      .placeholder2),
-                                                              fit: BoxFit.fill,
-                                                            ),
-                                                            shape: OvalBorder(),
+                                                          child: CircleAvatar(
+                                                            backgroundImage:
+                                                                NetworkImage(
+                                                                    "${GetUserPostCommetData?.object?[index].userProfilePic}"),
+                                                            radius: 25,
                                                           ),
+                                                          // decoration:
+                                                          //     ShapeDecoration(
+                                                          //   image:
+                                                          //       DecorationImage(
+                                                          //     image: AssetImage(
+                                                          //         ImageConstant
+                                                          //             .placeholder2),1
+                                                          //     fit: BoxFit.fill,
+                                                          //   ),
+                                                          //   shape: OvalBorder(),
+                                                          // ),
                                                         ),
                                                         Column(
                                                           crossAxisAlignment:
@@ -1124,7 +1160,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           .only(
                                                                       left: 10),
                                                               child: Text(
-                                                                'Kriston Watshon',
+                                                                '${GetUserPostCommetData?.object?[index].postUserName}',
                                                                 style:
                                                                     TextStyle(
                                                                   color: Colors
@@ -1144,8 +1180,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                     .only(
                                                                         left:
                                                                             10),
-                                                                width: _width /
-                                                                    1.9,
+                                                                width: _width -
+                                                                    100,
+
                                                                 // color: Colors.red,
                                                                 child: Column(
                                                                   crossAxisAlignment:
@@ -1153,7 +1190,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           .start,
                                                                   children: [
                                                                     Text(
-                                                                      'Lorem ipsum dolor sit amet, dolor consectetur adip.',
+                                                                      '${GetUserPostCommetData?.object?[index].description}',
                                                                       style:
                                                                           TextStyle(
                                                                         color: Colors
@@ -1166,8 +1203,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             FontWeight.w400,
                                                                       ),
                                                                     ),
-                                                                    Text(
-                                                                        '....'),
                                                                     Text(
                                                                       '1w',
                                                                       style:
@@ -1185,93 +1220,29 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                     Container(
                                                                       height:
                                                                           _height /
-                                                                              4.57,
-                                                                      width:
-                                                                          _width,
-                                                                      // color: Colors.amber,
-                                                                      child:
-                                                                          Column(
-                                                                        children: [
-                                                                          Row(
-                                                                            crossAxisAlignment:
-                                                                                CrossAxisAlignment.start,
-                                                                            children: [
-                                                                              Container(
-                                                                                width: 45,
-                                                                                height: 45,
-                                                                                margin: EdgeInsets.only(top: 15),
-                                                                                decoration: ShapeDecoration(
-                                                                                  image: DecorationImage(
-                                                                                    image: AssetImage(ImageConstant.placeholder2),
-                                                                                    fit: BoxFit.fill,
+                                                                              4,
+                                                                      // width:
+                                                                      //     _width,
+                                                                      color: Colors
+                                                                          .red,
+                                                                      child: ListView.builder(
+                                                                          physics: NeverScrollableScrollPhysics(),
+                                                                          itemCount: GetUserPostCommetData?.object?[index].comments?.length,
+                                                                          itemBuilder: (context, index2) {
+                                                                            return Row(
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              children: [
+                                                                                Container(
+                                                                                  width: 45,
+                                                                                  height: 45,
+                                                                                  margin: EdgeInsets.only(top: 15),
+                                                                                  child: CircleAvatar(
+                                                                                    backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].comments?[index2].profilePic}"),
+                                                                                    radius: 25,
                                                                                   ),
-                                                                                  shape: OvalBorder(),
                                                                                 ),
-                                                                              ),
-                                                                              Padding(
-                                                                                padding: const EdgeInsets.only(left: 8, top: 5, right: 3),
-                                                                                child: Column(
-                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                  children: [
-                                                                                    SizedBox(
-                                                                                      height: 10,
-                                                                                    ),
-                                                                                    Text(
-                                                                                      'Kriston Watshon',
-                                                                                      style: TextStyle(
-                                                                                        color: Colors.black,
-                                                                                        fontSize: 16,
-                                                                                        fontFamily: "outfit",
-                                                                                        fontWeight: FontWeight.w600,
-                                                                                      ),
-                                                                                    ),
-                                                                                    Container(
-                                                                                      width: 160,
-                                                                                      child: Text(
-                                                                                        'Lorem ipsum dolor sit..',
-                                                                                        maxLines: 1,
-                                                                                        style: TextStyle(
-                                                                                          overflow: TextOverflow.ellipsis,
-                                                                                          color: Colors.black,
-                                                                                          fontSize: 16,
-                                                                                          fontFamily: "outfit",
-                                                                                          fontWeight: FontWeight.w600,
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    Text(
-                                                                                      '1w',
-                                                                                      style: TextStyle(
-                                                                                        color: Color(0xFF8F8F8F),
-                                                                                        fontSize: 12,
-                                                                                        fontFamily: "outfit",
-                                                                                        fontWeight: FontWeight.w400,
-                                                                                      ),
-                                                                                    )
-                                                                                  ],
-                                                                                ),
-                                                                              )
-                                                                            ],
-                                                                          ),
-                                                                          Row(
-                                                                            crossAxisAlignment:
-                                                                                CrossAxisAlignment.start,
-                                                                            children: [
-                                                                              Container(
-                                                                                width: 45,
-                                                                                height: 45,
-                                                                                margin: EdgeInsets.only(top: 15),
-                                                                                decoration: ShapeDecoration(
-                                                                                  image: DecorationImage(
-                                                                                    image: AssetImage(ImageConstant.placeholder2),
-                                                                                    fit: BoxFit.fill,
-                                                                                  ),
-                                                                                  shape: OvalBorder(),
-                                                                                ),
-                                                                              ),
-                                                                              Padding(
-                                                                                padding: const EdgeInsets.only(left: 8, top: 5, right: 3),
-                                                                                child: Container(
+                                                                                Padding(
+                                                                                  padding: const EdgeInsets.only(left: 8, top: 5, right: 3),
                                                                                   child: Column(
                                                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                                                     children: [
@@ -1279,7 +1250,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                         height: 10,
                                                                                       ),
                                                                                       Text(
-                                                                                        'Kriston Watshon',
+                                                                                        '${GetUserPostCommetData?.object?[index].comments?[index2].userName}',
                                                                                         style: TextStyle(
                                                                                           color: Colors.black,
                                                                                           fontSize: 16,
@@ -1288,13 +1259,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                         ),
                                                                                       ),
                                                                                       Container(
-                                                                                        height: 50,
-                                                                                        width: 160,
+                                                                                        // width: 160,
                                                                                         child: Text(
-                                                                                          'Lorem ipsum dolor sit amet, dolor consectetur adip.',
-                                                                                          maxLines: 2,
+                                                                                          '${GetUserPostCommetData?.object?[index].comments?[index2].comment}',
+                                                                                          // maxLines: 1,
                                                                                           style: TextStyle(
-                                                                                            overflow: TextOverflow.ellipsis,
+                                                                                            // overflow: TextOverflow.ellipsis,
                                                                                             color: Colors.black,
                                                                                             fontSize: 16,
                                                                                             fontFamily: "outfit",
@@ -1303,7 +1273,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                         ),
                                                                                       ),
                                                                                       Text(
-                                                                                        '1ww',
+                                                                                        '1w',
                                                                                         style: TextStyle(
                                                                                           color: Color(0xFF8F8F8F),
                                                                                           fontSize: 12,
@@ -1313,13 +1283,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                       )
                                                                                     ],
                                                                                   ),
-                                                                                ),
-                                                                              )
-                                                                            ],
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                      // color: Colors.amber,
+                                                                                )
+                                                                              ],
+                                                                            );
+                                                                          }),
                                                                     )
                                                                   ],
                                                                 ),
@@ -1327,29 +1294,28 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             ),
                                                           ],
                                                         ),
-                                                        Container(
-                                                          width: 60,
-                                                          height: 60,
-                                                          margin:
-                                                              EdgeInsets.only(
-                                                                  left: 10,
-                                                                  top: 5),
-                                                          decoration:
-                                                              ShapeDecoration(
-                                                            image:
-                                                                DecorationImage(
-                                                              image: AssetImage(
-                                                                  ImageConstant
-                                                                      .design),
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                            shape: RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            4)),
-                                                          ),
-                                                        ),
+                                                        // Container(
+                                                        //   width: 60,
+                                                        //   height: 60,
+                                                        //   margin:
+                                                        //       EdgeInsets.only(
+                                                        //           left: 10,
+                                                        //           top: 5),
+                                                        //   decoration:
+                                                        //       ShapeDecoration(
+                                                        //     image:
+                                                        //         DecorationImage(
+                                                        //       image: NetworkImage(
+                                                        //           "${GetUserPostCommetData?.object?[index].postData?[0]}"),
+                                                        //       fit: BoxFit.cover,
+                                                        //     ),
+                                                        //     shape: RoundedRectangleBorder(
+                                                        //         borderRadius:
+                                                        //             BorderRadius
+                                                        //                 .circular(
+                                                        //                     4)),
+                                                        //   ),
+                                                        // ),
                                                       ],
                                                     )),
                                                   ),
@@ -1372,7 +1338,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       arrNotiyTypeList[3].isSelected
                           ? Container(
                               height: value1 == 0
-                                  ? FinalSavePostCount * 210
+                                  ? FinalSavePostCount * 230
                                   : SaveBlogCount * 145 + 100,
                               // color: Colors.green,
                               child: DefaultTabController(
@@ -2291,7 +2257,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       if (value1 == 0) {
         return Expanded(
             child: Padding(
-          padding: EdgeInsets.only(left: 10, right: 10),
+          padding: EdgeInsets.only(left: 10, right: 10,top: 10),
           child: GridView.builder(
             physics: NeverScrollableScrollPhysics(),
             padding: EdgeInsets.zero,
@@ -2300,21 +2266,20 @@ class _ProfileScreenState extends State<ProfileScreen>
               mainAxisSpacing: 20,
               crossAxisSpacing: 20,
             ),
-            itemCount: SaveUserPost.length,
+            itemCount: GetSavePostData?.object?.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding: EdgeInsets.only(bottom: 0, top: 0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12.0),
                   child: Container(
-                    margin: EdgeInsets.all(0.0),
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                    child: Image.asset(
-                      SaveUserPost[index],
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                      margin: EdgeInsets.all(0.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20)),
+                      child: CustomImageView(
+                        url: "${GetSavePostData?.object?[index].postData?[0]}",
+                        fit: BoxFit.cover,
+                      )),
                 ),
               );
             },
