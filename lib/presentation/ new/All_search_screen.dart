@@ -10,8 +10,7 @@ import 'package:pds/core/utils/image_constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AllSearchScreen extends StatefulWidget {
-  dynamic value3;
-  AllSearchScreen({required this.value3});
+  // AllSearchScreen({required this.value3});
 
   @override
   State<AllSearchScreen> createState() => _AllSearchScreenState();
@@ -78,11 +77,9 @@ class _AllSearchScreenState extends State<AllSearchScreen> {
                               1, 5, value.trim(), context,
                               filterModule: 'EXPERT');
                         }
-                      }else{
+                      } else {
                         dataget = false;
-                       setState(() {
-                         
-                       });
+                        setState(() {});
                       }
                     },
                     controller: searchController,
@@ -116,7 +113,6 @@ class _AllSearchScreenState extends State<AllSearchScreen> {
                             SharedPreferencesFunction(indexxx ?? 0);
                             setState(() {});
                             if (searchController.text.isNotEmpty) {
-                            
                               if (indexxx == 0) {
                                 BlocProvider.of<GetAllUserCubit>(context)
                                     .getalluser(1, 5,
@@ -127,9 +123,7 @@ class _AllSearchScreenState extends State<AllSearchScreen> {
                                         searchController.text.trim(), context,
                                         filterModule: 'EXPERT');
                               }
-                            }else{
-
-                            }
+                            } else {}
                           },
                           child: Container(
                             margin: EdgeInsets.all(5),

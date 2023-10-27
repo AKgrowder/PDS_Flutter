@@ -80,31 +80,35 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
         builder: (context, state) {
           return Column(
             children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 15, right: 15, top: 60),
-            child: Container(
-              height: 48,
-              decoration: BoxDecoration(
-                  color: Color(0xffF0F0F0),
-                  borderRadius: BorderRadius.circular(30)),
-              child: TextField(readOnly: true,onTap: () {
-                  Navigator.push(
-                            context,
-                            AllSearchScreen(value3: 0));
-              },
-                controller: searchController,
-                cursorColor: Colors.grey,
-                decoration: InputDecoration(
-                    hintText: "Search....",
-                    hintStyle: TextStyle(color: Colors.grey),
-                    border: InputBorder.none,
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                    )),
+              Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15, top: 60),
+                child: Container(
+                  height: 48,
+                  decoration: BoxDecoration(
+                      color: Color(0xffF0F0F0),
+                      borderRadius: BorderRadius.circular(30)),
+                  child: TextField(
+                    readOnly: true,
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return AllSearchScreen();
+                        },
+                      ));
+                    },
+                    controller: searchController,
+                    cursorColor: Colors.grey,
+                    decoration: InputDecoration(
+                        hintText: "Search....",
+                        hintStyle: TextStyle(color: Colors.grey),
+                        border: InputBorder.none,
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.grey,
+                        )),
+                  ),
+                ),
               ),
-            ),
-          ),
               Divider(
                 color: Colors.grey,
               ),
