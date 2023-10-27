@@ -106,53 +106,12 @@ class _CommentsScreenState extends State<CommentsScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: theme.colorScheme.onPrimary,
-
-      // appBar: CustomAppBar(
-      //   height: 100,
-      //   title: Row(
-      //     children: [
-      //       SizedBox(
-      //         width: _width / 4,
-      //       ),
-      //       Text(
-      //         "Commnents",
-      //         style: TextStyle(
-      //             color: Colors.black,
-      //             fontFamily: 'Outfit',
-      //             fontWeight: FontWeight.w600,
-      //             fontSize: 20),
-      //       ),
-      //     ],
-      //   ),
-      //   leadingWidth: 74,
-      //   leading: Column(
-      //     children: [
-      //       Container(
-      //         height: 44,
-      //         width: 44,
-      //         margin: EdgeInsets.only(left: 30, top: 6, bottom: 6),
-      //         child: GestureDetector(
-      //           onTap: () {
-      //             Navigator.pop(context);
-      //           },
-      //           child: Padding(
-      //             padding: const EdgeInsets.only(top: 0, right: 20),
-      //             child: Icon(
-      //               Icons.arrow_back,
-      //               color: Theme.of(context).brightness == Brightness.light
-      //                   ? Color(0XFF989898)
-      //                   : Color(0xFFC5C0C0),
-      //             ),
-      //           ),
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
       appBar: AppBar(
         leading: GestureDetector(
-          onTap: () { 
-            Navigator.pop(context,);
+          onTap: () {
+            Navigator.pop(
+              context,
+            );
           },
           child: Icon(
             Icons.arrow_back,
@@ -261,9 +220,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                     padding: const EdgeInsets.only(bottom: 5),
                                     child: Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text(
-                                          widget.description ??
-                                              "",
+                                      child: Text(widget.description ?? "",
                                           // maxLines: 2,
                                           style: TextStyle(
                                               fontFamily: 'outfit',
@@ -292,15 +249,13 @@ class _CommentsScreenState extends State<CommentsScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Padding(
-                                padding:
-                                    EdgeInsets.only(top: 15.0, left: 35.0),
+                                padding: EdgeInsets.only(top: 15.0, left: 35.0),
                                 child: Container(
                                   // height: 80,
                                   // width: _width / 1.2,
                                   decoration: BoxDecoration(
                                       // color: Colors.grey,
-                                      borderRadius:
-                                          BorderRadius.circular(15)),
+                                      borderRadius: BorderRadius.circular(15)),
                                   child: Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -369,8 +324,8 @@ class _CommentsScreenState extends State<CommentsScreen> {
 
                                                   style: TextStyle(
                                                       fontFamily: 'outfit',
-                                                      overflow: TextOverflow
-                                                          .visible,
+                                                      overflow:
+                                                          TextOverflow.visible,
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w400)),

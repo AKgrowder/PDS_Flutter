@@ -1,8 +1,10 @@
 import 'dart:io';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'package:dots_indicator/dots_indicator.dart';
-import 'package:pds/API/Bloc/CreateStory_Bloc/CreateStory_Cubit.dart';
+import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_state.dart';
+import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import 'package:pds/API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
+import 'package:pds/API/Model/storyModel/stroyModel.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -12,9 +14,6 @@ import 'package:flutter_instagram_storyboard/flutter_instagram_storyboard.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
-import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
-import 'package:pds/API/Bloc/postData_Bloc/postData_Bloc.dart';
-import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
 import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
@@ -31,14 +30,10 @@ import 'package:pds/presentation/register_create_account_screen/register_create_
 import 'package:pds/widgets/pagenation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pds/API/Bloc/GuestAllPost_Bloc/GetPostAllLike_Bloc/GetPostAllLike_cubit.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comments_screen.dart';
-import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
-import 'package:pds/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import 'package:pds/presentation/create_foram/create_foram_screen.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
-import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:hashtagable/hashtagable.dart';
 
 class HomeScreenNew extends StatefulWidget {
@@ -55,7 +50,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   int indexx = 0;
   String? User_ID;
   String? User_Name;
-  String? User_Module;
+  String? User_Module = "";
   List<String> image = [
     ImageConstant.placeholder4,
     ImageConstant.placeholder4,
@@ -77,11 +72,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   List<PageController> _pageControllers = [];
   List<int> _currentPages = [];
   String? myUserId;
+  String? UserProfileImage;
+  GetallBlogModel? getallBlogModel;
+  DateTime? parsedDateTimeBlogs;
   @override
   void initState() {
     Get_UserToken();
     storycontext = context;
     super.initState();
+    BlocProvider.of<GetGuestAllPostCubit>(context).GetallBlog(context);
   }
 
   List<StoryButtonData> buttonDatas = [];
@@ -96,11 +95,20 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     User_Name = prefs.getString(PreferencesKey.ProfileName);
     User_Module = prefs.getString(PreferencesKey.module);
     uuid = prefs.getString(PreferencesKey.loginUserID);
-
+    UserProfileImage = prefs.getString(PreferencesKey.UserProfile);
     print("---------------------->> : ${FCMToken}");
     print("User Token :--- " + "${Token}");
 
     User_ID == null ? api() : NewApi();
+  }
+
+  Save_UserData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("22222222 User_Module:-  ${User_Module}");
+
+    prefs.setString(PreferencesKey.module, User_Module ?? "");
+    prefs.setString(PreferencesKey.UserProfile, UserProfileImage ?? "");
+    // setState(() {});
   }
 
   api() async {
@@ -118,6 +126,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     );
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .FetchAllExpertsAPI(context);
+    await BlocProvider.of<GetGuestAllPostCubit>(context).MyAccount(context);
   }
 
   soicalFunation({String? apiName, int? index}) async {
@@ -190,11 +199,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           onPressed: () {
             if (uuid != null) {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return MultiBlocProvider(providers: [
-                  BlocProvider<AddPostCubit>(
-                    create: (context) => AddPostCubit(),
-                  ),
-                ], child: CreateNewPost());
+                return CreateNewPost();
               })).then((value) => Get_UserToken());
             } else {
               Navigator.of(context).push(MaterialPageRoute(
@@ -239,6 +244,17 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
+          if (state is GetallblogsLoadedState) {
+            // apiCalingdone = true;
+            getallBlogModel = state.getallBlogdata;
+          }
+          if (state is GetUserProfileLoadedState) {
+            print('dsfgsgfgsd-${state.myAccontDetails.success.toString()}');
+            User_Name = state.myAccontDetails.object?.userName;
+            User_Module = state.myAccontDetails.object?.module;
+            UserProfileImage = state.myAccontDetails.object?.userProfilePic;
+            Save_UserData();
+          }
           if (state is GetAllStoryLoadedState) {
             getAllStoryModel = state.getAllStoryModel;
             buttonDatas.clear();
@@ -249,7 +265,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                     false)) {
               state.getAllStoryModel.object?.forEach((element) {
                 if (element.userUid == User_ID) {
-                userName.add(element.userName.toString());
+                  userName.add(element.userName.toString());
                   buttonDatas.insert(
                       0,
                       StoryButtonData(
@@ -324,8 +340,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
                   storyAdded = true;
                 } else {
-                  if(!storyAdded)
-                  userName.add("Share Story");
+                  if (!storyAdded) userName.add("Share Story");
                   userName.add(element.userName.toString());
                   StoryButtonData buttonData1 = StoryButtonData(
                     timelineBackgroundColor: Colors.grey,
@@ -427,7 +442,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                 height: 40,
                                 child: Image.asset(ImageConstant.splashImage)),
                             Spacer(),
-                             User_Module == "EMPLOYEE" || User_Module == null
+                            User_Module == "EMPLOYEE" || User_Module == ''
                                 ? GestureDetector(
                                     onTapDown: (TapDownDetails details) {
                                       _showPopupMenu(
@@ -460,15 +475,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                 } else {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return MultiBlocProvider(
-                                      providers: [
-                                        BlocProvider<NewProfileSCubit>(
-                                          create: (context) =>
-                                              NewProfileSCubit(),
-                                        )
-                                      ],
-                                      child: ProfileScreen(),
-                                    );
+                                    return ProfileScreen();
                                   }));
                                 }
                               },
@@ -485,8 +492,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                       height: 50,
                                       width: 50,
                                       child: CircleAvatar(
-                                        backgroundImage: AssetImage(
-                                            ImageConstant.placeholder),
+                                        backgroundImage:
+                                            UserProfileImage != null
+                                                ? NetworkImage(
+                                                    "${UserProfileImage}")
+                                                : NetworkImage(""),
+                                        radius: 25,
+
+                                        //  CustomImageView(url: UserProfileImage,),
                                       ),
                                     ),
                             ),
@@ -505,7 +518,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                               if (!storyAdded)
                                 return GestureDetector(
                                   onTap: () async {
-                                    ImageDataPost? imageDataPost;
+                                    ImageDataPostOne? imageDataPost;
                                     if (Platform.isAndroid) {
                                       final info =
                                           await DeviceInfoPlugin().androidInfo;
@@ -518,15 +531,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                           imageDataPost = await Navigator.push(
                                               context, MaterialPageRoute(
                                                   builder: (context) {
-                                            return MultiBlocProvider(
-                                              providers: [
-                                                BlocProvider<CreateStoryCubit>(
-                                                  create: (context) =>
-                                                      CreateStoryCubit(),
-                                                )
-                                              ],
-                                              child: CreateStoryPage(),
-                                            );
+                                            return CreateStoryPage();
                                           }));
                                           print(
                                               "dfhsdfhsdfsdhf--${imageDataPost?.object}");
@@ -543,15 +548,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                         imageDataPost = await Navigator.push(
                                             context, MaterialPageRoute(
                                                 builder: (context) {
-                                          return MultiBlocProvider(
-                                            providers: [
-                                              BlocProvider<CreateStoryCubit>(
-                                                create: (context) =>
-                                                    CreateStoryCubit(),
-                                              )
-                                            ],
-                                            child: CreateStoryPage(),
-                                          );
+                                          return CreateStoryPage();
                                         }));
                                         var parmes = {
                                           "storyData":
@@ -688,7 +685,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                               right: 0,
                                               child: GestureDetector(
                                                 onTap: () async {
-                                                  ImageDataPost? imageDataPost;
+                                                  ImageDataPostOne?
+                                                      imageDataPost;
                                                   if (Platform.isAndroid) {
                                                     final info =
                                                         await DeviceInfoPlugin()
@@ -709,17 +707,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 MaterialPageRoute(
                                                                     builder:
                                                                         (context) {
-                                                          return MultiBlocProvider(
-                                                            providers: [
-                                                              BlocProvider<
-                                                                  CreateStoryCubit>(
-                                                                create: (context) =>
-                                                                    CreateStoryCubit(),
-                                                              )
-                                                            ],
-                                                            child:
-                                                                CreateStoryPage(),
-                                                          );
+                                                          return CreateStoryPage();
                                                         }));
                                                         print(
                                                             "imageData--${imageDataPost?.object.toString()}");
@@ -746,17 +734,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               MaterialPageRoute(
                                                                   builder:
                                                                       (context) {
-                                                        return MultiBlocProvider(
-                                                          providers: [
-                                                            BlocProvider<
-                                                                CreateStoryCubit>(
-                                                              create: (context) =>
-                                                                  CreateStoryCubit(),
-                                                            )
-                                                          ],
-                                                          child:
-                                                              CreateStoryPage(),
-                                                        );
+                                                        return CreateStoryPage();
                                                       }));
                                                       var parmes = {
                                                         "storyData":
@@ -801,7 +779,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                         flex: 1,
                                       ),
                                       Text(
-                                      '${userName[index]}',
+                                        '${userName[index]}',
                                         style: TextStyle(
                                             color: Colors.black, fontSize: 16),
                                       ),
@@ -935,14 +913,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       fontFamily: "outfit",
                                                     ),
                                                   ),
-                                                  Text(
+                                                  /* Text(
                                                     "${AllGuestPostRoomData?.object?.content?[index].postType}",
                                                     style: TextStyle(
                                                         fontSize: 10,
                                                         fontFamily: "outfit",
                                                         fontWeight:
                                                             FontWeight.bold),
-                                                  ),
+                                                  ), */
                                                 ],
                                               ),
                                               trailing: User_ID ==
@@ -1026,7 +1004,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       ?.content?[index]
                                                       .description !=
                                                   null
-                                              ?  HashTagText(
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 16),
+                                                  child: HashTagText(
                                                     text:
                                                         "${AllGuestPostRoomData?.object?.content?[index].description}",
                                                     decoratedStyle: TextStyle(
@@ -1034,7 +1016,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         fontSize: 14,
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        color:ColorConstant.HasTagColor),
+                                                        color: ColorConstant
+                                                            .HasTagColor),
                                                     basicStyle: TextStyle(
                                                         fontFamily: "outfit",
                                                         fontSize: 14,
@@ -1044,7 +1027,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     onTap: (text) {
                                                       print(text);
                                                     },
-                                                  )
+                                                  ),
+                                                )
                                               : SizedBox(),
                                           // index == 0
 
@@ -1288,16 +1272,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     Navigator.push(context,
                                                         MaterialPageRoute(
                                                       builder: (context) {
-                                                        return MultiBlocProvider(
-                                                          providers: [
-                                                            BlocProvider(
-                                                              create: (context) =>
-                                                                  GetPostAllLikeCubit(),
-                                                            ),
-                                                          ],
-                                                          child: ShowAllPostLike(
-                                                              "${AllGuestPostRoomData?.object?.content?[index].postUid}"),
-                                                        );
+                                                        return ShowAllPostLike(
+                                                            "${AllGuestPostRoomData?.object?.content?[index].postUid}");
                                                       },
                                                     ));
                                                   },
@@ -1311,47 +1287,41 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 SizedBox(
                                                   width: 18,
                                                 ),
-                                              GestureDetector(
+                                                GestureDetector(
                                                   onTap: () async {
                                                     await Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
                                                             builder: (context) {
-                                                      return MultiBlocProvider(
-                                                          providers: [
-                                                            BlocProvider<
-                                                                AddcommentCubit>(
-                                                              create: (context) =>
-                                                                  AddcommentCubit(),
-                                                            ),
-                                                          ],
-                                                          child: CommentsScreen(
-                                                            image: AllGuestPostRoomData
+                                                      return CommentsScreen(
+                                                        image:
+                                                            AllGuestPostRoomData
                                                                 ?.object
                                                                 ?.content?[
                                                                     index]
                                                                 .userProfilePic,
-                                                            userName:
-                                                                AllGuestPostRoomData
-                                                                    ?.object
-                                                                    ?.content?[
-                                                                        index]
-                                                                    .postUserName,
-                                                            description:
-                                                                AllGuestPostRoomData
-                                                                    ?.object
-                                                                    ?.content?[
-                                                                        index]
-                                                                    .description,
-                                                            PostUID:
-                                                                '${AllGuestPostRoomData?.object?.content?[index].postUid}',
-                                                            date: AllGuestPostRoomData
+                                                        userName:
+                                                            AllGuestPostRoomData
+                                                                ?.object
+                                                                ?.content?[
+                                                                    index]
+                                                                .postUserName,
+                                                        description:
+                                                            AllGuestPostRoomData
+                                                                ?.object
+                                                                ?.content?[
+                                                                    index]
+                                                                .description,
+                                                        PostUID:
+                                                            '${AllGuestPostRoomData?.object?.content?[index].postUid}',
+                                                        date:
+                                                            AllGuestPostRoomData
                                                                     ?.object
                                                                     ?.content?[
                                                                         index]
                                                                     .createdAt ??
                                                                 "",
-                                                          ));
+                                                      );
                                                     })).then((value) =>
                                                         methodtoReffrser());
                                                   },
@@ -1369,7 +1339,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       fontFamily: "outfit",
                                                       fontSize: 14),
                                                 ),
-                                                SizedBox(
+                                                /*  SizedBox(
                                                   width: 18,
                                                 ),
                                                 Image.asset(
@@ -1384,7 +1354,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   style: TextStyle(
                                                       fontFamily: "outfit",
                                                       fontSize: 14),
-                                                ),
+                                                ), */
                                                 Spacer(),
                                                 GestureDetector(
                                                   onTap: () async {
@@ -1710,10 +1680,24 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 margin:
                                                     EdgeInsets.only(bottom: 15),
                                                 child: ListView.builder(
+                                                  itemCount: getallBlogModel
+                                                      ?.object?.length,
                                                   scrollDirection:
                                                       Axis.horizontal,
                                                   itemBuilder:
-                                                      (context, index) {
+                                                      (context, index1) {
+                                                    if (getallBlogModel?.object
+                                                                ?.length !=
+                                                            0 ||
+                                                        getallBlogModel
+                                                                ?.object !=
+                                                            null) {
+                                                      parsedDateTimeBlogs =
+                                                          DateTime.parse(
+                                                              '${getallBlogModel?.object?[index1].createdAt ?? ""}');
+                                                      print(
+                                                          'index $index1 parsedDateTimeBlogs------$parsedDateTimeBlogs ');
+                                                    }
                                                     return Container(
                                                       height: 220,
                                                       width: _width / 1.6,
@@ -1734,10 +1718,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             CrossAxisAlignment
                                                                 .start,
                                                         children: [
-                                                          Image.asset(
-                                                            ImageConstant
-                                                                .rendom,
+                                                          CustomImageView(
+                                                            url: getallBlogModel
+                                                                    ?.object?[
+                                                                        index]
+                                                                    .image
+                                                                    .toString() ??
+                                                                "",
+                                                            // height: 50,
+                                                            width: _width,
                                                             fit: BoxFit.fill,
+                                                            radius: BorderRadius
+                                                                .circular(10),
                                                           ),
                                                           Padding(
                                                             padding:
@@ -1746,7 +1738,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     left: 9,
                                                                     top: 7),
                                                             child: Text(
-                                                              'Baluran Wild The Savvanah',
+                                                              "${getallBlogModel?.object?[index1].title}",
                                                               maxLines: 1,
                                                               style: TextStyle(
                                                                   fontSize: 16,
@@ -1770,7 +1762,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             10,
                                                                         top: 3),
                                                                 child: Text(
-                                                                  '27th June 2020 10:47 pm',
+                                                                  /*  getallBlogModel?.object?.length != 0 ||
+                                                                                getallBlogModel?.object != null
+                                                                            ?
+                                                                            : */
+                                                                  customFormat(
+                                                                      parsedDateTimeBlogs!),
                                                                   style: TextStyle(
                                                                       fontFamily:
                                                                           "outfit",
@@ -1823,7 +1820,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             .only(
                                                                         left: 7,
                                                                         top: 4),
-                                                                child: index !=
+                                                                child: index1 !=
                                                                         0
                                                                     ? Icon(Icons
                                                                         .favorite_border)
@@ -1870,7 +1867,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     );
                                                   },
                                                 ),
-                                              ),
+                                              )
                                             ],
                                           );
                                   } else {
@@ -2014,11 +2011,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                     print('no login');
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return MultiBlocProvider(providers: [
-                        BlocProvider<CreatFourmCubit>(
-                          create: (context) => CreatFourmCubit(),
-                        ),
-                      ], child: CreateForamScreen());
+                      return CreateForamScreen();
                     }));
                   },
                   child: Row(
@@ -2040,26 +2033,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               ],
             ),
           ),
-
-          /*   actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(ctx).pop();
-                print('no login');
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return MultiBlocProvider(providers: [
-                    BlocProvider<CreatFourmCubit>(
-                      create: (context) => CreatFourmCubit(),
-                    ),
-                  ], child: CreateForamScreen());
-                }));
-              },
-              child: Container(
-                // color: Colors.green,
-                child: Text("Okay"),
-              ),
-            ),
-          ], */
         ),
       );
     }
@@ -2171,11 +2144,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         ),
       ),
     );
-    // return showDialog(
-    //   context: context,
-
-    //   builder: (ctx) =>
-    // );
   }
 
   becomeAnExport() async {
@@ -2206,11 +2174,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                     print('no login');
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return MultiBlocProvider(providers: [
-                        BlocProvider<FetchExprtiseRoomCubit>(
-                          create: (context) => FetchExprtiseRoomCubit(),
-                        ),
-                      ], child: BecomeExpertScreen());
+                      return BecomeExpertScreen();
                     }));
                   },
                   child: Row(
@@ -2231,15 +2195,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           ),
         ),
       );
-
-      // print('no login');
-      // Navigator.push(context, MaterialPageRoute(builder: (context) {
-      //   return MultiBlocProvider(providers: [
-      //     BlocProvider<FetchExprtiseRoomCubit>(
-      //       create: (context) => FetchExprtiseRoomCubit(),
-      //     ),
-      //   ], child: BecomeExpertScreen());
-      // }));
     }
   }
 }

@@ -23,10 +23,10 @@ class FetchAllPublicRoomLoadedState extends FetchAllPublicRoomState {
   FetchAllPublicRoomLoadedState(this.PublicRoomData);
 }
 
-class FetchAllExpertsLoadedState extends FetchAllPublicRoomState {
-  final FetchAllExpertsModel FetchAllExpertsData;
-  FetchAllExpertsLoadedState(this.FetchAllExpertsData);
-}
+// class FetchAllExpertsLoadedState extends FetchAllPublicRoomState {
+//   final FetchAllExpertsModel FetchAllExpertsData;
+//   FetchAllExpertsLoadedState(this.FetchAllExpertsData);
+// }
 
 class FetchAllPublicRoomErrorState extends FetchAllPublicRoomState {
   final dynamic error;
@@ -60,11 +60,11 @@ class GetallblogLoadedState extends FetchAllPublicRoomState {
   GetallblogLoadedState(this.getallBlogdata);
 }
 
-class GetUserProfileLoadedState extends FetchAllPublicRoomState {
-  final MyAccontDetails myAccontDetails;
+// class GetUserProfileLoadedState extends FetchAllPublicRoomState {
+//   final MyAccontDetails myAccontDetails;
 
-  GetUserProfileLoadedState(this.myAccontDetails);
-}
+//   GetUserProfileLoadedState(this.myAccontDetails);
+// }
 
 class DeleteRoomLoadedState extends FetchAllPublicRoomState {
   final DeleteRoomModel DeleteRoom;

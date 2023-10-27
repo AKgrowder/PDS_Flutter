@@ -88,18 +88,18 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
     }
   }
 
-  Future<void> MyAccount(BuildContext context) async {
-    dynamic myAccontDetails;
-    try {
-      emit(FetchAllPublicRoomLoadingState());
-      myAccontDetails = await Repository().myAccount(context);
-      if (myAccontDetails.success == true) {
-        emit(GetUserProfileLoadedState(myAccontDetails));
-      }
-    } catch (e) {
-      emit(FetchAllPublicRoomErrorState(myAccontDetails));
-    }
-  }
+  // Future<void> MyAccount(BuildContext context) async {
+  //   dynamic myAccontDetails;
+  //   try {
+  //     emit(FetchAllPublicRoomLoadingState());
+  //     myAccontDetails = await Repository().myAccount(context);
+  //     if (myAccontDetails.success == true) {
+  //       emit(GetUserProfileLoadedState(myAccontDetails));
+  //     }
+  //   } catch (e) {
+  //     emit(FetchAllPublicRoomErrorState(myAccontDetails));
+  //   }
+  // }
 
   Future<void> DeleteRoomm(String roomuId, BuildContext context) async {
     dynamic GetAllPrivateRoom;

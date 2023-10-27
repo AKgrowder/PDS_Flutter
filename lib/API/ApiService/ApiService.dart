@@ -418,13 +418,6 @@ setLogOut(BuildContext context) async {
   await Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-          builder: (context) => MultiBlocProvider(
-                providers: [
-                  BlocProvider<SystemConfigCubit>(
-                    create: (context) => SystemConfigCubit(),
-                  ),
-                ],
-                child: SplashScreen(),
-              )),
+          builder: (context) => SplashScreen()),
       (route) => false);
 }

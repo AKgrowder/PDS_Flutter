@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,6 +48,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   XFile? pickedFile;
   ImagePicker _imagePicker = ImagePicker();
   List<File> pickedImage = [];
+  bool isTrue = false;
 
   Medium? medium1;
   bool selectImage = false;
@@ -56,6 +58,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
   String? userUiid;
   double _opacity = 0.0;
   // bool _mounted = false;
+  PageController _pageControllers = PageController();
+  int _currentPages = 0;
 
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -92,7 +96,14 @@ class _CreateNewPostState extends State<CreateNewPost> {
       listener: (context, state) {
         if (state is AddPostImaegState) {
           imageDataPost = state.imageDataPost;
-          print("imageDataPost-->${imageDataPost?.object?.data}");
+          if (state.imageDataPost.object?.status == 'failed') {
+            isTrue = true;
+            imageDataPost?.object?.data = null;
+          } else {
+            isTrue = true;
+
+            print("imageDataPost-->${imageDataPost?.object?.data}");
+          }
         }
         if (state is AddPostLoadedState) {
           print("lodedSate-->");
@@ -279,38 +290,78 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                   .toString(),
                                             ))
                                         : pickedImage.isNotEmpty
-                                            ? Expanded(
-                                                child: SizedBox(
-                                                  height: _height,
-                                                  width: _width,
-                                                  child: ListView.builder(
-                                                    padding: EdgeInsets.zero,
-                                                    scrollDirection:
-                                                        Axis.horizontal,
-                                                    itemCount: imageDataPost
-                                                        ?.object?.data?.length,
-                                                    itemBuilder:
-                                                        (context, index) {
-                                                      return Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          imageUrl:
-                                                              '${imageDataPost?.object?.data?[index]}',
-                                                          fit: BoxFit.cover,
-                                                          errorWidget: (context,
-                                                              url, error) {
-                                                            return Icon(
-                                                                Icons.error);
-                                                          },
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
-                                              )
+                                            ? _loading
+                                                ? Center(
+                                                    child: Container(
+                                                      margin: EdgeInsets.only(
+                                                          bottom: 100),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                        child: Image.asset(
+                                                            ImageConstant
+                                                                .loader,
+                                                            fit: BoxFit.cover,
+                                                            height: 100,
+                                                            width: 100),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : isTrue == true
+                                                    ? imageDataPost?.object
+                                                                ?.data !=
+                                                            null
+                                                        ? SizedBox(
+                                                            height: _height / 2,
+                                                            width: _width,
+                                                            child: PageView
+                                                                .builder(
+                                                              onPageChanged:
+                                                                  (value) {
+                                                                setState(() {
+                                                                  _currentPages =
+                                                                      value;
+                                                                });
+                                                              },
+                                                              itemCount:
+                                                                  imageDataPost
+                                                                      ?.object
+                                                                      ?.data
+                                                                      ?.length,
+                                                              controller:
+                                                                  _pageControllers,
+                                                              itemBuilder:
+                                                                  (context,
+                                                                      index) {
+                                                                return SizedBox(
+                                                                    height:
+                                                                        _height /
+                                                                            2,
+                                                                    width:
+                                                                        _width,
+                                                                    child:
+                                                                        Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.all(
+                                                                              8.0),
+                                                                      child:
+                                                                          CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            '${imageDataPost?.object?.data?[index]}',
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                      ),
+                                                                    ));
+                                                              },
+                                                            ),
+                                                          )
+                                                        : Container()
+                                                    : Center(
+                                                        child: GFLoader(
+                                                            type: GFLoaderType
+                                                                .ios),
+                                                      )
                                             : selectImage == true
                                                 ? medium1?.mediumType ==
                                                         MediumType.image
@@ -334,7 +385,27 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                     color: Colors.white,
                                                   ),
                                   ),
-                                )
+                                ),
+                                imageDataPost?.object?.data != null &&
+                                        imageDataPost?.object?.data?.length != 1
+                                    ? Container(
+                                        height: 20,
+                                        child: DotsIndicator(
+                                          dotsCount: imageDataPost
+                                                  ?.object?.data?.length ??
+                                              0,
+                                          position: _currentPages.toDouble(),
+                                          decorator: DotsDecorator(
+                                            size: const Size(10.0, 7.0),
+                                            activeSize: const Size(10.0, 10.0),
+                                            spacing: const EdgeInsets.symmetric(
+                                                horizontal: 2),
+                                            activeColor: Color(0xffED1C25),
+                                            color: Color(0xff6A6A6A),
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox(),
                               ],
                             ),
                           ),

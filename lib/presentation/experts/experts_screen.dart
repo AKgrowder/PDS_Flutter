@@ -5,13 +5,10 @@ import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../API/Bloc/SelectRoom_Bloc/SelectRoom_cubit.dart';
 import '../../API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import '../../API/Bloc/sherinvite_Block/sherinvite_state.dart';
 import '../../core/utils/color_constant.dart';
 import '../../theme/theme_helper.dart';
-import '../home/home.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
 import 'Room_selection_screen.dart';
 
@@ -465,19 +462,10 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                                     ? Navigator.push(context,
                                                         MaterialPageRoute(
                                                             builder: (context) {
-                                                        return MultiBlocProvider(
-                                                            providers: [
-                                                              BlocProvider<
-                                                                  SelectedRoomCubit>(
-                                                                create: (context) =>
-                                                                    SelectedRoomCubit(),
-                                                              ),
-                                                            ],
-                                                            child:
-                                                                RoomSelection(
+                                                        return RoomSelection(
                                                               ExperID:
-                                                                  "${FetchAllExpertsData?.object?[index].userEmail}",
-                                                            ));
+                                                          "${FetchAllExpertsData?.object?[index].userEmail}",
+                                                            );
                                                       }))
                                                     : Navigator.of(context)
                                                         .push(MaterialPageRoute(
