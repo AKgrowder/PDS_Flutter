@@ -50,7 +50,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   int indexx = 0;
   String? User_ID;
   String? User_Name;
-  String User_Module = "";
+  String? User_Module = "";
   List<String> image = [
     ImageConstant.placeholder4,
     ImageConstant.placeholder4,
@@ -244,12 +244,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
-          
-           if (state is GetallblogsLoadedState) {
+          if (state is GetallblogsLoadedState) {
             // apiCalingdone = true;
             getallBlogModel = state.getallBlogdata;
           }
-
           if (state is GetUserProfileLoadedState) {
             print('dsfgsgfgsd-${state.myAccontDetails.success.toString()}');
             User_Name = state.myAccontDetails.object?.userName;
@@ -1676,7 +1674,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   ),
                                                 ],
                                               ),
-                                               Container(
+                                              Container(
                                                 height: _height / 3.23,
                                                 width: _width,
                                                 margin:

@@ -224,5 +224,5 @@ class ImageConstant {
   static String ExitRoom =  "assets/images/ExitRoom.png";
   static String likewithout =  "assets/images/likewitoutcolor.png";
   static String addroomimage =  "assets/images/Plus button.png";
-   
+  static String hashTagimg = "assets/images/hashTag_Img.png";
 }
