@@ -3,8 +3,15 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pds/presentation/%20new/All_search_screen.dart';
+import '../../API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
+import '../../API/Bloc/HashTag_Bloc/HashTag_state.dart';
+import '../../API/Model/HashTage_Model/HashTag_model.dart';
 
 class SearchBarScreen extends StatefulWidget {
   dynamic value2;
@@ -28,16 +35,20 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   ];
   int? indexxx;
 
+  HashtagModel? hashtagModel;
+
   getUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    dataSetup = prefs.getInt(
+    dataSetup = 0;
+    indexxx = 0;
+    /*  dataSetup = prefs.getInt(
       "tabSelction",
     );
     if (dataSetup != null) {
       dataSetup = await dataSetup;
     } else {
       dataSetup = await widget.value2;
-    }
+    } */
     setState(() {});
   }
 
@@ -46,13 +57,29 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     // TODO: implement initState
     super.initState();
     getUserData();
+    BlocProvider.of<HashTagCubit>(context).HashTagForYouAPI(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
+      body: BlocConsumer<HashTagCubit, HashTagState>(
+        listener: (context, state) {
+          if (state is HashTagErrorState) {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.error),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
+          if (state is HashTagLoadedState) {
+            print("HashTagLoadedStateHashTagLoadedState");
+            hashtagModel = state.HashTagData;
+          }
+        },
+        builder: (context, state) {
+          return Column(
+            children: [
           Padding(
             padding: const EdgeInsets.only(left: 15, right: 15, top: 60),
             child: Container(
@@ -60,7 +87,11 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
               decoration: BoxDecoration(
                   color: Color(0xffF0F0F0),
                   borderRadius: BorderRadius.circular(30)),
-              child: TextField(
+              child: TextField(readOnly: true,onTap: () {
+                  Navigator.push(
+                            context,
+                            AllSearchScreen(value3: 0));
+              },
                 controller: searchController,
                 cursorColor: Colors.grey,
                 decoration: InputDecoration(
@@ -74,58 +105,60 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
               ),
             ),
           ),
-          Divider(
-            color: Colors.grey,
-          ),
-          SizedBox(
-              // height: 40,
-              width: double.infinity,
-              child: Column(children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: List.generate(2, (index) {
-                    return GestureDetector(
-                      onTap: () {
-                        indexxx = index;
-                        dataSetup = null;
+              Divider(
+                color: Colors.grey,
+              ),
+              SizedBox(
+                  // height: 40,
+                  width: double.infinity,
+                  child: Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: List.generate(2, (index) {
+                        return GestureDetector(
+                          onTap: () {
+                            indexxx = index;
+                            dataSetup = null;
 
-                        SharedPreferencesFunction(indexxx ?? 0);
-                        setState(() {});
-                      },
-                      child: Container(
-                        margin: EdgeInsets.all(5),
-                        height: 25,
-                        width: 120,
-                        decoration: BoxDecoration(
-                            color: indexxx == index
-                                ? Color(0xffED1C25)
-                                : dataSetup == index
+                            SharedPreferencesFunction(indexxx ?? 0);
+                            setState(() {});
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(5),
+                            height: 25,
+                            width: 120,
+                            decoration: BoxDecoration(
+                                color: indexxx == index
                                     ? Color(0xffED1C25)
-                                    : Color(0xffFBD8D9),
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Center(
-                            child: Text(
-                          text[index],
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: indexxx == index
-                                  ? Colors.white
-                                  : dataSetup == index
+                                    : dataSetup == index
+                                        ? Color(0xffED1C25)
+                                        : Color(0xffFBD8D9),
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Center(
+                                child: Text(
+                              text[index],
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: indexxx == index
                                       ? Colors.white
-                                      : Color(0xffED1C25)),
-                        )),
-                      ),
-                    );
-                  }),
-                )
-              ])),
-          Divider(
-            color: Colors.grey,
-          ),
-          TopSlider(),
-          NavagtionPassing()
-        ],
+                                      : dataSetup == index
+                                          ? Colors.white
+                                          : Color(0xffED1C25)),
+                            )),
+                          ),
+                        );
+                      }),
+                    )
+                  ])),
+              Divider(
+                color: Colors.grey,
+              ),
+              TopSlider(),
+              NavagtionPassing(hashtagModel: hashtagModel)
+            ],
+          );
+        },
       ),
     );
   }
@@ -197,13 +230,13 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     prefs.setInt("tabSelction", value);
   }
 
-  Widget NavagtionPassing() {
-    if (dataSetup != null) {
+  Widget NavagtionPassing({HashtagModel? hashtagModel}) {
+    /* if (dataSetup != null) {
       if (dataSetup == 0) {
         return Expanded(
           child: ListView.builder(
             padding: EdgeInsets.zero,
-            itemCount: 10,
+            itemCount: hashtagModel?.object?.length,
             itemBuilder: (context, index) {
               return Column(
                 children: [
@@ -228,14 +261,84 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                             ),
                           ),
                           Text(
-                            "#EcofriendlyPackaingDesign",
+                            "${hashtagModel?.object?[index].hashtagName}",
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500),
                           ),
                           Text(
-                            "2.64M posts",
+                            "${hashtagModel?.object?[index].postCount}M posts",
+                            style: TextStyle(
+                              color: Color(0xff808080),
+                              fontSize: 12,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        );
+      }
+    } else { */
+    if (indexxx != null) {
+      if (indexxx == 0) {
+        return Expanded(
+          child: ListView.builder(
+            padding: EdgeInsets.zero,
+            itemCount: hashtagModel?.object?.length,
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  Divider(
+                    height: 3,
+                    color: Colors.grey,
+                  ),
+                  SizedBox(
+                    height: 70,
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          top: 5, left: 10, right: 10, bottom: 5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Trending in India",
+                            style: TextStyle(
+                              color: Color(0xff808080),
+                              fontSize: 12,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        BlocProvider<HashTagCubit>(
+                                      create: (context) => HashTagCubit(),
+                                      child: HashTagViewScreen(
+                                          title:
+                                              "${hashtagModel?.object?[index].hashtagName}"),
+                                    ),
+                                  ));
+                            },
+                            child: Text(
+                              "${hashtagModel?.object?[index].hashtagName}",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          Text(
+                            "${hashtagModel?.object?[index].postCount}M posts",
                             style: TextStyle(
                               color: Color(0xff808080),
                               fontSize: 12,
@@ -303,115 +406,10 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
         );
       }
     } else {
-      if (indexxx != null) {
-        if (indexxx == 0) {
-          return Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    Divider(
-                      height: 3,
-                      color: Colors.grey,
-                    ),
-                    SizedBox(
-                      height: 70,
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 5, left: 10, right: 10, bottom: 5),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Trending in India",
-                              style: TextStyle(
-                                color: Color(0xff808080),
-                                fontSize: 12,
-                              ),
-                            ),
-                            Text(
-                              "#EcofriendlyPackaingDesign",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              "2.64M posts",
-                              style: TextStyle(
-                                color: Color(0xff808080),
-                                fontSize: 12,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          );
-        } else {
-          return Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    Divider(
-                      height: 3,
-                      color: Colors.grey,
-                    ),
-                    SizedBox(
-                      height: 70,
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 5, left: 10, right: 10, bottom: 5),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Trending in India",
-                              style: TextStyle(
-                                color: Color(0xff808080),
-                                fontSize: 12,
-                              ),
-                            ),
-                            Text(
-                              "#EcofriendlyPackaingDesign",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              "2.64M posts",
-                              style: TextStyle(
-                                color: Color(0xff808080),
-                                fontSize: 12,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          );
-        }
-      }
+      return Expanded(
+          child: Container(
+        color: Colors.white,
+      ));
     }
-    return Expanded(
-        child: Container(
-      color: Colors.white,
-    ));
   }
 }
