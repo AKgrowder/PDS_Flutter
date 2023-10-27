@@ -165,7 +165,6 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     }
   }
 
-
   Future<void> MyAccount(BuildContext context) async {
     dynamic myAccontDetails;
     try {
@@ -178,7 +177,8 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostErrorState(myAccontDetails));
     }
   }
-    Future<void> GetallBlog(BuildContext context) async {
+
+  Future<void> GetallBlog(BuildContext context) async {
     dynamic getallBlogmodel;
     try {
       emit(GetGuestAllPostLoadingState());
