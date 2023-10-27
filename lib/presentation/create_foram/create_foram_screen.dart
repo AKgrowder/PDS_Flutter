@@ -8,23 +8,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
-import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
-import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
-import 'package:pds/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
-import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
-import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
-import 'package:pds/API/Bloc/auth/register_Block.dart';
 import 'package:pds/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import 'package:pds/API/Bloc/creatForum_Bloc/creat_Fourm_state.dart';
-import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../../theme/theme_helper.dart';
 import '../policy_of_company/policy_screen.dart';
 import '../policy_of_company/privecy_policy.dart';
@@ -156,37 +147,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
               backgroundColor: ColorConstant.primary_color,
             );
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return MultiBlocProvider(providers: [
-                BlocProvider<FetchAllPublicRoomCubit>(
-                  create: (context) => FetchAllPublicRoomCubit(),
-                ),
-                BlocProvider<CreatPublicRoomCubit>(
-                  create: (context) => CreatPublicRoomCubit(),
-                ),
-                BlocProvider<senMSGCubit>(
-                  create: (context) => senMSGCubit(),
-                ),
-                BlocProvider<RegisterCubit>(
-                  create: (context) => RegisterCubit(),
-                ),
-                BlocProvider<GetAllPrivateRoomCubit>(
-                  create: (context) => GetAllPrivateRoomCubit(),
-                ),
-                BlocProvider<InvitationCubit>(
-                  create: (context) => InvitationCubit(),
-                ),
-
-                /// ---------------------------------------------------------------------------
-                BlocProvider<GetGuestAllPostCubit>(
-                  create: (context) => GetGuestAllPostCubit(),
-                ),
-                BlocProvider<CreatFourmCubit>(
-                  create: (context) => CreatFourmCubit(),
-                ),
-                BlocProvider<FetchExprtiseRoomCubit>(
-                  create: (context) => FetchExprtiseRoomCubit(),
-                ),
-              ], child: NewBottomBar(buttomIndex: 0));
+              return NewBottomBar(buttomIndex: 0);
             }));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             print('check Status--${state.createForm.success}');
@@ -361,6 +322,13 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 12),
                             child: MultiSelectDialogField<IndustryType>(
+                              decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.transparent)),
+                              buttonIcon: Icon(
+                                Icons.expand_more,
+                                color: Colors.black,
+                              ),
                               items: _industryTypes!,
                               listType: MultiSelectListType.LIST,
                               onConfirm: (values) {

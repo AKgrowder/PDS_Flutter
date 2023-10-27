@@ -146,11 +146,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             Navigator.pop(context);
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return MultiBlocProvider(providers: [
-                                BlocProvider<MyAccountCubit>(
-                                  create: (context) => MyAccountCubit(),
-                                )
-                              ], child: MyAccountScreen());
+                              return MyAccountScreen();
                             }));
                           },
                           child: Container(
@@ -297,11 +293,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             case 0:
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                return MultiBlocProvider(providers: [
-                                  BlocProvider<MyAccountCubit>(
-                                    create: (context) => MyAccountCubit(),
-                                  )
-                                ], child: MyAccountScreen());
+                                return MyAccountScreen();
                               }));
 
                               break;
@@ -329,16 +321,9 @@ class _SettingScreenState extends State<SettingScreen> {
                             case 3:
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                return MultiBlocProvider(
-                                    providers: [
-                                      BlocProvider<ForgetpasswordCubit>(
-                                        create: (context) =>
-                                            ForgetpasswordCubit(),
-                                      )
-                                    ],
-                                    child: ChangePasswordScreen(
-                                      isProfile: true,
-                                    ));
+                                return ChangePasswordScreen(
+                                  isProfile: true,
+                                );
                               }));
                               break;
                             case 4:
@@ -541,11 +526,7 @@ class _SettingScreenState extends State<SettingScreen> {
     }
     if (UserProfileOpen == true) {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return MultiBlocProvider(providers: [
-          BlocProvider<MyAccountCubit>(
-            create: (context) => MyAccountCubit(),
-          )
-        ], child: MyAccountScreen());
+        return MyAccountScreen();
       }));
     }
     userStatus =

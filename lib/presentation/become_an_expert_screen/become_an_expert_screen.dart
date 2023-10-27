@@ -370,6 +370,10 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 12),
                             child: MultiSelectDialogField<IndustryType>(
+                           decoration: BoxDecoration(
+                            border: Border.all(color: Colors.transparent)
+                           ),
+                              buttonIcon: Icon(Icons.expand_more,color: Colors.black,),
                               items: _industryTypes!,
                               listType: MultiSelectListType.LIST,
                               onConfirm: (values) {
