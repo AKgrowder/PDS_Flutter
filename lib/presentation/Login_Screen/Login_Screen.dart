@@ -156,38 +156,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return MultiBlocProvider(
-                            providers: [
-                              BlocProvider<FetchAllPublicRoomCubit>(
-                                create: (context) => FetchAllPublicRoomCubit(),
-                              ),
-                              BlocProvider<CreatPublicRoomCubit>(
-                                create: (context) => CreatPublicRoomCubit(),
-                              ),
-                              BlocProvider<senMSGCubit>(
-                                create: (context) => senMSGCubit(),
-                              ),
-                              BlocProvider<RegisterCubit>(
-                                create: (context) => RegisterCubit(),
-                              ),
-                              BlocProvider<GetAllPrivateRoomCubit>(
-                                create: (context) => GetAllPrivateRoomCubit(),
-                              ),
-                              BlocProvider<InvitationCubit>(
-                                create: (context) => InvitationCubit(),
-                              ),
-                              /// ---------------------------------------------------------------------------
-                  BlocProvider<GetGuestAllPostCubit>(
-                    create: (context) => GetGuestAllPostCubit(),
-                  ),BlocProvider<CreatFourmCubit>(
-                    create: (context) => CreatFourmCubit(),
-                  ),BlocProvider<FetchExprtiseRoomCubit>(
-                          create: (context) => FetchExprtiseRoomCubit(),
-                        ),
-                            ],
-                            child: NewBottomBar(
-                              buttomIndex: 0,
-                            ));
+                        return NewBottomBar(
+                          buttomIndex: 0,
+                        );
                       }));
                     }
 
@@ -218,54 +189,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     print('this condison is calling');
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return MultiBlocProvider(
-                          providers: [
-                            BlocProvider<FetchAllPublicRoomCubit>(
-                              create: (context) => FetchAllPublicRoomCubit(),
-                            ),
-                            BlocProvider<CreatPublicRoomCubit>(
-                              create: (context) => CreatPublicRoomCubit(),
-                            ),
-                            BlocProvider<senMSGCubit>(
-                              create: (context) => senMSGCubit(),
-                            ),
-                            BlocProvider<RegisterCubit>(
-                              create: (context) => RegisterCubit(),
-                            ),
-                            BlocProvider<GetAllPrivateRoomCubit>(
-                              create: (context) => GetAllPrivateRoomCubit(),
-                            ),
-                            BlocProvider<InvitationCubit>(
-                              create: (context) => InvitationCubit(),
-                            ),
-                            /// ---------------------------------------------------------------------------
-                  BlocProvider<GetGuestAllPostCubit>(
-                    create: (context) => GetGuestAllPostCubit(),
-                  ),BlocProvider<CreatFourmCubit>(
-                    create: (context) => CreatFourmCubit(),
-                  ),BlocProvider<FetchExprtiseRoomCubit>(
-                          create: (context) => FetchExprtiseRoomCubit(),
-                        ),
-                          ],
-                          child: NewBottomBar(
-                            buttomIndex: 0,
-                          ));
+                      return NewBottomBar(
+                        buttomIndex: 0,
+                      );
                     }));
                   } else {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return MultiBlocProvider(
-                          providers: [
-                            BlocProvider<OtpCubit>(
-                              create: (context) => OtpCubit(),
-                            )
-                          ],
-                          child: OtpVerificationScreen(
-                            loginModelData: loginModelData,
-                            flowCheck: 'login',
-                            phonNumber: state.getUserDataModel.object?.mobileNo,
-                            userId: loginModelData?.object?.uuid.toString(),
-                          ));
+                      return OtpVerificationScreen(
+                        loginModelData: loginModelData,
+                        flowCheck: 'login',
+                        phonNumber: state.getUserDataModel.object?.mobileNo,
+                        userId: loginModelData?.object?.uuid.toString(),
+                      );
                     }));
                   }
                 }
@@ -509,12 +445,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onTap: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return MultiBlocProvider(providers: [
-                                      BlocProvider<ForgetpasswordCubit>(
-                                        create: (context) =>
-                                            ForgetpasswordCubit(),
-                                      )
-                                    ], child: ForgetPasswordScreen());
+                                    return ForgetPasswordScreen();
                                   }));
                                 },
                                 child: Text(
