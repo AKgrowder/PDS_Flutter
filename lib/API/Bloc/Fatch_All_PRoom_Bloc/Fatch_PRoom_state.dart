@@ -23,10 +23,10 @@ class FetchAllPublicRoomLoadedState extends FetchAllPublicRoomState {
   FetchAllPublicRoomLoadedState(this.PublicRoomData);
 }
 
-class FetchAllExpertsLoadedState extends FetchAllPublicRoomState {
-  final FetchAllExpertsModel FetchAllExpertsData;
-  FetchAllExpertsLoadedState(this.FetchAllExpertsData);
-}
+// class FetchAllExpertsLoadedState extends FetchAllPublicRoomState {
+//   final FetchAllExpertsModel FetchAllExpertsData;
+//   FetchAllExpertsLoadedState(this.FetchAllExpertsData);
+// }
 
 class FetchAllPublicRoomErrorState extends FetchAllPublicRoomState {
   final dynamic error;
