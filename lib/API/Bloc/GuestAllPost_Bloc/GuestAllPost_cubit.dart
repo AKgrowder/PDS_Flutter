@@ -164,4 +164,30 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostErrorState(Deletepost));
     }
   }
+
+
+  Future<void> MyAccount(BuildContext context) async {
+    dynamic myAccontDetails;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      myAccontDetails = await Repository().myAccount(context);
+      if (myAccontDetails.success == true) {
+        emit(GetUserProfileLoadedState(myAccontDetails));
+      }
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(myAccontDetails));
+    }
+  }
+    Future<void> GetallBlog(BuildContext context) async {
+    dynamic getallBlogmodel;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      getallBlogmodel = await Repository().GetallBlog(context);
+      if (getallBlogmodel.success == true) {
+        emit(GetallblogsLoadedState(getallBlogmodel));
+      }
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(getallBlogmodel));
+    }
+  }
 }

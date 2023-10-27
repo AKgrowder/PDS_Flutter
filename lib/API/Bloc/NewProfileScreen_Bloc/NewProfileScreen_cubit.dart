@@ -17,4 +17,45 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       emit(NewProfileSErrorState(PublicRModel));
     }
   }
+
+  Future<void> GetAppPostAPI(BuildContext context, String userUid) async {
+    dynamic PublicRModel;
+    try {
+      emit(NewProfileSLoadingState());
+      PublicRModel = await Repository().GetAppPostAPI(context, userUid);
+      if (PublicRModel.success == true) {
+        emit(GetAppPostByUserLoadedState(PublicRModel));
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(PublicRModel));
+    }
+  }
+
+  Future<void> GetPostCommetAPI(
+      BuildContext context, String userUid, String orderBy) async {
+    dynamic PublicRModel;
+    try {
+      emit(NewProfileSLoadingState());
+      PublicRModel =
+          await Repository().GetPostCommetAPI(context, userUid, orderBy);
+      if (PublicRModel.success == true) {
+        emit(GetUserPostCommetLoadedState(PublicRModel));
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(PublicRModel));
+    }
+  }
+
+   Future<void> GetSavePostAPI (BuildContext context, String userUid) async {
+    dynamic PublicRModel;
+    try {
+      emit(NewProfileSLoadingState());
+      PublicRModel = await Repository().GetSavePostAPI(context, userUid);
+      if (PublicRModel.success == true) {
+        emit(GetSavePostLoadedState(PublicRModel));
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(PublicRModel));
+    }
+  }
 }
