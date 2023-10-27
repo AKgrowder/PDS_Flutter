@@ -135,11 +135,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                 child: TabBarView(children: [
                   Center(child: Text('Tab 1 Content')),
                   RequestOrderClass(),
-                  MultiBlocProvider(providers: [
-                    BlocProvider<InvitationCubit>(
-                      create: (context) => InvitationCubit(),
-                    ),
-                  ], child: InviationClass())
+                  InviationClass()
                 ]),
               ),
             ],
@@ -237,59 +233,53 @@ class RequestOrderClass extends StatelessWidget {
                               SizedBox(
                                 height: 10,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 30.0),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 30,
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                          color: Color(0xFFED1C25),
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Center(
-                                          child: Text(
-                                        "Accept",
-                                        style: TextStyle(
-                                            fontFamily: 'outfit',
-                                            color: Colors.white),
-                                      )),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Container(
-                                      height: 30,
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                              color: Color(0xFFED1C25))),
-                                      child: Center(
-                                          child: Text(
-                                        "Reject",
-                                        style: TextStyle(
-                                            fontFamily: 'outfit',
-                                            color: Color(0xFFED1C25)),
-                                      )),
-                                    )
-                                  ],
-                                ),
+                              Row(
+                                children: [
+                                  Container(
+                                    height: 30,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                        color: Color(0xFFED1C25),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Center(
+                                        child: Text(
+                                      "Accept",
+                                      style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          color: Colors.white),
+                                    )),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Container(
+                                    height: 30,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10),
+                                        border: Border.all(
+                                            color: Color(0xFFED1C25))),
+                                    child: Center(
+                                        child: Text(
+                                      "Reject",
+                                      style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          color: Color(0xFFED1C25)),
+                                    )),
+                                  )
+                                ],
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 85),
-                                child: Text(
-                                  customFormat(DateTime.now()),
-                                  maxLines: 2,
-                                  textScaleFactor: 1.0,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey,
-                                      fontFamily: "outfit",
-                                      fontSize: 14),
-                                ),
+                              Text(
+                                customFormat(DateTime.now()),
+                                maxLines: 2,
+                                textScaleFactor: 1.0,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey,
+                                    fontFamily: "outfit",
+                                    fontSize: 14),
                               ),
                             ],
                           ),
@@ -509,22 +499,14 @@ class _InviationClassState extends State<InviationClass> {
                                           Navigator.push(context,
                                               MaterialPageRoute(
                                             builder: (context) {
-                                              return MultiBlocProvider(
-                                                providers: [
-                                                  BlocProvider(
-                                                    create: (context) =>
-                                                        FatchAllMembersCubit(),
-                                                  ),
-                                                ],
-                                                child: RoomMembersScreen(
-                                                    roomname:
-                                                        "${InvitationRoomData?.object?[index].roomQuestion}",
-                                                    RoomOwner: false,
-                                                    roomdescription:
-                                                        "${InvitationRoomData?.object?[index].description}",
-                                                    room_Id:
-                                                        '${InvitationRoomData?.object?[index].roomUid.toString()}'),
-                                              );
+                                              return RoomMembersScreen(
+                                                  roomname:
+                                                      "${InvitationRoomData?.object?[index].roomQuestion}",
+                                                  RoomOwner: false,
+                                                  roomdescription:
+                                                      "${InvitationRoomData?.object?[index].description}",
+                                                  room_Id:
+                                                      '${InvitationRoomData?.object?[index].roomUid.toString()}');
                                             },
                                           ));
                                         },
