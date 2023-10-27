@@ -6,7 +6,7 @@ import 'package:pds/API/Bloc/auth/register_Block.dart';
 import 'package:pds/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/core/app_export.dart';
-import 'package:pds/presentation/%20new/newbottembar.dart'; 
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/Login_Screen/Login_Screen.dart';
 import 'package:pds/widgets/app_bar/appbar_image.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,7 @@ class RegisterCreateAccountScreen extends StatefulWidget {
 }
 
 class _RegisterCreateAccountScreenState
-extends State<RegisterCreateAccountScreen> {
+    extends State<RegisterCreateAccountScreen> {
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
@@ -44,8 +44,6 @@ extends State<RegisterCreateAccountScreen> {
                 ),
               ),
               Container(
-                
-             
                 alignment: Alignment.topLeft,
                 child: AppbarImage(
                     height: 23,
@@ -58,35 +56,7 @@ extends State<RegisterCreateAccountScreen> {
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return MultiBlocProvider(providers: [
-                          BlocProvider<FetchAllPublicRoomCubit>(
-                            create: (context) => FetchAllPublicRoomCubit(),
-                          ),
-                          BlocProvider<CreatPublicRoomCubit>(
-                            create: (context) => CreatPublicRoomCubit(),
-                          ),
-                          BlocProvider<senMSGCubit>(
-                            create: (context) => senMSGCubit(),
-                          ),
-                          BlocProvider<RegisterCubit>(
-                            create: (context) => RegisterCubit(),
-                          ),
-                          BlocProvider<GetAllPrivateRoomCubit>(
-                            create: (context) => GetAllPrivateRoomCubit(),
-                          ),
-                          BlocProvider<InvitationCubit>(
-                            create: (context) => InvitationCubit(),
-                          ),
-                          /// ---------------------------------------------------------------------------
-                  BlocProvider<GetGuestAllPostCubit>(
-                    create: (context) => GetGuestAllPostCubit(),
-                  ),BlocProvider<CreatFourmCubit>(
-                    create: (context) => CreatFourmCubit(),
-                  ),
-                  BlocProvider<FetchExprtiseRoomCubit>(
-                          create: (context) => FetchExprtiseRoomCubit(),
-                        ),
-                        ], child: NewBottomBar(buttomIndex: 0));
+                        return NewBottomBar(buttomIndex: 0);
                       }));
                     }),
               ),
@@ -139,11 +109,7 @@ extends State<RegisterCreateAccountScreen> {
             onTap: () {
               print('this is the data fget');
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return MultiBlocProvider(providers: [
-                  BlocProvider<RegisterCubit>(
-                    create: (context) => RegisterCubit(),
-                  )
-                ], child: CreateAccountScreen());
+                return CreateAccountScreen();
               }));
             },
             child: Padding(
@@ -170,14 +136,7 @@ extends State<RegisterCreateAccountScreen> {
           GestureDetector(
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return MultiBlocProvider(providers: [
-                  BlocProvider<LoginCubit>(
-                    create: (context) => LoginCubit(),
-                  ),
-                  BlocProvider<DevicesInfoCubit>(
-                    create: (context) => DevicesInfoCubit(),
-                  )
-                ], child: LoginScreen());
+                return LoginScreen();
               }));
             },
             child: Padding(

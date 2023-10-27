@@ -1,11 +1,10 @@
 import 'dart:io';
 import 'dart:math';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/CreateStory_Bloc/CreateStory_Cubit.dart';
-import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
+import 'package:pds/API/Model/storyModel/stroyModel.dart';
 import 'package:stories_editor/stories_editor.dart';
 import '../../API/Bloc/CreateStory_Bloc/CreateStory_state.dart';
 import '../../API/Model/CreateStory_Model/CreateStory_model.dart';
@@ -22,7 +21,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
   double value2 = 0.0;
   PlatformFile? file12;
   double finalFileSize = 0;
-  ImageDataPost? imageDataPost;
+  ImageDataPostOne? imageDataPost;
   CreateStoryModel? createForm;
   @override
   Widget build(BuildContext context) {
@@ -37,6 +36,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
         }
 
         if (state is AddPostImaegState) {
+          print("dsfdfhsdhfh");
           imageDataPost = state.imageDataPost;
            Navigator.pop(context, imageDataPost);
         }
