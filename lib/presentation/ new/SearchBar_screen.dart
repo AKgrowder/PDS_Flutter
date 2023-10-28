@@ -5,11 +5,13 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hashtagable/widgets/hashtag_text.dart';
+import 'package:pds/API/Model/Getalluset_list_Model/get_all_userlist_model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pds/presentation/%20new/All_search_screen.dart';
+
 import '../../API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
 import '../../API/Bloc/HashTag_Bloc/HashTag_state.dart';
 import '../../API/Model/HashTage_Model/HashTag_model.dart';
@@ -27,6 +29,10 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   dynamic dataSetup;
   TextEditingController searchController = TextEditingController();
   List text = ["For You", "Trending"];
+  List text1 = ["All", "Experts"];
+
+  bool dataget = false;
+  GetAllUserListModel? getalluserlistModel;
   List imageList = [
     ImageConstant.Rectangle,
     ImageConstant.Rectangle,
@@ -35,7 +41,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     ImageConstant.Rectangle,
   ];
   int? indexxx;
-
+  bool isSerch = false;
   HashtagModel? hashtagModel;
 
   getUserData() async {
@@ -73,94 +79,249 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
+
           if (state is HashTagLoadedState) {
             print("HashTagLoadedStateHashTagLoadedState");
             hashtagModel = state.HashTagData;
           }
+          if (state is GetAllUserLoadedState) {
+            dataget = true;
+            getalluserlistModel = state.getAllUserRoomData;
+          }
         },
         builder: (context, state) {
+          var _height = MediaQuery.of(context).size.height;
+          var _width = MediaQuery.of(context).size.width;
           return Column(
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15, top: 60),
-                child: Container(
-                  height: 48,
-                  decoration: BoxDecoration(
-                      color: Color(0xffF0F0F0),
-                      borderRadius: BorderRadius.circular(30)),
-                  child: TextField(
-                    readOnly: true,
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(
+                child: isSerch == true
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          NewBottomBar(buttomIndex: 2),
+                                    ));
+                              },
+                              child: Icon(Icons.arrow_back)),
+                          Container(
+                            height: 48,
+                            width: _width / 1.25,
+                            decoration: BoxDecoration(
+                                color: Color(0xffF0F0F0),
+                                borderRadius: BorderRadius.circular(30)),
+                            child: TextFormField(
+                              onTap: () {
+                                setState(() {
+                                  isSerch = true;
+                                });
+
+                                print("xfhdsfhsdfgsdfg-$isSerch");
+                                /*    Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return AllSearchScreen();
+                            },
+                          )); */
+                              },
+                              onChanged: (value) {
+                                if (value.isNotEmpty) {
+                                  if (indexxx == 0) {
+                                    BlocProvider.of<HashTagCubit>(context)
+                                        .getalluser(
+                                            1, 5, value.trim(), context);
+                                  } else {
+                                    BlocProvider.of<HashTagCubit>(context)
+                                        .getalluser(1, 5, value.trim(), context,
+                                            filterModule: 'EXPERT');
+                                  }
+                                } else {
+                                  dataget = false;
+                                  setState(() {});
+                                }
+                              },
+                              controller: searchController,
+                              cursorColor: Colors.grey,
+                              decoration: InputDecoration(
+                                  hintText: "Search....",
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  border: InputBorder.none,
+                                  prefixIcon: Icon(
+                                    Icons.search,
+                                    color: Colors.grey,
+                                  )),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(
+                        height: 48,
+                        decoration: BoxDecoration(
+                            color: Color(0xffF0F0F0),
+                            borderRadius: BorderRadius.circular(30)),
+                        child: TextFormField(
+                          onTap: () {
+                            setState(() {
+                              isSerch = true;
+                            });
+
+                            print("xfhdsfhsdfgsdfg-$isSerch");
+                            /*    Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
                           return AllSearchScreen();
                         },
-                      ));
-                    },
-                    controller: searchController,
-                    cursorColor: Colors.grey,
-                    decoration: InputDecoration(
-                        hintText: "Search....",
-                        hintStyle: TextStyle(color: Colors.grey),
-                        border: InputBorder.none,
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Colors.grey,
-                        )),
-                  ),
-                ),
-              ),
-              Divider(
-                color: Colors.grey,
-              ),
-              SizedBox(
-                  // height: 40,
-                  width: double.infinity,
-                  child: Column(children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: List.generate(2, (index) {
-                        return GestureDetector(
-                          onTap: () {
-                            indexxx = index;
-                            dataSetup = null;
-
-                            SharedPreferencesFunction(indexxx ?? 0);
-                            setState(() {});
+                      )); */
                           },
-                          child: Container(
-                            margin: EdgeInsets.all(5),
-                            height: 25,
-                            width: 120,
-                            decoration: BoxDecoration(
-                                color: indexxx == index
-                                    ? Color(0xffED1C25)
-                                    : dataSetup == index
-                                        ? Color(0xffED1C25)
-                                        : Color(0xffFBD8D9),
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Center(
-                                child: Text(
-                              text[index],
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: indexxx == index
-                                      ? Colors.white
-                                      : dataSetup == index
-                                          ? Colors.white
-                                          : Color(0xffED1C25)),
-                            )),
-                          ),
-                        );
-                      }),
-                    )
-                  ])),
+                          onChanged: (value) {
+                            if (value.isNotEmpty) {
+                              if (indexxx == 0) {
+                                BlocProvider.of<HashTagCubit>(context)
+                                    .getalluser(1, 5, value.trim(), context);
+                              } else {
+                                BlocProvider.of<HashTagCubit>(context)
+                                    .getalluser(1, 5, value.trim(), context,
+                                        filterModule: 'EXPERT');
+                              }
+                            } else {
+                              dataget = false;
+                              setState(() {});
+                            }
+                          },
+                          controller: searchController,
+                          cursorColor: Colors.grey,
+                          decoration: InputDecoration(
+                              hintText: "Search....",
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: InputBorder.none,
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: Colors.grey,
+                              )),
+                        ),
+                      ),
+              ),
               Divider(
                 color: Colors.grey,
               ),
-              TopSlider(),
-              NavagtionPassing(hashtagModel: hashtagModel)
+              isSerch == true
+                  ? SizedBox(
+                      // height: 40,
+                      width: double.infinity,
+                      child: Column(children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: List.generate(text1.length, (index) {
+                            print("fdshfsdgfgsdfgsdfg--${text1[index]}");
+                            return GestureDetector(
+                              onTap: () {
+                                indexxx = index;
+                                dataSetup = null;
+
+                                SharedPreferencesFunction(indexxx ?? 0);
+                                setState(() {});
+                                if (searchController.text.isNotEmpty) {
+                                  if (indexxx == 0) {
+                                    BlocProvider.of<HashTagCubit>(context)
+                                        .getalluser(
+                                            1,
+                                            5,
+                                            searchController.text.trim(),
+                                            context);
+                                  } else {
+                                    BlocProvider.of<HashTagCubit>(context)
+                                        .getalluser(
+                                            1,
+                                            5,
+                                            searchController.text.trim(),
+                                            context,
+                                            filterModule: 'EXPERT');
+                                  }
+                                } else {}
+                              },
+                              child: Container(
+                                margin: EdgeInsets.all(5),
+                                height: 25,
+                                width: 120,
+                                decoration: BoxDecoration(
+                                    color: indexxx == index
+                                        ? Color(0xffED1C25)
+                                        : dataSetup == index
+                                            ? Color(0xffED1C25)
+                                            : Color(0xffFBD8D9),
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: Center(
+                                    child: Text(
+                                  text1[index],
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: indexxx == index
+                                          ? Colors.white
+                                          : dataSetup == index
+                                              ? Colors.white
+                                              : Color(0xffED1C25)),
+                                )),
+                              ),
+                            );
+                          }),
+                        )
+                      ]))
+                  : SizedBox(
+                      width: double.infinity,
+                      child: Column(children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: List.generate(text.length, (index) {
+                            return GestureDetector(
+                              onTap: () {
+                                indexxx = index;
+                                dataSetup = null;
+
+                                SharedPreferencesFunction(indexxx ?? 0);
+                                setState(() {});
+                              },
+                              child: Container(
+                                margin: EdgeInsets.all(5),
+                                height: 25,
+                                width: 120,
+                                decoration: BoxDecoration(
+                                    color: indexxx == index
+                                        ? Color(0xffED1C25)
+                                        : dataSetup == index
+                                            ? Color(0xffED1C25)
+                                            : Color(0xffFBD8D9),
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: Center(
+                                    child: Text(
+                                  text[index],
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: indexxx == index
+                                          ? Colors.white
+                                          : dataSetup == index
+                                              ? Colors.white
+                                              : Color(0xffED1C25)),
+                                )),
+                              ),
+                            );
+                          }),
+                        )
+                      ])),
+              Divider(
+                color: Colors.grey,
+              ),
+              isSerch == true ? SizedBox() : TopSlider(),
+              isSerch == true
+                  ? dataget == true
+                      ? NavagtionPassing1()
+                      : SizedBox()
+                  : NavagtionPassing(hashtagModel: hashtagModel)
             ],
           );
         },
@@ -236,60 +397,6 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   }
 
   Widget NavagtionPassing({HashtagModel? hashtagModel}) {
-    /* if (dataSetup != null) {
-      if (dataSetup == 0) {
-        return Expanded(
-          child: ListView.builder(
-            padding: EdgeInsets.zero,
-            itemCount: hashtagModel?.object?.length,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Divider(
-                    height: 3,
-                    color: Colors.grey,
-                  ),
-                  SizedBox(
-                    height: 70,
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          top: 5, left: 10, right: 10, bottom: 5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Trending in India",
-                            style: TextStyle(
-                              color: Color(0xff808080),
-                              fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            "${hashtagModel?.object?[index].hashtagName}",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          Text(
-                            "${hashtagModel?.object?[index].postCount}M posts",
-                            style: TextStyle(
-                              color: Color(0xff808080),
-                              fontSize: 12,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-        );
-      }
-    } else { */
     if (indexxx != null) {
       if (indexxx == 0) {
         return Expanded(
@@ -421,6 +528,146 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
           ),
         );
       */
+      }
+    } else {
+      return Expanded(
+          child: Container(
+        color: Colors.white,
+      ));
+    }
+  }
+
+  Widget NavagtionPassing1() {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
+
+    if (indexxx != null) {
+      if (indexxx == 0) {
+        return Expanded(
+          child: ListView.builder(
+            padding: EdgeInsets.zero,
+            itemCount: getalluserlistModel?.object?.content?.length,
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 55,
+                      width: _width / 1.1,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Row(children: [
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            getalluserlistModel
+                                        ?.object?.content?[index].userProfile ==
+                                    null
+                                ? CircleAvatar(
+                                    radius: 25,
+                                    child: Image.asset(ImageConstant.pdslogo))
+                                : CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                      "${getalluserlistModel?.object?.content?[index].userProfile}",
+                                    ),
+                                    radius: 25,
+                                  ),
+                            getalluserlistModel
+                                        ?.object?.content?[index].isExpert ==
+                                    true
+                                ? Image.asset(
+                                    ImageConstant.Star,
+                                    height: 18,
+                                  )
+                                : SizedBox()
+                          ],
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          "${getalluserlistModel?.object?.content?[index].userName}",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        )
+                      ]),
+                    ),
+                  )
+                ],
+              );
+            },
+          ),
+        );
+      } else {
+        return Expanded(
+          child: ListView.builder(
+            padding: EdgeInsets.zero,
+            itemCount: getalluserlistModel?.object?.content?.length,
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 55,
+                      width: _width / 1.1,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Row(children: [
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            getalluserlistModel
+                                        ?.object?.content?[index].userProfile ==
+                                    null
+                                ? CircleAvatar(
+                                    radius: 25,
+                                    child: Image.asset(ImageConstant.pdslogo))
+                                : CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                      "${getalluserlistModel?.object?.content?[index].userProfile}",
+                                    ),
+                                    radius: 25,
+                                  ),
+                            getalluserlistModel
+                                        ?.object?.content?[index].isExpert ==
+                                    true
+                                ? Image.asset(
+                                    ImageConstant.Star,
+                                    height: 18,
+                                  )
+                                : SizedBox()
+                          ],
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          "${getalluserlistModel?.object?.content?[index].userName}",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        )
+                      ]),
+                    ),
+                  )
+                ],
+              );
+            },
+          ),
+        );
       }
     } else {
       return Expanded(
