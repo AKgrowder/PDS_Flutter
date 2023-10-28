@@ -22,7 +22,7 @@ class PaginationWidget extends StatefulWidget {
 class _PaginationWidgetState extends State<PaginationWidget> {
   int _offset = 0;
   List<int>? _offsetList;
-  bool _isLoading = false;
+  bool _isLoading = false; 
   @override
   void initState() {
     super.initState();
