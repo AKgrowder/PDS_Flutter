@@ -49,7 +49,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   ImagePicker _imagePicker = ImagePicker();
   List<File> pickedImage = [];
   bool isTrue = false;
-
+  String? User_ID;
   Medium? medium1;
   bool selectImage = false;
   TextEditingController postText = TextEditingController();
@@ -83,7 +83,13 @@ class _CreateNewPostState extends State<CreateNewPost> {
         });
       }
     });
+    GetUserData();
     super.initState();
+  }
+
+  GetUserData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    User_ID = prefs.getString(PreferencesKey.loginUserID);
   }
 
   List<String> soicalData = ["Following", "Public"];
@@ -180,8 +186,10 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                ProfileScreen()));
+                                            builder: (context) => ProfileScreen(
+                                                  User_ID: "${User_ID}",
+                                                  isFollowing: true,
+                                                )));
                                   },
                                   child: SizedBox(
                                     height: 50,
