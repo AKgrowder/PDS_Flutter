@@ -182,6 +182,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                             children: [
                               Container(
                                 child: GestureDetector(
+
                                   onTap: () {
                                     Navigator.push(
                                         context,
@@ -191,6 +192,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                   isFollowing: true,
                                                 )));
                                   },
+
                                   child: SizedBox(
                                     height: 50,
                                     width: 50,

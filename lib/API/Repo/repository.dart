@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_PostModel.dart';
@@ -18,6 +17,7 @@ import 'package:pds/API/Model/LogOutModel/LogOut_model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
+import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
 import 'package:pds/API/Model/storyModel/stroyModel.dart';
 import 'package:pds/API/Model/HashTage_Model/HashTagView_model.dart';
 import 'package:pds/API/Model/HashTage_Model/HashTag_model.dart';
@@ -969,9 +969,13 @@ class Repository {
     }
   }
 
-  GetGuestAllPost(BuildContext context,String pageNumber,) async {
-    final responce =
-        await apiServices.getApiCall('${Config.GuestGetAllPost}?pageNumber=$pageNumber&numberOfRecords=10',context);
+  GetGuestAllPost(
+    BuildContext context,
+    String pageNumber,
+  ) async {
+    final responce = await apiServices.getApiCall(
+        '${Config.GuestGetAllPost}?pageNumber=$pageNumber&numberOfRecords=10',
+        context);
     var jsonString = json.decode(responce.body);
     print('jasonnString$jsonString');
     print('respnse ${responce.statusCode}');
@@ -1179,11 +1183,12 @@ class Repository {
     }
   }
 
-  NewProfileAPI(
+   NewProfileAPI(
     BuildContext context,
+    String otherUserUid
   ) async {
     final response = await apiServices.getApiCallWithToken(
-        Config.NewfetchUserProfile, context);
+        "${Config.NewfetchUserProfile}?otherUserUid=${otherUserUid}", context);
     print('AddPost$response');
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -1394,7 +1399,7 @@ class Repository {
     }
   }
 
-   AddPostImageUploded1(
+  AddPostImageUploded1(
     BuildContext context,
     String fileName,
     String file,
@@ -1407,6 +1412,41 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return ImageDataPostOne.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  aboutMe(BuildContext context, String aboutMe) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.add_update_about_me}?aboutMe=$aboutMe', context);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return AboutMe.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  getAllDataGet(BuildContext context, String userUid) async {
+    print("shdsdgfgsdfgfg-$userUid");
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.get_about_me}?userUid=$userUid', context);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return AboutMe.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
