@@ -5,18 +5,45 @@ import 'package:pds/API/Repo/repository.dart';
 
 class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
   dynamic gestUserData;
+  dynamic PublicRModel;
+
   GetGuestAllPostCubit() : super(GetGuestAllPostInitialState()) {}
-  Future<void> GetGuestAllPostAPI(BuildContext context) async {
-    dynamic PublicRModel;
+  Future<void> GetGuestAllPostAPI(BuildContext context, String pageNumber,
+      {bool showAlert = false}) async {
     try {
       emit(GetGuestAllPostLoadingState());
-      PublicRModel = await Repository().GetGuestAllPost(context);
+      PublicRModel = await Repository().GetGuestAllPost(context, pageNumber);
       if (PublicRModel.success == true) {
         emit(GetGuestAllPostLoadedState(PublicRModel));
       }
     } catch (e) {
       print('errorstate-$e');
-      emit(GetGuestAllPostErrorState(PublicRModel));
+      emit(GetGuestAllPostErrorState(e.toString()));
+    }
+  }
+
+  Future<void> GetGuestAllPostAPIPagantion(
+      BuildContext context, String pageNumber,
+      {bool showAlert = false}) async {
+    dynamic gestUserDatasetUp;
+    try {
+      print("showAlert-->$showAlert");
+      showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
+      gestUserDatasetUp =
+          await Repository().GetGuestAllPost(context, pageNumber);
+      if (gestUserDatasetUp.success == true) {
+        if (gestUserDatasetUp.object != null) {
+          PublicRModel.object.content.addAll(gestUserDatasetUp.object.content);
+          PublicRModel.object.pageable.pageNumber =
+              gestUserDatasetUp.object.pageable.pageNumber;
+          PublicRModel.object.totalElements =
+              gestUserDatasetUp.object.totalElements;
+        }
+        emit(GetGuestAllPostLoadedState(PublicRModel));
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(GetGuestAllPostErrorState(e.toString()));
     }
   }
 
