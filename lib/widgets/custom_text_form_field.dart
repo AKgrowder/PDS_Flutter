@@ -8,6 +8,7 @@ class CustomTextFormField extends StatefulWidget {
     Key? key,
     this.alignment,
     this.width,
+     this.readOnly = false,
     this.margin,
     this.controller,
     this.focusNode,
@@ -45,6 +46,8 @@ class CustomTextFormField extends StatefulWidget {
   void Function(String)? onChanged;
   final EdgeInsetsGeometry? margin; 
   final TextEditingController? controller;
+ final bool? readOnly;
+
 
   final FocusNode? focusNode;
 
@@ -111,8 +114,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         width: widget.width ?? double.maxFinite,
         margin: widget.margin,
         child: TextFormField(
-          
-          onChanged:widget. onChanged,
+          readOnly :widget.readOnly ??  false,
+           onChanged:widget. onChanged,
           maxLength: widget.maxLength  ,
           controller: widget.controller,
           
