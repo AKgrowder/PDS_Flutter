@@ -1,4 +1,5 @@
 import 'package:pds/API/Model/Delete_Api_model/delete_api_model.dart';
+import 'package:pds/API/Model/Getalluset_list_Model/get_all_userlist_model.dart';
 import 'package:pds/API/Model/HashTage_Model/HashTagView_model.dart';
 import 'package:pds/API/Model/HashTage_Model/HashTag_model.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
@@ -34,4 +35,9 @@ class GetGuestAllPostLoadedState extends HashTagState {
 class HashTagErrorState extends HashTagState {
   final dynamic error;
   HashTagErrorState(this.error);
+}
+
+class GetAllUserLoadedState extends HashTagState {
+  final GetAllUserListModel getAllUserRoomData;
+  GetAllUserLoadedState(this.getAllUserRoomData);
 }

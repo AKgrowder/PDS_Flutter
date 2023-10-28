@@ -1,3 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/CreateRoom_Bloc/CreateRoom_cubit.dart';
 import 'package:pds/API/Bloc/CreateStory_Bloc/CreateStory_Cubit.dart';
 import 'package:pds/API/Bloc/Edit_room_bloc/edit_room_cubit.dart';
@@ -9,6 +14,7 @@ import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_cubit.dart';
 import 'package:pds/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GetPostAllLike_Bloc/GetPostAllLike_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
+import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
@@ -25,15 +31,9 @@ import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import 'package:pds/theme/theme_helper.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'presentation/splash_screen/splash_screen.dart';
-import 'package:pds/API/Bloc/Get_all_user_list_Bloc/get_all_user_list_Cubit.dart';
-import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
 
 Future<void> _messageHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -87,7 +87,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        
         BlocProvider<SystemConfigCubit>(
           create: (context) => SystemConfigCubit(),
         ),
@@ -174,9 +173,6 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<EditroomCubit>(
           create: (context) => EditroomCubit(),
-        ),
-        BlocProvider<GetAllUserCubit>(
-          create: (context) => GetAllUserCubit(),
         ),
       ],
       child: MaterialApp(
