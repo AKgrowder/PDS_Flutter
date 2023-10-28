@@ -969,9 +969,9 @@ class Repository {
     }
   }
 
-  GetGuestAllPost(BuildContext context) async {
+  GetGuestAllPost(BuildContext context,String pageNumber,) async {
     final responce =
-        await apiServices.getApiCall('${Config.GuestGetAllPost}', context);
+        await apiServices.getApiCall('${Config.GuestGetAllPost}?pageNumber=$pageNumber&numberOfRecords=10',context);
     var jsonString = json.decode(responce.body);
     print('jasonnString$jsonString');
     print('respnse ${responce.statusCode}');

@@ -6,6 +6,8 @@ import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import 'package:pds/API/Model/myaccountModel/myaccountModel.dart';
 import '../../Model/Get_all_blog_Model/get_all_blog_model.dart';
+import '../../Model/HashTage_Model/HashTag_model.dart';
+
 abstract class GetGuestAllPostState {}
 
 class GetGuestAllPostLoadingState extends GetGuestAllPostState {}
@@ -27,11 +29,11 @@ class PostLikeLoadedState extends GetGuestAllPostState {
   PostLikeLoadedState(this.likePost);
 }
 
-
 class FetchAllExpertsLoadedState extends GetGuestAllPostState {
   final FetchAllExpertsModel AllExperData;
   FetchAllExpertsLoadedState(this.AllExperData);
-} 
+}
+
 class GetAllStoryLoadedState extends GetGuestAllPostState {
   final GetAllStoryModel getAllStoryModel;
   GetAllStoryLoadedState(this.getAllStoryModel);
@@ -47,7 +49,7 @@ class DeletePostLoadedState extends GetGuestAllPostState {
   DeletePostLoadedState(this.DeletePost);
 }
 
- class GetUserProfileLoadedState extends GetGuestAllPostState {
+class GetUserProfileLoadedState extends GetGuestAllPostState {
   final MyAccontDetails myAccontDetails;
 
   GetUserProfileLoadedState(this.myAccontDetails);
