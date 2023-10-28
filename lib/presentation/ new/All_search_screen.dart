@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names, prefer_const_literals_to_create_immutables
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/Get_all_user_list_Bloc/get_all_user_List_state.dart';
@@ -191,46 +190,42 @@ class _AllSearchScreenState extends State<AllSearchScreen> {
                           border: Border.all(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10)),
                       child: Row(children: [
-                        Container(
-                          height: 40,
-                          width: 50,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(2)),
-                          child: Stack(
-                            alignment: Alignment.bottomRight,
-                            children: [
-                              CircleAvatar(
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      '${getalluserlistModel?.object?.content?[index].userProfile}',
-                                  height: 120,
-                                  width: 120,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
-                                ),
-                              ),
-                              getalluserlistModel
-                                          ?.object?.content?[index].isExpert ==
-                                      true
-                                  ? Image.asset(
-                                      ImageConstant.Star,
-                                      height: 20,
-                                    )
-                                  : SizedBox()
-                            ],
-                          ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            getalluserlistModel
+                                        ?.object?.content?[index].userProfile ==
+                                    null
+                                ? CircleAvatar(
+                                    radius: 25,
+                                    child: Image.asset(ImageConstant.pdslogo))
+                                : CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                      "${getalluserlistModel?.object?.content?[index].userProfile}",
+                                    ),
+                                    radius: 25,
+                                  ),
+                            getalluserlistModel
+                                        ?.object?.content?[index].isExpert ==
+                                    true
+                                ? Image.asset(
+                                    ImageConstant.Star,
+                                    height: 18,
+                                  )
+                                : SizedBox()
+                          ],
                         ),
                         SizedBox(
-                          width: 5,
+                          width: 8,
                         ),
                         Text(
                           "${getalluserlistModel?.object?.content?[index].userName}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 12,
+                            fontSize: 15,
                           ),
                         )
                       ]),
@@ -258,40 +253,42 @@ class _AllSearchScreenState extends State<AllSearchScreen> {
                           border: Border.all(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10)),
                       child: Row(children: [
+                        SizedBox(
+                          width: 8,
+                        ),
                         Stack(
                           alignment: Alignment.bottomRight,
                           children: [
-                            CircleAvatar(
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                    '${getalluserlistModel?.object?.content?[index].userProfile}',
-                                height: 120,
-                                width: 120,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) =>
-                                    CircularProgressIndicator(),
-                                errorWidget: (context, url, error) =>
-                                    Icon(Icons.error),
-                              ),
-                            ),
+                            getalluserlistModel
+                                        ?.object?.content?[index].userProfile ==
+                                    null
+                                ? CircleAvatar(
+                                    radius: 25,
+                                    child: Image.asset(ImageConstant.pdslogo))
+                                : CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                      "${getalluserlistModel?.object?.content?[index].userProfile}",
+                                    ),
+                                    radius: 25,
+                                  ),
                             getalluserlistModel
                                         ?.object?.content?[index].isExpert ==
                                     true
                                 ? Image.asset(
                                     ImageConstant.Star,
-                                    height: 20,
+                                    height: 18,
                                   )
                                 : SizedBox()
                           ],
                         ),
                         SizedBox(
-                          width: 5,
+                          width: 8,
                         ),
                         Text(
                           "${getalluserlistModel?.object?.content?[index].userName}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 12,
+                            fontSize: 15,
                           ),
                         )
                       ]),

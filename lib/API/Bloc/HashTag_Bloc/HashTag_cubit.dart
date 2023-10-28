@@ -39,4 +39,64 @@ class HashTagCubit extends Cubit<HashTagState> {
       emit(HashTagErrorState(hashTagViewModel));
     }
   }
+    Future<void> followWIngMethod(String? followedToUid, BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic likepost;
+    try {
+      // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
+      likepost = await Repository().folliwingMethod(followedToUid, context);
+      if (likepost.success == true) {
+        emit(PostLikeLoadedState(likepost));
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(HashTagErrorState(likepost));
+    }
+  }
+
+    Future<void> like_post(String? postUid, BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic likepost;
+    try {
+      // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
+      likepost = await Repository().likePostMethod(postUid, context);
+      if (likepost.success == true) {
+        emit(PostLikeLoadedState(likepost));
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(HashTagErrorState(likepost));
+    }
+  }
+
+   Future<void> savedData(String? postUid, BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic likepost;
+    try {
+      // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
+      likepost = await Repository().savedPostMethod(postUid, context);
+      if (likepost.success == true) {
+        emit(PostLikeLoadedState(likepost));
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(HashTagErrorState(likepost));
+    }
+  }
+    Future<void> DeletePost(String postUid, BuildContext context) async {
+    dynamic Deletepost;
+    try {
+      emit(HashTagLoadingState());
+      Deletepost = await Repository().Deletepost(postUid, context);
+      if (Deletepost.success == true) {
+        emit(DeletePostLoadedState(Deletepost));
+        Navigator.pop(context);
+      } else {
+        emit(HashTagErrorState(Deletepost.message));
+      }
+    } catch (e) {
+      emit(HashTagErrorState(Deletepost));
+    }
+  }
+  
 }

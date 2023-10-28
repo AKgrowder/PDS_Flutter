@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
+import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import '../../API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_state.dart';
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import 'package:pds/API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
@@ -86,6 +88,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   List<StoryButtonData> buttonDatas = [];
   List<StoryButton?> storyButtons = List.filled(1, null, growable: true);
   List<String> userName = [];
+  bool added = false;
 
   Get_UserToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -113,7 +116,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
   api() async {
     await BlocProvider.of<GetGuestAllPostCubit>(context)
-        .GetGuestAllPostAPI(context);
+        .GetGuestAllPostAPI(context, '1', showAlert: true);
   }
 
   NewApi() async {
@@ -442,7 +445,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                 height: 40,
                                 child: Image.asset(ImageConstant.splashImage)),
                             Spacer(),
-                            User_Module == "EMPLOYEE" || User_Module == ''
+                            User_Module == "EMPLOYEE"|| User_Module == null || User_Module == ''
                                 ? GestureDetector(
                                     onTapDown: (TapDownDetails details) {
                                       _showPopupMenu(
@@ -519,22 +522,40 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                 return GestureDetector(
                                   onTap: () async {
                                     ImageDataPostOne? imageDataPost;
-                                    if (Platform.isAndroid) {
-                                      final info =
-                                          await DeviceInfoPlugin().androidInfo;
-                                      if (num.parse(await info.version.release)
-                                              .toInt() >=
-                                          13) {
-                                        if (await permissionHandler(
-                                                context, Permission.photos) ??
+                                    if (uuid != null) {
+                                      if (Platform.isAndroid) {
+                                        final info = await DeviceInfoPlugin()
+                                            .androidInfo;
+                                        if (num.parse(
+                                                    await info.version.release)
+                                                .toInt() >=
+                                            13) {
+                                          if (await permissionHandler(
+                                                  context, Permission.photos) ??
+                                              false) {
+                                            imageDataPost =
+                                                await Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                              return CreateStoryPage();
+                                            }));
+                                            print(
+                                                "dfhsdfhsdfsdhf--${imageDataPost?.object}");
+                                            var parmes = {
+                                              "storyData": imageDataPost?.object
+                                                  .toString()
+                                            };
+                                            await Repository().cretateStoryApi(
+                                                context, parmes);
+                                          }
+                                        } else if (await permissionHandler(
+                                                context, Permission.storage) ??
                                             false) {
                                           imageDataPost = await Navigator.push(
                                               context, MaterialPageRoute(
                                                   builder: (context) {
                                             return CreateStoryPage();
                                           }));
-                                          print(
-                                              "dfhsdfhsdfsdhf--${imageDataPost?.object}");
                                           var parmes = {
                                             "storyData":
                                                 imageDataPost?.object.toString()
@@ -542,21 +563,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                           await Repository()
                                               .cretateStoryApi(context, parmes);
                                         }
-                                      } else if (await permissionHandler(
-                                              context, Permission.storage) ??
-                                          false) {
-                                        imageDataPost = await Navigator.push(
-                                            context, MaterialPageRoute(
-                                                builder: (context) {
-                                          return CreateStoryPage();
-                                        }));
-                                        var parmes = {
-                                          "storyData":
-                                              imageDataPost?.object.toString()
-                                        };
-                                        await Repository()
-                                            .cretateStoryApi(context, parmes);
                                       }
+                                    } else {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  RegisterCreateAccountScreen()));
                                     }
 
                                     if (imageDataPost?.object != null) {
@@ -829,11 +841,19 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                               offSet: AllGuestPostRoomData
                                   ?.object?.pageable?.pageNumber,
                               onPagination: ((p0) async {
-                                await BlocProvider.of<GetGuestAllPostCubit>(
-                                        context)
-                                    .GetUserAllPostAPIPagantion(
-                                        context, (p0 + 1).toString(),
-                                        showAlert: true);
+                                if (User_ID != null) {
+                                  await BlocProvider.of<GetGuestAllPostCubit>(
+                                          context)
+                                      .GetUserAllPostAPIPagantion(
+                                          context, (p0 + 1).toString(),
+                                          showAlert: true);
+                                } else {
+                                  await BlocProvider.of<GetGuestAllPostCubit>(
+                                          context)
+                                      .GetGuestAllPostAPIPagantion(
+                                          context, (p0 + 1).toString(),
+                                          showAlert: true);
+                                }
                               }),
                               items: ListView.separated(
                                 padding: EdgeInsets.zero,
@@ -843,12 +863,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                     0,
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
-                                  AllGuestPostRoomData
-                                      ?.object?.content?[index].postData
-                                      ?.forEach((element) {
-                                    _pageControllers.add(PageController());
-                                    _currentPages.add(0);
-                                  });
+                                  if (!added) {
+                                    AllGuestPostRoomData?.object?.content
+                                        ?.forEach((element) {
+                                      _pageControllers.add(PageController());
+                                      _currentPages.add(0);
+                                    });
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback(
+                                            (timeStamp) => setState(() {
+                                                  added = true;
+                                                }));
+                                  }
                                   DateTime parsedDateTime = DateTime.parse(
                                       '${AllGuestPostRoomData?.object?.content?[index].createdAt ?? ""}');
 
@@ -980,7 +1006,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         .white),
                                                               )
                                                             : Text(
-                                                                'Following',
+                                                                'Following ',
                                                                 style: TextStyle(
                                                                     fontFamily:
                                                                         "outfit",
@@ -1025,7 +1051,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             FontWeight.bold,
                                                         color: Colors.black),
                                                     onTap: (text) {
-                                                      print(text);
+                                                      print("${text}");
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                HashTagViewScreen(
+                                                                    title:
+                                                                        text),
+                                                          ));
                                                     },
                                                   ),
                                                 )
@@ -1100,8 +1134,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     ?.content?[
                                                                         index]
                                                                     .postData
-                                                                    ?.isNotEmpty ==
-                                                                true))
+                                                                    ?.isNotEmpty ??
+                                                                false)) ...[
                                                               SizedBox(
                                                                 height: 300,
                                                                 child: PageView
@@ -1169,50 +1203,46 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   },
                                                                 ),
                                                               ),
-                                                            (AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .postData
-                                                                        ?.isNotEmpty ==
-                                                                    true)
-                                                                ? Positioned(
-                                                                    bottom: 5,
-                                                                    left: 0,
-                                                                    right: 0,
+                                                              Positioned(
+                                                                  bottom: 5,
+                                                                  left: 0,
+                                                                  right: 0,
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        top: 0),
                                                                     child:
-                                                                        Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .only(
-                                                                          top:
-                                                                              0),
+                                                                        Container(
+                                                                      height:
+                                                                          20,
                                                                       child:
-                                                                          Container(
-                                                                        height:
-                                                                            20,
-                                                                        child:
-                                                                            DotsIndicator(
-                                                                          dotsCount:
-                                                                              AllGuestPostRoomData?.object?.content?[index].postData?.length ?? 0,
-                                                                          position:
-                                                                              _currentPages[index].toDouble(),
-                                                                          decorator:
-                                                                              DotsDecorator(
-                                                                            size:
-                                                                                const Size(10.0, 7.0),
-                                                                            activeSize:
-                                                                                const Size(10.0, 10.0),
-                                                                            spacing:
-                                                                                const EdgeInsets.symmetric(horizontal: 2),
-                                                                            activeColor:
-                                                                                Color(0xffED1C25),
-                                                                            color:
-                                                                                Color(0xff6A6A6A),
-                                                                          ),
+                                                                          DotsIndicator(
+                                                                        dotsCount:
+                                                                            AllGuestPostRoomData?.object?.content?[index].postData?.length ??
+                                                                                0,
+                                                                        position:
+                                                                            _currentPages[index].toDouble(),
+                                                                        decorator:
+                                                                            DotsDecorator(
+                                                                          size: const Size(
+                                                                              10.0,
+                                                                              7.0),
+                                                                          activeSize: const Size(
+                                                                              10.0,
+                                                                              10.0),
+                                                                          spacing:
+                                                                              const EdgeInsets.symmetric(horizontal: 2),
+                                                                          activeColor:
+                                                                              Color(0xffED1C25),
+                                                                          color:
+                                                                              Color(0xff6A6A6A),
                                                                         ),
                                                                       ),
-                                                                    ))
-                                                                : SizedBox()
+                                                                    ),
+                                                                  ))
+                                                            ]
+                                                            // : SizedBox()
                                                           ],
                                                         ),
                                                       ],

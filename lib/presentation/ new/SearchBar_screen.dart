@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hashtagable/widgets/hashtag_text.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
@@ -319,8 +320,20 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                               fontSize: 12,
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {
+                          HashTagText(
+                            text: "${hashtagModel?.object?[index].hashtagName}",
+                            decoratedStyle: TextStyle(
+                                fontFamily: "outfit",
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: ColorConstant.HasTagColor),
+                            basicStyle: TextStyle(
+                                fontFamily: "outfit",
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                            onTap: (text) {
+                              print(text);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -333,16 +346,9 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                     ),
                                   ));
                             },
-                            child: Text(
-                              "${hashtagModel?.object?[index].hashtagName}",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500),
-                            ),
                           ),
                           Text(
-                            "${hashtagModel?.object?[index].postCount}M posts",
+                            "${hashtagModel?.object?[index].postCount} posts",
                             style: TextStyle(
                               color: Color(0xff808080),
                               fontSize: 12,
@@ -358,7 +364,13 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
           ),
         );
       } else {
-        return Expanded(
+        return Container(
+          height: 100,
+          width: double.infinity,
+          color: Colors.amber,
+        );
+
+        /* Expanded(
           child: ListView.builder(
             padding: EdgeInsets.zero,
             itemCount: 5,
@@ -408,6 +420,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
             },
           ),
         );
+      */
       }
     } else {
       return Expanded(
