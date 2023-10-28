@@ -176,13 +176,13 @@ class _CreateNewPostState extends State<CreateNewPost> {
                             children: [
                               Container(
                                 child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ProfileScreen()));
-                                  },
+                                  // onTap: () {
+                                  //   Navigator.push(
+                                  //       context,
+                                  //       MaterialPageRoute(
+                                  //           builder: (context) =>
+                                  //               ProfileScreen()));
+                                  // },
                                   child: SizedBox(
                                     height: 50,
                                     width: 50,
