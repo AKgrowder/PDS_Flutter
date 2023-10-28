@@ -39,7 +39,8 @@ class HashTagCubit extends Cubit<HashTagState> {
       emit(HashTagErrorState(hashTagViewModel));
     }
   }
-    Future<void> followWIngMethod(String? followedToUid, BuildContext context,
+
+  Future<void> followWIngMethod(String? followedToUid, BuildContext context,
       {bool showAlert = false}) async {
     dynamic likepost;
     try {
@@ -54,7 +55,7 @@ class HashTagCubit extends Cubit<HashTagState> {
     }
   }
 
-    Future<void> like_post(String? postUid, BuildContext context,
+  Future<void> like_post(String? postUid, BuildContext context,
       {bool showAlert = false}) async {
     dynamic likepost;
     try {
@@ -69,7 +70,7 @@ class HashTagCubit extends Cubit<HashTagState> {
     }
   }
 
-   Future<void> savedData(String? postUid, BuildContext context,
+  Future<void> savedData(String? postUid, BuildContext context,
       {bool showAlert = false}) async {
     dynamic likepost;
     try {
@@ -83,7 +84,8 @@ class HashTagCubit extends Cubit<HashTagState> {
       emit(HashTagErrorState(likepost));
     }
   }
-    Future<void> DeletePost(String postUid, BuildContext context) async {
+
+  Future<void> DeletePost(String postUid, BuildContext context) async {
     dynamic Deletepost;
     try {
       emit(HashTagLoadingState());
@@ -98,5 +100,26 @@ class HashTagCubit extends Cubit<HashTagState> {
       emit(HashTagErrorState(Deletepost));
     }
   }
-  
+
+  Future<void> getalluser(
+    int? pageNumber,
+    int numberOfRecords,
+    String searchName,
+    BuildContext context, {
+    String? filterModule,
+  }) async {
+    dynamic getalluserlistModel;
+    try {
+      emit(HashTagLoadingState());
+      getalluserlistModel = await Repository().getalluser(
+          pageNumber, numberOfRecords, searchName, context,
+          filterModule: filterModule);
+      if (getalluserlistModel.success == true) {
+        emit(GetAllUserLoadedState(getalluserlistModel));
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(HashTagErrorState(e.toString()));
+    }
+  }
 }

@@ -5,11 +5,11 @@ import 'package:pds/API/Repo/repository.dart';
 
 class NewProfileSCubit extends Cubit<NewProfileSState> {
   NewProfileSCubit() : super(NewProfileSInitialState()) {}
-  Future<void> NewProfileSAPI(BuildContext context) async {
+  Future<void> NewProfileSAPI(BuildContext context,String otherUserUid,) async {
     dynamic PublicRModel;
     try {
       emit(NewProfileSLoadingState());
-      PublicRModel = await Repository().NewProfileAPI(context);
+      PublicRModel = await Repository().NewProfileAPI(context,otherUserUid);
       if (PublicRModel.success == true) {
         emit(NewProfileSLoadedState(PublicRModel));
       }
@@ -46,7 +46,7 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
     }
   }
 
-   Future<void> GetSavePostAPI (BuildContext context, String userUid) async {
+  Future<void> GetSavePostAPI(BuildContext context, String userUid) async {
     dynamic PublicRModel;
     try {
       emit(NewProfileSLoadingState());
@@ -56,6 +56,45 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       }
     } catch (e) {
       emit(NewProfileSErrorState(PublicRModel));
+    }
+  }
+
+  Future<void> add_update_about_me(BuildContext context, String userUid) async {
+    dynamic PublicRModel;
+    try {
+      emit(NewProfileSLoadingState());
+      PublicRModel = await Repository().GetSavePostAPI(context, userUid);
+      if (PublicRModel.success == true) {
+        emit(GetSavePostLoadedState(PublicRModel));
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(PublicRModel));
+    }
+  }
+
+  Future<void> abboutMeApi(BuildContext context, String aboutMe) async {
+    dynamic aboutMedataSet;
+    try {
+      emit(NewProfileSLoadingState());
+      aboutMedataSet = await Repository().aboutMe(context, aboutMe);
+      if (aboutMedataSet.success == true) {
+        emit(AboutMeLoadedState(aboutMedataSet));
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(e.toString()));
+    }
+  }
+
+  Future<void> get_about_me(BuildContext context, String userId) async {
+    dynamic aboutMedataSet;
+    try {
+      emit(NewProfileSLoadingState());
+      aboutMedataSet = await Repository().getAllDataGet(context, userId);
+      if (aboutMedataSet.success == true) {
+        emit(AboutMeLoadedState1(aboutMedataSet));
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(e.toString()));
     }
   }
 }
