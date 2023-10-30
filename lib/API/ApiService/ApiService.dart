@@ -75,7 +75,7 @@ class ApiServices {
       final response = await get(
         Uri.parse(baseURL + APIurl), /*  headers: headers1 */
       );
-
+      print("response - ${response.body}");
       if (response.statusCode == 602) {
         setLOGOUT(context);
       } else {
@@ -417,7 +417,6 @@ setLogOut(BuildContext context) async {
   prefs.clear();
   await Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(
-          builder: (context) => SplashScreen()),
+      MaterialPageRoute(builder: (context) => SplashScreen()),
       (route) => false);
 }
