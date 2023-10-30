@@ -122,4 +122,19 @@ class HashTagCubit extends Cubit<HashTagState> {
       emit(HashTagErrorState(e.toString()));
     }
   }
+
+  Future<void> HashTagBannerAPI(BuildContext context) async {
+    dynamic hashTagBannerModel;
+    try {
+      emit(HashTagLoadingState());
+      hashTagBannerModel = await Repository().HashTagBanner(context);
+      if (hashTagBannerModel.success == true) {
+        emit(HashTagBannerLoadedState(hashTagBannerModel));
+        print(hashTagBannerModel.message);
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(HashTagErrorState(e.toString()));
+    }
+  }
 }
