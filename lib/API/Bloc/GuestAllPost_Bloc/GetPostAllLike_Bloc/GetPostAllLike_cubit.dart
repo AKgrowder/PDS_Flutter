@@ -19,5 +19,20 @@ class GetPostAllLikeCubit extends Cubit<GetPostAllLikeState> {
     }
   }
 
+   Future<void> followWIngMethod(String? followedToUid, BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic likepost;
+    try {
+      // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
+      likepost = await Repository().folliwingMethod(followedToUid, context);
+      if (likepost.success == true) {
+        emit(PostLikeLoadedState(likepost));
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(GetGuestAllPostErrorState(likepost));
+    }
+  }
+
   
 }

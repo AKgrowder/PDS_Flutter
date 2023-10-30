@@ -8,6 +8,7 @@ import 'package:pds/API/Model/GetGuestAllPostModel/GetPostLike_Model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -111,15 +112,28 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
                     return Container(
                       height: 40,
                       child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: GetPostAllLikeRoomData
-                                      ?.object?[index].profilePic !=
-                                  null
-                              ? NetworkImage(
-                                  "${GetPostAllLikeRoomData?.object?[index].profilePic}")
-                              : NetworkImage(
-                                  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"),
-                          radius: 25,
+                        leading: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProfileScreen(
+                                          User_ID:
+                                              "${GetPostAllLikeRoomData?.object?[index].userUid}",
+                                          isFollowing:
+                                              "${GetPostAllLikeRoomData?.object?[index].isFollowing}",
+                                        )));
+                          },
+                          child: CircleAvatar(
+                            backgroundImage: GetPostAllLikeRoomData
+                                        ?.object?[index].profilePic !=
+                                    null
+                                ? NetworkImage(
+                                    "${GetPostAllLikeRoomData?.object?[index].profilePic}")
+                                : NetworkImage(
+                                    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"),
+                            radius: 25,
+                          ),
                         ),
                         title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,48 +161,70 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
                         trailing: User_ID ==
                                 GetPostAllLikeRoomData?.object?[index].userUid
                             ? SizedBox()
-                            : Container(
-                                height: 25,
-                                alignment: Alignment.center,
-                                width: 65,
-                                margin: EdgeInsets.only(bottom: 5),
-                                decoration: BoxDecoration(
-                                    color: Color(0xffED1C25),
-                                    borderRadius: BorderRadius.circular(4)),
-                                child: GetPostAllLikeRoomData
-                                            ?.object?[index].isFollowing ==
-                                        'FOLLOW'
-                                    ? Text(
-                                        'Follow',
-                                        style: TextStyle(
-                                            fontFamily: "outfit",
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      )
-                                    : GetPostAllLikeRoomData
-                                                ?.object?[index].isFollowing ==
-                                            'REQUESTED'
-                                        ? Text(
-                                            'Requested',
-                                            style: TextStyle(
-                                                fontFamily: "outfit",
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )
-                                        : Text(
-                                            'Following ',
-                                            style: TextStyle(
-                                                fontFamily: "outfit",
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          ),
+                            : GestureDetector(
+                                onTap: () {
+                                  followFunction(
+                                    apiName: 'Follow',
+                                    index: index,
+                                  );
+                                },
+                                child: Container(
+                                  height: 25,
+                                  alignment: Alignment.center,
+                                  width: 65,
+                                  margin: EdgeInsets.only(bottom: 5),
+                                  decoration: BoxDecoration(
+                                      color: Color(0xffED1C25),
+                                      borderRadius: BorderRadius.circular(4)),
+                                  child: GetPostAllLikeRoomData
+                                              ?.object?[index].isFollowing ==
+                                          'FOLLOW'
+                                      ? Text(
+                                          'Follow',
+                                          style: TextStyle(
+                                              fontFamily: "outfit",
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white),
+                                        )
+                                      : GetPostAllLikeRoomData?.object?[index]
+                                                  .isFollowing ==
+                                              'REQUESTED'
+                                          ? Text(
+                                              'Requested',
+                                              style: TextStyle(
+                                                  fontFamily: "outfit",
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            )
+                                          : Text(
+                                              'Following ',
+                                              style: TextStyle(
+                                                  fontFamily: "outfit",
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                ),
                               ),
                       ),
                     );
                   });
         }));
+  }
+
+  followFunction({String? apiName, int? index}) async {
+    print("fghdfghdfgh");
+    if (apiName == 'Follow') {
+      print("dfhsdfhsdfhsdgf");
+      await BlocProvider.of<GetPostAllLikeCubit>(context).followWIngMethod(
+          GetPostAllLikeRoomData?.object?[index ?? 0].userUid, context);
+      if (GetPostAllLikeRoomData?.object?[index ?? 0].isFollowing == 'FOLLOW') {
+        GetPostAllLikeRoomData?.object?[index ?? 0].isFollowing = 'REQUESTED';
+      } else {
+        GetPostAllLikeRoomData?.object?[index ?? 0].isFollowing = 'FOLLOW';
+      }
+    }
   }
 }

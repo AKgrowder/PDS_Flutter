@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names, prefer_const_literals_to_create_immutables
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
 import '../../API/Bloc/HashTag_Bloc/HashTag_state.dart';
+import '../../API/Model/HashTage_Model/HashTagBanner_model.dart';
 import '../../API/Model/HashTage_Model/HashTag_model.dart';
 
 class SearchBarScreen extends StatefulWidget {
@@ -43,6 +45,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   int? indexxx;
   bool isSerch = false;
   HashtagModel? hashtagModel;
+  HashTagImageModel? hashTagImageModel;
 
   getUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -65,10 +68,13 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     super.initState();
     getUserData();
     BlocProvider.of<HashTagCubit>(context).HashTagForYouAPI(context);
+    BlocProvider.of<HashTagCubit>(context).HashTagBannerAPI(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: BlocConsumer<HashTagCubit, HashTagState>(
         listener: (context, state) {
@@ -88,10 +94,12 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
             dataget = true;
             getalluserlistModel = state.getAllUserRoomData;
           }
+          if (state is HashTagBannerLoadedState) {
+            print("HashTagBannerLoadedState - ${hashTagImageModel?.object}");
+            hashTagImageModel = state.hashTagImageModel;
+          }
         },
         builder: (context, state) {
-          var _height = MediaQuery.of(context).size.height;
-          var _width = MediaQuery.of(context).size.width;
           return Column(
             children: [
               Padding(
@@ -117,6 +125,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 color: Color(0xffF0F0F0),
                                 borderRadius: BorderRadius.circular(30)),
                             child: TextFormField(
+                              autofocus: true,
                               onTap: () {
                                 setState(() {
                                   isSerch = true;
@@ -316,7 +325,9 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
               Divider(
                 color: Colors.grey,
               ),
-              isSerch == true ? SizedBox() : TopSlider(),
+              isSerch == true
+                  ? SizedBox()
+                  : TopSlider(hashTagImageModel: hashTagImageModel),
               isSerch == true
                   ? dataget == true
                       ? NavagtionPassing1()
@@ -329,7 +340,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     );
   }
 
-  Widget TopSlider() {
+  Widget TopSlider({HashTagImageModel? hashTagImageModel}) {
     return Column(
       children: [
         Stack(
@@ -354,11 +365,23 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                               });
                             });
                           }),
-                      itemCount: 5,
+                      itemCount: hashTagImageModel?.object?.length ?? 0,
                       itemBuilder: (context, index, realIndex) {
                         return GestureDetector(
                           onTap: () {},
-                          child: Image.asset(imageList[index]),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 12, right: 12),
+                            child: Container(
+                              width: double.infinity,
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    '${hashTagImageModel?.object?[index]}',
+                                height: 120,
+                                width: 120,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          ),
                         );
                       }),
                 ),
@@ -373,8 +396,8 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                   child: Container(
                     height: 20,
                     child: DotsIndicator(
-                      dotsCount: 5,
-                      position: 0,
+                      dotsCount: hashTagImageModel?.object?.length ?? 1,
+                      position: sliderCurrentPosition.toDouble(),
                       decorator: DotsDecorator(
                         size: const Size(10.0, 7.0),
                         activeSize: const Size(10.0, 10.0),
