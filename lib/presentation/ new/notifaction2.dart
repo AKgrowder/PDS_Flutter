@@ -5,6 +5,7 @@ import 'package:pds/API/Bloc/Fatch_all_members/fatch_all_members_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_state.dart';
 import 'package:pds/API/Model/InvitationModel/Invitation_Model.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/room_members/room_members_screen.dart';
@@ -54,9 +55,8 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                 height: 10,
               ),
               Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey)
-                ),
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.grey)),
                 child: TabBar(
                   onTap: (value) {},
                   controller: _tabController,
@@ -146,152 +146,228 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
   }
 }
 
-class RequestOrderClass extends StatelessWidget {
-  const RequestOrderClass({Key? key}) : super(key: key);
+class RequestOrderClass extends StatefulWidget {
+  @override
+  State<RequestOrderClass> createState() => _RequestOrderClassState();
+}
+
+class _RequestOrderClassState extends State<RequestOrderClass> {
+  @override
+  void initState() {
+    BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          requestsection_previous_request(context),
-          Padding(
-            padding: const EdgeInsets.only(left: 35),
-            child: Row(
-              children: [
-                Text(
-                  "Previous Requests",
-                  style: TextStyle(
-                      fontFamily: 'outfit',
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
+    RequestListModel? RequestListModelData;
+    return BlocConsumer<InvitationCubit, InvitationState>(
+        listener: (context, state) {
+      if (state is InvitationErrorState) {
+        if (state.error == "not found") {
+        } else {
+          SnackBar snackBar = SnackBar(
+            content: Text(state.error),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      }
+
+      if (state is InvitationLoadingState) {
+        Center(
+          child: Container(
+            margin: EdgeInsets.only(bottom: 100),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.asset(ImageConstant.loader,
+                  fit: BoxFit.cover, height: 100.0, width: 100),
             ),
           ),
-          requestsection_previous_request(context),
-          SizedBox(
-            height: 30,
-          ),
-        ],
-      ),
-    );
-  }
-
-  requestsection_previous_request(context) {
-    var _height = MediaQuery.of(context).size.height;
-    var _width = MediaQuery.of(context).size.width;
-    return ListView.builder(
-        shrinkWrap: true,
-        physics: BouncingScrollPhysics(),
-        itemCount: 5,
-        // itemCount: 5,
-        itemBuilder: (BuildContext context, int index) {
-          return Container(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 80,
-                        width: _width / 1.2,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 1),
-                            color: Colors.white.withOpacity(1),
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Row(children: [
-                          Image.asset(
-                            ImageConstant.expertone,
-                          ),
-                          Column(
+        );
+      }
+      if (state is RequestListLoadedState) {
+        RequestListModelData = state.RequestListModelData;
+      }
+    }, builder: (context, state) {
+      if (state is RequestListLoadedState) {
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              // requestsection_previous_request(context),
+              /*  Padding(
+                padding: const EdgeInsets.only(left: 35),
+                child: Row(
+                  children: [
+                    Text(
+                      "Previous Requests",
+                      style: TextStyle(
+                          fontFamily: 'outfit',
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ), */
+              RequestListModelData?.object?.length != 0 ||
+                      RequestListModelData?.object?.isNotEmpty == true
+                  ? ListView.builder(
+                      shrinkWrap: true,
+                      physics: BouncingScrollPhysics(),
+                      itemCount: RequestListModelData?.object?.length,
+                      // itemCount: 5,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          child: Column(
                             children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    "Karennne Watsaon",
-                                    style: TextStyle(
-                                        fontFamily: "outfit",
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13),
-                                  ),
-                                  SizedBox(
-                                    width: 4,
-                                  ),
-                                  Text(
-                                    "started following you.",
-                                    style: TextStyle(
-                                        fontFamily: "outfit",
-                                        fontWeight: FontWeight.w200,
-                                        fontSize: 13),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                    height: 30,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                        color: Color(0xFFED1C25),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Center(
-                                        child: Text(
-                                      "Accept",
-                                      style: TextStyle(
-                                          fontFamily: 'outfit',
-                                          color: Colors.white),
-                                    )),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Container(
-                                    height: 30,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10),
-                                        border: Border.all(
-                                            color: Color(0xFFED1C25))),
-                                    child: Center(
-                                        child: Text(
-                                      "Reject",
-                                      style: TextStyle(
-                                          fontFamily: 'outfit',
-                                          color: Color(0xFFED1C25)),
-                                    )),
-                                  )
-                                ],
-                              ),
-                              Text(
-                                customFormat(DateTime.now()),
-                                maxLines: 2,
-                                textScaleFactor: 1.0,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey,
-                                    fontFamily: "outfit",
-                                    fontSize: 14),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: 80,
+                                      width: _width / 1.2,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.grey, width: 1),
+                                          color: Colors.white.withOpacity(1),
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: Row(children: [
+                                        CustomImageView(
+                                          url:
+                                              "${RequestListModelData?.object?[index].followedByUserProfilePic}",
+                                          height: 70,
+                                          width: 70,
+                                          fit: BoxFit.fill,
+                                          radius: BorderRadius.circular(35),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${RequestListModelData?.object?[index].followedByUserName}",
+                                                  style: TextStyle(
+                                                      fontFamily: "outfit",
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13),
+                                                ),
+                                                SizedBox(
+                                                  width: 4,
+                                                ),
+                                                Text(
+                                                  "started following you.",
+                                                  style: TextStyle(
+                                                      fontFamily: "outfit",
+                                                      fontWeight:
+                                                          FontWeight.w200,
+                                                      fontSize: 13),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Row(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    // BlocProvider.of<
+                                                    //             InvitationCubit>(
+                                                    //         context)
+                                                    //     .accept_rejectAPI(
+                                                    //         context,);
+                                                  },
+                                                  child: Container(
+                                                    height: 30,
+                                                    width: 100,
+                                                    decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0xFFED1C25),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    child: Center(
+                                                        child: Text(
+                                                      "Accept",
+                                                      style: TextStyle(
+                                                          fontFamily: 'outfit',
+                                                          color: Colors.white),
+                                                    )),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Container(
+                                                  height: 30,
+                                                  width: 100,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      border: Border.all(
+                                                          color: Color(
+                                                              0xFFED1C25))),
+                                                  child: Center(
+                                                      child: Text(
+                                                    "Reject",
+                                                    style: TextStyle(
+                                                        fontFamily: 'outfit',
+                                                        color:
+                                                            Color(0xFFED1C25)),
+                                                  )),
+                                                )
+                                              ],
+                                            ),
+                                            Text(
+                                              customFormat(DateTime.now()),
+                                              maxLines: 2,
+                                              textScaleFactor: 1.0,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.grey,
+                                                  fontFamily: "outfit",
+                                                  fontSize: 14),
+                                            ),
+                                          ],
+                                        ),
+                                      ]),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                        ]),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
+                        );
+                      })
+                  : SizedBox(),
+              // requestsection_previous_request(context),
+              SizedBox(
+                height: 30,
+              ),
+            ],
+          ),
+        );
+      }
+      return Center(
+        child: Container(
+          margin: EdgeInsets.only(bottom: 100),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.asset(ImageConstant.loader,
+                fit: BoxFit.cover, height: 100.0, width: 100),
+          ),
+        ),
+      );
+    });
   }
 }
 
