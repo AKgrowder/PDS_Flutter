@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:image_picker/image_picker.dart';
@@ -60,6 +61,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
   // bool _mounted = false;
   PageController _pageControllers = PageController();
   int _currentPages = 0;
+  Color primaryColor = ColorConstant.primaryLight_color;
+  Color textColor = ColorConstant.primary_color;
 
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -156,7 +159,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
-                                        color: ColorConstant.primary_color,
+                                        color: primaryColor,
                                         borderRadius:
                                             BorderRadius.circular(14)),
                                     height: 40,
@@ -167,7 +170,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                       style: TextStyle(
                                         fontFamily: "outfit",
                                         fontSize: 15,
-                                        color: Colors.white,
+                                        color: textColor,
                                       ),
                                     )),
                                   ),
@@ -182,17 +185,15 @@ class _CreateNewPostState extends State<CreateNewPost> {
                             children: [
                               Container(
                                 child: GestureDetector(
-
                                   onTap: () {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => ProfileScreen(
                                                   User_ID: "${User_ID}",
-                                                  isFollowing: true,
+                                                  isFollowing: 'FOLLOW',
                                                 )));
                                   },
-
                                   child: SizedBox(
                                     height: 50,
                                     width: 50,
@@ -284,6 +285,34 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                           hintText: 'What’s on your head?',
                                           border: InputBorder.none,
                                         ),
+                                        inputFormatters: [
+                                          // Custom formatter to trim leading spaces
+                                          TextInputFormatter.withFunction(
+                                              (oldValue, newValue) {
+                                            if (newValue.text.startsWith(' ')) {
+                                              return TextEditingValue(
+                                                text: newValue.text.trimLeft(),
+                                                selection:
+                                                    TextSelection.collapsed(
+                                                        offset: newValue.text
+                                                            .trimLeft()
+                                                            .length),
+                                              );
+                                            }
+                                            return newValue;
+                                          }),
+                                        ],
+                                        onChanged: (value) {
+                                          setState(() {
+                                            primaryColor = value.isNotEmpty
+                                                ? ColorConstant.primary_color
+                                                : ColorConstant
+                                                    .primaryLight_color;
+                                            textColor = value.isNotEmpty
+                                                ? Colors.white
+                                                : ColorConstant.primary_color;
+                                          });
+                                        },
                                       ),
                                     ),
                                   ),
