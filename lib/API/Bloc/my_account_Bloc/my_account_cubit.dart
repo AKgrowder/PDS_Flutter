@@ -34,6 +34,22 @@ class MyAccountCubit extends Cubit<MyAccountState> {
     }
   }
 
+  Future<void> upoldeProfilePic1(File imageFile, BuildContext context) async {
+    print('thsi upoldeProfilePic');
+    dynamic chooseDocument;
+    try {
+      emit(MyAccountLoadingState());
+      chooseDocument =
+          await Repository().userProfileprofileCover(imageFile, context);
+      if (chooseDocument.success == true) {
+        emit(chooseDocumentLoadedState1(chooseDocument));
+      }
+    } catch (e) {
+      print('LoginScreen-${e.toString()}');
+      emit(MyAccountErrorState(chooseDocument));
+    }
+  }
+
   Future<void> fetchExprties(BuildContext context) async {
     dynamic fetchExprtise;
     try {
@@ -118,6 +134,19 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       }
     } catch (e) {
       emit(MyAccountErrorState(emailVerifaction));
+    }
+  }
+
+  Future<void> IndustryTypeAPI(BuildContext context) async {
+    dynamic industryType;
+    try {
+      emit(MyAccountLoadingState());
+      industryType = await Repository().IndustryType(context);
+      if (industryType.success == true) {
+        emit(IndustryTypeLoadedState(industryType));
+      }
+    } catch (e) {
+      emit(MyAccountErrorState(industryType));
     }
   }
 }
