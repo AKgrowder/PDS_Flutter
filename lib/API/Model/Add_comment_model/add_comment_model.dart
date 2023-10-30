@@ -1,6 +1,6 @@
 class AddCommentModel {
   String? message;
-  List<Object>? object;
+  List<Object1>? object;
   bool? success;
 
   AddCommentModel({this.message, this.object, this.success});
@@ -8,9 +8,9 @@ class AddCommentModel {
   AddCommentModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     if (json['object'] != null) {
-      object = <Object>[];
+      object = <Object1>[];
       json['object'].forEach((v) {
-        object!.add(new Object.fromJson(v));
+        object!.add(new Object1.fromJson(v));
       });
     }
     success = json['success'];
@@ -27,21 +27,21 @@ class AddCommentModel {
   }
 }
 
-class Object {
+class Object1{
   String? commentUid;
   String? comment;
   String? profilePic;
   String? userName;
   String? createdAt;
 
-  Object(
+  Object1(
       {this.commentUid,
       this.comment,
       this.profilePic,
       this.userName,
       this.createdAt});
 
-  Object.fromJson(Map<String, dynamic> json) {
+  Object1.fromJson(Map<String, dynamic> json) {
     print("json Get-->$json");
     commentUid = json['commentUid'];
     comment = json['comment'];
