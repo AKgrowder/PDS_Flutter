@@ -497,6 +497,22 @@ class Repository {
         return jsonString;
     }
   }
+ userProfileprofileCover(File imageFile, BuildContext context) async {
+    final response = await apiServices.multipartFileUserprofile(
+        '${Config.uploadProfile}', imageFile, context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return ChooseDocument1.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
 
   deviceInfoq(Map<String, dynamic> param, BuildContext context) async {
     final response =
