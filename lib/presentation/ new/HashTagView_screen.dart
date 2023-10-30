@@ -10,6 +10,7 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comments_screen.dart';
+import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -148,15 +149,36 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                           children: [
                             SizedBox(
                               child: ListTile(
-                                leading: CircleAvatar(
-                                  backgroundImage: hashTagViewData?.object
-                                              ?.posts?[index].userProfilePic !=
-                                          null
-                                      ? NetworkImage(
-                                          "${hashTagViewData?.object?.posts?[index].userProfilePic}")
-                                      : NetworkImage(
-                                          "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"),
-                                  radius: 25,
+                                leading: GestureDetector(
+                                  onTap: () {
+                                    if (uuid == null) {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  RegisterCreateAccountScreen()));
+                                    } else {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return ProfileScreen(
+                                            User_ID:
+                                                "${hashTagViewData?.object?.posts?[index].userUid}",
+                                            isFollowing: hashTagViewData?.object
+                                                ?.posts?[index].isFollowing);
+                                      }));
+                                    }
+                                  },
+                                  child: CircleAvatar(
+                                    backgroundImage: hashTagViewData
+                                                ?.object
+                                                ?.posts?[index]
+                                                .userProfilePic !=
+                                            null
+                                        ? NetworkImage(
+                                            "${hashTagViewData?.object?.posts?[index].userProfilePic}")
+                                        : NetworkImage(
+                                            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"),
+                                    radius: 25,
+                                  ),
                                 ),
                                 title: Text(
                                   "${hashTagViewData?.object?.posts?[index].postUserName}",
@@ -207,7 +229,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                       ?.object
                                                       ?.posts?[index]
                                                       .isFollowing ==
-                                                  false
+                                                  'FOLLOW'
                                               ? Text(
                                                   'Follow',
                                                   style: TextStyle(
@@ -217,15 +239,29 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                           FontWeight.bold,
                                                       color: Colors.white),
                                                 )
-                                              : Text(
-                                                  'Following',
-                                                  style: TextStyle(
-                                                      fontFamily: "outfit",
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.white),
-                                                ),
+                                              : hashTagViewData
+                                                          ?.object
+                                                          ?.posts?[index]
+                                                          .isFollowing ==
+                                                      'REQUESTED'
+                                                  ? Text(
+                                                      'Requested',
+                                                      style: TextStyle(
+                                                          fontFamily: "outfit",
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white),
+                                                    )
+                                                  : Text(
+                                                      'Following ',
+                                                      style: TextStyle(
+                                                          fontFamily: "outfit",
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white),
+                                                    ),
                                         ),
                                       ),
                               ),
@@ -574,12 +610,10 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
       print("dfhsdfhsdfhsdgf");
       await BlocProvider.of<HashTagCubit>(context).followWIngMethod(
           hashTagViewData?.object?.posts?[index ?? 0].userUid, context);
-
-      if (hashTagViewData?.object?.posts?[index ?? 0].isFollowing == true) {
-        print("indexxx check");
-        hashTagViewData?.object?.posts?[index ?? 0].isFollowing = false;
+      if (hashTagViewData?.object?.posts?[index ?? 0].isFollowing == 'FOLLOW') {
+        hashTagViewData?.object?.posts?[index ?? 0].isFollowing = 'REQUESTED';
       } else {
-        hashTagViewData?.object?.posts?[index ?? 0].isFollowing = true;
+        hashTagViewData?.object?.posts?[index ?? 0].isFollowing = 'FOLLOW';
       }
     } else if (apiName == 'like_post') {
       await BlocProvider.of<HashTagCubit>(context).like_post(

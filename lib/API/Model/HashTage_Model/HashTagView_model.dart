@@ -61,7 +61,7 @@ class Posts {
   String? postType;
   bool? isLiked;
   bool? isSaved;
-  bool? isFollowing;
+  String? isFollowing;
   int? likedCount;
   int? commentCount;
 

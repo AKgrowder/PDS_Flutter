@@ -11,7 +11,6 @@ import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class ShowAllPostLike extends StatefulWidget {
   String? PostID;
   ShowAllPostLike(this.PostID);
@@ -158,7 +157,7 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
                                     borderRadius: BorderRadius.circular(4)),
                                 child: GetPostAllLikeRoomData
                                             ?.object?[index].isFollowing ==
-                                        false
+                                        'FOLLOW'
                                     ? Text(
                                         'Follow',
                                         style: TextStyle(
@@ -167,14 +166,25 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white),
                                       )
-                                    : Text(
-                                        'Follow',
-                                        style: TextStyle(
-                                            fontFamily: "outfit",
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      ),
+                                    : GetPostAllLikeRoomData
+                                                ?.object?[index].isFollowing ==
+                                            'REQUESTED'
+                                        ? Text(
+                                            'Requested',
+                                            style: TextStyle(
+                                                fontFamily: "outfit",
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )
+                                        : Text(
+                                            'Following ',
+                                            style: TextStyle(
+                                                fontFamily: "outfit",
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          ),
                               ),
                       ),
                     );
