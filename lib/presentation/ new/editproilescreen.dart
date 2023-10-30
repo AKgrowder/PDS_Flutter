@@ -16,6 +16,7 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/stroycommenwoget.dart';
+import 'package:pds/presentation/my%20account/my_account_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,11 +38,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController contactController = TextEditingController();
   TextEditingController companyName = TextEditingController();
   TextEditingController jobProfile = TextEditingController();
-
+  TextEditingController expertIn = TextEditingController();
+  TextEditingController fees = TextEditingController();
+  TextEditingController compayName = TextEditingController();
   List<MultiSelectItem<IndustryType>>? _industryTypes = [];
   List<IndustryType> selectedIndustryTypes = [];
   List<IndustryType> selectedIndustryTypes2 = [];
-
+  String? dopcument;
   File? _image;
   File? _image1;
   double value2 = 0.0;
@@ -49,7 +52,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   double documentuploadsize = 0;
   ChooseDocument? chooseDocumentuploded;
   ChooseDocument1? chooseDocumentuploded1;
+  String? start;
+  String? startAm;
+  TimeOfDay? _startTime;
+  TimeOfDay? _endTime;
 
+  String? workignStart;
+  String? workignend;
+  String? end;
+  String? endAm;
+  List<Expertiseclass> expertiseData = [];
+  Expertiseclass? selectedExpertise;
   List<String> industryUUID = [];
 
   dataSetUpMethod() async {
@@ -71,12 +84,87 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   userStatusGet() async {
     if (widget.newProfileData?.object?.module != 'EMPLOYEE') {
       await BlocProvider.of<MyAccountCubit>(context).IndustryTypeAPI(context);
+      await BlocProvider.of<MyAccountCubit>(context).fetchExprties(context);
     }
-    if (widget.newProfileData?.object?.module == 'COMPANY') {
+    if (widget.newProfileData?.object?.companyName != null) {
       companyName.text =
           widget.newProfileData?.object?.companyName.toString() ?? '';
+    }
+    if (widget.newProfileData?.object?.jobProfile != null) {
       jobProfile.text =
           widget.newProfileData?.object?.jobProfile.toString() ?? '';
+    }
+    if (widget.newProfileData?.object?.workingHours != null) {
+            workignStart = widget.newProfileData?.object?.workingHours
+                .toString()
+                .split(" to ")
+                .first;
+
+            start = workignStart?.split(' ')[0];
+            startAm = workignStart?.split(' ')[1];
+            workignend = widget.newProfileData?.object?.workingHours
+                .toString()
+                .split(" to ")
+                .last;
+            end = workignend?.split(' ')[0];
+            endAm = workignend?.split(' ')[1];
+    }
+  }
+
+  Future<void> _selectEndTime(BuildContext context) async {
+    TimeOfDay initialTime = TimeOfDay(hour: 0, minute: 0);
+
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: initialTime,
+    );
+
+    String? time = pickedTime?.format(context);
+    if (time?.isNotEmpty ?? false) {
+      end = time?.split(' ')[0];
+      endAm = time?.split(' ')[1];
+    } else {
+      workignend = widget.newProfileData?.object?.workingHours
+          .toString()
+          .split(" to ")
+          .last;
+      end = workignend?.split(' ')[0];
+      endAm = workignend?.split(' ')[1];
+    }
+
+    if (pickedTime != null && pickedTime != _endTime) {
+      setState(() {
+        _endTime = pickedTime;
+      });
+    }
+  }
+
+  Future<void> _selectStartTime(BuildContext context) async {
+    TimeOfDay initialTime = TimeOfDay(hour: 0, minute: 0);
+
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: initialTime,
+    );
+
+    String? time = pickedTime?.format(context);
+    if (time?.isNotEmpty ?? false) {
+      start = time?.split(' ')[0];
+      startAm = time?.split(' ')[1];
+    } else {
+      workignStart = widget.newProfileData?.object?.workingHours
+          .toString()
+          .split(" to ")
+          .first;
+
+      start = workignStart?.split(' ')[0];
+      startAm = workignStart?.split(' ')[1];
+    }
+
+    if (pickedTime != null && pickedTime != _startTime) {
+      setState(() {
+        _startTime = pickedTime;
+      });
     }
   }
 
@@ -103,6 +191,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
               chooseDocumentuploded = state.chooseDocumentuploded;
             }
+            if (state is FetchExprtiseRoomLoadedState) {
+              state.fetchExprtise.object?.forEach((element) {
+                expertiseData.add(Expertiseclass(
+                    element.uid.toString(), element.expertiseName.toString()));
+              });
+              expertiseData.forEach((element) {
+                if (element.expertiseName ==
+                    widget
+                        .newProfileData?.object?.expertise?[0].expertiseName) {
+                  selectedExpertise = element;
+                }
+              });
+            }
             if (state is chooseDocumentLoadedState1) {
               print("chooseDocumentLoadedState1");
 
@@ -112,12 +213,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             }
             if (state is IndustryTypeLoadedState) {
               widget.newProfileData?.object?.industryTypes?.forEach((element) {
-                selectedIndustryTypes.add(IndustryType(
+                selectedIndustryTypes2.add((IndustryType(
                   element.industryTypeUid.toString(),
                   element.industryTypeName.toString(),
-                ));
+                )));
               });
-              print("dfsdhfsdhfgsdh-${selectedIndustryTypes2.length}");
+
               List<IndustryType> industryTypeData1 = state
                   .industryTypeModel.object!
                   .map((industryType) => IndustryType(
@@ -128,6 +229,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   .map((industryType) => MultiSelectItem(
                       industryType, industryType.industryTypeName))
                   .toList();
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                setState(() {});
+              });
             }
           },
           builder: (context, state) {
@@ -428,8 +532,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         TextFiledCommenWiget(_width),
                         GestureDetector(
                           onTap: () {
-                            print("sdghsdgfgfgg0-$User_Module");
-                            if (User_Module == 'COMPANY') {}
+                            userAllRqureidData();
+                            if (User_Module == 'COMPANY') {
+                              companyUserData();
+                            }
                           },
                           child: Padding(
                             padding: const EdgeInsets.only(top: 40),
@@ -466,12 +572,390 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+  userAllRqureidData() {
+    RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
+    final RegExp emailRegExp =
+        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    final RegExp phoneRegExp = RegExp(r'^(?!0+$)[0-9]{10}$');
+    if (nameController.text.isEmpty) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please Enter Name'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (nameController.text.trim().isEmpty) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Name can\'t be just blank spaces'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (!nameRegExp.hasMatch(nameController.text)) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Input cannot contains prohibited special characters'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (nameController.text.length <= 3 ||
+        nameController.text.length > 50) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Minimum length required'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (nameController.text.contains('..')) {
+      SnackBar snackBar = SnackBar(
+        content: Text('username does not contain is correct'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (emailController.text.isEmpty) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please Enter Email'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (!emailRegExp.hasMatch(emailController.text)) {
+      SnackBar snackBar = SnackBar(
+        content: Text('please Enter vaild Email'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (contactController.text.isEmpty) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please Enter Mobile Number'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (!phoneRegExp.hasMatch(contactController.text)) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Invalid Mobile Number'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
+
+  companyUserData() {
+    if (jobProfile.text == null || jobProfile.text == '') {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please Enter Job profile '),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (jobProfile.text.trim().isEmpty || jobProfile.text.trim() == '') {
+      SnackBar snackBar = SnackBar(
+        content: Text('Job profile can\'t be just blank spaces '),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (jobProfile.text.toString().length <= 3 ||
+        jobProfile.text.toString().length > 50) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please fill full Job Profile'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (companyName.text == null || companyName.text == '') {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please Enter Company Name '),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (companyName.text.trim().isEmpty ||
+        companyName.text.trim() == '') {
+      SnackBar snackBar = SnackBar(
+        content: Text('Company Name can\'t be just blank spaces '),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (companyName.text.toString().length <= 3 ||
+        companyName.text.toString().length > 50) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please fill full Company Name '),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (dopcument == 'Upload Image') {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please Upload Image'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else {
+      Map<String, dynamic> params = {};
+      /*    params['document'] = chooseDocumentuploded2?.object != null
+          ? "${chooseDocumentuploded2?.object.toString()}"
+          : '${myAccontDetails?.object?.userDocument}'; */
+      /*  params['userProfilePic'] = myAccontDetails?.object?.userProfilePic != null
+          ? myAccontDetails?.object?.userProfilePic
+          : chooseDocumentuploded?.object != null
+              ? chooseDocumentuploded?.object.toString()
+              : null; */
+      params['companyName'] = companyName.text;
+      params['jobProfile'] = jobProfile.text;
+      params['name'] = nameController.text;
+      params['uuid'] = widget.newProfileData?.object?.uuid?.toString();
+
+      params['email'] = emailController.text;
+      BlocProvider.of<MyAccountCubit>(context)
+          .cretaForumUpdate(params, context);
+    }
+  }
+
+/*  editProfileScreen(){
+   if (userName.text.isEmpty) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please Enter Name'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (userName.text.trim().isEmpty) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Name can\'t be just blank spaces'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (!nameRegExp.hasMatch(userName.text)) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text(
+                                  'Input cannot contains prohibited special characters'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (userName.text.length <= 3 ||
+                              userName.text.length > 50) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Minimum length required'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (userName.text.contains('..')) {
+                            SnackBar snackBar = SnackBar(
+                              content:
+                                  Text('username does not contain is correct'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (email.text.isEmpty) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please Enter Email'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (!emailRegExp.hasMatch(email.text)) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('please Enter vaild Email'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (mobileNo.text.isEmpty) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please Enter Mobile Number'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (!phoneRegExp.hasMatch(mobileNo.text)) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Invalid Mobile Number'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          }
+                          if (myAccontDetails?.object?.module == 'COMPANY') {
+                            if (isupdate == false) {
+                              if (jobProfile.text == null ||
+                                  jobProfile.text == '') {
+                                SnackBar snackBar = SnackBar(
+                                  content: Text('Please Enter Job profile '),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              } else if (jobProfile.text.trim().isEmpty ||
+                                  jobProfile.text.trim() == '') {
+                                SnackBar snackBar = SnackBar(
+                                  content: Text(
+                                      'Job profile can\'t be just blank spaces '),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              } else if (jobProfile.text.toString().length <=
+                                      3 ||
+                                  jobProfile.text.toString().length > 50) {
+                                SnackBar snackBar = SnackBar(
+                                  content: Text('Please fill full Job Profile'),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              } else if (compayName.text == null ||
+                                  compayName.text == '') {
+                                SnackBar snackBar = SnackBar(
+                                  content: Text('Please Enter Company Name '),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              } else if (compayName.text.trim().isEmpty ||
+                                  compayName.text.trim() == '') {
+                                SnackBar snackBar = SnackBar(
+                                  content: Text(
+                                      'Company Name can\'t be just blank spaces '),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              } else if (compayName.text.toString().length <=
+                                      3 ||
+                                  compayName.text.toString().length > 50) {
+                                SnackBar snackBar = SnackBar(
+                                  content:
+                                      Text('Please fill full Company Name '),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              } else if (dopcument == 'Upload Image') {
+                                SnackBar snackBar = SnackBar(
+                                  content: Text('Please Upload Image'),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              } else {
+                                Map<String, dynamic> params = {};
+                                params['document'] = chooseDocumentuploded2
+                                            ?.object !=
+                                        null
+                                    ? "${chooseDocumentuploded2?.object.toString()}"
+                                    : '${myAccontDetails?.object?.userDocument}';
+                                params['userProfilePic'] = myAccontDetails
+                                            ?.object?.userProfilePic !=
+                                        null
+                                    ? myAccontDetails?.object?.userProfilePic
+                                    : chooseDocumentuploded?.object != null
+                                        ? chooseDocumentuploded?.object
+                                            .toString()
+                                        : null;
+                                params['companyName'] = compayName.text;
+                                params['jobProfile'] = jobProfile.text;
+                                params['name'] = userName.text;
+                                params['uuid'] =
+                                    myAccontDetails?.object?.uuid.toString();
+
+                                params['email'] = email.text;
+                                BlocProvider.of<MyAccountCubit>(context)
+                                    .cretaForumUpdate(params, context);
+                              }
+                            }
+                          } else if (myAccontDetails?.object?.module ==
+                              'EXPERT') {
+                            if (jobProfile.text == null ||
+                                jobProfile.text == "") {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please Enter Job Profile'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (jobProfile.text.isNotEmpty &&
+                                jobProfile.text.length < 4) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text(
+                                    'Minimum length required in Job Profiie'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (selectedExpertise?.expertiseName
+                                    .toString() ==
+                                null) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please select Expertise in'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (fees.text == null || fees.text == '') {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please select Fees'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (fees.text == null || fees.text == '') {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please select Fees'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if ((start?.isEmpty ?? false) &&
+                                (startAm?.isEmpty ?? false) &&
+                                (end?.isEmpty ?? false) &&
+                                (endAm?.isEmpty ?? false)) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please select Working Hours'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (dopcument == 'Upload Image') {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please Upload Image'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else {
+                              String time =
+                                  '${start} ${startAm} to ${end} ${endAm}';
+
+                              var params = {
+                                "document": chooseDocumentuploded2?.object !=
+                                        null
+                                    ? "${chooseDocumentuploded2?.object.toString()}"
+                                    : '${myAccontDetails?.object?.userDocument}',
+                                "expertUId": [
+                                  "${selectedExpertise?.uid.toString()}"
+                                ],
+                                "fees": '${fees.text}',
+                                "jobProfile": '${jobProfile.text}',
+                                "uid": User_ID.toString(),
+                                "workingHours": time.toString(),
+                                "profilePic": myAccontDetails
+                                            ?.object?.userProfilePic !=
+                                        null
+                                    ? myAccontDetails?.object?.userProfilePic
+                                    : chooseDocumentuploded?.object != null
+                                        ? chooseDocumentuploded?.object
+                                            .toString()
+                                        : null,
+                                "email": email.text
+                              };
+
+                              BlocProvider.of<MyAccountCubit>(context)
+                                  .addExpertProfile(params, context);
+                            }
+ } */
+
   TextFiledCommenWiget(_width) {
     print(selectedIndustryTypes2);
     selectedIndustryTypes2.forEach((element) {
-      print(element.industryTypeName);
-      print(element.industryTypeUid);
+      print("industry name : ${element.industryTypeName}");
+      print("industry name : ${element.industryTypeUid}");
     });
+    print("Fgdfhgdfhgdfhdfgh-${widget.newProfileData?.object?.jobProfile}");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -529,7 +1013,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: Padding(
                 padding: EdgeInsets.only(left: 12),
                 child: MultiSelectDialogField<IndustryType>(
-                  initialValue: selectedIndustryTypes,
+                  initialValue: selectedIndustryTypes2,
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.transparent)),
                   buttonIcon: Icon(
@@ -539,8 +1023,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   items: _industryTypes!,
                   listType: MultiSelectListType.LIST,
                   onConfirm: (values) {
-                    selectedIndustryTypes = values;
-                    selectedIndustryTypes.forEach((element) {
+                    selectedIndustryTypes2 = values;
+                    selectedIndustryTypes2.forEach((element) {
                       industryUUID.add("${element.industryTypeUid}");
                     });
                     setState(() {});
@@ -549,6 +1033,150 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
+        if (widget.newProfileData?.object?.expertise != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: Text(
+              'Expertise',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        if (widget.newProfileData?.object?.expertise != null)
+          Container(
+            height: 50,
+            width: _width,
+            decoration: BoxDecoration(
+                color: Color(0xffEFEFEF),
+                borderRadius: BorderRadius.circular(10)),
+            child: DropdownButtonHideUnderline(
+              child: Padding(
+                padding: EdgeInsets.only(left: 12),
+                child: DropdownButton<Expertiseclass>(
+                  value: selectedExpertise,
+                  // value: Expertiseclass(uid, expertiseName),
+                  /*   value: Expertiseclass(selctedexpertiseData[0].uid,selctedexpertiseData[0].expertiseName), */
+                  onChanged: (Expertiseclass? newValue) {
+                    // When the user selects an option from the dropdown.
+                    if (newValue != null) {
+                      setState(() {
+                        selectedExpertise = newValue;
+                        print("Selectedexpertise: ${newValue.uid}");
+                      });
+                    }
+                  },
+                  items: expertiseData.map<DropdownMenuItem<Expertiseclass>>(
+                      (Expertiseclass expertise) {
+                    return DropdownMenuItem<Expertiseclass>(
+                      value: expertise,
+                      child: Text(expertise.expertiseName),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+          ),
+        if (widget.newProfileData?.object?.workingHours != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: Text(
+              'workingHours',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        if (widget.newProfileData?.object?.workingHours != null)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  _selectStartTime(context);
+                },
+                child: Container(
+                  height: 50,
+                  width: 140,
+                  decoration: BoxDecoration(
+                      color: Color(0xffF6F6F6),
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Text(
+                            start.toString(),
+                            style: TextStyle(
+                                fontSize: 16, color: Color(0xff989898)),
+                          )),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 6),
+                        child: VerticalDivider(
+                          thickness: 2,
+                          color: Color(0xff989898),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(startAm.toString(),
+                          style: TextStyle(
+                              fontSize: 16, color: Color(0xff989898))),
+                    ],
+                  ),
+                ),
+              ),
+              Text('To'),
+              GestureDetector(
+                onTap: () {
+                  _selectEndTime(context);
+                },
+                child: Container(
+                  height: 50,
+                  width: 140,
+                  decoration: BoxDecoration(
+                      color: Color(0xffF6F6F6),
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Text(
+                            end.toString(),
+                            style: TextStyle(
+                                fontSize: 16, color: Color(0xff989898)),
+                          )),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 6),
+                        child: VerticalDivider(
+                          thickness: 2,
+                          color: Color(0xff989898),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(endAm.toString(),
+                          style: TextStyle(
+                              fontSize: 16, color: Color(0xff989898))),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          )
+
       ],
     );
   }
