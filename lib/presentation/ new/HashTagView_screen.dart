@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +8,6 @@ import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_state.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
-import 'package:pds/presentation/%20new/comments_screen.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -508,9 +506,10 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                   SizedBox(
                                     width: 18,
                                   ),
+                                  //this bottomsheet will  remaing --ankur
                                   GestureDetector(
                                     onTap: () async {
-                                      await Navigator.push(context,
+                                      /* await Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
                                         return CommentsScreen(
                                           image: hashTagViewData?.object
@@ -528,7 +527,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                       })).then((value) =>
                                           BlocProvider.of<HashTagCubit>(context)
                                               .HashTagViewDataAPI(context,
-                                                  widget.title.toString()));
+                                                  widget.title.toString())); */
                                     },
                                     child: Image.asset(
                                       ImageConstant.meesage,
