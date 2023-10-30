@@ -18,6 +18,7 @@ import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
 import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
 import 'package:pds/API/Model/storyModel/stroyModel.dart';
 import 'package:pds/API/Model/HashTage_Model/HashTagView_model.dart';
 import 'package:pds/API/Model/HashTage_Model/HashTag_model.dart';
@@ -66,6 +67,8 @@ import '../Model/delete_room_model/Delete_room_model.dart';
 import '../Model/fetch_room_detail_model/fetch_room_detail_model.dart';
 import '../Model/forget_password_model/change_password_model.dart';
 import '../Model/myaccountModel/myaccountModel.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
+import 'package:pds/API/Model/HashTage_Model/HashTagBanner_model.dart';
 
 class Repository {
   ApiServices apiServices = ApiServices();
@@ -423,6 +426,60 @@ class Repository {
     }
   }
 
+  RequestListAPI(BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.get_all_request}', context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return RequestListModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+  
+  accept_rejectAPI(BuildContext context, bool isAccepted, String followUid) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.accept_reject_follow_request}?isAccepted=${isAccepted}&followUid=${followUid}', context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return accept_rejectModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+  
+    HashTagBanner(BuildContext context) async {
+    final response =
+        await apiServices.getApiCall(Config.HashTagBanner, context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return HashTagImageModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
   DeleteRoomApi(String roomuId, BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
         "${Config.DeleteRoom}?roomUid=${roomuId}", context);
@@ -497,7 +554,8 @@ class Repository {
         return jsonString;
     }
   }
- userProfileprofileCover(File imageFile, BuildContext context) async {
+
+  userProfileprofileCover(File imageFile, BuildContext context) async {
     final response = await apiServices.multipartFileUserprofile(
         '${Config.uploadProfile}', imageFile, context);
     var jsonString = json.decode(response.body);
@@ -1199,10 +1257,7 @@ class Repository {
     }
   }
 
-   NewProfileAPI(
-    BuildContext context,
-    String otherUserUid
-  ) async {
+  NewProfileAPI(BuildContext context, String otherUserUid) async {
     final response = await apiServices.getApiCallWithToken(
         "${Config.NewfetchUserProfile}?otherUserUid=${otherUserUid}", context);
     print('AddPost$response');

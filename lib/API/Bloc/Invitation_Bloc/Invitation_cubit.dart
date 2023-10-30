@@ -36,4 +36,32 @@ class InvitationCubit extends Cubit<InvitationState> {
       emit(InvitationErrorState(acceptRejectInvitationModel));
     }
   }
+
+  Future<void> RequestListAPI(BuildContext context) async {
+    dynamic acceptRejectInvitationModel;
+    try {
+      emit(InvitationLoadingState());
+      acceptRejectInvitationModel = await Repository().RequestListAPI(context);
+      if (acceptRejectInvitationModel.success == true) {
+        emit(RequestListLoadedState(acceptRejectInvitationModel));
+      }
+    } catch (e) {
+      emit(InvitationErrorState(acceptRejectInvitationModel));
+    }
+  }
+
+  Future<void> accept_rejectAPI(
+      BuildContext context, bool isAccepted, String followUid) async {
+    dynamic acceptRejectInvitationModel;
+    try {
+      emit(InvitationLoadingState());
+      acceptRejectInvitationModel =
+          await Repository().accept_rejectAPI(context, isAccepted, followUid);
+      if (acceptRejectInvitationModel.success == true) {
+        emit(accept_rejectLoadedState(acceptRejectInvitationModel));
+      }
+    } catch (e) {
+      emit(InvitationErrorState(acceptRejectInvitationModel));
+    }
+  }
 }
