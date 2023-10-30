@@ -1,4 +1,3 @@
-
 class GetGuestAllPostModel {
   String? message;
   Object? object;
@@ -106,7 +105,7 @@ class Content {
   String? postType;
   bool? isLiked;
   bool? isSaved;
-  bool? isFollowing;
+  String? isFollowing;
   int? likedCount;
   int? commentCount;
 
@@ -133,7 +132,7 @@ class Content {
     postUserName = json['postUserName'];
     userProfilePic = json['userProfilePic'];
     description = json['description'];
-     postData = json['postData'].cast<String>();
+    postData = json['postData'].cast<String>();
     postDataType = json['postDataType'];
     postType = json['postType'];
     isLiked = json['isLiked'];
