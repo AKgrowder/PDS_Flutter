@@ -141,13 +141,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       print("dfhsdfhsdfhsdgf");
       await BlocProvider.of<GetGuestAllPostCubit>(context).followWIngMethod(
           AllGuestPostRoomData?.object?.content?[index ?? 0].userUid, context);
-
       if (AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing ==
-          true) {
-        print("indexxx check");
-        AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing = false;
+          'FOLLOW') {
+        AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing =
+            'REQUESTED';
       } else {
-        AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing = true;
+        AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing =
+            'FOLLOW';
       }
     } else if (apiName == 'like_post') {
       await BlocProvider.of<GetGuestAllPostCubit>(context).like_post(
@@ -248,7 +248,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           }
           if (state is DeletePostLoadedState) {
             SnackBar snackBar = SnackBar(
-              content: Text(state.DeletePost.message.toString()),
+              content: Text(state.DeletePost.object.toString()),
               backgroundColor: ColorConstant.primary_color,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -490,13 +490,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                             builder: (context) =>
                                                 RegisterCreateAccountScreen()));
                                   } else {
-                                     Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return ProfileScreen(
-                                      User_ID: "${User_ID}",
-                                      isFollowing: true,
-                                    );
-                                  }));
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return ProfileScreen(
+                                        User_ID: "${User_ID}",
+                                        isFollowing: 'FOLLOW',
+                                      );
+                                    }));
                                   }
                                 },
                                 child: uuid == null
@@ -673,6 +673,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                             allButtonDatas: buttonDatas,
                                             storyListViewController:
                                                 ScrollController());
+
+                                        userName.add(User_Name!);
                                         if (mounted)
                                           setState(() {
                                             storyAdded = true;
@@ -929,36 +931,43 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                               height: 60,
                                               child: ListTile(
                                                 leading: GestureDetector(
-                                                onTap: () {
-                                                  if (uuid == null) {
-                                                    Navigator.of(context).push(
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                RegisterCreateAccountScreen()));
-                                                  } else {
-                                                    Navigator.push(context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) {
-                                                      return ProfileScreen(
-                                                        User_ID: "${AllGuestPostRoomData?.object?.content?[index].userUid}",
-                                                        isFollowing: AllGuestPostRoomData?.object?.content?[index].isFollowing
-                                                      );
-                                                    }));
-                                                  }
-                                                },
-                                                child: CircleAvatar(
-                                                  backgroundImage: AllGuestPostRoomData
-                                                              ?.object
-                                                              ?.content?[index]
-                                                              .userProfilePic !=
-                                                          null
-                                                      ? NetworkImage(
-                                                          "${AllGuestPostRoomData?.object?.content?[index].userProfilePic}")
-                                                      : NetworkImage(
-                                                          "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"),
-                                                  radius: 25,
+                                                  onTap: () {
+                                                    if (uuid == null) {
+                                                      Navigator.of(context).push(
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  RegisterCreateAccountScreen()));
+                                                    } else {
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                        return ProfileScreen(
+                                                            User_ID:
+                                                                "${AllGuestPostRoomData?.object?.content?[index].userUid}",
+                                                            isFollowing:
+                                                                AllGuestPostRoomData
+                                                                    ?.object
+                                                                    ?.content?[
+                                                                        index]
+                                                                    .isFollowing);
+                                                      }));
+                                                    }
+                                                  },
+                                                  child: CircleAvatar(
+                                                    backgroundImage: AllGuestPostRoomData
+                                                                ?.object
+                                                                ?.content?[
+                                                                    index]
+                                                                .userProfilePic !=
+                                                            null
+                                                        ? NetworkImage(
+                                                            "${AllGuestPostRoomData?.object?.content?[index].userProfilePic}")
+                                                        : NetworkImage(
+                                                            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"),
+                                                    radius: 25,
+                                                  ),
                                                 ),
-                                              ),
                                                 title: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
@@ -997,80 +1006,93 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     ), */
                                                   ],
                                                 ),
-                                                trailing: User_ID ==
-                                                        AllGuestPostRoomData
-                                                            ?.object
-                                                            ?.content?[index]
-                                                            .userUid
-                                                    ? GestureDetector(
-                                                        onTapDown:
-                                                            (TapDownDetails
-                                                                details) {
-                                                          delete_dilog_menu(
-                                                            details
-                                                                .globalPosition,
-                                                            context,
-                                                          );
-                                                        },
-                                                        child: Icon(
-                                                          Icons
-                                                              .more_vert_rounded,
-                                                        ))
-                                                    : GestureDetector(
-                                                        onTap: () async {
-                                                          await soicalFunation(
-                                                              apiName: 'Follow',
-                                                              index: index);
-                                                        },
-                                                        child: Container(
-                                                          height: 25,
-                                                          alignment:
-                                                              Alignment.center,
-                                                          width: 65,
-                                                          margin:
-                                                              EdgeInsets.only(
-                                                                  bottom: 5),
-                                                          decoration: BoxDecoration(
-                                                              color: Color(
-                                                                  0xffED1C25),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          4)),
-                                                          child: AllGuestPostRoomData
-                                                                      ?.object
-                                                                      ?.content?[
-                                                                          index]
-                                                                      .isFollowing ==
-                                                                  false
-                                                              ? Text(
-                                                                  'Follow',
-                                                                  style: TextStyle(
-                                                                      fontFamily:
-                                                                          "outfit",
-                                                                      fontSize:
-                                                                          12,
-                                                                      fontWeight:
-                                                                          FontWeight
+                                                trailing:
+                                                    User_ID ==
+                                                            AllGuestPostRoomData
+                                                                ?.object
+                                                                ?.content?[
+                                                                    index]
+                                                                .userUid
+                                                        ? GestureDetector(
+                                                            onTapDown:
+                                                                (TapDownDetails
+                                                                    details) {
+                                                              delete_dilog_menu(
+                                                                details
+                                                                    .globalPosition,
+                                                                context,
+                                                              );
+                                                            },
+                                                            child: Icon(
+                                                              Icons
+                                                                  .more_vert_rounded,
+                                                            ))
+                                                        : GestureDetector(
+                                                            onTap: () async {
+                                                              await soicalFunation(
+                                                                apiName:
+                                                                    'Follow',
+                                                                index: index,
+                                                              );
+                                                            },
+                                                            child: Container(
+                                                              height: 25,
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              width: 65,
+                                                              margin: EdgeInsets
+                                                                  .only(
+                                                                      bottom:
+                                                                          5),
+                                                              decoration: BoxDecoration(
+                                                                  color: Color(
+                                                                      0xffED1C25),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              4)),
+                                                              child: AllGuestPostRoomData
+                                                                          ?.object
+                                                                          ?.content?[
+                                                                              index]
+                                                                          .isFollowing ==
+                                                                      'FOLLOW'
+                                                                  ? Text(
+                                                                      'Follow',
+                                                                      style: TextStyle(
+                                                                          fontFamily:
+                                                                              "outfit",
+                                                                          fontSize:
+                                                                              12,
+                                                                          fontWeight: FontWeight
                                                                               .bold,
-                                                                      color: Colors
-                                                                          .white),
-                                                                )
-                                                              : Text(
-                                                                  'Following ',
-                                                                  style: TextStyle(
-                                                                      fontFamily:
-                                                                          "outfit",
-                                                                      fontSize:
-                                                                          12,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .white),
-                                                                ),
-                                                        ),
-                                                      ),
+                                                                          color:
+                                                                              Colors.white),
+                                                                    )
+                                                                  : AllGuestPostRoomData
+                                                                              ?.object
+                                                                              ?.content?[index]
+                                                                              .isFollowing ==
+                                                                          'REQUESTED'
+                                                                      ? Text(
+                                                                          'Requested',
+                                                                          style: TextStyle(
+                                                                              fontFamily: "outfit",
+                                                                              fontSize: 12,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Colors.white),
+                                                                        )
+                                                                      : Text(
+                                                                          'Following ',
+                                                                          style: TextStyle(
+                                                                              fontFamily: "outfit",
+                                                                              fontSize: 12,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Colors.white),
+                                                                        ),
+                                                            ),
+                                                          ),
                                               ),
                                             ),
                                             SizedBox(
@@ -2181,7 +2203,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       builder: (_) => AlertDialog(
         // title: const Text("Create Expert"),
         content: Container(
-          height: 80,
+          height: 90,
           child: Column(
             children: [
               Text("Are You Sure You Want To delete This Post."),
@@ -2197,10 +2219,17 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                       Navigator.pop(context);
                     },
                     child: Container(
+                      height: 30,
+                      width: 80,
+                      decoration: BoxDecoration(
+                          color: ColorConstant.primary_color,
+                          borderRadius: BorderRadius.circular(5)),
                       // color: Colors.green,
-                      child: Text(
-                        "Yas",
-                        style: TextStyle(color: Colors.blue),
+                      child: Center(
+                        child: Text(
+                          "Yes",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                   ),
@@ -2209,10 +2238,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                       Navigator.pop(context);
                     },
                     child: Container(
+                      height: 30,
+                      width: 80,
+                      decoration: BoxDecoration(
+                          border:
+                              Border.all(color: ColorConstant.primary_color),
+                          borderRadius: BorderRadius.circular(5)),
                       // color: Colors.green,
-                      child: Text(
-                        "No",
-                        style: TextStyle(color: Colors.blue),
+                      child: Center(
+                        child: Text(
+                          "No",
+                          style: TextStyle(color: ColorConstant.primary_color),
+                        ),
                       ),
                     ),
                   ),

@@ -44,7 +44,7 @@ class Object {
   List<Expertise>? expertise;
   bool? isEmailVerified;
   String? aboutMe;
-  bool? isFollowing;
+  String? isFollowing;
   int? followersCount;
   int? followingCount;
   int? postCount;

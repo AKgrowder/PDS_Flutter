@@ -62,7 +62,6 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getDocumentSize();
     BlocProvider.of<CreatFourmCubit>(context).IndustryTypeAPI(context);
