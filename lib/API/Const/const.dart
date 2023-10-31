@@ -85,4 +85,5 @@ class Config {
   static const String get_all_request = "user/api/get_all_request";
   static const String accept_reject_follow_request = "user/api/accept_reject_follow_request";
   static const String HashTagBanner = "admin_portal/banners/latest";
+  static const String deletecomment = "user/api/delete_comment_by_uid";
 }
