@@ -6,6 +6,7 @@ import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_state.dart';
 import 'package:pds/API/Model/InvitationModel/Invitation_Model.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/room_members/room_members_screen.dart';
@@ -163,6 +164,7 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     RequestListModel? RequestListModelData;
+    accept_rejectModel? accept_rejectData;
     return BlocConsumer<InvitationCubit, InvitationState>(
         listener: (context, state) {
       if (state is InvitationErrorState) {
@@ -191,8 +193,17 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
       if (state is RequestListLoadedState) {
         RequestListModelData = state.RequestListModelData;
       }
+      if (state is accept_rejectLoadedState) {
+        accept_rejectData = state.accept_rejectData;
+        print(
+            "accept_rejectData  accept_rejectData  accept_rejectData  accept_rejectData  accept_rejectData  accept_rejectData  ");
+        BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
+
+        print(accept_rejectData?.message);
+      }
     }, builder: (context, state) {
-      if (state is RequestListLoadedState) {
+      if (state is RequestListLoadedState ||
+          state is accept_rejectLoadedState) {
         return SingleChildScrollView(
           child: Column(
             children: [
@@ -279,11 +290,13 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                               children: [
                                                 GestureDetector(
                                                   onTap: () {
-                                                    // BlocProvider.of<
-                                                    //             InvitationCubit>(
-                                                    //         context)
-                                                    //     .accept_rejectAPI(
-                                                    //         context,);
+                                                    BlocProvider.of<
+                                                                InvitationCubit>(
+                                                            context)
+                                                        .accept_rejectAPI(
+                                                            context,
+                                                            true,
+                                                            "${RequestListModelData?.object?[index].followUuid}");
                                                   },
                                                   child: Container(
                                                     height: 30,
@@ -306,24 +319,35 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                 SizedBox(
                                                   width: 5,
                                                 ),
-                                                Container(
-                                                  height: 30,
-                                                  width: 100,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      border: Border.all(
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    BlocProvider.of<
+                                                                InvitationCubit>(
+                                                            context)
+                                                        .accept_rejectAPI(
+                                                            context,
+                                                            false,
+                                                            "${RequestListModelData?.object?[index].followUuid}");
+                                                  },
+                                                  child: Container(
+                                                    height: 30,
+                                                    width: 100,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        border: Border.all(
+                                                            color: Color(
+                                                                0xFFED1C25))),
+                                                    child: Center(
+                                                        child: Text(
+                                                      "Reject",
+                                                      style: TextStyle(
+                                                          fontFamily: 'outfit',
                                                           color: Color(
-                                                              0xFFED1C25))),
-                                                  child: Center(
-                                                      child: Text(
-                                                    "Reject",
-                                                    style: TextStyle(
-                                                        fontFamily: 'outfit',
-                                                        color:
-                                                            Color(0xFFED1C25)),
-                                                  )),
+                                                              0xFFED1C25)),
+                                                    )),
+                                                  ),
                                                 )
                                               ],
                                             ),
@@ -348,7 +372,17 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                           ),
                         );
                       })
-                  : SizedBox(),
+                  : Center(
+                      child: Text(
+                        "No Requests For Now",
+                        style: TextStyle(
+                          fontFamily: 'outfit',
+                          fontSize: 20,
+                          color: Color(0XFFED1C25),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
               // requestsection_previous_request(context),
               SizedBox(
                 height: 30,

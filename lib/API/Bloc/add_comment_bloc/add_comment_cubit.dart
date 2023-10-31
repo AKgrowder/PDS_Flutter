@@ -25,7 +25,6 @@ class AddcommentCubit extends Cubit<AddCommentState> {
   ) async {
     dynamic addnewcommentdata;
     try {
-     
       addnewcommentdata = await Repository().AddNewcomment(context, params);
       print("addPostData-->$addnewcommentdata");
       if (addnewcommentdata['success'] == true) {
@@ -33,6 +32,20 @@ class AddcommentCubit extends Cubit<AddCommentState> {
       }
     } catch (e) {
       emit(AddCommentErrorState(addnewcommentdata));
+    }
+  }
+
+  Future<void> Deletecomment(String commentuid, BuildContext context) async {
+    dynamic Deletecomment;
+    try {
+      emit(AddCommentLoadingState());
+      Deletecomment = await Repository().Deletecomment(commentuid, context);
+      
+      if (Deletecomment.success == true) {
+        emit(DeletecommentLoadedState(Deletecomment));
+      }
+    } catch (e) {
+      emit(AddCommentErrorState(e.toString()));
     }
   }
 }

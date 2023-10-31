@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class NewProfileScreen_Model {
   String? message;
   Object? object;
@@ -76,6 +78,7 @@ class Object {
       this.postCount});
 
   Object.fromJson(Map<String, dynamic> json) {
+    log("gdfhgfhgdfbh-$json");
     isApproved = json['isApproved'];
     userDocument = json['userDocument'];
     companyName = json['companyName'];

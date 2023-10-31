@@ -31,6 +31,16 @@ class IndustryType {
   String industryTypeUid;
   String industryTypeName;
   IndustryType(this.industryTypeUid, this.industryTypeName);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is IndustryType &&
+              runtimeType == other.runtimeType &&
+              industryTypeName == other.industryTypeName;
+
+  @override
+  int get hashCode => industryTypeName.hashCode;
 }
 
 class _CreateForamScreenState extends State<CreateForamScreen> {
