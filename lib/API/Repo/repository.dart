@@ -19,6 +19,7 @@ import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
 import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
+import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/API/Model/storyModel/stroyModel.dart';
 import 'package:pds/API/Model/HashTage_Model/HashTagView_model.dart';
 import 'package:pds/API/Model/HashTage_Model/HashTag_model.dart';
@@ -528,6 +529,26 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return ChooseDocument.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+  chooseProfileFile2(String file, String fileName, BuildContext context,
+      {params}) async {
+    print("apiCaling");
+    final response = await apiServices.multipartFile(
+        "${Config.uploadfile}", file, fileName, context,
+        apiName: 'create forum', params: params);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return ChooseDocument2.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -1518,6 +1539,25 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return AboutMe.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+
+   Deletecomment(String commentuid, BuildContext context) async {  
+    final response = await apiServices.deleteApiCall(
+        "${Config.deletecomment}?commentUid=${commentuid}", {}, context);
+    print(response);
+    var jsonString = json.decode(response!.body);
+    switch (response.statusCode) {
+      case 200:
+        return DeleteCommentModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:

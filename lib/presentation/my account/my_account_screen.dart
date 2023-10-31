@@ -262,9 +262,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
 
           Navigator.pop(context);
         }
-        if (state is chooseDocumentLoadedState2) {
+        /* if (state is chooseDocumentLoadedState2) {
           chooseDocumentuploded2 = state.chooseDocumentuploded;
-        }
+        } */
         if (state is FetchExprtiseRoomLoadedState) {
           state.fetchExprtise.object?.forEach((element) {
             expertiseData.add(Expertiseclass(
