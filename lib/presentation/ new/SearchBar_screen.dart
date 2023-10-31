@@ -139,7 +139,16 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           )); */
                               },
                               onChanged: (value) {
+                                if (value.contains('#')) {
+                                  
+                                  String hashTageValue = value.replaceAll("#", "%23");  
+                                    BlocProvider.of<HashTagCubit>(context)
+                                        .getalluser(
+                                            1, 5, hashTageValue.trim(), context);
+
+                                }
                                 if (value.isNotEmpty) {
+                                  print("fgdfhdfghdfgh-${value.trim()}");
                                   if (indexxx == 0) {
                                     BlocProvider.of<HashTagCubit>(context)
                                         .getalluser(
@@ -189,6 +198,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           onChanged: (value) {
                             if (value.isNotEmpty) {
                               if (indexxx == 0) {
+                                print("i want to  chrck-${value.trim()}");
                                 BlocProvider.of<HashTagCubit>(context)
                                     .getalluser(1, 5, value.trim(), context);
                               } else {

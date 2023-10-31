@@ -4,6 +4,8 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_instagram_storyboard/flutter_instagram_storyboard.dart';
 import 'package:hashtagable/hashtagable.dart';
@@ -16,6 +18,7 @@ import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
 import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
 import 'package:pds/API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
+import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/storyModel/stroyModel.dart';
 import 'package:pds/API/Repo/repository.dart';
@@ -50,6 +53,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   List a = ['1', '2', '3', '4'];
   List<String> data1 = ['Create Forum', 'Become an Expert'];
   String? uuid;
+  bool isEmojiVisible = false;
+  bool isKeyboardVisible = false;
   int indexx = 0;
   String? User_ID;
   String? User_Name;
@@ -62,6 +67,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   ];
   LikePost? likePost;
   GetGuestAllPostModel? AllGuestPostRoomData;
+  DeleteCommentModel? DeletecommentDataa;
   ScrollController scrollController = ScrollController();
   String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
   bool showDraggableSheet = false;
@@ -78,6 +84,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   String? UserProfileImage;
   GetallBlogModel? getallBlogModel;
   DateTime? parsedDateTimeBlogs;
+  FocusNode _focusNode = FocusNode();
+  final focusNode = FocusNode();
   @override
   void initState() {
     Get_UserToken();
@@ -186,7 +194,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           '${AllGuestPostRoomData?.object?.content?[index ?? 0].postUid}',
           context);
       AllGuestPostRoomData?.object?.content?.removeAt(index ?? 0);
-    }
+    } else if (apiName == 'Deletecomment') {}
   }
 
   methodtoReffrser() {
@@ -268,6 +276,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             UserProfileImage = state.myAccontDetails.object?.userProfilePic;
             Save_UserData();
           }
+
           if (state is GetAllStoryLoadedState) {
             getAllStoryModel = state.getAllStoryModel;
             buttonDatas.clear();
@@ -435,6 +444,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             AllGuestPostRoomData = state.GetGuestAllPostRoomData;
           }
           if (state is PostLikeLoadedState) {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.likePost.object.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
             likePost = state.likePost;
           }
         }, builder: (context, state) {
@@ -487,46 +501,44 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                 width: 17,
                               ),
                               GestureDetector(
-                                onTap: () {
-                                  if (uuid == null) {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                RegisterCreateAccountScreen()));
-                                  } else {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return ProfileScreen(
-                                        User_ID: "${User_ID}",
-                                        isFollowing: 'FOLLOW',
-                                      );
-                                    }));
-                                  }
-                                },
-                                child: uuid == null
-                                    ? Text(
-                                        'Login',
-                                        style: TextStyle(
-                                            fontFamily: "outfit",
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: ColorConstant.primary_color),
-                                      )
-                                    : SizedBox(
-                                        height: 50,
-                                        width: 50,
-                                        child: CircleAvatar(
-                                          backgroundImage:
-                                              UserProfileImage != null
-                                                  ? NetworkImage(
-                                                      "${UserProfileImage}")
-                                                  : NetworkImage(""),
-                                          radius: 25,
-
-                                          //  CustomImageView(url: UserProfileImage,),
-                                        ),
-                                      ),
-                              ),
+                                  onTap: () {
+                                    if (uuid == null) {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  RegisterCreateAccountScreen()));
+                                    } else {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return ProfileScreen(
+                                          User_ID: "${User_ID}",
+                                          isFollowing: 'FOLLOW',
+                                        );
+                                      }));
+                                    }
+                                  },
+                                  child: uuid == null
+                                      ? Text(
+                                          'Login',
+                                          style: TextStyle(
+                                              fontFamily: "outfit",
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                                  ColorConstant.primary_color),
+                                        )
+                                      : UserProfileImage != null
+                                          ? CustomImageView(
+                                              url: "${UserProfileImage}",
+                                              height: 50,
+                                              width: 50,
+                                              fit: BoxFit.fill,
+                                            )
+                                          : CustomImageView(
+                                              imagePath: ImageConstant.tomcruse,
+                                              height: 50,
+                                              width: 50,
+                                            )),
                             ],
                           ),
                         ),
@@ -2275,6 +2287,72 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     );
   }
 
+  Deletecommentdilog(String commentuuid, int index) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        // title: const Text("Create Expert"),
+        content: Container(
+          height: 90,
+          child: Column(
+            children: [
+              Text("Are You Sure You Want To delete This Comment."),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      BlocProvider.of<AddcommentCubit>(context)
+                          .Deletecomment("${commentuuid}", context);
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      height: 30,
+                      width: 80,
+                      decoration: BoxDecoration(
+                          color: ColorConstant.primary_color,
+                          borderRadius: BorderRadius.circular(5)),
+                      // color: Colors.green,
+                      child: Center(
+                        child: Text(
+                          "Yes",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      height: 30,
+                      width: 80,
+                      decoration: BoxDecoration(
+                          border:
+                              Border.all(color: ColorConstant.primary_color),
+                          borderRadius: BorderRadius.circular(5)),
+                      // color: Colors.green,
+                      child: Center(
+                        child: Text(
+                          "No",
+                          style: TextStyle(color: ColorConstant.primary_color),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   becomeAnExport() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
@@ -2338,7 +2416,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         useSafeArea: true,
         isDismissible: true,
         showDragHandle: true,
-        enableDrag: true, constraints: BoxConstraints.tight(Size.infinite),
+        enableDrag: true,
+        constraints: BoxConstraints.tight(Size.infinite),
         context: context,
         builder: (BuildContext bc) {
           return Scaffold(
@@ -2380,6 +2459,19 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                   print(
                       "cghfdgfgghgh->${addCommentModeldata?.object?.last.runtimeType}");
                   _goToElement();
+                }
+                if (state is DeletecommentLoadedState) {
+                  DeletecommentDataa = state.Deletecomment;
+                  if (DeletecommentDataa?.object ==
+                      "Comment deleted successfully") {
+                    print(addCommentModeldata?.object?[index].commentUid);
+                    // addCommentModeldata = addCommentModeldata?.object?.removeAt(index);
+                    addCommentModeldata?.object?.removeAt(index);
+
+                    // BlocProvider.of<AddcommentCubit>(context).Addcomment(
+                    //     context,
+                    //     '${AllGuestPostRoomData?.object?.content?[index].postUid}');
+                  }
                 }
               },
               builder: (context, state) {
@@ -2451,7 +2543,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                           child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                                ' ${AllGuestPostRoomData?.object?.content?[index].description??""}',
+                                                ' ${AllGuestPostRoomData?.object?.content?[index].description ?? ""}',
                                                 // maxLines: 2,
                                                 style: TextStyle(
                                                     fontFamily: 'outfit',
@@ -2527,33 +2619,57 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        "${addCommentModeldata?.object?[index].userName}",
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'outfit',
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 5,
-                                                      ),
-                                                      Text(
-                                                          // "1w",
-                                                          customFormat(
-                                                              parsedDateTime),
+                                                  Container(
+                                                    width: 250,
+                                                    // color: Colors.amber,
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                          "${addCommentModeldata?.object?[index].userName}",
                                                           style: TextStyle(
                                                               fontFamily:
                                                                   'outfit',
-                                                              fontSize: 13,
+                                                              fontSize: 18,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .w500)),
-                                                    ],
+                                                                      .bold),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                        Text(
+                                                            // "1w",
+                                                            customFormat(
+                                                                parsedDateTime),
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'outfit',
+                                                                fontSize: 13,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500)),
+                                                        Spacer(),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            Deletecommentdilog(
+                                                                addCommentModeldata
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .commentUid ??
+                                                                    "",
+                                                                index);
+                                                          },
+                                                          child: User_ID ==
+                                                                  addCommentModeldata
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .commentUid
+                                                              ? SizedBox()
+                                                              : Icon(Icons
+                                                                  .delete_outline_rounded),
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
                                                   Container(
                                                     width: _width / 1.4,
@@ -2612,14 +2728,23 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                 padding: const EdgeInsets.only(left: 10.0),
                                 child: TextField(
                                   controller: addcomment,
+                                  maxLength: 300,
+                                  counterText: "",
                                   cursorColor: ColorConstant.primary_color,
                                   decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: "Add Comment",
-                                      icon: Icon(
-                                        Icons.emoji_emotions_outlined,
-                                        color: Colors.grey,
-                                      )),
+                                    border: InputBorder.none,
+                                    hintText: "Add Comment",
+                                    icon: Container(
+                                      child: IconButton(
+                                        icon: Icon(
+                                          isEmojiVisible
+                                              ? Icons.emoji_emotions_outlined
+                                              : Icons.emoji_emotions_outlined,
+                                        ),
+                                        onPressed: onClickedEmoji,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -2674,5 +2799,40 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             ),
           );
         });
+  }
+
+  void onClickedEmoji() async {
+    if (isEmojiVisible) {
+      focusNode.requestFocus();
+    } else if (isKeyboardVisible) {
+      await SystemChannels.textInput.invokeMethod('TextInput.hide');
+      await Future.delayed(Duration(milliseconds: 100));
+    }
+    toggleEmojiKeyboard();
+  }
+
+  Future toggleEmojiKeyboard() async {
+    if (isKeyboardVisible) {
+      FocusScope.of(context).unfocus();
+    }
+
+    // setState(() {
+    isEmojiVisible = !isEmojiVisible;
+
+    // });
+  }
+
+  void onEmojiSelected(String emoji) => setState(() {
+        addcomment.text = addcomment.text + emoji;
+      });
+
+  Future<bool> onBackPress() {
+    if (isEmojiVisible) {
+      toggleEmojiKeyboard();
+    } else {
+      Navigator.pop(context);
+    }
+
+    return Future.value(false);
   }
 }
