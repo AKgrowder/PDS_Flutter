@@ -538,6 +538,26 @@ class Repository {
         return jsonString;
     }
   }
+  chooseProfileFile2(String file, String fileName, BuildContext context,
+      {params}) async {
+    print("apiCaling");
+    final response = await apiServices.multipartFile(
+        "${Config.uploadfile}", file, fileName, context,
+        apiName: 'create forum', params: params);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return ChooseDocument2.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
 
   userProfile(File imageFile, BuildContext context) async {
     final response = await apiServices.multipartFileUserprofile(

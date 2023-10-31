@@ -39,8 +39,8 @@ class FetchExprtiseRoomLoadedState extends MyAccountState {
 }
 
 class chooseDocumentLoadedState2 extends MyAccountState {
-  final ChooseDocument chooseDocumentuploded;
-  chooseDocumentLoadedState2(this.chooseDocumentuploded);
+  final ChooseDocument2 chooseDocumentuploded2;
+  chooseDocumentLoadedState2(this.chooseDocumentuploded2);
 }
 
 class AddExportLoadedState extends MyAccountState {
