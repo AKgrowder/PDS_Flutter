@@ -95,19 +95,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           widget.newProfileData?.object?.jobProfile.toString() ?? '';
     }
     if (widget.newProfileData?.object?.workingHours != null) {
-            workignStart = widget.newProfileData?.object?.workingHours
-                .toString()
-                .split(" to ")
-                .first;
+      workignStart = widget.newProfileData?.object?.workingHours
+          .toString()
+          .split(" to ")
+          .first;
 
-            start = workignStart?.split(' ')[0];
-            startAm = workignStart?.split(' ')[1];
-            workignend = widget.newProfileData?.object?.workingHours
-                .toString()
-                .split(" to ")
-                .last;
-            end = workignend?.split(' ')[0];
-            endAm = workignend?.split(' ')[1];
+      start = workignStart?.split(' ')[0];
+      startAm = workignStart?.split(' ')[1];
+      workignend = widget.newProfileData?.object?.workingHours
+          .toString()
+          .split(" to ")
+          .last;
+      end = workignend?.split(' ')[0];
+      endAm = workignend?.split(' ')[1];
     }
   }
 
@@ -315,7 +315,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           child: userProfile != 'soicalScreen'
                               ? GestureDetector(
                                   onTap: () {
-                                    _settingModalBottomSheet1(context);
+                                    if (widget.newProfileData?.object
+                                            ?.userBackgroundPic !=
+                                        null) {
+                                      _settingModalBottomSheet1(context);
+                                    }
                                   },
                                   child: Container(
                                     height: 45,
@@ -399,6 +403,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       right: -0,
                                       child: GestureDetector(
                                         onTap: () {
+                                          print(
+                                              "user profile -- ${widget.newProfileData?.object?.userProfilePic}");
+
                                           _settingModalBottomSheet(context);
                                         },
                                         child: Container(
@@ -1176,7 +1183,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ],
           )
-
       ],
     );
   }
@@ -1235,7 +1241,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Center(
                   child: new ListTile(
                       leading: new Image.asset(
-                        ImageConstant.uplodimage,
+                        ImageConstant.galleryimage,
                         height: 45,
                       ),
                       title: new Text('See Profile Picture'),
@@ -1254,7 +1260,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Center(
                   child: new ListTile(
                     leading: new Image.asset(
-                      ImageConstant.galleryimage,
+                      ImageConstant.uplodimage,
                       height: 45,
                     ),
                     title: new Text('Upload Profile Picture'),
@@ -1296,7 +1302,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Center(
                   child: new ListTile(
                       leading: new Image.asset(
-                        ImageConstant.uplodimage,
+                        ImageConstant.galleryimage,
                         height: 45,
                       ),
                       title: new Text('See Profile Picture'),
@@ -1304,7 +1310,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => DocumentViewScreen1(
                                       path:
-                                          '${widget.newProfileData?.object?.userProfilePic}',
+                                          '${widget.newProfileData?.object?.userBackgroundPic}',
                                       title: 'Pdf',
                                     )))
                           }),
@@ -1315,7 +1321,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Center(
                   child: new ListTile(
                     leading: new Image.asset(
-                      ImageConstant.galleryimage,
+                      ImageConstant.uplodimage,
                       height: 45,
                     ),
                     title: new Text('Upload Profile Picture'),

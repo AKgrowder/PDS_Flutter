@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -435,6 +436,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             AllGuestPostRoomData = state.GetGuestAllPostRoomData;
           }
           if (state is PostLikeLoadedState) {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.likePost.object.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
             likePost = state.likePost;
           }
         }, builder: (context, state) {
@@ -487,46 +493,44 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                 width: 17,
                               ),
                               GestureDetector(
-                                onTap: () {
-                                  if (uuid == null) {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                RegisterCreateAccountScreen()));
-                                  } else {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return ProfileScreen(
-                                        User_ID: "${User_ID}",
-                                        isFollowing: 'FOLLOW',
-                                      );
-                                    }));
-                                  }
-                                },
-                                child: uuid == null
-                                    ? Text(
-                                        'Login',
-                                        style: TextStyle(
-                                            fontFamily: "outfit",
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: ColorConstant.primary_color),
-                                      )
-                                    : SizedBox(
-                                        height: 50,
-                                        width: 50,
-                                        child: CircleAvatar(
-                                          backgroundImage:
-                                              UserProfileImage != null
-                                                  ? NetworkImage(
-                                                      "${UserProfileImage}")
-                                                  : NetworkImage(""),
-                                          radius: 25,
-
-                                          //  CustomImageView(url: UserProfileImage,),
-                                        ),
-                                      ),
-                              ),
+                                  onTap: () {
+                                    if (uuid == null) {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  RegisterCreateAccountScreen()));
+                                    } else {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return ProfileScreen(
+                                          User_ID: "${User_ID}",
+                                          isFollowing: 'FOLLOW',
+                                        );
+                                      }));
+                                    }
+                                  },
+                                  child: uuid == null
+                                      ? Text(
+                                          'Login',
+                                          style: TextStyle(
+                                              fontFamily: "outfit",
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                                  ColorConstant.primary_color),
+                                        )
+                                      : UserProfileImage != null
+                                          ? CustomImageView(
+                                              url: "${UserProfileImage}",
+                                              height: 50,
+                                              width: 50,
+                                              fit: BoxFit.fill,
+                                            )
+                                          : CustomImageView(
+                                              imagePath: ImageConstant.tomcruse,
+                                              height: 50,
+                                              width: 50,
+                                            )),
                             ],
                           ),
                         ),
@@ -2338,7 +2342,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         useSafeArea: true,
         isDismissible: true,
         showDragHandle: true,
-        enableDrag: true, constraints: BoxConstraints.tight(Size.infinite),
+        enableDrag: true,
+        constraints: BoxConstraints.tight(Size.infinite),
         context: context,
         builder: (BuildContext bc) {
           return Scaffold(
@@ -2451,7 +2456,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                           child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                                ' ${AllGuestPostRoomData?.object?.content?[index].description??""}',
+                                                ' ${AllGuestPostRoomData?.object?.content?[index].description ?? ""}',
                                                 // maxLines: 2,
                                                 style: TextStyle(
                                                     fontFamily: 'outfit',
@@ -2613,7 +2618,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                 child: TextField(
                                   controller: addcomment,
                                   cursorColor: ColorConstant.primary_color,
+                                  maxLength: 300,
                                   decoration: InputDecoration(
+                                      counterText: "",
                                       border: InputBorder.none,
                                       hintText: "Add Comment",
                                       icon: Icon(
