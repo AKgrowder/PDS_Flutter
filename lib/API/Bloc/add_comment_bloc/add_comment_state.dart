@@ -1,4 +1,5 @@
 import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
+import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 
 abstract class AddCommentState {}
 
@@ -14,6 +15,10 @@ class AddCommentLoadedState extends AddCommentState {
 class AddCommentErrorState extends AddCommentState {
   final String error;
   AddCommentErrorState(this.error);
+}
+class DeletecommentLoadedState extends AddCommentState {
+  final DeleteCommentModel Deletecomment;
+  DeletecommentLoadedState(this.Deletecomment);
 }
 
 //-------------------------
