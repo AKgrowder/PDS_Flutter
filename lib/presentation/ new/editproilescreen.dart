@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,6 +16,7 @@ import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/stroycommenwoget.dart';
 import 'package:pds/presentation/my%20account/my_account_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
@@ -41,6 +43,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController expertIn = TextEditingController();
   TextEditingController fees = TextEditingController();
   TextEditingController compayName = TextEditingController();
+
+  double finalFileSize = 12.0;
+  TextEditingController uplopdfile = TextEditingController();
   List<MultiSelectItem<IndustryType>>? _industryTypes = [];
   List<IndustryType> selectedIndustryTypes = [];
   List<IndustryType> selectedIndustryTypes2 = [];
@@ -48,15 +53,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   File? _image;
   File? _image1;
   double value2 = 0.0;
+
+  String? filepath;
   String? User_Module;
   double documentuploadsize = 0;
   ChooseDocument? chooseDocumentuploded;
   ChooseDocument1? chooseDocumentuploded1;
+  ChooseDocument2? chooseDocument2;
+  ChooseDocument2? chooseDocumentuploded2;
   String? start;
   String? startAm;
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
-
   String? workignStart;
   String? workignend;
   String? end;
@@ -65,6 +73,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Expertiseclass? selectedExpertise;
   List<String> industryUUID = [];
 
+  List<String> industryUUIDinApi = [];
   dataSetUpMethod() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_Module = prefs.getString(PreferencesKey.module);
@@ -95,19 +104,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           widget.newProfileData?.object?.jobProfile.toString() ?? '';
     }
     if (widget.newProfileData?.object?.workingHours != null) {
-            workignStart = widget.newProfileData?.object?.workingHours
-                .toString()
-                .split(" to ")
-                .first;
+      workignStart = widget.newProfileData?.object?.workingHours
+          .toString()
+          .split(" to ")
+          .first;
 
-            start = workignStart?.split(' ')[0];
-            startAm = workignStart?.split(' ')[1];
-            workignend = widget.newProfileData?.object?.workingHours
-                .toString()
-                .split(" to ")
-                .last;
-            end = workignend?.split(' ')[0];
-            endAm = workignend?.split(' ')[1];
+      start = workignStart?.split(' ')[0];
+      startAm = workignStart?.split(' ')[1];
+      workignend = widget.newProfileData?.object?.workingHours
+          .toString()
+          .split(" to ")
+          .last;
+      end = workignend?.split(' ')[0];
+      endAm = workignend?.split(' ')[1];
+    }
+    if (widget.newProfileData?.object?.fees != null) {
+      fees.text = widget.newProfileData?.object?.fees.toString() ?? '';
+    }
+    if (widget.newProfileData?.object?.userDocument != null) {
+      dopcument = widget.newProfileData?.object?.userDocument;
+    } else {
+      dopcument = 'Upload Image';
     }
   }
 
@@ -183,13 +200,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       body: SingleChildScrollView(
         child: BlocConsumer<MyAccountCubit, MyAccountState>(
           listener: (context, state) {
+            if (state is chooseDocumentLoadedState2) {
+              chooseDocumentuploded2 = state.chooseDocumentuploded2;
+            }
             if (state is chooseDocumentLoadedState) {
-              print("chooseDocumentLoadedState");
-              Navigator.pop(context);
+              print("chooseDocumentLoadedStatqqqqqqqqqqqqqe");
 
               widget.newProfileData?.object?.userProfilePic = null;
 
               chooseDocumentuploded = state.chooseDocumentuploded;
+              Navigator.pop(context);
+            }
+            if (state is AddExportLoadedState) {
+              print("AddExportLoadedState");
+              SnackBar snackBar = SnackBar(
+                content: Text(state.addExpertProfile.message.toString()),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NewBottomBar(buttomIndex: 0)));
             }
             if (state is FetchExprtiseRoomLoadedState) {
               state.fetchExprtise.object?.forEach((element) {
@@ -205,11 +237,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               });
             }
             if (state is chooseDocumentLoadedState1) {
-              print("chooseDocumentLoadedState1");
-
-              Navigator.pop(context);
               widget.newProfileData?.object?.userBackgroundPic = null;
               chooseDocumentuploded1 = state.chooseDocumentuploded1;
+              Navigator.pop(context);
             }
             if (state is IndustryTypeLoadedState) {
               widget.newProfileData?.object?.industryTypes?.forEach((element) {
@@ -232,6 +262,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                 setState(() {});
               });
+            }
+            if (state is chooseDocumentLoadedState2) {
+              chooseDocument2 = state.chooseDocumentuploded2;
             }
           },
           builder: (context, state) {
@@ -477,6 +510,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                         ),
                         customTextFeild(
+                          isReadOnly: true,
                           controller: nameController,
                           width: _width / 1.1,
                           hintText: "Enter Name",
@@ -511,6 +545,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         customTextFeild(
                           controller: emailController,
                           width: _width / 1.1,
+                          isReadOnly: true,
                           hintText: "Email Address",
                         ),
                         Padding(
@@ -525,16 +560,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                         ),
                         customTextFeild(
+                          isReadOnly: true,
                           controller: contactController,
                           width: _width / 1.1,
                           hintText: "Contact no.",
                         ),
                         TextFiledCommenWiget(_width),
                         GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             userAllRqureidData();
                             if (User_Module == 'COMPANY') {
                               companyUserData();
+                            } else if (User_Module == 'EXPERT') {
+                              await expertUserData();
                             }
                           },
                           child: Padding(
@@ -702,260 +740,130 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-/*  editProfileScreen(){
-   if (userName.text.isEmpty) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please Enter Name'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (userName.text.trim().isEmpty) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Name can\'t be just blank spaces'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (!nameRegExp.hasMatch(userName.text)) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text(
-                                  'Input cannot contains prohibited special characters'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (userName.text.length <= 3 ||
-                              userName.text.length > 50) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Minimum length required'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (userName.text.contains('..')) {
-                            SnackBar snackBar = SnackBar(
-                              content:
-                                  Text('username does not contain is correct'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (email.text.isEmpty) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please Enter Email'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (!emailRegExp.hasMatch(email.text)) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('please Enter vaild Email'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (mobileNo.text.isEmpty) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please Enter Mobile Number'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (!phoneRegExp.hasMatch(mobileNo.text)) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Invalid Mobile Number'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          }
-                          if (myAccontDetails?.object?.module == 'COMPANY') {
-                            if (isupdate == false) {
-                              if (jobProfile.text == null ||
-                                  jobProfile.text == '') {
-                                SnackBar snackBar = SnackBar(
-                                  content: Text('Please Enter Job profile '),
-                                  backgroundColor: ColorConstant.primary_color,
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              } else if (jobProfile.text.trim().isEmpty ||
-                                  jobProfile.text.trim() == '') {
-                                SnackBar snackBar = SnackBar(
-                                  content: Text(
-                                      'Job profile can\'t be just blank spaces '),
-                                  backgroundColor: ColorConstant.primary_color,
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              } else if (jobProfile.text.toString().length <=
-                                      3 ||
-                                  jobProfile.text.toString().length > 50) {
-                                SnackBar snackBar = SnackBar(
-                                  content: Text('Please fill full Job Profile'),
-                                  backgroundColor: ColorConstant.primary_color,
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              } else if (compayName.text == null ||
-                                  compayName.text == '') {
-                                SnackBar snackBar = SnackBar(
-                                  content: Text('Please Enter Company Name '),
-                                  backgroundColor: ColorConstant.primary_color,
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              } else if (compayName.text.trim().isEmpty ||
-                                  compayName.text.trim() == '') {
-                                SnackBar snackBar = SnackBar(
-                                  content: Text(
-                                      'Company Name can\'t be just blank spaces '),
-                                  backgroundColor: ColorConstant.primary_color,
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              } else if (compayName.text.toString().length <=
-                                      3 ||
-                                  compayName.text.toString().length > 50) {
-                                SnackBar snackBar = SnackBar(
-                                  content:
-                                      Text('Please fill full Company Name '),
-                                  backgroundColor: ColorConstant.primary_color,
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              } else if (dopcument == 'Upload Image') {
-                                SnackBar snackBar = SnackBar(
-                                  content: Text('Please Upload Image'),
-                                  backgroundColor: ColorConstant.primary_color,
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              } else {
-                                Map<String, dynamic> params = {};
-                                params['document'] = chooseDocumentuploded2
-                                            ?.object !=
-                                        null
-                                    ? "${chooseDocumentuploded2?.object.toString()}"
-                                    : '${myAccontDetails?.object?.userDocument}';
-                                params['userProfilePic'] = myAccontDetails
-                                            ?.object?.userProfilePic !=
-                                        null
-                                    ? myAccontDetails?.object?.userProfilePic
-                                    : chooseDocumentuploded?.object != null
-                                        ? chooseDocumentuploded?.object
-                                            .toString()
-                                        : null;
-                                params['companyName'] = compayName.text;
-                                params['jobProfile'] = jobProfile.text;
-                                params['name'] = userName.text;
-                                params['uuid'] =
-                                    myAccontDetails?.object?.uuid.toString();
+  expertUserData() async {
+    if (jobProfile.text == null || jobProfile.text == "") {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please Enter Job Profile'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (jobProfile.text.isNotEmpty && jobProfile.text.length < 4) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Minimum length required in Job Profiie'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (selectedExpertise?.expertiseName.toString() == null) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please select Expertise in'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (fees.text == null || fees.text == '') {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please select Fees'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (fees.text == null || fees.text == '') {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please select Fees'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if ((start?.isEmpty ?? false) &&
+        (startAm?.isEmpty ?? false) &&
+        (end?.isEmpty ?? false) &&
+        (endAm?.isEmpty ?? false)) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please select Working Hours'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (dopcument == 'Upload Image') {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please Upload Image'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } /* else if (selectedIndustryTypes2 != null) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please select industry Types'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } */
+    else {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? userid = await prefs.getString(PreferencesKey.loginUserID);
 
-                                params['email'] = email.text;
-                                BlocProvider.of<MyAccountCubit>(context)
-                                    .cretaForumUpdate(params, context);
-                              }
-                            }
-                          } else if (myAccontDetails?.object?.module ==
-                              'EXPERT') {
-                            if (jobProfile.text == null ||
-                                jobProfile.text == "") {
-                              SnackBar snackBar = SnackBar(
-                                content: Text('Please Enter Job Profile'),
-                                backgroundColor: ColorConstant.primary_color,
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            } else if (jobProfile.text.isNotEmpty &&
-                                jobProfile.text.length < 4) {
-                              SnackBar snackBar = SnackBar(
-                                content: Text(
-                                    'Minimum length required in Job Profiie'),
-                                backgroundColor: ColorConstant.primary_color,
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            } else if (selectedExpertise?.expertiseName
-                                    .toString() ==
-                                null) {
-                              SnackBar snackBar = SnackBar(
-                                content: Text('Please select Expertise in'),
-                                backgroundColor: ColorConstant.primary_color,
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            } else if (fees.text == null || fees.text == '') {
-                              SnackBar snackBar = SnackBar(
-                                content: Text('Please select Fees'),
-                                backgroundColor: ColorConstant.primary_color,
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            } else if (fees.text == null || fees.text == '') {
-                              SnackBar snackBar = SnackBar(
-                                content: Text('Please select Fees'),
-                                backgroundColor: ColorConstant.primary_color,
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            } else if ((start?.isEmpty ?? false) &&
-                                (startAm?.isEmpty ?? false) &&
-                                (end?.isEmpty ?? false) &&
-                                (endAm?.isEmpty ?? false)) {
-                              SnackBar snackBar = SnackBar(
-                                content: Text('Please select Working Hours'),
-                                backgroundColor: ColorConstant.primary_color,
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            } else if (dopcument == 'Upload Image') {
-                              SnackBar snackBar = SnackBar(
-                                content: Text('Please Upload Image'),
-                                backgroundColor: ColorConstant.primary_color,
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            } else {
-                              String time =
-                                  '${start} ${startAm} to ${end} ${endAm}';
+      String time = '${start} ${startAm} to ${end} ${endAm}';
+      selectedIndustryTypes2.forEach((element) {
+        industryUUIDinApi.add(element.industryTypeUid);
+      });
+      setState(() {});
+      if (chooseDocumentuploded?.object.toString() != null &&
+          chooseDocumentuploded1?.object.toString() != null) {
+        print("both condison");
+        var params = {
+          "document":
+              "${widget.newProfileData?.object?.userDocument?.toString()}",
+          "expertUId": ["${selectedExpertise?.uid}"],
+          "userProfilePic": chooseDocumentuploded?.object.toString(),
+          "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
+          "fees": fees.text,
+          "workingHours": time.toString(),
+          "jobProfile": jobProfile.text,
+          "uid": userid.toString(),
+          "industryTypesUid": industryUUIDinApi
+        };
+        print("parmas-$params");
+        BlocProvider.of<MyAccountCubit>(context)
+            .addExpertProfile(params, context);
+      }
+      else if (chooseDocumentuploded?.object.toString() != null) {
+        print("userProfilePic condiosn working");
+        var params = {
+          "document":
+              "${widget.newProfileData?.object?.userDocument?.toString()}",
+          "expertUId": ["${selectedExpertise?.uid}"],
+          "userProfilePic": chooseDocumentuploded?.object.toString(),
+          "fees": fees.text,
+          "workingHours": time.toString(),
+          "jobProfile": jobProfile.text,
+          "uid": userid.toString(),
+          "industryTypesUid": industryUUIDinApi
+        };
+        print("parmas-$params");
 
-                              var params = {
-                                "document": chooseDocumentuploded2?.object !=
-                                        null
-                                    ? "${chooseDocumentuploded2?.object.toString()}"
-                                    : '${myAccontDetails?.object?.userDocument}',
-                                "expertUId": [
-                                  "${selectedExpertise?.uid.toString()}"
-                                ],
-                                "fees": '${fees.text}',
-                                "jobProfile": '${jobProfile.text}',
-                                "uid": User_ID.toString(),
-                                "workingHours": time.toString(),
-                                "profilePic": myAccontDetails
-                                            ?.object?.userProfilePic !=
-                                        null
-                                    ? myAccontDetails?.object?.userProfilePic
-                                    : chooseDocumentuploded?.object != null
-                                        ? chooseDocumentuploded?.object
-                                            .toString()
-                                        : null,
-                                "email": email.text
-                              };
-
-                              BlocProvider.of<MyAccountCubit>(context)
-                                  .addExpertProfile(params, context);
-                            }
- } */
+        BlocProvider.of<MyAccountCubit>(context)
+            .addExpertProfile(params, context);
+      }
+     else if (chooseDocumentuploded1?.object.toString() != null) {
+        print("userBackgroundPic condiosn working");
+        var params = {
+          "document":
+              "${widget.newProfileData?.object?.userDocument?.toString()}",
+          "expertUId": ["${selectedExpertise?.uid}"],
+          "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
+          "fees": fees.text,
+          "workingHours": time.toString(),
+          "jobProfile": jobProfile.text,
+          "uid": userid.toString(),
+          "industryTypesUid": industryUUIDinApi
+        };
+        print("parmas-$params");
+        BlocProvider.of<MyAccountCubit>(context)
+            .addExpertProfile(params, context);
+      }
+    }
+  }
 
   TextFiledCommenWiget(_width) {
-    print(selectedIndustryTypes2);
     selectedIndustryTypes2.forEach((element) {
       print("industry name : ${element.industryTypeName}");
       print("industry name : ${element.industryTypeUid}");
     });
-    print("Fgdfhgdfhgdfhdfgh-${widget.newProfileData?.object?.jobProfile}");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -973,6 +881,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         if (widget.newProfileData?.object?.companyName != null)
           customTextFeild(
+            isReadOnly: true,
             controller: companyName,
             width: _width / 1.1,
           ),
@@ -990,6 +899,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         if (widget.newProfileData?.object?.jobProfile != null)
           customTextFeild(
+            isReadOnly: true,
             controller: jobProfile,
             width: _width / 1.1,
           ),
@@ -1005,34 +915,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.industryTypes?.isNotEmpty == true)
-          Container(
-            // width: _width / 1.2,
-            decoration: BoxDecoration(color: Color(0xffEFEFEF)),
-            child: DropdownButtonHideUnderline(
-              child: Padding(
-                padding: EdgeInsets.only(left: 12),
-                child: MultiSelectDialogField<IndustryType>(
-                  initialValue: selectedIndustryTypes2,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.transparent)),
-                  buttonIcon: Icon(
-                    Icons.expand_more,
-                    color: Colors.black,
-                  ),
-                  items: _industryTypes!,
-                  listType: MultiSelectListType.LIST,
-                  onConfirm: (values) {
+        Container(
+          decoration: BoxDecoration(color: Color(0xffEFEFEF)),
+          child: DropdownButtonHideUnderline(
+            child: Padding(
+              padding: EdgeInsets.only(left: 12),
+              child: MultiSelectDialogField<IndustryType>(
+                initialValue: [...selectedIndustryTypes2],
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.transparent)),
+                buttonIcon: Icon(
+                  Icons.expand_more,
+                  color: Colors.black,
+                ),
+                items: _industryTypes!,
+                listType: MultiSelectListType.LIST,
+                /* onConfirm: (values) {
                     selectedIndustryTypes2 = values;
                     selectedIndustryTypes2.forEach((element) {
                       industryUUID.add("${element.industryTypeUid}");
                     });
                     setState(() {});
-                  },
-                ),
+                  }, */
+                onConfirm: (p0) {},
               ),
             ),
           ),
+        ),
         if (widget.newProfileData?.object?.expertise != null)
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -1059,7 +968,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   value: selectedExpertise,
                   // value: Expertiseclass(uid, expertiseName),
                   /*   value: Expertiseclass(selctedexpertiseData[0].uid,selctedexpertiseData[0].expertiseName), */
-                  onChanged: (Expertiseclass? newValue) {
+                  /*  onChanged: (Expertiseclass? newValue) {
                     // When the user selects an option from the dropdown.
                     if (newValue != null) {
                       setState(() {
@@ -1067,7 +976,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         print("Selectedexpertise: ${newValue.uid}");
                       });
                     }
-                  },
+                  }, */
+                  onChanged: null,
                   items: expertiseData.map<DropdownMenuItem<Expertiseclass>>(
                       (Expertiseclass expertise) {
                     return DropdownMenuItem<Expertiseclass>(
@@ -1078,6 +988,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
               ),
             ),
+          ),
+        if (widget.newProfileData?.object?.fees != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: Text(
+              'fees',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        if (widget.newProfileData?.object?.fees != null)
+          customTextFeild(
+            controller: fees,
+            width: _width / 1.1,
           ),
         if (widget.newProfileData?.object?.workingHours != null)
           Padding(
@@ -1175,14 +1102,136 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
               ),
             ],
+          ),
+        if (widget.newProfileData?.object?.userDocument != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: Text(
+              'Document',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        if (widget.newProfileData?.object?.userDocument != null)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => DocumentViewScreen(
+                            path: widget.newProfileData?.object?.userDocument
+                                .toString(),
+                            title: 'Pdf',
+                          )));
+                },
+                child: Container(
+                    height: 50,
+                    width: _width / 1.6,
+                    decoration: BoxDecoration(
+                        color: Color(0XFFF6F6F6),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(5),
+                            bottomLeft: Radius.circular(5))),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 15, left: 20),
+                      child: Text(
+                        '${dopcument.toString()}',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    )),
+              ),
+              dopcument == "Upload Image"
+                  ? GestureDetector(
+                      onTap: () async {
+                        filepath = await prepareTestPdf(0);
+                      },
+                      child: Container(
+                        height: 50,
+                        width: _width / 5,
+                        decoration: BoxDecoration(
+                            color: Color(0XFF777777),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(5),
+                                bottomRight: Radius.circular(5))),
+                        child: Center(
+                          child: Text(
+                            "Choose",
+                            style: TextStyle(
+                              fontFamily: 'outfit',
+                              fontSize: 15,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : widget.newProfileData?.object?.approvalStatus != 'APPROVED'
+                      ? Container(
+                          height: 50,
+                          width: _width / 5,
+                          decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 228, 228, 228),
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(5),
+                                  bottomRight: Radius.circular(5))),
+                          child: GestureDetector(
+                              onTap: () {
+                                dopcument = "Upload Image";
+                                setState(() {});
+                              },
+                              child: Icon(
+                                Icons.delete_forever,
+                                color: ColorConstant.primary_color,
+                              )),
+                        )
+                      : GestureDetector(
+                          onTap: () {
+                            SnackBar snackBar = SnackBar(
+                              content: Text(
+                                  "Your Profile is Approved,You can't Change Document!"),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          },
+                          child: Container(
+                            height: 50,
+                            width: _width / 5,
+                            decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 189, 189, 189),
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(5),
+                                    bottomRight: Radius.circular(5))),
+                            child: Center(
+                              child: Text(
+                                "Change",
+                                style: TextStyle(
+                                  fontFamily: 'outfit',
+                                  fontSize: 15,
+                                  color: Colors.black45,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+            ],
           )
-
       ],
     );
   }
 
   customTextFeild(
-      {double? width, TextEditingController? controller, String? hintText}) {
+      {double? width,
+      TextEditingController? controller,
+      String? hintText,
+      bool? isReadOnly}) {
     return Container(
       // height: 50,
       width: width,
@@ -1195,6 +1244,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       child: Padding(
         padding: EdgeInsets.only(left: 12),
         child: TextFormField(
+          readOnly: isReadOnly ?? false,
           controller: controller,
           autofocus: false,
           cursorColor: ColorConstant.primary_color,
@@ -1328,6 +1378,184 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           );
         });
+  }
+
+  prepareTestPdf(
+    int Index,
+  ) async {
+    PlatformFile file;
+
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'png', 'doc', 'jpg'],
+    );
+    {
+      if (result != null) {
+        file = result.files.first;
+
+        if ((file.path?.contains(".mp4") ?? false) ||
+            (file.path?.contains(".mov") ?? false) ||
+            (file.path?.contains(".mp3") ?? false) ||
+            (file.path?.contains(".m4a") ?? false)) {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text(
+                "Selected File Error",
+                textScaleFactor: 1.0,
+              ),
+              content: Text(
+                "Only PDF, PNG, JPG Supported.",
+                textScaleFactor: 1.0,
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: Container(
+                    // color: Colors.green,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("Okay"),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          getFileSize(file.path!, 1, result.files.first, Index, context);
+        }
+
+        /*     setState(() {
+          // fileparth = file.path!;
+
+          switch (Index) {
+            case 1:
+              GSTName = "";
+              // file.name;
+
+              break;
+            case 2:
+              PanName = file.name;
+
+              break;
+            case 3:
+              UdhyanName = file.name;
+
+              break;
+            default:
+          }
+
+          BlocProvider.of<DocumentUploadCubit>(context)
+              .documentUpload(file.path!);
+        });  */
+      } else {}
+    }
+    return "";
+    // "${fileparth}";
+  }
+
+  getFileSize(String filepath, int decimals, PlatformFile file1, int Index,
+      context) async {
+    var file = File(filepath);
+    int bytes = await file.length();
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    var i = (log(bytes) / log(1024)).floor();
+    var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
+    print('getFileSizevariable-${file1.path}');
+    value2 = double.parse(STR);
+
+    print(value2);
+    switch (i) {
+      case 0:
+        print("Done file size B");
+        switch (Index) {
+          case 1:
+            if (file1.name.isNotEmpty || file1.name.toString() == null) {
+              setState(() {
+                uplopdfile.text = file1.name;
+                dopcument = file1.name;
+              });
+            }
+
+            break;
+          default:
+        }
+        print('xfjsdjfjfilenamecheckKB-${file1.path}');
+
+        break;
+      case 1:
+        print("Done file size KB");
+        switch (Index) {
+          case 0:
+            if (file1.name.isNotEmpty || file1.name.toString() == null) {
+              setState(() {
+                uplopdfile.text = file1.name;
+                dopcument = file1.name;
+              });
+            }
+            print('filenamecheckdocmenut-${dopcument}');
+
+            break;
+          default:
+        }
+        print('filenamecheckKB-${file1.path}');
+        BlocProvider.of<MyAccountCubit>(context)
+            .chooseDocumentprofile(dopcument.toString(), file1.path!, context);
+
+        setState(() {});
+
+        break;
+      case 2:
+        if (value2 > finalFileSize) {
+          print(
+              "this file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB");
+
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text("Max Size ${finalFileSize}MB"),
+              content: Text(
+                  "This file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB"),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: Container(
+                    // color: Colors.green,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("Okay"),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          print("Done file Size 12MB");
+
+          switch (Index) {
+            case 1:
+              setState(() {
+                uplopdfile.text = file1.name;
+                dopcument = file1.name;
+              });
+              break;
+
+            default:
+          }
+          print('filecheckPath-${file1.path}');
+          print('filecheckPath-${file1.path}');
+          BlocProvider.of<MyAccountCubit>(context).chooseDocumentprofile(
+              dopcument.toString(), file1.path!, context);
+        }
+
+        break;
+      default:
+    }
+
+    return STR;
   }
 
   bool _isGifOrSvg(String imagePath) {

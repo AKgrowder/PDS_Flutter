@@ -70,7 +70,7 @@ class MyAccountCubit extends Cubit<MyAccountState> {
     try {
       emit(MyAccountLoadingState());
       createForm =
-          await Repository().chooseProfileFile(file, fileName, context);
+          await Repository().chooseProfileFile2(file, fileName, context);
       print('createFormDataCheck-${createForm.message}');
       if (createForm.success == true) {
         print('createFormdataGet-----${createForm.object}');

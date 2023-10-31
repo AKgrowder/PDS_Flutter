@@ -29,8 +29,6 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-
-
 class NotificationModel {
   int id;
   String title;
@@ -47,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     "Post",
     "Comments",
   ];
-    String? User_ID;
+  String? User_ID;
   List<String> SaveList = ["Post", "Blog"];
   // List<String>
   String industryTypesArray = "";
@@ -58,6 +56,13 @@ class _ProfileScreenState extends State<ProfileScreen>
   String? dopcument;
   String? filepath;
   double value2 = 0.0;
+
+  String? workignStart;
+  String? workignend;
+  String? start;
+  String? startAm;
+  String? end;
+  String? endAm;
   TabController? _tabController;
   String selctedValue = 'Newest to oldest';
   String selctedValue1 = 'All Date';
@@ -132,11 +137,6 @@ class _ProfileScreenState extends State<ProfileScreen>
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
   }
-
-  // getUserSavedData() async {
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   User_ID = prefs.getString(PreferencesKey.loginUserID);
-  // }
 
   @override
   void dispose() {
@@ -213,6 +213,21 @@ class _ProfileScreenState extends State<ProfileScreen>
         dopcument = NewProfileData?.object?.userDocument;
         priceContrller.text = "${NewProfileData?.object?.fees}";
         Expertise.text = ExpertiseData;
+        if (state.PublicRoomData.object?.workingHours != null) {
+          workignStart = state.PublicRoomData.object?.workingHours
+              .toString()
+              .split(" to ")
+              .first;
+
+          start = workignStart?.split(' ')[0];
+          startAm = workignStart?.split(' ')[1];
+          workignend = state.PublicRoomData.object?.workingHours
+              .toString()
+              .split(" to ")
+              .last;
+          end = workignend?.split(' ')[0];
+          endAm = workignend?.split(' ')[1];
+        }
       }
       if (state is GetAppPostByUserLoadedState) {
         print(state.GetAllPost);
@@ -337,6 +352,82 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ],
                 ),
               ),
+
+                Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Container(
+                        height: 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: NewProfileData?.object?.approvalStatus ==
+                                  "PARTIALLY_REGISTERED"
+                              ? Color(0xffB6D9EC)
+                              : NewProfileData?.object?.approvalStatus ==
+                                      "PENDING"
+                                  ? Color(0xffFFDBA8)
+                                  : NewProfileData?.object?.approvalStatus ==
+                                          "APPROVED"
+                                      ? Color(0xffD5EED5)
+                                      : Color(0xffFFE0E1),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15, right: 15),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                height: 10,
+                                width: 10,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: NewProfileData
+                                                ?.object?.approvalStatus ==
+                                            "PARTIALLY_REGISTERED"
+                                        ? Color(0xff1A94D7)
+                                        : NewProfileData
+                                                    ?.object?.approvalStatus ==
+                                                "PENDING"
+                                            ? Color(0xffC28432)
+                                            : NewProfileData?.object
+                                                        ?.approvalStatus ==
+                                                    "APPROVED"
+                                                ? Color(0xff019801)
+                                                : Color(0xffFF000B)),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "Profile ${NewProfileData?.object?.approvalStatus}",
+                                style: TextStyle(
+                                    color: NewProfileData
+                                                ?.object?.approvalStatus ==
+                                            "PARTIALLY_REGISTERED"
+                                        ? Color(0xff1A94D7)
+                                        : NewProfileData
+                                                    ?.object?.approvalStatus ==
+                                                "PENDING"
+                                            ? Color(0xffC28432)
+                                            : NewProfileData?.object
+                                                        ?.approvalStatus ==
+                                                    "APPROVED"
+                                                ? Color(0xff019801)
+                                                : Color(0xffFF000B),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: Center(
@@ -361,7 +452,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       color: Color(0xff444444)),
                 ),
               ),
-              SizedBox(
+              /* SizedBox(
                 height: 10,
               ),
               Center(
@@ -373,11 +464,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                       fontWeight: FontWeight.bold,
                       color: Color(0xff444444)),
                 ),
-              ),
+              ), */
               SizedBox(
                 height: 10,
               ),
-                 User_ID == widget.User_ID
+              User_ID == widget.User_ID
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -386,7 +477,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => EditProfileScreen()));
+                                    builder: (context) => EditProfileScreen(newProfileData: NewProfileData,)));
                           },
                           child: Container(
                             alignment: Alignment.center,
@@ -428,7 +519,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                       ],
                     )
-                  :widget.isFollowing == true  
+                  : widget.isFollowing == true
                       ? Container(
                           alignment: Alignment.center,
                           height: 45,
@@ -445,149 +536,138 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500),
                           ),
-                        ): Container(
-                      alignment: Alignment.center,
-                      height: 45,
-                      width: _width / 3,
-                      decoration: BoxDecoration(
-                        color: Color(0xffED1C25),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        'Follow',
-                        style: TextStyle(
-                            fontFamily: "outfit",
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    
+                        )
+                      : Container(
+                          alignment: Alignment.center,
+                          height: 45,
+                          width: _width / 3,
+                          decoration: BoxDecoration(
+                            color: Color(0xffED1C25),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            'Follow',
+                            style: TextStyle(
+                                fontFamily: "outfit",
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+
               SizedBox(
                 height: 12,
               ),
-              Center(
-                child: Container(
-                  height: 80,
-                  width: _width / 1.1,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: Color(0xffD2D2D2),
-                      )),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 35,
-                      ),
-                      Container(
-                        // height: 55,
-                        width: 55,
-                        // color: Colors.amber,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 10,
+           Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 15),
+                  child: Container(
+                    height: 80,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Color(0xffD2D2D2),
+                        )),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Container(
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    '${NewProfileData?.object?.postCount}',
+                                    style: TextStyle(
+                                        fontFamily: "outfit",
+                                        fontSize: 25,
+                                        color: Color(0xff000000),
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    'Post',
+                                    style: TextStyle(
+                                        fontFamily: "outfit",
+                                        fontSize: 16,
+                                        color: Color(0xff444444),
+                                        fontWeight: FontWeight.w500),
+                                  )
+                                ],
+                              ),
                             ),
-                            Text(
-                              '${NewProfileData?.object?.postCount}',
-                              style: TextStyle(
-                                  fontFamily: "outfit",
-                                  fontSize: 25,
-                                  color: Color(0xff000000),
-                                  fontWeight: FontWeight.bold),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20, bottom: 20),
+                            child: VerticalDivider(
+                              thickness: 1.5,
+                              color: Color(0xffC2C2C2),
                             ),
-                            Text(
-                              'Post',
-                              style: TextStyle(
-                                  fontFamily: "outfit",
-                                  fontSize: 16,
-                                  color: Color(0xff444444),
-                                  fontWeight: FontWeight.w500),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20, bottom: 20),
-                        child: VerticalDivider(
-                          thickness: 1.5,
-                          color: Color(0xffC2C2C2),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 25,
-                      ),
-                      Container(
-                        // height: 55,
-                        width: 90,
-                        // color: Colors.amber,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 11,
+                          ),
+                          Container(
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 11,
+                                ),
+                                Text(
+                                  '${NewProfileData?.object?.followersCount}',
+                                  style: TextStyle(
+                                      fontFamily: "outfit",
+                                      fontSize: 25,
+                                      color: Color(0xff000000),
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  'Followers',
+                                  style: TextStyle(
+                                      fontFamily: "outfit",
+                                      fontSize: 16,
+                                      color: Color(0xff444444),
+                                      fontWeight: FontWeight.w500),
+                                )
+                              ],
                             ),
-                            Text(
-                              '${NewProfileData?.object?.followersCount}',
-                              style: TextStyle(
-                                  fontFamily: "outfit",
-                                  fontSize: 25,
-                                  color: Color(0xff000000),
-                                  fontWeight: FontWeight.bold),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20, bottom: 20),
+                            child: VerticalDivider(
+                              thickness: 1.5,
+                              color: Color(0xffC2C2C2),
                             ),
-                            Text(
-                              'Followers',
-                              style: TextStyle(
-                                  fontFamily: "outfit",
-                                  fontSize: 16,
-                                  color: Color(0xff444444),
-                                  fontWeight: FontWeight.w500),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20, bottom: 20),
-                        child: VerticalDivider(
-                          thickness: 1.5,
-                          color: Color(0xffC2C2C2),
-                        ),
-                      ),
-                      Container(
-                        // height: 55,
-                        width: 90,
-                        // color: Colors.amber,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 11,
+                          ),
+                          Container(
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 11,
+                                ),
+                                Text(
+                                  '${NewProfileData?.object?.followingCount}',
+                                  style: TextStyle(
+                                      fontFamily: "outfit",
+                                      fontSize: 25,
+                                      color: Color(0xff000000),
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  'Following',
+                                  style: TextStyle(
+                                      fontFamily: "outfit",
+                                      fontSize: 16,
+                                      color: Color(0xff444444),
+                                      fontWeight: FontWeight.w500),
+                                )
+                              ],
                             ),
-                            Text(
-                              '${NewProfileData?.object?.followingCount}',
-                              style: TextStyle(
-                                  fontFamily: "outfit",
-                                  fontSize: 25,
-                                  color: Color(0xff000000),
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              'Following',
-                              style: TextStyle(
-                                  fontFamily: "outfit",
-                                  fontSize: 16,
-                                  color: Color(0xff444444),
-                                  fontWeight: FontWeight.w500),
-                            )
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -1241,17 +1321,21 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           child: Padding(
                                             padding: const EdgeInsets.only(
                                                 bottom: 10),
-                                            child: ConstrainedBox(constraints: BoxConstraints(
-                                                    maxHeight: 300,maxWidth: _width),
-                                              child: Container( 
+                                            child: ConstrainedBox(
+                                              constraints: BoxConstraints(
+                                                  maxHeight: 300,
+                                                  maxWidth: _width),
+                                              child: Container(
                                                 decoration: ShapeDecoration(
                                                   // color: Colors.green,
                                                   shape: RoundedRectangleBorder(
                                                     side: BorderSide(
                                                         width: 1,
-                                                        color: Color(0xFFD3D3D3)),
+                                                        color:
+                                                            Color(0xFFD3D3D3)),
                                                     borderRadius:
-                                                        BorderRadius.circular(10),
+                                                        BorderRadius.circular(
+                                                            10),
                                                   ),
                                                 ),
                                                 child: Column(
@@ -1301,14 +1385,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 padding:
                                                                     const EdgeInsets
                                                                             .only(
-                                                                        left: 10),
+                                                                        left:
+                                                                            10),
                                                                 child: Text(
                                                                   '${GetUserPostCommetData?.object?[index].postUserName}',
                                                                   style:
                                                                       TextStyle(
                                                                     color: Colors
                                                                         .black,
-                                                                    fontSize: 16,
+                                                                    fontSize:
+                                                                        16,
                                                                     fontFamily:
                                                                         'outfit',
                                                                     fontWeight:
@@ -1318,14 +1404,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 ),
                                                               ),
                                                               Expanded(
-                                                                child: Container(
+                                                                child:
+                                                                    Container(
                                                                   margin: EdgeInsets
                                                                       .only(
                                                                           left:
                                                                               10),
-                                                                  width: _width -
-                                                                      100,
-                                            
+                                                                  width:
+                                                                      _width -
+                                                                          100,
+
                                                                   // color: Colors.red,
                                                                   child: Column(
                                                                     crossAxisAlignment:
@@ -1336,8 +1424,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         '${GetUserPostCommetData?.object?[index].description}',
                                                                         style:
                                                                             TextStyle(
-                                                                          color: Colors
-                                                                              .black,
+                                                                          color:
+                                                                              Colors.black,
                                                                           fontSize:
                                                                               14,
                                                                           fontFamily:
@@ -1350,8 +1438,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         '1w',
                                                                         style:
                                                                             TextStyle(
-                                                                          color: Color(
-                                                                              0xFF8F8F8F),
+                                                                          color:
+                                                                              Color(0xFF8F8F8F),
                                                                           fontSize:
                                                                               12,
                                                                           fontFamily:
@@ -1746,7 +1834,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
           trailing: GestureDetector(
             onTap: () {
-                 Navigator.push(
+              Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => EditProfileScreen(
@@ -1973,13 +2061,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               Padding(
                                   padding: EdgeInsets.only(left: 20),
                                   child: Text(
-                                    _startTime != null
-                                        ? _startTime!
-                                            .format(context)
-                                            .toString()
-                                            .split(' ')
-                                            .first
-                                        : '00:01',
+                                    start.toString(),
                                     style: TextStyle(
                                         fontSize: 16, color: Color(0xff989898)),
                                   )),
@@ -1990,14 +2072,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 thickness: 2,
                                 color: Color(0xff989898),
                               ),
-                              Text(
-                                  _startTime != null
-                                      ? _startTime!
-                                          .format(context)
-                                          .toString()
-                                          .split(' ')
-                                          .last
-                                      : 'AM',
+                              Text(startAm.toString(),
                                   style: TextStyle(
                                       fontSize: 16, color: Color(0xff989898))),
                             ],
@@ -2035,13 +2110,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               Padding(
                                   padding: EdgeInsets.only(left: 20),
                                   child: Text(
-                                    _endTime != null
-                                        ? _endTime!
-                                            .format(context)
-                                            .toString()
-                                            .split(' ')
-                                            .first
-                                        : '00:00',
+                                    end.toString(),
                                     style: TextStyle(
                                         fontSize: 16, color: Color(0xff989898)),
                                   )),
@@ -2052,14 +2121,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 thickness: 2,
                                 color: Color(0xff989898),
                               ),
-                              Text(
-                                  _endTime != null
-                                      ? _endTime!
-                                          .format(context)
-                                          .toString()
-                                          .split(' ')
-                                          .last
-                                      : 'PM',
+                              Text(endAm.toString(),
                                   style: TextStyle(
                                       fontSize: 16, color: Color(0xff989898))),
                             ],
@@ -2195,12 +2257,12 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
           trailing: GestureDetector(
             onTap: () {
-              Navigator.push(
+             /*  Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => EditProfileScreen(
                             newProfileData: NewProfileData,
-                          )));
+                          ))); */
             },
             child: Icon(
               Icons.edit,
@@ -2459,6 +2521,18 @@ class _ProfileScreenState extends State<ProfileScreen>
       initialTime: initialTime,
     );
 
+    String? time = pickedTime?.format(context);
+    if (time?.isNotEmpty ?? false) {
+      start = time?.split(' ')[0];
+      startAm = time?.split(' ')[1];
+    } else {
+      workignStart =
+          NewProfileData?.object?.workingHours.toString().split(" to ").first;
+
+      start = workignStart?.split(' ')[0];
+      startAm = workignStart?.split(' ')[1];
+    }
+
     if (pickedTime != null && pickedTime != _startTime) {
       setState(() {
         _startTime = pickedTime;
@@ -2473,6 +2547,17 @@ class _ProfileScreenState extends State<ProfileScreen>
       context: context,
       initialTime: initialTime,
     );
+
+    String? time = pickedTime?.format(context);
+    if (time?.isNotEmpty ?? false) {
+      end = time?.split(' ')[0];
+      endAm = time?.split(' ')[1];
+    } else {
+      workignend =
+          NewProfileData?.object?.workingHours.toString().split(" to ").last;
+      end = workignend?.split(' ')[0];
+      endAm = workignend?.split(' ')[1];
+    }
 
     if (pickedTime != null && pickedTime != _endTime) {
       setState(() {
