@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -2731,7 +2732,21 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                   maxLength: 300,
                                   counterText: "",
                                   cursorColor: ColorConstant.primary_color,
+                                 
+                                  
                                   decoration: InputDecoration(
+
+                                    
+                                     
+                                    
+                                      border: InputBorder.none,
+                                      hintText: "Add Comment",
+                                      icon: Icon(
+                                        Icons.emoji_emotions_outlined,
+                                        color: Colors.grey,
+                                      )),
+
+                                  
                                     border: InputBorder.none,
                                     hintText: "Add Comment",
                                     icon: Container(
@@ -2745,6 +2760,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                       ),
                                     ),
                                   ),
+
+                                
                                 ),
                               ),
                             ),
