@@ -2406,7 +2406,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     }
   }
 
-  void _settingModalBottomSheet1(context, index, _width) {
+ void _settingModalBottomSheet1(context, index, _width) {
     void _goToElement() {
       scroll.animateTo((1000 * 20),
           duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
@@ -2730,23 +2730,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                 child: TextField(
                                   controller: addcomment,
                                   maxLength: 300,
-                                  counterText: "",
+                                  // counterText: "",
                                   cursorColor: ColorConstant.primary_color,
-                                 
-                                  
                                   decoration: InputDecoration(
-
-                                    
-                                     
-                                    
-                                      border: InputBorder.none,
-                                      hintText: "Add Comment",
-                                      icon: Icon(
-                                        Icons.emoji_emotions_outlined,
-                                        color: Colors.grey,
-                                      )),
-
-                                  
                                     border: InputBorder.none,
                                     hintText: "Add Comment",
                                     icon: Container(
@@ -2760,8 +2746,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                       ),
                                     ),
                                   ),
-
-                                
                                 ),
                               ),
                             ),
