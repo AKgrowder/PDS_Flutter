@@ -8,7 +8,7 @@ import 'register_state.dart';
 class RegisterCubit extends Cubit<RegisterState> {
   RegisterCubit() : super(RegisterInitialState()) {}
   Future<void> registerApi(
-      Map<String, String> params, BuildContext context) async {
+      Map<String, dynamic> params, BuildContext context) async {
     dynamic registerClassData;
     try {
       emit(RegisterLoadingState());
