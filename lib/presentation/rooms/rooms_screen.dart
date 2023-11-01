@@ -530,7 +530,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                 index]
                                                             .uid
                                                             .toString(),
-                                                              );
+                                                           );
                                                         },
                                                       ));
                                                     },

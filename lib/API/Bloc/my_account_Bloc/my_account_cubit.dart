@@ -83,7 +83,6 @@ class MyAccountCubit extends Cubit<MyAccountState> {
   }
 
   Future<void> addExpertProfile(params, BuildContext context) async {
-    print('this method working');
     dynamic fetchExprtise;
     try {
       emit(MyAccountLoadingState());

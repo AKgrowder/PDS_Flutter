@@ -1,7 +1,3 @@
-import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
-import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
-import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
-
 import 'dart:io';
 import 'dart:math';
 
@@ -10,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_state.dart';
+import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
+import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
+import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
@@ -2432,7 +2431,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 topLeft: Radius.circular(5),
                                 bottomLeft: Radius.circular(5))),
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 15, left: 20),
+                          padding: const EdgeInsets.only(top: 15, left: 10),
                           child: Text(
                             '${dopcument.toString()}',
                             overflow: TextOverflow.ellipsis,
