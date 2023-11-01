@@ -71,7 +71,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   List<Expertiseclass> expertiseData = [];
   Expertiseclass? selectedExpertise;
   List<String> industryUUID = [];
-
+  ImagePicker picker = ImagePicker();
   List<String> industryUUIDinApi = [];
   dataSetUpMethod() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
