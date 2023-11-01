@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_instagram_storyboard/flutter_instagram_storyboard.dart';
 import 'package:hashtagable/hashtagable.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_state.dart';
+import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
 import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
 import 'package:pds/API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
@@ -23,6 +23,9 @@ import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/storyModel/stroyModel.dart';
 import 'package:pds/API/Repo/repository.dart';
+import 'package:pds/StoryFile/src/story_button.dart';
+import 'package:pds/StoryFile/src/story_page_transform.dart';
+import 'package:pds/StoryFile/src/story_route.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_utils.dart';
@@ -34,6 +37,7 @@ import 'package:pds/presentation/Create_Post_Screen/Ceratepost_Screen.dart';
 import 'package:pds/presentation/create_foram/create_foram_screen.dart';
 import 'package:pds/presentation/create_story/create_story.dart';
 import 'package:pds/presentation/create_story/full_story_page.dart';
+import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/pagenation.dart';
@@ -133,7 +137,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   }
 
   NewApi() async {
-    print("1111111111111${User_ID}");
+    print("1111111111111 :- ${User_ID}");
     // /user/api/get_all_post
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .GetUserAllPostAPI(context, '1', showAlert: true);
@@ -321,6 +325,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                             ],
                           ),
                         ),
+                        images: List.generate(element.storyData?.length ?? 0,
+                            (index) => element.storyData![index].storyData!),
                         borderDecoration: BoxDecoration(
                           borderRadius: const BorderRadius.all(
                             Radius.circular(60.0),
@@ -397,6 +403,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                         ],
                       ),
                     ),
+                    images: List.generate(element.storyData?.length ?? 0,
+                        (index) => element.storyData![index].storyData!),
                     borderDecoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(
                         Radius.circular(60.0),
@@ -534,11 +542,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                               height: 50,
                                               width: 50,
                                               fit: BoxFit.fill,
+                                              radius: BorderRadius.circular(25),
                                             )
                                           : CustomImageView(
                                               imagePath: ImageConstant.tomcruse,
                                               height: 50,
                                               width: 50,
+                                              fit: BoxFit.fill,
+                                              radius: BorderRadius.circular(25),
                                             )),
                             ],
                           ),
@@ -641,6 +652,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                               ],
                                             ),
                                           ),
+                                          images: [
+                                            imageDataPost!.object.toString()
+                                          ],
                                           borderDecoration: BoxDecoration(
                                             borderRadius:
                                                 const BorderRadius.all(
@@ -804,7 +818,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 parmes);
                                                       }
                                                     }
-
+                                                    buttonDatas[0].images.add(
+                                                        imageDataPost!.object!);
                                                     if (imageDataPost?.object !=
                                                         null) {
                                                       buttonDatas[0]
@@ -1547,14 +1562,36 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           ),
                                                         ),
                                                         Spacer(),
-                                                        SizedBox(
-                                                            height: 20,
-                                                            child: Icon(
-                                                              Icons
-                                                                  .arrow_forward_rounded,
-                                                              color:
-                                                                  Colors.black,
-                                                            )),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                      builder: (context) => MultiBlocProvider(
+                                                                          providers: [
+                                                                            BlocProvider<SherInviteCubit>(
+                                                                              create: (_) => SherInviteCubit(),
+                                                                            ),
+                                                                          ],
+                                                                          child:
+                                                                              ExpertsScreen(RoomUUID: "")),
+                                                                      // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
+                                                                    ))
+                                                                .then((value) =>
+                                                                    setState(
+                                                                        () {
+                                                                      // refresh = true;
+                                                                    }));
+                                                          },
+                                                          child: SizedBox(
+                                                              height: 20,
+                                                              child: Icon(
+                                                                Icons
+                                                                    .arrow_forward_rounded,
+                                                                color: Colors
+                                                                    .black,
+                                                              )),
+                                                        ),
                                                         SizedBox(
                                                           width: 10,
                                                         ),
@@ -1707,38 +1744,51 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                    Align(
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .bottomCenter,
+                                                                    GestureDetector(
+                                                                      onTap:
+                                                                          () {
+                                                                        Navigator
+                                                                            .push(
+                                                                                context,
+                                                                                MaterialPageRoute(
+                                                                                  builder: (context) => MultiBlocProvider(providers: [
+                                                                                    BlocProvider<SherInviteCubit>(
+                                                                                      create: (_) => SherInviteCubit(),
+                                                                                    ),
+                                                                                  ], child: ExpertsScreen(RoomUUID: "")),
+                                                                                  // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
+                                                                                )).then((value) =>
+                                                                            setState(() {
+                                                                              // refresh = true;
+                                                                            }));
+                                                                      },
                                                                       child:
-                                                                          Container(
-                                                                        height:
-                                                                            25,
-                                                                        width:
-                                                                            130,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          borderRadius:
-                                                                              BorderRadius.only(
-                                                                            bottomLeft:
-                                                                                Radius.circular(8),
-                                                                            bottomRight:
-                                                                                Radius.circular(8),
-                                                                          ),
-                                                                          color:
-                                                                              Color(0xffED1C25),
-                                                                        ),
+                                                                          Align(
+                                                                        alignment:
+                                                                            Alignment.bottomCenter,
                                                                         child:
-                                                                            Center(
+                                                                            Container(
+                                                                          height:
+                                                                              25,
+                                                                          width:
+                                                                              130,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            borderRadius:
+                                                                                BorderRadius.only(
+                                                                              bottomLeft: Radius.circular(8),
+                                                                              bottomRight: Radius.circular(8),
+                                                                            ),
+                                                                            color:
+                                                                                Color(0xffED1C25),
+                                                                          ),
                                                                           child:
-                                                                              Text(
-                                                                            'Invite',
-                                                                            style: TextStyle(
-                                                                                fontFamily: "outfit",
-                                                                                fontSize: 13,
-                                                                                color: Colors.white,
-                                                                                fontWeight: FontWeight.bold),
+                                                                              Center(
+                                                                            child:
+                                                                                Text(
+                                                                              'Invite',
+                                                                              style: TextStyle(fontFamily: "outfit", fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold),
+                                                                            ),
                                                                           ),
                                                                         ),
                                                                       ),
@@ -1939,21 +1989,29 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             ),
                                                             Row(
                                                               children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .only(
-                                                                      left: 7,
-                                                                      top: 4),
-                                                                  child: index1 !=
-                                                                          0
-                                                                      ? Icon(Icons
-                                                                          .favorite_border)
-                                                                      : Icon(
-                                                                          Icons
-                                                                              .favorite,
-                                                                          color:
-                                                                              Colors.red,
-                                                                        ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    print("Click On Like Button");
+                                                                  },
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        left: 7,
+                                                                        top: 4),
+                                                                    child: getallBlogModel
+                                                                                ?.object?[
+                                                                                    index1]
+                                                                                .isLiked ==
+                                                                            false
+                                                                        ? Icon(Icons
+                                                                            .favorite_border)
+                                                                        : Icon(
+                                                                            Icons
+                                                                                .favorite,
+                                                                            color:
+                                                                                Colors.red,
+                                                                          ),
+                                                                  ),
                                                                 ),
                                                                 SizedBox(
                                                                   width: 15,
@@ -1971,16 +2029,22 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   ),
                                                                 ),
                                                                 Spacer(),
-                                                                SizedBox(
-                                                                  height: 35,
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
-                                                                        top: 6),
-                                                                    child: Image.asset(
-                                                                        ImageConstant
-                                                                            .blogunsaveimage),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    print("Save Blogs");
+                                                                  },
+                                                                  child: SizedBox(
+                                                                    height: 35,
+                                                                    child: Padding(
+                                                                        padding: const EdgeInsets.only(top: 6),
+                                                                        child: Image.asset(
+                                                                          getallBlogModel?.object?[index1].isSaved ==
+                                                                                  false
+                                                                              ? ImageConstant.savePin
+                                                                              : ImageConstant.Savefill,
+                                                                          width:
+                                                                              12.5,
+                                                                        )),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
@@ -2288,7 +2352,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     );
   }
 
-  Deletecommentdilog(String commentuuid, int index) {
+  Deletecommentdilog(String commentuuid, int index1) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -2306,8 +2370,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      BlocProvider.of<AddcommentCubit>(context)
-                          .Deletecomment("${commentuuid}", context);
+                      print(
+                          "index print${addCommentModeldata?.object?[index1].commentUid}");
+                      print(
+                          "index print1${addCommentModeldata?.object?[index1].comment}");
+
+                      BlocProvider.of<AddcommentCubit>(context).Deletecomment(
+                          "${addCommentModeldata?.object?[index1].commentUid}",
+                          context);
+                      addCommentModeldata?.object?.removeAt(index1);
                       Navigator.pop(context);
                     },
                     child: Container(
@@ -2406,7 +2477,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     }
   }
 
- void _settingModalBottomSheet1(context, index, _width) {
+  void _settingModalBottomSheet1(context, index, _width) {
     void _goToElement() {
       scroll.animateTo((1000 * 20),
           duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
@@ -2467,7 +2538,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                       "Comment deleted successfully") {
                     print(addCommentModeldata?.object?[index].commentUid);
                     // addCommentModeldata = addCommentModeldata?.object?.removeAt(index);
-                    addCommentModeldata?.object?.removeAt(index);
 
                     // BlocProvider.of<AddcommentCubit>(context).Addcomment(
                     //     context,
@@ -2621,7 +2691,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Container(
-                                                    width: 250,
+                                                    width: 300,
                                                     // color: Colors.amber,
                                                     child: Row(
                                                       children: [
@@ -2660,15 +2730,20 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     "",
                                                                 index);
                                                           },
-                                                          child: User_ID ==
-                                                                  addCommentModeldata
+                                                          child: addCommentModeldata
                                                                       ?.object?[
                                                                           index]
-                                                                      .commentUid
-                                                              ? SizedBox()
-                                                              : Icon(Icons
-                                                                  .delete_outline_rounded),
-                                                        )
+                                                                      .commentByLoggedInUser ==
+                                                                  true
+                                                              ? Icon(
+                                                                  Icons
+                                                                      .delete_outline_rounded,
+                                                                  size: 20,
+                                                                  color: Colors
+                                                                      .grey,
+                                                                )
+                                                              : SizedBox(),
+                                                        ),
                                                       ],
                                                     ),
                                                   ),
@@ -2730,9 +2805,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                 child: TextField(
                                   controller: addcomment,
                                   maxLength: 300,
-                                  // counterText: "",
+                                  //
                                   cursorColor: ColorConstant.primary_color,
                                   decoration: InputDecoration(
+                                    counterText: "",
                                     border: InputBorder.none,
                                     hintText: "Add Comment",
                                     icon: Container(

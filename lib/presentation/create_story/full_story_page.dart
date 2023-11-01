@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_instagram_storyboard/flutter_instagram_storyboard.dart';
+import 'package:pds/StoryFile/src/story_page_scaffold.dart';
 
 class FullStoryPage extends StatefulWidget {
   final String text;

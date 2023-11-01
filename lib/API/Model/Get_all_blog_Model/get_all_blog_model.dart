@@ -35,6 +35,8 @@ class Object {
   String? description;
   Null? modifiedAt;
   String? createdAt;
+  bool? isSaved;
+  bool? isLiked;
 
   Object(
       {this.uid,
@@ -43,7 +45,9 @@ class Object {
       this.image,
       this.description,
       this.modifiedAt,
-      this.createdAt});
+      this.createdAt,
+      this.isSaved,
+      this.isLiked});
 
   Object.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
@@ -53,6 +57,8 @@ class Object {
     description = json['description'];
     modifiedAt = json['modifiedAt'];
     createdAt = json['createdAt'];
+    isSaved = json['isSaved'];
+    isLiked = json['isLiked'];
   }
 
   Map<String, dynamic> toJson() {
@@ -64,6 +70,8 @@ class Object {
     data['description'] = this.description;
     data['modifiedAt'] = this.modifiedAt;
     data['createdAt'] = this.createdAt;
+    data['isSaved'] = this.isSaved;
+    data['isLiked'] = this.isLiked;
     return data;
   }
 }
