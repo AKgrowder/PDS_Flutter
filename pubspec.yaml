@@ -37,7 +37,7 @@ dependencies:
   carousel_slider: ^4.2.1
   dots_indicator: ^2.1.0
   getwidget:
-  flutter_instagram_storyboard: ^0.0.8
+  # flutter_instagram_storyboard: ^0.0.8
   flutter_slidable: ^3.0.0 
   transparent_image: ^2.0.1
   flutter_markdown:
