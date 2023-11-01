@@ -43,7 +43,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController expertIn = TextEditingController();
   TextEditingController fees = TextEditingController();
   TextEditingController compayName = TextEditingController();
-
   double finalFileSize = 12.0;
   TextEditingController uplopdfile = TextEditingController();
   List<MultiSelectItem<IndustryType>>? _industryTypes = [];
@@ -117,7 +116,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           .last;
       end = workignend?.split(' ')[0];
       endAm = workignend?.split(' ')[1];
-
     }
     if (widget.newProfileData?.object?.fees != null) {
       fees.text = widget.newProfileData?.object?.fees.toString() ?? '';
@@ -126,7 +124,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       dopcument = widget.newProfileData?.object?.userDocument;
     } else {
       dopcument = 'Upload Image';
-
     }
   }
 
@@ -632,7 +629,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else if (nameController.text.trim().isEmpty) {
       SnackBar snackBar = SnackBar(
-        content: Text('Name can\'t be just blank spaces'),
+        content: Text('ame can\'t be just blank spaces'),
         backgroundColor: ColorConstant.primary_color,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -829,8 +826,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print("parmas-$params");
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
-      }
-      else if (chooseDocumentuploded?.object.toString() != null) {
+      } else if (chooseDocumentuploded?.object.toString() != null) {
         print("userProfilePic condiosn working");
         var params = {
           "document":
@@ -847,8 +843,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
-      }
-     else if (chooseDocumentuploded1?.object.toString() != null) {
+      } else if (chooseDocumentuploded1?.object.toString() != null) {
         print("userBackgroundPic condiosn working");
         var params = {
           "document":
@@ -1611,7 +1606,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
     }
 
-    print("image selcted Path set-->$_image");
+    print("image selcted Path set1-->$_image");
   }
 
   getUploadeProfile(

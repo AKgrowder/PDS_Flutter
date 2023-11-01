@@ -1,29 +1,25 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_cubit.dart';
-import 'package:pds/API/Bloc/auth/login_Block.dart';
 import 'package:pds/API/Bloc/auth/otp_block.dart';
 import 'package:pds/API/Bloc/auth/otp_state.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
-import 'package:pds/presentation/%20new/newbottembar.dart'; 
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/change_password_screen/change_password_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/widgets/app_bar/appbar_image.dart';
 import 'package:pds/widgets/app_bar/custom_app_bar.dart';
 import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-
-import '../../API/Bloc/device_info_Bloc/device_info_bloc.dart';
 import '../../API/Model/authModel/loginModel.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../Login_Screen/Login_Screen.dart';
 
-// ignore_for_file: must_be_immutable
 class OtpVerificationScreen extends StatefulWidget {
   String? phonNumber;
   String? flowCheck;
@@ -160,7 +156,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 }
 
                 if (state is resendOtpLoadedState) {
-                  
                   SnackBar snackBar = SnackBar(
                     content: Text(state.Forgetpassword.message.toString()),
                     backgroundColor: ColorConstant.primary_color,
@@ -210,7 +205,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         widget.loginModelData?.object?.jwt.toString() ?? "",
                         widget.loginModelData?.object?.module.toString() ?? ""
                         // state.loginModel.object!.verified.toString(),
-);
+                        );
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return NewBottomBar(buttomIndex: 0);
@@ -359,16 +354,15 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                   tm
                                       ? GestureDetector(
                                           onTap: () {
-                                         
                                             setState(() {
-                                                 OTPController.clear();
+                                              OTPController.clear();
                                               tm = false;
                                               _startTimer();
-                                               BlocProvider.of<OtpCubit>(
-                                            context)
-                                        .resendOtpApi(
-                                           widget.phonNumber.toString(),
-                                            context);
+                                              BlocProvider.of<OtpCubit>(context)
+                                                  .resendOtpApi(
+                                                      widget.phonNumber
+                                                          .toString(),
+                                                      context);
                                             });
                                           },
                                           child: Text("Resend",

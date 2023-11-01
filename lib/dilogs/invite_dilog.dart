@@ -69,6 +69,9 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
             backgroundColor: ColorConstant.primary_color,
           );
           SubmitOneTime = false;
+           Future.delayed(const Duration(seconds: 1), () {
+            Navigator.pop(context);
+          });
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
         if (state is SherInviteLoadingState) {
@@ -89,7 +92,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          Future.delayed(const Duration(milliseconds: 300), () {
+          Future.delayed(const Duration(seconds: 1), () {
             Navigator.pop(context);
           });
         }

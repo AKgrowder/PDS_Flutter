@@ -18,7 +18,7 @@ import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/%20new/newbottembar.dart'; 
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/Login_Screen/UserReActivate_screen.dart';
 import 'package:pds/presentation/otp_verification_screen/otp_verification_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
@@ -168,9 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     print(
-                        'check Status--${state.loginModel.object!.verified.toString()}');
-
-                    // Navigator.push(context,MaterialPageRoute(builder: (context)=> HomeScreen()));
+                        'check Status--${state.loginModel.message}');
                   }
                 }
                 if (state is GetUserLoadedState) {
@@ -194,6 +192,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     }));
                   } else {
+                        SnackBar snackBar = SnackBar(
+                      content: Text('Otp send successfully'),
+                      backgroundColor: ColorConstant.primary_color,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return OtpVerificationScreen(
@@ -601,7 +604,7 @@ class _LoginScreenState extends State<LoginScreen> {
     prefs.setString(
         PreferencesKey.ProfileName, "${getUserDataModelData?.object?.name}");
     prefs.setString(
-        PreferencesKey.ProfileEmail,"${getUserDataModelData?.object?.email}");
+        PreferencesKey.ProfileEmail, "${getUserDataModelData?.object?.email}");
     prefs.setString(PreferencesKey.ProfileModule,
         "${getUserDataModelData?.object?.module}");
     prefs.setString(PreferencesKey.ProfileMobileNo,
