@@ -242,6 +242,9 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                               ? Stack(
                                                   children: [
                                                     CustomImageView(
+                                                      height: _height / 4.8,
+                                                      width: _width,
+                                                      fit: BoxFit.fill,
                                                       imagePath: ImageConstant
                                                           .brandlogo,
                                                     ),
@@ -463,9 +466,9 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                                         MaterialPageRoute(
                                                             builder: (context) {
                                                         return RoomSelection(
-                                                              ExperID:
-                                                          "${FetchAllExpertsData?.object?[index].userEmail}",
-                                                            );
+                                                          ExperID:
+                                                              "${FetchAllExpertsData?.object?[index].userEmail}",
+                                                        );
                                                       }))
                                                     : Navigator.of(context)
                                                         .push(MaterialPageRoute(

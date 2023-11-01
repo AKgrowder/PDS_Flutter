@@ -204,7 +204,7 @@ class Repository {
     }
   }
 
-  registerApi(Map<String, String> params, BuildContext context) async {
+  registerApi(Map<String, dynamic> params, BuildContext context) async {
     final response =
         await apiServices.postApiCall(Config.registerApi, params, context);
     var jsonString = json.decode(response.body);

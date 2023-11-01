@@ -140,12 +140,11 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                               },
                               onChanged: (value) {
                                 if (value.contains('#')) {
-                                  
-                                  String hashTageValue = value.replaceAll("#", "%23");  
-                                    BlocProvider.of<HashTagCubit>(context)
-                                        .getalluser(
-                                            1, 5, hashTageValue.trim(), context);
-
+                                  String hashTageValue =
+                                      value.replaceAll("#", "%23");
+                                  BlocProvider.of<HashTagCubit>(context)
+                                      .getalluser(
+                                          1, 5, hashTageValue.trim(), context);
                                 }
                                 if (value.isNotEmpty) {
                                   print("fgdfhdfghdfgh-${value.trim()}");
@@ -444,22 +443,14 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                     color: Colors.grey,
                   ),
                   SizedBox(
-                    height: 70,
                     width: double.infinity,
                     child: Padding(
-                      padding: const EdgeInsets.only(
+                      padding: EdgeInsets.only(
                           top: 5, left: 10, right: 10, bottom: 5),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "Trending in India",
-                            style: TextStyle(
-                              color: Color(0xff808080),
-                              fontSize: 12,
-                            ),
-                          ),
                           HashTagText(
                             text: "${hashtagModel?.object?[index].hashtagName}",
                             decoratedStyle: TextStyle(
@@ -487,11 +478,14 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                   ));
                             },
                           ),
-                          Text(
-                            "${hashtagModel?.object?[index].postCount} posts",
-                            style: TextStyle(
-                              color: Color(0xff808080),
-                              fontSize: 12,
+                          Padding(
+                            padding: EdgeInsets.only(top: 5),
+                            child: Text(
+                              "${hashtagModel?.object?[index].postCount} posts",
+                              style: TextStyle(
+                                color: Color(0xff808080),
+                                fontSize: 12,
+                              ),
                             ),
                           )
                         ],

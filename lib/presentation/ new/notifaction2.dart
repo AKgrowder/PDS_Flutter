@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:pds/API/Bloc/Fatch_all_members/fatch_all_members_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_state.dart';
 import 'package:pds/API/Model/InvitationModel/Invitation_Model.dart';
@@ -11,6 +10,8 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/room_members/room_members_screen.dart';
 import 'package:pds/widgets/custom_image_view.dart';
+
+import '../rooms/room_details_screen.dart';
 
 class NewNotifactionScreen extends StatefulWidget {
   const NewNotifactionScreen({Key? key}) : super(key: key);
@@ -415,6 +416,8 @@ class InviationClass extends StatefulWidget {
 class _InviationClassState extends State<InviationClass> {
   @override
   InvitationModel? InvitationRoomData;
+ 
+  String? User_Mood;
   @override
   void initState() {
     BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
@@ -538,6 +541,27 @@ class _InviationClassState extends State<InviationClass> {
                                                   fontFamily: "outfit",
                                                   fontSize: 14),
                                             ),
+                                           
+                                              
+                                                
+                                               GestureDetector(
+                                                    onTap: () {
+                                                      print('EXPERT');
+                                                      
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                        builder: (context) {
+                                                          return RoomDetailScreen(
+                                                                uuid: InvitationRoomData?.object?[index].roomUid
+                                                            .toString(),
+                                                              );
+                                                        },
+                                                      ));
+                                                    },
+                                                    child: Icon(Icons
+                                                        .remove_red_eye_outlined),
+                                                  ),
+                                              
                                           ],
                                         ),
                                       ),

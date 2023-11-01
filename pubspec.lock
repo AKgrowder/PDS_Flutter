@@ -430,14 +430,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
-  flutter_instagram_storyboard:
-    dependency: "direct main"
-    description:
-      name: flutter_instagram_storyboard
-      sha256: "443eed7a5c0092e234ecf652a01ba80183e28f471bb38051e3858f545fd3c863"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.8"
   flutter_keyboard_visibility:
     dependency: "direct main"
     description:
