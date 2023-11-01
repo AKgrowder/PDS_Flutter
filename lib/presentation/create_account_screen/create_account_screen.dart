@@ -55,8 +55,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   XFile? pickedFile;
   double documentuploadsize = 0;
   double value2 = 0.0;
-
-
+  bool isChecked = false;
   Future<void> _checkPermissions() async {
     final cameraStatus = await Permission.camera.status;
     if (this.mounted) {
@@ -151,11 +150,16 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         );
                       }
                       if (state is RegisterLoadedState) {
-                        SnackBar snackBar = SnackBar(
+                        /*           SnackBar snackBar = SnackBar(
                           content: Text(state.registerClass.message.toString()),
                           backgroundColor: ColorConstant.primary_color,
                         );
-
+ 
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar); */
+                        SnackBar snackBar = SnackBar(
+                          content: Text('Otp send successfully'),
+                          backgroundColor: ColorConstant.primary_color,
+                        );
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         Navigator.push(
                           context,
@@ -171,7 +175,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             imageUrl:
                                 state.chooseDocumentuploded.object.toString());
                         chooseDocument = state.chooseDocumentuploded;
-
                         // SnackBar snackBar = SnackBar(
                         //   content: Text(
                         //       state.chooseDocumentuploded.message.toString()),
@@ -734,25 +737,30 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              if (SubmitOneTime == false) {
-                                if (_formKey.currentState!.validate()) {
-                                  var datapPassing = {
-                                    "name": nameController.text,
-                                    "userName": enteruseridController.text,
-                                    "email": emailAndMobileController.text,
-                                    "mobileNo": contectnumberController.text,
-                                    "password": passwordController.text,
-                                    "module": "EMPLOYEE",
-                                  };
-                                  if (chooseDocument?.object != null) {
-                                    datapPassing['profilePic'] =
-                                        '${chooseDocument?.object.toString()}';
+                              print("dfghgdfdfhghfgbh-$isChecked");
+                             
+                                if (SubmitOneTime == false) {
+                                  if (_formKey.currentState!.validate()) {
+                                     if (isChecked == true) { var datapPassing = {
+                                      "name": nameController.text,
+                                      "userName": enteruseridController.text,
+                                      "email": emailAndMobileController.text,
+                                      "mobileNo": contectnumberController.text,
+                                      "password": passwordController.text,
+                                      "module": "EMPLOYEE",
+                                      "checkTermsAndConditions": isChecked,
+                                    };
+                                    if (chooseDocument?.object != null) {
+                                      datapPassing['profilePic'] =
+                                          '${chooseDocument?.object.toString()}';
+                                    }
+                                    print('dataPassing-$datapPassing');
+                                    SubmitOneTime = true;
+                                    BlocProvider.of<RegisterCubit>(context)
+                                        .registerApi(datapPassing, context);}
+                                   
                                   }
-                                  print('dataPassing-$datapPassing');
-                                  SubmitOneTime = true;
-                                  BlocProvider.of<RegisterCubit>(context)
-                                      .registerApi(datapPassing, context);
-                                }
+                                
                               }
                             },
                             child: Container(
@@ -816,6 +824,24 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              SizedBox(
+                                height: 5,
+                                child: Checkbox(
+                                  visualDensity: VisualDensity(
+                                    horizontal:
+                                        -2.0, // Adjust this value to change the size
+                                    vertical:
+                                        -2.0, // Adjust this value to change the size
+                                  ),
+                                  checkColor: Color(0xffED1C25),
+                                  value: isChecked,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      isChecked = value!;
+                                    });
+                                  },
+                                ),
+                              ),
                               GestureDetector(
                                 onTap: () {
                                   Navigator.push(
@@ -917,8 +943,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       }
     } catch (e) {}
   }
-
-
 
   bool _isGifOrSvg(String imagePath) {
     // Check if the image file has a .gif or .svg extension
