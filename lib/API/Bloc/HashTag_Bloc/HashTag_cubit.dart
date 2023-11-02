@@ -5,6 +5,7 @@ import 'package:pds/API/Repo/repository.dart';
 
 class HashTagCubit extends Cubit<HashTagState> {
   HashTagCubit() : super(HashTagInitialState()) {}
+  dynamic getalluserlistModel;
   Future<void> HashTagForYouAPI(BuildContext context) async {
     dynamic HashTagForYouModel;
     try {
@@ -103,22 +104,46 @@ class HashTagCubit extends Cubit<HashTagState> {
 
   Future<void> getalluser(
     int? pageNumber,
-    int numberOfRecords,
     String searchName,
     BuildContext context, {
     String? filterModule,
   }) async {
-    dynamic getalluserlistModel;
     try {
       emit(HashTagLoadingState());
       getalluserlistModel = await Repository().getalluser(
-          pageNumber, numberOfRecords, searchName, context,
+          pageNumber, searchName, context,
           filterModule: filterModule);
       if (getalluserlistModel.success == true) {
         emit(GetAllUserLoadedState(getalluserlistModel));
       }
     } catch (e) {
-      // print('errorstate-$e');
+      print('errorstateshwowData-$e');
+      emit(HashTagErrorState(e.toString()));
+    }
+  }
+
+  Future<void> getAllPagaationApi(
+    int? pageNumber,
+    String searchName,
+    BuildContext context, {
+    String? filterModule,
+  }) async {
+    dynamic getalluserlistModelDataSetup;
+    try {
+      emit(HashTagLoadingState());
+      getalluserlistModelDataSetup = await Repository().getalluser(
+          pageNumber, searchName, context,
+          filterModule: filterModule);
+      if (getalluserlistModelDataSetup.success == true) {
+        getalluserlistModel.object.content
+            .addAll(getalluserlistModelDataSetup.object.content);
+        getalluserlistModel.object.pageable.pageNumber = getalluserlistModelDataSetup.object.pageable.pageNumber;
+        getalluserlistModel.object.totalElements = getalluserlistModelDataSetup.object.totalElements;
+        print("DataSetup");
+        emit(GetAllUserLoadedState(getalluserlistModel));
+      }
+    } catch (e) {
+      print('errorstateshwowData-$e');
       emit(HashTagErrorState(e.toString()));
     }
   }

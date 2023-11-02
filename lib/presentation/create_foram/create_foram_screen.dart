@@ -35,9 +35,9 @@ class IndustryType {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is IndustryType &&
-              runtimeType == other.runtimeType &&
-              industryTypeName == other.industryTypeName;
+      other is IndustryType &&
+          runtimeType == other.runtimeType &&
+          industryTypeName == other.industryTypeName;
 
   @override
   int get hashCode => industryTypeName.hashCode;
@@ -475,6 +475,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                     ),
                     GestureDetector(
                       onTap: () async {
+                        print("idfsdsdhfsdhsdfh-$industryUUID");
                         print(name.text.length);
                         if (name.text == null || name.text == '') {
                           SnackBar snackBar = SnackBar(
@@ -518,6 +519,12 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             backgroundColor: ColorConstant.primary_color,
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else if (industryUUID.isEmpty) {
+                          SnackBar snackBar = SnackBar(
+                            content: Text('Please Selcted Industry Type'),
+                            backgroundColor: ColorConstant.primary_color,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         } else if (dopcument == 'Upload Image') {
                           print('upolded imah');
                           SnackBar snackBar = SnackBar(
@@ -536,6 +543,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                           };
 
                           print('button-$params');
+
                           if (SubmitOneTime == false) {
                             SubmitOneTime = true;
                             BlocProvider.of<CreatFourmCubit>(context)
