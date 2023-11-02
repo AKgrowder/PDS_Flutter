@@ -124,29 +124,29 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   String _getMonthName(int month) {
     switch (month) {
       case 1:
-        return 'st January';
+        return 'January';
       case 2:
-        return 'nd February';
+        return 'February';
       case 3:
-        return 'rd March';
+        return 'March';
       case 4:
-        return 'th April';
+        return 'April';
       case 5:
-        return 'th May';
+        return 'May';
       case 6:
-        return 'th June';
+        return 'June';
       case 7:
-        return 'th July';
+        return 'July';
       case 8:
-        return 'th August';
+        return 'August';
       case 9:
-        return 'th September';
+        return 'September';
       case 10:
-        return 'th October';
+        return 'October';
       case 11:
-        return 'th November';
+        return 'November';
       case 12:
-        return 'th December';
+        return 'December';
       default:
         return '';
     }
