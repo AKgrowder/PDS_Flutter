@@ -195,6 +195,11 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
         RequestListModelData = state.RequestListModelData;
       }
       if (state is accept_rejectLoadedState) {
+        SnackBar snackBar = SnackBar(
+          content: Text("${state.accept_rejectData.message}"),
+          backgroundColor: ColorConstant.primary_color,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
         accept_rejectData = state.accept_rejectData;
         print(
             "accept_rejectData  accept_rejectData  accept_rejectData  accept_rejectData  accept_rejectData  accept_rejectData  ");
@@ -248,14 +253,27 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                           borderRadius:
                                               BorderRadius.circular(15)),
                                       child: Row(children: [
-                                        CustomImageView(
-                                          url:
-                                              "${RequestListModelData?.object?[index].followedByUserProfilePic}",
-                                          height: 70,
-                                          width: 70,
-                                          fit: BoxFit.fill,
-                                          radius: BorderRadius.circular(35),
-                                        ),
+                                        RequestListModelData?.object?[index]
+                                                    .followedByUserProfilePic !=
+                                                null
+                                            ? CustomImageView(
+                                                url:
+                                                    "${RequestListModelData?.object?[index].followedByUserProfilePic}",
+                                                height: 70,
+                                                width: 70,
+                                                fit: BoxFit.fill,
+                                                radius:
+                                                    BorderRadius.circular(35),
+                                              )
+                                            : CustomImageView(
+                                                imagePath:
+                                                    ImageConstant.tomcruse,
+                                                height: 70,
+                                                width: 70,
+                                                fit: BoxFit.fill,
+                                                radius:
+                                                    BorderRadius.circular(35),
+                                              ),
                                         SizedBox(
                                           width: 10,
                                         ),
@@ -352,15 +370,19 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                 )
                                               ],
                                             ),
-                                            Text(
-                                              customFormat(DateTime.now()),
-                                              maxLines: 2,
-                                              textScaleFactor: 1.0,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.grey,
-                                                  fontFamily: "outfit",
-                                                  fontSize: 14),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 70.0),
+                                              child: Text(
+                                                customFormat(DateTime.now()),
+                                                maxLines: 2,
+                                                textScaleFactor: 1.0,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.grey,
+                                                    fontFamily: "outfit",
+                                                    fontSize: 14),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -416,7 +438,7 @@ class InviationClass extends StatefulWidget {
 class _InviationClassState extends State<InviationClass> {
   @override
   InvitationModel? InvitationRoomData;
- 
+
   String? User_Mood;
   @override
   void initState() {
@@ -541,27 +563,25 @@ class _InviationClassState extends State<InviationClass> {
                                                   fontFamily: "outfit",
                                                   fontSize: 14),
                                             ),
-                                           
-                                              
-                                                
-                                               GestureDetector(
-                                                    onTap: () {
-                                                      print('EXPERT');
-                                                      
-                                                      Navigator.push(context,
-                                                          MaterialPageRoute(
-                                                        builder: (context) {
-                                                          return RoomDetailScreen(
-                                                                uuid: InvitationRoomData?.object?[index].roomUid
-                                                            .toString(),
-                                                              );
-                                                        },
-                                                      ));
-                                                    },
-                                                    child: Icon(Icons
-                                                        .remove_red_eye_outlined),
-                                                  ),
-                                              
+                                            GestureDetector(
+                                              onTap: () {
+                                                print('EXPERT');
+
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return RoomDetailScreen(
+                                                      uuid: InvitationRoomData
+                                                          ?.object?[index]
+                                                          .roomUid
+                                                          .toString(),
+                                                    );
+                                                  },
+                                                ));
+                                              },
+                                              child: Icon(Icons
+                                                  .remove_red_eye_outlined),
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -1028,29 +1048,29 @@ String customFormat(DateTime date) {
 String _getMonthName(int month) {
   switch (month) {
     case 1:
-      return 'st January';
+      return 'January';
     case 2:
-      return 'nd February';
+      return 'February';
     case 3:
-      return 'rd March';
+      return 'March';
     case 4:
-      return 'th April';
+      return 'April';
     case 5:
-      return 'th May';
+      return 'May';
     case 6:
-      return 'th June';
+      return 'June';
     case 7:
-      return 'th July';
+      return 'July';
     case 8:
-      return 'th August';
+      return 'August';
     case 9:
-      return 'th September';
+      return 'September';
     case 10:
-      return 'th October';
+      return 'October';
     case 11:
-      return 'th November';
+      return 'November';
     case 12:
-      return 'th December';
+      return 'December';
     default:
       return '';
   }
