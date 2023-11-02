@@ -6,6 +6,7 @@ import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import 'package:pds/API/Model/myaccountModel/myaccountModel.dart';
+import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
 import '../../Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../Model/HashTage_Model/HashTag_model.dart';
 
@@ -59,4 +60,14 @@ class GetUserProfileLoadedState extends GetGuestAllPostState {
 class GetallblogsLoadedState extends GetGuestAllPostState {
   final GetallBlogModel getallBlogdata;
   GetallblogsLoadedState(this.getallBlogdata);
+}
+
+class saveBlogLoadedState extends GetGuestAllPostState {
+  final saveBlogModel saveBlogModeData;
+  saveBlogLoadedState(this.saveBlogModeData);
+}
+
+class likeBlogLoadedState extends GetGuestAllPostState {
+  final saveBlogModel LikeBlogModeData;
+  likeBlogLoadedState(this.LikeBlogModeData);
 }

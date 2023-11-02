@@ -735,51 +735,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
                             fillColor: appTheme.gray100,
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              print("dfghgdfdfhghfgbh-$isChecked");
-                             
-                                if (SubmitOneTime == false) {
-                                  if (_formKey.currentState!.validate()) {
-                                     if (isChecked == true) { var datapPassing = {
-                                      "name": nameController.text,
-                                      "userName": enteruseridController.text,
-                                      "email": emailAndMobileController.text,
-                                      "mobileNo": contectnumberController.text,
-                                      "password": passwordController.text,
-                                      "module": "EMPLOYEE",
-                                      "checkTermsAndConditions": isChecked,
-                                    };
-                                    if (chooseDocument?.object != null) {
-                                      datapPassing['profilePic'] =
-                                          '${chooseDocument?.object.toString()}';
-                                    }
-                                    print('dataPassing-$datapPassing');
-                                    SubmitOneTime = true;
-                                    BlocProvider.of<RegisterCubit>(context)
-                                        .registerApi(datapPassing, context);}
-                                   
-                                  }
-                                
-                              }
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              margin: EdgeInsets.only(top: 15),
-                              height: 50,
-                              width: _width,
-                              decoration: BoxDecoration(
-                                  color: Color(0xffED1C25),
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: Text(
-                                'Submit',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'outfit',
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                          ),
 
                           Align(
                             // alignment: Alignment.center,
@@ -829,7 +784,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 child: Checkbox(
                                   visualDensity: VisualDensity(
                                     horizontal:
-                                        -2.0, // Adjust this value to change the size
+                                        -4.0, // Adjust this value to change the size
                                     vertical:
                                         -2.0, // Adjust this value to change the size
                                   ),
@@ -855,6 +810,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 },
                                 child: Text(
                                   "Terms & Conditions ",
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: theme.colorScheme.primary,
                                     fontSize: 14,
@@ -864,31 +820,78 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   ),
                                 ),
                               ),
-                              Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Policies(
-                                            title: " ",
-                                            data: Policy_Data.privacy_policy1,
-                                          ),
-                                        ));
-                                  },
-                                  child: Text(
-                                    "Privacy & Policy  of PDS Terms",
-                                    style: TextStyle(
-                                      color: theme.colorScheme.primary,
-                                      fontSize: 14,
-                                      fontFamily: 'Outfit',
-                                      fontWeight: FontWeight.w500,
-                                      decoration: TextDecoration.underline,
+                              Padding(
+                                padding: const EdgeInsets.only(right: 2),
+                                child: Center(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Policies(
+                                              title: " ",
+                                              data: Policy_Data.privacy_policy1,
+                                            ),
+                                          ));
+                                    },
+                                    child: Text(
+                                      "Privacy & Policy  of PDS Terms",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: theme.colorScheme.primary,
+                                        fontSize: 14,
+                                        fontFamily: 'Outfit',
+                                        fontWeight: FontWeight.w500,
+                                        decoration: TextDecoration.underline,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ],
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              if (SubmitOneTime == false) {
+                                if (_formKey.currentState!.validate()) {
+                                  if (isChecked == true) {
+                                    var datapPassing = {
+                                      "name": nameController.text,
+                                      "userName": enteruseridController.text,
+                                      "email": emailAndMobileController.text,
+                                      "mobileNo": contectnumberController.text,
+                                      "password": passwordController.text,
+                                      "module": "EMPLOYEE",
+                                      "checkTermsAndConditions": isChecked,
+                                    };
+                                    if (chooseDocument?.object != null) {
+                                      datapPassing['profilePic'] =
+                                          '${chooseDocument?.object.toString()}';
+                                    }
+                                    print('dataPassing-$datapPassing');
+                                    SubmitOneTime = true;
+                                    BlocProvider.of<RegisterCubit>(context)
+                                        .registerApi(datapPassing, context);
+                                  }
+                                }
+                              }
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.only(top: 15),
+                              height: 50,
+                              width: _width,
+                              decoration: BoxDecoration(
+                                  color: Color(0xffED1C25),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text(
+                                'Submit',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'outfit',
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
                           ),
                         ],
                       );

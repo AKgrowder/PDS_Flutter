@@ -205,11 +205,11 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     }
   }
 
-  Future<void> GetallBlog(BuildContext context) async {
+  Future<void> GetallBlog(BuildContext context, String userUid) async {
     dynamic getallBlogmodel;
     try {
       emit(GetGuestAllPostLoadingState());
-      getallBlogmodel = await Repository().GetallBlog(context);
+      getallBlogmodel = await Repository().GetallBlog(context, userUid);
       if (getallBlogmodel.success == true) {
         emit(GetallblogsLoadedState(getallBlogmodel));
       }
@@ -218,5 +218,31 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     }
   }
 
+  Future<void> SaveBlog(
+      BuildContext context, String userUid, String blogUid) async {
+    dynamic getallBlogmodel;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      getallBlogmodel = await Repository().SaveBlog(context, userUid, blogUid);
+      if (getallBlogmodel.success == true) {
+        emit(saveBlogLoadedState(getallBlogmodel));
+      }
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(getallBlogmodel));
+    }
+  }
 
+  Future<void> LikeBlog(
+      BuildContext context, String userUid, String blogUid) async {
+    dynamic getallBlogmodel;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      getallBlogmodel = await Repository().LikeBlog(context, userUid, blogUid);
+      if (getallBlogmodel.success == true) {
+        emit(likeBlogLoadedState(getallBlogmodel));
+      }
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(getallBlogmodel));
+    }
+  }
 }
