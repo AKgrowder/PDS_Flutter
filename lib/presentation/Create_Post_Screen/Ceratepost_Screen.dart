@@ -42,6 +42,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   double value2 = 0.0;
   List<Album>? _albums;
   bool _loading = false;
+  bool CreatePostDone = true;
   MediaPage? page;
   double finalFileSize = 0;
   double documentuploadsize = 0;
@@ -1013,6 +1014,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
     RegExp exp = new RegExp(r"\B#\w\w+");
 
     if (postText.text.length >= 1000) {
+      CreatePostDone = false;
       SnackBar snackBar = SnackBar(
         content: Text('Please enter less than 1000 letter!!'),
         backgroundColor: ColorConstant.primary_color,
@@ -1029,6 +1031,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
         if (aa.length <= 100) {
           HasetagList?.add("$match");
         } else {
+          CreatePostDone = false;
           SnackBar snackBar = SnackBar(
             content: Text('Please HaseTag less than 100 letter!!'),
             backgroundColor: ColorConstant.primary_color,
@@ -1046,88 +1049,95 @@ class _CreateNewPostState extends State<CreateNewPost> {
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         } else { */
-        if (postText.text.isNotEmpty && file?.path != null) {
-          Map<String, dynamic> param = {
-            "description": postText.text,
-            "postData": imageDataPost?.object?.data,
-            "postDataType": "IMAGE",
-            "postType": soicalData[indexx].toString().toUpperCase()
-          };
-          BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
-        } else if (postText.text.isNotEmpty && file12?.path != null) {
-          Map<String, dynamic> param = {
-            "description": postText.text,
-            "postData": imageDataPost?.object?.data,
-            "postDataType": "ATTACHMENT",
-            "postType": soicalData[indexx].toString().toUpperCase()
-          };
-          BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
-        } else if (postText.text.isNotEmpty && pickedImage.isNotEmpty) {
-          Map<String, dynamic> param = {
-            "description": postText.text,
-            "postData": imageDataPost?.object?.data,
-            "postDataType": "IMAGE",
-            "postType": soicalData[indexx].toString().toUpperCase()
-          };
-          BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
-        } else if (pickedFile?.path != null && postText.text.isNotEmpty) {
-          Map<String, dynamic> param = {
-            "description": postText.text,
-            "postData": imageDataPost?.object?.data,
-            "postDataType": "IMAGE",
-            "postType": soicalData[indexx].toString().toUpperCase()
-          };
-          BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
-        } else {
-          if (postText.text.isNotEmpty) {
+        if (CreatePostDone == true) {
+          if (postText.text.isNotEmpty && file?.path != null) {
             Map<String, dynamic> param = {
               "description": postText.text,
+              "postData": imageDataPost?.object?.data,
+              "postDataType": "IMAGE",
               "postType": soicalData[indexx].toString().toUpperCase()
             };
             BlocProvider.of<AddPostCubit>(context)
                 .InvitationAPI(context, param);
-          } else if (file?.path != null) {
+          } else if (postText.text.isNotEmpty && file12?.path != null) {
             Map<String, dynamic> param = {
-              "postData": imageDataPost?.object?.data,
-              "postDataType": "IMAGE",
-              "postType": soicalData[indexx].toString().toUpperCase(),
-            };
-            BlocProvider.of<AddPostCubit>(context)
-                .InvitationAPI(context, param);
-          } else if (pickedFile?.path != null) {
-            Map<String, dynamic> param = {
-              "postData": imageDataPost?.object?.data,
-              "postDataType": "IMAGE",
-              "postType": soicalData[indexx].toString().toUpperCase(),
-            };
-            BlocProvider.of<AddPostCubit>(context)
-                .InvitationAPI(context, param);
-          } else if (file12?.path != null) {
-            Map<String, dynamic> param = {
+              "description": postText.text,
               "postData": imageDataPost?.object?.data,
               "postDataType": "ATTACHMENT",
-              "postType": soicalData[indexx].toString().toUpperCase(),
+              "postType": soicalData[indexx].toString().toUpperCase()
             };
             BlocProvider.of<AddPostCubit>(context)
                 .InvitationAPI(context, param);
-          } else if (pickedImage.isNotEmpty) {
+          } else if (postText.text.isNotEmpty && pickedImage.isNotEmpty) {
             Map<String, dynamic> param = {
+              "description": postText.text,
               "postData": imageDataPost?.object?.data,
               "postDataType": "IMAGE",
-              "postType": soicalData[indexx].toString().toUpperCase(),
+              "postType": soicalData[indexx].toString().toUpperCase()
+            };
+            BlocProvider.of<AddPostCubit>(context)
+                .InvitationAPI(context, param);
+          } else if (pickedFile?.path != null && postText.text.isNotEmpty) {
+            Map<String, dynamic> param = {
+              "description": postText.text,
+              "postData": imageDataPost?.object?.data,
+              "postDataType": "IMAGE",
+              "postType": soicalData[indexx].toString().toUpperCase()
             };
             BlocProvider.of<AddPostCubit>(context)
                 .InvitationAPI(context, param);
           } else {
-            SnackBar snackBar = SnackBar(
-              content: Text('please select image either fill Text'),
-              backgroundColor: ColorConstant.primary_color,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            if (postText.text.isNotEmpty) {
+              Map<String, dynamic> param = {
+                "description": postText.text,
+                "postType": soicalData[indexx].toString().toUpperCase()
+              };
+              BlocProvider.of<AddPostCubit>(context)
+                  .InvitationAPI(context, param);
+            } else if (file?.path != null) {
+              Map<String, dynamic> param = {
+                "postData": imageDataPost?.object?.data,
+                "postDataType": "IMAGE",
+                "postType": soicalData[indexx].toString().toUpperCase(),
+              };
+              BlocProvider.of<AddPostCubit>(context)
+                  .InvitationAPI(context, param);
+            } else if (pickedFile?.path != null) {
+              Map<String, dynamic> param = {
+                "postData": imageDataPost?.object?.data,
+                "postDataType": "IMAGE",
+                "postType": soicalData[indexx].toString().toUpperCase(),
+              };
+              BlocProvider.of<AddPostCubit>(context)
+                  .InvitationAPI(context, param);
+            } else if (file12?.path != null) {
+              Map<String, dynamic> param = {
+                "postData": imageDataPost?.object?.data,
+                "postDataType": "ATTACHMENT",
+                "postType": soicalData[indexx].toString().toUpperCase(),
+              };
+              BlocProvider.of<AddPostCubit>(context)
+                  .InvitationAPI(context, param);
+            } else if (pickedImage.isNotEmpty) {
+              Map<String, dynamic> param = {
+                "postData": imageDataPost?.object?.data,
+                "postDataType": "IMAGE",
+                "postType": soicalData[indexx].toString().toUpperCase(),
+              };
+              BlocProvider.of<AddPostCubit>(context)
+                  .InvitationAPI(context, param);
+            } else {
+              SnackBar snackBar = SnackBar(
+                content: Text('please select image either fill Text'),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
           }
         }
         /* } */
       } else {
+        CreatePostDone = false;
         SnackBar snackBar = SnackBar(
           content: Text('Please HaseTag Lath less than 25 letter!!'),
           backgroundColor: ColorConstant.primary_color,

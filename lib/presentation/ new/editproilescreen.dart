@@ -17,7 +17,6 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
-import 'package:pds/presentation/%20new/stroycommenwoget.dart';
 import 'package:pds/presentation/my%20account/my_account_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -185,6 +184,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void initState() {
+    print("i want to  data check--${widget.newProfileData}");
     dataSetUpMethod();
     userStatusGet();
     super.initState();
@@ -314,8 +314,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           Radius.circular(20))),
                                   // color: Colors.red,
                                   child: Image.asset(
-                                    ImageConstant.placeholder,
-                                    fit: BoxFit.cover,
+                                    ImageConstant.pdslogo,
+                                    fit: BoxFit.fill,
                                     height: 150,
                                     width: 150,
                                   ),
@@ -347,11 +347,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           child: userProfile != 'soicalScreen'
                               ? GestureDetector(
                                   onTap: () {
-                                    if (widget.newProfileData?.object
-                                            ?.userBackgroundPic !=
-                                        null) {
-                                      _settingModalBottomSheet1(context);
-                                    }
+                                    _settingModalBottomSheet1(context);
                                   },
                                   child: Container(
                                     height: 45,
@@ -421,7 +417,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           child: ClipOval(
                                             child: FittedBox(
                                               child: Image.asset(
-                                                ImageConstant.placeholder2,
+                                                ImageConstant.tomcruse,
                                                 fit: BoxFit.cover,
                                                 height: 150,
                                                 width: 150,
@@ -480,11 +476,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: "Approved",
+                        text:
+                            " ${widget.newProfileData?.object?.approvalStatus}",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
-                          color: Color(0xff019801),
+                          color: widget
+                                      .newProfileData?.object?.approvalStatus ==
+                                  "PARTIALLY_REGISTERED"
+                              ? Color(0xff1A94D7)
+                              : widget.newProfileData?.object?.approvalStatus ==
+                                      "PENDING"
+                                  ? Color(0xffC28432)
+                                  : widget.newProfileData?.object
+                                              ?.approvalStatus ==
+                                          "APPROVED"
+                                      ? Color(0xff019801)
+                                      : Color(0xffFF000B),
                         ),
                       )
                     ],
@@ -864,6 +872,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   TextFiledCommenWiget(_width) {
+    print("i wantt to  check--${widget.newProfileData?.object?.expertise}");
+    print("check module${widget.newProfileData?.object?.module}");
+
     selectedIndustryTypes2.forEach((element) {
       print("industry name : ${element.industryTypeName}");
       print("industry name : ${element.industryTypeUid}");
@@ -919,34 +930,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        Container(
-          decoration: BoxDecoration(color: Color(0xffEFEFEF)),
-          child: DropdownButtonHideUnderline(
-            child: Padding(
-              padding: EdgeInsets.only(left: 12),
-              child: MultiSelectDialogField<IndustryType>(
-                initialValue: [...selectedIndustryTypes2],
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.transparent)),
-                buttonIcon: Icon(
-                  Icons.expand_more,
-                  color: Colors.black,
-                ),
-                items: _industryTypes!,
-                listType: MultiSelectListType.LIST,
-                /* onConfirm: (values) {
+        if (widget.newProfileData?.object?.industryTypes?.isNotEmpty == true)
+          Container(
+            decoration: BoxDecoration(color: Color(0xffEFEFEF)),
+            child: DropdownButtonHideUnderline(
+              child: Padding(
+                padding: EdgeInsets.only(left: 12),
+                child: MultiSelectDialogField<IndustryType>(
+                  initialValue: [...selectedIndustryTypes2],
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.transparent)),
+                  buttonIcon: Icon(
+                    Icons.expand_more,
+                    color: Colors.black,
+                  ),
+                  items: _industryTypes!,
+                  listType: MultiSelectListType.LIST,
+                  /* onConfirm: (values) {
                     selectedIndustryTypes2 = values;
                     selectedIndustryTypes2.forEach((element) {
                       industryUUID.add("${element.industryTypeUid}");
                     });
                     setState(() {});
                   }, */
-                onConfirm: (p0) {},
+                  onConfirm: (p0) {},
+                ),
               ),
             ),
           ),
-        ),
-        if (widget.newProfileData?.object?.expertise != null)
+        if (widget.newProfileData?.object?.expertise != null &&
+            widget.newProfileData?.object?.module != 'EMPLOYEE')
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -958,7 +971,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.expertise != null)
+        if (widget.newProfileData?.object?.expertise != null &&
+            widget.newProfileData?.object?.module != 'EMPLOYEE')
           Container(
             height: 50,
             width: _width,
@@ -1293,14 +1307,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         height: 45,
                       ),
                       title: new Text('See Profile Picture'),
-                      onTap: () => {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => DocumentViewScreen1(
-                                      path:
-                                          '${widget.newProfileData?.object?.userProfilePic}',
-                                      title: 'Pdf',
-                                    )))
-                          }),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => DocumentViewScreen1(
+                                  path: widget.newProfileData?.object
+                                              ?.userProfilePic ==
+                                          null
+                                      ? 'https://pds-testing-images.s3.amazonaws.com/PROFILE_PIC/%2Fc0fabd0c-c623-4ee8-be53-e76699248782_83c3b85e_d254_46de_9e60_7bbb136fc051.rofileimage.png'
+                                      : '${widget.newProfileData?.object?.userProfilePic}',
+                                  title: 'Pdf',
+                                )));
+                      }),
                 ),
                 SizedBox(
                   height: 20,
@@ -1357,8 +1374,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       onTap: () => {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => DocumentViewScreen1(
-                                      path:
-                                          '${widget.newProfileData?.object?.userBackgroundPic}',
+                                      path: widget.newProfileData?.object
+                                                  ?.userBackgroundPic ==
+                                              null
+                                          ? "https://pds-testing-images.s3.amazonaws.com/PROFILE_PIC/%2Fb5bd8d53-625e-4d6c-9b74-4c3771257375_cd1371fd_d116_4a2f_9786_4124554ee79e.inal_logo-3.png"
+                                          : '${widget.newProfileData?.object?.userBackgroundPic}',
                                       title: 'Pdf',
                                     )))
                           }),

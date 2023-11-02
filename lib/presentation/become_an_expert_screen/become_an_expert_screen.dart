@@ -370,10 +370,13 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 12),
                             child: MultiSelectDialogField<IndustryType>(
-                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.transparent)
-                           ),
-                              buttonIcon: Icon(Icons.expand_more,color: Colors.black,),
+                              decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.transparent)),
+                              buttonIcon: Icon(
+                                Icons.expand_more,
+                                color: Colors.black,
+                              ),
                               items: _industryTypes!,
                               listType: MultiSelectListType.LIST,
                               onConfirm: (values) {
@@ -793,6 +796,13 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                               feesController.text == '') {
                             SnackBar snackBar = SnackBar(
                               content: Text('Please select Fees'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (industryUUID.isEmpty) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please Selcted Industry Type'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
