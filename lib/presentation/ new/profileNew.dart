@@ -4,12 +4,14 @@ import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_state.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart';
+import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
@@ -44,6 +46,8 @@ class _ProfileScreenState extends State<ProfileScreen>
     "Post",
     "Comments",
   ];
+  String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+  DateTime? parsedDateTimeBlogs;
   String? User_ID;
   List<String> SaveList = ["Post", "Blog"];
   // List<String>
@@ -79,6 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   GetAppUserPostModel? GetAllPostData;
   GetUserPostCommetModel? GetUserPostCommetData;
   GetSavePostModel? GetSavePostData;
+  saveAllBlogModel? saveAllBlogModelData;
   int UserProfilePostCount = 0;
   int FinalPostCount = 0;
   int CommentsPostCount = 0;
@@ -117,6 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     if (User_Module == 'EMPLOYEE') {
       BlocProvider.of<NewProfileSCubit>(context).get_about_me(context, userId);
     }
+    BlocProvider.of<NewProfileSCubit>(context).GetAllSaveBlog(context, userId);
   }
 
   @override
@@ -158,6 +164,10 @@ class _ProfileScreenState extends State<ProfileScreen>
       }
       if (state is AboutMeLoadedState1) {
         aboutMe.text = state.aboutMe.object.toString();
+      }
+      if (state is saveAllBlogModelLoadedState1) {
+        saveAllBlogModelData = state.saveAllBlogModelData;
+        SaveBlogCount = saveAllBlogModelData?.object?.length ?? 0;
       }
       if (state is NewProfileSLoadingState) {
         Center(
@@ -352,7 +362,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ),
               ),
 
-                Padding(
+              Padding(
                 padding: const EdgeInsets.only(top: 15),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -476,7 +486,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => EditProfileScreen(newProfileData: NewProfileData,)));
+                                    builder: (context) => EditProfileScreen(
+                                          newProfileData: NewProfileData,
+                                        )));
                           },
                           child: Container(
                             alignment: Alignment.center,
@@ -557,7 +569,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               SizedBox(
                 height: 12,
               ),
-           Center(
+              Center(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 15, right: 15),
                   child: Container(
@@ -1180,7 +1192,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         .GetPostCommetAPI(
                                                             context,
                                                             "${NewProfileData?.object?.uuid}",
-                                                            "desc");
+                                                            "asc");
                                                   } else if (newValue ==
                                                       "oldest to Newest") {
                                                     BlocProvider.of<
@@ -1189,7 +1201,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         .GetPostCommetAPI(
                                                             context,
                                                             "${NewProfileData?.object?.uuid}",
-                                                            "asc");
+                                                            "desc");
                                                   }
                                                   selctedValue = newValue!;
                                                 });
@@ -1688,8 +1700,10 @@ class _ProfileScreenState extends State<ProfileScreen>
         return Expanded(
           child: ListView.builder(
             physics: NeverScrollableScrollPhysics(),
-            itemCount: SaveBlogCount,
+            itemCount: saveAllBlogModelData?.object?.length,
             itemBuilder: (context, index) {
+              parsedDateTimeBlogs = DateTime.parse(
+                  '${saveAllBlogModelData?.object?[index].createdAt ?? ""}');
               return Container(
                 height: 140,
                 // color: Colors.red,
@@ -1708,27 +1722,60 @@ class _ProfileScreenState extends State<ProfileScreen>
                           children: [
                             Stack(
                               children: [
-                                Image.asset(
-                                  ImageConstant.dummyImage,
+                                CustomImageView(
+                                  url:
+                                      "${saveAllBlogModelData?.object?[index].image}",
                                   width: 135,
+                                  height: 135,
                                 ),
-                                Positioned(
-                                    top: 8,
-                                    left: 8,
-                                    child: Container(
-                                      height: 25,
-                                      width: 25,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          color: Colors.white),
-                                      child: Center(
-                                          child: Padding(
-                                        padding: const EdgeInsets.all(5.0),
-                                        child: Image.asset(
-                                            ImageConstant.save_icon_360),
+                                // Image.asset(
+                                //   ImageConstant.dummyImage,
+                                //   width: 135,
+                                // ),
+                                GestureDetector(
+                                  onTap: () {
+                                    print("Unsave Button");
+
+                                    BlocProvider.of<NewProfileSCubit>(context)
+                                        .ProfileSaveBlog(context, "${User_ID}",
+                                            "${saveAllBlogModelData?.object?[index].uid}");
+
+                                    if (saveAllBlogModelData
+                                            ?.object?[index].isSaved ==
+                                        true) {
+                                      saveAllBlogModelData?.object
+                                          ?.removeAt(index);
+                                      setState(() {
+                                        SaveBlogCount = saveAllBlogModelData
+                                                ?.object?.length ??
+                                            0;
+                                      });
+                                    }
+                                  },
+                                  child: Positioned(
+                                      top: 8,
+                                      left: 8,
+                                      child: Container(
+                                        height: 25,
+                                        width: 25,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            color: Colors.white),
+                                        child: Center(
+                                            child: Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Image.asset(
+                                            saveAllBlogModelData?.object?[index]
+                                                        .isSaved ==
+                                                    false
+                                                ? ImageConstant.savePin
+                                                : ImageConstant.Savefill,
+                                            width: 12.5,
+                                          ),
+                                        )),
                                       )),
-                                    ))
+                                )
                               ],
                             ),
                             Expanded(
@@ -1740,19 +1787,25 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   children: [
                                     Column(
                                       children: [
-                                        Text(
-                                          "Guide to Professional looking packaing desigm",
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "G${saveAllBlogModelData?.object?[index].title}",
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.black),
+                                          ),
                                         ),
-                                        Text(
-                                          "Lectus scelerisque vulputate tortor pellentesque ac. Fringilla cras ut facilisis amet imperdiet...",
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.grey),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "${saveAllBlogModelData?.object?[index].description}",
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.grey),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -1761,29 +1814,62 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          "27th June 2020",
+                                          customFormat(parsedDateTimeBlogs!),
                                           style: TextStyle(
                                               fontSize: 9.5,
                                               fontWeight: FontWeight.w400,
                                               color: Colors.grey),
                                         ),
+                                        // Text(
+                                        //   "10:47 pm",
+                                        //   style: TextStyle(
+                                        //       fontSize: 9.5,
+                                        //       fontWeight: FontWeight.w400,
+                                        //       color: Colors.grey),
+                                        // ),
+
                                         Text(
-                                          "10:47 pm",
+                                          " ",
                                           style: TextStyle(
                                               fontSize: 9.5,
                                               fontWeight: FontWeight.w400,
                                               color: Colors.grey),
                                         ),
-                                        Text(
-                                          "12.3K Views",
-                                          style: TextStyle(
-                                              fontSize: 9.5,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.grey),
+                                        Spacer(),
+                                        GestureDetector(
+                                          onTap: () {
+                                            print("click on Blog like button");
+
+                                            BlocProvider.of<NewProfileSCubit>(
+                                                    context)
+                                                .ProfileLikeBlog(
+                                                    context,
+                                                    "${User_ID}",
+                                                    "${saveAllBlogModelData?.object?[index].uid}");
+                                            if (saveAllBlogModelData
+                                                    ?.object?[index].isLiked ==
+                                                false) {
+                                              saveAllBlogModelData
+                                                  ?.object?[index]
+                                                  .isLiked = true;
+                                            } else {
+                                              saveAllBlogModelData
+                                                  ?.object?[index]
+                                                  .isLiked = false;
+                                            }
+                                          },
+                                          child: saveAllBlogModelData
+                                                      ?.object?[index]
+                                                      .isLiked ==
+                                                  false
+                                              ? Icon(Icons.favorite_border)
+                                              : Icon(
+                                                  Icons.favorite,
+                                                  color: Colors.red,
+                                                ),
                                         ),
-                                        Image.asset(
-                                          ImageConstant.like_icon_360,
-                                          height: 15,
+                                        SizedBox(
+                                          width: 10,
                                         ),
                                         Image.asset(
                                           ImageConstant.arrowright,
@@ -2256,7 +2342,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
           trailing: GestureDetector(
             onTap: () {
-             /*  Navigator.push(
+              /*  Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => EditProfileScreen(
@@ -2727,6 +2813,47 @@ class _ProfileScreenState extends State<ProfileScreen>
     }
 
     return STR;
+  }
+
+  String customFormat(DateTime date) {
+    String day = date.day.toString();
+    String month = _getMonthName(date.month);
+    String year = date.year.toString();
+    String time = DateFormat('dd-MM-yyyy     h:mm a').format(date);
+
+    String formattedDate = '$time';
+    return formattedDate;
+  }
+
+  String _getMonthName(int month) {
+    switch (month) {
+      case 1:
+        return ' January';
+      case 2:
+        return ' February';
+      case 3:
+        return ' March';
+      case 4:
+        return ' April';
+      case 5:
+        return ' May';
+      case 6:
+        return ' June';
+      case 7:
+        return ' July';
+      case 8:
+        return ' August';
+      case 9:
+        return ' September';
+      case 10:
+        return ' October';
+      case 11:
+        return ' November';
+      case 12:
+        return ' December';
+      default:
+        return '';
+    }
   }
 
   updateType() {

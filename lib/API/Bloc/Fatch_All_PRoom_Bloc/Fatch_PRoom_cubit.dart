@@ -75,11 +75,11 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
     }
   }
 
-  Future<void> GetallBlog(BuildContext context) async {
+  Future<void> GetallBlog(BuildContext context, String User_ID) async {
     dynamic getallBlogmodel;
     try {
       emit(GetallblogLoadingState());
-      getallBlogmodel = await Repository().GetallBlog(context);
+      getallBlogmodel = await Repository().GetallBlog(context,User_ID);
       if (getallBlogmodel.success == true) {
         emit(GetallblogLoadedState(getallBlogmodel));
       }

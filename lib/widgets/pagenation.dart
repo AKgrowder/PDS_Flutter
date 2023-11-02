@@ -67,13 +67,13 @@ class _PaginationWidgetState extends State<PaginationWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.offSet != null) {
-      print('offset ${widget.offSet}');
+      // print('offset ${widget.offSet}');
       _offset = widget.offSet!;
       _offsetList = [];
       for (int i = 1; i <= (widget.offSet ?? 0); i++) {
         _offsetList?.add(i);
       }
-      print("dsfhfgh-$_offsetList");
+      // print("dsfhfgh-$_offsetList");
     }
     return Column(children: [
       widget.items ?? SizedBox(),

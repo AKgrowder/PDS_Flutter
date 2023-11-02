@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 class GetAllUserListModel {
   String? message;
   Object? object;
@@ -8,7 +6,6 @@ class GetAllUserListModel {
   GetAllUserListModel({this.message, this.object, this.success});
 
   GetAllUserListModel.fromJson(Map<String, dynamic> json) {
-    log("GetAlluserlistModel->$json");
     message = json['message'];
     object =
         json['object'] != null ? new Object.fromJson(json['object']) : null;
@@ -101,7 +98,7 @@ class Content {
   String? userName;
   String? userProfile;
   bool? isExpert;
-  Null? hashtagNamesDto;
+  HashtagNamesDto? hashtagNamesDto;
 
   Content(
       {this.userUid,
@@ -115,7 +112,9 @@ class Content {
     userName = json['userName'];
     userProfile = json['userProfile'];
     isExpert = json['isExpert'];
-    hashtagNamesDto = json['hashtagNamesDto'];
+    hashtagNamesDto = json['hashtagNamesDto'] != null
+        ? new HashtagNamesDto.fromJson(json['hashtagNamesDto'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -124,7 +123,28 @@ class Content {
     data['userName'] = this.userName;
     data['userProfile'] = this.userProfile;
     data['isExpert'] = this.isExpert;
-    data['hashtagNamesDto'] = this.hashtagNamesDto;
+    if (this.hashtagNamesDto != null) {
+      data['hashtagNamesDto'] = this.hashtagNamesDto!.toJson();
+    }
+    return data;
+  }
+}
+
+class HashtagNamesDto {
+  String? hashtagName;
+  int? postCount;
+
+  HashtagNamesDto({this.hashtagName, this.postCount});
+
+  HashtagNamesDto.fromJson(Map<String, dynamic> json) {
+    hashtagName = json['hashtagName'];
+    postCount = json['postCount'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['hashtagName'] = this.hashtagName;
+    data['postCount'] = this.postCount;
     return data;
   }
 }

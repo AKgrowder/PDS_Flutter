@@ -11,6 +11,7 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
+import 'package:pds/widgets/pagenation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
@@ -42,6 +43,8 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     ImageConstant.Rectangle,
     ImageConstant.Rectangle,
   ];
+
+  ScrollController scrollController = ScrollController();
   int? indexxx;
   bool isSerch = false;
   HashtagModel? hashtagModel;
@@ -59,16 +62,24 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     } else {
       dataSetup = await widget.value2;
     } */
-    setState(() {});
+    if (mounted) {
+      setState(() {
+        // Update the widget's state.
+      });
+    }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getUserData();
     BlocProvider.of<HashTagCubit>(context).HashTagForYouAPI(context);
     BlocProvider.of<HashTagCubit>(context).HashTagBannerAPI(context);
+  }
+
+  void dispose() {
+    // Cancel the timer or stop the animation here.
+    super.dispose();
   }
 
   @override
@@ -92,7 +103,12 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
           }
           if (state is GetAllUserLoadedState) {
             dataget = true;
+            print("api caling");
             getalluserlistModel = state.getAllUserRoomData;
+            getalluserlistModel?.object?.content?.forEach((element) {
+              print(
+                  "i want to check dtata-${element.hashtagNamesDto?.hashtagName}");
+            });
           }
           if (state is HashTagBannerLoadedState) {
             print("HashTagBannerLoadedState - ${hashTagImageModel?.object}");
@@ -127,9 +143,11 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                             child: TextFormField(
                               autofocus: true,
                               onTap: () {
-                                setState(() {
-                                  isSerch = true;
-                                });
+                                if (mounted) {
+                                  setState(() {
+                                    isSerch = true;
+                                  });
+                                }
 
                                 print("xfhdsfhsdfgsdfg-$isSerch");
                                 /*    Navigator.push(context, MaterialPageRoute(
@@ -139,27 +157,45 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           )); */
                               },
                               onChanged: (value) {
+                                print("i want to check value-${value}");
                                 if (value.contains('#')) {
-                                  String hashTageValue =
-                                      value.replaceAll("#", "%23");
-                                  BlocProvider.of<HashTagCubit>(context)
-                                      .getalluser(
-                                          1, 5, hashTageValue.trim(), context);
-                                }
-                                if (value.isNotEmpty) {
-                                  print("fgdfhdfghdfgh-${value.trim()}");
+                                  print("value.contains('#')");
                                   if (indexxx == 0) {
+                                    print("index is  0");
+                                    String hashTageValue =
+                                        value.replaceAll("#", "%23");
                                     BlocProvider.of<HashTagCubit>(context)
                                         .getalluser(
-                                            1, 5, value.trim(), context);
+                                            1, hashTageValue.trim(), context);
                                   } else {
+                                    print("index is not 0");
+                                    String hashTageValue =
+                                        value.replaceAll("#", "%23");
                                     BlocProvider.of<HashTagCubit>(context)
-                                        .getalluser(1, 5, value.trim(), context,
+                                        .getalluser(
+                                            1, hashTageValue.trim(), context,
+                                            filterModule: 'EXPERT');
+                                  }
+                                } else if (value.isNotEmpty) {
+                                  if (indexxx == 0) {
+                                    print("if condison woking");
+
+                                    BlocProvider.of<HashTagCubit>(context)
+                                        .getalluser(1, value.trim(), context);
+                                  } else {
+                                    print("else condison woking");
+                                    BlocProvider.of<HashTagCubit>(context)
+                                        .getalluser(1, value.trim(), context,
                                             filterModule: 'EXPERT');
                                   }
                                 } else {
                                   dataget = false;
-                                  setState(() {});
+                                  if (mounted) {
+                                    setState(() {
+                                      // Update the widget's state.
+                                    });
+                                  }
+                                  print("dataGet-$dataget");
                                 }
                               },
                               controller: searchController,
@@ -183,9 +219,11 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                             borderRadius: BorderRadius.circular(30)),
                         child: TextFormField(
                           onTap: () {
-                            setState(() {
-                              isSerch = true;
-                            });
+                            if (mounted) {
+                              setState(() {
+                                isSerch = true;
+                              });
+                            }
 
                             print("xfhdsfhsdfgsdfg-$isSerch");
                             /*    Navigator.push(context, MaterialPageRoute(
@@ -199,15 +237,19 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                               if (indexxx == 0) {
                                 print("i want to  chrck-${value.trim()}");
                                 BlocProvider.of<HashTagCubit>(context)
-                                    .getalluser(1, 5, value.trim(), context);
+                                    .getalluser(1, value.trim(), context);
                               } else {
                                 BlocProvider.of<HashTagCubit>(context)
-                                    .getalluser(1, 5, value.trim(), context,
+                                    .getalluser(1, value.trim(), context,
                                         filterModule: 'EXPERT');
                               }
                             } else {
                               dataget = false;
-                              setState(() {});
+                              if (mounted) {
+                                setState(() {
+                                  // Update the widget's state.
+                                });
+                              }
                             }
                           },
                           controller: searchController,
@@ -234,27 +276,46 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: List.generate(text1.length, (index) {
-                            print("fdshfsdgfgsdfgsdfg--${text1[index]}");
                             return GestureDetector(
                               onTap: () {
                                 indexxx = index;
                                 dataSetup = null;
 
                                 SharedPreferencesFunction(indexxx ?? 0);
-                                setState(() {});
-                                if (searchController.text.isNotEmpty) {
+                                if (mounted) {
+                                  setState(() {
+                                    // Update the widget's state.
+                                  });
+                                }
+                                if (searchController.text.contains('#')) {
+                                  print("value.contains('#')");
+                                  if (indexxx == 0) {
+                                    print("index is  0");
+                                    String hashTageValue = searchController.text
+                                        .replaceAll("#", "%23");
+                                    BlocProvider.of<HashTagCubit>(context)
+                                        .getalluser(
+                                            1, hashTageValue.trim(), context);
+                                  } else {
+                                    print("index is not 0");
+                                    String hashTageValue = searchController.text
+                                        .replaceAll("#", "%23");
+                                    BlocProvider.of<HashTagCubit>(context)
+                                        .getalluser(
+                                            1, hashTageValue.trim(), context,
+                                            filterModule: 'EXPERT');
+                                  }
+                                } else if (searchController.text.isNotEmpty) {
                                   if (indexxx == 0) {
                                     BlocProvider.of<HashTagCubit>(context)
                                         .getalluser(
                                             1,
-                                            5,
                                             searchController.text.trim(),
                                             context);
                                   } else {
                                     BlocProvider.of<HashTagCubit>(context)
                                         .getalluser(
                                             1,
-                                            5,
                                             searchController.text.trim(),
                                             context,
                                             filterModule: 'EXPERT');
@@ -301,7 +362,11 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 dataSetup = null;
 
                                 SharedPreferencesFunction(indexxx ?? 0);
-                                setState(() {});
+                                if (mounted) {
+                                  setState(() {
+                                    // Update the widget's state.
+                                  });
+                                }
                               },
                               child: Container(
                                 margin: EdgeInsets.all(5),
@@ -369,9 +434,11 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           scrollDirection: Axis.horizontal,
                           onPageChanged: (index, reason) {
                             WidgetsBinding.instance.addPostFrameCallback((_) {
-                              setState(() {
-                                sliderCurrentPosition = index;
-                              });
+                              if (mounted) {
+                                setState(() {
+                                  sliderCurrentPosition = index;
+                                });
+                              }
                             });
                           }),
                       itemCount: hashTagImageModel?.object?.length ?? 0,
@@ -503,58 +570,6 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
           width: double.infinity,
           color: Colors.amber,
         );
-
-        /* Expanded(
-          child: ListView.builder(
-            padding: EdgeInsets.zero,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Divider(
-                    height: 3,
-                    color: Colors.grey,
-                  ),
-                  SizedBox(
-                    height: 70,
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          top: 5, left: 10, right: 10, bottom: 5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Trending in India",
-                            style: TextStyle(
-                              color: Color(0xff808080),
-                              fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            "#EcofriendlyPackaingDesign",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          Text(
-                            "2.64M posts",
-                            style: TextStyle(
-                              color: Color(0xff808080),
-                              fontSize: 12,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-        );
-      */
       }
     } else {
       return Expanded(
@@ -571,128 +586,267 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     if (indexxx != null) {
       if (indexxx == 0) {
         return Expanded(
-          child: ListView.builder(
-            padding: EdgeInsets.zero,
-            itemCount: getalluserlistModel?.object?.content?.length,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      height: 55,
-                      width: _width / 1.1,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Row(children: [
-                        SizedBox(
-                          width: 8,
+          child: SingleChildScrollView(
+            controller: scrollController,
+            child: PaginationWidget(
+              scrollController: scrollController,
+              totalSize: getalluserlistModel?.object?.totalElements,
+              offSet: getalluserlistModel?.object?.pageable?.pageNumber,
+              onPagination: (p0) async {
+                if (searchController.text.contains("#")) {
+                  String hashTageValue =
+                      searchController.text.replaceAll("#", "%23");
+                  BlocProvider.of<HashTagCubit>(context).getAllPagaationApi(
+                      (p0 + 1), hashTageValue.trim(), context);
+                } else {
+                  if (searchController.text.isNotEmpty) {
+                    BlocProvider.of<HashTagCubit>(context).getAllPagaationApi(
+                        (p0 + 1), searchController.text.trim(), context);
+                  }
+                }
+              },
+              items: ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.zero,
+                itemCount: getalluserlistModel?.object?.content?.length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      if (getalluserlistModel
+                              ?.object?.content?[index].hashtagNamesDto ==
+                          null)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: 55,
+                            width: _width / 1.1,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Row(children: [
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Stack(
+                                alignment: Alignment.bottomRight,
+                                children: [
+                                  getalluserlistModel?.object?.content?[index]
+                                              .userProfile ==
+                                          null
+                                      ? CircleAvatar(
+                                          radius: 25,
+                                          child: Image.asset(
+                                              ImageConstant.pdslogo))
+                                      : CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                            "${getalluserlistModel?.object?.content?[index].userProfile}",
+                                          ),
+                                          radius: 25,
+                                        ),
+                                  getalluserlistModel?.object?.content?[index]
+                                              .isExpert ==
+                                          true
+                                      ? Image.asset(
+                                          ImageConstant.Star,
+                                          height: 18,
+                                        )
+                                      : SizedBox()
+                                ],
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                "${getalluserlistModel?.object?.content?[index].userName}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              )
+                            ]),
+                          ),
                         ),
-                        Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            getalluserlistModel
-                                        ?.object?.content?[index].userProfile ==
-                                    null
-                                ? CircleAvatar(
-                                    radius: 25,
-                                    child: Image.asset(ImageConstant.pdslogo))
-                                : CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                      "${getalluserlistModel?.object?.content?[index].userProfile}",
+                      if (getalluserlistModel
+                              ?.object?.content?[index].hashtagNamesDto !=
+                          null)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: 50,
+                            width: _width / 1.1,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Container(
+                                  width: _width / 1.5,
+                                  child: Text(
+                                    "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
                                     ),
-                                    radius: 25,
                                   ),
-                            getalluserlistModel
-                                        ?.object?.content?[index].isExpert ==
-                                    true
-                                ? Image.asset(
-                                    ImageConstant.Star,
-                                    height: 18,
-                                  )
-                                : SizedBox()
-                          ],
-                        ),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text(
-                          "${getalluserlistModel?.object?.content?[index].userName}",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Text(
+                                  "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.postCount} Post",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         )
-                      ]),
-                    ),
-                  )
-                ],
-              );
-            },
+                    ],
+                  );
+                },
+              ),
+            ),
           ),
         );
       } else {
         return Expanded(
-          child: ListView.builder(
-            padding: EdgeInsets.zero,
-            itemCount: getalluserlistModel?.object?.content?.length,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      height: 55,
-                      width: _width / 1.1,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Row(children: [
-                        SizedBox(
-                          width: 8,
+          child: SingleChildScrollView(
+            controller: scrollController,
+            child: PaginationWidget(
+              scrollController: scrollController,
+              totalSize: getalluserlistModel?.object?.totalElements,
+              offSet: getalluserlistModel?.object?.pageable?.pageNumber,
+              onPagination: (p0) async {
+                if (searchController.text.contains("#")) {
+                  String hashTageValue =
+                      searchController.text.replaceAll("#", "%23");
+                  BlocProvider.of<HashTagCubit>(context).getAllPagaationApi(
+                      (p0 + 1), hashTageValue.trim(), context);
+                } else {
+                  if (searchController.text.isNotEmpty) {
+                    print("this mehtod");
+                    BlocProvider.of<HashTagCubit>(context).getAllPagaationApi(
+                        (p0 + 1), searchController.text.trim(), context);
+                  }
+                }
+              },
+              items: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                itemCount: getalluserlistModel?.object?.content?.length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      if (getalluserlistModel
+                              ?.object?.content?[index].hashtagNamesDto ==
+                          null)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: 55,
+                            width: _width / 1.1,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Row(children: [
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Stack(
+                                alignment: Alignment.bottomRight,
+                                children: [
+                                  getalluserlistModel?.object?.content?[index]
+                                              .userProfile ==
+                                          null
+                                      ? CircleAvatar(
+                                          radius: 25,
+                                          child: Image.asset(
+                                              ImageConstant.pdslogo))
+                                      : CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                            "${getalluserlistModel?.object?.content?[index].userProfile}",
+                                          ),
+                                          radius: 25,
+                                        ),
+                                  getalluserlistModel?.object?.content?[index]
+                                              .isExpert ==
+                                          true
+                                      ? Image.asset(
+                                          ImageConstant.Star,
+                                          height: 18,
+                                        )
+                                      : SizedBox()
+                                ],
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                "${getalluserlistModel?.object?.content?[index].userName}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              )
+                            ]),
+                          ),
                         ),
-                        Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            getalluserlistModel
-                                        ?.object?.content?[index].userProfile ==
-                                    null
-                                ? CircleAvatar(
-                                    radius: 25,
-                                    child: Image.asset(ImageConstant.pdslogo))
-                                : CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                      "${getalluserlistModel?.object?.content?[index].userProfile}",
+                      if (getalluserlistModel
+                              ?.object?.content?[index].hashtagNamesDto !=
+                          null)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: 50,
+                            width: _width / 1.1,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Container(
+                                  width: _width / 1.5,
+                                  child: Text(
+                                    "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
                                     ),
-                                    radius: 25,
                                   ),
-                            getalluserlistModel
-                                        ?.object?.content?[index].isExpert ==
-                                    true
-                                ? Image.asset(
-                                    ImageConstant.Star,
-                                    height: 18,
-                                  )
-                                : SizedBox()
-                          ],
-                        ),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text(
-                          "${getalluserlistModel?.object?.content?[index].userName}",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
+                                ),
+                                Container(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.postCount} Post",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         )
-                      ]),
-                    ),
-                  )
-                ],
-              );
-            },
+                    ],
+                  );
+                },
+              ),
+            ),
           ),
         );
       }
