@@ -97,4 +97,45 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       emit(NewProfileSErrorState(e.toString()));
     }
   }
+
+    Future<void> GetAllSaveBlog(BuildContext context, String userId) async {
+    dynamic aboutMedataSet;
+    try {
+      emit(NewProfileSLoadingState());
+      aboutMedataSet = await Repository().GetAllSaveBlog(context, userId);
+      if (aboutMedataSet.success == true) {
+        emit(saveAllBlogModelLoadedState1(aboutMedataSet));
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(e.toString()));
+    }
+  }
+
+    Future<void> ProfileSaveBlog(
+      BuildContext context, String userUid, String blogUid) async {
+    dynamic getallBlogmodel;
+    try {
+      emit(NewProfileSLoadingState());
+      getallBlogmodel = await Repository().SaveBlog(context, userUid, blogUid);
+      if (getallBlogmodel.success == true) {
+        emit(ProfilesaveBlogLoadedState(getallBlogmodel));
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(getallBlogmodel));
+    }
+  }
+
+  Future<void> ProfileLikeBlog(
+      BuildContext context, String userUid, String blogUid) async {
+    dynamic getallBlogmodel;
+    try {
+      emit(NewProfileSLoadingState());
+      getallBlogmodel = await Repository().LikeBlog(context, userUid, blogUid);
+      if (getallBlogmodel.success == true) {
+        emit(ProfilelikeBlogLoadedState(getallBlogmodel));
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(getallBlogmodel));
+    }
+  }
 }

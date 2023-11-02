@@ -84,7 +84,13 @@ class Config {
   static const String add_update_about_me = "user/api/add_update_about_me";
   static const String get_about_me = "user/api/get_about_me";
   static const String get_all_request = "user/api/get_all_request";
-  static const String accept_reject_follow_request = "user/api/accept_reject_follow_request";
+  static const String accept_reject_follow_request =
+      "user/api/accept_reject_follow_request";
   static const String HashTagBanner = "admin_portal/banners/latest";
   static const String deletecomment = "user/api/delete_comment_by_uid";
+
+  static const String saveBlog = "guest/api/saveBlog";
+  static const String LikeBlog = "guest/api/likeBlog";
+  static const String getSavedBlogs = "guest/api/getSavedBlogs";
+
 }
