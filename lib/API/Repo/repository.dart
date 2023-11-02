@@ -70,6 +70,9 @@ import '../Model/forget_password_model/change_password_model.dart';
 import '../Model/myaccountModel/myaccountModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
 import 'package:pds/API/Model/HashTage_Model/HashTagBanner_model.dart';
+import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
+import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
+
 
 class Repository {
   ApiServices apiServices = ApiServices();
@@ -444,10 +447,12 @@ class Repository {
         return jsonString;
     }
   }
-  
-  accept_rejectAPI(BuildContext context, bool isAccepted, String followUid) async {
+
+  accept_rejectAPI(
+      BuildContext context, bool isAccepted, String followUid) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.accept_reject_follow_request}?isAccepted=${isAccepted}&followUid=${followUid}', context);
+        '${Config.accept_reject_follow_request}?isAccepted=${isAccepted}&followUid=${followUid}',
+        context);
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -462,8 +467,8 @@ class Repository {
         return jsonString;
     }
   }
-  
-    HashTagBanner(BuildContext context) async {
+
+  HashTagBanner(BuildContext context) async {
     final response =
         await apiServices.getApiCall(Config.HashTagBanner, context);
     print(response);
@@ -538,6 +543,7 @@ class Repository {
         return jsonString;
     }
   }
+
   chooseProfileFile2(String file, String fileName, BuildContext context,
       {params}) async {
     print("apiCaling");
@@ -813,8 +819,9 @@ class Repository {
     }
   }
 
-  GetallBlog(BuildContext context) async {
-    final response = await apiServices.getApiCall(Config.getallBlog, context);
+  GetallBlog(BuildContext context, String userUid) async {
+    final response = await apiServices.getApiCall(
+        "${Config.getallBlog}?userUid=${userUid}", context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
@@ -829,6 +836,61 @@ class Repository {
         return jsonString;
     }
   }
+
+  SaveBlog(BuildContext context, String userUid, String blogUid) async {
+    final response = await apiServices.getApiCall(
+        "${Config.saveBlog}?userUid=${userUid}&blogUid=${blogUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return saveBlogModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  LikeBlog(BuildContext context, String userUid, String blogUid) async {
+    final response = await apiServices.getApiCall(
+        "${Config.LikeBlog}?userUid=${userUid}&blogUid=${blogUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return saveBlogModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  GetAllSaveBlog(BuildContext context, String userUid) async {
+    final response = await apiServices.getApiCall(
+        "${Config.getSavedBlogs}?userUid=${userUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return saveAllBlogModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+  
 
   LogOut(BuildContext context) async {
     final response =
@@ -1461,7 +1523,7 @@ class Repository {
 
   getalluser(
     int? pageNumber,
-    int numberOfRecords,
+    
     String searchName,
     BuildContext context, {
     String? filterModule,
@@ -1469,14 +1531,13 @@ class Repository {
     final response;
     if (filterModule != null) {
       response = await apiServices.getApiCallWithToken(
-          "${Config.getalluser}?pageNumber=$pageNumber&numberOfRecords=$numberOfRecords&searchName=$searchName&filterModule=$filterModule",
+          "${Config.getalluser}?pageNumber=$pageNumber&numberOfRecords=20&searchName=$searchName&filterModule=$filterModule",
           context);
     } else {
       response = await apiServices.getApiCallWithToken(
-          "${Config.getalluser}?pageNumber=$pageNumber&numberOfRecords=$numberOfRecords&searchName=$searchName",
+          "${Config.getalluser}?pageNumber=$pageNumber&numberOfRecords=20&searchName=$searchName",
           context);
     }
-
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
@@ -1549,8 +1610,7 @@ class Repository {
     }
   }
 
-
-   Deletecomment(String commentuid, BuildContext context) async {  
+  Deletecomment(String commentuid, BuildContext context) async {
     final response = await apiServices.deleteApiCall(
         "${Config.deletecomment}?commentUid=${commentuid}", {}, context);
     print(response);

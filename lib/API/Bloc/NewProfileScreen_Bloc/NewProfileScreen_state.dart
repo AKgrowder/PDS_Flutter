@@ -4,6 +4,8 @@ import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart
 import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart';
 import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
 import 'package:pds/API/Model/checkUserStatusModel/chekuserStausModel.dart';
+import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
+import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
 
 abstract class NewProfileSState {}
 
@@ -46,3 +48,23 @@ class AboutMeLoadedState1 extends NewProfileSState {
   final AboutMe aboutMe;
   AboutMeLoadedState1(this.aboutMe);
 }
+
+class saveAllBlogModelLoadedState1 extends NewProfileSState {
+  final saveAllBlogModel saveAllBlogModelData;
+  saveAllBlogModelLoadedState1(this.saveAllBlogModelData);
+}
+
+class ProfilesaveBlogLoadedState extends NewProfileSState {
+  final saveBlogModel saveAllBlogModelData;
+  ProfilesaveBlogLoadedState(this.saveAllBlogModelData);
+}
+
+class ProfilelikeBlogLoadedState extends NewProfileSState {
+  final saveBlogModel saveAllBlogModelData;
+  ProfilelikeBlogLoadedState(this.saveAllBlogModelData);
+}
+
+
+
+
+ 
