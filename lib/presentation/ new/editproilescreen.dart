@@ -1370,7 +1370,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ImageConstant.galleryimage,
                         height: 45,
                       ),
-                      title: new Text('See Profile Picture'),
+                      title: new Text('See Cover Picture'),
                       onTap: () => {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => DocumentViewScreen1(
@@ -1392,7 +1392,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ImageConstant.uplodimage,
                       height: 45,
                     ),
-                    title: new Text('Upload Profile Picture'),
+                    title: new Text('Upload Cover Picture'),
                     onTap: () => {
                       gallerypicker1(),
                     },

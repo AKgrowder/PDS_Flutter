@@ -155,9 +155,18 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
               content: Text(state.createForm.message ?? ""),
               backgroundColor: ColorConstant.primary_color,
             );
+            String industryType = industryUUID.join(', ');
+            Map<String, dynamic> params = {
+              'document': chooseDocument?.object.toString(),
+              'companyName': name.text,
+              'jobProfile': profile.text,
+              'industryTypesUid': industryType
+            };
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return NewBottomBar(buttomIndex: 0);
-            }));
+            })).then((value) => BlocProvider.of<CreatFourmCubit>(context)
+                .CreatFourm(
+                    params, uplopdfile.text, filepath.toString(), context));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             print('check Status--${state.createForm.success}');
           }
