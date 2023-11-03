@@ -137,13 +137,13 @@ class HashTagCubit extends Cubit<HashTagState> {
       if (getalluserlistModelDataSetup.success == true) {
         getalluserlistModel.object.content
             .addAll(getalluserlistModelDataSetup.object.content);
-        getalluserlistModel.object.pageable.pageNumber = getalluserlistModelDataSetup.object.pageable.pageNumber;
-        getalluserlistModel.object.totalElements = getalluserlistModelDataSetup.object.totalElements;
-        print("DataSetup");
+        getalluserlistModel.object.pageable.pageNumber =
+            getalluserlistModelDataSetup.object.pageable.pageNumber;
+        getalluserlistModel.object.totalElements =
+            getalluserlistModelDataSetup.object.totalElements;
         emit(GetAllUserLoadedState(getalluserlistModel));
       }
     } catch (e) {
-      print('errorstateshwowData-$e');
       emit(HashTagErrorState(e.toString()));
     }
   }
@@ -158,7 +158,6 @@ class HashTagCubit extends Cubit<HashTagState> {
         print(hashTagBannerModel.message);
       }
     } catch (e) {
-      // print('errorstate-$e');
       emit(HashTagErrorState(e.toString()));
     }
   }

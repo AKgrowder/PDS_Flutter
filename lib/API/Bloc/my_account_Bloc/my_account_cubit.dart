@@ -35,7 +35,7 @@ class MyAccountCubit extends Cubit<MyAccountState> {
   }
 
   Future<void> upoldeProfilePic1(File imageFile, BuildContext context) async {
-    print('thsi upoldeProfilePic');
+    print('thsi cover image');
     dynamic chooseDocument;
     try {
       emit(MyAccountLoadingState());
@@ -96,7 +96,7 @@ class MyAccountCubit extends Cubit<MyAccountState> {
   }
 
   Future<void> cretaForumUpdate(
-      Map<String, dynamic> params, BuildContext context) async {
+      Map<String, dynamic> params, BuildContext context,{String? apiname}) async {
     dynamic createForm;
     try {
       emit(MyAccountLoadingState());
