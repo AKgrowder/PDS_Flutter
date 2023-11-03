@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -163,15 +164,27 @@ class ApiServices {
     response.headers.addAll(headers1);
 
     if (params != null) {
+      if (params['userProfilePic'].toString().isNotEmpty &&
+          params['userBackgroundPic'].toString().isNotEmpty) {
+        response.fields["userProfilePic"] = params['userProfilePic'] ?? "";
+        response.fields["userBackgroundPic"] =
+            params['userBackgroundPic'] ?? "";
+      } else if (params['userProfilePic'].toString().isNotEmpty) {
+        response.fields["userProfilePic"] = params['userProfilePic'] ?? "";
+      } else {
+        response.fields["userBackgroundPic"] =
+            params['userBackgroundPic'] ?? "";
+      }
       response.fields["document"] = params['document'] ?? "";
       response.fields["companyName"] = params['companyName'] ?? "";
       response.fields["jobProfile"] = params['jobProfile'] ?? "";
-      response.fields["userProfilePic"] = params['userProfilePic'] ?? "";
-      response.fields["uuid"] = params['uuid'] ?? "";
+      response.fields["uid"] = params['uuid'] ?? "";
       response.fields["name"] = params['name'] ?? "";
       response.fields["email"] = params['email'] ?? "";
+      response.fields["industryTypesUid"] = params['industryTypesUid'];
     }
-    print('response.fields-$response');
+    print("check responce fields--${params!['document']}");
+    log("message${params}");
     var res = await response.send();
     print('responce stauscode-${res.statusCode.toString()}');
     if (res.statusCode == 602) {

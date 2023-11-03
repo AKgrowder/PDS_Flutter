@@ -39,7 +39,8 @@ class Object {
   String? module;
   String? approvalStatus;
   String? mobileNo;
-  String? uuid;
+  String? userUid;
+  String? profileUid;
   String? userProfilePic;
   String? userBackgroundPic;
   List<IndustryTypes>? industryTypes;
@@ -65,7 +66,8 @@ class Object {
       this.module,
       this.approvalStatus,
       this.mobileNo,
-      this.uuid,
+      this.userUid,
+      this.profileUid,
       this.userProfilePic,
       this.userBackgroundPic,
       this.industryTypes,
@@ -92,7 +94,8 @@ class Object {
     module = json['module'];
     approvalStatus = json['approvalStatus'];
     mobileNo = json['mobileNo'];
-    uuid = json['uuid'];
+    userUid = json['userUid'];
+    profileUid = json['profileUid'];
     userProfilePic = json['userProfilePic'];
     userBackgroundPic = json['userBackgroundPic'];
     if (json['industryTypes'] != null) {
@@ -130,7 +133,8 @@ class Object {
     data['module'] = this.module;
     data['approvalStatus'] = this.approvalStatus;
     data['mobileNo'] = this.mobileNo;
-    data['uuid'] = this.uuid;
+    data['uuid'] = this.userUid;
+    data['profileUid'] = this.profileUid;
     data['userProfilePic'] = this.userProfilePic;
     data['userBackgroundPic'] = this.userBackgroundPic;
     if (this.industryTypes != null) {

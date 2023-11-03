@@ -21,7 +21,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CommentBottomSheet extends StatefulWidget {
   GetGuestAllPostModel? AllGuestPostRoomData;
   int index;
-   CommentBottomSheet(this.AllGuestPostRoomData,this.index,{key});
+  CommentBottomSheet(this.AllGuestPostRoomData, this.index, {key});
 
   @override
   State<CommentBottomSheet> createState() => _CommentBottomSheetState();
@@ -47,12 +47,11 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
     super.initState();
   }
 
-  setUserId() async{
+  setUserId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     User_ID = prefs.getString(PreferencesKey.loginUserID);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +59,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
     isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
     return WillPopScope(
       onWillPop: () {
-        if(isEmojiVisible){
+        if (isEmojiVisible) {
           setState(() {
             isEmojiVisible = false;
           });
@@ -101,7 +100,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
             if (state is AddnewCommentLoadedState) {
               addcomment.clear();
               Object1 object =
-              Object1.fromJson(state.addnewCommentsModeldata['object']);
+                  Object1.fromJson(state.addnewCommentsModeldata['object']);
 
               addCommentModeldata?.object?.add(object);
               print(
@@ -146,23 +145,24 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                             children: [
                               Padding(
                                 padding: EdgeInsets.only(left: 16),
-                                child: widget.AllGuestPostRoomData
-                                    ?.object
-                                    ?.content?[widget.index]
-                                    .userProfilePic !=
-                                    null
+                                child: widget
+                                            .AllGuestPostRoomData
+                                            ?.object
+                                            ?.content?[widget.index]
+                                            .userProfilePic !=
+                                        null
                                     ? CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      "${widget.AllGuestPostRoomData?.object?.content?[widget.index].userProfilePic}"),
-                                  radius: 25,
-                                )
+                                        backgroundImage: NetworkImage(
+                                            "${widget.AllGuestPostRoomData?.object?.content?[widget.index].userProfilePic}"),
+                                        radius: 25,
+                                      )
                                     : CustomImageView(
-                                  imagePath: ImageConstant.tomcruse,
-                                  height: 50,
-                                  width: 50,
-                                  fit: BoxFit.fill,
-                                  radius: BorderRadius.circular(25),
-                                ),
+                                        imagePath: ImageConstant.tomcruse,
+                                        height: 50,
+                                        width: 50,
+                                        fit: BoxFit.fill,
+                                        radius: BorderRadius.circular(25),
+                                      ),
                               ),
                               SizedBox(
                                 width: 10,
@@ -189,13 +189,11 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                             style: TextStyle(
                                                 fontFamily: 'outfit',
                                                 fontSize: 13,
-                                                fontWeight:
-                                                FontWeight.w500)),
+                                                fontWeight: FontWeight.w500)),
                                       ],
                                     ),
                                     Padding(
-                                      padding:
-                                      const EdgeInsets.only(bottom: 5),
+                                      padding: const EdgeInsets.only(bottom: 5),
                                       child: Align(
                                         alignment: Alignment.centerLeft,
                                         child: Text(
@@ -205,8 +203,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 fontFamily: 'outfit',
                                                 // overflow: TextOverflow.ellipsis,
                                                 fontSize: 16,
-                                                fontWeight:
-                                                FontWeight.w400)),
+                                                fontWeight: FontWeight.w400)),
                                       ),
                                     ),
                                   ],
@@ -229,104 +226,99 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 15.0, left: 35.0),
+                                  padding:
+                                      EdgeInsets.only(top: 15.0, left: 35.0),
                                   child: Container(
                                     // height: 80,
                                     // width: _width / 1.2,
                                     decoration: BoxDecoration(
-                                      // color: Colors.grey,
+                                        // color: Colors.grey,
                                         borderRadius:
-                                        BorderRadius.circular(15)),
+                                            BorderRadius.circular(15)),
                                     child: Row(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          addCommentModeldata
-                                              ?.object?[index]
-                                              .profilePic ==
-                                              null
+                                          addCommentModeldata?.object?[index]
+                                                      .profilePic ==
+                                                  null
                                               ? CustomImageView(
-                                            radius:
-                                            BorderRadius.circular(
-                                                50),
-                                            imagePath:
-                                            ImageConstant.pdslogo,
-                                            fit: BoxFit.fill,
-                                            height: 35,
-                                            width: 35,
-                                          )
+                                                  radius:
+                                                      BorderRadius.circular(50),
+                                                  imagePath:
+                                                      ImageConstant.pdslogo,
+                                                  fit: BoxFit.fill,
+                                                  height: 35,
+                                                  width: 35,
+                                                )
                                               : CustomImageView(
-                                            radius:
-                                            BorderRadius.circular(
-                                                50),
-                                            url:
-                                            "${addCommentModeldata?.object?[index].profilePic}",
-                                            fit: BoxFit.fill,
-                                            height: 35,
-                                            width: 35,
-                                          ),
+                                                  radius:
+                                                      BorderRadius.circular(50),
+                                                  url:
+                                                      "${addCommentModeldata?.object?[index].profilePic}",
+                                                  fit: BoxFit.fill,
+                                                  height: 35,
+                                                  width: 35,
+                                                ),
                                           SizedBox(
                                             width: 10,
                                           ),
                                           Column(
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                             mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                             children: [
                                               Container(
-                                                width: 300,
+                                                width: 280,
                                                 // color: Colors.amber,
                                                 child: Row(
                                                   children: [
                                                     Text(
                                                       "${addCommentModeldata?.object?[index].userName}",
                                                       style: TextStyle(
-                                                          fontFamily:
-                                                          'outfit',
+                                                          fontFamily: 'outfit',
                                                           fontSize: 18,
                                                           fontWeight:
-                                                          FontWeight
-                                                              .bold),
+                                                              FontWeight.bold),
                                                     ),
                                                     SizedBox(
                                                       width: 5,
                                                     ),
                                                     Text(
-                                                      // "1w",
+                                                        // "1w",
                                                         customFormat(
                                                             parsedDateTime),
                                                         style: TextStyle(
                                                             fontFamily:
-                                                            'outfit',
+                                                                'outfit',
                                                             fontSize: 13,
                                                             fontWeight:
-                                                            FontWeight
-                                                                .w500)),
+                                                                FontWeight
+                                                                    .w500)),
                                                     Spacer(),
                                                     GestureDetector(
                                                       onTap: () {
                                                         Deletecommentdilog(
                                                             addCommentModeldata
-                                                                ?.object?[
-                                                            index]
-                                                                .commentUid ??
+                                                                    ?.object?[
+                                                                        index]
+                                                                    .commentUid ??
                                                                 "",
                                                             index);
                                                       },
                                                       child: addCommentModeldata
-                                                          ?.object?[
-                                                      index]
-                                                          .commentByLoggedInUser ==
-                                                          true
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .commentByLoggedInUser ==
+                                                              true
                                                           ? Icon(
-                                                        Icons
-                                                            .delete_outline_rounded,
-                                                        size: 20,
-                                                        color: Colors
-                                                            .grey,
-                                                      )
+                                                              Icons
+                                                                  .delete_outline_rounded,
+                                                              size: 20,
+                                                              color:
+                                                                  Colors.grey,
+                                                            )
                                                           : SizedBox(),
                                                     ),
                                                   ],
@@ -341,15 +333,12 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                     // maxLines: 2,
 
                                                     style: TextStyle(
-                                                        fontFamily:
-                                                        'outfit',
-                                                        overflow:
-                                                        TextOverflow
+                                                        fontFamily: 'outfit',
+                                                        overflow: TextOverflow
                                                             .visible,
                                                         fontSize: 16,
                                                         fontWeight:
-                                                        FontWeight
-                                                            .w400)),
+                                                            FontWeight.w400)),
                                               ),
                                             ],
                                           ),
@@ -389,8 +378,15 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                   ),
                                   color: Colors.white),
                               child: Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
+                                padding: const EdgeInsets.only(right: 10),
                                 child: TextField(
+                                  onTap: () {
+                                    if (isEmojiVisible) {
+                                      setState(() {
+                                        isEmojiVisible = !isEmojiVisible;
+                                      });
+                                    }
+                                  },
                                   controller: addcomment,
                                   maxLength: 300,
                                   //
@@ -403,15 +399,17 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                       child: IconButton(
                                         icon: Icon(
                                           isEmojiVisible
-                                              ? Icons.emoji_emotions_outlined
+                                              ? Icons.keyboard_alt_outlined
                                               : Icons.emoji_emotions_outlined,
                                         ),
-                                        onPressed: () async{
+                                        onPressed: () async {
                                           if (isEmojiVisible) {
                                             focusNode.requestFocus();
                                           } else if (isKeyboardVisible) {
-                                            await SystemChannels.textInput.invokeMethod('TextInput.hide');
-                                            await Future.delayed(Duration(milliseconds: 100));
+                                            await SystemChannels.textInput
+                                                .invokeMethod('TextInput.hide');
+                                            await Future.delayed(
+                                                Duration(milliseconds: 100));
                                           }
                                           if (isKeyboardVisible) {
                                             FocusScope.of(context).unfocus();
@@ -441,7 +439,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                   SnackBar snackBar = SnackBar(
                                     content: Text('Please Add Comment'),
                                     backgroundColor:
-                                    ColorConstant.primary_color,
+                                        ColorConstant.primary_color,
                                   );
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar);
@@ -449,7 +447,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                   Map<String, dynamic> params = {
                                     "comment": addcomment.text,
                                     "postUid":
-                                    '${widget.AllGuestPostRoomData?.object?.content?[widget.index].postUid}',
+                                        '${widget.AllGuestPostRoomData?.object?.content?[widget.index].postUid}',
                                   };
 
                                   BlocProvider.of<AddcommentCubit>(context)
@@ -476,8 +474,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                             height: 250,
                             child: EmojiPicker(
                               textEditingController: addcomment,
-                              onBackspacePressed: (){
-                                if(isEmojiVisible){
+                              onBackspacePressed: () {
+                                if (isEmojiVisible) {
                                   setState(() {
                                     isEmojiVisible = false;
                                   });
@@ -488,7 +486,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                 // Issue: https://github.com/flutter/flutter/issues/28894
                                 emojiSizeMax: 32 *
                                     (foundation.defaultTargetPlatform ==
-                                        TargetPlatform.iOS
+                                            TargetPlatform.iOS
                                         ? 1.30
                                         : 1.0),
                                 verticalSpacing: 0,
@@ -503,20 +501,17 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                 skinToneDialogBgColor: Colors.white,
                                 skinToneIndicatorColor: Colors.grey,
                                 enableSkinTones: true,
-                                recentTabBehavior:
-                                RecentTabBehavior.RECENT,
+                                recentTabBehavior: RecentTabBehavior.RECENT,
                                 recentsLimit: 28,
                                 replaceEmojiOnLimitExceed: false,
                                 noRecents: const Text(
                                   'No Recents',
                                   style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.black26),
+                                      fontSize: 20, color: Colors.black26),
                                   textAlign: TextAlign.center,
                                 ),
                                 loadingIndicator: const SizedBox.shrink(),
-                                tabIndicatorAnimDuration:
-                                kTabScrollDuration,
+                                tabIndicatorAnimDuration: kTabScrollDuration,
                                 categoryIcons: const CategoryIcons(),
                                 buttonMode: ButtonMode.MATERIAL,
                                 checkPlatformCompatibility: true,
@@ -588,7 +583,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                       width: 80,
                       decoration: BoxDecoration(
                           border:
-                          Border.all(color: ColorConstant.primary_color),
+                              Border.all(color: ColorConstant.primary_color),
                           borderRadius: BorderRadius.circular(5)),
                       // color: Colors.green,
                       child: Center(
