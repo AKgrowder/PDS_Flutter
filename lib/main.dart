@@ -91,7 +91,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<SystemConfigCubit>(
           create: (context) => SystemConfigCubit(),
         ),
-         
+        BlocProvider<GetGuestAllPostCubit>(
+          create: (context) => GetGuestAllPostCubit(),
+        ),
         BlocProvider<AddPostCubit>(
           create: (context) => AddPostCubit(),
         ),
@@ -149,7 +151,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<DevicesInfoCubit>(
           create: (context) => DevicesInfoCubit(),
         ),
-         
+        BlocProvider<GetGuestAllPostCubit>(
+          create: (context) => GetGuestAllPostCubit(),
+        ),
         BlocProvider<FatchAllMembersCubit>(
           create: (context) => FatchAllMembersCubit(),
         ),
