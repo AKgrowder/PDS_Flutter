@@ -1215,7 +1215,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         .GetPostCommetAPI(
                                                             context,
                                                             "${NewProfileData?.object?.userUid}",
-                                                            "asc");
+                                                            "desc");
                                                   } else if (newValue ==
                                                       "oldest to Newest") {
                                                     BlocProvider.of<
@@ -1224,7 +1224,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         .GetPostCommetAPI(
                                                             context,
                                                             "${NewProfileData?.object?.userUid}",
-                                                            "desc");
+                                                            "asc");
                                                   }
                                                   selctedValue = newValue!;
                                                 });
