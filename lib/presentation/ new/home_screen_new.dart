@@ -23,6 +23,7 @@ import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
 import 'package:pds/API/Model/storyModel/stroyModel.dart';
+import 'package:pds/API/Model/story_model.dart';
 import 'package:pds/API/Repo/repository.dart';
 import 'package:pds/StoryFile/src/story_button.dart';
 import 'package:pds/StoryFile/src/story_page_transform.dart';
@@ -91,7 +92,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   List<int> _currentPages = [];
   String? myUserId;
   String? UserProfileImage;
-  GetallBlogModel? getallBlogModel;
+  GetallBlogModel? getallBlogModel1;
   DateTime? parsedDateTimeBlogs;
   FocusNode _focusNode = FocusNode();
   final focusNode = FocusNode();
@@ -146,7 +147,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     await BlocProvider.of<GetGuestAllPostCubit>(context).get_all_story(
       context,
     );
-    BlocProvider.of<GetGuestAllPostCubit>(context)
+    await BlocProvider.of<GetGuestAllPostCubit>(context)
         .GetallBlog(context, User_ID ?? "");
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .FetchAllExpertsAPI(context);
@@ -276,13 +277,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           }
           if (state is GetallblogsLoadedState) {
             // apiCalingdone = true;
-            getallBlogModel = state.getallBlogdata;
-
-            getallBlogModel?.object?.forEach((element) {
-              print(
-                  "Blog saved successfully Blog saved successfully Blog saved successfully Blog saved successfully Blog saved successfully Blog saved successfully ");
-              print(element.isSaved);
-            });
+            getallBlogModel1 = state.getallBlogdata;
           }
           if (state is GetUserProfileLoadedState) {
             print('dsfgsgfgsd-${state.myAccontDetails.success.toString()}');
@@ -342,8 +337,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                             ],
                           ),
                         ),
-                        images: List.generate(element.storyData?.length ?? 0,
-                            (index) => element.storyData![index].storyData!),
+                        images: List.generate(
+                            element.storyData?.length ?? 0,
+                            (index) => StoryModel(
+                                element.storyData![index].storyData!,
+                                element.storyData![index].createdAt!,
+                                element.storyData![index].profilePic,
+                                element.storyData![index].userName)),
                         borderDecoration: BoxDecoration(
                           borderRadius: const BorderRadius.all(
                             Radius.circular(60.0),
@@ -420,8 +420,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                         ],
                       ),
                     ),
-                    images: List.generate(element.storyData?.length ?? 0,
-                        (index) => element.storyData![index].storyData!),
+                    images: List.generate(
+                        element.storyData?.length ?? 0,
+                        (index) => StoryModel(
+                            element.storyData![index].storyData!,
+                            element.storyData![index].createdAt!,
+                            element.storyData![index].profilePic,
+                            element.storyData![index].userName)),
                     borderDecoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(
                         Radius.circular(60.0),
@@ -669,7 +674,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                             ),
                                           ),
                                           images: [
-                                            imageDataPost!.object.toString()
+                                            StoryModel(
+                                                imageDataPost!.object
+                                                    .toString(),
+                                                DateTime.now()
+                                                    .toIso8601String(),
+                                                UserProfileImage,
+                                                User_Name)
                                           ],
                                           borderDecoration: BoxDecoration(
                                             borderRadius:
@@ -834,8 +845,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 parmes);
                                                       }
                                                     }
-                                                    buttonDatas[0].images.add(
-                                                        imageDataPost!.object!);
+                                                  buttonDatas[0].images.add(
+    StoryModel(imageDataPost!.object!, DateTime.now().toIso8601String(), UserProfileImage, User_Name));
                                                     if (imageDataPost?.object !=
                                                         null) {
                                                       buttonDatas[0]
@@ -989,8 +1000,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       if (uuid == null) {
                                                         Navigator.of(context).push(
                                                             MaterialPageRoute(
-                                                                builder: (context) =>
-                                                                    RegisterCreateAccountScreen()));
+                                                                builder:
+                                                                    (context) =>
+                                                                        RegisterCreateAccountScreen()));
                                                       } else {
                                                         Navigator.push(context,
                                                             MaterialPageRoute(
@@ -1010,7 +1022,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     },
                                                     child: AllGuestPostRoomData
                                                                 ?.object
-                                                                ?.content?[index]
+                                                                ?.content?[
+                                                                    index]
                                                                 .userProfilePic !=
                                                             null
                                                         ? CircleAvatar(
@@ -1032,7 +1045,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   ),
                                                   title: Column(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       // SizedBox(
                                                       //   height: 6,
@@ -1068,93 +1082,95 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       ), */
                                                     ],
                                                   ),
-                                                  trailing:
-                                                      User_ID ==
-                                                              AllGuestPostRoomData
-                                                                  ?.object
-                                                                  ?.content?[
-                                                                      index]
-                                                                  .userUid
-                                                          ? GestureDetector(
-                                                              onTapDown:
-                                                                  (TapDownDetails
-                                                                      details) {
-                                                                delete_dilog_menu(
-                                                                  details
-                                                                      .globalPosition,
-                                                                  context,
-                                                                );
-                                                              },
-                                                              child: Icon(
-                                                                Icons
-                                                                    .more_vert_rounded,
-                                                              ))
-                                                          : GestureDetector(
-                                                              onTap: () async {
-                                                                await soicalFunation(
-                                                                  apiName:
-                                                                      'Follow',
-                                                                  index: index,
-                                                                );
-                                                              },
-                                                              child: Container(
-                                                                height: 25,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                width: 65,
-                                                                margin: EdgeInsets
-                                                                    .only(
-                                                                        bottom:
-                                                                            5),
-                                                                decoration: BoxDecoration(
-                                                                    color: Color(
-                                                                        0xffED1C25),
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                                4)),
-                                                                child: AllGuestPostRoomData
+                                                  trailing: User_ID ==
+                                                          AllGuestPostRoomData
+                                                              ?.object
+                                                              ?.content?[index]
+                                                              .userUid
+                                                      ? GestureDetector(
+                                                          onTapDown:
+                                                              (TapDownDetails
+                                                                  details) {
+                                                            delete_dilog_menu(
+                                                              details
+                                                                  .globalPosition,
+                                                              context,
+                                                            );
+                                                          },
+                                                          child: Icon(
+                                                            Icons
+                                                                .more_vert_rounded,
+                                                          ))
+                                                      : GestureDetector(
+                                                          onTap: () async {
+                                                            await soicalFunation(
+                                                              apiName: 'Follow',
+                                                              index: index,
+                                                            );
+                                                          },
+                                                          child: Container(
+                                                            height: 25,
+                                                            alignment: Alignment
+                                                                .center,
+                                                            width: 65,
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                    bottom: 5),
+                                                            decoration: BoxDecoration(
+                                                                color: Color(
+                                                                    0xffED1C25),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            4)),
+                                                            child: AllGuestPostRoomData
+                                                                        ?.object
+                                                                        ?.content?[
+                                                                            index]
+                                                                        .isFollowing ==
+                                                                    'FOLLOW'
+                                                                ? Text(
+                                                                    'Follow',
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            "outfit",
+                                                                        fontSize:
+                                                                            12,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        color: Colors
+                                                                            .white),
+                                                                  )
+                                                                : AllGuestPostRoomData
                                                                             ?.object
-                                                                            ?.content?[
-                                                                                index]
+                                                                            ?.content?[index]
                                                                             .isFollowing ==
-                                                                        'FOLLOW'
+                                                                        'REQUESTED'
                                                                     ? Text(
-                                                                        'Follow',
+                                                                        'Requested',
                                                                         style: TextStyle(
                                                                             fontFamily:
                                                                                 "outfit",
                                                                             fontSize:
                                                                                 12,
-                                                                            fontWeight: FontWeight
-                                                                                .bold,
-                                                                            color:
-                                                                                Colors.white),
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            color: Colors.white),
                                                                       )
-                                                                    : AllGuestPostRoomData
-                                                                                ?.object
-                                                                                ?.content?[index]
-                                                                                .isFollowing ==
-                                                                            'REQUESTED'
-                                                                        ? Text(
-                                                                            'Requested',
-                                                                            style: TextStyle(
-                                                                                fontFamily: "outfit",
-                                                                                fontSize: 12,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: Colors.white),
-                                                                          )
-                                                                        : Text(
-                                                                            'Following ',
-                                                                            style: TextStyle(
-                                                                                fontFamily: "outfit",
-                                                                                fontSize: 12,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: Colors.white),
-                                                                          ),
-                                                              ),
-                                                            ),
+                                                                    : Text(
+                                                                        'Following ',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                "outfit",
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            color: Colors.white),
+                                                                      ),
+                                                          ),
+                                                        ),
                                                 ),
                                               ),
                                               SizedBox(
@@ -1173,22 +1189,26 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         text:
                                                             "${AllGuestPostRoomData?.object?.content?[index].description}",
                                                         decoratedStyle: TextStyle(
-                                                            fontFamily: "outfit",
+                                                            fontFamily:
+                                                                "outfit",
                                                             fontSize: 14,
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             color: ColorConstant
                                                                 .HasTagColor),
                                                         basicStyle: TextStyle(
-                                                            fontFamily: "outfit",
+                                                            fontFamily:
+                                                                "outfit",
                                                             fontSize: 14,
                                                             fontWeight:
                                                                 FontWeight.bold,
-                                                            color: Colors.black),
+                                                            color:
+                                                                Colors.black),
                                                         onTap: (text) {
                                                           if (User_ID == null) {
-                                                            Navigator.of(context).push(
-                                                                MaterialPageRoute(
+                                                            Navigator.of(
+                                                                    context)
+                                                                .push(MaterialPageRoute(
                                                                     builder:
                                                                         (context) =>
                                                                             RegisterCreateAccountScreen()));
@@ -1208,7 +1228,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     )
                                                   : SizedBox(),
                                               // index == 0
-                                      
+
                                               AllGuestPostRoomData
                                                           ?.object
                                                           ?.content?[index]
@@ -1229,11 +1249,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               "IMAGE"
                                                           ? Container(
                                                               width: _width,
-                                                              margin:
-                                                                  EdgeInsets.only(
+                                                              margin: EdgeInsets
+                                                                  .only(
                                                                       left: 16,
                                                                       top: 15,
-                                                                      right: 16),
+                                                                      right:
+                                                                          16),
                                                               child: Center(
                                                                   child:
                                                                       CustomImageView(
@@ -1255,17 +1276,16 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           ?.isNotEmpty ==
                                                                       true)
                                                                   ? Container(
-                                                                      height: 400,
+                                                                      height:
+                                                                          400,
                                                                       width:
                                                                           _width,
                                                                       child:
                                                                           DocumentViewScreen1(
                                                                         path: AllGuestPostRoomData
                                                                             ?.object
-                                                                            ?.content?[
-                                                                                index]
-                                                                            .postData?[
-                                                                                0]
+                                                                            ?.content?[index]
+                                                                            .postData?[0]
                                                                             .toString(),
                                                                       ))
                                                                   : SizedBox()
@@ -1303,14 +1323,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           .postData
                                                                           ?.length,
                                                                       itemBuilder:
-                                                                          (BuildContext
-                                                                                  context,
+                                                                          (BuildContext context,
                                                                               int index1) {
-                                                                        if (AllGuestPostRoomData
-                                                                                ?.object
-                                                                                ?.content?[
-                                                                                    index]
-                                                                                .postDataType ==
+                                                                        if (AllGuestPostRoomData?.object?.content?[index].postDataType ==
                                                                             "IMAGE") {
                                                                           return Container(
                                                                             width:
@@ -1321,22 +1336,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 right: 16),
                                                                             child: Center(
                                                                                 child: CustomImageView(
-                                                                              url:
-                                                                                  "${AllGuestPostRoomData?.object?.content?[index].postData?[index1]}",
+                                                                              url: "${AllGuestPostRoomData?.object?.content?[index].postData?[index1]}",
                                                                             )),
                                                                           );
-                                                                        } else if (AllGuestPostRoomData
-                                                                                ?.object
-                                                                                ?.content?[index]
-                                                                                .postDataType ==
+                                                                        } else if (AllGuestPostRoomData?.object?.content?[index].postDataType ==
                                                                             "ATTACHMENT") {
                                                                           return Container(
-                                                                              height:
-                                                                                  400,
-                                                                              width:
-                                                                                  _width,
-                                                                              child:
-                                                                                  DocumentViewScreen1(
+                                                                              height: 400,
+                                                                              width: _width,
+                                                                              child: DocumentViewScreen1(
                                                                                 path: AllGuestPostRoomData?.object?.content?[index].postData?[index1].toString(),
                                                                               ));
                                                                         }
@@ -1349,10 +1357,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       right: 0,
                                                                       child:
                                                                           Padding(
-                                                                        padding: const EdgeInsets
-                                                                                .only(
-                                                                            top:
-                                                                                0),
+                                                                        padding:
+                                                                            const EdgeInsets.only(top: 0),
                                                                         child:
                                                                             Container(
                                                                           height:
@@ -1365,16 +1371,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 _currentPages[index].toDouble(),
                                                                             decorator:
                                                                                 DotsDecorator(
-                                                                              size:
-                                                                                  const Size(10.0, 7.0),
-                                                                              activeSize:
-                                                                                  const Size(10.0, 10.0),
-                                                                              spacing:
-                                                                                  const EdgeInsets.symmetric(horizontal: 2),
-                                                                              activeColor:
-                                                                                  Color(0xffED1C25),
-                                                                              color:
-                                                                                  Color(0xff6A6A6A),
+                                                                              size: const Size(10.0, 7.0),
+                                                                              activeSize: const Size(10.0, 10.0),
+                                                                              spacing: const EdgeInsets.symmetric(horizontal: 2),
+                                                                              activeColor: Color(0xffED1C25),
+                                                                              color: Color(0xff6A6A6A),
                                                                             ),
                                                                           ),
                                                                         ),
@@ -1385,7 +1386,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             ),
                                                           ],
                                                         ),
-                                      
+
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     left: 13),
@@ -1407,7 +1408,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     GestureDetector(
                                                       onTap: () async {
                                                         await soicalFunation(
-                                                            apiName: 'like_post',
+                                                            apiName:
+                                                                'like_post',
                                                             index: index);
                                                       },
                                                       child: AllGuestPostRoomData
@@ -1422,7 +1424,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               height: 20,
                                                             )
                                                           : Image.asset(
-                                                              ImageConstant.like,
+                                                              ImageConstant
+                                                                  .like,
                                                               height: 20,
                                                             ),
                                                     ),
@@ -1437,7 +1440,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     builder: (context) =>
                                                     
                                                         ShowAllPostLike("${AllGuestPostRoomData?.object?[index].postUid}"))); */
-                                      
+
                                                         Navigator.push(context,
                                                             MaterialPageRoute(
                                                           builder: (context) {
@@ -1449,7 +1452,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       child: Text(
                                                         "${AllGuestPostRoomData?.object?.content?[index].likedCount}",
                                                         style: TextStyle(
-                                                            fontFamily: "outfit",
+                                                            fontFamily:
+                                                                "outfit",
                                                             fontSize: 14),
                                                       ),
                                                     ),
@@ -1463,7 +1467,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 context)
                                                             .Addcomment(context,
                                                                 '${AllGuestPostRoomData?.object?.content?[index].postUid}');
-                                                         if (uuid == null) {
+                                                        if (uuid == null) {
                                                           Navigator.of(context).push(
                                                               MaterialPageRoute(
                                                                   builder:
@@ -1880,63 +1884,63 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 Colors.black),
                                                       ),
                                                     ),
-                                                    Spacer(),
-                                                    SizedBox(
-                                                        height: 20,
-                                                        child: Icon(
-                                                          Icons
-                                                              .arrow_forward_rounded,
-                                                          color: Colors.black,
-                                                        )),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
+                                                    // Spacer(),
+                                                    // SizedBox(
+                                                    //     height: 20,
+                                                    //     child: Icon(
+                                                    //       Icons
+                                                    //           .arrow_forward_rounded,
+                                                    //       color: Colors.black,
+                                                    //     )),
+                                                    // SizedBox(
+                                                    //   width: 10,
+                                                    // ),
                                                   ],
                                                 ),
                                                 Container(
                                                   height: _height / 3.23,
-                                                  width: _width,
+                                                  // width: _width,
                                                   margin: EdgeInsets.only(
                                                       bottom: 15),
                                                   child: ListView.builder(
-                                                    itemCount: getallBlogModel
+                                                    itemCount: getallBlogModel1
                                                         ?.object?.length,
                                                     scrollDirection:
                                                         Axis.horizontal,
                                                     itemBuilder:
                                                         (context, index1) {
-                                                      if (getallBlogModel
+                                                      if (getallBlogModel1
                                                                   ?.object
                                                                   ?.length !=
                                                               0 ||
-                                                          getallBlogModel
+                                                          getallBlogModel1
                                                                   ?.object !=
                                                               null) {
                                                         parsedDateTimeBlogs =
                                                             DateTime.parse(
-                                                                '${getallBlogModel?.object?[index1].createdAt ?? ""}');
+                                                                '${getallBlogModel1?.object?[index1].createdAt ?? ""}');
                                                         // print(
                                                         //     'index $index1 parsedDateTimeBlogs------$parsedDateTimeBlogs ');
                                                       }
                                                       return GestureDetector(
-                                                          onTap: () {
+                                                        onTap: () {
                                                           Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
                                                                 builder: (context) => RecentBlogScren(
-                                                                    description1: getallBlogModel
+                                                                    description1: getallBlogModel1
                                                                             ?.object?[
                                                                                 index1]
                                                                             .description
                                                                             .toString() ??
                                                                         "",
-                                                                    title: getallBlogModel
+                                                                    title: getallBlogModel1
                                                                             ?.object?[
                                                                                 index1]
                                                                             .title
                                                                             .toString() ??
                                                                         "",
-                                                                    imageURL: getallBlogModel
+                                                                    imageURL: getallBlogModel1
                                                                             ?.object?[index1]
                                                                             .image
                                                                             .toString() ??
@@ -1946,8 +1950,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         child: Container(
                                                           height: 220,
                                                           width: _width / 1.6,
-                                                          margin: EdgeInsets.only(
-                                                              left: 10, top: 10),
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  left: 10,
+                                                                  top: 10),
                                                           decoration:
                                                               BoxDecoration(
                                                                   borderRadius:
@@ -1966,15 +1972,16 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     .start,
                                                             children: [
                                                               CustomImageView(
-                                                                url: getallBlogModel
+                                                                url: getallBlogModel1
                                                                         ?.object?[
-                                                                            index]
+                                                                            index1]
                                                                         .image
                                                                         .toString() ??
                                                                     "",
-                                                                // height: 50,
+                                                                height: 150,
                                                                 width: _width,
-                                                                fit: BoxFit.fill,
+                                                                fit:
+                                                                    BoxFit.fill,
                                                                 radius:
                                                                     BorderRadius
                                                                         .circular(
@@ -1987,7 +1994,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         left: 9,
                                                                         top: 7),
                                                                 child: Text(
-                                                                  "${getallBlogModel?.object?[index1].title}",
+                                                                  "${getallBlogModel1?.object?[index1].title}",
                                                                   maxLines: 1,
                                                                   style: TextStyle(
                                                                       fontSize:
@@ -2007,7 +2014,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   Padding(
                                                                     padding: const EdgeInsets
                                                                             .only(
-                                                                        left: 10,
+                                                                        left:
+                                                                            10,
                                                                         top: 3),
                                                                     child: Text(
                                                                       /*  getallBlogModel?.object?.length != 0 ||
@@ -2021,22 +2029,19 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               "outfit",
                                                                           fontSize:
                                                                               12,
-                                                                          fontWeight:
-                                                                              FontWeight
-                                                                                  .w400,
-                                                                          color: Color(
-                                                                              0xffABABAB)),
+                                                                          fontWeight: FontWeight
+                                                                              .w400,
+                                                                          color:
+                                                                              Color(0xffABABAB)),
                                                                     ),
                                                                   ),
                                                                   Container(
                                                                     height: 6,
                                                                     width: 7,
-                                                                    margin: EdgeInsets
-                                                                        .only(
-                                                                            top:
-                                                                                5,
-                                                                            left:
-                                                                                2),
+                                                                    margin: EdgeInsets.only(
+                                                                        top: 5,
+                                                                        left:
+                                                                            2),
                                                                     decoration: BoxDecoration(
                                                                         shape: BoxShape
                                                                             .circle,
@@ -2047,14 +2052,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     padding: const EdgeInsets
                                                                             .only(
                                                                         top: 4,
-                                                                        left: 1),
+                                                                        left:
+                                                                            1),
                                                                     child: Text(
                                                                       '12.3K Views',
                                                                       style: TextStyle(
                                                                           fontSize:
                                                                               11,
-                                                                          color: Color(
-                                                                              0xffABABAB)),
+                                                                          color:
+                                                                              Color(0xffABABAB)),
                                                                     ),
                                                                   ),
                                                                 ],
@@ -2065,24 +2071,22 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     onTap: () {
                                                                       print(
                                                                           "Click On Like Button");
-                                                      
+
                                                                       BlocProvider.of<GetGuestAllPostCubit>(context).LikeBlog(
                                                                           context,
                                                                           "${User_ID}",
-                                                                          "${getallBlogModel?.object?[index1].uid}");
-                                                      
-                                                                      if (getallBlogModel
+                                                                          "${getallBlogModel1?.object?[index1].uid}");
+
+                                                                      if (getallBlogModel1
                                                                               ?.object?[index1]
                                                                               .isLiked ==
                                                                           false) {
-                                                                        getallBlogModel
-                                                                            ?.object?[
-                                                                                index1]
+                                                                        getallBlogModel1
+                                                                            ?.object?[index1]
                                                                             .isLiked = true;
                                                                       } else {
-                                                                        getallBlogModel
-                                                                            ?.object?[
-                                                                                index1]
+                                                                        getallBlogModel1
+                                                                            ?.object?[index1]
                                                                             .isLiked = false;
                                                                       }
                                                                     },
@@ -2090,16 +2094,17 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         Padding(
                                                                       padding: const EdgeInsets
                                                                               .only(
-                                                                          left: 7,
-                                                                          top: 4),
-                                                                      child: getallBlogModel?.object?[index1].isLiked ==
+                                                                          left:
+                                                                              7,
+                                                                          top:
+                                                                              4),
+                                                                      child: getallBlogModel1?.object?[index1].isLiked ==
                                                                               false
-                                                                          ? Icon(Icons
-                                                                              .favorite_border)
+                                                                          ? Icon(
+                                                                              Icons.favorite_border)
                                                                           : Icon(
                                                                               Icons.favorite,
-                                                                              color:
-                                                                                  Colors.red,
+                                                                              color: Colors.red,
                                                                             ),
                                                                     ),
                                                                   ),
@@ -2112,7 +2117,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         Padding(
                                                                       padding: const EdgeInsets
                                                                               .only(
-                                                                          top: 2),
+                                                                          top:
+                                                                              2),
                                                                       child: Image.asset(
                                                                           ImageConstant
                                                                               .arrowright),
@@ -2123,33 +2129,32 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     onTap: () {
                                                                       print(
                                                                           "Save Blogs");
-                                                      
+
                                                                       BlocProvider.of<GetGuestAllPostCubit>(context).SaveBlog(
                                                                           context,
                                                                           "${User_ID}",
-                                                                          "${getallBlogModel?.object?[index1].uid}");
-                                                                      if (getallBlogModel
+                                                                          "${getallBlogModel1?.object?[index1].uid}");
+                                                                      if (getallBlogModel1
                                                                               ?.object?[index1]
                                                                               .isSaved ==
                                                                           false) {
-                                                                        getallBlogModel
-                                                                            ?.object?[
-                                                                                index1]
+                                                                        getallBlogModel1
+                                                                            ?.object?[index1]
                                                                             .isSaved = true;
                                                                       } else {
-                                                                        getallBlogModel
-                                                                            ?.object?[
-                                                                                index1]
+                                                                        getallBlogModel1
+                                                                            ?.object?[index1]
                                                                             .isSaved = false;
                                                                       }
                                                                     },
                                                                     child:
                                                                         SizedBox(
-                                                                      height: 35,
+                                                                      height:
+                                                                          35,
                                                                       child: Padding(
                                                                           padding: const EdgeInsets.only(top: 6),
                                                                           child: Image.asset(
-                                                                            getallBlogModel?.object?[index1].isSaved == false
+                                                                            getallBlogModel1?.object?[index1].isSaved == false
                                                                                 ? ImageConstant.savePin
                                                                                 : ImageConstant.Savefill,
                                                                             width:
@@ -2604,7 +2609,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         context: context,
         builder: (BuildContext bc) {
           return CommentBottomSheet(AllGuestPostRoomData, index);
-             });
+        });
   }
 
   void onClickedEmoji() async {

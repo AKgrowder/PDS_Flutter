@@ -92,5 +92,7 @@ class Config {
   static const String saveBlog = "guest/api/saveBlog";
   static const String LikeBlog = "guest/api/likeBlog";
   static const String getSavedBlogs = "guest/api/getSavedBlogs";
+  static const String OpenSaveImagePost = "user/api/get_post_by_uid";
+
 
 }

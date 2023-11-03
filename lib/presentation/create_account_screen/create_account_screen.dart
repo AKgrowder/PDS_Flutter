@@ -315,7 +315,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     ],
                                   ),
                                 )
-                              : Align(
+                              : SizedBox(),
+                          /* Align(
                                   alignment: Alignment.center,
                                   child: Container(
                                     height: 130,
@@ -348,39 +349,15 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                               svgPath: ImageConstant.imgCamera,
                                               alignment: Alignment.center,
                                             ),
-                                            // child: CustomIconButton(
-                                            //   height: 33,
-                                            //   width: 33,
-                                            //   alignment: Alignment.bottomRight,
-                                            //   child: GestureDetector(
-                                            //     onTap: () {
-                                            //       pickImage();
-                                            //     },
-                                            //     child: CustomImageView(
-                                            //       svgPath: ImageConstant.imgCamera,
-                                            //     ),
-                                            //   ),
-                                            // ),
+                                           
                                           ),
                                         ),
 
-                                        // CustomIconButton(
-                                        //   height: 33,+-----+-
-                                        //   width: 33,
-                                        //   alignment: Alignment.bottomRight,
-                                        //   child: GestureDetector(
-                                        //     onTap: () {
-                                        //       pickImage();
-                                        //     },
-                                        //     child: CustomImageView(
-                                        //       svgPath: ImageConstant.imgCamera,
-                                        //     ),
-                                        //   ),
-                                        // ),
+                                       
                                       ],
                                     ),
                                   ),
-                                ),
+                                ), */
                           Padding(
                             padding: EdgeInsets.only(
                               top: 18,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pds/API/Model/story_model.dart';
 import 'package:pds/StoryFile/src/set_state_after_frame_mixin.dart';
 import 'package:pds/StoryFile/src/story_page_transform.dart';
 
@@ -221,7 +222,7 @@ class StoryButtonData {
   final double timelineSpacing;
   final EdgeInsets? timlinePadding;
   final IsVisibleCallback isVisibleCallback;
-  List<String> images = [];
+  List<StoryModel> images = [];
 
   /// Usualy this is required for the final story
   /// to pop it out to its button mosition

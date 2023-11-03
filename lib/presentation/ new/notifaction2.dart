@@ -8,6 +8,7 @@ import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart'
 import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/room_members/room_members_screen.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 
@@ -253,27 +254,40 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                           borderRadius:
                                               BorderRadius.circular(15)),
                                       child: Row(children: [
-                                        RequestListModelData?.object?[index]
-                                                    .followedByUserProfilePic !=
-                                                null
-                                            ? CustomImageView(
-                                                url:
-                                                    "${RequestListModelData?.object?[index].followedByUserProfilePic}",
-                                                height: 70,
-                                                width: 70,
-                                                fit: BoxFit.fill,
-                                                radius:
-                                                    BorderRadius.circular(35),
-                                              )
-                                            : CustomImageView(
-                                                imagePath:
-                                                    ImageConstant.tomcruse,
-                                                height: 70,
-                                                width: 70,
-                                                fit: BoxFit.fill,
-                                                radius:
-                                                    BorderRadius.circular(35),
-                                              ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return ProfileScreen(
+                                                  User_ID:
+                                                      "${RequestListModelData?.object?[index].followedByUserUid}",
+                                                  isFollowing: "REQUESTED");
+                                            }));
+                                          },
+                                          child: RequestListModelData
+                                                      ?.object?[index]
+                                                      .followedByUserProfilePic !=
+                                                  null
+                                              ? CustomImageView(
+                                                  url:
+                                                      "${RequestListModelData?.object?[index].followedByUserProfilePic}",
+                                                  height: 70,
+                                                  width: 70,
+                                                  fit: BoxFit.fill,
+                                                  radius:
+                                                      BorderRadius.circular(35),
+                                                )
+                                              : CustomImageView(
+                                                  imagePath:
+                                                      ImageConstant.tomcruse,
+                                                  height: 70,
+                                                  width: 70,
+                                                  fit: BoxFit.fill,
+                                                  radius:
+                                                      BorderRadius.circular(35),
+                                                ),
+                                        ),
                                         SizedBox(
                                           width: 10,
                                         ),
