@@ -17,6 +17,7 @@ import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
+import 'package:pds/API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_cubit.dart';
 import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:pds/API/Bloc/SelectRoom_Bloc/SelectRoom_cubit.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
@@ -90,9 +91,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<SystemConfigCubit>(
           create: (context) => SystemConfigCubit(),
         ),
-        BlocProvider<GetGuestAllPostCubit>(
-          create: (context) => GetGuestAllPostCubit(),
-        ),
+         
         BlocProvider<AddPostCubit>(
           create: (context) => AddPostCubit(),
         ),
@@ -150,9 +149,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<DevicesInfoCubit>(
           create: (context) => DevicesInfoCubit(),
         ),
-        BlocProvider<GetGuestAllPostCubit>(
-          create: (context) => GetGuestAllPostCubit(),
-        ),
+         
         BlocProvider<FatchAllMembersCubit>(
           create: (context) => FatchAllMembersCubit(),
         ),
@@ -174,6 +171,10 @@ class MyApp extends StatelessWidget {
         BlocProvider<EditroomCubit>(
           create: (context) => EditroomCubit(),
         ),
+        BlocProvider<OpenSaveCubit>(
+          create: (context) => OpenSaveCubit(),
+        ),
+        
       ],
       child: MaterialApp(
           theme: ThemeData(
