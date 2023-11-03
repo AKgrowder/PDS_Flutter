@@ -17,6 +17,7 @@ import 'package:pds/API/Model/LogOutModel/LogOut_model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
+import 'package:pds/API/Model/OpenSaveImagepostModel/OpenSaveImagepost_Model.dart';
 import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
 import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
@@ -1582,6 +1583,23 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return AboutMe.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+    openSaveImagePost(BuildContext context, String PostUID) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.OpenSaveImagePost}?postUid=$PostUID', context);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return OpenSaveImagepostModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
