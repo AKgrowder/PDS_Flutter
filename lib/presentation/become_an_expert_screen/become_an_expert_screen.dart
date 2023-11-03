@@ -12,6 +12,7 @@ import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/utils/image_constant.dart';
@@ -149,7 +150,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         ),
       ),
       body: BlocConsumer<FetchExprtiseRoomCubit, FetchExprtiseRoomState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is FetchExprtiseRoomLoadingState) {
             Center(
               child: Container(
@@ -214,7 +215,24 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
               backgroundColor: ColorConstant.primary_color,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            Navigator.pop(context);
+            final SharedPreferences prefs =
+                await SharedPreferences.getInstance();
+            String? userid = await prefs.getString(PreferencesKey.loginUserID);
+            String time =
+                '${_startTime?.format(context).toString()} to ${_endTime?.format(context).toString()}';
+            Map<String, dynamic> params = {
+              "document": "${chooseDocument?.object.toString()}",
+              "expertUId": ["${selectedExpertise?.uid}"],
+              "fees": feesController.text,
+              "jobProfile": jobprofileController.text,
+              "uid": userid.toString(),
+              "workingHours": time.toString(),
+              "industryTypesUid": industryUUID
+            };
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return NewBottomBar(buttomIndex: 0);
+            })).then((value) => BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                .addExpertProfile(params, context));
           }
         },
         builder: (context, state) {

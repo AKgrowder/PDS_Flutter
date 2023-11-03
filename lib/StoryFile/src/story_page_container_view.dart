@@ -3,10 +3,14 @@ import 'dart:collection';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pds/StoryFile/src/first_build_mixin.dart';
 import 'package:pds/StoryFile/src/story_button.dart';
 import 'package:pds/StoryFile/src/story_page_scaffold.dart';
 import 'package:pds/core/utils/color_constant.dart';
+
+import '../../core/utils/image_constant.dart';
+import '../../widgets/custom_image_view.dart';
 
 class StoryPageContainerView extends StatefulWidget {
   final StoryButtonData buttonData;
@@ -111,12 +115,79 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
       ),
       child: Row(
         children: [
-          const Expanded(child: SizedBox()),
+          Expanded(child: SizedBox(
+            child: Row(
+              children: [
+                widget.buttonData.images[0].profileImage != null  ? CustomImageView(
+                  url: "${widget.buttonData.images[0].profileImage}",
+                  height: 32,
+                  width: 32,
+                  fit: BoxFit.fill,
+                  radius: BorderRadius.circular(25),
+                )  : CustomImageView(
+                  imagePath: ImageConstant.tomcruse,
+                  height: 32,
+                  width: 32,
+                  fit: BoxFit.fill,
+                  radius: BorderRadius.circular(25),
+                ),
+                SizedBox(width: 12,),
+                Text(
+                  '${widget.buttonData.images[0].username}',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontFamily: 'outfit',
+                    fontWeight: FontWeight.w400,
+                    height: 0.08,
+                    letterSpacing: -0.17,
+                  ),
+                ),
+                SizedBox(width: 8,),
+                Opacity(
+                  opacity: 0.50,
+                  child: Text(
+                    '${formatDateTime(DateTime.parse(widget.buttonData.images[_curSegmentIndex].date!))}',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                      height: 0.08,
+                      letterSpacing: -0.17,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )),
           closeButton,
         ],
       ),
     );
   }
+
+  String formatDateTime(DateTime dateTime) {
+    final now = DateTime.now();
+    final yesterday = now.subtract(Duration(days: 1));
+    final formatter = DateFormat('h:mm a');
+
+    if (dateTime.year == now.year &&
+        dateTime.month == now.month &&
+        dateTime.day == now.day) {
+      // Today
+      return 'Today, ${formatter.format(dateTime)}';
+    } else if (dateTime.year == yesterday.year &&
+        dateTime.month == yesterday.month &&
+        dateTime.day == yesterday.day) {
+      // Yesterday
+      return 'Yesterday, ${formatter.format(dateTime)}';
+    } else {
+      // A different day, you can format it as you wish
+      return '${DateFormat('MMMM d').format(dateTime)}, ${formatter.format(dateTime)}';
+    }
+  }
+
 
   Widget _buildTimeline() {
     return Padding(
@@ -141,7 +212,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   Widget _buildPageContent() {
     bool imageLoaded = false;
     _storyController!.pause();
-    NetworkImage networkImage = NetworkImage(widget.buttonData.images[_curSegmentIndex]);
+    NetworkImage networkImage = NetworkImage(widget.buttonData.images[_curSegmentIndex].image!);
     networkImage.resolve(ImageConfiguration()).addListener(
       ImageStreamListener((info, call) {
         if (mounted) {
@@ -168,7 +239,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
-          image: widget.buttonData.images[_curSegmentIndex].contains("car")?DecorationImage(
+          image: widget.buttonData.images[_curSegmentIndex].image!.contains("car")?DecorationImage(
             image: AssetImage(
               "assets/images/expert4.png",
             ),

@@ -158,6 +158,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                 GestureDetector(
                                   onTap: () {
                                     HasetagList = [];
+                                    CreatePostDone = true;
                                     dataPostFucntion();
                                   },
                                   child: Container(
@@ -1139,7 +1140,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
       } else {
         CreatePostDone = false;
         SnackBar snackBar = SnackBar(
-          content: Text('Please HaseTag Lath less than 25 letter!!'),
+          content: Text('Please HaseTag less than 25 letter!!'),
           backgroundColor: ColorConstant.primary_color,
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);

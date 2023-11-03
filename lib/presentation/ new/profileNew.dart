@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:math';
-
+import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -184,16 +184,17 @@ class _ProfileScreenState extends State<ProfileScreen>
 
       if (state is NewProfileSLoadedState) {
         NewProfileData = state.PublicRoomData;
+      
         print(NewProfileData?.object?.module);
         BlocProvider.of<NewProfileSCubit>(context)
-            .GetAppPostAPI(context, "${NewProfileData?.object?.uuid}");
+            .GetAppPostAPI(context, "${NewProfileData?.object?.userUid}");
 
         BlocProvider.of<NewProfileSCubit>(context)
-            .GetSavePostAPI(context, "${NewProfileData?.object?.uuid}");
+            .GetSavePostAPI(context, "${NewProfileData?.object?.userUid}");
 
         BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
-            context, "${NewProfileData?.object?.uuid}", "desc");
-        savedataFuntion(NewProfileData?.object?.uuid ?? '');
+            context, "${NewProfileData?.object?.userUid}", "desc");
+        savedataFuntion(NewProfileData?.object?.userUid ?? '');
         NewProfileData?.object?.industryTypes?.forEach((element) {
           print(element.industryTypeName);
           // industryTypesArray.add("${element.industryTypeName}");
@@ -308,15 +309,23 @@ class _ProfileScreenState extends State<ProfileScreen>
                       width: _width,
                       child: NewProfileData?.object?.userBackgroundPic == null
                           ? Image.asset(ImageConstant.pdslogo)
-                          : CustomImageView(
-                              url:
-                                  "${NewProfileData?.object?.userBackgroundPic}",
-                              fit: BoxFit.cover,
-                              radius: BorderRadius.only(
-                                  bottomRight: Radius.circular(20),
-                                  bottomLeft: Radius.circular(20))
-                              // BorderRadius.circular(25),
-                              ),
+                          : InkWell(
+                              onTap: () {
+                                print(
+                                    "check Data userBackgroundPic--${NewProfileData?.object?.userBackgroundPic}");
+                                print(
+                                    "check Data userProfilePic--${NewProfileData?.object?.userProfilePic}");
+                              },
+                              child: CustomImageView(
+                                  url:
+                                      "${NewProfileData?.object?.userBackgroundPic}",
+                                  fit: BoxFit.cover,
+                                  radius: BorderRadius.only(
+                                      bottomRight: Radius.circular(20),
+                                      bottomLeft: Radius.circular(20))
+                                  // BorderRadius.circular(25),
+                                  ),
+                            ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 55, left: 16),
@@ -1106,18 +1115,32 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         EdgeInsets.only(bottom: 10, top: 10),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(12.0),
-                                      child: Container(
-                                          margin: EdgeInsets.all(0.0),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      20)), // Remove margin
+                                      child:  GestureDetector(
+                                        onTap: () {
+                                          // OpenSaveImagepostModel
+                                          print(
+                                              "Open SavePost Click in one post");
 
-                                          child: CustomImageView(
-                                            fit: BoxFit.cover,
-                                            url:
-                                                "${GetAllPostData?.object?[index].postData?[0]}",
-                                          )),
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    OpenSavePostImage(PostID: GetAllPostData?.object?[index].postUid,)),
+                                          );
+                                        },
+                                        child: Container(
+                                            margin: EdgeInsets.all(0.0),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        20)), // Remove margin
+
+                                            child: CustomImageView(
+                                              fit: BoxFit.cover,
+                                              url:
+                                                  "${GetAllPostData?.object?[index].postData?[0]}",
+                                            )),
+                                      ),
                                     ),
                                   );
                                 },
@@ -1191,8 +1214,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             context)
                                                         .GetPostCommetAPI(
                                                             context,
-                                                            "${NewProfileData?.object?.uuid}",
-                                                            "asc");
+                                                            "${NewProfileData?.object?.userUid}",
+                                                            "desc");
                                                   } else if (newValue ==
                                                       "oldest to Newest") {
                                                     BlocProvider.of<
@@ -1200,8 +1223,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             context)
                                                         .GetPostCommetAPI(
                                                             context,
-                                                            "${NewProfileData?.object?.uuid}",
-                                                            "desc");
+                                                            "${NewProfileData?.object?.userUid}",
+                                                            "asc");
                                                   }
                                                   selctedValue = newValue!;
                                                 });
