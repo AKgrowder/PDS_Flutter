@@ -191,14 +191,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void initState() {
-    print(
-        "i want to  data userBackgroundPic--> ${widget.newProfileData?.object?.userBackgroundPic}");
-    print(
-        "i want to  data userProfilePic--> ${widget.newProfileData?.object?.userProfilePic}");
-
     dataSetUpMethod();
     userStatusGet();
     super.initState();
+  }
+
+  void dispose() {
+    _image = null;
+    _image1 = null;
+    chooseDocumentuploded?.object = null;
+    chooseDocumentuploded1?.object = null;
+    super.dispose();
   }
 
   @override
@@ -214,10 +217,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             //   // chooseDocumentuploded2 = state.chooseDocumentuploded2;
             // }
             if (state is chooseDocumentLoadedState) {
-              print("chooseDocumentLoadedStatqqqqqqqqqqqqqe");
-
-              widget.newProfileData?.object?.userProfilePic = null;
-              chooseDocumentuploded = state.chooseDocumentuploded;
+              print("chooseDocumentLoadedState");
+              if (state.chooseDocumentuploded.object == null) {
+                SnackBar snackBar = SnackBar(
+                  content: Text(state.chooseDocumentuploded.message.toString()),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              } else {
+                widget.newProfileData?.object?.userProfilePic = null;
+                chooseDocumentuploded = state.chooseDocumentuploded;
+              }
               Navigator.pop(context);
             }
             if (state is AddExportLoadedState) {
@@ -260,8 +270,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               });
             }
             if (state is chooseDocumentLoadedState1) {
-              widget.newProfileData?.object?.userBackgroundPic = null;
-              chooseDocumentuploded1 = state.chooseDocumentuploded1;
+              print("chooseDocumentLoadedState1");
+              if (state.chooseDocumentuploded1.object == null) {
+                SnackBar snackBar = SnackBar(
+                  content:
+                      Text(state.chooseDocumentuploded1.message.toString()),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              } else {
+                widget.newProfileData?.object?.userBackgroundPic = null;
+                chooseDocumentuploded1 = state.chooseDocumentuploded1;
+              }
+
               Navigator.pop(context);
             }
             if (state is IndustryTypeLoadedState) {
@@ -637,7 +658,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       chooseDocumentuploded?.object.toString(),
                                   "userBackgroundPic":
                                       chooseDocumentuploded1?.object.toString(),
-                                  "uid": User_ID.toString(),
+                                  "profileUid":
+                                      widget.newProfileData?.object?.profileUid,
                                   "email": emailController.text,
                                 };
                                 BlocProvider.of<MyAccountCubit>(context)
@@ -648,7 +670,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 var params = {
                                   "userProfilePic":
                                       chooseDocumentuploded?.object.toString(),
-                                  "uid": User_ID.toString(),
+                                  "profileUid":
+                                      widget.newProfileData?.object?.profileUid,
                                   "email": emailController.text,
                                 };
                                 BlocProvider.of<MyAccountCubit>(context)
@@ -657,7 +680,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 var params = {
                                   "userBackgroundPic":
                                       chooseDocumentuploded1?.object.toString(),
-                                  "uid": User_ID.toString(),
+                                  "profileUid":
+                                      widget.newProfileData?.object?.profileUid,
                                   "email": emailController.text,
                                 };
                                 BlocProvider.of<MyAccountCubit>(context)
@@ -835,9 +859,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         params['userProfilePic'] = chooseDocumentuploded?.object.toString();
       } else {
         print("bagrounPic--${chooseDocumentuploded1?.object.toString()}");
-
         params['userBackgroundPic'] = chooseDocumentuploded1?.object.toString();
       }
+
       BlocProvider.of<MyAccountCubit>(context).cretaForumUpdate(
         params,
         context,
@@ -911,12 +935,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "fees": fees.text,
           "workingHours": time.toString(),
           "jobProfile": jobProfile.text,
-          "uid": User_ID,
+          "profileUid": widget.newProfileData?.object?.profileUid,
           "industryTypesUid": industryUUIDinApi
         };
         print("parmas-$params");
-        BlocProvider.of<MyAccountCubit>(context)
-            .addExpertProfile(params, context);
+         BlocProvider.of<MyAccountCubit>(context)
+            .addExpertProfile(params, context); 
       } else if (chooseDocumentuploded?.object.toString() != null) {
         var params = {
           "document":
@@ -926,13 +950,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "fees": fees.text,
           "workingHours": time.toString(),
           "jobProfile": jobProfile.text,
-          "uid": User_ID,
+          "profileUid": widget.newProfileData?.object?.profileUid,
           "industryTypesUid": industryUUIDinApi
         };
         print("parmas-$params");
 
         BlocProvider.of<MyAccountCubit>(context)
-            .addExpertProfile(params, context);
+            .addExpertProfile(params, context); 
       } else if (chooseDocumentuploded1?.object.toString() != null) {
         print("userBackgroundPic condiosn working");
         var params = {
@@ -943,24 +967,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "fees": fees.text,
           "workingHours": time.toString(),
           "jobProfile": jobProfile.text,
-          "uid": User_ID,
+          "profileUid": widget.newProfileData?.object?.profileUid,
           "industryTypesUid": industryUUIDinApi
         };
         print("parmas-$params");
-        BlocProvider.of<MyAccountCubit>(context)
-            .addExpertProfile(params, context);
+       BlocProvider.of<MyAccountCubit>(context)
+            .addExpertProfile(params, context); 
       }
     }
   }
 
   TextFiledCommenWiget(_width) {
-    print("i wantt to  check--${widget.newProfileData?.object?.expertise}");
-    print("check module${widget.newProfileData?.object?.module}");
-
-    selectedIndustryTypes2.forEach((element) {
-      print("industry name : ${element.industryTypeName}");
-      print("industry name : ${element.industryTypeUid}");
-    });
+    selectedIndustryTypes2.forEach((element) {});
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1705,8 +1723,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         getUploadeProfile1(_image1!.path, 1, _image1!, 0);
       }
     }
-
-    print("image selcted Path set1-->$_image");
   }
 
   getUploadeProfile(
