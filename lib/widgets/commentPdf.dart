@@ -65,36 +65,41 @@ class DocumentViewScreen1 extends StatelessWidget {
   String? title;
 
   bool? dataHowToDislay;
-  DocumentViewScreen1({Key? key, this.path, this.title, this.dataHowToDislay,})
-      : super(key: key);
+  DocumentViewScreen1({
+    Key? key,
+    this.path,
+    this.title,
+    this.dataHowToDislay,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    print("if the DocumentViewScreen-->$path");
     return Scaffold(
-      
-      body:path!=null? Container(
-          color: Colors.white,
-          margin: EdgeInsets.only(right: 8.0, top: 8.0, left: 8.0, bottom: 8.0),
-          child: path!.contains('.jpg') ||
-                  path!.contains('.png') ||
-                  path!.contains('.jpeg')
-              ? Container(
-                  child: PhotoView(
-                    backgroundDecoration: BoxDecoration(),
-                    minScale: PhotoViewComputedScale.contained * 0.8,
-                    maxScale: PhotoViewComputedScale.covered * 2,
-                    imageProvider: CachedNetworkImageProvider(
-                      path!,
-                      cacheKey: path,
-                    ),
-                  ),
-                )
-              : Container(
-                  child: SfPdfViewer.network(path!,
-                      key: Key(path!),
-                      pageLayoutMode: PdfPageLayoutMode.continuous),
-                )):GFLoader(type: GFLoaderType.ios),
+      body: path != null
+          ? Container(
+              color: Colors.white,
+              margin:
+                  EdgeInsets.only(right: 8.0, top: 8.0, left: 8.0, bottom: 8.0),
+              child: path!.contains('.jpg') ||
+                      path!.contains('.png') ||
+                      path!.contains('.jpeg')
+                  ? Container(
+                      child: PhotoView(
+                        backgroundDecoration: BoxDecoration(),
+                        minScale: PhotoViewComputedScale.contained * 0.8,
+                        maxScale: PhotoViewComputedScale.covered * 2,
+                        imageProvider: CachedNetworkImageProvider(
+                          path!,
+                          cacheKey: path,
+                        ),
+                      ),
+                    )
+                  : Container(
+                      child: SfPdfViewer.network(path!,
+                          key: Key(path!),
+                          pageLayoutMode: PdfPageLayoutMode.continuous),
+                    ))
+          : GFLoader(type: GFLoaderType.ios),
     );
   }
 }
