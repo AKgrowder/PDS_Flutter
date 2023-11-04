@@ -1760,10 +1760,10 @@ class _ProfileScreenState extends State<ProfileScreen>
             parsedDateTimeBlogs = DateTime.parse(
                 '${saveAllBlogModelData?.object?[index].createdAt ?? ""}');
             return Container(
-              height: 140,
+              height: 150,
               // color: Colors.red,
               child: Padding(
-                padding: EdgeInsets.only(left: 10, right: 10),
+                padding: EdgeInsets.only(left: 10, right: 10, bottom:10),
                 child: Center(
                   child: GestureDetector(
                     onTap: () {
@@ -1786,7 +1786,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           ));
                     },
                     child: Container(
-                      height: 130,
+                      height: 140,
                       decoration: BoxDecoration(
                           // color: Colors.green,
                           borderRadius: BorderRadius.circular(15),
@@ -1876,6 +1876,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             "${saveAllBlogModelData?.object?[index].description}",
+                                          maxLines: 3,
                                             style: TextStyle(
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w600,
