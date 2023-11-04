@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dots_indicator/dots_indicator.dart';
@@ -33,6 +34,7 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_utils.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
+import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comment_bottom_sheet.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
@@ -287,10 +289,20 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             Save_UserData();
           }
           if (state is saveBlogLoadedState) {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.saveBlogModeData.object.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
             saveBlogModeData = state.saveBlogModeData;
           }
 
           if (state is likeBlogLoadedState) {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.LikeBlogModeData.object.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
             LikeBlogModeData = state.LikeBlogModeData;
           }
 
@@ -845,8 +857,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 parmes);
                                                       }
                                                     }
-                                                  buttonDatas[0].images.add(
-    StoryModel(imageDataPost!.object!, DateTime.now().toIso8601String(), UserProfileImage, User_Name));
+                                                    buttonDatas[0].images.add(
+                                                        StoryModel(
+                                                            imageDataPost!
+                                                                .object!,
+                                                            DateTime.now()
+                                                                .toIso8601String(),
+                                                            UserProfileImage,
+                                                            User_Name));
                                                     if (imageDataPost?.object !=
                                                         null) {
                                                       buttonDatas[0]
@@ -1097,6 +1115,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               context,
                                                             );
                                                           },
+                                                          onTap: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
                                                           child: Icon(
                                                             Icons
                                                                 .more_vert_rounded,
@@ -1229,163 +1251,167 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   : SizedBox(),
                                               // index == 0
 
-                                              AllGuestPostRoomData
-                                                          ?.object
-                                                          ?.content?[index]
-                                                          .postDataType ==
-                                                      null
-                                                  ? SizedBox()
-                                                  : AllGuestPostRoomData
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            OpenSavePostImage(
+                                                              PostID:
+                                                                  AllGuestPostRoomData
+                                                                      ?.object
+                                                                      ?.content?[
+                                                                          index]
+                                                                      .postUid,
+                                                            )),
+                                                  );
+                                                },
+                                                child: Container(
+                                                  width: _width,
+                                                  child: AllGuestPostRoomData
                                                               ?.object
                                                               ?.content?[index]
-                                                              .postData
-                                                              ?.length ==
-                                                          1
-                                                      ? (AllGuestPostRoomData
+                                                              .postDataType ==
+                                                          null
+                                                      ? SizedBox()
+                                                      : AllGuestPostRoomData
                                                                   ?.object
                                                                   ?.content?[
                                                                       index]
-                                                                  .postDataType ==
-                                                              "IMAGE"
-                                                          ? Container(
-                                                              width: _width,
-                                                              margin: EdgeInsets
-                                                                  .only(
-                                                                      left: 16,
-                                                                      top: 15,
-                                                                      right:
-                                                                          16),
-                                                              child: Center(
-                                                                  child:
-                                                                      CustomImageView(
-                                                                url:
-                                                                    "${AllGuestPostRoomData?.object?.content?[index].postData?[0]}",
-                                                              )),
-                                                            )
-                                                          : AllGuestPostRoomData
+                                                                  .postData
+                                                                  ?.length ==
+                                                              1
+                                                          ? (AllGuestPostRoomData
                                                                       ?.object
                                                                       ?.content?[
                                                                           index]
                                                                       .postDataType ==
-                                                                  "ATTACHMENT"
-                                                              ? (AllGuestPostRoomData
+                                                                  "IMAGE"
+                                                              ? Container(
+                                                                  width: _width,
+                                                                  margin: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              16,
+                                                                          top:
+                                                                              15,
+                                                                          right:
+                                                                              16),
+                                                                  child: Center(
+                                                                      child:
+                                                                          CustomImageView(
+                                                                    url:
+                                                                        "${AllGuestPostRoomData?.object?.content?[index].postData?[0]}",
+                                                                  )),
+                                                                )
+                                                              : AllGuestPostRoomData
                                                                           ?.object
                                                                           ?.content?[
                                                                               index]
-                                                                          .postData
-                                                                          ?.isNotEmpty ==
-                                                                      true)
-                                                                  ? Container(
-                                                                      height:
-                                                                          400,
-                                                                      width:
-                                                                          _width,
-                                                                      child:
-                                                                          DocumentViewScreen1(
-                                                                        path: AllGuestPostRoomData
+                                                                          .postDataType ==
+                                                                      "ATTACHMENT"
+                                                                  ? (AllGuestPostRoomData?.object?.content?[index].postData?.isNotEmpty ==
+                                                                          true)
+                                                                      ? Container(
+                                                                          height:
+                                                                              400,
+                                                                          width:
+                                                                              _width,
+                                                                          child:
+                                                                              DocumentViewScreen1(
+                                                                            path:
+                                                                                AllGuestPostRoomData?.object?.content?[index].postData?[0].toString(),
+                                                                          ))
+                                                                      : SizedBox()
+                                                                  : SizedBox())
+                                                          : Column(
+                                                              children: [
+                                                                Stack(
+                                                                  children: [
+                                                                    if ((AllGuestPostRoomData
                                                                             ?.object
                                                                             ?.content?[index]
-                                                                            .postData?[0]
-                                                                            .toString(),
-                                                                      ))
-                                                                  : SizedBox()
-                                                              : SizedBox())
-                                                      : Column(
-                                                          children: [
-                                                            Stack(
-                                                              children: [
-                                                                if ((AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .postData
-                                                                        ?.isNotEmpty ??
-                                                                    false)) ...[
-                                                                  SizedBox(
-                                                                    height: 300,
-                                                                    child: PageView
-                                                                        .builder(
-                                                                      onPageChanged:
-                                                                          (page) {
-                                                                        setState(
-                                                                            () {
-                                                                          _currentPages[index] =
-                                                                              page;
-                                                                        });
-                                                                      },
-                                                                      controller:
-                                                                          _pageControllers[
-                                                                              index],
-                                                                      itemCount: AllGuestPostRoomData
-                                                                          ?.object
-                                                                          ?.content?[
-                                                                              index]
-                                                                          .postData
-                                                                          ?.length,
-                                                                      itemBuilder:
-                                                                          (BuildContext context,
-                                                                              int index1) {
-                                                                        if (AllGuestPostRoomData?.object?.content?[index].postDataType ==
-                                                                            "IMAGE") {
-                                                                          return Container(
-                                                                            width:
-                                                                                _width,
-                                                                            margin: EdgeInsets.only(
-                                                                                left: 16,
-                                                                                top: 15,
-                                                                                right: 16),
-                                                                            child: Center(
-                                                                                child: CustomImageView(
-                                                                              url: "${AllGuestPostRoomData?.object?.content?[index].postData?[index1]}",
-                                                                            )),
-                                                                          );
-                                                                        } else if (AllGuestPostRoomData?.object?.content?[index].postDataType ==
-                                                                            "ATTACHMENT") {
-                                                                          return Container(
-                                                                              height: 400,
-                                                                              width: _width,
-                                                                              child: DocumentViewScreen1(
-                                                                                path: AllGuestPostRoomData?.object?.content?[index].postData?[index1].toString(),
-                                                                              ));
-                                                                        }
-                                                                      },
-                                                                    ),
-                                                                  ),
-                                                                  Positioned(
-                                                                      bottom: 5,
-                                                                      left: 0,
-                                                                      right: 0,
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            const EdgeInsets.only(top: 0),
-                                                                        child:
-                                                                            Container(
-                                                                          height:
-                                                                              20,
-                                                                          child:
-                                                                              DotsIndicator(
-                                                                            dotsCount:
-                                                                                AllGuestPostRoomData?.object?.content?[index].postData?.length ?? 0,
-                                                                            position:
-                                                                                _currentPages[index].toDouble(),
-                                                                            decorator:
-                                                                                DotsDecorator(
-                                                                              size: const Size(10.0, 7.0),
-                                                                              activeSize: const Size(10.0, 10.0),
-                                                                              spacing: const EdgeInsets.symmetric(horizontal: 2),
-                                                                              activeColor: Color(0xffED1C25),
-                                                                              color: Color(0xff6A6A6A),
-                                                                            ),
-                                                                          ),
+                                                                            .postData
+                                                                            ?.isNotEmpty ??
+                                                                        false)) ...[
+                                                                      SizedBox(
+                                                                        height:
+                                                                            300,
+                                                                        child: PageView
+                                                                            .builder(
+                                                                          onPageChanged:
+                                                                              (page) {
+                                                                            setState(() {
+                                                                              _currentPages[index] = page;
+                                                                            });
+                                                                          },
+                                                                          controller:
+                                                                              _pageControllers[index],
+                                                                          itemCount: AllGuestPostRoomData
+                                                                              ?.object
+                                                                              ?.content?[index]
+                                                                              .postData
+                                                                              ?.length,
+                                                                          itemBuilder:
+                                                                              (BuildContext context, int index1) {
+                                                                            if (AllGuestPostRoomData?.object?.content?[index].postDataType ==
+                                                                                "IMAGE") {
+                                                                              return Container(
+                                                                                width: _width,
+                                                                                margin: EdgeInsets.only(left: 16, top: 15, right: 16),
+                                                                                child: Center(
+                                                                                    child: CustomImageView(
+                                                                                  url: "${AllGuestPostRoomData?.object?.content?[index].postData?[index1]}",
+                                                                                )),
+                                                                              );
+                                                                            } else if (AllGuestPostRoomData?.object?.content?[index].postDataType ==
+                                                                                "ATTACHMENT") {
+                                                                              return Container(
+                                                                                  height: 400,
+                                                                                  width: _width,
+                                                                                  child: DocumentViewScreen1(
+                                                                                    path: AllGuestPostRoomData?.object?.content?[index].postData?[index1].toString(),
+                                                                                  ));
+                                                                            }
+                                                                          },
                                                                         ),
-                                                                      ))
-                                                                ]
-                                                                // : SizedBox()
+                                                                      ),
+                                                                      Positioned(
+                                                                          bottom:
+                                                                              5,
+                                                                          left:
+                                                                              0,
+                                                                          right:
+                                                                              0,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(top: 0),
+                                                                            child:
+                                                                                Container(
+                                                                              height: 20,
+                                                                              child: DotsIndicator(
+                                                                                dotsCount: AllGuestPostRoomData?.object?.content?[index].postData?.length ?? 0,
+                                                                                position: _currentPages[index].toDouble(),
+                                                                                decorator: DotsDecorator(
+                                                                                  size: const Size(10.0, 7.0),
+                                                                                  activeSize: const Size(10.0, 10.0),
+                                                                                  spacing: const EdgeInsets.symmetric(horizontal: 2),
+                                                                                  activeColor: Color(0xffED1C25),
+                                                                                  color: Color(0xff6A6A6A),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ))
+                                                                    ]
+                                                                    // : SizedBox()
+                                                                  ],
+                                                                ),
                                                               ],
                                                             ),
-                                                          ],
-                                                        ),
+                                                ),
+                                              ),
 
                                               Padding(
                                                 padding: const EdgeInsets.only(
@@ -1952,8 +1978,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           width: _width / 1.6,
                                                           margin:
                                                               EdgeInsets.only(
-                                                                  left: 10,
-                                                                  top: 10),
+                                                            left: 10,
+                                                          ),
                                                           decoration:
                                                               BoxDecoration(
                                                                   borderRadius:
@@ -2608,7 +2634,17 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         constraints: BoxConstraints.tight(Size.infinite),
         context: context,
         builder: (BuildContext bc) {
-          return CommentBottomSheet(AllGuestPostRoomData, index);
+          return CommentBottomSheet(
+              userProfile: AllGuestPostRoomData
+                      ?.object?.content?[index].userProfilePic ??
+                  "",
+              UserName:
+                  AllGuestPostRoomData?.object?.content?[index].postUserName ??
+                      "",
+              desc: AllGuestPostRoomData?.object?.content?[index].description ??
+                  "",
+              postUuID:
+                  AllGuestPostRoomData?.object?.content?[index].postUid ?? "");
         });
   }
 
