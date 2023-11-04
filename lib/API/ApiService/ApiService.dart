@@ -178,12 +178,12 @@ class ApiServices {
       response.fields["document"] = params['document'] ?? "";
       response.fields["companyName"] = params['companyName'] ?? "";
       response.fields["jobProfile"] = params['jobProfile'] ?? "";
-      response.fields["uid"] = params['uuid'] ?? "";
+      response.fields["profileUid"] = params['profileUid'] ?? "";
       response.fields["name"] = params['name'] ?? "";
       response.fields["email"] = params['email'] ?? "";
       response.fields["industryTypesUid"] = params['industryTypesUid'];
     }
-    print("check responce fields--${params!['document']}");
+    print("check responce fields--${params}");
     log("message${params}");
     var res = await response.send();
     print('responce stauscode-${res.statusCode.toString()}');
@@ -253,12 +253,18 @@ class ApiServices {
   multipartFileUserprofile(String APIurl, File imageFile, BuildContext context,
       {bool? ImageDatasetup}) async {
     await UpdateBaseURL();
+    var headers1 = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${Token}'
+    };
+
     final response =
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
+    response.headers.addAll(headers1);
     print("API =>******${baseURL + APIurl}");
     if (imageFile != null) {
       response.files
-          .add(await http.MultipartFile.fromPath('image', imageFile.path));
+          .add(await http.MultipartFile.fromPath('document', imageFile.path));
     }
     var res = await response.send();
     print('responce stauscode-${res.statusCode.toString()}');

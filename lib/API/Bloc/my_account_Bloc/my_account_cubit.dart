@@ -28,6 +28,10 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       if (chooseDocument.success == true) {
         emit(chooseDocumentLoadedState(chooseDocument));
       }
+      else{
+        emit(chooseDocumentLoadedState(chooseDocument));
+
+      }
     } catch (e) {
       print('LoginScreen-${e.toString()}');
       emit(MyAccountErrorState(chooseDocument));
@@ -43,6 +47,9 @@ class MyAccountCubit extends Cubit<MyAccountState> {
           await Repository().userProfileprofileCover(imageFile, context);
       if (chooseDocument.success == true) {
         emit(chooseDocumentLoadedState1(chooseDocument));
+      }
+      else{
+         emit(chooseDocumentLoadedState1(chooseDocument));
       }
     } catch (e) {
       print('LoginScreen-${e.toString()}');

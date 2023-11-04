@@ -96,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (state is fetchUserModulemodelLoadedState) {
         user_Module = state.fetchUserModule.object?.userModule ?? "";
         User_profile = state.fetchUserModule.object?.userProfilePic ?? "";
-         await SetUi();
+        await SetUi();
       }
       if (state is SystemConfigLoadedState) {
         systemConfigModel = state.systemConfigModel;
@@ -165,7 +165,7 @@ class _SplashScreenState extends State<SplashScreen> {
         var ApkRouteVersion = element.value ?? "";
         print(" ApkRouteVersion  ${ApkRouteVersion}");
         prefs.setString(PreferencesKey.ApkRouteVersion, ApkRouteVersion);
-      }else if (element.name == "MaxPostUploadSizeInMB") {
+      } else if (element.name == "MaxPostUploadSizeInMB") {
         print(" ApkRouteVersion  ${ApkRouteVersion}");
         prefs.setString(
             PreferencesKey.MaxPostUploadSizeInMB, element.value ?? '');

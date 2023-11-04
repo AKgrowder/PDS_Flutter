@@ -568,7 +568,7 @@ class Repository {
 
   userProfile(File imageFile, BuildContext context) async {
     final response = await apiServices.multipartFileUserprofile(
-        '${Config.uploadProfile}', imageFile, context);
+        '${Config.uploadfile}', imageFile, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
@@ -585,7 +585,7 @@ class Repository {
 
   userProfileprofileCover(File imageFile, BuildContext context) async {
     final response = await apiServices.multipartFileUserprofile(
-        '${Config.uploadProfile}', imageFile, context);
+        '${Config.uploadfile}', imageFile, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
