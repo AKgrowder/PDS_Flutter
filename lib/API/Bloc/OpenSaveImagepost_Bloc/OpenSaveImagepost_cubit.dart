@@ -18,4 +18,34 @@ class OpenSaveCubit extends Cubit<OpenSaveState> {
       emit(OpenSaveErrorState(OpenSaveModel));
     }
   }
+
+  Future<void> like_post(String? postUid, BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic likepost;
+    try {
+      // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
+      likepost = await Repository().likePostMethod(postUid, context);
+      if (likepost.success == true) {
+        emit(PostLikeLoadedState(likepost));
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(OpenSaveErrorState(likepost));
+    }
+  }
+
+  Future<void> savedData(String? postUid, BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic likepost;
+    try {
+      // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
+      likepost = await Repository().savedPostMethod(postUid, context);
+      if (likepost.success == true) {
+        emit(PostLikeLoadedState(likepost));
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(OpenSaveErrorState(likepost));
+    }
+  }
 }

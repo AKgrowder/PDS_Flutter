@@ -2,6 +2,7 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_state.dart';
 import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
@@ -19,9 +20,18 @@ import 'package:flutter/foundation.dart' as foundation;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CommentBottomSheet extends StatefulWidget {
-  GetGuestAllPostModel? AllGuestPostRoomData;
-  int index;
-  CommentBottomSheet(this.AllGuestPostRoomData, this.index, {key});
+  String userProfile;
+  String UserName;
+  String desc;
+  String postUuID;
+  // GetGuestAllPostModel? AllGuestPostRoomData;
+  // int index;
+  CommentBottomSheet(
+      {required this.userProfile,
+      required this.UserName,
+      required this.desc,
+      required this.postUuID,
+      key});
 
   @override
   State<CommentBottomSheet> createState() => _CommentBottomSheetState();
@@ -33,7 +43,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
   final ScrollController scroll = ScrollController();
   DeleteCommentModel? DeletecommentDataa;
   bool isEmojiVisible = false;
-  final focusNode = FocusNode();
+  FocusNode focusNode = FocusNode();
   bool isKeyboardVisible = false;
 
   void _goToElement() {
@@ -109,9 +119,13 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
             }
             if (state is DeletecommentLoadedState) {
               DeletecommentDataa = state.Deletecomment;
+              SnackBar snackBar = SnackBar(
+                content: Text(state.Deletecomment.object ?? ""),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
               if (DeletecommentDataa?.object ==
                   "Comment deleted successfully") {
-                print(addCommentModeldata?.object?[widget.index].commentUid);
                 // addCommentModeldata = addCommentModeldata?.object?.removeAt(index);
 
                 // BlocProvider.of<AddcommentCubit>(context).Addcomment(
@@ -145,15 +159,10 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                             children: [
                               Padding(
                                 padding: EdgeInsets.only(left: 16),
-                                child: widget
-                                            .AllGuestPostRoomData
-                                            ?.object
-                                            ?.content?[widget.index]
-                                            .userProfilePic !=
-                                        null
+                                child: widget.userProfile != null
                                     ? CircleAvatar(
                                         backgroundImage: NetworkImage(
-                                            "${widget.AllGuestPostRoomData?.object?.content?[widget.index].userProfilePic}"),
+                                            "${widget.userProfile}"),
                                         radius: 25,
                                       )
                                     : CustomImageView(
@@ -175,7 +184,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                     Row(
                                       children: [
                                         Text(
-                                          '${widget.AllGuestPostRoomData?.object?.content?[widget.index].postUserName}',
+                                          '${widget.UserName}',
                                           style: TextStyle(
                                               fontFamily: 'outfit',
                                               fontSize: 18,
@@ -196,8 +205,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                       padding: const EdgeInsets.only(bottom: 5),
                                       child: Align(
                                         alignment: Alignment.centerLeft,
-                                        child: Text(
-                                            ' ${widget.AllGuestPostRoomData?.object?.content?[widget.index].description ?? ""}',
+                                        child: Text(' ${widget.desc ?? ""}',
                                             // maxLines: 2,
                                             style: TextStyle(
                                                 fontFamily: 'outfit',
@@ -287,7 +295,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                     ),
                                                     Text(
                                                         // "1w",
-                                                        customFormat(
+                                                        customadateFormat(
                                                             parsedDateTime),
                                                         style: TextStyle(
                                                             fontFamily:
@@ -387,6 +395,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                       });
                                     }
                                   },
+
                                   controller: addcomment,
                                   maxLength: 300,
                                   //
@@ -446,8 +455,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                 } else {
                                   Map<String, dynamic> params = {
                                     "comment": addcomment.text,
-                                    "postUid":
-                                        '${widget.AllGuestPostRoomData?.object?.content?[widget.index].postUid}',
+                                    "postUid": '${widget.postUuID}',
                                   };
 
                                   BlocProvider.of<AddcommentCubit>(context)
@@ -601,5 +609,46 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
         ),
       ),
     );
+  }
+
+  String customadateFormat(DateTime date) {
+    String day = date.day.toString();
+    String month = _getMonthName(date.month);
+    String year = date.year.toString();
+    String time = DateFormat('h:mm a').format(date);
+
+    String formattedDate = '$day $month $year $time';
+    return formattedDate;
+  }
+
+  String _getMonthName(int month) {
+    switch (month) {
+      case 1:
+        return 'January';
+      case 2:
+        return 'February';
+      case 3:
+        return 'March';
+      case 4:
+        return 'April';
+      case 5:
+        return 'May';
+      case 6:
+        return 'June';
+      case 7:
+        return 'July';
+      case 8:
+        return 'August';
+      case 9:
+        return 'September';
+      case 10:
+        return 'October';
+      case 11:
+        return 'November';
+      case 12:
+        return 'December';
+      default:
+        return '';
+    }
   }
 }

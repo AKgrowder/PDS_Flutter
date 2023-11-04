@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +16,12 @@ import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/editproilescreen.dart';
+import 'package:pds/presentation/recent_blog/recent_blog_screen.dart';
 import 'package:pds/presentation/settings/setting_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 
 class ProfileScreen extends StatefulWidget {
   String User_ID;
@@ -134,7 +135,6 @@ class _ProfileScreenState extends State<ProfileScreen>
     getUserSavedData();
     dataSetup = null;
     value1 = 0;
-    print("dfhdfhsdfh-${widget.isFollowing}");
     // SavePostCount = SaveUserPost.length;
 
     super.initState();
@@ -186,6 +186,8 @@ class _ProfileScreenState extends State<ProfileScreen>
 
       if (state is NewProfileSLoadedState) {
         NewProfileData = state.PublicRoomData;
+
+        print(NewProfileData?.object?.module);
         BlocProvider.of<NewProfileSCubit>(context)
             .GetAppPostAPI(context, "${NewProfileData?.object?.userUid}");
 
@@ -261,6 +263,8 @@ class _ProfileScreenState extends State<ProfileScreen>
         }
       }
       if (state is GetUserPostCommetLoadedState) {
+        print(
+            "Get Comment Get Comment Get Comment Get Comment Get Comment Get Comment Get Comment ");
         print(state.GetUserPostCommet);
         GetUserPostCommetData = state.GetUserPostCommet;
         CommentsPostCount = GetUserPostCommetData?.object?.length ?? 0;
@@ -717,7 +721,6 @@ class _ProfileScreenState extends State<ProfileScreen>
               SizedBox(
                 height: 30,
               ),
-
               if (NewProfileData?.object?.isFollowing != 'REQUESTED')
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -942,9 +945,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                           : arrNotiyTypeList[2].isSelected == true
                               ? CommentsPostCount * 310 + 100
                               : arrNotiyTypeList[3].isSelected == true
-                                  ? value1 == 0
-                                      ? FinalSavePostCount * 230
-                                      : SaveBlogCount * 145 + 100
+                                  ? /* value1 == 0
+                                    ? FinalSavePostCount * 230
+                                    : */
+                                  SaveBlogCount * 145 + 100
                                   : 10,
                   child: Column(
                     children: <Widget>[
@@ -1612,83 +1616,80 @@ class _ProfileScreenState extends State<ProfileScreen>
                           : SizedBox(),
 
                       /// Content of Tab 4
-                      if ("soicalScreens" != 'soicalScreen')
-                        arrNotiyTypeList[3].isSelected
-                            ? Container(
-                                height: value1 == 0
-                                    ? FinalSavePostCount * 230
-                                    : SaveBlogCount * 145 + 100,
-                                // color: Colors.green,
-                                child: DefaultTabController(
-                                  length: SaveList.length,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(top: 10),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: List.generate(
-                                                SaveList.length,
-                                                (index) => GestureDetector(
-                                                    onTap: () {
-                                                      dataSetup = null;
-                                                      value1 = index;
 
-                                                      SharedPreferencesFunction(
-                                                          value1 ?? 0);
-                                                      setState(() {});
-                                                    },
-                                                    child: Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      margin: EdgeInsets.only(
-                                                          left: 15),
-                                                      width: 100,
-                                                      height: 25,
-                                                      decoration:
-                                                          ShapeDecoration(
+                      arrNotiyTypeList[3].isSelected
+                          ? Container(
+                              height: /*  value1 == 0
+                                ? FinalSavePostCount * 230
+                                :  */
+                                  SaveBlogCount * 145 + 100,
+                              // color: Colors.green,
+                              child: DefaultTabController(
+                                length: SaveList.length,
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 10),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: List.generate(
+                                              SaveList.length,
+                                              (index) => GestureDetector(
+                                                  onTap: () {
+                                                    dataSetup = null;
+                                                    value1 = index;
+
+                                                    SharedPreferencesFunction(
+                                                        value1 ?? 0);
+                                                    setState(() {});
+                                                  },
+                                                  child: Container(
+                                                    alignment: Alignment.center,
+                                                    margin: EdgeInsets.only(
+                                                        left: 15),
+                                                    width: 100,
+                                                    height: 25,
+                                                    decoration: ShapeDecoration(
+                                                      color: value1 == index
+                                                          ? Color(0xFFED1C25)
+                                                          : dataSetup == index
+                                                              ? Color(
+                                                                  0xFFED1C25)
+                                                              : Color(
+                                                                  0xFFFBD8D9),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(100),
+                                                      ),
+                                                    ),
+                                                    child: Text(
+                                                      SaveList[index],
+                                                      style: TextStyle(
                                                         color: value1 == index
-                                                            ? Color(0xFFED1C25)
+                                                            ? Colors.white
                                                             : dataSetup == index
-                                                                ? Color(
-                                                                    0xFFED1C25)
+                                                                ? Colors.white
                                                                 : Color(
-                                                                    0xFFFBD8D9),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      100),
-                                                        ),
+                                                                    0xFFF58E92),
+                                                        fontSize: 14,
+                                                        fontFamily: "outfit",
+                                                        fontWeight:
+                                                            FontWeight.w400,
                                                       ),
-                                                      child: Text(
-                                                        SaveList[index],
-                                                        style: TextStyle(
-                                                          color: value1 == index
-                                                              ? Colors.white
-                                                              : dataSetup ==
-                                                                      index
-                                                                  ? Colors.white
-                                                                  : Color(
-                                                                      0xFFF58E92),
-                                                          fontSize: 14,
-                                                          fontFamily: "outfit",
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                        ),
-                                                      ),
-                                                    )))),
-                                        NavagtionPassing()
-                                      ],
-                                    ),
+                                                    ),
+                                                  )))),
+                                      NavagtionPassing()
+                                    ],
                                   ),
                                 ),
-                              )
-                            : SizedBox(),
+                              ),
+                            )
+                          : SizedBox(),
                     ],
                   ),
                 ),
@@ -1708,23 +1709,32 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget NavagtionPassing() {
-    if (value1 != null) {
-      if (value1 == 0) {
-        return Expanded(
-            child: Padding(
-          padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-          child: GridView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.zero,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 20,
-              crossAxisSpacing: 20,
-            ),
-            itemCount: GetSavePostData?.object?.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: EdgeInsets.only(bottom: 0, top: 0),
+    if (value1 == 0) {
+      return Expanded(
+          child: Padding(
+        padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+        child: GridView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 20,
+            crossAxisSpacing: 20,
+          ),
+          itemCount: GetSavePostData?.object?.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: EdgeInsets.only(bottom: 0, top: 0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => OpenSavePostImage(
+                              PostID: GetSavePostData?.object?[index].postUid,
+                            )),
+                  );
+                },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12.0),
                   child: Container(
@@ -1736,24 +1746,45 @@ class _ProfileScreenState extends State<ProfileScreen>
                         fit: BoxFit.cover,
                       )),
                 ),
-              );
-            },
-          ),
-        ));
-      } else {
-        return Expanded(
-          child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: saveAllBlogModelData?.object?.length,
-            itemBuilder: (context, index) {
-              parsedDateTimeBlogs = DateTime.parse(
-                  '${saveAllBlogModelData?.object?[index].createdAt ?? ""}');
-              return Container(
-                height: 140,
-                // color: Colors.red,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  child: Center(
+              ),
+            );
+          },
+        ),
+      ));
+    } else {
+      return Expanded(
+        child: ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: saveAllBlogModelData?.object?.length,
+          itemBuilder: (context, index) {
+            parsedDateTimeBlogs = DateTime.parse(
+                '${saveAllBlogModelData?.object?[index].createdAt ?? ""}');
+            return Container(
+              height: 140,
+              // color: Colors.red,
+              child: Padding(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RecentBlogScren(
+                                description1: saveAllBlogModelData
+                                        ?.object?[index].description
+                                        .toString() ??
+                                    "",
+                                title: saveAllBlogModelData
+                                        ?.object?[index].title
+                                        .toString() ??
+                                    "",
+                                imageURL: saveAllBlogModelData
+                                        ?.object?[index].image
+                                        .toString() ??
+                                    ""),
+                          ));
+                    },
                     child: Container(
                       height: 130,
                       decoration: BoxDecoration(
@@ -1931,14 +1962,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                     ),
                   ),
                 ),
-              );
-            },
-          ),
-        );
-      }
+              ),
+            );
+          },
+        ),
+      );
     }
-
-    return SizedBox();
   }
 
   Widget expertUser(_height, _width) {
@@ -1963,17 +1992,20 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
           trailing: GestureDetector(
             onTap: () {
-              /* Navigator.push(
+              Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => EditProfileScreen(
                             newProfileData: NewProfileData,
-                          ))); */
+                          )));
             },
-            child:  NewProfileData?.object?.isFollowing != 'REQUESTED' &&  NewProfileData?.object?.isFollowing != 'FOLLOWING'? Icon(
-              Icons.edit,
-              color: Colors.black,
-            ):SizedBox(),
+            child: NewProfileData?.object?.isFollowing != 'REQUESTED' &&
+                    NewProfileData?.object?.isFollowing != 'FOLLOWING'
+                ? Icon(
+                    Icons.edit,
+                    color: Colors.black,
+                  )
+                : SizedBox(),
           ),
         ),
         Transform.translate(
