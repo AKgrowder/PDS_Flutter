@@ -154,11 +154,23 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (saveDeviceInfo == true) {
                         savePhoneData();
                       }
-                      Navigator.push(context,
+                      /*   Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return NewBottomBar(
                           buttomIndex: 0,
                         );
+                      })); */
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return MultiBlocProvider(
+                            providers: [
+                              BlocProvider<GetGuestAllPostCubit>(
+                                create: (context) => GetGuestAllPostCubit(),
+                              ),
+                            ],
+                            child: NewBottomBar(
+                              buttomIndex: 0,
+                            ));
                       }));
                     }
 
@@ -167,8 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       backgroundColor: ColorConstant.primary_color,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    print(
-                        'check Status--${state.loginModel.message}');
+                    print('check Status--${state.loginModel.message}');
                   }
                 }
                 if (state is GetUserLoadedState) {
@@ -185,14 +196,26 @@ class _LoginScreenState extends State<LoginScreen> {
                       savePhoneData();
                     }
                     print('this condison is calling');
-                    Navigator.push(context,
+                    /*    Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return NewBottomBar(
                         buttomIndex: 0,
                       );
-                    }));
+                    })); */
+                     Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return MultiBlocProvider(
+                            providers: [
+                              BlocProvider<GetGuestAllPostCubit>(
+                                create: (context) => GetGuestAllPostCubit(),
+                              ),
+                            ],
+                            child: NewBottomBar(
+                              buttomIndex: 0,
+                            ));
+                      }));
                   } else {
-                        SnackBar snackBar = SnackBar(
+                    SnackBar snackBar = SnackBar(
                       content: Text('Otp send successfully'),
                       backgroundColor: ColorConstant.primary_color,
                     );
