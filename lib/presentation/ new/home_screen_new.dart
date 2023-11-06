@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:pds/presentation/%20new/RePost_Screen.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -113,6 +113,106 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   List<String> userName = [];
   bool added = false;
 
+  void showPopupMenu(BuildContext context, int index,buttonKey) {
+    final RenderBox button =
+        buttonKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(Offset.zero, ancestor: overlay),
+        button.localToGlobal(button.size.bottomLeft(Offset.zero),
+            ancestor: overlay),
+      ),
+      Offset.zero & overlay.size,
+    );
+
+    showMenu(
+      context: context,
+      position: position,
+      items: <PopupMenuItem<String>>[
+        PopupMenuItem<String>(
+          value: 'delete',
+          child: Container(
+            width: 130,
+            height: 40,
+            child: Center(
+              child: Text(
+                'Delete',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            decoration: BoxDecoration(
+                color: Color(0xffED1C25),
+                borderRadius: BorderRadius.circular(5)),
+          ),
+        ),
+      ],
+    ).then((value) {
+      if (value == 'delete') {
+        showDeleteConfirmationDialog(context,
+            AllGuestPostRoomData?.object?.content?[index].postUid ?? "", index);
+      }
+    });
+  }
+
+  void showDeleteConfirmationDialog(
+      BuildContext context, String PostUID, int index) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Confirm Delete'),
+          content: Text('Are you sure you want to delete this item?'),
+          actions: <Widget>[
+            GestureDetector(
+              onTap: () async {
+                await soicalFunation(apiName: 'Deletepost', index: index);
+
+                print('Deleted.');
+              },
+              child: Container(
+                height: 30,
+                width: 80,
+                decoration: BoxDecoration(
+                    color: ColorConstant.primary_color,
+                    borderRadius: BorderRadius.circular(5)),
+                // color: Colors.green,
+                child: Center(
+                  child: Text(
+                    "Yes",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+                print('Not deleted.');
+              },
+              child: Container(
+                height: 30,
+                width: 80,
+                decoration: BoxDecoration(
+                    border: Border.all(color: ColorConstant.primary_color),
+                    borderRadius: BorderRadius.circular(5)),
+                // color: Colors.green,
+                child: Center(
+                  child: Text(
+                    "No",
+                    style: TextStyle(color: ColorConstant.primary_color),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Get_UserToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var Token = prefs.getString(PreferencesKey.loginJwt);
@@ -206,7 +306,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           '${AllGuestPostRoomData?.object?.content?[index ?? 0].postUid}',
           context);
       AllGuestPostRoomData?.object?.content?.removeAt(index ?? 0);
-    } else if (apiName == 'Deletecomment') {}
+    }
   }
 
   methodtoReffrser() {
@@ -355,7 +455,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                 element.storyData![index].storyData!,
                                 element.storyData![index].createdAt!,
                                 element.storyData![index].profilePic,
-                                element.storyData![index].userName)),
+                                element.storyData![index].userName,
+                                 element.storyData![index].storyUid,
+                                element.storyData![index].userUid)),
                         borderDecoration: BoxDecoration(
                           borderRadius: const BorderRadius.all(
                             Radius.circular(60.0),
@@ -411,7 +513,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                   NetworkImage(element.profilePic.toString()))
                           : DecorationImage(
                               image: AssetImage(
-                                'assets/images/expert3.png',
+                                ImageConstant.pdslogo,
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -438,7 +540,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                             element.storyData![index].storyData!,
                             element.storyData![index].createdAt!,
                             element.storyData![index].profilePic,
-                            element.storyData![index].userName)),
+                            element.storyData![index].userName, element.storyData![index].storyUid,
+                                element.storyData![index].userUid)),
                     borderDecoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(
                         Radius.circular(60.0),
@@ -663,7 +766,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                             shape: BoxShape.circle,
                                             image: DecorationImage(
                                               image: AssetImage(
-                                                'assets/images/expert3.png',
+                                               ImageConstant.pdslogo,
                                               ),
                                               fit: BoxFit.cover,
                                             ),
@@ -692,7 +795,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 DateTime.now()
                                                     .toIso8601String(),
                                                 UserProfileImage,
-                                                User_Name)
+                                                User_Name,"","${User_ID}")
                                           ],
                                           borderDecoration: BoxDecoration(
                                             borderRadius:
@@ -864,7 +967,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             DateTime.now()
                                                                 .toIso8601String(),
                                                             UserProfileImage,
-                                                            User_Name));
+                                                            User_Name,"","${User_ID}"));
                                                     if (imageDataPost?.object !=
                                                         null) {
                                                       buttonDatas[0]
@@ -983,7 +1086,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                     }
                                     DateTime parsedDateTime = DateTime.parse(
                                         '${AllGuestPostRoomData?.object?.content?[index].createdAt ?? ""}');
-
+                                          GlobalKey buttonKey = GlobalKey(); //
                                     return Padding(
                                       padding:
                                           EdgeInsets.only(left: 16, right: 16),
@@ -1106,7 +1209,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               ?.content?[index]
                                                               .userUid
                                                       ? GestureDetector(
-                                                          onTapDown:
+                                                          key:buttonKey ,
+                                                          onTap: () {
+                                                            showPopupMenu(
+                                                                context, index,buttonKey);
+                                                          },
+                                                          /*  onTapDown:
                                                               (TapDownDetails
                                                                   details) {
                                                             delete_dilog_menu(
@@ -1118,7 +1226,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           onTap: () {
                                                             Navigator.pop(
                                                                 context);
-                                                          },
+                                                          }, */
                                                           child: Icon(
                                                             Icons
                                                                 .more_vert_rounded,
@@ -1551,6 +1659,32 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     ),
                                                     Text(
                                                       "${AllGuestPostRoomData?.object?.content?[index].commentCount}",
+                                                      style: TextStyle(
+                                                          fontFamily: "outfit",
+                                                          fontSize: 14),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 18,
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.push(context,
+                                                            MaterialPageRoute(
+                                                          builder: (context) {
+                                                            return RePostScreen();
+                                                          },
+                                                        ));
+                                                      },
+                                                      child: Image.asset(
+                                                        ImageConstant.vector2,
+                                                        height: 12,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    Text(
+                                                      '1335',
                                                       style: TextStyle(
                                                           fontFamily: "outfit",
                                                           fontSize: 14),
