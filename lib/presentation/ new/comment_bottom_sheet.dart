@@ -1,4 +1,5 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,12 +12,11 @@ import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/%20new/notifaction2.dart';
+import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/widgets/custom_image_view.dart';
-import 'package:flutter/foundation.dart' as foundation;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CommentBottomSheet extends StatefulWidget {
@@ -24,6 +24,9 @@ class CommentBottomSheet extends StatefulWidget {
   String UserName;
   String desc;
   String postUuID;
+  String? isFoollinng;
+  String?useruid;
+
   // GetGuestAllPostModel? AllGuestPostRoomData;
   // int index;
   CommentBottomSheet(
@@ -31,6 +34,7 @@ class CommentBottomSheet extends StatefulWidget {
       required this.UserName,
       required this.desc,
       required this.postUuID,
+      this.isFoollinng,this.useruid,
       key});
 
   @override
@@ -42,9 +46,12 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
   AddCommentModel? addCommentModeldata;
   final ScrollController scroll = ScrollController();
   DeleteCommentModel? DeletecommentDataa;
+  GetGuestAllPostModel? AllGuestPostRoomData;
   bool isEmojiVisible = false;
   FocusNode focusNode = FocusNode();
   bool isKeyboardVisible = false;
+  String? uuid;
+  String? User_ID1;
 
   void _goToElement() {
     scroll.animateTo((1000 * 20),
@@ -60,7 +67,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
   setUserId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    User_ID = prefs.getString(PreferencesKey.loginUserID);
+    User_ID1 = prefs.getString(PreferencesKey.loginUserID);
   }
 
   @override
@@ -134,7 +141,10 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
               }
             }
           },
-          builder: (context, state) {
+          builder: (
+            context,
+            state,
+          ) {
             if (state is AddCommentLoadingState) {
               return Center(
                 child: Container(
@@ -157,21 +167,40 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                         child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: 16),
-                                child: widget.userProfile != null
-                                    ? CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                            "${widget.userProfile}"),
-                                        radius: 25,
-                                      )
-                                    : CustomImageView(
-                                        imagePath: ImageConstant.tomcruse,
-                                        height: 50,
-                                        width: 50,
-                                        fit: BoxFit.fill,
-                                        radius: BorderRadius.circular(25),
-                                      ),
+                              GestureDetector(
+                                onTap: () {
+                                  if (User_ID1 == null) {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                RegisterCreateAccountScreen()));
+                                  } else {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (
+                                      context,
+                                    ) {
+                                      return ProfileScreen(
+                                          User_ID: widget.useruid ?? "",
+                                          isFollowing: widget.isFoollinng);
+                                    }));
+                                  }
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 16),
+                                  child: widget.userProfile != null
+                                      ? CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                              "${widget.userProfile}"),
+                                          radius: 25,
+                                        )
+                                      : CustomImageView(
+                                          imagePath: ImageConstant.tomcruse,
+                                          height: 50,
+                                          width: 50,
+                                          fit: BoxFit.fill,
+                                          radius: BorderRadius.circular(25),
+                                        ),
+                                ),
                               ),
                               SizedBox(
                                 width: 10,
