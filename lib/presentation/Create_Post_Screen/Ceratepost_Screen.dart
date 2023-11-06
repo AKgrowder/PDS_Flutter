@@ -1012,7 +1012,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
     print("FBSDFNFBDBFSBF--${postText.text.length}");
 
     // String text = postText.text;
-    RegExp exp = new RegExp(r"\B#\w\w+");
+    RegExp exp = new RegExp(r"\B#\w+");
 
     if (postText.text.length >= 1000) {
       CreatePostDone = false;

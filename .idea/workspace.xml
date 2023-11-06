@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2eb873ab-88f0-4b1b-a1a2-4a1f67d47979" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/lib/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/API/Model/CreateStory_Model/CreateStory_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/API/Model/CreateStory_Model/CreateStory_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/API/Repo/repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/API/Repo/repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/API/Bloc/DeleteRoom_bloc/Delete_room_cubit.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/API/Bloc/DeleteRoom_bloc/Delete_room_cubit.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/presentation/ new/editproilescreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/presentation/ new/editproilescreen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/presentation/ new/home_screen_new.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/presentation/ new/home_screen_new.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/presentation/ new/notifaction2.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/presentation/ new/notifaction2.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/presentation/create_story/create_story.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/presentation/create_story/create_story.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/presentation/ new/profileNew.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/presentation/ new/profileNew.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/presentation/view_details_screen/view_details_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/presentation/view_details_screen/view_details_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,18 +27,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "cidr.known.project.marker": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "last_opened_file_path": "/home/ankurborad/live projectworking/PDS_Flutter",
-    "settings.editor.selected.configurable": "AndroidSdkUpdater",
-    "show.migrate.to.gradle.popup": "false"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/ankurborad/live projectworking/PDS_Flutter&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;AndroidSdkUpdater&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
       <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />

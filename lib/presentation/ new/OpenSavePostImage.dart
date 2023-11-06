@@ -68,11 +68,11 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
       }
       if (state is PostLikeLoadedState) {
         print("${state.likePost.object}");
-        SnackBar snackBar = SnackBar(
-          content: Text(state.likePost.object ?? ""),
-          backgroundColor: ColorConstant.primary_color,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        // SnackBar snackBar = SnackBar(
+        //   content: Text(state.likePost.object ?? ""),
+        //   backgroundColor: ColorConstant.primary_color,
+        // );
+        // ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }, builder: (context, state) {
       if (state is OpenSaveLoadingState) {

@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:io';
 import 'dart:math';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
@@ -505,7 +507,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   child: EditProfileScreen(
                                     newProfileData: NewProfileData,
                                   ));
-                            }));
+                            })).then((value) =>
+                                BlocProvider.of<NewProfileSCubit>(context)
+                                    .NewProfileSAPI(context, widget.User_ID));
                           },
                           child: Container(
                             alignment: Alignment.center,
@@ -682,13 +686,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       color: Color(0xff000000),
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Text(
-                                  'Following',
-                                  style: TextStyle(
-                                      fontFamily: "outfit",
-                                      fontSize: 16,
-                                      color: Color(0xff444444),
-                                      fontWeight: FontWeight.w500),
+                                InkWell(
+                                  onTap: () {
+                                    print(
+                                        "fgfgfhfghdfgh-${NewProfileData?.object?.isFollowing}");
+                                  },
+                                  child: Text(
+                                    'Following',
+                                    style: TextStyle(
+                                        fontFamily: "outfit",
+                                        fontSize: 16,
+                                        color: Color(0xff444444),
+                                        fontWeight: FontWeight.w500),
+                                  ),
                                 )
                               ],
                             ),
@@ -721,7 +731,8 @@ class _ProfileScreenState extends State<ProfileScreen>
               SizedBox(
                 height: 30,
               ),
-              if (NewProfileData?.object?.isFollowing != 'REQUESTED')
+              if (NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
+                  User_ID == NewProfileData?.object?.userUid)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -929,7 +940,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                     ),
                   ],
                 ),
-              if (NewProfileData?.object?.isFollowing != 'REQUESTED')
+              if (NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
+                  User_ID == NewProfileData?.object?.userUid)
                 Container(
                   // color: Colors.red,
                   height: arrNotiyTypeList[0].isSelected == true
@@ -1760,10 +1772,10 @@ class _ProfileScreenState extends State<ProfileScreen>
             parsedDateTimeBlogs = DateTime.parse(
                 '${saveAllBlogModelData?.object?[index].createdAt ?? ""}');
             return Container(
-              height: 140,
+              height: 150,
               // color: Colors.red,
               child: Padding(
-                padding: EdgeInsets.only(left: 10, right: 10),
+                padding: EdgeInsets.only(left: 10, right: 10, bottom:10),
                 child: Center(
                   child: GestureDetector(
                     onTap: () {
@@ -1786,7 +1798,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           ));
                     },
                     child: Container(
-                      height: 130,
+                      height: 140,
                       decoration: BoxDecoration(
                           // color: Colors.green,
                           borderRadius: BorderRadius.circular(15),
@@ -1876,6 +1888,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             "${saveAllBlogModelData?.object?[index].description}",
+                                          maxLines: 3,
                                             style: TextStyle(
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w600,
@@ -1997,10 +2010,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                   MaterialPageRoute(
                       builder: (context) => EditProfileScreen(
                             newProfileData: NewProfileData,
-                          )));
+                          ))).then((value) =>
+                  BlocProvider.of<NewProfileSCubit>(context)
+                      .NewProfileSAPI(context, widget.User_ID));
             },
-            child: NewProfileData?.object?.isFollowing != 'REQUESTED' &&
-                    NewProfileData?.object?.isFollowing != 'FOLLOWING'
+            child: User_ID == NewProfileData?.object?.userUid
                 ? Icon(
                     Icons.edit,
                     color: Colors.black,
@@ -2418,17 +2432,21 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
           trailing: GestureDetector(
             onTap: () {
-              /*  Navigator.push(
+              Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => EditProfileScreen(
                             newProfileData: NewProfileData,
-                          ))); */
+                          ))).then((value) =>
+                  BlocProvider.of<NewProfileSCubit>(context)
+                      .NewProfileSAPI(context, widget.User_ID));
             },
-            child: Icon(
-              Icons.edit,
-              color: Colors.black,
-            ),
+            child: User_ID == NewProfileData?.object?.userUid
+                ? Icon(
+                    Icons.edit,
+                    color: Colors.black,
+                  )
+                : SizedBox(),
           ),
         ),
         Transform.translate(
