@@ -237,10 +237,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 backgroundColor: ColorConstant.primary_color,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => NewBottomBar(buttomIndex: 0)));
+            Navigator.pop(context);
             }
             if (state is UpdateProfileLoadedState) {
               SnackBar snackBar = SnackBar(
@@ -248,10 +245,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 backgroundColor: ColorConstant.primary_color,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => NewBottomBar(buttomIndex: 0)));
+             Navigator.pop(context);
             }
             if (state is FetchExprtiseRoomLoadedState) {
               print("FetchExprtiseRoomLoadedState");
