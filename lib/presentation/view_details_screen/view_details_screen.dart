@@ -2,16 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/ViewDetails_Bloc/ViewDetails_state.dart';
 import 'package:pds/API/Model/ViewDetails_Model/ViewDetails_model.dart';
-import 'package:pds/presentation/room_members/room_members_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../API/Bloc/ViewDetails_Bloc/ViewDetails_cubit.dart';
 import '../../core/utils/color_constant.dart';
-import '../../core/utils/image_constant.dart';
-// import '../../core/utils/size_utils.dart';
-import '../../core/utils/sharedPreferences.dart';
 import '../../theme/theme_helper.dart';
-import '../../widgets/custom_icon_button.dart';
 import '../../widgets/custom_image_view.dart';
 
 class ViewDetailsScreen extends StatefulWidget {

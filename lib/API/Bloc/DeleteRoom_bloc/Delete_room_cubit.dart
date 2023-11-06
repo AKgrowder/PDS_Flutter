@@ -2,7 +2,6 @@ import 'package:pds/API/Repo/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../Model/delete_room_model/Delete_room_model.dart';
 import 'Delete_room_state.dart';
 
 class DeleteRoomCubit extends Cubit<DeleteRoomState> {
