@@ -31,6 +31,7 @@ import 'package:pds/API/Bloc/device_info_Bloc/device_info_bloc.dart';
 import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
+import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_cubit.dart';
 import 'package:pds/theme/theme_helper.dart';
 
 import 'API/Bloc/postData_Bloc/postData_Bloc.dart';
@@ -151,7 +152,6 @@ class MyApp extends StatelessWidget {
         BlocProvider<DevicesInfoCubit>(
           create: (context) => DevicesInfoCubit(),
         ),
-       
         BlocProvider<FatchAllMembersCubit>(
           create: (context) => FatchAllMembersCubit(),
         ),
@@ -176,7 +176,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<OpenSaveCubit>(
           create: (context) => OpenSaveCubit(),
         ),
-        
+        BlocProvider<ViewStoryCubit>(
+          create: (context) => ViewStoryCubit(),
+        ),
       ],
       child: MaterialApp(
           theme: ThemeData(

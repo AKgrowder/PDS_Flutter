@@ -3,11 +3,16 @@ import 'dart:collection';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_cubit.dart';
+import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_state.dart';
 import 'package:pds/StoryFile/src/first_build_mixin.dart';
 import 'package:pds/StoryFile/src/story_button.dart';
 import 'package:pds/StoryFile/src/story_page_scaffold.dart';
 import 'package:pds/core/utils/color_constant.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/utils/image_constant.dart';
 import '../../widgets/custom_image_view.dart';
@@ -38,15 +43,20 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   int _pointerDownMillis = 0;
   double _pageValue = 0.0;
   List<bool> imageLoads = [];
+  bool? StoryView = false;
+  int DummyStoryView = -1;
+  bool? DummyStoryViewBool = false;
+  String? User_ID = "";
 
   @override
   void initState() {
     _storyController =
         widget.buttonData.storyController ?? StoryTimelineController();
     _stopwatch.start();
+    GetUserID();
     _storyController!.addListener(_onTimelineEvent);
-    imageLoads = List.generate(widget.buttonData.images.length, (index) => false);
-
+    imageLoads =
+        List.generate(widget.buttonData.images.length, (index) => false);
     super.initState();
   }
 
@@ -113,55 +123,69 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         horizontal: 15.0,
         vertical: 10.0,
       ),
-      child: Row(
+      child: Column(
         children: [
-          Expanded(child: SizedBox(
-            child: Row(
-              children: [
-                widget.buttonData.images[0].profileImage != null  ? CustomImageView(
-                  url: "${widget.buttonData.images[0].profileImage}",
-                  height: 32,
-                  width: 32,
-                  fit: BoxFit.fill,
-                  radius: BorderRadius.circular(25),
-                )  : CustomImageView(
-                  imagePath: ImageConstant.tomcruse,
-                  height: 32,
-                  width: 32,
-                  fit: BoxFit.fill,
-                  radius: BorderRadius.circular(25),
-                ),
-                SizedBox(width: 12,),
-                Text(
-                  '${widget.buttonData.images[0].username}',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontFamily: 'outfit',
-                    fontWeight: FontWeight.w400,
-                    height: 0.08,
-                    letterSpacing: -0.17,
-                  ),
-                ),
-                SizedBox(width: 8,),
-                Opacity(
-                  opacity: 0.50,
-                  child: Text(
-                    '${formatDateTime(DateTime.parse(widget.buttonData.images[_curSegmentIndex].date!))}',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                      height: 0.08,
-                      letterSpacing: -0.17,
+          Row(
+            children: [
+              Expanded(
+                  child: SizedBox(
+                child: Row(
+                  children: [
+                    widget.buttonData.images[0].profileImage != null
+                        ? CustomImageView(
+                            url: "${widget.buttonData.images[0].profileImage}",
+                            height: 32,
+                            width: 32,
+                            fit: BoxFit.fill,
+                            radius: BorderRadius.circular(25),
+                          )
+                        : CustomImageView(
+                            imagePath: ImageConstant.tomcruse,
+                            height: 32,
+                            width: 32,
+                            fit: BoxFit.fill,
+                            radius: BorderRadius.circular(25),
+                          ),
+                    SizedBox(
+                      width: 12,
                     ),
-                  ),
-                )
-              ],
-            ),
-          )),
-          closeButton,
+                    Text(
+                      '${widget.buttonData.images[0].username}',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontFamily: 'outfit',
+                        fontWeight: FontWeight.w400,
+                        height: 0.08,
+                        letterSpacing: -0.17,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Opacity(
+                      opacity: 0.50,
+                      child: Text(
+                        '${formatDateTime(DateTime.parse(widget.buttonData.images[_curSegmentIndex].date!))}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w400,
+                          height: 0.08,
+                          letterSpacing: -0.17,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )),
+              closeButton,
+            ],
+          ),
+          
+
+           
         ],
       ),
     );
@@ -188,7 +212,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     }
   }
 
-
   Widget _buildTimeline() {
     return Padding(
       padding: EdgeInsets.only(
@@ -197,10 +220,12 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         right: widget.buttonData.timlinePadding?.left ?? 15.0,
         bottom: widget.buttonData.timlinePadding?.bottom ?? 5.0,
       ),
-      child: _storyController != null ? StoryTimeline(
-        controller: _storyController!,
-        buttonData: widget.buttonData,
-      ):SizedBox(),
+      child: _storyController != null
+          ? StoryTimeline(
+              controller: _storyController!,
+              buttonData: widget.buttonData,
+            )
+          : SizedBox(),
     );
   }
 
@@ -208,19 +233,31 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     return widget.buttonData.currentSegmentIndex;
   }
 
-
   Widget _buildPageContent() {
     bool imageLoaded = false;
     _storyController!.pause();
-    NetworkImage networkImage = NetworkImage(widget.buttonData.images[_curSegmentIndex].image!);
+    NetworkImage networkImage =
+        NetworkImage(widget.buttonData.images[_curSegmentIndex].image!);
+    print(_curSegmentIndex);
+
     networkImage.resolve(ImageConfiguration()).addListener(
       ImageStreamListener((info, call) {
         if (mounted) {
+          if (DummyStoryView == _curSegmentIndex) {
+            DummyStoryViewBool = false;
+          } else {
+            DummyStoryView = _curSegmentIndex;
+            DummyStoryViewBool = true;
+          }
           setState(() {
             // Image has been loaded
             imageLoaded = true;
+
             _storyController!.unpause();
           });
+          if (DummyStoryViewBool == true) {
+            StoryView = true;
+          }
         }
       }),
     );
@@ -232,42 +269,61 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         ),
       );
     }
-    return !imageLoaded ? Center(
-      child: CircularProgressIndicator(color: ColorConstant.primary_color,strokeWidth: 2,),
-    ):StoryPageScaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          image: widget.buttonData.images[_curSegmentIndex].image!.contains("car")?DecorationImage(
-            image: AssetImage(
-              "assets/images/expert4.png",
+    if (imageLoaded == true) {
+      if (StoryView == true) {
+        StoryView = false;
+        print(
+            "View_User_Story View_User_Story View_User_Story View_User_Story View_User_Story View_User_Story View_User_Story View_User_Story ");
+        print(widget.buttonData.images[_curSegmentIndex].storyUid);
+        print(User_ID);
+        BlocProvider.of<ViewStoryCubit>(context).ViewStory(
+            context,
+            "${User_ID}",
+            "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+      }
+    }
+    return !imageLoaded
+        ? Center(
+            child: CircularProgressIndicator(
+              color: ColorConstant.primary_color,
+              strokeWidth: 2,
             ),
-            fit: BoxFit.cover,
-          ):DecorationImage(
-            image: networkImage,
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                '',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.bold,
+          )
+        : StoryPageScaffold(
+            body: Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                image: widget.buttonData.images[_curSegmentIndex].image!
+                        .contains("car")
+                    ? DecorationImage(
+                        image: AssetImage(ImageConstant.pdslogo),
+                        fit: BoxFit.cover,
+                      )
+                    : DecorationImage(
+                        image: networkImage,
+                        fit: BoxFit.cover,
+                      ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      '',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+              ),
+            ),
+          );
   }
 
   bool _isLeftPartOfStory(Offset position) {
@@ -315,12 +371,24 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                 children: [
                   _buildTimeline(),
                   _buildCloseButton(),
+                  // print(widget.buttonData.images[_curSegmentIndex].storyUid);
+                  Spacer(),
+                  widget.buttonData.images[_curSegmentIndex].userUid == User_ID ?
+                  Container(
+                      height: 50,
+                      color: Colors.red,
+                    ):SizedBox()
                 ],
               ),
             ),
-            _storyController == null ? Center(
-              child: CircularProgressIndicator(color: ColorConstant.primary_color,strokeWidth: 2,),
-            ):SizedBox()
+            _storyController == null
+                ? Center(
+                    child: CircularProgressIndicator(
+                      color: ColorConstant.primary_color,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : SizedBox()
           ],
         ),
       ),
@@ -339,8 +407,42 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: _buildPageStructure(),
+      body: BlocConsumer<ViewStoryCubit, ViewStoryState>(
+          listener: (context, state) async {
+        if (state is ViewStoryErrorState) {
+          SnackBar snackBar = SnackBar(
+            content: Text(state.error),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+
+        if (state is ViewStoryLoadingState) {
+          Center(
+            child: Container(
+              margin: EdgeInsets.only(bottom: 100),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.asset(ImageConstant.loader,
+                    fit: BoxFit.cover, height: 100.0, width: 100),
+              ),
+            ),
+          );
+        }
+        if (state is ViewStoryLoadedState) {
+          print(state.ViewStoryModelData.object);
+        }
+      }, builder: (context, state) {
+        return _buildPageStructure();
+      }),
+
+      ///  Show Count API Data
     );
+  }
+
+  GetUserID() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    User_ID = prefs.getString(PreferencesKey.loginUserID);
   }
 }
 
