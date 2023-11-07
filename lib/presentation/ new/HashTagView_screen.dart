@@ -7,11 +7,13 @@ import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
 import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_state.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import '../../API/Model/HashTage_Model/HashTagView_model.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../../widgets/custom_image_view.dart';
@@ -358,19 +360,32 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                       ?.posts?[index]
                                                       .postDataType ==
                                                   "IMAGE"
-                                              ? Container(
-                                                  // height: 230,
-                                                  // width: _width,
-                                                  margin: EdgeInsets.only(
-                                                      left: 16,
-                                                      top: 15,
-                                                      right: 16),
-                                                  child: Center(
-                                                      child: CustomImageView(
-                                                    url:
-                                                        "${hashTagViewData?.object?.posts?[index].postData?[0]}",
-                                                  )),
-                                                )
+                                              ? GestureDetector( 
+                                                 onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            OpenSavePostImage(
+                                                              PostID:
+                                                                   hashTagViewData?.object?.posts?[index].postUid ?? ""
+                                                            )),
+                                                  );
+                                                },
+                                                child: Container( 
+                                                    // height: 230,
+                                                    // width: _width,
+                                                    margin: EdgeInsets.only(
+                                                        left: 16,
+                                                        top: 15,
+                                                        right: 16),
+                                                    child: Center(
+                                                        child: CustomImageView(
+                                                      url:
+                                                          "${hashTagViewData?.object?.posts?[index].postData?[0]}",
+                                                    )),
+                                                  ),
+                                              )
                                               : hashTagViewData
                                                           ?.object
                                                           ?.posts?[index]

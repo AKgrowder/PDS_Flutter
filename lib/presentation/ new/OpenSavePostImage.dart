@@ -1,22 +1,31 @@
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_cubit.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
+import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:pds/API/Model/OpenSaveImagepostModel/OpenSaveImagepost_Model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comment_bottom_sheet.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
+import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 
 import '../../API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_state.dart';
 
 class OpenSavePostImage extends StatefulWidget {
   String? PostID;
-
-  OpenSavePostImage({required this.PostID});
+  bool? profileTure;
+  int? index; 
+  OpenSavePostImage({
+    Key? key,
+    required this.PostID,
+    this.profileTure,
+    this.index, 
+  }) : super(key: key);
   @override
   State<OpenSavePostImage> createState() => _OpenSavePostImageState();
 }
@@ -26,6 +35,9 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
   String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
   DateTime? parsedDateTimeBlogs;
   final ScrollController scroll = ScrollController();
+  List<int> currentPages = [];
+  List<PageController> pageControllers = [];
+  bool added = false;
 
   @override
   void initState() {
@@ -38,6 +50,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
+
     return BlocConsumer<OpenSaveCubit, OpenSaveState>(
         listener: (context, state) async {
       if (state is OpenSaveErrorState) {
@@ -65,6 +78,18 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
         print(OpenSaveModelData?.object?.postUserName);
         parsedDateTimeBlogs =
             DateTime.parse('${OpenSaveModelData?.object?.createdAt ?? ""}');
+        navigationFunction();
+        print("home imges -- ${widget.index}");
+        if (!added) {
+          OpenSaveModelData?.object?.postData?.forEach((element) {
+            pageControllers.add(PageController());
+            currentPages.add(0);
+          });
+          WidgetsBinding.instance
+              .addPostFrameCallback((timeStamp) => setState(() {
+                    added = true;
+                  }));
+        }
       }
       if (state is PostLikeLoadedState) {
         print("${state.likePost.object}");
@@ -121,13 +146,22 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                 Padding(
                     padding: const EdgeInsets.only(top: 15, bottom: 15),
                     child: Row(children: [
-                      CustomImageView(
-                        url: "${OpenSaveModelData?.object?.userProfilePic}",
-                        height: 50,
-                        width: 50,
-                        fit: BoxFit.fill,
-                        radius: BorderRadius.circular(25),
-                      ),
+                      OpenSaveModelData?.object?.userProfilePic != null
+                          ? CustomImageView(
+                              url:
+                                  "${OpenSaveModelData?.object?.userProfilePic}",
+                              height: 50,
+                              width: 50,
+                              fit: BoxFit.fill,
+                              radius: BorderRadius.circular(25),
+                            )
+                          : CustomImageView(
+                              imagePath: ImageConstant.tomcruse,
+                              height: 50,
+                              width: 50,
+                              fit: BoxFit.fill,
+                              radius: BorderRadius.circular(25),
+                            ),
                       SizedBox(width: 10),
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,11 +185,122 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                 ))
                           ])
                     ])),
-                CustomImageView(
-                  height: _height / 1.6,
-                  url: "${OpenSaveModelData?.object?.postData?[0]}",
-                  fit: BoxFit.fill,
-                  radius: BorderRadius.circular(5),
+                Container(
+                  height: _height / 1.5,
+                  width: _width,
+                  child: OpenSaveModelData?.object?.postDataType == null
+                      ? SizedBox()
+                      : OpenSaveModelData?.object?.postData?.length == 1
+                          ? OpenSaveModelData?.object?.postDataType == "IMAGE"
+                              ? Container(
+                                  width: _width,
+                                  height: 150,
+                                  margin: EdgeInsets.only(
+                                      left: 16, top: 15, right: 16),
+                                  child: Center(
+                                      child: CustomImageView(
+                                    url:
+                                        "${OpenSaveModelData?.object?.postData?[0]}",
+                                  )),
+                                )
+                              : OpenSaveModelData?.object?.postDataType ==
+                                      "ATTACHMENT"
+                                  ? Container(
+                                      height: 400,
+                                      width: _width,
+                                      child: DocumentViewScreen1(
+                                        path: "",
+                                      ))
+                                  : SizedBox()
+                          : Column(
+                              children: [
+                                Stack(
+                                  children: [
+                                    if ((OpenSaveModelData
+                                            ?.object?.postData?.isNotEmpty ??
+                                        false)) ...[
+                                      SizedBox(
+                                        height: _height / 1.6,
+                                        child: PageView.builder(
+                                          onPageChanged: (page) {
+                                            setState(() {
+                                              currentPages[widget.index ?? 0] =
+                                                  page;
+                                            });
+                                          },
+                                          controller: pageControllers[
+                                              widget.index ?? 0],
+                                          itemCount: OpenSaveModelData
+                                              ?.object?.postData?.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index1) {
+                                            if (OpenSaveModelData
+                                                    ?.object?.postDataType ==
+                                                "IMAGE") {
+                                              return Container(
+                                                width: _width,
+                                                margin: EdgeInsets.only(
+                                                    left: 16,
+                                                    top: 15,
+                                                    right: 16),
+                                                child: Center(
+                                                    child: CustomImageView(
+                                                  url:
+                                                      "${OpenSaveModelData?.object?.postData?[index1]}",
+                                                )),
+                                              );
+                                            } else if (OpenSaveModelData
+                                                    ?.object?.postDataType ==
+                                                "ATTACHMENT") {
+                                              return Container(
+                                                  height: 400,
+                                                  width: _width,
+                                                  child: DocumentViewScreen1(
+                                                    path: OpenSaveModelData
+                                                        ?.object
+                                                        ?.postData?[index1]
+                                                        .toString(),
+                                                  ));
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                      Positioned(
+                                          bottom: 5,
+                                          left: 0,
+                                          right: 0,
+                                          child: Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 0),
+                                            child: Container(
+                                              height: 20,
+                                              child: DotsIndicator(
+                                                dotsCount: OpenSaveModelData
+                                                        ?.object
+                                                        ?.postData
+                                                        ?.length ??
+                                                    1,
+                                                position: currentPages[
+                                                        widget.index ?? 0]
+                                                    .toDouble(),
+                                                decorator: DotsDecorator(
+                                                  size: const Size(10.0, 7.0),
+                                                  activeSize:
+                                                      const Size(10.0, 10.0),
+                                                  spacing: const EdgeInsets
+                                                      .symmetric(horizontal: 2),
+                                                  activeColor:
+                                                      Color(0xffED1C25),
+                                                  color: Color(0xff6A6A6A),
+                                                ),
+                                              ),
+                                            ),
+                                          ))
+                                    ]
+                                  ],
+                                ),
+                              ],
+                            ),
                 ),
                 OpenSaveModelData?.object?.description == null
                     ? SizedBox()
@@ -370,6 +515,18 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
         return ' December';
       default:
         return '';
+    }
+  }
+
+  navigationFunction() {
+    if (widget.profileTure == true) {
+      Future.delayed(
+        Duration(seconds: 2),
+      ).then((value) {
+        BlocProvider.of<AddcommentCubit>(context)
+            .Addcomment(context, '${OpenSaveModelData?.object?.postUid}');
+        _settingModalBottomSheet1(context, 0, double.infinity);
+      });
     }
   }
 
