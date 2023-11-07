@@ -95,9 +95,11 @@ class DocumentViewScreen1 extends StatelessWidget {
                       ),
                     )
                   : Container(
-                      child: SfPdfViewer.network(path!,
-                          key: Key(path!),
-                          pageLayoutMode: PdfPageLayoutMode.continuous),
+                      child: SfPdfViewer.network(
+                        path!,
+                        key: Key(path!),
+                        pageLayoutMode: PdfPageLayoutMode.continuous,
+                      ),
                     ))
           : GFLoader(type: GFLoaderType.ios),
     );

@@ -6,11 +6,13 @@ import 'package:pds/API/Repo/repository.dart';
 class HashTagCubit extends Cubit<HashTagState> {
   HashTagCubit() : super(HashTagInitialState()) {}
   dynamic getalluserlistModel;
-  Future<void> HashTagForYouAPI(BuildContext context) async {
+  Future<void> HashTagForYouAPI(
+      BuildContext context, String hashtagViewType) async {
     dynamic HashTagForYouModel;
     try {
       emit(HashTagLoadingState());
-      HashTagForYouModel = await Repository().HashTagForYouAPI(context);
+      HashTagForYouModel =
+          await Repository().HashTagForYouAPI(context, hashtagViewType);
       if (HashTagForYouModel.success == true) {
         emit(HashTagLoadedState(HashTagForYouModel));
       }
@@ -156,6 +158,21 @@ class HashTagCubit extends Cubit<HashTagState> {
       if (hashTagBannerModel.success == true) {
         emit(HashTagBannerLoadedState(hashTagBannerModel));
         print(hashTagBannerModel.message);
+      }
+    } catch (e) {
+      emit(HashTagErrorState(e.toString()));
+    }
+  }
+
+  Future<void> serchDataAdd(BuildContext context, String typeWord) async {
+    dynamic serchDataAdd;
+    try {
+      emit(HashTagLoadingState());
+      serchDataAdd =
+          await Repository().search_historyDataAdd(context, typeWord);
+      if (serchDataAdd.success == true) {
+        emit(SerchDataAdd(serchDataAdd));
+        print(serchDataAdd.message);
       }
     } catch (e) {
       emit(HashTagErrorState(e.toString()));
