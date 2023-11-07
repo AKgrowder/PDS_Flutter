@@ -226,5 +226,8 @@ class ImageConstant {
   static String addroomimage =  "assets/images/Plus button.png";
   static String hashTagimg = "assets/images/hashTag_Img.png";
   static String whiteClose = "assets/images/whiteClose.png";
+  static String StoryViewListeye = "assets/images/StoryViewListeye.png";
+
+  
 
 }

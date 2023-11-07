@@ -26,27 +26,27 @@ class GetGuestAllPostModel {
 class Object {
   List<Content>? content;
   Pageable? pageable;
+  bool? last;
   int? totalPages;
   int? totalElements;
-  bool? last;
   int? size;
   int? number;
   Sort? sort;
-  int? numberOfElements;
   bool? first;
+  int? numberOfElements;
   bool? empty;
 
   Object(
       {this.content,
       this.pageable,
+      this.last,
       this.totalPages,
       this.totalElements,
-      this.last,
       this.size,
       this.number,
       this.sort,
-      this.numberOfElements,
       this.first,
+      this.numberOfElements,
       this.empty});
 
   Object.fromJson(Map<String, dynamic> json) {
@@ -59,14 +59,14 @@ class Object {
     pageable = json['pageable'] != null
         ? new Pageable.fromJson(json['pageable'])
         : null;
+    last = json['last'];
     totalPages = json['totalPages'];
     totalElements = json['totalElements'];
-    last = json['last'];
     size = json['size'];
     number = json['number'];
     sort = json['sort'] != null ? new Sort.fromJson(json['sort']) : null;
-    numberOfElements = json['numberOfElements'];
     first = json['first'];
+    numberOfElements = json['numberOfElements'];
     empty = json['empty'];
   }
 
@@ -78,16 +78,16 @@ class Object {
     if (this.pageable != null) {
       data['pageable'] = this.pageable!.toJson();
     }
+    data['last'] = this.last;
     data['totalPages'] = this.totalPages;
     data['totalElements'] = this.totalElements;
-    data['last'] = this.last;
     data['size'] = this.size;
     data['number'] = this.number;
     if (this.sort != null) {
       data['sort'] = this.sort!.toJson();
     }
-    data['numberOfElements'] = this.numberOfElements;
     data['first'] = this.first;
+    data['numberOfElements'] = this.numberOfElements;
     data['empty'] = this.empty;
     return data;
   }
@@ -108,6 +108,7 @@ class Content {
   String? isFollowing;
   int? likedCount;
   int? commentCount;
+  RepostOn? repostOn;
 
   Content(
       {this.postUid,
@@ -123,7 +124,8 @@ class Content {
       this.isSaved,
       this.isFollowing,
       this.likedCount,
-      this.commentCount});
+      this.commentCount,
+      this.repostOn});
 
   Content.fromJson(Map<String, dynamic> json) {
     postUid = json['postUid'];
@@ -140,6 +142,9 @@ class Content {
     isFollowing = json['isFollowing'];
     likedCount = json['likedCount'];
     commentCount = json['commentCount'];
+    repostOn = json['repostOn'] != null
+        ? new RepostOn.fromJson(json['repostOn'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -158,6 +163,82 @@ class Content {
     data['isFollowing'] = this.isFollowing;
     data['likedCount'] = this.likedCount;
     data['commentCount'] = this.commentCount;
+    if (this.repostOn != null) {
+      data['repostOn'] = this.repostOn!.toJson();
+    }
+    return data;
+  }
+}
+
+class RepostOn {
+  String? postUid;
+  String? createdAt;
+  String? userUid;
+  String? postUserName;
+  String? userProfilePic;
+  String? description;
+  List<String>? postData;
+  String? postDataType;
+  String? postType;
+  bool? isLiked;
+  bool? isSaved;
+  String? isFollowing;
+  int? likedCount;
+  int? commentCount;
+  Null? repostOn;
+
+  RepostOn(
+      {this.postUid,
+      this.createdAt,
+      this.userUid,
+      this.postUserName,
+      this.userProfilePic,
+      this.description,
+      this.postData,
+      this.postDataType,
+      this.postType,
+      this.isLiked,
+      this.isSaved,
+      this.isFollowing,
+      this.likedCount,
+      this.commentCount,
+      this.repostOn});
+
+  RepostOn.fromJson(Map<String, dynamic> json) {
+    postUid = json['postUid'];
+    createdAt = json['createdAt'];
+    userUid = json['userUid'];
+    postUserName = json['postUserName'];
+    userProfilePic = json['userProfilePic'];
+    description = json['description'];
+    postData = json['postData'].cast<String>();
+    postDataType = json['postDataType'];
+    postType = json['postType'];
+    isLiked = json['isLiked'];
+    isSaved = json['isSaved'];
+    isFollowing = json['isFollowing'];
+    likedCount = json['likedCount'];
+    commentCount = json['commentCount'];
+    repostOn = json['repostOn'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['postUid'] = this.postUid;
+    data['createdAt'] = this.createdAt;
+    data['userUid'] = this.userUid;
+    data['postUserName'] = this.postUserName;
+    data['userProfilePic'] = this.userProfilePic;
+    data['description'] = this.description;
+    data['postData'] = this.postData;
+    data['postDataType'] = this.postDataType;
+    data['postType'] = this.postType;
+    data['isLiked'] = this.isLiked;
+    data['isSaved'] = this.isSaved;
+    data['isFollowing'] = this.isFollowing;
+    data['likedCount'] = this.likedCount;
+    data['commentCount'] = this.commentCount;
+    data['repostOn'] = this.repostOn;
     return data;
   }
 }

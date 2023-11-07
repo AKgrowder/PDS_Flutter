@@ -2,13 +2,14 @@
 
 import 'dart:io';
 import 'dart:math';
-import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_state.dart';
+import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
@@ -17,13 +18,13 @@ import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/editproilescreen.dart';
 import 'package:pds/presentation/recent_blog/recent_blog_screen.dart';
 import 'package:pds/presentation/settings/setting_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 
 class ProfileScreen extends StatefulWidget {
   String User_ID;
@@ -1021,8 +1022,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ),
                                               ],
                                             ),
-                                            trailing: GestureDetector(
+                                            trailing: User_ID == NewProfileData?.object?.userUid?GestureDetector(
                                               onTap: () {
+                                               
                                                 setState(() {
                                                   isUpDate = true;
                                                 });
@@ -1081,7 +1083,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       Icons.edit,
                                                       color: Colors.black,
                                                     ),
-                                            ),
+                                            ):SizedBox(),
                                           ))
                                       : SizedBox(),
                                   NewProfileData?.object?.module == "EXPERT"
@@ -1387,232 +1389,251 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             child: Padding(
                                               padding: const EdgeInsets.only(
                                                   bottom: 10),
-                                              child: ConstrainedBox(
-                                                constraints: BoxConstraints(
-                                                    maxHeight: 300,
-                                                    maxWidth: _width),
-                                                child: Container(
-                                                  decoration: ShapeDecoration(
-                                                    // color: Colors.green,
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      side: BorderSide(
-                                                          width: 1,
-                                                          color: Color(
-                                                              0xFFD3D3D3)),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
+                                              child: GestureDetector(
+
+
+                                                  onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            OpenSavePostImage(
+                                                              PostID:
+                                                                  GetUserPostCommetData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .postUid,
+                                                              profileTure: true,
+                                                            )),
+                                                  );
+                                                },
+                                                child: ConstrainedBox(
+                                                  constraints: BoxConstraints(
+                                                      maxHeight: 300,
+                                                      maxWidth: _width),
+                                                  child: Container(
+                                                    decoration: ShapeDecoration(
+                                                      // color: Colors.green,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        side: BorderSide(
+                                                            width: 1,
+                                                            color: Color(
+                                                                0xFFD3D3D3)),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                10),
+                                                      ),
                                                     ),
-                                                  ),
-                                                  child: Column(
-                                                    children: [
-                                                      Expanded(
-                                                        child: Container(
-                                                            // color: Colors.amber,
-                                                            child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Container(
-                                                              width: 50,
-                                                              height: 50,
-                                                              margin: EdgeInsets
-                                                                  .only(
-                                                                      left: 5,
-                                                                      top: 10),
-                                                              child:
-                                                                  CircleAvatar(
-                                                                backgroundImage:
-                                                                    NetworkImage(
-                                                                        "${GetUserPostCommetData?.object?[index].userProfilePic}"),
-                                                                radius: 25,
-                                                              ),
-                                                              // decoration:
-                                                              //     ShapeDecoration(
-                                                              //   image:
-                                                              //       DecorationImage(
-                                                              //     image: AssetImage(
-                                                              //         ImageConstant
-                                                              //             .placeholder2),1
-                                                              //     fit: BoxFit.fill,
-                                                              //   ),
-                                                              //   shape: OvalBorder(),
-                                                              // ),
-                                                            ),
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                SizedBox(
-                                                                  height: 15,
+                                                    child: Column(
+                                                      children: [
+                                                        Expanded(
+                                                          child: Container(
+                                                              // color: Colors.amber,
+                                                              child: Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Container(
+                                                                width: 50,
+                                                                height: 50,
+                                                                margin: EdgeInsets
+                                                                    .only(
+                                                                        left: 5,
+                                                                        top: 10),
+                                                                child:
+                                                                    CircleAvatar(
+                                                                  backgroundImage:
+                                                                      NetworkImage(
+                                                                          "${GetUserPostCommetData?.object?[index].userProfilePic}"),
+                                                                  radius: 25,
                                                                 ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .only(
-                                                                      left: 10),
-                                                                  child: Text(
-                                                                    '${GetUserPostCommetData?.object?[index].postUserName}',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          16,
-                                                                      fontFamily:
-                                                                          'outfit',
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
+                                                                // decoration:
+                                                                //     ShapeDecoration(
+                                                                //   image:
+                                                                //       DecorationImage(
+                                                                //     image: AssetImage(
+                                                                //         ImageConstant
+                                                                //             .placeholder2),1
+                                                                //     fit: BoxFit.fill,
+                                                                //   ),
+                                                                //   shape: OvalBorder(),
+                                                                // ),
+                                                              ),
+                                                              Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  SizedBox(
+                                                                    height: 15,
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        left: 10),
+                                                                    child: Text(
+                                                                      '${GetUserPostCommetData?.object?[index].postUserName}',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontFamily:
+                                                                            'outfit',
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w600,
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                                Expanded(
-                                                                  child:
-                                                                      Container(
-                                                                    margin: EdgeInsets
-                                                                        .only(
-                                                                            left:
-                                                                                10),
-                                                                    width:
-                                                                        _width -
-                                                                            100,
-
-                                                                    // color: Colors.red,
+                                                                  Expanded(
                                                                     child:
-                                                                        Column(
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .start,
-                                                                      children: [
-                                                                        Text(
-                                                                          '${GetUserPostCommetData?.object?[index].description}',
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color:
-                                                                                Colors.black,
-                                                                            fontSize:
-                                                                                14,
-                                                                            fontFamily:
-                                                                                'outfit',
-                                                                            fontWeight:
-                                                                                FontWeight.w400,
+                                                                        Container(
+                                                                      margin: EdgeInsets
+                                                                          .only(
+                                                                              left:
+                                                                                  10),
+                                                                      width:
+                                                                          _width -
+                                                                              100,
+                                              
+                                                                      // color: Colors.red,
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment
+                                                                                .start,
+                                                                        children: [
+                                                                          Text(
+                                                                            '${GetUserPostCommetData?.object?[index].description}',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color:
+                                                                                  Colors.black,
+                                                                              fontSize:
+                                                                                  14,
+                                                                              fontFamily:
+                                                                                  'outfit',
+                                                                              fontWeight:
+                                                                                  FontWeight.w400,
+                                                                            ),
                                                                           ),
-                                                                        ),
-                                                                        Text(
-                                                                          '1w',
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color:
-                                                                                Color(0xFF8F8F8F),
-                                                                            fontSize:
-                                                                                12,
-                                                                            fontFamily:
-                                                                                'outfit',
-                                                                            fontWeight:
-                                                                                FontWeight.w400,
+                                                                          Text(
+                                                                            '1w',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color:
+                                                                                  Color(0xFF8F8F8F),
+                                                                              fontSize:
+                                                                                  12,
+                                                                              fontFamily:
+                                                                                  'outfit',
+                                                                              fontWeight:
+                                                                                  FontWeight.w400,
+                                                                            ),
                                                                           ),
-                                                                        ),
-                                                                        Expanded(
-                                                                          child: ListView.builder(
-                                                                              padding: EdgeInsets.zero,
-                                                                              shrinkWrap: true,
-                                                                              physics: NeverScrollableScrollPhysics(),
-                                                                              itemCount: GetUserPostCommetData?.object?[index].comments?.length == null ? 0 : ((GetUserPostCommetData?.object?[index].comments?.length ?? 0) > 2 ? 2 : GetUserPostCommetData?.object?[index].comments?.length),
-                                                                              itemBuilder: (context, index2) {
-                                                                                return Row(
-                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                  children: [
-                                                                                    Container(
-                                                                                      width: 45,
-                                                                                      height: 45,
-                                                                                      margin: EdgeInsets.only(top: 15),
-                                                                                      child: CircleAvatar(
-                                                                                        backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].comments?[index2].profilePic}"),
-                                                                                        radius: 25,
+                                                                          Expanded(
+                                                                            child: ListView.builder(
+                                                                                padding: EdgeInsets.zero,
+                                                                                shrinkWrap: true,
+                                                                                physics: NeverScrollableScrollPhysics(),
+                                                                                itemCount: GetUserPostCommetData?.object?[index].comments?.length == null ? 0 : ((GetUserPostCommetData?.object?[index].comments?.length ?? 0) > 2 ? 2 : GetUserPostCommetData?.object?[index].comments?.length),
+                                                                                itemBuilder: (context, index2) {
+                                                                                  return Row(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Container(
+                                                                                        width: 45,
+                                                                                        height: 45,
+                                                                                        margin: EdgeInsets.only(top: 15),
+                                                                                        child: CircleAvatar(
+                                                                                          backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].comments?[index2].profilePic}"),
+                                                                                          radius: 25,
+                                                                                        ),
                                                                                       ),
-                                                                                    ),
-                                                                                    Padding(
-                                                                                      padding: const EdgeInsets.only(left: 8, top: 5, right: 3),
-                                                                                      child: Column(
-                                                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                        children: [
-                                                                                          SizedBox(
-                                                                                            height: 10,
-                                                                                          ),
-                                                                                          Text(
-                                                                                            '${GetUserPostCommetData?.object?[index].comments?[index2].userName}',
-                                                                                            style: TextStyle(
-                                                                                              color: Colors.black,
-                                                                                              fontSize: 16,
-                                                                                              fontFamily: "outfit",
-                                                                                              fontWeight: FontWeight.w600,
+                                                                                      Padding(
+                                                                                        padding: const EdgeInsets.only(left: 8, top: 5, right: 3),
+                                                                                        child: Column(
+                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                          children: [
+                                                                                            SizedBox(
+                                                                                              height: 10,
                                                                                             ),
-                                                                                          ),
-                                                                                          Container(
-                                                                                            width: _width / 1.7,
-                                                                                            child: Text(
-                                                                                              '${GetUserPostCommetData?.object?[index].comments?[index2].comment}',
-                                                                                              // maxLines: 1,
+                                                                                            Text(
+                                                                                              '${GetUserPostCommetData?.object?[index].comments?[index2].userName}',
                                                                                               style: TextStyle(
-                                                                                                // overflow: TextOverflow.ellipsis,
                                                                                                 color: Colors.black,
                                                                                                 fontSize: 16,
                                                                                                 fontFamily: "outfit",
                                                                                                 fontWeight: FontWeight.w600,
                                                                                               ),
                                                                                             ),
-                                                                                          ),
-                                                                                          Text(
-                                                                                            '1w',
-                                                                                            style: TextStyle(
-                                                                                              color: Color(0xFF8F8F8F),
-                                                                                              fontSize: 12,
-                                                                                              fontFamily: "outfit",
-                                                                                              fontWeight: FontWeight.w400,
+                                                                                            Container(
+                                                                                              width: _width / 1.7,
+                                                                                              child: Text(
+                                                                                                '${GetUserPostCommetData?.object?[index].comments?[index2].comment}',
+                                                                                                // maxLines: 1,
+                                                                                                style: TextStyle(
+                                                                                                  // overflow: TextOverflow.ellipsis,
+                                                                                                  color: Colors.black,
+                                                                                                  fontSize: 16,
+                                                                                                  fontFamily: "outfit",
+                                                                                                  fontWeight: FontWeight.w600,
+                                                                                                ),
+                                                                                              ),
                                                                                             ),
-                                                                                          )
-                                                                                        ],
-                                                                                      ),
-                                                                                    )
-                                                                                  ],
-                                                                                );
-                                                                              }),
-                                                                        )
-                                                                      ],
+                                                                                            Text(
+                                                                                              '1w',
+                                                                                              style: TextStyle(
+                                                                                                color: Color(0xFF8F8F8F),
+                                                                                                fontSize: 12,
+                                                                                                fontFamily: "outfit",
+                                                                                                fontWeight: FontWeight.w400,
+                                                                                              ),
+                                                                                            )
+                                                                                          ],
+                                                                                        ),
+                                                                                      )
+                                                                                    ],
+                                                                                  );
+                                                                                }),
+                                                                          )
+                                                                        ],
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            /* Container(
-                                                            width: 60,
-                                                            height: 60,
-                                                            margin:
-                                                                EdgeInsets.only(
-                                                                    left: 10,
-                                                                    top: 5),
-                                                            decoration:
-                                                                ShapeDecoration(
-                                                              image:
-                                                                  DecorationImage(
-                                                                image: NetworkImage(
-                                                                    "${GetUserPostCommetData?.object?[index].postData?[0]}"),
-                                                                fit: BoxFit.cover,
+                                                                ],
                                                               ),
-                                                              shape: RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              4)),
-                                                            ),
-                                                          ), */
-                                                          ],
-                                                        )),
-                                                      ),
-                                                    ],
+                                                              /* Container(
+                                                              width: 60,
+                                                              height: 60,
+                                                              margin:
+                                                                  EdgeInsets.only(
+                                                                      left: 10,
+                                                                      top: 5),
+                                                              decoration:
+                                                                  ShapeDecoration(
+                                                                image:
+                                                                    DecorationImage(
+                                                                  image: NetworkImage(
+                                                                      "${GetUserPostCommetData?.object?[index].postData?[0]}"),
+                                                                  fit: BoxFit.cover,
+                                                                ),
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                                4)),
+                                                              ),
+                                                            ), */
+                                                            ],
+                                                          )),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -1984,6 +2005,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget expertUser(_height, _width) {
+    print("i waant to check-${ User_ID } ----${ NewProfileData?.object?.userUid}");
     return Column(
       children: [
         ListTile(
