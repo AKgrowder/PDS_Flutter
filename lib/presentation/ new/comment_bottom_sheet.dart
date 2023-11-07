@@ -13,7 +13,6 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
-import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/widgets/custom_image_view.dart';
@@ -25,7 +24,7 @@ class CommentBottomSheet extends StatefulWidget {
   String desc;
   String postUuID;
   String? isFoollinng;
-  String?useruid;
+  String? useruid;
 
   // GetGuestAllPostModel? AllGuestPostRoomData;
   // int index;
@@ -34,7 +33,8 @@ class CommentBottomSheet extends StatefulWidget {
       required this.UserName,
       required this.desc,
       required this.postUuID,
-      this.isFoollinng,this.useruid,
+      this.isFoollinng,
+      this.useruid,
       key});
 
   @override
@@ -121,7 +121,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
 
               addCommentModeldata?.object?.add(object);
               print(
-                  "cghfdgfgghgh->${addCommentModeldata?.object?.last.runtimeType}");
+                  "i want to cheak->${addCommentModeldata?.object?.last.runtimeType}");
+
               _goToElement();
             }
             if (state is DeletecommentLoadedState) {
@@ -251,7 +252,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 70),
                         child: ListView.builder(
-                          // physics: NeverScrollableScrollPhysics(),
+                          // physics:  NeverScrollableScrollPhysics(),
                           itemCount: addCommentModeldata?.object?.length,
                           shrinkWrap: true,
                           controller: scroll,
@@ -468,12 +469,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                if (User_ID == null) {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          RegisterCreateAccountScreen()));
-                                } else if (addcomment.text == null ||
-                                    addcomment.text.isEmpty) {
+                                if (addcomment.text.isEmpty) {
                                   SnackBar snackBar = SnackBar(
                                     content: Text('Please Add Comment'),
                                     backgroundColor:
