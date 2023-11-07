@@ -84,6 +84,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     setState(() {});
   }
 
+
+
   Widget _buildCloseButton() {
     Widget closeButton;
     if (widget.buttonData.closeButton != null) {
@@ -183,9 +185,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
               closeButton,
             ],
           ),
-          
-
-           
         ],
       ),
     );
@@ -250,7 +249,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             DummyStoryViewBool = true;
           }
           setState(() {
-            // Image has been loaded
             imageLoaded = true;
 
             _storyController!.unpause();
@@ -373,11 +371,12 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                   _buildCloseButton(),
                   // print(widget.buttonData.images[_curSegmentIndex].storyUid);
                   Spacer(),
-                  widget.buttonData.images[_curSegmentIndex].userUid == User_ID ?
-                  Container(
-                      height: 50,
-                      color: Colors.red,
-                    ):SizedBox()
+                  widget.buttonData.images[_curSegmentIndex].userUid == User_ID
+                      ? Container(
+                          height: 50,
+                          color: Colors.red,
+                        )
+                      : SizedBox()
                 ],
               ),
             ),

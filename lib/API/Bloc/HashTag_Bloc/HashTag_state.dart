@@ -17,22 +17,27 @@ class HashTagLoadedState extends HashTagState {
   final HashtagModel HashTagData;
   HashTagLoadedState(this.HashTagData);
 }
+
 class HashTagViewDataLoadedState extends HashTagState {
   final HashtagViewDataModel HashTagViewData;
   HashTagViewDataLoadedState(this.HashTagViewData);
 }
+
 class PostLikeLoadedState extends HashTagState {
   final LikePost likePost;
   PostLikeLoadedState(this.likePost);
 }
+
 class DeletePostLoadedState extends HashTagState {
   final DeletePostModel DeletePost;
   DeletePostLoadedState(this.DeletePost);
 }
+
 class GetGuestAllPostLoadedState extends HashTagState {
   final GetGuestAllPostModel GetGuestAllPostRoomData;
   GetGuestAllPostLoadedState(this.GetGuestAllPostRoomData);
 }
+
 class HashTagErrorState extends HashTagState {
   final dynamic error;
   HashTagErrorState(this.error);
@@ -46,4 +51,9 @@ class GetAllUserLoadedState extends HashTagState {
 class HashTagBannerLoadedState extends HashTagState {
   final HashTagImageModel hashTagImageModel;
   HashTagBannerLoadedState(this.hashTagImageModel);
+}
+
+class SerchDataAdd extends HashTagState {
+  final SerchDataAdd serchDataAdd;
+  SerchDataAdd(this.serchDataAdd);
 }

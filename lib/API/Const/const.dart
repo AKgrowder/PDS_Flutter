@@ -94,6 +94,8 @@ class Config {
   static const String getSavedBlogs = "guest/api/getSavedBlogs";
   static const String OpenSaveImagePost = "user/api/get_post_by_uid";
   static const String view_story = "user/api/view_story";
+  static const String search_historyDataAdd = "user/api/add_hashtag_search_history";
+  static const String StoryViewList = "user/api/story_view_details_of_user";
 
 
 
