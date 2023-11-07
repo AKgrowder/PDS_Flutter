@@ -7,11 +7,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_cubit.dart';
 import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_state.dart';
+import 'package:pds/API/Model/ViewStoryModel/StoryViewList_Model.dart';
 import 'package:pds/StoryFile/src/first_build_mixin.dart';
 import 'package:pds/StoryFile/src/story_button.dart';
 import 'package:pds/StoryFile/src/story_page_scaffold.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/utils/image_constant.dart';
@@ -47,6 +49,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   int DummyStoryView = -1;
   bool? DummyStoryViewBool = false;
   String? User_ID = "";
+  StoryViewListModel? StoryViewListModelData;
+  late PointerUpEvent event1;
 
   @override
   void initState() {
@@ -57,6 +61,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     _storyController!.addListener(_onTimelineEvent);
     imageLoads =
         List.generate(widget.buttonData.images.length, (index) => false);
+    BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
+        context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
     super.initState();
   }
 
@@ -83,8 +89,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     }
     setState(() {});
   }
-
-
 
   Widget _buildCloseButton() {
     Widget closeButton;
@@ -236,7 +240,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     bool imageLoaded = false;
     _storyController!.pause();
     NetworkImage networkImage =
-        NetworkImage(widget.buttonData.images[_curSegmentIndex].image!);
+        NetworkImage(widget.buttonData.images[_curSegmentIndex].image ?? "");
     print(_curSegmentIndex);
 
     networkImage.resolve(ImageConfiguration()).addListener(
@@ -248,13 +252,14 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             DummyStoryView = _curSegmentIndex;
             DummyStoryViewBool = true;
           }
-          setState(() {
-            imageLoaded = true;
 
-            _storyController!.unpause();
-          });
+          // Image has been loaded
+          imageLoaded = true;
+          _storyController!.unpause();
+
           if (DummyStoryViewBool == true) {
             StoryView = true;
+            setState(() {});
           }
         }
       }),
@@ -280,7 +285,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             "${widget.buttonData.images[_curSegmentIndex].storyUid}");
       }
     }
-    return !imageLoaded
+    return imageLoaded == false
         ? Center(
             child: CircularProgressIndicator(
               color: ColorConstant.primary_color,
@@ -333,6 +338,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   }
 
   Widget _buildPageStructure() {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return Listener(
       onPointerDown: (PointerDownEvent event) {
         _pointerDownMillis = _stopwatch.elapsedMilliseconds;
@@ -340,6 +347,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         _storyController?.pause();
       },
       onPointerUp: (PointerUpEvent event) {
+        event1 = event;
         final pointerUpMillis = _stopwatch.elapsedMilliseconds;
         final maxPressMillis = kPressTimeout.inMilliseconds * 2;
         final diffMillis = pointerUpMillis - _pointerDownMillis;
@@ -372,9 +380,178 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                   // print(widget.buttonData.images[_curSegmentIndex].storyUid);
                   Spacer(),
                   widget.buttonData.images[_curSegmentIndex].userUid == User_ID
-                      ? Container(
-                          height: 50,
-                          color: Colors.red,
+                      ? GestureDetector(
+                          onTapDown: (details) {
+                            _pointerDownMillis = _stopwatch.elapsedMilliseconds;
+                            _pointerDownPosition = details.localPosition;
+                            _storyController?.pause();
+                            showModalBottomSheet(
+                                isScrollControlled: true,
+                                useSafeArea: true,
+                                isDismissible: true,
+                                showDragHandle: true,
+                                enableDrag: true,
+                                constraints:
+                                    BoxConstraints.tight(Size.infinite),
+                                context: context,
+                                builder: (BuildContext bc) {
+                                  return ListView.separated(
+                  itemCount: StoryViewListModelData?.object?.length ?? 0,
+                  separatorBuilder: (BuildContext context, int index) =>
+                      const Divider(),
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      // height: 40,
+                      width: _width,
+                      // color: Colors.green,
+                      child: ListTile(
+                        leading: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProfileScreen(
+                                          User_ID:
+                                              "${StoryViewListModelData?.object?[index].userUid}",
+                                          isFollowing:
+                                              "${StoryViewListModelData?.object?[index].isFollowing}",
+                                        )));
+                          },
+                          child: CircleAvatar(
+                            backgroundImage: StoryViewListModelData
+                                        ?.object?[index].profilePic !=
+                                    null
+                                ? NetworkImage(
+                                    "${StoryViewListModelData?.object?[index].profilePic}")
+                                : NetworkImage(
+                                    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"),
+                            radius: 25,
+                          ),
+                        ),
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 6,
+                            ),
+                            Text(
+                              "${StoryViewListModelData?.object?[index].userName}",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontFamily: "outfit",
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            // Text(
+                            //   customFormat(
+                            //       parsedDateTime),
+                            //   style: TextStyle(
+                            //     fontSize: 12,
+                            //     fontFamily: "outfit",
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                        trailing: User_ID ==
+                                StoryViewListModelData?.object?[index].userUid
+                            ? SizedBox()
+                            : GestureDetector(
+                                onTap: () {
+                                  // followFunction(
+                                  //   apiName: 'Follow',
+                                  //   index: index,
+                                  // );
+                                },
+                                child: Container(
+                                  height: 25,
+                                  alignment: Alignment.center,
+                                  width: 65,
+                                  margin: EdgeInsets.only(bottom: 5),
+                                  decoration: BoxDecoration(
+                                      color: ColorConstant.primary_color,
+                                      borderRadius: BorderRadius.circular(4)),
+                                  child: StoryViewListModelData
+                                              ?.object?[index].isFollowing ==
+                                          'FOLLOW'
+                                      ? Text(
+                                          'Follow',
+                                          style: TextStyle(
+                                              fontFamily: "outfit",
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white),
+                                        )
+                                      : StoryViewListModelData?.object?[index]
+                                                  .isFollowing ==
+                                              'REQUESTED'
+                                          ? Text(
+                                              'Requested',
+                                              style: TextStyle(
+                                                  fontFamily: "outfit",
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color:Colors.white),
+                                            )
+                                          : Text(
+                                              'Following ',
+                                              style: TextStyle(
+                                                  fontFamily: "outfit",
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color:Colors.white),
+                                            ),
+                                ),
+                              ),
+                      ),
+                    );
+                  });
+                                }).then((value) {
+                              final pointerUpMillis =
+                                  _stopwatch.elapsedMilliseconds;
+                              final maxPressMillis =
+                                  kPressTimeout.inMilliseconds * 2;
+                              final diffMillis =
+                                  pointerUpMillis - _pointerDownMillis;
+                              if (diffMillis <= maxPressMillis) {
+                                final position = event1.position;
+                                final distance =
+                                    (position - _pointerDownPosition).distance;
+                                if (distance < 5.0) {
+                                  final isLeft = _isLeftPartOfStory(position);
+                                  if (isLeft) {
+                                    _storyController!.previousSegment();
+                                  } else {
+                                    _storyController!.nextSegment();
+                                  }
+                                }
+                              }
+                              _storyController!.unpause();
+                            });
+                          },
+                          child: Container(
+                            height: 50,
+                            width: 150,
+                            color: Colors.transparent,
+                            child: Row(
+                              children: [
+                                Spacer(),
+                                Image.asset(
+                                  ImageConstant.StoryViewListeye,
+                                  height: 14,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "${StoryViewListModelData?.object?.length}",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: "outfit",
+                                      fontSize: 14),
+                                ),
+                                Spacer()
+                              ],
+                            ),
+                          ),
                         )
                       : SizedBox()
                 ],
@@ -404,6 +581,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
   @override
   Widget build(BuildContext context) {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: BlocConsumer<ViewStoryCubit, ViewStoryState>(
@@ -430,6 +609,9 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         }
         if (state is ViewStoryLoadedState) {
           print(state.ViewStoryModelData.object);
+        }
+        if (state is StoryViewListLoadedState) {
+          StoryViewListModelData = state.StoryViewListModelData;
         }
       }, builder: (context, state) {
         return _buildPageStructure();
