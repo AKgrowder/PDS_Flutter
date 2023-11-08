@@ -2564,54 +2564,64 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           ),
                                                           GestureDetector(
                                                             onTap: () {
-                                                              Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                builder:
-                                                                    (context) {
-                                                                  return RePostScreen(
-                                                                    userProfile: AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .userProfilePic,
-                                                                    username: AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .postUserName,
-                                                                    date: AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .createdAt,
-                                                                    desc: AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .description,
-                                                                    postData: AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .postData,
-                                                                    postDataType: AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .postDataType,
-                                                                    index:
-                                                                        index,
-                                                                    AllGuestPostRoomData:
-                                                                        AllGuestPostRoomData,
-                                                                    postUid: AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .postUid,
-                                                                  );
-                                                                },
-                                                              ));
+                                                              if (uuid ==
+                                                                  null) {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .push(MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                RegisterCreateAccountScreen()));
+                                                              } else {
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) {
+                                                                    return RePostScreen(
+                                                                      userProfile: AllGuestPostRoomData
+                                                                          ?.object
+                                                                          ?.content?[
+                                                                              index]
+                                                                          .userProfilePic,
+                                                                      username: AllGuestPostRoomData
+                                                                          ?.object
+                                                                          ?.content?[
+                                                                              index]
+                                                                          .postUserName,
+                                                                      date: AllGuestPostRoomData
+                                                                          ?.object
+                                                                          ?.content?[
+                                                                              index]
+                                                                          .createdAt,
+                                                                      desc: AllGuestPostRoomData
+                                                                          ?.object
+                                                                          ?.content?[
+                                                                              index]
+                                                                          .description,
+                                                                      postData: AllGuestPostRoomData
+                                                                          ?.object
+                                                                          ?.content?[
+                                                                              index]
+                                                                          .postData,
+                                                                      postDataType: AllGuestPostRoomData
+                                                                          ?.object
+                                                                          ?.content?[
+                                                                              index]
+                                                                          .postDataType,
+                                                                      index:
+                                                                          index,
+                                                                      AllGuestPostRoomData:
+                                                                          AllGuestPostRoomData,
+                                                                      postUid: AllGuestPostRoomData
+                                                                          ?.object
+                                                                          ?.content?[
+                                                                              index]
+                                                                          .postUid,
+                                                                    );
+                                                                  },
+                                                                ));
+                                                              }
                                                             },
                                                             child: Image.asset(
                                                               ImageConstant
@@ -2623,7 +2633,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             width: 5,
                                                           ),
                                                           Text(
-                                                            '${AllGuestPostRoomData?.object?.content?[index].repostCount}',
+                                                            uuid == null
+                                                                ? ""
+                                                                : '${AllGuestPostRoomData?.object?.content?[index].repostCount}',
                                                             style: TextStyle(
                                                                 fontFamily:
                                                                     "outfit",
