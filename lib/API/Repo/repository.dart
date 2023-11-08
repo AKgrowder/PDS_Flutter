@@ -18,6 +18,7 @@ import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
 import 'package:pds/API/Model/OpenSaveImagepostModel/OpenSaveImagepost_Model.dart';
+import 'package:pds/API/Model/PersonalChatListModel/PersonalChatList_Model.dart';
 import 'package:pds/API/Model/ViewStoryModel/ViewStory_Model.dart';
 import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
@@ -1701,6 +1702,29 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return StoryViewListModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  
+
+  PersonalChatList(
+    BuildContext context,
+   ) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.PersonalChatList}',
+        context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return PersonalChatListModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
