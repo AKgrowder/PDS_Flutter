@@ -29,8 +29,12 @@ class AddcommentCubit extends Cubit<AddCommentState> {
       print("addPostData-->$addnewcommentdata");
       if (addnewcommentdata['success'] == true) {
         emit(AddnewCommentLoadedState(addnewcommentdata));
+      }else{
+        emit(AddnewCommentLoadedState(addnewcommentdata));
+
       }
     } catch (e) {
+      print("fdhfsdfhsdfh");
       emit(AddCommentErrorState(addnewcommentdata));
     }
   }

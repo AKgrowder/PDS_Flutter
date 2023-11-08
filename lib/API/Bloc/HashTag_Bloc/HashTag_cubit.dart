@@ -171,11 +171,25 @@ class HashTagCubit extends Cubit<HashTagState> {
       serchDataAdd =
           await Repository().search_historyDataAdd(context, typeWord);
       if (serchDataAdd.success == true) {
-        emit(SerchDataAdd(serchDataAdd));
+        emit(SerchDataAddClass(serchDataAdd));
         print(serchDataAdd.message);
       }
     } catch (e) {
       emit(HashTagErrorState(e.toString()));
     }
+  }Future<void> serchDataGet(BuildContext context) async {
+    dynamic getSerchData;
+    try {
+      emit(HashTagLoadingState());
+      getSerchData =
+          await Repository().getSerchData(context);
+      if (getSerchData.success == true) {
+        emit(GetSerchData(getSerchData));
+        print(getSerchData.message);
+      }
+    } catch (e) {
+      emit(HashTagErrorState(e.toString()));
+    }
   }
+
 }

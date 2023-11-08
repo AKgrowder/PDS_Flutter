@@ -117,13 +117,19 @@ class _CreateNewPostState extends State<CreateNewPost> {
           }
         }
         if (state is AddPostLoadedState) {
-          print("lodedSate-->");
+          print(
+              "lodedSate--> i want check respoce--${state.addPost.object.toString()}");
+          if (state.addPost.object.toString() ==
+              'Comment contains a restricted word') {
+          } else {
+            Navigator.pop(context);
+          }
           SnackBar snackBar = SnackBar(
             content: Text(state.addPost.object.toString()),
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          Navigator.pop(context);
+          //
         }
       },
       builder: (context, state) {
