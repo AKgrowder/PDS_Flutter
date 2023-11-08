@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:pds/API/Model/RePost_Model/RePost_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_PostModel.dart';
@@ -22,6 +23,7 @@ import 'package:pds/API/Model/ViewStoryModel/ViewStory_Model.dart';
 import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
 import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
+import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
 import 'package:pds/API/Model/serchDataAddModel/serchDataAddModel.dart';
 import 'package:pds/API/Model/storyModel/stroyModel.dart';
 import 'package:pds/API/Model/HashTage_Model/HashTagView_model.dart';
@@ -1674,10 +1676,28 @@ class Repository {
     final response = await apiServices.getApiCallWithToken(
         "${Config.search_historyDataAdd}?searchDescription=$typeWord", context);
     var jsonString = json.decode(response.body);
-    print('search_historyDataAdd$jsonString');
+    print("responce jasonString-$jsonString");
     switch (response.statusCode) {
       case 200:
         return SerchDataAdd.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  getSerchData(BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(Config.get_hashtag_search_history,context);
+    var jsonString = json.decode(response.body);
+    print('search_historyDataAdd$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return GetDataInSerch.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -1701,6 +1721,24 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return StoryViewListModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+   RePost(
+      BuildContext context, Map<String, dynamic> params, String? uuId) async {
+    final response = await apiServices.postApiCall(
+        Config.rePost + "?postUid=" + "${uuId}", params, context);
+    print('AddPost$response');
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return RePostModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
