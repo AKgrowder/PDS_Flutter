@@ -1,5 +1,6 @@
 import 'package:pds/API/Model/Add_PostModel/Add_PostModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
+import 'package:pds/API/Model/RePost_Model/RePost_model.dart';
 
 abstract class RePostState {}
 
@@ -8,7 +9,7 @@ class RePostLoadingState extends RePostState {}
 class RePostInitialState extends RePostState {}
 
 class RePostLoadedState extends RePostState {
-  final AddPost RePost;
+  final RePostModel RePost;
   RePostLoadedState(this.RePost); 
 }
 
