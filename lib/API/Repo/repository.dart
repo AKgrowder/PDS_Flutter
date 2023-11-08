@@ -19,6 +19,7 @@ import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
 import 'package:pds/API/Model/OpenSaveImagepostModel/OpenSaveImagepost_Model.dart';
+import 'package:pds/API/Model/PersonalChatListModel/PersonalChatList_Model.dart';
 import 'package:pds/API/Model/ViewStoryModel/ViewStory_Model.dart';
 import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
@@ -1671,8 +1672,51 @@ class Repository {
         return jsonString;
     }
   }
+ 
+  StoryViewList(
+    BuildContext context,
+    String storyUid,
+   ) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.StoryViewList}?storyUid=${storyUid}',
+        context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return StoryViewListModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
 
-  search_historyDataAdd(BuildContext context, String typeWord) async {
+      default:
+        return jsonString;
+    }
+  }
+ 
+  
+
+  PersonalChatList(
+    BuildContext context,
+   ) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.PersonalChatList}',
+        context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return PersonalChatListModel.fromJson(jsonString);    case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+ search_historyDataAdd(BuildContext context, String typeWord) async {
     final response = await apiServices.getApiCallWithToken(
         "${Config.search_historyDataAdd}?searchDescription=$typeWord", context);
     var jsonString = json.decode(response.body);
@@ -1709,27 +1753,6 @@ class Repository {
     }
   }
 
-  StoryViewList(
-    BuildContext context,
-    String storyUid,
-   ) async {
-    final response = await apiServices.getApiCallWithToken(
-        '${Config.StoryViewList}?storyUid=${storyUid}',
-        context);
-    print(response);
-    var jsonString = json.decode(response.body);
-    switch (response.statusCode) {
-      case 200:
-        return StoryViewListModel.fromJson(jsonString);
-      case 404:
-        return Config.somethingWentWrong;
-      case 500:
-        return Config.servernotreachable;
-
-      default:
-        return jsonString;
-    }
-  }
    RePost(
       BuildContext context, Map<String, dynamic> params, String? uuId) async {
     final response = await apiServices.postApiCall(
@@ -1748,6 +1771,7 @@ class Repository {
         return jsonString;
     }
   }
+ 
 }
 // var headers = {
 //   'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc1ZlcmlmaWVkIjp0cnVlLCJtb2R1bGUiOiJFTVBMT1lFRSIsImlzQWN0aXZlIjp0cnVlLCJ1dWlkIjoiODYwMWViNTItNzk4NS00MWU3LTgwOTAtYmMyMjQ0MjkwZjkzIiwidXNlcm5hbWUiOiJBTiIsInN1YiI6IkFOIiwiaWF0IjoxNjkxMTUyODIxLCJleHAiOjE2OTIyMzI4MjF9.AjSlFxHlTU9opgsyXaqVh_sMQuv7f-fKGmIGle6879MD-OAGTNcPN5r9ZW8Go1124YE2BbSrc1Lj5GuspgilWg'
