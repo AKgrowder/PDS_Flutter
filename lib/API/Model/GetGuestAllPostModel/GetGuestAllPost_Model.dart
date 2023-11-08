@@ -109,23 +109,26 @@ class Content {
   int? likedCount;
   int? commentCount;
   RepostOn? repostOn;
+  int? repostCount;
 
-  Content(
-      {this.postUid,
-      this.createdAt,
-      this.userUid,
-      this.postUserName,
-      this.userProfilePic,
-      this.description,
-      this.postData,
-      this.postDataType,
-      this.postType,
-      this.isLiked,
-      this.isSaved,
-      this.isFollowing,
-      this.likedCount,
-      this.commentCount,
-      this.repostOn});
+  Content({
+    this.postUid,
+    this.createdAt,
+    this.userUid,
+    this.postUserName,
+    this.userProfilePic,
+    this.description,
+    this.postData,
+    this.postDataType,
+    this.postType,
+    this.isLiked,
+    this.isSaved,
+    this.isFollowing,
+    this.likedCount,
+    this.commentCount,
+    this.repostOn,
+    this.repostCount,
+  });
 
   Content.fromJson(Map<String, dynamic> json) {
     postUid = json['postUid'];
@@ -145,6 +148,7 @@ class Content {
     repostOn = json['repostOn'] != null
         ? new RepostOn.fromJson(json['repostOn'])
         : null;
+    repostCount = json['repostCount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -166,6 +170,7 @@ class Content {
     if (this.repostOn != null) {
       data['repostOn'] = this.repostOn!.toJson();
     }
+    data['repostCount'] = this.repostCount;
     return data;
   }
 }
@@ -186,23 +191,26 @@ class RepostOn {
   int? likedCount;
   int? commentCount;
   Null? repostOn;
+  int? repostCount;
 
-  RepostOn(
-      {this.postUid,
-      this.createdAt,
-      this.userUid,
-      this.postUserName,
-      this.userProfilePic,
-      this.description,
-      this.postData,
-      this.postDataType,
-      this.postType,
-      this.isLiked,
-      this.isSaved,
-      this.isFollowing,
-      this.likedCount,
-      this.commentCount,
-      this.repostOn});
+  RepostOn({
+    this.postUid,
+    this.createdAt,
+    this.userUid,
+    this.postUserName,
+    this.userProfilePic,
+    this.description,
+    this.postData,
+    this.postDataType,
+    this.postType,
+    this.isLiked,
+    this.isSaved,
+    this.isFollowing,
+    this.likedCount,
+    this.commentCount,
+    this.repostOn,
+    this.repostCount,
+  });
 
   RepostOn.fromJson(Map<String, dynamic> json) {
     postUid = json['postUid'];
@@ -219,6 +227,7 @@ class RepostOn {
     isFollowing = json['isFollowing'];
     likedCount = json['likedCount'];
     commentCount = json['commentCount'];
+    repostCount = json['repostCount'];
     repostOn = json['repostOn'];
   }
 
@@ -238,6 +247,7 @@ class RepostOn {
     data['isFollowing'] = this.isFollowing;
     data['likedCount'] = this.likedCount;
     data['commentCount'] = this.commentCount;
+    data['repostCount'] = this.repostCount;
     data['repostOn'] = this.repostOn;
     return data;
   }

@@ -7,7 +7,8 @@ import 'package:pds/API/Repo/repository.dart';
 
 class RePostCubit extends Cubit<RePostState> {
   RePostCubit() : super(RePostInitialState()) {}
-  Future<void> UplodeImageAPIImane(BuildContext context, List<File> imageFile) async {
+  Future<void> UplodeImageAPIImane(
+      BuildContext context, List<File> imageFile) async {
     dynamic addPostImageUploded;
     try {
       emit(RePostLoadingState());
@@ -20,7 +21,7 @@ class RePostCubit extends Cubit<RePostState> {
     }
   }
 
-    Future<void> UplodeImageAPI(
+  Future<void> UplodeImageAPI(
     BuildContext context,
     String? fileName,
     String? file,
@@ -35,6 +36,21 @@ class RePostCubit extends Cubit<RePostState> {
       }
     } catch (e) {
       emit(RePostErrorState(addPostImageUploded));
+    }
+  }
+
+  Future<void> RePostAPI(
+      BuildContext context, Map<String, dynamic> params, String? uuid) async {
+    dynamic addPostData;
+    try {
+      emit(RePostLoadingState());
+      addPostData = await Repository().RePost(context, params, uuid);
+      print("addPostData-->$addPostData");
+      if (addPostData.success == true) {
+        emit(RePostLoadedState(addPostData));
+      }
+    } catch (e) {
+      emit(RePostErrorState(addPostData));
     }
   }
 }
