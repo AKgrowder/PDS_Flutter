@@ -1,12 +1,12 @@
-// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, prefer_const_literals_to_create_immutables, must_be_immutable
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dots_indicator/dots_indicator.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hashtagable/widgets/hashtag_text.dart';
 import 'package:pds/API/Model/Getalluset_list_Model/get_all_userlist_model.dart';
+import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
@@ -16,7 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import '../../API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
 import '../../API/Bloc/HashTag_Bloc/HashTag_state.dart';
-import '../../API/Model/HashTage_Model/HashTagBanner_model.dart';
 import '../../API/Model/HashTage_Model/HashTag_model.dart';
 
 class SearchBarScreen extends StatefulWidget {
@@ -33,7 +32,6 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   TextEditingController searchController = TextEditingController();
   List text = ["For You", "Trending"];
   List text1 = ["All", "Experts"];
-
   bool dataget = false;
   GetAllUserListModel? getalluserlistModel;
   List imageList = [
@@ -43,10 +41,11 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     ImageConstant.Rectangle,
     ImageConstant.Rectangle,
   ];
-
+  Timer? _timer;
   ScrollController scrollController = ScrollController();
   int? indexxx;
   bool isSerch = false;
+  GetDataInSerch? getDataInSerch;
   HashtagModel? hashtagModel; /* 
   HashTagImageModel? hashTagImageModel; */
   bool apiDataSetup = false;
@@ -74,11 +73,13 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     super.initState();
     getUserData();
     BlocProvider.of<HashTagCubit>(context).HashTagForYouAPI(context, 'FOR YOU');
-    BlocProvider.of<HashTagCubit>(context).HashTagBannerAPI(context);
+    BlocProvider.of<HashTagCubit>(context).serchDataGet(context);
+
+    // BlocProvider.of<HashTagCubit>(context).HashTagBannerAPI(context);
   }
 
   void dispose() {
-    // Cancel the timer or stop the animation here.
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -87,19 +88,24 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: BlocConsumer<HashTagCubit, HashTagState>(
         listener: (context, state) {
           if (state is HashTagErrorState) {
+            print("i want error print${state.error}");
             SnackBar snackBar = SnackBar(
               content: Text(state.error),
               backgroundColor: ColorConstant.primary_color,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
-
+          if (state is GetSerchData) {
+            getDataInSerch = state.getDataInSerch;
+          }
           if (state is HashTagLoadedState) {
             apiDataSetup = true;
-            print("HashTagLoadedStateHashTagLoadedState");
+            print(
+                "HashTagLoadedStateHashTagLoadedState${state.HashTagData.message}dfdfh`${state.HashTagData.object}");
             hashtagModel = state.HashTagData;
           }
           if (state is GetAllUserLoadedState) {
@@ -115,12 +121,10 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
             print("HashTagBannerLoadedState - ${hashTagImageModel?.object}");
             hashTagImageModel = state.hashTagImageModel;
           } */
-          if (state is SerchDataAdd) {
-            print("Tdhfhfsdhfh");
-          }
         },
         builder: (context, state) {
           return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15, top: 60),
@@ -205,14 +209,21 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 }
                                 print("dataGet-${value.trim()}");
 
-                              /*   if (text.isNotEmpty) {
-                             
-                                  Future.delayed(Duration(seconds: 13), () {
-                                         print("cfhhffhsdfh${searchController.text.trim()}");
-                                   /*  BlocProvider.of<HashTagCubit>(context)
-                                        .serchDataAdd(context, value.trim()); */
-                                  });
-                                } */
+                                if (text.isNotEmpty) {
+                                  print("valuee check--${value.trim()}");
+                                  if (_timer != null) {
+                                    _timer?.cancel();
+                                    _timer = Timer(Duration(seconds: 5), () {
+                                      BlocProvider.of<HashTagCubit>(context)
+                                          .serchDataAdd(context, value.trim());
+                                    });
+                                  } else {
+                                    _timer = Timer(Duration(seconds: 5), () {
+                                      BlocProvider.of<HashTagCubit>(context)
+                                          .serchDataAdd(context, value.trim());
+                                    });
+                                  }
+                                }
                               },
                               controller: searchController,
                               cursorColor: Colors.grey,
@@ -242,11 +253,6 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                             }
 
                             print("xfhdsfhsdfgsdfg-$isSerch");
-                            /*    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) {
-                          return AllSearchScreen();
-                        },
-                      )); */
                           },
                           onChanged: (value) {
                             if (value.isNotEmpty) {
@@ -366,76 +372,190 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           }),
                         )
                       ]))
-                  : SizedBox(
-                      width: double.infinity,
-                      child: Column(children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: List.generate(text.length, (index) {
-                            return GestureDetector(
-                              onTap: () {
-                                indexxx = index;
-                                dataSetup = null;
-                                print("indexxx$indexxx");
-                                SharedPreferencesFunction(indexxx ?? 0);
-                                if (indexxx == 1) {
-                                  //TRENDING
-                                  BlocProvider.of<HashTagCubit>(context)
-                                      .HashTagForYouAPI(context, 'TRENDING');
-                                } else {
-                                  BlocProvider.of<HashTagCubit>(context)
-                                      .HashTagForYouAPI(context, 'FOR YOU');
-                                }
-                                if (mounted) {
-                                  setState(() {
-                                    // Update the widget's state.
-                                  });
-                                }
-                              },
-                              child: Container(
-                                margin: EdgeInsets.all(5),
-                                height: 25,
-                                width: 120,
-                                decoration: BoxDecoration(
-                                    color: indexxx == index
-                                        ? Color(0xffED1C25)
-                                        : dataSetup == index
+                  : apiDataSetup == true
+                      ? SizedBox(
+                          width: double.infinity,
+                          child: Column(children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: List.generate(text.length, (index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    indexxx = index;
+                                    dataSetup = null;
+                                    print("indexxx$indexxx");
+                                    SharedPreferencesFunction(indexxx ?? 0);
+                                    if (indexxx == 1) {
+                                      //TRENDING
+                                      BlocProvider.of<HashTagCubit>(context)
+                                          .HashTagForYouAPI(
+                                              context, 'TRENDING');
+                                    } else {
+                                      BlocProvider.of<HashTagCubit>(context)
+                                          .HashTagForYouAPI(context, 'FOR YOU');
+                                    }
+                                    if (mounted) {
+                                      setState(() {
+                                        // Update the widget's state.
+                                      });
+                                    }
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.all(5),
+                                    height: 25,
+                                    width: 120,
+                                    decoration: BoxDecoration(
+                                        color: indexxx == index
                                             ? Color(0xffED1C25)
-                                            : Color(0xffFBD8D9),
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: Center(
-                                    child: Text(
-                                  text[index],
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                      color: indexxx == index
-                                          ? Colors.white
-                                          : dataSetup == index
+                                            : dataSetup == index
+                                                ? Color(0xffED1C25)
+                                                : Color(0xffFBD8D9),
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: Center(
+                                        child: Text(
+                                      text[index],
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color: indexxx == index
                                               ? Colors.white
-                                              : Color(0xffED1C25)),
-                                )),
-                              ),
-                            );
-                          }),
-                        )
-                      ])),
+                                              : dataSetup == index
+                                                  ? Colors.white
+                                                  : Color(0xffED1C25)),
+                                    )),
+                                  ),
+                                );
+                              }),
+                            )
+                          ]))
+                      : Center(
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 100),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset(ImageConstant.loader,
+                                  fit: BoxFit.cover, height: 100.0, width: 100),
+                            ),
+                          ),
+                        ),
               Divider(
                 color: Colors.grey,
               ),
-              /*  isSerch == true
+              isSerch == true
                   ? SizedBox()
-                  : TopSlider(hashTagImageModel: hashTagImageModel), */
+                  : indexxx == 0
+                      ? Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            "History",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
+              isSerch == true
+                  ? SizedBox()
+                  : indexxx == 0
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: historyData(),
+                        )
+                      : SizedBox(),
+              isSerch == true
+                  ? SizedBox()
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Divider(
+                          height: 3,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            "For You",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
               isSerch == true
                   ? dataget == true
                       ? NavagtionPassing1()
                       : SizedBox()
-                  : NavagtionPassing(hashtagModel: hashtagModel)
+                  : NavagtionPassing(hashtagModel: hashtagModel),
             ],
           );
         },
       ),
     );
+  }
+
+  Widget historyData() {
+    return getDataInSerch?.object?.isNotEmpty == true
+        ? Column(
+            children: List.generate(
+                getDataInSerch?.object?.length ?? 0,
+                (index) => getDataInSerch?.object?[index].isNotEmpty == true
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Divider(
+                            height: 3,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              if (getDataInSerch?.object?.isNotEmpty == true) {
+                                isSerch = true;
+                                searchController.text =
+                                    getDataInSerch?.object?[index].toString() ??
+                                        '';
+                                setState(() {});
+
+                                if (searchController.text.contains('#')) {
+                                  String hashTageValue = searchController.text
+                                      .replaceAll("#", "%23");
+                                  BlocProvider.of<HashTagCubit>(context)
+                                      .getalluser(
+                                          1, hashTageValue.trim(), context);
+                                } else {
+                                  BlocProvider.of<HashTagCubit>(context)
+                                      .getalluser(
+                                          1,
+                                          searchController.text.trim(),
+                                          context);
+                                }
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(
+                                getDataInSerch?.object?[index] ?? '',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          )
+                        ],
+                      )
+                    : SizedBox()))
+        : SizedBox();
   }
 
   /*  Widget TopSlider({HashTagImageModel? hashTagImageModel}) {
@@ -707,7 +827,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
-                             onTap: () {
+                            onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
                                 return ProfileScreen(
@@ -755,11 +875,16 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 SizedBox(
                                   width: 8,
                                 ),
-                                Text(
-                                  "${getalluserlistModel?.object?.content?[index].userName}",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
+                                Container(
+                                  width: _width / 1.5,
+                                  // color: Colors.amber,
+                                  child: Text(
+                                    "${getalluserlistModel?.object?.content?[index].userName}",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
                                   ),
                                 )
                               ]),
@@ -899,11 +1024,15 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 SizedBox(
                                   width: 8,
                                 ),
-                                Text(
-                                  "${getalluserlistModel?.object?.content?[index].userName}",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
+                                Container(
+                                  width: _width / 1.5,
+                                  child: Text(
+                                    "${getalluserlistModel?.object?.content?[index].userName}",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
                                   ),
                                 )
                               ]),
@@ -963,7 +1092,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     } else {
       return Expanded(
           child: Container(
-        color: Colors.white,
+        color: Colors.red,
       ));
     }
   }

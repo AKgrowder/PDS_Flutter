@@ -3,7 +3,9 @@ import 'package:pds/API/Model/Getalluset_list_Model/get_all_userlist_model.dart'
 import 'package:pds/API/Model/HashTage_Model/HashTagBanner_model.dart';
 import 'package:pds/API/Model/HashTage_Model/HashTagView_model.dart';
 import 'package:pds/API/Model/HashTage_Model/HashTag_model.dart';
+import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
+import 'package:pds/API/Model/serchDataAddModel/serchDataAddModel.dart';
 
 import '../../Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 
@@ -53,7 +55,13 @@ class HashTagBannerLoadedState extends HashTagState {
   HashTagBannerLoadedState(this.hashTagImageModel);
 }
 
-class SerchDataAdd extends HashTagState {
+class SerchDataAddClass extends HashTagState {
   final SerchDataAdd serchDataAdd;
-  SerchDataAdd(this.serchDataAdd);
+  SerchDataAddClass(this.serchDataAdd);
+}
+
+
+class GetSerchData extends HashTagState {
+  final GetDataInSerch getDataInSerch;
+  GetSerchData(this.getDataInSerch);
 }

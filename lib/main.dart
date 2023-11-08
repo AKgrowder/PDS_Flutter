@@ -18,6 +18,8 @@ import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_cubit.dart';
+import 'package:pds/API/Bloc/PersonalChatList_Bloc/PersonalChatList_cubit.dart';
+import 'package:pds/API/Bloc/RePost_Bloc/RePost_cubit.dart';
 import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:pds/API/Bloc/SelectRoom_Bloc/SelectRoom_cubit.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
@@ -179,6 +181,13 @@ class MyApp extends StatelessWidget {
         BlocProvider<ViewStoryCubit>(
           create: (context) => ViewStoryCubit(),
         ),
+        BlocProvider<PersonalChatListCubit>(
+          create: (context) => PersonalChatListCubit(),
+        ),
+        BlocProvider<RePostCubit>(
+          create: (context) => RePostCubit(),
+        ),
+        
       ],
       child: MaterialApp(
           theme: ThemeData(
