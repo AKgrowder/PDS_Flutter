@@ -217,17 +217,15 @@ class ImageConstant {
   static String Cameraicon = "assets/images/Cameraicon.png";
   static String aTTACHMENT = "assets/images/ATTACHMENT.png";
   static String gallery = "assets/images/galleryIcon.png";
- static String Gif_icon =  'assets/images/Gif icon.png';
-  static String  Savefill =  "assets/images/Savefill.png";
-  static String like =  "assets/images/like 1.png";
-   static String commentarrow =  "assets/images/Vector (30).png";
-  static String ExitRoom =  "assets/images/ExitRoom.png";
-  static String likewithout =  "assets/images/likewitoutcolor.png";
-  static String addroomimage =  "assets/images/Plus button.png";
+  static String Gif_icon = 'assets/images/Gif icon.png';
+  static String Savefill = "assets/images/Savefill.png";
+  static String like = "assets/images/like 1.png";
+  static String commentarrow = "assets/images/Vector (30).png";
+  static String ExitRoom = "assets/images/ExitRoom.png";
+  static String likewithout = "assets/images/likewitoutcolor.png";
+  static String addroomimage = "assets/images/Plus button.png";
   static String hashTagimg = "assets/images/hashTag_Img.png";
   static String whiteClose = "assets/images/whiteClose.png";
   static String StoryViewListeye = "assets/images/StoryViewListeye.png";
-
-  
-
+  static String ChatimageIcon = "assets/images/ChatimageIcon.png";
 }
