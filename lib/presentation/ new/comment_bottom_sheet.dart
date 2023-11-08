@@ -115,15 +115,24 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
             }
 
             if (state is AddnewCommentLoadedState) {
-              addcomment.clear();
+              print("dgdfhgdfhdfghhdfgh-${state.addnewCommentsModeldata}");
+              if(state.addnewCommentsModeldata['message'] =='Comment contains a restricted word'){
+                 SnackBar snackBar = SnackBar(
+                content: Text(state.addnewCommentsModeldata['message']),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }else{
+                addcomment.clear();
+
               Object1 object =
                   Object1.fromJson(state.addnewCommentsModeldata['object']);
 
               addCommentModeldata?.object?.add(object);
-              print(
-                  "i want to cheak->${addCommentModeldata?.object?.last.runtimeType}");
 
               _goToElement();
+              }
+              
             }
             if (state is DeletecommentLoadedState) {
               DeletecommentDataa = state.Deletecomment;
