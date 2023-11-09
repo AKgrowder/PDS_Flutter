@@ -445,15 +445,18 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
               isSerch == true
                   ? SizedBox()
                   : indexxx == 0
-                      ? Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Text(
-                            "History",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        )
+                      ? getDataInSerch?.object?.isEmpty == false
+                          ? SizedBox()
+                          : Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(
+                                "History",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    color: ColorConstant.primary_color),
+                              ),
+                            )
                       : SizedBox(),
               isSerch == true
                   ? SizedBox()
@@ -480,8 +483,9 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           child: Text(
                             "For You",
                             style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: ColorConstant.primary_color),
                           ),
                         ),
                         SizedBox(
@@ -896,40 +900,55 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           null)
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            height: 50,
-                            width: _width / 1.1,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Container(
-                                  width: _width / 1.5,
-                                  child: Text(
-                                    "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}",
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        BlocProvider<HashTagCubit>(
+                                      create: (context) => HashTagCubit(),
+                                      child: HashTagViewScreen(
+                                          title:
+                                              "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}"),
+                                    ),
+                                  ));
+                            },
+                            child: Container(
+                              height: 50,
+                              width: _width / 1.1,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Container(
+                                    width: _width / 1.5,
+                                    child: Text(
+                                      "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.postCount} Post",
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Text(
-                                  "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.postCount} Post",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         )
@@ -1044,40 +1063,55 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           null)
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            height: 50,
-                            width: _width / 1.1,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Container(
-                                  width: _width / 1.5,
-                                  child: Text(
-                                    "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}",
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        BlocProvider<HashTagCubit>(
+                                      create: (context) => HashTagCubit(),
+                                      child: HashTagViewScreen(
+                                          title:
+                                              "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}"),
+                                    ),
+                                  ));
+                            },
+                            child: Container(
+                              height: 50,
+                              width: _width / 1.1,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Container(
+                                    width: _width / 1.5,
+                                    child: Text(
+                                      "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.postCount} Post",
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  width: 10,
-                                ),
-                                Text(
-                                  "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.postCount} Post",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         )
