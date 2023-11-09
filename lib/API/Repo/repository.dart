@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
 import 'package:pds/API/Model/RePost_Model/RePost_model.dart';
+
+import 'package:pds/API/Model/PersonalChatListModel/SelectChatMember_Model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_PostModel.dart';
@@ -25,6 +28,7 @@ import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
 import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
+import 'package:pds/API/Model/removeFolloweModel/removeFollowerModel.dart';
 import 'package:pds/API/Model/serchDataAddModel/serchDataAddModel.dart';
 import 'package:pds/API/Model/storyModel/stroyModel.dart';
 import 'package:pds/API/Model/HashTage_Model/HashTagView_model.dart';
@@ -79,6 +83,7 @@ import 'package:pds/API/Model/HashTage_Model/HashTagBanner_model.dart';
 import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
 import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
 import 'package:pds/API/Model/ViewStoryModel/StoryViewList_Model.dart';
+
 class Repository {
   ApiServices apiServices = ApiServices();
 
@@ -509,8 +514,6 @@ class Repository {
     }
   }
 
-  
-
   checkUserActive(BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
         "${Config.checkUserActive}", context);
@@ -870,6 +873,60 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return saveBlogModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  fllowersApi(BuildContext context, String userUid) async {
+    final response = await apiServices.getApiCall(
+        "${Config.get_all_followers}?userUid=${userUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return FollowersClassModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  removeFollwerApi(BuildContext context, String follwUid) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.remove_follower}?followUid=${follwUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return Remove_Follower.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  get_all_followering(BuildContext context, String userUid) async {
+    final response = await apiServices.getApiCall(
+        "${Config.get_all_followings}?userUid=${userUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return FollowersClassModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -1672,14 +1729,13 @@ class Repository {
         return jsonString;
     }
   }
- 
+
   StoryViewList(
     BuildContext context,
     String storyUid,
-   ) async {
+  ) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.StoryViewList}?storyUid=${storyUid}',
-        context);
+        '${Config.StoryViewList}?storyUid=${storyUid}', context);
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -1694,20 +1750,18 @@ class Repository {
         return jsonString;
     }
   }
- 
-  
 
   PersonalChatList(
     BuildContext context,
-   ) async {
+  ) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.PersonalChatList}',
-        context);
+        '${Config.PersonalChatList}', context);
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
-        return PersonalChatListModel.fromJson(jsonString);    case 404:
+        return PersonalChatListModel.fromJson(jsonString);
+      case 404:
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
@@ -1716,7 +1770,8 @@ class Repository {
         return jsonString;
     }
   }
- search_historyDataAdd(BuildContext context, String typeWord) async {
+
+  search_historyDataAdd(BuildContext context, String typeWord) async {
     final response = await apiServices.getApiCallWithToken(
         "${Config.search_historyDataAdd}?searchDescription=$typeWord", context);
     var jsonString = json.decode(response.body);
@@ -1736,7 +1791,8 @@ class Repository {
   }
 
   getSerchData(BuildContext context) async {
-    final response = await apiServices.getApiCallWithToken(Config.get_hashtag_search_history,context);
+    final response = await apiServices.getApiCallWithToken(
+        Config.get_hashtag_search_history, context);
     var jsonString = json.decode(response.body);
     print('search_historyDataAdd$jsonString');
     switch (response.statusCode) {
@@ -1753,7 +1809,7 @@ class Repository {
     }
   }
 
-   RePost(
+  RePost(
       BuildContext context, Map<String, dynamic> params, String? uuId) async {
     final response = await apiServices.postApiCall(
         Config.rePost + "?postUid=" + "${uuId}", params, context);
@@ -1771,7 +1827,22 @@ class Repository {
         return jsonString;
     }
   }
- 
+   SelectChatMemberList(BuildContext context) async {
+    final responce =
+        await apiServices.getApiCall('${Config.SelectChatMember}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    switch (responce.statusCode) {
+      case 200:
+        return SelectChatMemberModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
 }
 // var headers = {
 //   'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc1ZlcmlmaWVkIjp0cnVlLCJtb2R1bGUiOiJFTVBMT1lFRSIsImlzQWN0aXZlIjp0cnVlLCJ1dWlkIjoiODYwMWViNTItNzk4NS00MWU3LTgwOTAtYmMyMjQ0MjkwZjkzIiwidXNlcm5hbWUiOiJBTiIsInN1YiI6IkFOIiwiaWF0IjoxNjkxMTUyODIxLCJleHAiOjE2OTIyMzI4MjF9.AjSlFxHlTU9opgsyXaqVh_sMQuv7f-fKGmIGle6879MD-OAGTNcPN5r9ZW8Go1124YE2BbSrc1Lj5GuspgilWg'
