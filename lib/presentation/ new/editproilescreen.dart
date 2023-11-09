@@ -237,7 +237,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 backgroundColor: ColorConstant.primary_color,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            Navigator.pop(context);
+              Navigator.pop(context);
             }
             if (state is UpdateProfileLoadedState) {
               SnackBar snackBar = SnackBar(
@@ -245,7 +245,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 backgroundColor: ColorConstant.primary_color,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-             Navigator.pop(context);
+              Navigator.pop(context);
             }
             if (state is FetchExprtiseRoomLoadedState) {
               print("FetchExprtiseRoomLoadedState");
@@ -318,6 +318,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   MaterialPageRoute(
                       builder: (context) => NewBottomBar(buttomIndex: 0)));
             }
+             if (state is EmailVerifactionLoadedState) {
+          SnackBar snackBar = SnackBar(
+            content: Text(state.emailVerifaction.message.toString()),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
           },
           builder: (context, state) {
             return Column(
@@ -597,16 +604,69 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           width: _width / 1.1,
                           hintText: "Enter User Name",
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 10),
-                          child: Text(
-                            "Email",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
+                        Row(
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 10, bottom: 10),
+                              child: Text(
+                                "Email",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
+                                ),
+                              ),
                             ),
-                          ),
+                            Spacer(),
+                            widget.newProfileData?.object?.isEmailVerified ==
+                                    false
+                                ? GestureDetector(
+                                    onTap: () {
+                                      BlocProvider.of<MyAccountCubit>(context)
+                                          .emailVerifaction(context,
+                                              "${widget.newProfileData?.object?.email}");
+                                    },
+                                    child: Text(
+                                      'Not Verified',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.black,
+                                          fontFamily: "outfit",
+                                          fontSize: 15),
+                                    ),
+                                  )
+                                : Text(
+                                    'Verified',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black,
+                                        fontFamily: "outfit",
+                                        fontSize: 15),
+                                  ),
+                                  SizedBox(width: 5,),
+                            widget.newProfileData?.object?.isEmailVerified ==
+                                    false
+                                ? GestureDetector(
+                                    onTap: () {
+                                      BlocProvider.of<MyAccountCubit>(context)
+                                          .emailVerifaction(context,
+                                              "${widget.newProfileData?.object?.email}");
+                                    },
+                                    child: SizedBox(
+                                        height: 22,
+                                        child: Image.asset(
+                                          ImageConstant.notVerify,
+                                          color: Colors.red,
+                                        )),
+                                  )
+                                : SizedBox(
+                                    height: 22,
+                                    child: Image.asset(
+                                      ImageConstant.Verified,
+                                      color: Colors.green,
+                                    ))
+                          ],
                         ),
                         customTextFeild(
                           controller: emailController,
@@ -684,11 +744,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             }
                           },
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 40),
+                            padding: const EdgeInsets.only(top: 20,bottom: 20),
                             child: Center(
                               child: Container(
-                                height: 40,
-                                width: 100,
+                                height: 55,
+                                width: _width -65,
                                 decoration: BoxDecoration(
                                     color: ColorConstant.primary_color,
                                     borderRadius: BorderRadius.circular(10)),
@@ -933,8 +993,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "industryTypesUid": industryUUIDinApi
         };
         print("parmas-$params");
-         BlocProvider.of<MyAccountCubit>(context)
-            .addExpertProfile(params, context); 
+        BlocProvider.of<MyAccountCubit>(context)
+            .addExpertProfile(params, context);
       } else if (chooseDocumentuploded?.object.toString() != null) {
         var params = {
           "document":
@@ -950,7 +1010,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print("parmas-$params");
 
         BlocProvider.of<MyAccountCubit>(context)
-            .addExpertProfile(params, context); 
+            .addExpertProfile(params, context);
       } else if (chooseDocumentuploded1?.object.toString() != null) {
         print("userBackgroundPic condiosn working");
         var params = {
@@ -965,8 +1025,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "industryTypesUid": industryUUIDinApi
         };
         print("parmas-$params");
-       BlocProvider.of<MyAccountCubit>(context)
-            .addExpertProfile(params, context); 
+        BlocProvider.of<MyAccountCubit>(context)
+            .addExpertProfile(params, context);
       }
     }
   }

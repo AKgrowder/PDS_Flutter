@@ -5,11 +5,14 @@ import 'package:pds/API/Repo/repository.dart';
 
 class NewProfileSCubit extends Cubit<NewProfileSState> {
   NewProfileSCubit() : super(NewProfileSInitialState()) {}
-  Future<void> NewProfileSAPI(BuildContext context,String otherUserUid,) async {
+  Future<void> NewProfileSAPI(
+    BuildContext context,
+    String otherUserUid,
+  ) async {
     dynamic PublicRModel;
     try {
       emit(NewProfileSLoadingState());
-      PublicRModel = await Repository().NewProfileAPI(context,otherUserUid);
+      PublicRModel = await Repository().NewProfileAPI(context, otherUserUid);
       if (PublicRModel.success == true) {
         emit(NewProfileSLoadedState(PublicRModel));
       }
@@ -98,7 +101,7 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
     }
   }
 
-    Future<void> GetAllSaveBlog(BuildContext context, String userId) async {
+  Future<void> GetAllSaveBlog(BuildContext context, String userId) async {
     dynamic aboutMedataSet;
     try {
       emit(NewProfileSLoadingState());
@@ -111,7 +114,7 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
     }
   }
 
-    Future<void> ProfileSaveBlog(
+  Future<void> ProfileSaveBlog(
       BuildContext context, String userUid, String blogUid) async {
     dynamic getallBlogmodel;
     try {
@@ -136,6 +139,43 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       }
     } catch (e) {
       emit(NewProfileSErrorState(getallBlogmodel));
+    }
+  }
+
+  Future<void> getFollwerApi(
+    BuildContext context,
+    String userUid,
+  ) async {
+    dynamic getAllFollwerData;
+    try {
+      emit(NewProfileSLoadingState());
+      getAllFollwerData = await Repository().fllowersApi(
+        context,
+        userUid,
+      );
+      if (getAllFollwerData.success == true) {
+        emit(FollowersClass(getAllFollwerData));
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(getAllFollwerData));
+    }
+  }
+  Future<void> getAllFollwing(
+    BuildContext context,
+    String userUid,
+  ) async {
+    dynamic getAllFollwerData;
+    try {
+      emit(NewProfileSLoadingState());
+      getAllFollwerData = await Repository().get_all_followering(
+        context,
+        userUid,
+      );
+      if (getAllFollwerData.success == true) {
+        emit(FollowersClass1(getAllFollwerData));
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(getAllFollwerData));
     }
   }
 }

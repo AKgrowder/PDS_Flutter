@@ -1,3 +1,4 @@
+import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
@@ -22,7 +23,6 @@ class NewProfileSErrorState extends NewProfileSState {
   final String error;
   NewProfileSErrorState(this.error);
 }
-
 
 class GetAppPostByUserLoadedState extends NewProfileSState {
   final GetAppUserPostModel GetAllPost;
@@ -64,7 +64,12 @@ class ProfilelikeBlogLoadedState extends NewProfileSState {
   ProfilelikeBlogLoadedState(this.saveAllBlogModelData);
 }
 
+class FollowersClass extends NewProfileSState {
+  final FollowersClassModel followersClassModel;
+  FollowersClass(this.followersClassModel);
+}
+class FollowersClass1 extends NewProfileSState {
+  final FollowersClassModel followersClassModel1;
+  FollowersClass1(this.followersClassModel1);
+}
 
-
-
- 
