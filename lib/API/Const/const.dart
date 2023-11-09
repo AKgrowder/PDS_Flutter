@@ -94,11 +94,15 @@ class Config {
   static const String getSavedBlogs = "guest/api/getSavedBlogs";
   static const String OpenSaveImagePost = "user/api/get_post_by_uid";
   static const String view_story = "user/api/view_story";
-  static const String search_historyDataAdd = "user/api/add_hashtag_search_history";
-  static const String get_hashtag_search_history = "user/api/get_hashtag_search_history";
+  static const String search_historyDataAdd =
+      "user/api/add_hashtag_search_history";
+  static const String get_hashtag_search_history =
+      "user/api/get_hashtag_search_history";
   static const String PersonalChatList = "user/api/get_all_inbox_details";
   static const String StoryViewList = "user/api/story_view_details_of_user";
-   static const String rePost = "user/api/add_repost";
-
-
+  static const String rePost = "user/api/add_repost";
+  static const String get_all_followers = "user/api/get_all_followers";
+  static const String get_all_followings = "user/api/get_all_followings";
+  static const String remove_follower = "user/api/remove_follower";
+  static const String SelectChatMember = "user/api/search_user_for_inbox";
 }
