@@ -9,6 +9,7 @@ import 'package:pds/API/Model/PersonalChatListModel/PersonalChatList_Model.dart'
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/presentation/%20new/SelectChatMember.dart';
 
 class InboxScreen extends StatefulWidget {
   const InboxScreen({Key? key}) : super(key: key);
@@ -27,14 +28,19 @@ class _InboxScreenState extends State<InboxScreen> {
   TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-      String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+    String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     PersonalChatListModel? PersonalChatListModelData;
     return Scaffold(
         floatingActionButton: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SelectChatMember()),
+              );
+            },
             child: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -125,7 +131,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                 PersonalChatListModelData?.object?.length,
                             itemBuilder: (context, index) {
                               DateTime parsedDateTime = DateTime.parse(
-                                        '${PersonalChatListModelData?.object?[index].createdDate ?? ""}');
+                                  '${PersonalChatListModelData?.object?[index].createdDate ?? ""}');
                               return Slidable(
                                 enabled: true,
                                 dragStartBehavior: DragStartBehavior.start,
@@ -280,8 +286,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                             padding:
                                                 const EdgeInsets.only(top: 6),
                                             child: Text(
-                                            customFormat(
-                                                            parsedDateTime),
+                                              customFormat(parsedDateTime),
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w400,
@@ -319,7 +324,7 @@ class _InboxScreenState extends State<InboxScreen> {
         }));
   }
 
- String customFormat(DateTime date) {
+  String customFormat(DateTime date) {
     String day = date.day.toString();
     String month = _getMonthName(date.month);
     String year = date.year.toString();
@@ -359,5 +364,4 @@ class _InboxScreenState extends State<InboxScreen> {
         return '';
     }
   }
-
 }
