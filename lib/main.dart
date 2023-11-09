@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:pds/API/Bloc/SelectChat_bloc/SelectChat_cubit.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,6 +31,7 @@ import 'package:pds/API/Bloc/auth/otp_block.dart';
 import 'package:pds/API/Bloc/auth/register_Block.dart';
 import 'package:pds/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import 'package:pds/API/Bloc/device_info_Bloc/device_info_bloc.dart';
+import 'package:pds/API/Bloc/followerBlock/followBlock.dart';
 import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
@@ -106,6 +108,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<CreateStoryCubit>(
           create: (context) => CreateStoryCubit(),
         ),
+         BlocProvider<SelectChatMemberListCubit>(
+          create: (context) => SelectChatMemberListCubit(),
+        ),
         BlocProvider<GetPostAllLikeCubit>(
           create: (context) => GetPostAllLikeCubit(),
         ),
@@ -129,6 +134,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<senMSGCubit>(
           create: (context) => senMSGCubit(),
+        ),
+        BlocProvider<FollowerBlock>(
+          create: (context) => FollowerBlock(),
         ),
         BlocProvider<RegisterCubit>(
           create: (context) => RegisterCubit(),

@@ -1,9 +1,5 @@
-import 'package:pds/API/Bloc/my_account_Bloc/my_account_state.dart';
 import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
-import 'package:pds/API/Model/myaccountModel/myaccountModel.dart';
 import 'package:pds/API/Model/pinAndUnpinModel/pinAndUnpinModel.dart';
-
-import '../../Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import '../../Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../Model/HomeScreenModel/MyPublicRoom_model.dart';
 import '../../Model/HomeScreenModel/PublicRoomModel.dart';
@@ -22,11 +18,6 @@ class FetchAllPublicRoomLoadedState extends FetchAllPublicRoomState {
   final PublicRoomModel PublicRoomData;
   FetchAllPublicRoomLoadedState(this.PublicRoomData);
 }
-
-// class FetchAllExpertsLoadedState extends FetchAllPublicRoomState {
-//   final FetchAllExpertsModel FetchAllExpertsData;
-//   FetchAllExpertsLoadedState(this.FetchAllExpertsData);
-// }
 
 class FetchAllPublicRoomErrorState extends FetchAllPublicRoomState {
   final dynamic error;
@@ -70,7 +61,6 @@ class DeleteRoomLoadedState extends FetchAllPublicRoomState {
   final DeleteRoomModel DeleteRoom;
   DeleteRoomLoadedState(this.DeleteRoom);
 }
-
 
 class SelectedDataPinAndUnpin extends FetchAllPublicRoomState {
   final UnPinModel unPinModel;
