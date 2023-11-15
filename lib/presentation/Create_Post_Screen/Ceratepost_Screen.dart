@@ -8,21 +8,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'package:pds/API/Bloc/postData_Bloc/postData_state.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/main.dart';
-import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/example/lib/main.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
-import 'package:pds/presentation/room_members/room_members_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -97,7 +92,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
     User_ID = prefs.getString(PreferencesKey.loginUserID);
   }
 
-  List<String> soicalData = ["Following", "Public"];
+//Public
+// Following
+  List<String> soicalData = ["Public", "Following"];
 
   @override
   Widget build(BuildContext context) {
@@ -654,13 +651,13 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                   height: 20,
                                 ),
                               ),
-                              SizedBox(
+                             /*  SizedBox(
                                 width: 30,
                               ),
                               Image.asset(
                                 ImageConstant.Gif_icon,
                                 height: 20,
-                              ),
+                              ), */
                             ],
                           ),
                         ),
@@ -736,13 +733,21 @@ class _CreateNewPostState extends State<CreateNewPost> {
       List<XFile> xFilePicker = pickedFile;
 
       if (xFilePicker.isNotEmpty) {
-        for (var i = 0; i < xFilePicker.length; i++) {
-          if (!_isGifOrSvg(xFilePicker[i].path)) {
-            pickedImage.add(File(xFilePicker[i].path));
-            setState(() {});
-            getFileSize1(pickedImage[i].path, 1, pickedImage[i], 0);
+        if (xFilePicker.length <= 5) {
+          for (var i = 0; i < xFilePicker.length; i++) {
+            if (!_isGifOrSvg(xFilePicker[i].path)) {
+              pickedImage.add(File(xFilePicker[i].path));
+              setState(() {});
+              getFileSize1(pickedImage[i].path, 1, pickedImage[i], 0);
+            }
+            print("xFilePickerxFilePicker - ${xFilePicker[i].path}");
           }
-          print("xFilePickerxFilePicker - ${xFilePicker[i].path}");
+        } else {
+          SnackBar snackBar = SnackBar(
+            content: Text('Max 5 images upload allowed !'),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
       }
       /*   if (!_isGifOrSvg(pickedFile!.path)) {
@@ -785,6 +790,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
   prepareTestPdf(
     int Index,
   ) async {
+    this.file = null;
+    pickedImage = [];
     PlatformFile file;
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -800,7 +807,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
             (file.path?.contains(".png") ?? false) ||
             (file.path?.contains(".doc") ?? false) ||
             (file.path?.contains(".jpg") ?? false) ||
-            (file.path?.contains(".m4a") ?? false)) {
+            (file.path?.contains(".m4a") ?? false) || 
+             (file.path?.contains(".gif") ?? false) ) {
           showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
@@ -861,6 +869,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
           context,
           pickedImage,
         );
+
         setState(() {});
 
         break;

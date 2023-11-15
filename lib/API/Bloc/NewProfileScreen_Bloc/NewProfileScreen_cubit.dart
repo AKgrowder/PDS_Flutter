@@ -113,7 +113,20 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       emit(NewProfileSErrorState(e.toString()));
     }
   }
-
+   Future<void> followWIngMethod(String? followedToUid, BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic likepost;
+    try {
+      // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
+      likepost = await Repository().folliwingMethod(followedToUid, context);
+      if (likepost.success == true) {
+        emit(PostLikeLoadedState(likepost));
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(NewProfileSErrorState(e.toString()));
+    }
+  }
   Future<void> ProfileSaveBlog(
       BuildContext context, String userUid, String blogUid) async {
     dynamic getallBlogmodel;

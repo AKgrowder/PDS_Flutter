@@ -4,18 +4,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_cubit.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
-import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:pds/API/Model/OpenSaveImagepostModel/OpenSaveImagepost_Model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comment_bottom_sheet.dart';
-import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 
 import '../../API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_state.dart';
 
+// ignore: must_be_immutable
 class OpenSavePostImage extends StatefulWidget {
   String? PostID;
   bool? profileTure;

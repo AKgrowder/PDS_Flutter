@@ -46,7 +46,7 @@ class Followers extends StatelessWidget {
         listener: (context, state) {
           if (state is RemoveLoddingState) {
             SnackBar snackBar = SnackBar(
-              content: Text(state.remove_Follower!.message.toString()),
+              content: Text(state.remove_Follower!.object.toString()),
               backgroundColor: ColorConstant.primary_color,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -105,9 +105,7 @@ class Followers extends StatelessWidget {
                                   null
                               ? GestureDetector(
                                   onTap: () {
-                                    if (userId ==
-                                        followersClassModel
-                                            .object?[index].userUid) {
+                                    
                                       BlocProvider.of<FollowerBlock>(context)
                                           .removeFollwerApi(
                                               context,
@@ -116,7 +114,7 @@ class Followers extends StatelessWidget {
                                                   '');
                                       followersClassModel.object
                                           ?.removeAt(index);
-                                    } else {}
+                                   
                                   },
                                   child: Container(
                                     height: 60,
@@ -127,9 +125,7 @@ class Followers extends StatelessWidget {
                                         color: Color(0xffEFEFEF),
                                         borderRadius:
                                             BorderRadius.circular(10)),
-                                    child:userId ==
-                                        followersClassModel
-                                            .object?[index].userUid? Text('Remove'):Text('Follow'),
+                                    child: Text('Remove'),
                                   ),
                                 )
                               : Container(
