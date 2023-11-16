@@ -1,10 +1,7 @@
 import 'package:pds/API/Bloc/creatForum_Bloc/creat_Fourm_state.dart';
-import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Repo/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../Model/creat_form/creat_form_Model.dart';
 
 class CreatFourmCubit extends Cubit<CreatFourmState> {
   CreatFourmCubit() : super(CreatFourmInitialState()) {}
@@ -54,6 +51,19 @@ class CreatFourmCubit extends Cubit<CreatFourmState> {
     } catch (e) {
       print('error data-$e');
       emit(CreatFourmErrorState(createForm));
+    }
+  }
+
+    Future<void> IndustryTypeAPI(BuildContext context) async {
+    dynamic industryType;
+    try {
+      emit(CreatFourmLoadingState());
+      industryType = await Repository().IndustryType(context);
+      if (industryType.success == true) {
+        emit(IndustryTypeLoadedState(industryType));
+      }
+    } catch (e) {
+      emit(CreatFourmErrorState(industryType));
     }
   }
 }

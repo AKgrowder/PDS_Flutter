@@ -1,4 +1,5 @@
 import 'package:pds/API/Model/sherInviteModel/sherinviteModel.dart';
+import 'package:pds/API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 
 abstract class SherInviteState {}
 
@@ -14,4 +15,8 @@ class SherInviteLoadedState extends SherInviteState {
 class SherInviteErrorState extends SherInviteState {
   final dynamic error;
   SherInviteErrorState(this.error);
+}
+class FetchAllExpertsLoadedState extends SherInviteState {
+  final FetchAllExpertsModel FetchAllExpertsData;
+  FetchAllExpertsLoadedState(this.FetchAllExpertsData);
 }

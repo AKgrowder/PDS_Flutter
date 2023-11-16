@@ -5,21 +5,17 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
-import 'package:pds/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
-import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
-import 'package:pds/API/Bloc/auth/register_Block.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:pds/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import 'package:pds/API/Bloc/creatForum_Bloc/creat_Fourm_state.dart';
-import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/%20new/newbottembar.dart'; 
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../../theme/theme_helper.dart';
 import '../policy_of_company/policy_screen.dart';
 import '../policy_of_company/privecy_policy.dart';
@@ -29,6 +25,22 @@ class CreateForamScreen extends StatefulWidget {
 
   @override
   State<CreateForamScreen> createState() => _CreateForamScreenState();
+}
+
+class IndustryType {
+  String industryTypeUid;
+  String industryTypeName;
+  IndustryType(this.industryTypeUid, this.industryTypeName);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is IndustryType &&
+          runtimeType == other.runtimeType &&
+          industryTypeName == other.industryTypeName;
+
+  @override
+  int get hashCode => industryTypeName.hashCode;
 }
 
 class _CreateForamScreenState extends State<CreateForamScreen> {
@@ -44,6 +56,9 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
   String? filepath;
   bool? SubmitOneTime = false;
   ChooseDocument? chooseDocument;
+  List<MultiSelectItem<IndustryType>>? _industryTypes = [];
+  List<IndustryType> selectedIndustryTypes = [];
+  List<String> industryUUID = [];
 
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -57,9 +72,9 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getDocumentSize();
+    BlocProvider.of<CreatFourmCubit>(context).IndustryTypeAPI(context);
     dopcument = 'Upload Image';
   }
 
@@ -123,33 +138,35 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             // );
             // ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
+          if (state is IndustryTypeLoadedState) {
+            List<IndustryType> industryTypeData1 = state
+                .industryTypeModel.object!
+                .map((industryType) => IndustryType(
+                    industryType.industryTypeUid ?? '',
+                    industryType.industryTypeName ?? ''))
+                .toList();
+            _industryTypes = industryTypeData1
+                .map((industryType) => MultiSelectItem(
+                    industryType, industryType.industryTypeName))
+                .toList();
+          }
           if (state is CreatFourmLoadedState) {
             SnackBar snackBar = SnackBar(
               content: Text(state.createForm.message ?? ""),
               backgroundColor: ColorConstant.primary_color,
             );
+            String industryType = industryUUID.join(', ');
+            Map<String, dynamic> params = {
+              'document': chooseDocument?.object.toString(),
+              'companyName': name.text,
+              'jobProfile': profile.text,
+              'industryTypesUid': industryType
+            };
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return MultiBlocProvider(providers: [
-                BlocProvider<FetchAllPublicRoomCubit>(
-                  create: (context) => FetchAllPublicRoomCubit(),
-                ),
-                BlocProvider<CreatPublicRoomCubit>(
-                  create: (context) => CreatPublicRoomCubit(),
-                ),
-                BlocProvider<senMSGCubit>(
-                  create: (context) => senMSGCubit(),
-                ),
-                BlocProvider<RegisterCubit>(
-                  create: (context) => RegisterCubit(),
-                ),
-                BlocProvider<GetAllPrivateRoomCubit>(
-                  create: (context) => GetAllPrivateRoomCubit(),
-                ),
-                BlocProvider<InvitationCubit>(
-                  create: (context) => InvitationCubit(),
-                ),
-              ], child: NewBottomBar(buttomIndex: 0));
-            }));
+              return NewBottomBar(buttomIndex: 0);
+            })).then((value) => BlocProvider.of<CreatFourmCubit>(context)
+                .CreatFourm(
+                    params, uplopdfile.text, filepath.toString(), context));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             print('check Status--${state.createForm.success}');
           }
@@ -303,6 +320,51 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                       ),
                     ),
                     Padding(
+                      padding: EdgeInsets.only(top: 18, left: 35, bottom: 5),
+                      child: Text(
+                        "Industry Type",
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontFamily: 'outfit',
+                          fontWeight: FontWeight.w500,
+                        ),
+                        // style: theme.textTheme.bodyLarge,
+                      ),
+                    ),
+                    Center(
+                      child: Container(
+                        width: _width / 1.2,
+                        decoration: BoxDecoration(color: Color(0xffEFEFEF)),
+                        child: DropdownButtonHideUnderline(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 12),
+                            child: MultiSelectDialogField<IndustryType>(
+                              decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.transparent)),
+                              buttonIcon: Icon(
+                                Icons.expand_more,
+                                color: Colors.black,
+                              ),
+                              items: _industryTypes!,
+                              listType: MultiSelectListType.LIST,
+                              onConfirm: (values) {
+                                selectedIndustryTypes = values;
+                                selectedIndustryTypes.forEach((element) {
+                                  print(
+                                      "sxfgsdfghdfghdfgh${element.industryTypeUid.runtimeType}");
+                                  industryUUID
+                                      .add("${element.industryTypeUid}");
+                                });
+                                setState(() {});
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
                       padding:
                           const EdgeInsets.only(top: 10.0, left: 35, bottom: 5),
                       child: Text(
@@ -422,6 +484,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                     ),
                     GestureDetector(
                       onTap: () async {
+                        print("idfsdsdhfsdhsdfh-$industryUUID");
                         print(name.text.length);
                         if (name.text == null || name.text == '') {
                           SnackBar snackBar = SnackBar(
@@ -465,6 +528,12 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             backgroundColor: ColorConstant.primary_color,
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else if (industryUUID.isEmpty) {
+                          SnackBar snackBar = SnackBar(
+                            content: Text('Please Selcted Industry Type'),
+                            backgroundColor: ColorConstant.primary_color,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         } else if (dopcument == 'Upload Image') {
                           print('upolded imah');
                           SnackBar snackBar = SnackBar(
@@ -473,17 +542,17 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         } else {
-                          final SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          String? jwtToken =
-                              await prefs.getString(PreferencesKey.loginJwt);
-                          print('jwttokenGet -$jwtToken');
+                          String industryType = industryUUID.join(', ');
+                          print("sdgfsdfghdfgsdfgsdgf-${industryType}");
                           Map<String, dynamic> params = {
                             'document': chooseDocument?.object.toString(),
                             'companyName': name.text,
                             'jobProfile': profile.text,
+                            'industryTypesUid': industryType
                           };
+
                           print('button-$params');
+
                           if (SubmitOneTime == false) {
                             SubmitOneTime = true;
                             BlocProvider.of<CreatFourmCubit>(context)
@@ -491,35 +560,6 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                     filepath.toString(), context);
                           }
                         }
-                        // if (name.text != null && name.text != "") {
-                        //   if (profile.text != null && profile.text != "") {
-                        //     if (uplopdfile.text != null &&
-                        //         uplopdfile.text != "") {
-                        //     } else {
-                        //       SnackBar snackBar = SnackBar(
-                        //         content: Text('Please upload Document'),
-                        //         backgroundColor: ColorConstant.primary_color,
-                        //       );
-                        //       ScaffoldMessenger.of(context)
-                        //           .showSnackBar(snackBar);
-                        //     }
-                        //   } else {
-                        //     SnackBar snackBar = SnackBar(
-                        //       content: Text('Please Profile Name'),
-                        //       backgroundColor: ColorConstant.primary_color,
-                        //     );
-                        //     ScaffoldMessenger.of(context)
-                        //         .showSnackBar(snackBar);
-                        //   }
-                        //   print('vaildate');
-
-                        // } else {
-                        //   SnackBar snackBar = SnackBar(
-                        //     content: Text('Please Enter Company Name'),
-                        //     backgroundColor: ColorConstant.primary_color,
-                        //   );
-                        //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        // }
                       },
                       child: Center(
                         child: Container(

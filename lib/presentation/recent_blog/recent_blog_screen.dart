@@ -1,4 +1,4 @@
-import 'package:carousel_slider/carousel_slider.dart';
+ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 
@@ -285,70 +285,70 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
     );
   }
 
-  Widget TopSlider() {
-    return Column(
-      children: [
-        SizedBox(
-          height: 180,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: CarouselSlider.builder(
-                options: CarouselOptions(
-                    height: 350,
-                    initialPage: 0,
-                    autoPlay: true,
-                    viewportFraction: 1.0,
-                    enableInfiniteScroll: false,
-                    scrollDirection: Axis.horizontal,
-                    onPageChanged: (index, reason) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        // Your code HERE
-                        // Flutter will wait until the current build is completed before executing this code.
-                        setState(() {
-                          sliderCurrentPosition = index;
-                        });
-                      });
-                    }),
-                itemCount: getallBlogdata?.object?.length,
-                itemBuilder: (context, index, realIndex) {
-                  return GestureDetector(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 160,
-                      child: CustomImageView(
-                        url: getallBlogdata?.object?[index].image.toString() ??
-                            "",
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  );
-                }),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 0),
-          child: Container(
-            height: 20,
-            child: DotsIndicator(
-              dotsCount: (getallBlogdata?.object?.length ?? 1),
-              position: sliderCurrentPosition,
-              decorator: DotsDecorator(
-                size: const Size(10.0, 3.0),
-                activeSize: const Size(30.0, 3.0),
-                spacing: const EdgeInsets.symmetric(horizontal: 2),
-                activeColor: ColorConstant.primary_color,
-                color: ColorConstant.primary_color.withOpacity(0.3),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
-                activeShape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
-              ),
-            ),
-          ),
-        )
-      ],
-    );
-  }
+  // Widget TopSlider() {
+  //   return Column(
+  //     children: [
+  //       SizedBox(
+  //         height: 180,
+  //         child: ClipRRect(
+  //           borderRadius: BorderRadius.circular(10),
+  //           child: CarouselSlider.builder(
+  //               options: CarouselOptions(
+  //                   height: 350,
+  //                   initialPage: 0,
+  //                   autoPlay: true,
+  //                   viewportFraction: 1.0,
+  //                   enableInfiniteScroll: false,
+  //                   scrollDirection: Axis.horizontal,
+  //                   onPageChanged: (index, reason) {
+  //                     WidgetsBinding.instance.addPostFrameCallback((_) {
+  //                       // Your code HERE
+  //                       // Flutter will wait until the current build is completed before executing this code.
+  //                       setState(() {
+  //                         sliderCurrentPosition = index;
+  //                       });
+  //                     });
+  //                   }),
+  //               itemCount: getallBlogdata?.object?.length,
+  //               itemBuilder: (context, index, realIndex) {
+  //                 return GestureDetector(
+  //                   child: Container(
+  //                     width: MediaQuery.of(context).size.width,
+  //                     height: 160,
+  //                     child: CustomImageView(
+  //                       url: getallBlogdata?.object?[index].image.toString() ??
+  //                           "",
+  //                       fit: BoxFit.fill,
+  //                     ),
+  //                   ),
+  //                 );
+  //               }),
+  //         ),
+  //       ),
+  //       Padding(
+  //         padding: const EdgeInsets.only(top: 0),
+  //         child: Container(
+  //           height: 20,
+  //           child: DotsIndicator(
+  //             dotsCount: (getallBlogdata?.object?.length ?? 1),
+  //             position: sliderCurrentPosition.toDouble(),
+  //             decorator: DotsDecorator(
+  //               size: const Size(10.0, 3.0),
+  //               activeSize: const Size(30.0, 3.0),
+  //               spacing: const EdgeInsets.symmetric(horizontal: 2),
+  //               activeColor: ColorConstant.primary_color,
+  //               color: ColorConstant.primary_color.withOpacity(0.3),
+  //               shape: RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.circular(5.0)),
+  //               activeShape: RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.circular(5.0)),
+  //             ),
+  //           ),
+  //         ),
+  //       )
+  //     ],
+  //   );
+  // }
 
   similerblogs() {
     var _height = MediaQuery.of(context).size.height;

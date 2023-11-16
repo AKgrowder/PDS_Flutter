@@ -5,12 +5,14 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_state.dart';
 import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/utils/image_constant.dart';
@@ -32,6 +34,12 @@ class Expertise {
   Expertise(this.uid, this.expertiseName);
 }
 
+class IndustryType {
+  final String industryTypeUid;
+  final String industryTypeName;
+  IndustryType(this.industryTypeUid, this.industryTypeName);
+}
+
 bool? SubmitOneTime = false;
 
 class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
@@ -44,7 +52,6 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   String? selctedIndex;
   List<Expertise> expertiseData = [];
   Expertise? selectedExpertise;
-  // String selctedexpertiseData = "";
 
   @override
   List<String> working_houres = [
@@ -59,6 +66,10 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
   ChooseDocument? chooseDocument;
+  List<MultiSelectItem<IndustryType>>? _industryTypes = [];
+  List<IndustryType> selectedIndustryTypes = [];
+  List<String> industryUUID = [];
+
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TimeOfDay initialTime = TimeOfDay(hour: 0, minute: 0);
   Future<void> _selectStartTime(BuildContext context) async {
@@ -105,6 +116,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
     super.initState();
     getDocumentSize();
     BlocProvider.of<FetchExprtiseRoomCubit>(context).fetchExprties(context);
+    BlocProvider.of<FetchExprtiseRoomCubit>(context).IndustryTypeAPI(context);
     dopcument = 'Upload Image';
   }
 
@@ -138,7 +150,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         ),
       ),
       body: BlocConsumer<FetchExprtiseRoomCubit, FetchExprtiseRoomState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is FetchExprtiseRoomLoadingState) {
             Center(
               child: Container(
@@ -184,6 +196,18 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             // selectedExpertise =
             //     expertiseData.isNotEmpty ? expertiseData[0] : null;
           }
+          if (state is IndustryTypeLoadedState) {
+            List<IndustryType> industryTypeData1 = state
+                .industryTypeModel.object!
+                .map((industryType) => IndustryType(
+                    industryType.industryTypeUid ?? '',
+                    industryType.industryTypeName ?? ''))
+                .toList();
+            _industryTypes = industryTypeData1
+                .map((industryType) => MultiSelectItem(
+                    industryType, industryType.industryTypeName))
+                .toList();
+          }
 
           if (state is AddExportLoadedState) {
             SnackBar snackBar = SnackBar(
@@ -191,7 +215,24 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
               backgroundColor: ColorConstant.primary_color,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            Navigator.pop(context);
+            final SharedPreferences prefs =
+                await SharedPreferences.getInstance();
+            String? userid = await prefs.getString(PreferencesKey.loginUserID);
+            String time =
+                '${_startTime?.format(context).toString()} to ${_endTime?.format(context).toString()}';
+            Map<String, dynamic> params = {
+              "document": "${chooseDocument?.object.toString()}",
+              "expertUId": ["${selectedExpertise?.uid}"],
+              "fees": feesController.text,
+              "jobProfile": jobprofileController.text,
+              "uid": userid.toString(),
+              "workingHours": time.toString(),
+              "industryTypesUid": industryUUID
+            };
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return NewBottomBar(buttomIndex: 0);
+            })).then((value) => BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                .addExpertProfile(params, context));
           }
         },
         builder: (context, state) {
@@ -321,6 +362,51 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   child: Text(expertise.expertiseName),
                                 );
                               }).toList(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 18,
+                        ),
+                        child: Text(
+                          "Industry Type",
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontFamily: 'outfit',
+                            fontWeight: FontWeight.w500,
+                          ),
+                          // style: theme.textTheme.bodyLarge,
+                        ),
+                      ),
+                      Container(
+                        width: _width,
+                        decoration: BoxDecoration(color: Color(0xffEFEFEF)),
+                        child: DropdownButtonHideUnderline(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 12),
+                            child: MultiSelectDialogField<IndustryType>(
+                              decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.transparent)),
+                              buttonIcon: Icon(
+                                Icons.expand_more,
+                                color: Colors.black,
+                              ),
+                              items: _industryTypes!,
+                              listType: MultiSelectListType.LIST,
+                              onConfirm: (values) {
+                                selectedIndustryTypes = values;
+                                selectedIndustryTypes.forEach((element) {
+                                  print(
+                                      "sxfgsdfghdfghdfgh${element.industryTypeUid.runtimeType}");
+                                  industryUUID
+                                      .add("${element.industryTypeUid}");
+                                });
+                                setState(() {});
+                              },
                             ),
                           ),
                         ),
@@ -732,6 +818,13 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
+                          } else if (industryUUID.isEmpty) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please Selcted Industry Type'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
                           } else if (feesController.text.isNotEmpty &&
                               feesController.text[0] == '.') {
                             SnackBar snackBar = SnackBar(
@@ -773,18 +866,16 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             print(
                                 'endtime-${_endTime?.format(context).toString()}');
                             print('Finaltime-$time');
-                            print(
-                                'sddfsdm,gndfgj${chooseDocument?.object.toString()}');
-                            var params = {
+                            print('dartatset${industryUUID}');
+                            Map<String, dynamic> params = {
                               "document":
                                   "${chooseDocument?.object.toString()}",
-                              "expertUId": [
-                                "${selectedExpertise?.uid.toString()}"
-                              ],
+                              "expertUId": ["${selectedExpertise?.uid}"],
                               "fees": feesController.text,
                               "jobProfile": jobprofileController.text,
                               "uid": userid.toString(),
                               "workingHours": time.toString(),
+                              "industryTypesUid": industryUUID
                             };
                             print('working time-$time');
                             print('pwarems-$params');

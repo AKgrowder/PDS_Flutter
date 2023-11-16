@@ -109,17 +109,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
                 builder: (context) {
-                  return MultiBlocProvider(
-                    providers: [
-                      BlocProvider<LoginCubit>(
-                        create: (context) => LoginCubit(),
-                      ),
-                      BlocProvider<DevicesInfoCubit>(
-                        create: (context) => DevicesInfoCubit(),
-                      ),
-                    ],
-                    child: LoginScreen(),
-                  );
+                  return LoginScreen();
                 },
               ), (route) => false);
             }

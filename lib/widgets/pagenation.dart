@@ -1,7 +1,5 @@
 // ignore_for_file: must_be_immutable
-
 import 'package:flutter/material.dart';
-
 class PaginationWidget extends StatefulWidget {
   int? offSet;
   ScrollController? scrollController;
@@ -24,7 +22,7 @@ class PaginationWidget extends StatefulWidget {
 class _PaginationWidgetState extends State<PaginationWidget> {
   int _offset = 0;
   List<int>? _offsetList;
-  bool _isLoading = false;
+  bool _isLoading = false; 
   @override
   void initState() {
     super.initState();
@@ -34,7 +32,7 @@ class _PaginationWidgetState extends State<PaginationWidget> {
 
     widget.scrollController?.addListener(() {
       if (widget.scrollController?.position.pixels ==
-              widget.scrollController?.position.minScrollExtent &&
+              widget.scrollController?.position.maxScrollExtent &&
           widget.totalSize != null &&
           !_isLoading &&
           widget.isPagination) {
@@ -69,13 +67,13 @@ class _PaginationWidgetState extends State<PaginationWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.offSet != null) {
-      print('offset ${widget.offSet}');
+      // print('offset ${widget.offSet}');
       _offset = widget.offSet!;
       _offsetList = [];
       for (int i = 1; i <= (widget.offSet ?? 0); i++) {
         _offsetList?.add(i);
       }
-      print("dsfhfgh-$_offsetList");
+      // print("dsfhfgh-$_offsetList");
     }
     return Column(children: [
       widget.items ?? SizedBox(),

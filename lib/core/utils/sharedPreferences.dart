@@ -36,16 +36,12 @@ class PreferencesKey {
   static const String IPAIosRoutVersion = 'IPARoutVersion';
   static const String IPAIosMainversion = 'IPAMainversion';
   static const String RoutURl = 'RoutURl';
-  static const String UpdateURLinSplash = 'UpdateURLinSplash';  
+  static const String UpdateURLinSplash = 'UpdateURLinSplash';
   static const String ShowSoftAlert = 'ShowSoftAlert';
   static String rating = "UserRating";
   static String MaxPublicRoomSave = "MaxPublicRoomSave";
   static String RoomPageCount = "RoomPageCount";
   static String AutoSetRoomID = "AutoSetRoomID";
   static String tabSelction = "tabSelction";
-
-
-
-
-
+  static String MaxPostUploadSizeInMB = "MaxPostUploadSizeInMB";
 }

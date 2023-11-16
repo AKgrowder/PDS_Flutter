@@ -55,7 +55,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   XFile? pickedFile;
   double documentuploadsize = 0;
   double value2 = 0.0;
-
+  bool isChecked = false;
   Future<void> _checkPermissions() async {
     final cameraStatus = await Permission.camera.status;
     if (this.mounted) {
@@ -150,11 +150,16 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         );
                       }
                       if (state is RegisterLoadedState) {
-                        SnackBar snackBar = SnackBar(
+                        /*           SnackBar snackBar = SnackBar(
                           content: Text(state.registerClass.message.toString()),
                           backgroundColor: ColorConstant.primary_color,
                         );
-
+ 
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar); */
+                        SnackBar snackBar = SnackBar(
+                          content: Text('Otp send successfully'),
+                          backgroundColor: ColorConstant.primary_color,
+                        );
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         Navigator.push(
                           context,
@@ -170,7 +175,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             imageUrl:
                                 state.chooseDocumentuploded.object.toString());
                         chooseDocument = state.chooseDocumentuploded;
-
                         // SnackBar snackBar = SnackBar(
                         //   content: Text(
                         //       state.chooseDocumentuploded.message.toString()),
@@ -311,7 +315,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     ],
                                   ),
                                 )
-                              : Align(
+                              : SizedBox(),
+                          /* Align(
                                   alignment: Alignment.center,
                                   child: Container(
                                     height: 130,
@@ -344,39 +349,15 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                               svgPath: ImageConstant.imgCamera,
                                               alignment: Alignment.center,
                                             ),
-                                            // child: CustomIconButton(
-                                            //   height: 33,
-                                            //   width: 33,
-                                            //   alignment: Alignment.bottomRight,
-                                            //   child: GestureDetector(
-                                            //     onTap: () {
-                                            //       pickImage();
-                                            //     },
-                                            //     child: CustomImageView(
-                                            //       svgPath: ImageConstant.imgCamera,
-                                            //     ),
-                                            //   ),
-                                            // ),
+                                           
                                           ),
                                         ),
 
-                                        // CustomIconButton(
-                                        //   height: 33,+-----+-
-                                        //   width: 33,
-                                        //   alignment: Alignment.bottomRight,
-                                        //   child: GestureDetector(
-                                        //     onTap: () {
-                                        //       pickImage();
-                                        //     },
-                                        //     child: CustomImageView(
-                                        //       svgPath: ImageConstant.imgCamera,
-                                        //     ),
-                                        //   ),
-                                        // ),
+                                       
                                       ],
                                     ),
                                   ),
-                                ),
+                                ), */
                           Padding(
                             padding: EdgeInsets.only(
                               top: 18,
@@ -459,7 +440,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               } else if (value.contains('..')) {
                                 return 'username does not contain is correct';
                               }
-
                               return null;
                             },
                             // focusNode: FocusNode(),
@@ -588,7 +568,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 child: CustomTextFormField(
                                   validator: (value) {
                                     final RegExp phoneRegExp =
-                                         RegExp(r'^[6-9]\d{9}$');
+                                        RegExp(r'^[6-9]\d{9}$');
                                     if (value!.isEmpty) {
                                       return 'Please Enter Mobile Number';
                                     } else if (!phoneRegExp.hasMatch(value)) {
@@ -679,11 +659,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             validator: (value) {
                               String pattern =
                                   r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$%^&*(),.?":{}|<>])[A-Za-z0-9!@#\$%^&*(),.?":{}|<>]{8,}$';
-
                               if (value!.isEmpty) {
                                 return 'Please Enter Password';
                               }
-
                               if (!RegExp(pattern).hasMatch(value)) {
                                 return 'Password should contain at least 1 uppercase, 1 lowercase, 1 digit, 1 special character and be at least 8 characters long';
                               }
@@ -734,75 +712,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
                             fillColor: appTheme.gray100,
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              if (SubmitOneTime == false) {
-                                if (_formKey.currentState!.validate()) {
-                                  var datapPassing = {
-                                    "name": nameController.text,
-                                    "userName": enteruseridController.text,
-                                    "email": emailAndMobileController.text,
-                                    "mobileNo": contectnumberController.text,
-                                    "password": passwordController.text,
-                                    "module": "EMPLOYEE",
-                                  };
-                                  if (chooseDocument?.object != null) {
-                                    datapPassing['profilePic'] =
-                                        '${chooseDocument?.object.toString()}';
-                                  }
-                                  print('dataPassing-$datapPassing');
-                                  SubmitOneTime = true;
-                                  BlocProvider.of<RegisterCubit>(context)
-                                      .registerApi(datapPassing, context);
-                                }
-                              }
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              margin: EdgeInsets.only(top: 15),
-                              height: 50,
-                              width: _width,
-                              decoration: BoxDecoration(
-                                  color: Color(0xffED1C25),
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: Text(
-                                'Submit',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'outfit',
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                          ),
-                          // CustomElevatedButton(
-                          //   onTap: () {
-                          //     if (_formKey.currentState!.validate()) {
-                          //       var datapPassing = {
-                          //         "name": nameController.text,
-                          //         "userName": nameController.text,
-                          //         "email": emailAndMobileController.text,
-                          //         "mobileNo": contectnumberController.text,
-                          //         "password": passwordController.text,
-                          //         "module": "EMPLOYEE"
-                          //       };
-                          //       print('dataoassing-$datapPassing');
-                          //       BlocProvider.of<RegisterCubit>(context)
-                          //           .registerApi(datapPassing);
-                          //     }
-                          //   },
-                          //   text: "Submit",
-                          //   margin: EdgeInsets.only(
-                          //     top: 18,
-                          //   ),
-                          //   buttonStyle: ButtonThemeHelper
-                          //       .outlineOrangeA7000c
-                          //       .copyWith(
-                          //           fixedSize:
-                          //               MaterialStateProperty.all<Size>(
-                          //                   Size(double.maxFinite, 50))),
-                          //   buttonTextStyle:
-                          //       TextThemeHelper.titleMediumOnPrimary,
-                          // ),
+
                           Align(
                             // alignment: Alignment.center,
                             child: Container(
@@ -846,6 +756,24 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              SizedBox(
+                                height: 5,
+                                child: Checkbox(
+                                  visualDensity: VisualDensity(
+                                    horizontal:
+                                        -4.0, // Adjust this value to change the size
+                                    vertical:
+                                        -2.0, // Adjust this value to change the size
+                                  ),
+                                  checkColor: Color(0xffED1C25),
+                                  value: isChecked,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      isChecked = value!;
+                                    });
+                                  },
+                                ),
+                              ),
                               GestureDetector(
                                 onTap: () {
                                   Navigator.push(
@@ -859,6 +787,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 },
                                 child: Text(
                                   "Terms & Conditions ",
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: theme.colorScheme.primary,
                                     fontSize: 14,
@@ -868,31 +797,78 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   ),
                                 ),
                               ),
-                              Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Policies(
-                                            title: " ",
-                                            data: Policy_Data.privacy_policy1,
-                                          ),
-                                        ));
-                                  },
-                                  child: Text(
-                                    "Privacy & Policy  of PDS Terms",
-                                    style: TextStyle(
-                                      color: theme.colorScheme.primary,
-                                      fontSize: 14,
-                                      fontFamily: 'Outfit',
-                                      fontWeight: FontWeight.w500,
-                                      decoration: TextDecoration.underline,
+                              Padding(
+                                padding: const EdgeInsets.only(right: 2),
+                                child: Center(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Policies(
+                                              title: " ",
+                                              data: Policy_Data.privacy_policy1,
+                                            ),
+                                          ));
+                                    },
+                                    child: Text(
+                                      "Privacy & Policy  of PDS Terms",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: theme.colorScheme.primary,
+                                        fontSize: 14,
+                                        fontFamily: 'Outfit',
+                                        fontWeight: FontWeight.w500,
+                                        decoration: TextDecoration.underline,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ],
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              if (SubmitOneTime == false) {
+                                if (_formKey.currentState!.validate()) {
+                                  if (isChecked == true) {
+                                    var datapPassing = {
+                                      "name": nameController.text,
+                                      "userName": enteruseridController.text,
+                                      "email": emailAndMobileController.text,
+                                      "mobileNo": contectnumberController.text,
+                                      "password": passwordController.text,
+                                      "module": "EMPLOYEE",
+                                      "checkTermsAndConditions": isChecked,
+                                    };
+                                    if (chooseDocument?.object != null) {
+                                      datapPassing['profilePic'] =
+                                          '${chooseDocument?.object.toString()}';
+                                    }
+                                    print('dataPassing-$datapPassing');
+                                    SubmitOneTime = true;
+                                    BlocProvider.of<RegisterCubit>(context)
+                                        .registerApi(datapPassing, context);
+                                  }
+                                }
+                              }
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.only(top: 15),
+                              height: 50,
+                              width: _width,
+                              decoration: BoxDecoration(
+                                  color: Color(0xffED1C25),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text(
+                                'Submit',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'outfit',
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
                           ),
                         ],
                       );

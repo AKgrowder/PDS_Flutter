@@ -8,17 +8,11 @@ import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/Inbox_screen.dart';
 import 'package:pds/presentation/%20new/home_screen_new.dart';
-import 'package:pds/presentation/history_screen/history_screen.dart';
-import 'package:pds/presentation/home/home.dart';
-import 'package:pds/presentation/notifications/notification_screen.dart';
+import 'package:pds/presentation/%20new/notifaction2.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/presentation/rooms/rooms_screen.dart';
-import 'package:pds/presentation/settings/setting_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'SearchBar_screen.dart';
-
-import 'new_notification_screen.dart';
-import 'newsettingScreen.dart';
 
 // import 'package:growder/presentation/Buy_Screen/Buy_screen.dart';
 // import 'package:growder/presentation/Profile_Screen/Profile_screen.dart';
@@ -45,16 +39,15 @@ class _NewBottomBarState extends State<NewBottomBar> {
 
   List widgetOptions = [
     // HomeScreen(),
-   HomeScreenNew(),
+    HomeScreenNew(),
     RoomsScreen(),
     // HistoryScreen(),
     SearchBarScreen(value2: 1),
     // NotificationsScreen(),
-   
+
     InboxScreen(),
-     NotificationScreen(),
+    NewNotifactionScreen(),
     // SettingScreen(),
-    
 
     // ViewDetailsScreen(),
     // ViewCommentScreen(),
@@ -232,10 +225,10 @@ class _NewBottomBarState extends State<NewBottomBar> {
                           child: Container(
                             child: selectedIndex != 2
                                 ? Padding(
-                                    padding: const EdgeInsets.all(10.0),
+                                    padding: const EdgeInsets.all(12.0),
                                     child: Image.asset(
                                       ImageConstant.serchpng,
-                                      color: Colors.grey,
+                                      color: Colors.grey.shade800,
                                       // height: 24,
                                       // width: 24,
                                     ),
@@ -244,7 +237,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                                     height: 30,
                                     width: 30,
                                     child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
+                                      padding: const EdgeInsets.all(12.0),
                                       child: Image.asset(
                                         ImageConstant.serchpng,
                                         color: const Color(0XFFED1C25),

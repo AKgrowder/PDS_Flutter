@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
+import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_cubit.dart';
+import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:pds/API/Bloc/auth/login_Block.dart';
 import 'package:pds/API/Bloc/auth/login_state.dart';
@@ -16,7 +18,7 @@ import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/%20new/newbottembar.dart'; 
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/Login_Screen/UserReActivate_screen.dart';
 import 'package:pds/presentation/otp_verification_screen/otp_verification_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
@@ -28,6 +30,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../../API/Bloc/UserReActivate_Bloc/UserReActivate_cubit.dart';
+import '../../API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import '../../API/Bloc/device_info_Bloc/device_info_bloc.dart';
 import '../../API/Model/authModel/getUserDetailsMdoel.dart';
 import '../../API/Model/authModel/loginModel.dart';
@@ -151,27 +154,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (saveDeviceInfo == true) {
                         savePhoneData();
                       }
+                      /*   Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return NewBottomBar(
+                          buttomIndex: 0,
+                        );
+                      })); */
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return MultiBlocProvider(
                             providers: [
-                              BlocProvider<FetchAllPublicRoomCubit>(
-                                create: (context) => FetchAllPublicRoomCubit(),
-                              ),
-                              BlocProvider<CreatPublicRoomCubit>(
-                                create: (context) => CreatPublicRoomCubit(),
-                              ),
-                              BlocProvider<senMSGCubit>(
-                                create: (context) => senMSGCubit(),
-                              ),
-                              BlocProvider<RegisterCubit>(
-                                create: (context) => RegisterCubit(),
-                              ),
-                              BlocProvider<GetAllPrivateRoomCubit>(
-                                create: (context) => GetAllPrivateRoomCubit(),
-                              ),
-                              BlocProvider<InvitationCubit>(
-                                create: (context) => InvitationCubit(),
+                              BlocProvider<GetGuestAllPostCubit>(
+                                create: (context) => GetGuestAllPostCubit(),
                               ),
                             ],
                             child: NewBottomBar(
@@ -185,10 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       backgroundColor: ColorConstant.primary_color,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    print(
-                        'check Status--${state.loginModel.object!.verified.toString()}');
-
-                    // Navigator.push(context,MaterialPageRoute(builder: (context)=> HomeScreen()));
+                    print('check Status--${state.loginModel.message}');
                   }
                 }
                 if (state is GetUserLoadedState) {
@@ -205,48 +196,38 @@ class _LoginScreenState extends State<LoginScreen> {
                       savePhoneData();
                     }
                     print('this condison is calling');
-                    Navigator.push(context,
+                    /*    Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return MultiBlocProvider(
-                          providers: [
-                            BlocProvider<FetchAllPublicRoomCubit>(
-                              create: (context) => FetchAllPublicRoomCubit(),
-                            ),
-                            BlocProvider<CreatPublicRoomCubit>(
-                              create: (context) => CreatPublicRoomCubit(),
-                            ),
-                            BlocProvider<senMSGCubit>(
-                              create: (context) => senMSGCubit(),
-                            ),
-                            BlocProvider<RegisterCubit>(
-                              create: (context) => RegisterCubit(),
-                            ),
-                            BlocProvider<GetAllPrivateRoomCubit>(
-                              create: (context) => GetAllPrivateRoomCubit(),
-                            ),
-                            BlocProvider<InvitationCubit>(
-                              create: (context) => InvitationCubit(),
-                            ),
-                          ],
-                          child: NewBottomBar(
-                            buttomIndex: 0,
-                          ));
-                    }));
+                      return NewBottomBar(
+                        buttomIndex: 0,
+                      );
+                    })); */
+                     Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return MultiBlocProvider(
+                            providers: [
+                              BlocProvider<GetGuestAllPostCubit>(
+                                create: (context) => GetGuestAllPostCubit(),
+                              ),
+                            ],
+                            child: NewBottomBar(
+                              buttomIndex: 0,
+                            ));
+                      }));
                   } else {
+                    SnackBar snackBar = SnackBar(
+                      content: Text('Otp send successfully'),
+                      backgroundColor: ColorConstant.primary_color,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return MultiBlocProvider(
-                          providers: [
-                            BlocProvider<OtpCubit>(
-                              create: (context) => OtpCubit(),
-                            )
-                          ],
-                          child: OtpVerificationScreen(
-                            loginModelData: loginModelData,
-                            flowCheck: 'login',
-                            phonNumber: state.getUserDataModel.object?.mobileNo,
-                            userId: loginModelData?.object?.uuid.toString(),
-                          ));
+                      return OtpVerificationScreen(
+                        loginModelData: loginModelData,
+                        flowCheck: 'login',
+                        phonNumber: state.getUserDataModel.object?.mobileNo,
+                        userId: loginModelData?.object?.uuid.toString(),
+                      );
                     }));
                   }
                 }
@@ -490,12 +471,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onTap: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return MultiBlocProvider(providers: [
-                                      BlocProvider<ForgetpasswordCubit>(
-                                        create: (context) =>
-                                            ForgetpasswordCubit(),
-                                      )
-                                    ], child: ForgetPasswordScreen());
+                                    return ForgetPasswordScreen();
                                   }));
                                 },
                                 child: Text(
@@ -651,7 +627,7 @@ class _LoginScreenState extends State<LoginScreen> {
     prefs.setString(
         PreferencesKey.ProfileName, "${getUserDataModelData?.object?.name}");
     prefs.setString(
-        PreferencesKey.ProfileEmail,"${getUserDataModelData?.object?.email}");
+        PreferencesKey.ProfileEmail, "${getUserDataModelData?.object?.email}");
     prefs.setString(PreferencesKey.ProfileModule,
         "${getUserDataModelData?.object?.module}");
     prefs.setString(PreferencesKey.ProfileMobileNo,

@@ -1,29 +1,59 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
+import 'package:pds/API/Model/RePost_Model/RePost_model.dart';
 
+import 'package:pds/API/Model/PersonalChatListModel/SelectChatMember_Model.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
-import 'package:pds/API/Model/RateUseModel/Rateuse_model.dart';
-import 'package:pds/API/Model/ViewDetails_Model/ViewDetails_model.dart';
-import 'package:pds/API/Model/emailVerfiaction/emailVerfiaction.dart';
-import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
-import 'package:pds/API/Model/pinAndUnpinModel/pinAndUnpinModel.dart';
-import '../Model/SelectRoomModel/SelectRoom_Model.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
+import 'package:pds/API/Model/Add_PostModel/Add_PostModel.dart';
+import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
+import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
+import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
 import 'package:pds/API/Model/DeleteUserModel/DeleteUser_Model.dart';
+import 'package:pds/API/Model/Delete_Api_model/delete_api_model.dart';
 import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
+import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
+import 'package:pds/API/Model/GetGuestAllPostModel/GetPostLike_Model.dart';
 import 'package:pds/API/Model/Get_all_blog_Model/get_all_blog_model.dart';
+import 'package:pds/API/Model/IndustrytypeModel/Industrytype_Model.dart';
+import 'package:pds/API/Model/LogOutModel/LogOut_model.dart';
+import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
+import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
+import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
+import 'package:pds/API/Model/OpenSaveImagepostModel/OpenSaveImagepost_Model.dart';
+import 'package:pds/API/Model/PersonalChatListModel/PersonalChatList_Model.dart';
+import 'package:pds/API/Model/ViewStoryModel/ViewStory_Model.dart';
+import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
+import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
+import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
+import 'package:pds/API/Model/removeFolloweModel/removeFollowerModel.dart';
+import 'package:pds/API/Model/serchDataAddModel/serchDataAddModel.dart';
+import 'package:pds/API/Model/storyModel/stroyModel.dart';
+import 'package:pds/API/Model/HashTage_Model/HashTagView_model.dart';
+import 'package:pds/API/Model/HashTage_Model/HashTag_model.dart';
+import 'package:pds/API/Model/Getalluset_list_Model/get_all_userlist_model.dart';
+import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart';
+import 'package:pds/API/Model/RateUseModel/Rateuse_model.dart';
 import 'package:pds/API/Model/UserReActivateModel/UserReActivate_model.dart';
+import 'package:pds/API/Model/ViewDetails_Model/ViewDetails_model.dart';
 import 'package:pds/API/Model/authModel/getUserDetailsMdoel.dart';
 import 'package:pds/API/Model/authModel/loginModel.dart';
 import 'package:pds/API/Model/authModel/registerModel.dart';
 import 'package:pds/API/Model/checkUserStatusModel/chekuserStausModel.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
+import 'package:pds/API/Model/createStroyModel/createStroyModel.dart';
 import 'package:pds/API/Model/deviceInfo/deviceInfo_model.dart';
+import 'package:pds/API/Model/emailVerfiaction/emailVerfiaction.dart';
 import 'package:pds/API/Model/forget_password_model/forget_password_model.dart';
+import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
+import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/otpmodel/otpmodel.dart';
+import 'package:pds/API/Model/pinAndUnpinModel/pinAndUnpinModel.dart';
 import 'package:pds/API/Model/sherInviteModel/sherinviteModel.dart';
 import 'package:pds/API/Model/updateprofileModel/updateprofileModel.dart';
+
 import '../ApiService/ApiService.dart';
 import '../Const/const.dart';
 import '../Model/AddThread/CreateRoom_Model.dart';
@@ -34,7 +64,9 @@ import '../Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import '../Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
 import '../Model/HomeScreenModel/MyPublicRoom_model.dart';
 import '../Model/HomeScreenModel/PublicRoomModel.dart';
+import '../Model/HomeScreenModel/getLoginPublicRoom_model.dart';
 import '../Model/InvitationModel/Invitation_Model.dart';
+import '../Model/SelectRoomModel/SelectRoom_Model.dart';
 import '../Model/SendMSG/SendMSG_Model.dart';
 import '../Model/System_Config_model/fetchUserModule_model.dart';
 import '../Model/System_Config_model/system_config_model.dart';
@@ -46,8 +78,11 @@ import '../Model/delete_room_model/Delete_room_model.dart';
 import '../Model/fetch_room_detail_model/fetch_room_detail_model.dart';
 import '../Model/forget_password_model/change_password_model.dart';
 import '../Model/myaccountModel/myaccountModel.dart';
-import 'package:pds/API/Model/LogOutModel/LogOut_model.dart';
-import '../Model/HomeScreenModel/getLoginPublicRoom_model.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
+import 'package:pds/API/Model/HashTage_Model/HashTagBanner_model.dart';
+import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
+import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
+import 'package:pds/API/Model/ViewStoryModel/StoryViewList_Model.dart';
 
 class Repository {
   ApiServices apiServices = ApiServices();
@@ -182,7 +217,7 @@ class Repository {
     }
   }
 
-  registerApi(Map<String, String> params, BuildContext context) async {
+  registerApi(Map<String, dynamic> params, BuildContext context) async {
     final response =
         await apiServices.postApiCall(Config.registerApi, params, context);
     var jsonString = json.decode(response.body);
@@ -405,9 +440,65 @@ class Repository {
     }
   }
 
+  RequestListAPI(BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.get_all_request}', context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return RequestListModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  accept_rejectAPI(
+      BuildContext context, bool isAccepted, String followUid) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.accept_reject_follow_request}?isAccepted=${isAccepted}&followUid=${followUid}',
+        context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return accept_rejectModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  HashTagBanner(BuildContext context) async {
+    final response =
+        await apiServices.getApiCall(Config.HashTagBanner, context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return HashTagImageModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
   DeleteRoomApi(String roomuId, BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
-        "${Config.DeleteRoom}/${roomuId}", context);
+        "${Config.DeleteRoom}?roomUid=${roomuId}", context);
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -463,14 +554,52 @@ class Repository {
     }
   }
 
+  chooseProfileFile2(String file, String fileName, BuildContext context,
+      {params}) async {
+    print("apiCaling");
+    final response = await apiServices.multipartFile(
+        "${Config.uploadfile}", file, fileName, context,
+        apiName: 'create forum', params: params);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return ChooseDocument2.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
   userProfile(File imageFile, BuildContext context) async {
     final response = await apiServices.multipartFileUserprofile(
-        '${Config.uploadProfile}', imageFile, context);
+        '${Config.uploadfile}', imageFile, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
       case 200:
         return ChooseDocument.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  userProfileprofileCover(File imageFile, BuildContext context) async {
+    final response = await apiServices.multipartFileUserprofile(
+        '${Config.uploadfile}', imageFile, context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return ChooseDocument1.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -700,13 +829,122 @@ class Repository {
     }
   }
 
-  GetallBlog(BuildContext context) async {
-    final response = await apiServices.getApiCall(Config.getallBlog, context);
+  GetallBlog(BuildContext context, String userUid) async {
+    final response = await apiServices.getApiCall(
+        "${Config.getallBlog}?userUid=${userUid}", context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
       case 200:
         return GetallBlogModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  SaveBlog(BuildContext context, String userUid, String blogUid) async {
+    final response = await apiServices.getApiCall(
+        "${Config.saveBlog}?userUid=${userUid}&blogUid=${blogUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return saveBlogModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  LikeBlog(BuildContext context, String userUid, String blogUid) async {
+    final response = await apiServices.getApiCall(
+        "${Config.LikeBlog}?userUid=${userUid}&blogUid=${blogUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return saveBlogModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  fllowersApi(BuildContext context, String userUid) async {
+    final response = await apiServices.getApiCall(
+        "${Config.get_all_followers}?userUid=${userUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return FollowersClassModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  removeFollwerApi(BuildContext context, String follwUid) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.remove_follower}?followUid=${follwUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return Remove_Follower.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  get_all_followering(BuildContext context, String userUid) async {
+    final response = await apiServices.getApiCall(
+        "${Config.get_all_followings}?userUid=${userUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return FollowersClassModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  GetAllSaveBlog(BuildContext context, String userUid) async {
+    final response = await apiServices.getApiCall(
+        "${Config.getSavedBlogs}?userUid=${userUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return saveAllBlogModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -914,8 +1152,7 @@ class Repository {
     }
   }
 
-  RemoveUser(String roomID, String? memberUesrID,
-      BuildContext context) async {
+  RemoveUser(String roomID, String? memberUesrID, BuildContext context) async {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.RemoveUser}?roomUid=${roomID}&memberUserUid=${memberUesrID}',
         context);
@@ -933,8 +1170,681 @@ class Repository {
         return jsonString;
     }
   }
-}
 
+  Exituser(String roomID, BuildContext context) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.RemoveUser}?roomUid=${roomID}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return RemoveUserModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  GetGuestAllPost(
+    BuildContext context,
+    String pageNumber,
+  ) async {
+    final responce = await apiServices.getApiCall(
+        '${Config.GuestGetAllPost}?pageNumber=$pageNumber&numberOfRecords=10',
+        context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return GetGuestAllPostModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  GetUserAllPost(
+    BuildContext context,
+    String pageNumber,
+  ) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.UserGetAllPost}?pageNumber=$pageNumber&numberOfRecords=10',
+        context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return GetGuestAllPostModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  AddPostApiCalling(
+    BuildContext context,
+    Map<String, dynamic> params,
+  ) async {
+    final response =
+        await apiServices.postApiCall(Config.addPost, params, context);
+    print('AddPost$response');
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return AddPost.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+  // ImageDataPost
+
+  AddPostImageUploded(
+    BuildContext context,
+    String fileName,
+    String file,
+  ) async {
+    final response = await apiServices.multipartFile(
+        Config.upload_data, fileName, file, context,
+        AadPost: true);
+    print('AddPost$response');
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return ImageDataPost.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  userProfile1(List<File> imageFile, BuildContext context) async {
+    final response = await apiServices.multipartFileWith1(
+        '${Config.upload_data}', imageFile, context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return ImageDataPost.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  likePostMethod(String? postUid, BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.like_post}?postUid=${postUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return LikePost.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  savedPostMethod(String? postUid, BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.save_post}?postUid=${postUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return LikePost.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  folliwingMethod(String? followedToUid, BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.follow_user}?followedToUid=${followedToUid}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return LikePost.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  GetPostAllLike(BuildContext context, String PostUID) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.GetPostAllLike}?postUid=${PostUID}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return GetPostLikeModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  Addcomment(BuildContext context, String PostUID) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.Addcomments}?postUid=${PostUID}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return AddCommentModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  AddNewcomment(
+    BuildContext context,
+    Map<String, dynamic> params,
+  ) async {
+    final response =
+        await apiServices.postApiCall(Config.getcomments, params, context);
+    print('AddPost$response');
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return jsonString;
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  NewProfileAPI(BuildContext context, String otherUserUid) async {
+    print("sdfhsdfhsdfh-$otherUserUid");
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.NewfetchUserProfile}?otherUserUid=${otherUserUid}", context);
+    print('AddPost$response');
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return NewProfileScreen_Model.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  GetAppPostAPI(BuildContext context, String userUid) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.GetAppPost}?userUid=${userUid}", context);
+    print('AddPost$response');
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return GetAppUserPostModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  GetPostCommetAPI(BuildContext context, String userUid, String orderBy) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.GetPostCommetAPI}?userUid=${userUid}&orderBy=${orderBy}",
+        context);
+    print('AddPost$response');
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return GetUserPostCommetModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  GetSavePostAPI(BuildContext context, String userUid) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.GetSavePostAPI}?userUid=${userUid}", context);
+    print('AddPost$response');
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return GetSavePostModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  GetAllStory(BuildContext context) async {
+    final response =
+        await apiServices.getApiCallWithToken("${Config.getAllStory}", context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return GetAllStoryModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  cretateStoryApi(BuildContext context, Map<String, dynamic> params) async {
+    final response = await apiServices.postApiCall(
+        "${Config.crateStroyCheck}", params, context);
+    var jsonString = json.decode(response.body);
+    print("cretateStoryApi$jsonString");
+    switch (response.statusCode) {
+      case 200:
+        return CreateStroy.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  IndustryType(BuildContext context) async {
+    final response = await apiServices.getApiCall(Config.industryType, context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return IndustryTypeModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  Deletepost(String postUid, BuildContext context) async {
+    final response = await apiServices.deleteApiCall(
+        "${Config.Deletepost}?postUid=${postUid}", {}, context);
+    print(response);
+    var jsonString = json.decode(response!.body);
+    switch (response.statusCode) {
+      case 200:
+        return DeletePostModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  HashTagForYouAPI(BuildContext context, String hashtagViewType) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.HashTagForYou}?hashtagViewType=$hashtagViewType', context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return HashtagModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  HashTagViewDataAPI(
+    BuildContext context,
+    String hashTag,
+  ) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.HashTagView}?hashtagName=${hashTag.replaceAll("#", "%23")}',
+        context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return HashtagViewDataModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  ViewStory(
+    BuildContext context,
+    String userUid,
+    String storyUid,
+  ) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.view_story}?userUid=${userUid}&storyUid=${storyUid}',
+        context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return ViewStoryModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  getalluser(
+    int? pageNumber,
+    String searchName,
+    BuildContext context, {
+    String? filterModule,
+  }) async {
+    final response;
+    if (filterModule != null) {
+      response = await apiServices.getApiCallWithToken(
+          "${Config.getalluser}?pageNumber=$pageNumber&numberOfRecords=20&searchName=$searchName&filterModule=$filterModule",
+          context);
+    } else {
+      response = await apiServices.getApiCallWithToken(
+          "${Config.getalluser}?pageNumber=$pageNumber&numberOfRecords=20&searchName=$searchName",
+          context);
+    }
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return GetAllUserListModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+
+  AddPostImageUploded1(
+    BuildContext context,
+    String fileName,
+    String file,
+  ) async {
+    final response = await apiServices.multipartFile(
+        Config.uploadStroy, fileName, file, context,
+        AadPost: true);
+    print('AddPost$response');
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return ImageDataPostOne.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  aboutMe(BuildContext context, String aboutMe) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.add_update_about_me}?aboutMe=$aboutMe', context);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return AboutMe.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  openSaveImagePost(BuildContext context, String PostUID) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.OpenSaveImagePost}?postUid=$PostUID', context);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return OpenSaveImagepostModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  getAllDataGet(BuildContext context, String userUid) async {
+    print("shdsdgfgsdfgfg-$userUid");
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.get_about_me}?userUid=$userUid', context);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return AboutMe.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  Deletecomment(String commentuid, BuildContext context) async {
+    final response = await apiServices.deleteApiCall(
+        "${Config.deletecomment}?commentUid=${commentuid}", {}, context);
+    print(response);
+    var jsonString = json.decode(response!.body);
+    switch (response.statusCode) {
+      case 200:
+        return DeleteCommentModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  StoryViewList(
+    BuildContext context,
+    String storyUid,
+  ) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.StoryViewList}?storyUid=${storyUid}', context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return StoryViewListModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  PersonalChatList(
+    BuildContext context,
+  ) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.PersonalChatList}', context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return PersonalChatListModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+
+  search_historyDataAdd(BuildContext context, String typeWord) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.search_historyDataAdd}?searchDescription=$typeWord", context);
+    var jsonString = json.decode(response.body);
+    print("responce jasonString-$jsonString");
+    switch (response.statusCode) {
+      case 200:
+        return SerchDataAdd.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  getSerchData(BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        Config.get_hashtag_search_history, context);
+    var jsonString = json.decode(response.body);
+    print('search_historyDataAdd$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return GetDataInSerch.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  RePost(
+      BuildContext context, Map<String, dynamic> params, String? uuId) async {
+    final response = await apiServices.postApiCall(
+        Config.rePost + "?postUid=" + "${uuId}", params, context);
+    print('AddPost$response');
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return RePostModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+
+      default:
+        return jsonString;
+    }
+  }
+   SelectChatMemberList(BuildContext context) async {
+    final responce =
+        await apiServices.getApiCall('${Config.SelectChatMember}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    switch (responce.statusCode) {
+      case 200:
+        return SelectChatMemberModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      default:
+        return jsonString;
+    }
+  }
+}
 // var headers = {
 //   'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc1ZlcmlmaWVkIjp0cnVlLCJtb2R1bGUiOiJFTVBMT1lFRSIsImlzQWN0aXZlIjp0cnVlLCJ1dWlkIjoiODYwMWViNTItNzk4NS00MWU3LTgwOTAtYmMyMjQ0MjkwZjkzIiwidXNlcm5hbWUiOiJBTiIsInN1YiI6IkFOIiwiaWF0IjoxNjkxMTUyODIxLCJleHAiOjE2OTIyMzI4MjF9.AjSlFxHlTU9opgsyXaqVh_sMQuv7f-fKGmIGle6879MD-OAGTNcPN5r9ZW8Go1124YE2BbSrc1Lj5GuspgilWg'
 // };

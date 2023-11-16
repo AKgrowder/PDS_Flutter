@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../../presentation/splash_screen/splash_screen.dart';
-import '../Bloc/System_Config_Bloc/system_config_cubit.dart';
 
 class ApiServices {
   var baseURL = "";
@@ -30,7 +30,7 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.packagingdepot.store/";
           // "https://packagingdepot.store/";
-          "http://192.168.29.100:8081/";
+          "http://192.168.29.17:8081/";
     }
 
     print(baseURL);
@@ -54,6 +54,7 @@ class ApiServices {
       if (response.statusCode == 602) {
         setLOGOUT(context);
       } else {
+        print("responce-->$response");
         return response;
       }
     } else {}
@@ -67,14 +68,14 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           //  "https://uatapi.packagingdepot.store/";
           // "https://packagingdepot.store/";
-          "http://192.168.29.100:8081/";
+          "http://192.168.29.17:8081/";
     }
     final hasInternet = await checkInternet();
     if (hasInternet == true) {
       final response = await get(
         Uri.parse(baseURL + APIurl), /*  headers: headers1 */
       );
-
+      print("response - ${response.body}");
       if (response.statusCode == 602) {
         setLOGOUT(context);
       } else {
@@ -99,6 +100,7 @@ class ApiServices {
         Uri.parse(baseURL + APIurl),
         headers: headers1,
       );
+
       print('respncebody-${response.body}');
       if (response.statusCode == 602) {
         setLOGOUT(context);
@@ -106,6 +108,25 @@ class ApiServices {
         return response;
       }
     } else {}
+  }
+
+  Future<Response?> deleteApiCall(
+      String APIurl, Map<String, dynamic> params, BuildContext context) async {
+    await UpdateBaseURL();
+
+    final headers1 = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${Token}'
+    };
+    print("API =>******${baseURL + APIurl}");
+    final response = await delete(Uri.parse(baseURL + APIurl),
+        headers: headers1, body: json.encode(params));
+
+    if (response.statusCode == 602) {
+      await setLOGOUT(context);
+    } else {
+      return response;
+    }
   }
 
   postApiCalla(String APIurl, BuildContext context) async {
@@ -142,15 +163,27 @@ class ApiServices {
     response.headers.addAll(headers1);
 
     if (params != null) {
+      if (params['userProfilePic'].toString().isNotEmpty &&
+          params['userBackgroundPic'].toString().isNotEmpty) {
+        response.fields["userProfilePic"] = params['userProfilePic'] ?? "";
+        response.fields["userBackgroundPic"] =
+            params['userBackgroundPic'] ?? "";
+      } else if (params['userProfilePic'].toString().isNotEmpty) {
+        response.fields["userProfilePic"] = params['userProfilePic'] ?? "";
+      } else {
+        response.fields["userBackgroundPic"] =
+            params['userBackgroundPic'] ?? "";
+      }
       response.fields["document"] = params['document'] ?? "";
       response.fields["companyName"] = params['companyName'] ?? "";
       response.fields["jobProfile"] = params['jobProfile'] ?? "";
-      response.fields["userProfilePic"] = params['userProfilePic'] ?? "";
-      response.fields["uuid"] = params['uuid'] ?? "";
+      response.fields["profileUid"] = params['profileUid'] ?? "";
       response.fields["name"] = params['name'] ?? "";
       response.fields["email"] = params['email'] ?? "";
+      response.fields["industryTypesUid"] = params['industryTypesUid'];
     }
-    print('response.fields-$response');
+    print("check responce fields--${params}");
+    log("message${params}");
     var res = await response.send();
     print('responce stauscode-${res.statusCode.toString()}');
     if (res.statusCode == 602) {
@@ -164,17 +197,26 @@ class ApiServices {
 
   multipartFile(
       String APIurl, String fileName, String file, BuildContext context,
-      {String? apiName, Map<String, dynamic>? params}) async {
+      {String? apiName, Map<String, dynamic>? params, bool? AadPost}) async {
     await UpdateBaseURL();
     print('fileApi-$file');
     print('fileName-$fileName');
-    print('token-$params');
 
-    var headers1 = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${Token}'
-    };
+    var headers1;
+    if (AadPost == true) {
+      print("this hader true");
+      headers1 = {'document': '', 'Authorization': 'Bearer ${Token}'};
+    } else {
+      print("else hader");
+      headers1 = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${Token}'
+      };
+    }
+
+    print("Token-->$Token");
     print("API =>******${baseURL + APIurl}");
+    print("header full Print-->$headers1");
     final response =
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
     response.headers.addAll(headers1);
@@ -183,12 +225,14 @@ class ApiServices {
         response.fields["document"] = params['document'] ?? "";
         response.fields["companyName"] = params['companyName'] ?? "";
         response.fields["jobProfile"] = params['jobProfile'] ?? "";
+        response.fields["industryTypesUid"] = params['industryTypesUid'] ?? [];
 
         print('params-$params');
       }
     }
 
-    if (apiName == 'create forum') {
+    print("paramesa-->$params");
+    if (apiName == 'create forum' || AadPost == true) {
       print('this is the get');
       response.files.add(await http.MultipartFile.fromPath('document', file));
     }
@@ -205,15 +249,21 @@ class ApiServices {
     }
   }
 
-  multipartFileUserprofile(
-      String APIurl, File imageFile, BuildContext context) async {
+  multipartFileUserprofile(String APIurl, File imageFile, BuildContext context,
+      {bool? ImageDatasetup}) async {
     await UpdateBaseURL();
+    var headers1 = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${Token}'
+    };
+
     final response =
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
+    response.headers.addAll(headers1);
     print("API =>******${baseURL + APIurl}");
     if (imageFile != null) {
       response.files
-          .add(await http.MultipartFile.fromPath('image', imageFile.path));
+          .add(await http.MultipartFile.fromPath('document', imageFile.path));
     }
     var res = await response.send();
     print('responce stauscode-${res.statusCode.toString()}');
@@ -236,6 +286,37 @@ class ApiServices {
       response.files
           .add(await http.MultipartFile.fromPath('image', imageFile.path));
     }
+    var res = await response.send();
+    print('responce stauscode-${res.statusCode.toString()}');
+    if (res.statusCode == 602) {
+      setLOGOUT(context);
+    } else {
+      var respond = await http.Response.fromStream(res);
+      print('responsData-${respond.body}');
+      return respond;
+    }
+  }
+
+  multipartFileWith1(
+    String APIurl,
+    List<File> imageFile,
+    BuildContext context,
+  ) async {
+    await UpdateBaseURL();
+    final headers1 = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${Token}'
+    };
+    final response =
+        await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
+    print("API =>******${baseURL + APIurl}");
+    if (imageFile.isNotEmpty) {
+      imageFile.forEach((element) async {
+        response.files
+            .add(await http.MultipartFile.fromPath('document', element.path));
+      });
+    }
+    response.headers.addAll(headers1);
     var res = await response.send();
     print('responce stauscode-${res.statusCode.toString()}');
     if (res.statusCode == 602) {
@@ -354,14 +435,6 @@ setLogOut(BuildContext context) async {
   prefs.clear();
   await Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(
-          builder: (context) => MultiBlocProvider(
-                providers: [
-                  BlocProvider<SystemConfigCubit>(
-                    create: (context) => SystemConfigCubit(),
-                  ),
-                ],
-                child: SplashScreen(),
-              )),
+      MaterialPageRoute(builder: (context) => SplashScreen()),
       (route) => false);
 }

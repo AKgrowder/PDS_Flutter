@@ -2,22 +2,16 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
-import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
-import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_state.dart';
-import 'package:pds/API/Bloc/auth/register_Block.dart';
-import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pds/presentation/%20new/newbottembar.dart'; 
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import '../../core/utils/image_constant.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -102,6 +96,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (state is fetchUserModulemodelLoadedState) {
         user_Module = state.fetchUserModule.object?.userModule ?? "";
         User_profile = state.fetchUserModule.object?.userProfilePic ?? "";
+        await SetUi();
       }
       if (state is SystemConfigLoadedState) {
         systemConfigModel = state.systemConfigModel;
@@ -110,29 +105,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Future.delayed(Duration(seconds: 0), () {
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
             builder: (context) {
-              return MultiBlocProvider(
-                providers: [
-                  BlocProvider<FetchAllPublicRoomCubit>(
-                    create: (context) => FetchAllPublicRoomCubit(),
-                  ),
-                  BlocProvider<CreatPublicRoomCubit>(
-                    create: (context) => CreatPublicRoomCubit(),
-                  ),
-                  BlocProvider<senMSGCubit>(
-                    create: (context) => senMSGCubit(),
-                  ),
-                  BlocProvider<RegisterCubit>(
-                    create: (context) => RegisterCubit(),
-                  ),
-                  BlocProvider<GetAllPrivateRoomCubit>(
-                    create: (context) => GetAllPrivateRoomCubit(),
-                  ),
-                  BlocProvider<InvitationCubit>(
-                    create: (context) => InvitationCubit(),
-                  ),
-                ],
-                child: NewBottomBar(buttomIndex: 0),
-              );
+              return NewBottomBar(buttomIndex: 0);
             },
           ), (route) => false);
         });
@@ -192,6 +165,10 @@ class _SplashScreenState extends State<SplashScreen> {
         var ApkRouteVersion = element.value ?? "";
         print(" ApkRouteVersion  ${ApkRouteVersion}");
         prefs.setString(PreferencesKey.ApkRouteVersion, ApkRouteVersion);
+      } else if (element.name == "MaxPostUploadSizeInMB") {
+        print(" ApkRouteVersion  ${ApkRouteVersion}");
+        prefs.setString(
+            PreferencesKey.MaxPostUploadSizeInMB, element.value ?? '');
       }
 
       /// -----

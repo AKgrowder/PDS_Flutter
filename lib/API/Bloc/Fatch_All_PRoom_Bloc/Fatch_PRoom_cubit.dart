@@ -18,18 +18,7 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
     }
   }
 
-  Future<void> FetchAllExpertsAPI(BuildContext context) async {
-    dynamic PublicRModel;
-    try {
-      emit(FetchAllPublicRoomLoadingState());
-      PublicRModel = await Repository().FetchAllExpertsAPI(context);
-      if (PublicRModel.success == true) {
-        emit(FetchAllExpertsLoadedState(PublicRModel));
-      }
-    } catch (e) {
-      emit(FetchAllPublicRoomErrorState(PublicRModel));
-    }
-  }
+  
 
   Future<void> chckUserStaus(BuildContext context) async {
     dynamic checkUserStausModel;
@@ -86,31 +75,31 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
     }
   }
 
-  Future<void> GetallBlog(BuildContext context) async {
-    dynamic getallBlogmodel;
-    try {
-      emit(GetallblogLoadingState());
-      getallBlogmodel = await Repository().GetallBlog(context);
-      if (getallBlogmodel.success == true) {
-        emit(GetallblogLoadedState(getallBlogmodel));
-      }
-    } catch (e) {
-      emit(FetchAllPublicRoomErrorState(getallBlogmodel));
-    }
-  }
+  // Future<void> GetallBlog(BuildContext context, String User_ID) async {
+  //   dynamic getallBlogmodel;
+  //   try {
+  //     emit(GetallblogLoadingState());
+  //     getallBlogmodel = await Repository().GetallBlog(context,User_ID);
+  //     if (getallBlogmodel.success == true) {
+  //       emit(GetallblogLoadedState(getallBlogmodel));
+  //     }
+  //   } catch (e) {
+  //     emit(FetchAllPublicRoomErrorState(getallBlogmodel));
+  //   }
+  // }
 
-  Future<void> MyAccount(BuildContext context) async {
-    dynamic myAccontDetails;
-    try {
-      emit(FetchAllPublicRoomLoadingState());
-      myAccontDetails = await Repository().myAccount(context);
-      if (myAccontDetails.success == true) {
-        emit(GetUserProfileLoadedState(myAccontDetails));
-      }
-    } catch (e) {
-      emit(FetchAllPublicRoomErrorState(myAccontDetails));
-    }
-  }
+  // Future<void> MyAccount(BuildContext context) async {
+  //   dynamic myAccontDetails;
+  //   try {
+  //     emit(FetchAllPublicRoomLoadingState());
+  //     myAccontDetails = await Repository().myAccount(context);
+  //     if (myAccontDetails.success == true) {
+  //       emit(GetUserProfileLoadedState(myAccontDetails));
+  //     }
+  //   } catch (e) {
+  //     emit(FetchAllPublicRoomErrorState(myAccontDetails));
+  //   }
+  // }
 
   Future<void> DeleteRoomm(String roomuId, BuildContext context) async {
     dynamic GetAllPrivateRoom;

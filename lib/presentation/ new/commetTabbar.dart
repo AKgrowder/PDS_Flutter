@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/* import 'package:flutter/material.dart';
 import 'package:pds/core/utils/image_constant.dart';
 
 class MyWidget extends StatefulWidget {
@@ -165,6 +165,7 @@ class _MyWidgetState extends State<MyWidget> {
           ),
           Expanded(
             child: ListView.builder(
+               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return Container(
                   margin: EdgeInsets.all(10),
@@ -448,3 +449,4 @@ class _MyWidgetState extends State<MyWidget> {
     );
   }
 }
+ */

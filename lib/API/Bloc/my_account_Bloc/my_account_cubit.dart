@@ -28,6 +28,29 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       if (chooseDocument.success == true) {
         emit(chooseDocumentLoadedState(chooseDocument));
       }
+      else{
+        emit(chooseDocumentLoadedState(chooseDocument));
+
+      }
+    } catch (e) {
+      print('LoginScreen-${e.toString()}');
+      emit(MyAccountErrorState(chooseDocument));
+    }
+  }
+
+  Future<void> upoldeProfilePic1(File imageFile, BuildContext context) async {
+    print('thsi cover image');
+    dynamic chooseDocument;
+    try {
+      emit(MyAccountLoadingState());
+      chooseDocument =
+          await Repository().userProfileprofileCover(imageFile, context);
+      if (chooseDocument.success == true) {
+        emit(chooseDocumentLoadedState1(chooseDocument));
+      }
+      else{
+         emit(chooseDocumentLoadedState1(chooseDocument));
+      }
     } catch (e) {
       print('LoginScreen-${e.toString()}');
       emit(MyAccountErrorState(chooseDocument));
@@ -54,7 +77,7 @@ class MyAccountCubit extends Cubit<MyAccountState> {
     try {
       emit(MyAccountLoadingState());
       createForm =
-          await Repository().chooseProfileFile(file, fileName, context);
+          await Repository().chooseProfileFile2(file, fileName, context);
       print('createFormDataCheck-${createForm.message}');
       if (createForm.success == true) {
         print('createFormdataGet-----${createForm.object}');
@@ -67,7 +90,6 @@ class MyAccountCubit extends Cubit<MyAccountState> {
   }
 
   Future<void> addExpertProfile(params, BuildContext context) async {
-    print('this method working');
     dynamic fetchExprtise;
     try {
       emit(MyAccountLoadingState());
@@ -81,7 +103,7 @@ class MyAccountCubit extends Cubit<MyAccountState> {
   }
 
   Future<void> cretaForumUpdate(
-      Map<String, dynamic> params, BuildContext context) async {
+      Map<String, dynamic> params, BuildContext context,{String? apiname}) async {
     dynamic createForm;
     try {
       emit(MyAccountLoadingState());
@@ -118,6 +140,19 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       }
     } catch (e) {
       emit(MyAccountErrorState(emailVerifaction));
+    }
+  }
+
+  Future<void> IndustryTypeAPI(BuildContext context) async {
+    dynamic industryType;
+    try {
+      emit(MyAccountLoadingState());
+      industryType = await Repository().IndustryType(context);
+      if (industryType.success == true) {
+        emit(IndustryTypeLoadedState(industryType));
+      }
+    } catch (e) {
+      emit(MyAccountErrorState(industryType));
     }
   }
 }
