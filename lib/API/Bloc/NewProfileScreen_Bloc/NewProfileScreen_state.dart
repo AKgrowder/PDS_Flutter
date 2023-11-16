@@ -5,6 +5,7 @@ import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart
 import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart';
 import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
 import 'package:pds/API/Model/checkUserStatusModel/chekuserStausModel.dart';
+import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
 import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
 
@@ -63,6 +64,13 @@ class ProfilelikeBlogLoadedState extends NewProfileSState {
   final saveBlogModel saveAllBlogModelData;
   ProfilelikeBlogLoadedState(this.saveAllBlogModelData);
 }
+
+
+class PostLikeLoadedState extends NewProfileSState {
+  final LikePost likePost;
+  PostLikeLoadedState(this.likePost);
+}
+
 
 class FollowersClass extends NewProfileSState {
   final FollowersClassModel followersClassModel;

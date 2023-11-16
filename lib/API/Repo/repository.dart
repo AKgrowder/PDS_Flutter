@@ -1404,6 +1404,7 @@ class Repository {
   }
 
   NewProfileAPI(BuildContext context, String otherUserUid) async {
+    print("sdfhsdfhsdfh-$otherUserUid");
     final response = await apiServices.getApiCallWithToken(
         "${Config.NewfetchUserProfile}?otherUserUid=${otherUserUid}", context);
     print('AddPost$response');
