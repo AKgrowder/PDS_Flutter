@@ -442,7 +442,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
               Divider(
                 color: Colors.grey,
               ),
-              isSerch == true
+              /* isSerch == true
                   ? SizedBox()
                   : indexxx == 0
                       ? getDataInSerch?.object?.isEmpty == false
@@ -465,8 +465,8 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           padding: const EdgeInsets.only(top: 5),
                           child: historyData(),
                         )
-                      : SizedBox(),
-              isSerch == true
+                      : SizedBox(), */
+        /*       isSerch == true
                   ? SizedBox()
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -492,7 +492,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           height: 10,
                         ),
                       ],
-                    ),
+                    ), */
               isSerch == true
                   ? dataget == true
                       ? NavagtionPassing1()

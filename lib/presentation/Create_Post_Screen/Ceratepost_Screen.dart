@@ -60,7 +60,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   Color primaryColor = ColorConstant.primaryLight_color;
   Color textColor = ColorConstant.primary_color;
   List<String>? HasetagList = [];
-
+   String?UserProfileImage; 
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -90,6 +90,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   GetUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
+    UserProfileImage = prefs.getString(PreferencesKey.UserProfile);
   }
 
 //Public
@@ -201,12 +202,19 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                   isFollowing: 'FOLLOW',
                                                 )));
                                   },
-                                  child: SizedBox(
+                                  child:UserProfileImage?.isEmpty == true? SizedBox(
                                     height: 50,
                                     width: 50,
                                     child: CircleAvatar(
                                       backgroundImage:
-                                          AssetImage(ImageConstant.placeholder),
+                                          AssetImage(ImageConstant.tomcruse),
+                                    ),
+                                  ):SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: CircleAvatar(
+                                     backgroundImage: NetworkImage(UserProfileImage.toString()),
+                                         
                                     ),
                                   ),
                                 ),
@@ -817,7 +825,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                 textScaleFactor: 1.0,
               ),
               content: Text(
-                "Only PDF, PNG, JPG Supported.",
+                "Only PDF Allowed.",
                 textScaleFactor: 1.0,
               ),
               actions: <Widget>[

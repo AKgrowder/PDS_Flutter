@@ -1067,8 +1067,10 @@ class Repository {
       File imageFile) async {
     final response = await apiServices.multipartFileUserprofile(
       "${Config.chatImage}/${room_Id}/${userUid}",
+
       imageFile,
       context,
+      imageDataType: "yes"
     );
     var jsonString = json.decode(response.body);
     print('jasonnString$jsonString');
