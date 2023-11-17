@@ -250,7 +250,7 @@ class ApiServices {
   }
 
   multipartFileUserprofile(String APIurl, File imageFile, BuildContext context,
-      {bool? ImageDatasetup}) async {
+      {bool? ImageDatasetup, String? imageDataType}) async {
     await UpdateBaseURL();
     var headers1 = {
       'Content-Type': 'application/json',
@@ -262,8 +262,13 @@ class ApiServices {
     response.headers.addAll(headers1);
     print("API =>******${baseURL + APIurl}");
     if (imageFile != null) {
-      response.files
-          .add(await http.MultipartFile.fromPath('document', imageFile.path));
+      if (imageDataType?.isNotEmpty == true) {
+        response.files
+            .add(await http.MultipartFile.fromPath('image', imageFile.path));
+      } else {
+        response.files
+            .add(await http.MultipartFile.fromPath('document', imageFile.path));
+      }
     }
     var res = await response.send();
     print('responce stauscode-${res.statusCode.toString()}');

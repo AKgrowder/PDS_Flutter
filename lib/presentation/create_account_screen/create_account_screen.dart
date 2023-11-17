@@ -157,7 +157,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
  
                         ScaffoldMessenger.of(context).showSnackBar(snackBar); */
                         SnackBar snackBar = SnackBar(
-                          content: Text('Otp send successfully'),
+                          content: Text('OTP send successfully'),
                           backgroundColor: ColorConstant.primary_color,
                         );
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -830,6 +830,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           GestureDetector(
                             onTap: () {
                               if (SubmitOneTime == false) {
+                                print("sxfsdhfsdhfhsdfgh-$SubmitOneTime");
                                 if (_formKey.currentState!.validate()) {
                                   if (isChecked == true) {
                                     var datapPassing = {
@@ -849,6 +850,15 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     SubmitOneTime = true;
                                     BlocProvider.of<RegisterCubit>(context)
                                         .registerApi(datapPassing, context);
+                                  } else {
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text(
+                                          'Please Select Terms & conditions'),
+                                      backgroundColor:
+                                          ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
                                   }
                                 }
                               }
