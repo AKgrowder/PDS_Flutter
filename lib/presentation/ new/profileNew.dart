@@ -2,9 +2,9 @@
 
 import 'dart:io';
 import 'dart:math';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
@@ -31,7 +31,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ProfileScreen extends StatefulWidget {
   String User_ID;
   String? isFollowing;
-  ProfileScreen({required this.User_ID, required this.isFollowing});
+
+  ProfileScreen({
+    required this.User_ID,
+    required this.isFollowing,
+  });
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -100,10 +104,39 @@ class _ProfileScreenState extends State<ProfileScreen>
   // String? User_ID;
   int? value1;
   bool isDataGet = false;
+  bool isAbourtMe = true;
+  bool AbboutMeShow = true;
   dynamic dataSetup;
   String? User_Module;
   FollowersClassModel? followersClassModel1;
   FollowersClassModel? followersClassModel2;
+  String getTimeDifference(DateTime dateTime) {
+    final difference = DateTime.now().difference(dateTime);
+    if (difference.inDays > 0) {
+      if (difference.inDays == 1) {
+        return '1 day ago';
+      } else if (difference.inDays < 7) {
+        return '${difference.inDays} days ago';
+      } else {
+        final weeks = (difference.inDays / 7).floor();
+        return '$weeks week${weeks == 1 ? '' : 's'} ago';
+      }
+    } else if (difference.inHours > 0) {
+      if (difference.inHours == 1) {
+        return '1 hour ago';
+      } else {
+        return '${difference.inHours} hours ago';
+      }
+    } else if (difference.inMinutes > 0) {
+      if (difference.inMinutes == 1) {
+        return '1 minute ago';
+      } else {
+        return '${difference.inMinutes} minutes ago';
+      }
+    } else {
+      return 'Just now';
+    }
+  }
 
   var arrNotiyTypeList = [
     NotificationModel(
@@ -129,21 +162,19 @@ class _ProfileScreenState extends State<ProfileScreen>
     User_Module = prefs.getString(PreferencesKey.module);
     setState(() {});
 
-    if (User_Module == 'EMPLOYEE') {
-      BlocProvider.of<NewProfileSCubit>(context).get_about_me(context, userId);
-    }
+    BlocProvider.of<NewProfileSCubit>(context).get_about_me(context, userId);
+
     BlocProvider.of<NewProfileSCubit>(context).GetAllSaveBlog(context, userId);
   }
 
   @override
   void initState() {
-    print("fsdfgsdgfsdgfsdg-${widget.User_ID}");
     _tabController = TabController(length: tabData.length, vsync: this);
     BlocProvider.of<NewProfileSCubit>(context)
         .NewProfileSAPI(context, widget.User_ID);
     BlocProvider.of<NewProfileSCubit>(context)
         .getFollwerApi(context, widget.User_ID);
-          BlocProvider.of<NewProfileSCubit>(context)
+    BlocProvider.of<NewProfileSCubit>(context)
         .getAllFollwing(context, widget.User_ID);
     getUserSavedData();
     dataSetup = null;
@@ -178,6 +209,10 @@ class _ProfileScreenState extends State<ProfileScreen>
       }
 
       if (state is AboutMeLoadedState1) {
+        print("this data i will get-->${state.aboutMe.object}");
+        if (state.aboutMe.object?.isNotEmpty == true) {
+          AbboutMeShow = false;
+        }
         aboutMe.text = state.aboutMe.object.toString();
       }
       if (state is saveAllBlogModelLoadedState1) {
@@ -204,9 +239,8 @@ class _ProfileScreenState extends State<ProfileScreen>
         ScaffoldMessenger.of(context).showSnackBar(snackBar); */
         followersClassModel1 = state.followersClassModel;
       }
-      if(state is FollowersClass1){
+      if (state is FollowersClass1) {
         followersClassModel2 = state.followersClassModel1;
-
       }
       if (state is NewProfileSLoadedState) {
         NewProfileData = state.PublicRoomData;
@@ -219,7 +253,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             .GetSavePostAPI(context, "${NewProfileData?.object?.userUid}");
 
         BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
-            context, "${NewProfileData?.object?.userUid}", "desc");
+            context, "${NewProfileData?.object?.userUid}", "asc");
         savedataFuntion(NewProfileData?.object?.userUid ?? '');
         NewProfileData?.object?.industryTypes?.forEach((element) {
           print(element.industryTypeName);
@@ -311,12 +345,26 @@ class _ProfileScreenState extends State<ProfileScreen>
         }
       }
       if (state is AboutMeLoadedState) {
+        isAbourtMe = true;
         isUpDate = false;
+        print("dfgsfgdsfg-${isAbourtMe}");
         SnackBar snackBar = SnackBar(
-          content: Text(state.aboutMe.message.toString()),
+          content: Text('Saved successfully'),
           backgroundColor: ColorConstant.primary_color,
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+      if (state is PostLikeLoadedState) {
+        BlocProvider.of<NewProfileSCubit>(context)
+            .NewProfileSAPI(context, widget.User_ID);
+        if (state.likePost.object != 'Post Liked Successfully' &&
+            state.likePost.object != 'Post Unliked Successfully') {
+          SnackBar snackBar = SnackBar(
+            content: Text(state.likePost.object.toString()),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
       }
     }, builder: (context, state) {
       return Scaffold(
@@ -413,85 +461,93 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                       ),
 
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Flexible(
-                              child: Container(
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color:
-                                      NewProfileData?.object?.approvalStatus ==
-                                              "PARTIALLY_REGISTERED"
-                                          ? Color(0xffB6D9EC)
-                                          : NewProfileData?.object
-                                                      ?.approvalStatus ==
-                                                  "PENDING"
-                                              ? Color(0xffFFDBA8)
-                                              : NewProfileData?.object
-                                                          ?.approvalStatus ==
-                                                      "APPROVED"
-                                                  ? Color(0xffD5EED5)
-                                                  : Color(0xffFFE0E1),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 15, right: 15),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        height: 10,
-                                        width: 10,
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: NewProfileData?.object
+                      User_ID == NewProfileData?.object?.userUid
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 15),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Flexible(
+                                    child: Container(
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: NewProfileData
+                                                    ?.object?.approvalStatus ==
+                                                "PARTIALLY_REGISTERED"
+                                            ? Color(0xffB6D9EC)
+                                            : NewProfileData?.object
                                                         ?.approvalStatus ==
-                                                    "PARTIALLY_REGISTERED"
-                                                ? Color(0xff1A94D7)
+                                                    "PENDING"
+                                                ? Color(0xffFFDBA8)
                                                 : NewProfileData?.object
                                                             ?.approvalStatus ==
-                                                        "PENDING"
-                                                    ? Color(0xffC28432)
-                                                    : NewProfileData?.object
-                                                                ?.approvalStatus ==
-                                                            "APPROVED"
-                                                        ? Color(0xff019801)
-                                                        : Color(0xffFF000B)),
+                                                        "APPROVED"
+                                                    ? Color(0xffD5EED5)
+                                                    : Color(0xffFFE0E1),
                                       ),
-                                      SizedBox(
-                                        width: 10,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 15, right: 15),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Container(
+                                              height: 10,
+                                              width: 10,
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: NewProfileData?.object
+                                                              ?.approvalStatus ==
+                                                          "PARTIALLY_REGISTERED"
+                                                      ? Color(0xff1A94D7)
+                                                      : NewProfileData?.object
+                                                                  ?.approvalStatus ==
+                                                              "PENDING"
+                                                          ? Color(0xffC28432)
+                                                          : NewProfileData
+                                                                      ?.object
+                                                                      ?.approvalStatus ==
+                                                                  "APPROVED"
+                                                              ? Color(
+                                                                  0xff019801)
+                                                              : Color(
+                                                                  0xffFF000B)),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              "Profile ${NewProfileData?.object?.approvalStatus}",
+                                              style: TextStyle(
+                                                  color: NewProfileData?.object
+                                                              ?.approvalStatus ==
+                                                          "PARTIALLY_REGISTERED"
+                                                      ? Color(0xff1A94D7)
+                                                      : NewProfileData?.object
+                                                                  ?.approvalStatus ==
+                                                              "PENDING"
+                                                          ? Color(0xffC28432)
+                                                          : NewProfileData
+                                                                      ?.object
+                                                                      ?.approvalStatus ==
+                                                                  "APPROVED"
+                                                              ? Color(
+                                                                  0xff019801)
+                                                              : Color(
+                                                                  0xffFF000B),
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w600),
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                      Text(
-                                        "Profile ${NewProfileData?.object?.approvalStatus}",
-                                        style: TextStyle(
-                                            color: NewProfileData?.object
-                                                        ?.approvalStatus ==
-                                                    "PARTIALLY_REGISTERED"
-                                                ? Color(0xff1A94D7)
-                                                : NewProfileData?.object
-                                                            ?.approvalStatus ==
-                                                        "PENDING"
-                                                    ? Color(0xffC28432)
-                                                    : NewProfileData?.object
-                                                                ?.approvalStatus ==
-                                                            "APPROVED"
-                                                        ? Color(0xff019801)
-                                                        : Color(0xffFF000B),
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600),
-                                      )
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
+                            )
+                          : SizedBox(),
                       Padding(
                         padding: EdgeInsets.only(top: 20),
                         child: Center(
@@ -616,21 +672,31 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         fontWeight: FontWeight.w500),
                                   ),
                                 )
-                              : Container(
-                                  alignment: Alignment.center,
-                                  height: 45,
-                                  width: _width / 3,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xffED1C25),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Text(
-                                    '${NewProfileData?.object?.isFollowing?.toLowerCase()}',
-                                    style: TextStyle(
-                                        fontFamily: "outfit",
-                                        fontSize: 18,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500),
+                              : GestureDetector(
+                                  onTap: () {
+                                    BlocProvider.of<NewProfileSCubit>(context)
+                                        .followWIngMethod(
+                                            NewProfileData?.object?.userUid
+                                                .toString(),
+                                            context);
+                                    // print(${name[0].toUpperCase()}${name.substring(1).toLowerCase()});
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    height: 45,
+                                    width: _width / 3,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xffED1C25),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Text(
+                                      '${NewProfileData?.object?.isFollowing?.toString()[0].toUpperCase()}${NewProfileData?.object?.isFollowing?.toString().substring(1).toLowerCase()}',
+                                      style: TextStyle(
+                                          fontFamily: "outfit",
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                                   ),
                                 ),
 
@@ -700,19 +766,30 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      if (followersClassModel1
-                                              ?.object?.isNotEmpty ==
-                                          true) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => Followers(
-                                                      appBarName: 'FOLLOWERS',
-                                                      followersClassModel:
-                                                          followersClassModel1!,
-                                                          userId: User_ID,
-                                                    )));
-                                      }
+                                      if (NewProfileData?.object?.isFollowing ==
+                                              'FOLLOWING' ||
+                                          User_ID ==
+                                              NewProfileData?.object?.userUid) {
+                                        if (followersClassModel1
+                                                ?.object?.isNotEmpty ==
+                                            true) {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Followers(
+                                                        // OLLOWERS
+                                                        appBarName: 'Followers',
+                                                        followersClassModel:
+                                                            followersClassModel1!,
+                                                        userId: User_ID,
+                                                      ))).then((value) =>
+                                              BlocProvider.of<NewProfileSCubit>(
+                                                      context)
+                                                  .NewProfileSAPI(
+                                                      context, widget.User_ID));
+                                        }
+                                      } else {}
                                     },
                                     child: Container(
                                       child: Column(
@@ -749,23 +826,28 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     ),
                                   ),
                                   GestureDetector(
-                                     onTap: (){
+                                    onTap: () {
+                                      if (NewProfileData?.object?.isFollowing ==
+                                              'FOLLOWING' ||
+                                          User_ID ==
+                                              NewProfileData?.object?.userUid) {
                                         if (followersClassModel2
-                                                    ?.object?.isNotEmpty ==
-                                                true) {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Followers(
-                                                            appBarName:
-                                                                'FOLLOWING',
-                                                            followersClassModel:
-                                                                followersClassModel2!,
-                                                                  userId: User_ID,
-                                                          )));
-                                            } 
-                                     },
+                                                ?.object?.isNotEmpty ==
+                                            true) {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Followers(
+                                                        // FOLLOWING
+                                                        appBarName: 'Following',
+                                                        followersClassModel:
+                                                            followersClassModel2!,
+                                                        userId: User_ID,
+                                                      ))).then((value) => null);
+                                        }
+                                      } else {}
+                                    },
                                     child: Container(
                                       child: Column(
                                         children: [
@@ -983,61 +1065,66 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 },
                               ),
                             ),
-                            Expanded(
-                              child: GestureDetector(
-                                child: Container(
-                                    height: 40,
-                                    alignment: Alignment.center,
-                                    // color: arrNotiyTypeList[3].isSelected
-                                    //     ? Color(0xFFED1C25)
-                                    //     : Theme.of(context).brightness == Brightness.light
-                                    //         ? Colors.white
-                                    //         : Colors.black,
-                                    child: Center(
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              const Spacer(),
-                                              Text("Saved",
-                                                  textScaleFactor: 1.0,
-                                                  style: TextStyle(
-                                                      // color: arrNotiyTypeList[3].isSelected
-                                                      //     ? Colors.white
-                                                      //     : Colors.black,
-                                                      fontSize: 18,
-                                                      fontFamily: 'Outfit',
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              Spacer(),
-                                            ],
-                                          ),
-                                          arrNotiyTypeList[3].isSelected
-                                              ? Divider(
-                                                  endIndent: 25,
-                                                  indent: 25,
-                                                  color: Colors.black,
-                                                )
-                                              : SizedBox(),
-                                        ],
-                                      ),
-                                    )),
-                                onTap: () {
-                                  setState(() {
-                                    updateType();
-                                    arrNotiyTypeList[3].isSelected = true;
-                                  });
-                                  print("abcd");
-                                },
-                              ),
-                            ),
+                            User_ID == NewProfileData?.object?.userUid
+                                ? Expanded(
+                                    child: GestureDetector(
+                                      child: Container(
+                                          height: 40,
+                                          alignment: Alignment.center,
+                                          // color: arrNotiyTypeList[3].isSelected
+                                          //     ? Color(0xFFED1C25)
+                                          //     : Theme.of(context).brightness == Brightness.light
+                                          //         ? Colors.white
+                                          //         : Colors.black,
+                                          child: Center(
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    const Spacer(),
+                                                    Text("Saved",
+                                                        textScaleFactor: 1.0,
+                                                        style: TextStyle(
+                                                            // color: arrNotiyTypeList[3].isSelected
+                                                            //     ? Colors.white
+                                                            //     : Colors.black,
+                                                            fontSize: 18,
+                                                            fontFamily:
+                                                                'Outfit',
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                    Spacer(),
+                                                  ],
+                                                ),
+                                                arrNotiyTypeList[3].isSelected
+                                                    ? Divider(
+                                                        endIndent: 25,
+                                                        indent: 25,
+                                                        color: Colors.black,
+                                                      )
+                                                    : SizedBox(),
+                                              ],
+                                            ),
+                                          )),
+                                      onTap: () {
+                                        setState(() {
+                                          updateType();
+                                          arrNotiyTypeList[3].isSelected = true;
+                                        });
+                                        print("abcd");
+                                      },
+                                    ),
+                                  )
+                                : SizedBox.shrink(),
                           ],
                         ),
                       if (NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
                           User_ID == NewProfileData?.object?.userUid)
                         Container(
                           // color: Colors.red,
-                          height: arrNotiyTypeList[0].isSelected == true
+                          height: _height,
+                          /* arrNotiyTypeList[0].isSelected == true
                               ? NewProfileData?.object?.module == "EMPLOYEE"
                                   ? _height / 3
                                   : NewProfileData?.object?.module == "EXPERT"
@@ -1055,84 +1142,181 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     ? FinalSavePostCount * 230
                                     : */
                                           SaveBlogCount * 145 + 100
-                                          : 10,
-                          child: Column(
-                            children: <Widget>[
-                              /// Content of Tab 1
-                              arrNotiyTypeList[0].isSelected
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 16, right: 16, top: 14),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          NewProfileData?.object?.module ==
-                                                  "EMPLOYEE"
-                                              ? Card(
-                                                  color: Colors.white,
-                                                  borderOnForeground: true,
-                                                  elevation: 10,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15.0),
-                                                  ),
-                                                  child: ListTile(
-                                                    leading: Container(
-                                                      width: 35,
-                                                      height: 35,
-                                                      decoration:
-                                                          ShapeDecoration(
-                                                        color:
-                                                            Color(0xFFED1C25),
-                                                        shape: OvalBorder(),
-                                                      ),
+                                          : 10, */
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: <Widget>[
+                                /// Content of Tab 1
+                                arrNotiyTypeList[0].isSelected
+                                    ? Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 16, right: 16, top: 14),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            User_ID !=
+                                                    NewProfileData
+                                                        ?.object?.userUid
+                                                ? NewProfileData
+                                                            ?.object?.aboutMe ==
+                                                        null
+                                                    ? SizedBox()
+                                                    : Card(
+                                                        color: Colors.white,
+                                                        borderOnForeground:
+                                                            true,
+                                                        elevation: 10,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      15.0),
+                                                        ),
+                                                        /*  child: expertUser(_height, _width) */
+                                                        child: Column(
+                                                          children: [
+                                                            ListTile(
+                                                              leading:
+                                                                  Container(
+                                                                width: 35,
+                                                                height: 35,
+                                                                decoration:
+                                                                    ShapeDecoration(
+                                                                  color: Color(
+                                                                      0xFFED1C25),
+                                                                  shape:
+                                                                      OvalBorder(),
+                                                                ),
+                                                              ),
+                                                              title: Text(
+                                                                'About Me',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
+                                                              subtitle: Text(
+                                                                '${NewProfileData?.object?.aboutMe}',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontFamily:
+                                                                        "outfit"),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ))
+                                                : Card(
+                                                    color: Colors.white,
+                                                    borderOnForeground: true,
+                                                    elevation: 10,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15.0),
                                                     ),
-                                                    title: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        SizedBox(
-                                                          height: 15,
-                                                        ),
-                                                        Text(
-                                                          'About Me',
-                                                          style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        TextFormField(
-                                                          controller: aboutMe,
-                                                          maxLines: 5,
+                                                    child: ListTile(
+                                                        leading: Container(
+                                                          width: 35,
+                                                          height: 35,
                                                           decoration:
-                                                              InputDecoration(
-                                                            border:
-                                                                OutlineInputBorder(),
+                                                              ShapeDecoration(
+                                                            color: Color(
+                                                                0xFFED1C25),
+                                                            shape: OvalBorder(),
                                                           ),
                                                         ),
-                                                        SizedBox(
-                                                          height: 12,
+                                                        title: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            SizedBox(
+                                                              height: 15,
+                                                            ),
+                                                            Text(
+                                                              'About Me',
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 5,
+                                                            ),
+                                                            AbboutMeShow == true
+                                                                ? Container(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .center,
+                                                                    height: 50,
+                                                                    width:
+                                                                        _width /
+                                                                            2,
+                                                                    decoration: BoxDecoration(
+                                                                        // color: Colors.amber
+                                                                        borderRadius: BorderRadius.circular(10),
+                                                                        border: Border.all(color: Color(0xffEFEFEF))),
+                                                                    child: Text(
+                                                                      'Enter About Me',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              14,
+                                                                          fontWeight: FontWeight
+                                                                              .w300,
+                                                                          color:
+                                                                              Colors.black),
+                                                                    ),
+                                                                  )
+                                                                : TextFormField(
+                                                                    inputFormatters: [
+                                                                      LengthLimitingTextInputFormatter(
+                                                                          500),
+                                                                    ],
+                                                                    readOnly:
+                                                                        isAbourtMe,
+                                                                    controller:
+                                                                        aboutMe,
+                                                                    maxLines: 5,
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      border:
+                                                                          OutlineInputBorder(),
+                                                                    ),
+                                                                  ),
+                                                            //wiil DataGet
+                                                            /*   : */
+                                                            SizedBox(
+                                                              height: 12,
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ],
-                                                    ),
-                                                    trailing:
-                                                        User_ID ==
+                                                        trailing: User_ID !=
                                                                 NewProfileData
                                                                     ?.object
                                                                     ?.userUid
-                                                            ? GestureDetector(
+                                                            ? SizedBox.shrink()
+                                                            : GestureDetector(
                                                                 onTap: () {
                                                                   setState(() {
                                                                     isUpDate =
                                                                         true;
+                                                                    isAbourtMe =
+                                                                        false;
                                                                   });
                                                                 },
                                                                 child: isUpDate ==
@@ -1184,591 +1368,597 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         color: Colors
                                                                             .black,
                                                                       ),
-                                                              )
-                                                            : SizedBox(),
-                                                  ))
-                                              : SizedBox(),
-                                          NewProfileData?.object?.module ==
-                                                  "EXPERT"
-                                              ? Card(
-                                                  color: Colors.white,
-                                                  borderOnForeground: true,
-                                                  elevation: 10,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15.0),
-                                                  ),
-                                                  /*  child: expertUser(_height, _width) */
-                                                  child: expertUser(
-                                                      _height, _width),
-                                                )
-                                              : SizedBox(),
-                                          NewProfileData?.object?.module ==
-                                                  "COMPANY"
-                                              ? Card(
-                                                  color: Colors.white,
-                                                  borderOnForeground: true,
-                                                  elevation: 10,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15.0),
-                                                  ),
-                                                  /*  child: expertUser(_height, _width) */
-                                                  child: compnayUser(
-                                                      _height, _width),
-                                                )
-                                              : SizedBox()
-                                        ],
-                                      ),
-                                    )
-                                  : SizedBox(),
-
-                              /// Content of Tab 2
-                              arrNotiyTypeList[1].isSelected
-                                  ? Container(
-                                      height: FinalPostCount * 190,
-                                      // color: Colors.yellow,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 16, right: 16, top: 14),
-                                        child: GridView.builder(
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          padding: EdgeInsets.zero,
-                                          gridDelegate:
-                                              SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount:
-                                                2, // Number of columns
-                                            mainAxisSpacing:
-                                                0.0, // Vertical spacing between items
-                                            crossAxisSpacing:
-                                                20, // Horizontal spacing between items
-                                          ),
-                                          itemCount:
-                                              GetAllPostData?.object?.length,
-                                          itemBuilder: (context, index) {
-                                            return Padding(
-                                              padding: EdgeInsets.only(
-                                                  bottom: 10, top: 10),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(12.0),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    // OpenSaveImagepostModel
-                                                    print(
-                                                        "Open SavePost Click in one post");
-
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              OpenSavePostImage(
-                                                                PostID: GetAllPostData
-                                                                    ?.object?[
-                                                                        index]
-                                                                    .postUid,
-                                                              )),
-                                                    );
-                                                  },
-                                                  child: Container(
-                                                      margin:
-                                                          EdgeInsets.all(0.0),
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                  20)), // Remove margin
-
-                                                      child: CustomImageView(
-                                                        fit: BoxFit.cover,
-                                                        url:
-                                                            "${GetAllPostData?.object?[index].postData?[0]}",
-                                                      )),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    )
-                                  : SizedBox(),
-
-                              /// Content of Tab 3
-                              arrNotiyTypeList[2].isSelected
-                                  ? Container(
-                                      // color: Colors.green,
-                                      height: CommentsPostCount * 310 + 100,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 16, right: 16, top: 10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              height: 30,
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    width: 150,
-                                                    height: 25,
-                                                    decoration: ShapeDecoration(
-                                                      color: Color(0xFFFBD8D9),
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(100),
-                                                      ),
+                                                              ))),
+                                            NewProfileData?.object?.module ==
+                                                    "EXPERT"
+                                                ? Card(
+                                                    color: Colors.white,
+                                                    borderOnForeground: true,
+                                                    elevation: 10,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15.0),
                                                     ),
-                                                    child:
-                                                        DropdownButtonHideUnderline(
-                                                      child: DropdownButton<
-                                                          String>(
-                                                        // Step 3.
-                                                        value: selctedValue,
-                                                        // Step 4.
-                                                        items: <String>[
-                                                          'Newest to oldest',
-                                                          'oldest to Newest'
-                                                        ].map<
-                                                            DropdownMenuItem<
-                                                                String>>((String
-                                                            value) {
-                                                          return DropdownMenuItem<
-                                                              String>(
-                                                            value: value,
-                                                            child: Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      left: 10),
-                                                              child: Text(
-                                                                value,
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Color(
-                                                                      0xFFF58E92),
-                                                                  fontSize: 14,
-                                                                  fontFamily:
-                                                                      'outfit',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  height: 0,
+                                                    /*  child: expertUser(_height, _width) */
+                                                    child: expertUser(
+                                                        _height, _width),
+                                                  )
+                                                : SizedBox(),
+                                            NewProfileData?.object?.module ==
+                                                    "COMPANY"
+                                                ? Card(
+                                                    color: Colors.white,
+                                                    borderOnForeground: true,
+                                                    elevation: 10,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15.0),
+                                                    ),
+                                                    /*  child: expertUser(_height, _width) */
+                                                    child: compnayUser(
+                                                        _height, _width),
+                                                  )
+                                                : SizedBox()
+                                          ],
+                                        ),
+                                      )
+                                    : SizedBox(),
+
+                                /// Content of Tab 2
+                                arrNotiyTypeList[1].isSelected
+                                    ? Container(
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                1,
+                                        // color: Colors.yellow,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 16, right: 16, top: 14),
+                                          child: GridView.builder(
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            padding: EdgeInsets.zero,
+                                            gridDelegate:
+                                                SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount:
+                                                  2, // Number of columns
+                                              mainAxisSpacing:
+                                                  0.0, // Vertical spacing between items
+                                              crossAxisSpacing:
+                                                  20, // Horizontal spacing between items
+                                            ),
+                                            itemCount:
+                                                GetAllPostData?.object?.length,
+                                            itemBuilder: (context, index) {
+                                              return Padding(
+                                                padding: EdgeInsets.only(
+                                                    bottom: 10, top: 10),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12.0),
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      // OpenSaveImagepostModel
+                                                      print(
+                                                          "Open SavePost Click in one post");
+
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                OpenSavePostImage(
+                                                                  PostID: GetAllPostData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .postUid,
+                                                                )),
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                        margin:
+                                                            EdgeInsets.all(0.0),
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20)), // Remove margin
+
+                                                        child: CustomImageView(
+                                                          fit: BoxFit.cover,
+                                                          url:
+                                                              "${GetAllPostData?.object?[index].postData?[0]}",
+                                                        )),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox(),
+
+                                /// Content of Tab 3
+                                arrNotiyTypeList[2].isSelected
+                                    ? Container(
+                                        height: _height * 70,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 16, right: 16, top: 0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                height: 30,
+                                                child: Row(
+                                                  children: [
+                                                    Container(
+                                                      width: 150,
+                                                      height: 25,
+                                                      decoration:
+                                                          ShapeDecoration(
+                                                        color:
+                                                            Color(0xFFFBD8D9),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      100),
+                                                        ),
+                                                      ),
+                                                      child:
+                                                          DropdownButtonHideUnderline(
+                                                        child: DropdownButton<
+                                                            String>(
+                                                          // Step 3.
+                                                          value: selctedValue,
+                                                          // Step 4.
+                                                          items: <String>[
+                                                            'Newest to oldest',
+                                                            'oldest to Newest'
+                                                          ].map<
+                                                              DropdownMenuItem<
+                                                                  String>>((String
+                                                              value) {
+                                                            return DropdownMenuItem<
+                                                                String>(
+                                                              value: value,
+                                                              child: Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        left:
+                                                                            10),
+                                                                child: Text(
+                                                                  value,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Color(
+                                                                        0xFFF58E92),
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontFamily:
+                                                                        'outfit',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    height: 0,
+                                                                  ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                          );
-                                                        }).toList(),
-                                                        // Step 5.
-                                                        onChanged:
-                                                            (String? newValue) {
-                                                          setState(() {
-                                                            if (newValue ==
-                                                                "Newest to oldest") {
-                                                              BlocProvider.of<
-                                                                          NewProfileSCubit>(
-                                                                      context)
-                                                                  .GetPostCommetAPI(
-                                                                      context,
-                                                                      "${NewProfileData?.object?.userUid}",
-                                                                      "desc");
-                                                            } else if (newValue ==
-                                                                "oldest to Newest") {
-                                                              BlocProvider.of<
-                                                                          NewProfileSCubit>(
-                                                                      context)
-                                                                  .GetPostCommetAPI(
-                                                                      context,
-                                                                      "${NewProfileData?.object?.userUid}",
-                                                                      "asc");
-                                                            }
-                                                            selctedValue =
-                                                                newValue!;
-                                                          });
-                                                        },
+                                                            );
+                                                          }).toList(),
+                                                          // Step 5.
+                                                          onChanged: (String?
+                                                              newValue) {
+                                                            setState(() {
+                                                              if (newValue ==
+                                                                  "Newest to oldest") {
+                                                                BlocProvider.of<
+                                                                            NewProfileSCubit>(
+                                                                        context)
+                                                                    .GetPostCommetAPI(
+                                                                        context,
+                                                                        "${NewProfileData?.object?.userUid}",
+                                                                        "asc"); //asc
+                                                              } else if (newValue ==
+                                                                  "oldest to Newest") {
+                                                                BlocProvider.of<
+                                                                            NewProfileSCubit>(
+                                                                        context)
+                                                                    .GetPostCommetAPI(
+                                                                        context,
+                                                                        "${NewProfileData?.object?.userUid}",
+                                                                        "desc");
+                                                              }
+                                                              selctedValue =
+                                                                  newValue!;
+                                                            });
+                                                          },
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  /* SizedBox(
-                                          width: 10,
-                                        ),
-                                        Container(
-                                          width: 110,
-                                          height: 25,
-                                          decoration: ShapeDecoration(
-                                            color: Color(0xFFFBD8D9),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                            ),
+                                                    /* SizedBox(
+                                            width: 10,
                                           ),
-                                          child: DropdownButtonHideUnderline(
-                                            child: DropdownButton<String>(
-                                              // Step 3.
-                                              value: selctedValue1,
-                                              // Step 4.
-                                              items: <String>[
-                                                'All Date',
-                                                '1',
-                                                '2',
-                                                '3',
-                                                '4'
-                                              ].map<DropdownMenuItem<String>>(
-                                                  (String value) {
-                                                return DropdownMenuItem<String>(
-                                                  value: value,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 12),
-                                                    child: Text(
-                                                      value,
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xFFF58E92),
-                                                        fontSize: 14,
-                                                        fontFamily: 'outfit',
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        height: 0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              }).toList(),
-                                              // Step 5.
-                                              onChanged: (String? newValue) {
-                                                setState(() {
-                                                  selctedValue1 = newValue!;
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Container(
-                                          width: 100,
-                                          height: 25,
-                                          decoration: ShapeDecoration(
-                                            color: Color(0xFFFBD8D9),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                            ),
-                                          ),
-                                          child: DropdownButtonHideUnderline(
-                                            child: DropdownButton<String>(
-                                              // Step 3.
-                                              value: selctedValue2,
-                                              // Step 4.
-                                              items: <String>[
-                                                'All Users',
-                                                '1',
-                                                '2',
-                                                '3',
-                                                '4'
-                                              ].map<DropdownMenuItem<String>>(
-                                                  (String value) {
-                                                return DropdownMenuItem<String>(
-                                                  value: value,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 12),
-                                                    child: Text(
-                                                      value,
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xFFF58E92),
-                                                        fontSize: 14,
-                                                        fontFamily: 'outfit',
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        height: 0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              }).toList(),
-                                              // Step 5.
-                                              onChanged: (String? newValue) {
-                                                setState(() {
-                                                  selctedValue = newValue!;
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                        ), */
-                                                ],
+                                          Container(
+                                            width: 110,
+                                            height: 25,
+                                            decoration: ShapeDecoration(
+                                              color: Color(0xFFFBD8D9),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
                                               ),
                                             ),
-                                            Expanded(
-                                              child: ListView.builder(
-                                                physics:
-                                                    NeverScrollableScrollPhysics(),
-                                                itemCount: GetUserPostCommetData
-                                                    ?.object?.length,
-                                                itemBuilder: (context, index) {
-                                                  return Center(
+                                            child: DropdownButtonHideUnderline(
+                                              child: DropdownButton<String>(
+                                                // Step 3.
+                                                value: selctedValue1,
+                                                // Step 4.
+                                                items: <String>[
+                                                  'All Date',
+                                                  '1',
+                                                  '2',
+                                                  '3',
+                                                  '4'
+                                                ].map<DropdownMenuItem<String>>(
+                                                    (String value) {
+                                                  return DropdownMenuItem<String>(
+                                                    value: value,
                                                     child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              bottom: 10),
-                                                      child: GestureDetector(
-                                                        onTap: () {
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        OpenSavePostImage(
-                                                                          PostID: GetUserPostCommetData
-                                                                              ?.object?[index]
-                                                                              .postUid,
-                                                                          profileTure:
-                                                                              true,
-                                                                        )),
-                                                          );
-                                                        },
-                                                        child: ConstrainedBox(
-                                                          constraints:
-                                                              BoxConstraints(
-                                                                  maxHeight:
-                                                                      300,
-                                                                  maxWidth:
-                                                                      _width),
-                                                          child: Container(
-                                                            decoration:
-                                                                ShapeDecoration(
-                                                              // color: Colors.green,
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                side: BorderSide(
-                                                                    width: 1,
-                                                                    color: Color(
-                                                                        0xFFD3D3D3)),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10),
+                                                      padding: EdgeInsets.only(
+                                                          left: 12),
+                                                      child: Text(
+                                                        value,
+                                                        style: TextStyle(
+                                                          color:
+                                                              Color(0xFFF58E92),
+                                                          fontSize: 14,
+                                                          fontFamily: 'outfit',
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          height: 0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                }).toList(),
+                                                // Step 5.
+                                                onChanged: (String? newValue) {
+                                                  setState(() {
+                                                    selctedValue1 = newValue!;
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Container(
+                                            width: 100,
+                                            height: 25,
+                                            decoration: ShapeDecoration(
+                                              color: Color(0xFFFBD8D9),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                              ),
+                                            ),
+                                            child: DropdownButtonHideUnderline(
+                                              child: DropdownButton<String>(
+                                                // Step 3.
+                                                value: selctedValue2,
+                                                // Step 4.
+                                                items: <String>[
+                                                  'All Users',
+                                                  '1',
+                                                  '2',
+                                                  '3',
+                                                  '4'
+                                                ].map<DropdownMenuItem<String>>(
+                                                    (String value) {
+                                                  return DropdownMenuItem<String>(
+                                                    value: value,
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 12),
+                                                      child: Text(
+                                                        value,
+                                                        style: TextStyle(
+                                                          color:
+                                                              Color(0xFFF58E92),
+                                                          fontSize: 14,
+                                                          fontFamily: 'outfit',
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          height: 0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                }).toList(),
+                                                // Step 5.
+                                                onChanged: (String? newValue) {
+                                                  setState(() {
+                                                    selctedValue = newValue!;
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                          ), */
+                                                  ],
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: ListView.builder(
+                                                  physics:
+                                                      NeverScrollableScrollPhysics(),
+                                                  itemCount:
+                                                      GetUserPostCommetData
+                                                          ?.object?.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    DateTime parsedDateTime =
+                                                        DateTime.parse(
+                                                            '${GetUserPostCommetData?.object?[index].createdAt ?? ""}');
+                                                    return Center(
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                bottom: 10),
+                                                        child: GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          OpenSavePostImage(
+                                                                            PostID:
+                                                                                GetUserPostCommetData?.object?[index].postUid,
+                                                                            profileTure:
+                                                                                true,
+                                                                          )),
+                                                            );
+                                                          },
+                                                          child: ConstrainedBox(
+                                                            constraints:
+                                                                BoxConstraints(
+                                                                    maxHeight:
+                                                                        300,
+                                                                    maxWidth:
+                                                                        _width),
+                                                            child: Container(
+                                                              decoration:
+                                                                  ShapeDecoration(
+                                                                // color: Colors.green,
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  side: BorderSide(
+                                                                      width: 1,
+                                                                      color: Color(
+                                                                          0xFFD3D3D3)),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10),
+                                                                ),
                                                               ),
-                                                            ),
-                                                            child: Column(
-                                                              children: [
-                                                                Expanded(
-                                                                  child: Container(
-                                                                      // color: Colors.amber,
-                                                                      child: Row(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Container(
-                                                                        width:
-                                                                            50,
-                                                                        height:
-                                                                            50,
-                                                                        margin: EdgeInsets.only(
-                                                                            left:
-                                                                                5,
-                                                                            top:
-                                                                                10),
-                                                                        child:
-                                                                            CircleAvatar(
-                                                                          backgroundImage:
-                                                                              NetworkImage("${GetUserPostCommetData?.object?[index].userProfilePic}"),
-                                                                          radius:
-                                                                              25,
-                                                                        ),
-                                                                        // decoration:
-                                                                        //     ShapeDecoration(
-                                                                        //   image:
-                                                                        //       DecorationImage(
-                                                                        //     image: AssetImage(
-                                                                        //         ImageConstant
-                                                                        //             .placeholder2),1
-                                                                        //     fit: BoxFit.fill,
-                                                                        //   ),
-                                                                        //   shape: OvalBorder(),
-                                                                        // ),
-                                                                      ),
-                                                                      Column(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          SizedBox(
-                                                                            height:
-                                                                                15,
+                                                              child: Column(
+                                                                children: [
+                                                                  Expanded(
+                                                                    child: Container(
+                                                                        // color: Colors.amber,
+                                                                        child: Row(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Container(
+                                                                          width:
+                                                                              50,
+                                                                          height:
+                                                                              50,
+                                                                          margin: EdgeInsets.only(
+                                                                              left: 5,
+                                                                              top: 10),
+                                                                          child:
+                                                                              CircleAvatar(
+                                                                            backgroundImage:
+                                                                                NetworkImage("${GetUserPostCommetData?.object?[index].userProfilePic}"),
+                                                                            radius:
+                                                                                25,
                                                                           ),
-                                                                          Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.only(left: 10),
-                                                                            child:
-                                                                                Text(
-                                                                              '${GetUserPostCommetData?.object?[index].postUserName}',
-                                                                              style: TextStyle(
-                                                                                color: Colors.black,
-                                                                                fontSize: 16,
-                                                                                fontFamily: 'outfit',
-                                                                                fontWeight: FontWeight.w600,
+                                                                          // decoration:
+                                                                          //     ShapeDecoration(
+                                                                          //   image:
+                                                                          //       DecorationImage(
+                                                                          //     image: AssetImage(
+                                                                          //         ImageConstant
+                                                                          //             .placeholder2),1
+                                                                          //     fit: BoxFit.fill,
+                                                                          //   ),
+                                                                          //   shape: OvalBorder(),
+                                                                          // ),
+                                                                        ),
+                                                                        Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            SizedBox(
+                                                                              height: 15,
+                                                                            ),
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.only(left: 10),
+                                                                              child: Text(
+                                                                                '${GetUserPostCommetData?.object?[index].postUserName}',
+                                                                                style: TextStyle(
+                                                                                  color: Colors.black,
+                                                                                  fontSize: 16,
+                                                                                  fontFamily: 'outfit',
+                                                                                  fontWeight: FontWeight.w600,
+                                                                                ),
                                                                               ),
                                                                             ),
-                                                                          ),
-                                                                          Expanded(
-                                                                            child:
-                                                                                Container(
-                                                                              margin: EdgeInsets.only(left: 10),
-                                                                              width: _width - 100,
+                                                                            Expanded(
+                                                                              child: Container(
+                                                                                margin: EdgeInsets.only(left: 10),
+                                                                                width: _width - 100,
 
-                                                                              // color: Colors.red,
-                                                                              child: Column(
-                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                children: [
-                                                                                  Text(
-                                                                                    '${GetUserPostCommetData?.object?[index].description}',
-                                                                                    style: TextStyle(
-                                                                                      color: Colors.black,
-                                                                                      fontSize: 14,
-                                                                                      fontFamily: 'outfit',
-                                                                                      fontWeight: FontWeight.w400,
+                                                                                // color: Colors.red,
+                                                                                child: Column(
+                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                  children: [
+                                                                                    GetUserPostCommetData?.object?[index].description != null
+                                                                                        ? Text(
+                                                                                            '${GetUserPostCommetData?.object?[index].description}',
+                                                                                            style: TextStyle(
+                                                                                              color: Colors.black,
+                                                                                              fontSize: 14,
+                                                                                              fontFamily: 'outfit',
+                                                                                              fontWeight: FontWeight.w400,
+                                                                                            ),
+                                                                                          )
+                                                                                        : SizedBox(),
+                                                                                    Text(
+                                                                                      getTimeDifference(parsedDateTime),
+                                                                                      style: TextStyle(
+                                                                                        fontSize: 12,
+                                                                                        fontFamily: "outfit",
+                                                                                      ),
                                                                                     ),
-                                                                                  ),
-                                                                                  Text(
-                                                                                    '1w',
-                                                                                    style: TextStyle(
-                                                                                      color: Color(0xFF8F8F8F),
-                                                                                      fontSize: 12,
-                                                                                      fontFamily: 'outfit',
-                                                                                      fontWeight: FontWeight.w400,
-                                                                                    ),
-                                                                                  ),
-                                                                                  Expanded(
-                                                                                    child: ListView.builder(
-                                                                                        padding: EdgeInsets.zero,
-                                                                                        shrinkWrap: true,
-                                                                                        physics: NeverScrollableScrollPhysics(),
-                                                                                        itemCount: GetUserPostCommetData?.object?[index].comments?.length == null ? 0 : ((GetUserPostCommetData?.object?[index].comments?.length ?? 0) > 2 ? 2 : GetUserPostCommetData?.object?[index].comments?.length),
-                                                                                        itemBuilder: (context, index2) {
-                                                                                          return Row(
-                                                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                            children: [
-                                                                                              Container(
-                                                                                                width: 45,
-                                                                                                height: 45,
-                                                                                                margin: EdgeInsets.only(top: 15),
-                                                                                                child: CircleAvatar(
-                                                                                                  backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].comments?[index2].profilePic}"),
-                                                                                                  radius: 25,
+                                                                                    Expanded(
+                                                                                      child: ListView.builder(
+                                                                                          padding: EdgeInsets.zero,
+                                                                                          shrinkWrap: true,
+                                                                                          physics: NeverScrollableScrollPhysics(),
+                                                                                          itemCount: GetUserPostCommetData?.object?[index].comments?.length == null ? 0 : ((GetUserPostCommetData?.object?[index].comments?.length ?? 0) > 2 ? 2 : GetUserPostCommetData?.object?[index].comments?.length),
+                                                                                          itemBuilder: (context, index2) {
+                                                                                            DateTime parsedDateTime2 = DateTime.parse('${GetUserPostCommetData?.object?[index].comments?[index2].createdAt}');
+                                                                                            return Row(
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Container(
+                                                                                                  width: 45,
+                                                                                                  height: 45,
+                                                                                                  margin: EdgeInsets.only(top: 15),
+                                                                                                  child: CircleAvatar(
+                                                                                                    backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].comments?[index2].profilePic}"),
+                                                                                                    radius: 25,
+                                                                                                  ),
                                                                                                 ),
-                                                                                              ),
-                                                                                              Padding(
-                                                                                                padding: const EdgeInsets.only(left: 8, top: 5, right: 3),
-                                                                                                child: Column(
-                                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                  children: [
-                                                                                                    SizedBox(
-                                                                                                      height: 10,
-                                                                                                    ),
-                                                                                                    Text(
-                                                                                                      '${GetUserPostCommetData?.object?[index].comments?[index2].userName}',
-                                                                                                      style: TextStyle(
-                                                                                                        color: Colors.black,
-                                                                                                        fontSize: 16,
-                                                                                                        fontFamily: "outfit",
-                                                                                                        fontWeight: FontWeight.w600,
+                                                                                                Padding(
+                                                                                                  padding: const EdgeInsets.only(left: 8, top: 5, right: 3),
+                                                                                                  child: Column(
+                                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                    children: [
+                                                                                                      SizedBox(
+                                                                                                        height: 10,
                                                                                                       ),
-                                                                                                    ),
-                                                                                                    Container(
-                                                                                                      width: _width / 1.7,
-                                                                                                      child: Text(
-                                                                                                        '${GetUserPostCommetData?.object?[index].comments?[index2].comment}',
-                                                                                                        // maxLines: 1,
+                                                                                                      Text(
+                                                                                                        '${GetUserPostCommetData?.object?[index].comments?[index2].userName}',
                                                                                                         style: TextStyle(
-                                                                                                          // overflow: TextOverflow.ellipsis,
                                                                                                           color: Colors.black,
                                                                                                           fontSize: 16,
                                                                                                           fontFamily: "outfit",
                                                                                                           fontWeight: FontWeight.w600,
                                                                                                         ),
                                                                                                       ),
-                                                                                                    ),
-                                                                                                    Text(
-                                                                                                      '1w',
-                                                                                                      style: TextStyle(
-                                                                                                        color: Color(0xFF8F8F8F),
-                                                                                                        fontSize: 12,
-                                                                                                        fontFamily: "outfit",
-                                                                                                        fontWeight: FontWeight.w400,
+                                                                                                      Container(
+                                                                                                        width: _width / 1.7,
+                                                                                                        child: Text(
+                                                                                                          '${GetUserPostCommetData?.object?[index].comments?[index2].comment}',
+                                                                                                          // maxLines: 1,
+                                                                                                          style: TextStyle(
+                                                                                                            // overflow: TextOverflow.ellipsis,
+                                                                                                            color: Colors.black,
+                                                                                                            fontSize: 16,
+                                                                                                            fontFamily: "outfit",
+                                                                                                            fontWeight: FontWeight.w600,
+                                                                                                          ),
+                                                                                                        ),
                                                                                                       ),
-                                                                                                    )
-                                                                                                  ],
-                                                                                                ),
-                                                                                              )
-                                                                                            ],
-                                                                                          );
-                                                                                        }),
-                                                                                  )
-                                                                                ],
+                                                                                                      Text(
+                                                                                                        getTimeDifference(parsedDateTime2),
+                                                                                                        style: TextStyle(
+                                                                                                          fontSize: 12,
+                                                                                                          fontFamily: "outfit",
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                    ],
+                                                                                                  ),
+                                                                                                )
+                                                                                              ],
+                                                                                            );
+                                                                                          }),
+                                                                                    )
+                                                                                  ],
+                                                                                ),
                                                                               ),
                                                                             ),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                      /* Container(
-                                                              width: 60,
-                                                              height: 60,
-                                                              margin:
-                                                                  EdgeInsets.only(
-                                                                      left: 10,
-                                                                      top: 5),
-                                                              decoration:
-                                                                  ShapeDecoration(
-                                                                image:
-                                                                    DecorationImage(
-                                                                  image: NetworkImage(
-                                                                      "${GetUserPostCommetData?.object?[index].postData?[0]}"),
-                                                                  fit: BoxFit.cover,
+                                                                          ],
+                                                                        ),
+                                                                        /* Container(
+                                                                width: 60,
+                                                                height: 60,
+                                                                margin:
+                                                                    EdgeInsets.only(
+                                                                        left: 10,
+                                                                        top: 5),
+                                                                decoration:
+                                                                    ShapeDecoration(
+                                                                  image:
+                                                                      DecorationImage(
+                                                                    image: NetworkImage(
+                                                                        "${GetUserPostCommetData?.object?[index].postData?[0]}"),
+                                                                    fit: BoxFit.cover,
+                                                                  ),
+                                                                  shape: RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius
+                                                                              .circular(
+                                                                                  4)),
                                                                 ),
-                                                                shape: RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                                4)),
+                                                              ), */
+                                                                      ],
+                                                                    )),
+                                                                  ),
+                                                                ],
                                                               ),
-                                                            ), */
-                                                                    ],
-                                                                  )),
-                                                                ),
-                                                              ],
                                                             ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            )
-                                          ],
+                                                    );
+                                                  },
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  : SizedBox(),
+                                      )
+                                    : SizedBox(),
 
-                              /// Content of Tab 4
+                                /// Content of Tab 4
 
-                              arrNotiyTypeList[3].isSelected
-                                  ? Container(
-                                      height: /*  value1 == 0
-                                ? FinalSavePostCount * 230
-                                :  */
-                                          SaveBlogCount * 145 + 100,
-                                      // color: Colors.green,
-                                      child: DefaultTabController(
-                                        length: SaveList.length,
+                                arrNotiyTypeList[3].isSelected
+                                    ? Container(
+                                        height: _height,
+                                        // color: Colors.amber,
+
+                                        /*  value1 == 0
+                                  ? FinalSavePostCount * 230
+                                  :  */
+                                        // SaveBlogCount * 145 + 100,
+                                        // color: Colors.green,
                                         child: Padding(
                                           padding: EdgeInsets.only(top: 10),
                                           child: Column(
@@ -1848,10 +2038,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             ],
                                           ),
                                         ),
-                                      ),
-                                    )
-                                  : SizedBox(),
-                            ],
+                                      )
+                                    : SizedBox(),
+                              ],
+                            ),
                           ),
                         ),
                       SizedBox(
@@ -1912,20 +2102,23 @@ class _ProfileScreenState extends State<ProfileScreen>
         ),
       ));
     } else {
-      return Expanded(
-        child: ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: saveAllBlogModelData?.object?.length,
-          itemBuilder: (context, index) {
-            parsedDateTimeBlogs = DateTime.parse(
-                '${saveAllBlogModelData?.object?[index].createdAt ?? ""}');
-            return Container(
-              height: 150,
-              // color: Colors.red,
-              child: Padding(
-                padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                child: Center(
-                  child: GestureDetector(
+      return Padding(
+        padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: List.generate(saveAllBlogModelData?.object?.length ?? 0,
+                (index) {
+              parsedDateTimeBlogs = DateTime.parse(
+                  '${saveAllBlogModelData?.object?[index].createdAt ?? ""}');
+              return Container(
+                margin: EdgeInsets.only(bottom: 10),
+                height: 150,
+                // color: Colors.amber,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Color(0xffF1F1F1))),
+                child: GestureDetector(
                     onTap: () {
                       Navigator.push(
                           context,
@@ -1945,188 +2138,180 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     ""),
                           ));
                     },
-                    child: Container(
-                      height: 140,
-                      decoration: BoxDecoration(
-                          // color: Colors.green,
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: Colors.grey, width: 0.5)),
-                      child: Padding(
-                        padding: EdgeInsets.all(5.0),
-                        child: Row(
-                          children: [
-                            Stack(
-                              children: [
-                                CustomImageView(
-                                  url:
-                                      "${saveAllBlogModelData?.object?[index].image}",
-                                  width: 135,
-                                  height: 135,
-                                ),
-                                // Image.asset(
-                                //   ImageConstant.dummyImage,
-                                //   width: 135,
-                                // ),
-                                GestureDetector(
-                                  onTap: () {
-                                    print("Unsave Button");
-
-                                    BlocProvider.of<NewProfileSCubit>(context)
-                                        .ProfileSaveBlog(context, "${User_ID}",
-                                            "${saveAllBlogModelData?.object?[index].uid}");
-
-                                    if (saveAllBlogModelData
-                                            ?.object?[index].isSaved ==
-                                        true) {
-                                      saveAllBlogModelData?.object
-                                          ?.removeAt(index);
-                                      setState(() {
-                                        SaveBlogCount = saveAllBlogModelData
-                                                ?.object?.length ??
-                                            0;
-                                      });
-                                    }
-                                  },
-                                  child: Positioned(
-                                      top: 8,
-                                      left: 8,
-                                      child: Container(
-                                        height: 25,
-                                        width: 25,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            color: Colors.white),
-                                        child: Center(
-                                            child: Padding(
-                                          padding: const EdgeInsets.all(5.0),
-                                          child: Image.asset(
-                                            saveAllBlogModelData?.object?[index]
-                                                        .isSaved ==
-                                                    false
-                                                ? ImageConstant.savePin
-                                                : ImageConstant.Savefill,
-                                            width: 12.5,
-                                          ),
-                                        )),
-                                      )),
-                                )
-                              ],
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, top: 10),
+                          child: Container(
+                            width: 135,
+                            height: 135,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 5),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            "G${saveAllBlogModelData?.object?[index].title}",
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.black),
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            "${saveAllBlogModelData?.object?[index].description}",
-                                            maxLines: 3,
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.grey),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          customFormat(parsedDateTimeBlogs!),
-                                          style: TextStyle(
-                                              fontSize: 9.5,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.grey),
-                                        ),
-                                        // Text(
-                                        //   "10:47 pm",
-                                        //   style: TextStyle(
-                                        //       fontSize: 9.5,
-                                        //       fontWeight: FontWeight.w400,
-                                        //       color: Colors.grey),
-                                        // ),
+                            child: CustomImageView(
+                              url:
+                                  "${saveAllBlogModelData?.object?[index].image}",
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width / 1.73,
+                          // color: Colors.amber,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Text(
+                                  "G${saveAllBlogModelData?.object?[index].title}",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Text(
+                                  "${saveAllBlogModelData?.object?[index].description}",
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.grey),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 10),
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        customFormat(parsedDateTimeBlogs!),
+                                        style: TextStyle(
+                                            fontSize: 9.5,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.grey),
+                                      ),
+                                      // Text(
+                                      //   "10:47 pm",
+                                      //   style: TextStyle(
+                                      //       fontSize: 9.5,
+                                      //       fontWeight: FontWeight.w400,
+                                      //       color: Colors.grey),
+                                      // ),
 
-                                        Text(
-                                          " ",
-                                          style: TextStyle(
-                                              fontSize: 9.5,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.grey),
-                                        ),
-                                        Spacer(),
-                                        GestureDetector(
+                                      Text(
+                                        " ",
+                                        style: TextStyle(
+                                            fontSize: 9.5,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.grey),
+                                      ),
+                                      Spacer(),
+                                      GestureDetector(
+                                        onTap: () {
+                                          print("click on Blog like button");
+
+                                          BlocProvider.of<NewProfileSCubit>(
+                                                  context)
+                                              .ProfileLikeBlog(
+                                                  context,
+                                                  "${User_ID}",
+                                                  "${saveAllBlogModelData?.object?[index].uid}");
+                                          if (saveAllBlogModelData
+                                                  ?.object?[index].isLiked ==
+                                              false) {
+                                            saveAllBlogModelData
+                                                ?.object?[index].isLiked = true;
+                                          } else {
+                                            saveAllBlogModelData?.object?[index]
+                                                .isLiked = false;
+                                          }
+                                        },
+                                        child: saveAllBlogModelData
+                                                    ?.object?[index].isLiked ==
+                                                false
+                                            ? Icon(Icons.favorite_border)
+                                            : Icon(
+                                                Icons.favorite,
+                                                color: Colors.red,
+                                              ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      GestureDetector(
                                           onTap: () {
-                                            print("click on Blog like button");
+                                            print("Unsave Button");
 
                                             BlocProvider.of<NewProfileSCubit>(
                                                     context)
-                                                .ProfileLikeBlog(
+                                                .ProfileSaveBlog(
                                                     context,
                                                     "${User_ID}",
                                                     "${saveAllBlogModelData?.object?[index].uid}");
+
                                             if (saveAllBlogModelData
-                                                    ?.object?[index].isLiked ==
-                                                false) {
-                                              saveAllBlogModelData
-                                                  ?.object?[index]
-                                                  .isLiked = true;
-                                            } else {
-                                              saveAllBlogModelData
-                                                  ?.object?[index]
-                                                  .isLiked = false;
+                                                    ?.object?[index].isSaved ==
+                                                true) {
+                                              saveAllBlogModelData?.object
+                                                  ?.removeAt(index);
+                                              setState(() {
+                                                SaveBlogCount =
+                                                    saveAllBlogModelData
+                                                            ?.object?.length ??
+                                                        0;
+                                              });
                                             }
                                           },
-                                          child: saveAllBlogModelData
-                                                      ?.object?[index]
-                                                      .isLiked ==
-                                                  false
-                                              ? Icon(Icons.favorite_border)
-                                              : Icon(
-                                                  Icons.favorite,
-                                                  color: Colors.red,
-                                                ),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Image.asset(
-                                          ImageConstant.arrowright,
-                                          height: 15,
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
+                                          child: Container(
+                                            height: 25,
+                                            width: 25,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                color: Colors.white),
+                                            child: Center(
+                                                child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: Image.asset(
+                                                saveAllBlogModelData
+                                                            ?.object?[index]
+                                                            .isSaved ==
+                                                        false
+                                                    ? ImageConstant.savePin
+                                                    : ImageConstant.Savefill,
+                                                width: 12.5,
+                                              ),
+                                            )),
+                                          )),
+                                    ]),
                               ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
+                            ],
+                          ),
+                        )
+                      ],
+                    )),
+              );
+            })),
       );
     }
   }

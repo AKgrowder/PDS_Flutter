@@ -30,7 +30,7 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.packagingdepot.store/";
           // "https://packagingdepot.store/";
-          "http://192.168.29.100:8081/";
+          "http://192.168.29.17:8081/";
     }
 
     print(baseURL);
@@ -68,7 +68,7 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           //  "https://uatapi.packagingdepot.store/";
           // "https://packagingdepot.store/";
-          "http://192.168.29.100:8081/";
+          "http://192.168.29.17:8081/";
     }
     final hasInternet = await checkInternet();
     if (hasInternet == true) {
@@ -250,7 +250,7 @@ class ApiServices {
   }
 
   multipartFileUserprofile(String APIurl, File imageFile, BuildContext context,
-      {bool? ImageDatasetup}) async {
+      {bool? ImageDatasetup, String? imageDataType}) async {
     await UpdateBaseURL();
     var headers1 = {
       'Content-Type': 'application/json',
@@ -262,8 +262,13 @@ class ApiServices {
     response.headers.addAll(headers1);
     print("API =>******${baseURL + APIurl}");
     if (imageFile != null) {
-      response.files
-          .add(await http.MultipartFile.fromPath('document', imageFile.path));
+      if (imageDataType?.isNotEmpty == true) {
+        response.files
+            .add(await http.MultipartFile.fromPath('image', imageFile.path));
+      } else {
+        response.files
+            .add(await http.MultipartFile.fromPath('document', imageFile.path));
+      }
     }
     var res = await response.send();
     print('responce stauscode-${res.statusCode.toString()}');
