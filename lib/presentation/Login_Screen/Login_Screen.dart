@@ -301,7 +301,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 top: 41,
                               ),
                               child: Text(
-                                "User Id / Mobile Number",
+                                "User ID / Mobile Number",
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
