@@ -353,7 +353,7 @@ class _SettingScreenState extends State<SettingScreen> {
                               }));
                               break;
                             case 6:
-                              Share.share('https://play.google.com/store/apps/details?id=com.pds.app');
+                              Share.share('https://play.google.com/');
                               // Navigator.push(context,
                               //     MaterialPageRoute(builder: (context) {
                               //   return RoomDetailScreen();

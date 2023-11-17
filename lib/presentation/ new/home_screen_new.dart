@@ -300,9 +300,11 @@ String? IosMainversion;
       });
 }
 
-AlertSoftUpdate() {
+AlertSoftUpdate() async{
+
   var height = MediaQuery.of(context).size.height;
   var width = MediaQuery.of(context).size.width;
+
   showDialog(
       context: context,
       barrierDismissible: false,
@@ -424,9 +426,9 @@ SetUi() async {
   // prefs.setString(PreferencesKey.module, user_Module);
   // prefs.setString(PreferencesKey.UserProfile, User_profile);
 
-  prefs.setString(PreferencesKey.appApkRouteVersion, "1");
+  prefs.setString(PreferencesKey.appApkRouteVersion, "2");
   prefs.setString(PreferencesKey.appApkLatestVersion, "1");
-  prefs.setString(PreferencesKey.appApkMinVersion, "2");
+  prefs.setString(PreferencesKey.appApkMinVersion, "1");
 
   prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
   prefs.setString(PreferencesKey.IPAIosRoutVersion, "1");
@@ -522,11 +524,12 @@ VersionControll() async {
   ipaIosRoutVersion = prefs.getString(PreferencesKey.IPAIosRoutVersion);
   ipaIosMainversion = prefs.getString(PreferencesKey.IPAIosMainversion);
 
-  // ShowSoftAlert = prefs.getBool(PreferencesKey.ShowSoftAlert);
-  VersionAlert();
+  bool ShowSoftAlert = prefs.getBool(PreferencesKey.ShowSoftAlert) ?? false;
+  VersionAlert(ShowSoftAlert);
 }
 
-VersionAlert() {
+VersionAlert( bool ShowSoftAlert) async{
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
   if (Platform.isAndroid) {
     if (int.parse(ApkMinVersion ?? "") >
         (int.parse( appApkMinVersion ?? ""))) {
@@ -537,15 +540,18 @@ VersionAlert() {
     if (int.parse(ApkLatestVersion ?? "") >
         (int.parse(appApkLatestVersion ?? ""))) {
       print("Moti2");
-      // if (ShowSoftAlert == false || ShowSoftAlert == null) {
+      if (ShowSoftAlert == false || ShowSoftAlert == null) {
       AlertSoftUpdate();
-      // }
+      }
     }
 
     if (int.parse(ApkRouteVersion ?? "") ==
         (int.parse(appApkRouteVersion ?? ""))) {
       print("same");
       setLOGOUT(context);
+    }else{
+      prefs.setBool(PreferencesKey.RoutURl, false);
+
     }
   }
 
@@ -560,13 +566,18 @@ VersionAlert() {
     if (int.parse(IosLatestVersion ?? "") >
         (int.parse(ipaIosLatestVersion ?? ""))) {
       print("Moti2");
-      AlertSoftUpdate();
+      if (ShowSoftAlert == false || ShowSoftAlert == null) {
+        AlertSoftUpdate();
+      }
     }
 
     if (int.parse(IosRoutVersion ?? "") ==
         (int.parse(ipaIosRoutVersion ?? ""))) {
       print("same");
       setLOGOUT(context);
+    }else{
+      prefs.setBool(PreferencesKey.RoutURl, false);
+
     }
   }
 }
@@ -578,19 +589,34 @@ VersionAlert() {
 
 setLOGOUT(BuildContext context) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.clear();
-  await Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-          builder: (context) => MultiBlocProvider(
-                providers: [
-                  BlocProvider<SystemConfigCubit>(
-                    create: (context) => SystemConfigCubit(),
-                  ),
-                ],
-                child: SplashScreen(),
-              )),
-      (route) => false);
+  // prefs.clear();
+
+  prefs.remove(PreferencesKey.loginUserID);
+  prefs.remove(PreferencesKey.loginJwt);
+  prefs.remove(PreferencesKey.module);
+  prefs.remove(PreferencesKey.UserProfile);
+
+  prefs.setBool(PreferencesKey.RoutURl, true);
+  prefs.setBool(PreferencesKey.UpdateURLinSplash, true);
+
+  if (myUserId != "") {
+    BlocProvider.of<SystemConfigCubit>(context).UserModel(context);
+  }
+
+  BlocProvider.of<SystemConfigCubit>(context).SystemConfig(context);
+  Get_UserToken();
+  /*await Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MultiBlocProvider(
+                      providers: [
+                        BlocProvider<SystemConfigCubit>(
+                          create: (context) => SystemConfigCubit(),
+                        ),
+                      ],
+                      child: SplashScreen(),
+                    )),
+            (route) => false);*/
 }
 
   void showDeleteConfirmationDialog(

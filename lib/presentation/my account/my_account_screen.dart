@@ -68,6 +68,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   double value2 = 0.0;
   FetchExprtise? _fetchExprtise;
   List<Expertiseclass> expertiseData = [];
+  
   Expertiseclass? selectedExpertise;
 
   String? dopcument;

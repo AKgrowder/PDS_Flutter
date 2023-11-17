@@ -210,10 +210,9 @@ class Repository {
         return Config.loginerror;
       case 500:
         return Config.servernotreachable;
-      case 403:
-        return LoginModel.fromJson(jsonString);
+        
       default:
-        return LoginModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
@@ -1066,8 +1065,12 @@ class Repository {
   chatImage(BuildContext context, String room_Id, String userUid,
       File imageFile) async {
     final response = await apiServices.multipartFileUserprofile(
-        "${Config.chatImage}/${room_Id}/${userUid}", imageFile, context,
-        imageDataType: "yes");
+      "${Config.chatImage}/${room_Id}/${userUid}",
+
+      imageFile,
+      context,
+      imageDataType: "yes"
+    );
     var jsonString = json.decode(response.body);
     print('jasonnString$jsonString');
     switch (response.statusCode) {
@@ -1543,13 +1546,10 @@ class Repository {
     }
   }
 
-  HashTagForYouAPI(
-      BuildContext context, String hashtagViewType, String pageNumber) async {
+  HashTagForYouAPI(BuildContext context, String hashtagViewType) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.HashTagForYou}?hashtagViewType=$hashtagViewType&pageNumber=$pageNumber&pageSize=20',
-        context);
-    print("dsgfsdgfsdg-${response}");
-    print("responce statucdoe-${response.statusCode}");
+        '${Config.HashTagForYou}?hashtagViewType=$hashtagViewType', context);
+    print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
@@ -1829,8 +1829,7 @@ class Repository {
         return jsonString;
     }
   }
-
-  SelectChatMemberList(BuildContext context) async {
+   SelectChatMemberList(BuildContext context) async {
     final responce =
         await apiServices.getApiCall('${Config.SelectChatMember}', context);
     var jsonString = json.decode(responce.body);
