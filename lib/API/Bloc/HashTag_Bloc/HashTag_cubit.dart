@@ -6,14 +6,36 @@ import 'package:pds/API/Repo/repository.dart';
 class HashTagCubit extends Cubit<HashTagState> {
   HashTagCubit() : super(HashTagInitialState()) {}
   dynamic getalluserlistModel;
+  dynamic HashTagForYouModel;
   Future<void> HashTagForYouAPI(
-      BuildContext context, String hashtagViewType) async {
-    dynamic HashTagForYouModel;
+      BuildContext context, String hashtagViewType, String pageNumber) async {
     try {
       emit(HashTagLoadingState());
-      HashTagForYouModel =
-          await Repository().HashTagForYouAPI(context, hashtagViewType);
+      HashTagForYouModel = await Repository()
+          .HashTagForYouAPI(context, hashtagViewType, pageNumber);
       if (HashTagForYouModel.success == true) {
+        emit(HashTagLoadedState(HashTagForYouModel));
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(HashTagErrorState(HashTagForYouModel));
+    }
+  }
+
+  Future<void> HashTagForYouAPIDataGet(
+      BuildContext context, String hashtagViewType, String pageNumber) async {
+    dynamic HasthagpagantionDataGet;
+    try {
+      emit(HashTagLoadingState());
+      HasthagpagantionDataGet = await Repository()
+          .HashTagForYouAPI(context, hashtagViewType, pageNumber);
+      if (HasthagpagantionDataGet.success == true) {
+        HashTagForYouModel.object.content
+            .addAll(HasthagpagantionDataGet.object.content);
+        HashTagForYouModel.object.pageable.pageNumber =
+            HasthagpagantionDataGet.object.pageable.pageNumber;
+        HashTagForYouModel.object.totalElements =
+            HasthagpagantionDataGet.object.totalElements;
         emit(HashTagLoadedState(HashTagForYouModel));
       }
     } catch (e) {
@@ -177,12 +199,13 @@ class HashTagCubit extends Cubit<HashTagState> {
     } catch (e) {
       emit(HashTagErrorState(e.toString()));
     }
-  }Future<void> serchDataGet(BuildContext context) async {
+  }
+
+  Future<void> serchDataGet(BuildContext context) async {
     dynamic getSerchData;
     try {
       emit(HashTagLoadingState());
-      getSerchData =
-          await Repository().getSerchData(context);
+      getSerchData = await Repository().getSerchData(context);
       if (getSerchData.success == true) {
         emit(GetSerchData(getSerchData));
         print(getSerchData.message);
@@ -191,5 +214,4 @@ class HashTagCubit extends Cubit<HashTagState> {
       emit(HashTagErrorState(e.toString()));
     }
   }
-
 }

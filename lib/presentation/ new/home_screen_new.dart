@@ -427,8 +427,8 @@ SetUi() async {
   // prefs.setString(PreferencesKey.UserProfile, User_profile);
 
   prefs.setString(PreferencesKey.appApkRouteVersion, "2");
-  prefs.setString(PreferencesKey.appApkLatestVersion, "1");
-  prefs.setString(PreferencesKey.appApkMinVersion, "1");
+  prefs.setString(PreferencesKey.appApkLatestVersion, "2");
+  prefs.setString(PreferencesKey.appApkMinVersion, "2");
 
   prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
   prefs.setString(PreferencesKey.IPAIosRoutVersion, "1");
