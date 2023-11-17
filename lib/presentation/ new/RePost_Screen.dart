@@ -112,10 +112,12 @@ class _RePostScreenState extends State<RePostScreen> {
   List<Album>? _albums;
   double _opacity = 0.0;
   ImageDataPost? imageDataPost;
+  String? UserProfileImage;
 
   GetUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
+    UserProfileImage = prefs.getString(PreferencesKey.UserProfile);
   }
 
   @override
@@ -225,14 +227,23 @@ class _RePostScreenState extends State<RePostScreen> {
                                                 isFollowing: 'FOLLOW',
                                               )));
                                 },
-                                child: SizedBox(
-                                  height: 50,
-                                  width: 50,
-                                  child: CircleAvatar(
-                                    backgroundImage:
-                                        AssetImage(ImageConstant.placeholder),
-                                  ),
-                                ),
+                                child: UserProfileImage?.isEmpty == true
+                                    ? SizedBox(
+                                        height: 50,
+                                        width: 50,
+                                        child: CircleAvatar(
+                                          backgroundImage: AssetImage(
+                                              ImageConstant.tomcruse),
+                                        ),
+                                      )
+                                    : SizedBox(
+                                        height: 50,
+                                        width: 50,
+                                        child: CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                              UserProfileImage.toString()),
+                                        ),
+                                      ),
                               ),
                             ),
                             Padding(
@@ -1177,7 +1188,7 @@ class _RePostScreenState extends State<RePostScreen> {
                 textScaleFactor: 1.0,
               ),
               content: Text(
-                "Only PDF, PNG, JPG Supported.",
+                "Only PDF Allowed",
                 textScaleFactor: 1.0,
               ),
               actions: <Widget>[
@@ -1518,7 +1529,7 @@ class _RePostScreenState extends State<RePostScreen> {
                   .RePostAPI(context, param, widget.postUid);
             } else {
               SnackBar snackBar = SnackBar(
-                content: Text('please select image either fill Text'),
+                content: Text('Please selcte image either fill Text'),
                 backgroundColor: ColorConstant.primary_color,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
