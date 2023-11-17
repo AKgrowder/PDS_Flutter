@@ -1067,8 +1067,10 @@ class Repository {
       File imageFile) async {
     final response = await apiServices.multipartFileUserprofile(
       "${Config.chatImage}/${room_Id}/${userUid}",
+
       imageFile,
       context,
+      imageDataType: "yes"
     );
     var jsonString = json.decode(response.body);
     print('jasonnString$jsonString');
@@ -1404,6 +1406,7 @@ class Repository {
   }
 
   NewProfileAPI(BuildContext context, String otherUserUid) async {
+    print("sdfhsdfhsdfh-$otherUserUid");
     final response = await apiServices.getApiCallWithToken(
         "${Config.NewfetchUserProfile}?otherUserUid=${otherUserUid}", context);
     print('AddPost$response');

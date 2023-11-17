@@ -1,8 +1,9 @@
 import 'dart:io';
+import 'package:dotted_border/dotted_border.dart';
+import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
 import 'package:pds/presentation/%20new/RePost_Screen.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dots_indicator/dots_indicator.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,11 +41,13 @@ import 'package:pds/presentation/create_story/create_story.dart';
 import 'package:pds/presentation/create_story/full_story_page.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
+import 'package:pds/presentation/splash_screen/splash_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pds/presentation/recent_blog/recent_blog_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
 
@@ -94,11 +97,55 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   bool isDataget = false;
   DateTime? parsedDateTimeBlogs;
   FocusNode _focusNode = FocusNode();
+
+String? appApkMinVersion;
+String? appApkLatestVersion;
+String? appApkRouteVersion;
+String? ipaIosLatestVersion;
+String? ipaIosRoutVersion;
+String? ipaIosMainversion;
+
+String? ApkMinVersion;
+String? ApkLatestVersion;
+String? ApkRouteVersion;
+String? IosLatestVersion;
+String? IosRoutVersion;
+String? IosMainversion;
+
   final focusNode = FocusNode();
+  String getTimeDifference(DateTime dateTime) {
+    final difference = DateTime.now().difference(dateTime);
+    if (difference.inDays > 0) {
+      if (difference.inDays == 1) {
+        return '1 day ago';
+      } else if (difference.inDays < 7) {
+        return '${difference.inDays} days ago';
+      } else {
+        final weeks = (difference.inDays / 7).floor();
+        return '$weeks week${weeks == 1 ? '' : 's'} ago';
+      }
+    } else if (difference.inHours > 0) {
+      if (difference.inHours == 1) {
+        return '1 hour ago';
+      } else {
+        return '${difference.inHours} hours ago';
+      }
+    } else if (difference.inMinutes > 0) {
+      if (difference.inMinutes == 1) {
+        return '1 minute ago';
+      } else {
+        return '${difference.inMinutes} minutes ago';
+      }
+    } else {
+      return 'Just now';
+    }
+  }
+
   @override
   void initState() {
     Get_UserToken();
     storycontext = context;
+    SetUi();
     super.initState();
   }
 
@@ -154,6 +201,398 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     });
   }
 
+  AlertHardUpdate() {
+  var height = MediaQuery.of(context).size.height;
+  var width = MediaQuery.of(context).size.width;
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: Dialog(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)),
+            child: Container(
+              height: height / 2,
+              width: width,
+              // color: Colors.white,
+              child: Column(
+                children: [
+                  Image.asset(
+                    ImageConstant.alertimage,
+                    height: height / 4.8,
+                    width: width,
+                    fit: BoxFit.fill,
+                  ),
+                  Container(
+                    height: height / 7,
+                    width: width,
+                    color: Colors.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "New Version Alert",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: ColorConstant.primary_color,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "New application version is available",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              color: Colors.black),
+                        ),
+                        Text(
+                          "please download latest version",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      final Uri url = Uri.parse(
+                          "https://play.google.com/store/apps/details?id=com.pds.app");
+
+                      launchUrl(url,
+                          mode: LaunchMode.externalApplication);
+                    },
+                    child: Container(
+                      height: 45,
+                      width: width,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
+                          color: ColorConstant.primary_color),
+                      child: Center(
+                          child: Text(
+                        "Update",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 17,
+                          color: Colors.white,
+                        ),
+                      )),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      });
+}
+
+AlertSoftUpdate() {
+  var height = MediaQuery.of(context).size.height;
+  var width = MediaQuery.of(context).size.width;
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: Dialog(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)),
+            child: Container(
+              height: height / 2,
+              width: width,
+              // color: Colors.white,
+              child: Column(
+                children: [
+                  Image.asset(
+                    ImageConstant.alertimage,
+                    height: height / 4.8,
+                    width: width,
+                    fit: BoxFit.fill,
+                  ),
+                  Container(
+                    height: height / 7,
+                    width: width,
+                    color: Colors.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "New Version Alert",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: ColorConstant.primary_color,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "New application version is available",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              color: Colors.black),
+                        ),
+                        Text(
+                          "please download latest version",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          saveAlertStatus();
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          height: 50,
+                          width: width / 2.5,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: ColorConstant.primary_color),
+                              color: Colors.white),
+                          child: Center(
+                              child: Text(
+                            "Later",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17,
+                              color: ColorConstant.primary_color,
+                            ),
+                          )),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          height: 50,
+                          width: width / 2.5,
+                          decoration: BoxDecoration(
+                              color: ColorConstant.primary_color),
+                          child: Center(
+                              child: Text(
+                            "Update",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17,
+                              color: Colors.white,
+                            ),
+                          )),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      });
+}
+
+SetUi() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  // prefs.setString(PreferencesKey.module, user_Module);
+  // prefs.setString(PreferencesKey.UserProfile, User_profile);
+
+  prefs.setString(PreferencesKey.appApkRouteVersion, "1");
+  prefs.setString(PreferencesKey.appApkLatestVersion, "1");
+  prefs.setString(PreferencesKey.appApkMinVersion, "2");
+
+  prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
+  prefs.setString(PreferencesKey.IPAIosRoutVersion, "1");
+  prefs.setString(PreferencesKey.IPAIosMainversion, "1");
+
+  /*systemConfigModel?.object?.forEach((element) async {
+    if (element.name == "MaxDocUploadSizeInMB") {
+      var fileSize = element.value!;
+      prefs.setString(PreferencesKey.fileSize, fileSize);
+    } else if (element.name == "MaxMediaUploadSizeInMB") {
+      var mediaSize = int.parse(element.value!);
+      prefs.setInt(PreferencesKey.mediaSize, mediaSize);
+    } else if (element.name == "ResendTimerInSeconds") {
+      var otpTimer = int.parse(element.value!);
+      print(" otp timer  ${otpTimer}");
+      prefs.setInt(PreferencesKey.otpTimer, otpTimer);
+    } else if (element.name == "ApkMinVersion") {
+      var ApkMinVersion = element.value ?? "";
+      print("ApkMinVersion  ${ApkMinVersion}");
+      prefs.setString(PreferencesKey.ApkMinVersion, ApkMinVersion);
+    } else if (element.name == "ApkLatestVersion") {
+      var ApkLatestVersion = element.value ?? "";
+      print(" ApkLatestVersion  ${ApkLatestVersion}");
+      prefs.setString(PreferencesKey.ApkLatestVersion, ApkLatestVersion);
+    } else if (element.name == "ApkRouteVersion") {
+      var ApkRouteVersion = element.value ?? "";
+      print(" ApkRouteVersion  ${ApkRouteVersion}");
+      prefs.setString(PreferencesKey.ApkRouteVersion, ApkRouteVersion);
+    } else if (element.name == "MaxPostUploadSizeInMB") {
+      print(" ApkRouteVersion  ${ApkRouteVersion}");
+      prefs.setString(
+          PreferencesKey.MaxPostUploadSizeInMB, element.value ?? '');
+    }
+
+    /// -----
+
+    else if (element.name == "IosLatestVersion") {
+      var IosLatestVersion = element.value ?? "";
+      print(" IosLatestVersion  ${IosLatestVersion}");
+      prefs.setString(PreferencesKey.IosLatestVersion, IosLatestVersion);
+    } else if (element.name == "IosRoutVersion") {
+      var IosRoutVersion = element.value ?? "";
+      print("IosRoutVersion  ${IosRoutVersion}");
+      prefs.setString(PreferencesKey.IosRoutVersion, IosRoutVersion);
+    } else if (element.name == "IosMainversion") {
+      var IosMainversion = element.value ?? "";
+      print(" IosMainversion  ${IosMainversion}");
+      prefs.setString(PreferencesKey.IosMainversion, IosMainversion);
+    }
+
+    /// ---------
+
+    else if (element.name == "SocketLink") {
+      var SocketLink = element.value ?? "";
+      print(" SocketLink  ${SocketLink}");
+      prefs.setString(PreferencesKey.SocketLink, SocketLink);
+    } else if (element.name == "RoutURL") {
+      var RoutURL = element.value ?? "";
+      print(" RoutURL  ${RoutURL}");
+      prefs.setString(PreferencesKey.RoutURL, RoutURL);
+    } else if (element.name == "SupportEmailId") {
+      var SupportEmailId = element.value ?? "";
+      print(" SupportEmailId  ${SupportEmailId}");
+      prefs.setString(PreferencesKey.SupportEmailId, SupportEmailId);
+    } else if (element.name == "SupportPhoneNumber") {
+      var SupportPhoneNumber = element.value ?? "";
+      print(" SupportPhoneNumber  ${SupportPhoneNumber}");
+      prefs.setString(PreferencesKey.SupportPhoneNumber, SupportPhoneNumber);
+    } else if (element.name == "MaxPublicRoomSave") {
+      var MaxPublicRoomSave = element.value ?? "";
+      print("SupportPhoneNumber  ${MaxPublicRoomSave}");
+      prefs.setString(PreferencesKey.MaxPublicRoomSave, MaxPublicRoomSave);
+    }
+  });*/
+  VersionControll();
+}
+
+VersionControll() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  ApkMinVersion = prefs.getString(PreferencesKey.ApkMinVersion);
+  ApkLatestVersion = prefs.getString(PreferencesKey.ApkLatestVersion);
+  ApkRouteVersion = prefs.getString(PreferencesKey.ApkRouteVersion);
+
+  IosLatestVersion = prefs.getString(PreferencesKey.IosLatestVersion);
+  IosRoutVersion = prefs.getString(PreferencesKey.IosRoutVersion);
+  IosMainversion = prefs.getString(PreferencesKey.IosMainversion);
+
+  appApkRouteVersion = prefs.getString(PreferencesKey.appApkRouteVersion);
+  appApkLatestVersion = prefs.getString(PreferencesKey.appApkLatestVersion);
+  appApkMinVersion = prefs.getString(PreferencesKey.appApkMinVersion);
+
+  ipaIosLatestVersion = prefs.getString(PreferencesKey.IPAIosLatestVersion);
+  ipaIosRoutVersion = prefs.getString(PreferencesKey.IPAIosRoutVersion);
+  ipaIosMainversion = prefs.getString(PreferencesKey.IPAIosMainversion);
+
+  // ShowSoftAlert = prefs.getBool(PreferencesKey.ShowSoftAlert);
+  VersionAlert();
+}
+
+VersionAlert() {
+  if (Platform.isAndroid) {
+    if (int.parse(ApkMinVersion ?? "") >
+        (int.parse( appApkMinVersion ?? ""))) {
+      print("Moti1");
+      AlertHardUpdate();
+    }
+
+    if (int.parse(ApkLatestVersion ?? "") >
+        (int.parse(appApkLatestVersion ?? ""))) {
+      print("Moti2");
+      // if (ShowSoftAlert == false || ShowSoftAlert == null) {
+      AlertSoftUpdate();
+      // }
+    }
+
+    if (int.parse(ApkRouteVersion ?? "") ==
+        (int.parse(appApkRouteVersion ?? ""))) {
+      print("same");
+      setLOGOUT(context);
+    }
+  }
+
+  /// -----------------------------------------
+  if (Platform.isIOS) {
+    if (int.parse(IosMainversion ?? "") >
+        (int.parse(ipaIosMainversion ?? ""))) {
+      print("Moti1");
+      AlertHardUpdate();
+    }
+
+    if (int.parse(IosLatestVersion ?? "") >
+        (int.parse(ipaIosLatestVersion ?? ""))) {
+      print("Moti2");
+      AlertSoftUpdate();
+    }
+
+    if (int.parse(IosRoutVersion ?? "") ==
+        (int.parse(ipaIosRoutVersion ?? ""))) {
+      print("same");
+      setLOGOUT(context);
+    }
+  }
+}
+
+  saveAlertStatus() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setBool(PreferencesKey.ShowSoftAlert, true);
+}
+
+setLOGOUT(BuildContext context) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.clear();
+  await Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+          builder: (context) => MultiBlocProvider(
+                providers: [
+                  BlocProvider<SystemConfigCubit>(
+                    create: (context) => SystemConfigCubit(),
+                  ),
+                ],
+                child: SplashScreen(),
+              )),
+      (route) => false);
+}
+
   void showDeleteConfirmationDialog(
       BuildContext context, String PostUID, int index) {
     showDialog(
@@ -163,58 +602,75 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           contentPadding: EdgeInsets.all(10),
           title: Text('Confirm Delete'),
           titlePadding: EdgeInsets.all(10),
-          content: Text('Are you sure you want to delete this item?'),
-          actionsPadding: EdgeInsets.all(5),
-          actions: <Widget>[
-            GestureDetector(
-              onTap: () async {
-                await soicalFunation(apiName: 'Deletepost', index: index);
+          content: Container(
+            height: 75,
+            child: Column(
+              children: [
+                Text('Are you sure you want to delete this Post?'),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        await soicalFunation(
+                            apiName: 'Deletepost', index: index);
 
-                print('Deleted.');
-              },
-              child: Container(
-                height: 30,
-                width: 80,
-                decoration: BoxDecoration(
-                    // color: Colors.green,
-                    color: ColorConstant.primary_color,
-                    borderRadius: BorderRadius.circular(5)),
-                child: Center(
-                  child: Text(
-                    "Yes",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
+                        print('Deleted.');
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 80,
+                        decoration: BoxDecoration(
+                            // color: Colors.green,
+                            color: ColorConstant.primary_color,
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Center(
+                          child: Text(
+                            "Yes",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        print('Not deleted.');
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 10),
+                        height: 30,
+                        width: 80,
+                        decoration: BoxDecoration(
+                            border:
+                                Border.all(color: ColorConstant.primary_color),
+                            borderRadius: BorderRadius.circular(5)),
+                        // color: Colors.green,
+                        child: Center(
+                          child: Text(
+                            "No",
+                            style:
+                                TextStyle(color: ColorConstant.primary_color),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
             ),
-            SizedBox(
-              width: 40,
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-                print('Not deleted.');
-              },
-              child: Container(
-                height: 30,
-                width: 80,
-                decoration: BoxDecoration(
-                    border: Border.all(color: ColorConstant.primary_color),
-                    borderRadius: BorderRadius.circular(5)),
-                // color: Colors.green,
-                child: Center(
-                  child: Text(
-                    "No",
-                    style: TextStyle(color: ColorConstant.primary_color),
-                  ),
-                ),
-              ),
-            ),
+          ),
+          actionsPadding: EdgeInsets.all(5),
+          /* actions: <Widget>[
+           
             SizedBox(
               width: 40,
               height: 50,
             ),
-          ],
+          ], */
         );
       },
     );
@@ -417,13 +873,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             getAllStoryModel = state.getAllStoryModel;
             buttonDatas.clear();
             storyButtons.clear();
+            userName.clear();
             storyButtons = List.filled(1, null, growable: true);
             if (state.getAllStoryModel.object != null ||
                 ((state.getAllStoryModel.object?.isNotEmpty == true) ??
                     false)) {
               state.getAllStoryModel.object?.forEach((element) {
                 if (element.userUid == User_ID) {
-                  userName.add(element.userName.toString());
+                  userName.insert(0,element.userName.toString());
                   buttonDatas.insert(
                       0,
                       StoryButtonData(
@@ -435,7 +892,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                   image: NetworkImage(element.profilePic))
                               : DecorationImage(
                                   image: AssetImage(
-                                    ImageConstant.placeholder2,
+                                    ImageConstant.tomcruse,
                                   ),
                                   fit: BoxFit.cover,
                                 ),
@@ -679,7 +1136,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                           'Login',
                                           style: TextStyle(
                                               fontFamily: "outfit",
-                                              fontSize: 18,        
+                                              fontSize: 18,
                                               fontWeight: FontWeight.bold,
                                               color:
                                                   ColorConstant.primary_color),
@@ -706,264 +1163,264 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                         SizedBox(
                           height: 15,
                         ),
-                        // Container(
-                        //   height: 90,
-                        //   margin: EdgeInsets.symmetric(horizontal: 16),
-                        //   child: ListView.separated(
-                        //     itemBuilder: (context, index) {
-                        //       if (index == 0) {
-                        //         if (!storyAdded)
-                        //           return GestureDetector(
-                        //             onTap: () async {
-                        //               ImageDataPostOne? imageDataPost;
-                        //               if (uuid != null) {
-                        //                 if (Platform.isAndroid) {
-                        //                   final info = await DeviceInfoPlugin()
-                        //                       .androidInfo;
-                        //                   if (num.parse(await info
-                        //                               .version.release)
-                        //                           .toInt() >=
-                        //                       13) {
-                        //                     if (await permissionHandler(context,
-                        //                             Permission.photos) ??
-                        //                         false) {
-                        //                       imageDataPost =
-                        //                           await Navigator.push(context,
-                        //                               MaterialPageRoute(
-                        //                                   builder: (context) {
-                        //                         return CreateStoryPage();
-                        //                       }));
-                        //                       print(
-                        //                           "dfhsdfhsdfsdhf--${imageDataPost?.object}");
-                        //                       var parmes = {
-                        //                         "storyData": imageDataPost
-                        //                             ?.object
-                        //                             .toString()
-                        //                       };
-                        //                       await Repository()
-                        //                           .cretateStoryApi(
-                        //                               context, parmes);
-                        //                     }
-                        //                   } else if (await permissionHandler(
-                        //                           context,
-                        //                           Permission.storage) ??
-                        //                       false) {
-                        //                     imageDataPost =
-                        //                         await Navigator.push(context,
-                        //                             MaterialPageRoute(
-                        //                                 builder: (context) {
-                        //                       return CreateStoryPage();
-                        //                     }));
-                        //                     var parmes = {
-                        //                       "storyData": imageDataPost?.object
-                        //                           .toString()
-                        //                     };
-                        //                     await Repository().cretateStoryApi(
-                        //                         context, parmes);
-                        //                   }
-                        //                 }
-                        //               } else {
-                        //                 Navigator.of(context).push(
-                        //                     MaterialPageRoute(
-                        //                         builder: (context) =>
-                        //                             RegisterCreateAccountScreen()));
-                        //               }
+                        Container(
+                          height: 90,
+                          margin: EdgeInsets.symmetric(horizontal: 16),
+                          child: ListView.separated(
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                if (!storyAdded)
+                                  return GestureDetector(
+                                    onTap: () async {
+                                      ImageDataPostOne? imageDataPost;
+                                      if (uuid != null) {
+                                        if (Platform.isAndroid) {
+                                          final info = await DeviceInfoPlugin()
+                                              .androidInfo;
+                                          if (num.parse(await info
+                                                      .version.release)
+                                                  .toInt() >=
+                                              13) {
+                                            if (await permissionHandler(context,
+                                                    Permission.photos) ??
+                                                false) {
+                                              imageDataPost =
+                                                  await Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) {
+                                                return CreateStoryPage();
+                                              }));
+                                              print(
+                                                  "dfhsdfhsdfsdhf--${imageDataPost?.object}");
+                                              var parmes = {
+                                                "storyData": imageDataPost
+                                                    ?.object
+                                                    .toString()
+                                              };
+                                              await Repository()
+                                                  .cretateStoryApi(
+                                                      context, parmes);
+                                            }
+                                          } else if (await permissionHandler(
+                                                  context,
+                                                  Permission.storage) ??
+                                              false) {
+                                            imageDataPost =
+                                                await Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                              return CreateStoryPage();
+                                            }));
+                                            var parmes = {
+                                              "storyData": imageDataPost?.object
+                                                  .toString()
+                                            };
+                                            await Repository().cretateStoryApi(
+                                                context, parmes);
+                                          }
+                                        }
+                                      } else {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RegisterCreateAccountScreen()));
+                                      }
 
-                        //               if (imageDataPost?.object != null) {
-                        //                 StoryButtonData buttonData =
-                        //                     StoryButtonData(
-                        //                   timelineBackgroundColor: Colors.grey,
-                        //                   buttonDecoration: BoxDecoration(
-                        //                     shape: BoxShape.circle,
-                        //                     image: DecorationImage(
-                        //                       image: AssetImage(
-                        //                         ImageConstant.pdslogo,
-                        //                       ),
-                        //                       fit: BoxFit.cover,
-                        //                     ),
-                        //                   ),
-                        //                   child: Padding(
-                        //                     padding: const EdgeInsets.all(5.0),
-                        //                     child: Column(
-                        //                       mainAxisSize: MainAxisSize.max,
-                        //                       mainAxisAlignment:
-                        //                           MainAxisAlignment.end,
-                        //                       children: [
-                        //                         Text(
-                        //                           '',
-                        //                           style: const TextStyle(
-                        //                             color: Colors.white,
-                        //                             fontWeight: FontWeight.bold,
-                        //                           ),
-                        //                         ),
-                        //                       ],
-                        //                     ),
-                        //                   ),
-                        //                   images: [
-                        //                     StoryModel(
-                        //                         imageDataPost!.object
-                        //                             .toString(),
-                        //                         DateTime.now()
-                        //                             .toIso8601String(),
-                        //                         UserProfileImage,
-                        //                         User_Name,
-                        //                         "",
-                        //                         "${User_ID}")
-                        //                   ],
-                        //                   borderDecoration: BoxDecoration(
-                        //                     borderRadius:
-                        //                         const BorderRadius.all(
-                        //                       Radius.circular(60.0),
-                        //                     ),
-                        //                     border: Border.fromBorderSide(
-                        //                       BorderSide(
-                        //                         color: Colors.red,
-                        //                         width: 1.5,
-                        //                       ),
-                        //                     ),
-                        //                   ),
-                        //                   storyPages: [
-                        //                     FullStoryPage(
-                        //                       imageName:
-                        //                           '${imageDataPost.object}',
-                        //                     )
-                        //                   ],
-                        //                   segmentDuration:
-                        //                       const Duration(seconds: 3),
-                        //                 );
+                                      if (imageDataPost?.object != null) {
+                                        StoryButtonData buttonData =
+                                            StoryButtonData(
+                                          timelineBackgroundColor: Colors.grey,
+                                          buttonDecoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              image: AssetImage(
+                                                ImageConstant.pdslogo,
+                                              ),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                  '',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          images: [
+                                            StoryModel(
+                                                imageDataPost!.object
+                                                    .toString(),
+                                                DateTime.now()
+                                                    .toIso8601String(),
+                                                UserProfileImage,
+                                                User_Name,
+                                                "",
+                                                "${User_ID}")
+                                          ],
+                                          borderDecoration: BoxDecoration(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              Radius.circular(60.0),
+                                            ),
+                                            border: Border.fromBorderSide(
+                                              BorderSide(
+                                                color: Colors.red,
+                                                width: 1.5,
+                                              ),
+                                            ),
+                                          ),
+                                          storyPages: [
+                                            FullStoryPage(
+                                              imageName:
+                                                  '${imageDataPost.object}',
+                                            )
+                                          ],
+                                          segmentDuration:
+                                              const Duration(seconds: 3),
+                                        );
 
-                        //                 buttonDatas.insert(0, buttonData);
-                        //                 storyButtons[0] = StoryButton(
-                        //                     onPressed: (data) {
-                        //                       Navigator.of(storycontext!).push(
-                        //                         StoryRoute(
-                        //                           storyContainerSettings:
-                        //                               StoryContainerSettings(
-                        //                             buttonData: buttonData,
-                        //                             tapPosition: buttonData
-                        //                                 .buttonCenterPosition!,
-                        //                             curve: buttonData
-                        //                                 .pageAnimationCurve,
-                        //                             allButtonDatas: buttonDatas,
-                        //                             pageTransform:
-                        //                                 StoryPage3DTransform(),
-                        //                             storyListScrollController:
-                        //                                 ScrollController(),
-                        //                           ),
-                        //                           duration: buttonData
-                        //                               .pageAnimationDuration,
-                        //                         ),
-                        //                       );
-                        //                     },
-                        //                     buttonData: buttonData,
-                        //                     allButtonDatas: buttonDatas,
-                        //                     storyListViewController:
-                        //                         ScrollController());
+                                        buttonDatas.insert(0, buttonData);
+                                        storyButtons[0] = StoryButton(
+                                            onPressed: (data) {
+                                              Navigator.of(storycontext!).push(
+                                                StoryRoute(
+                                                  storyContainerSettings:
+                                                      StoryContainerSettings(
+                                                    buttonData: buttonData,
+                                                    tapPosition: buttonData
+                                                        .buttonCenterPosition!,
+                                                    curve: buttonData
+                                                        .pageAnimationCurve,
+                                                    allButtonDatas: buttonDatas,
+                                                    pageTransform:
+                                                        StoryPage3DTransform(),
+                                                    storyListScrollController:
+                                                        ScrollController(),
+                                                  ),
+                                                  duration: buttonData
+                                                      .pageAnimationDuration,
+                                                ),
+                                              );
+                                            },
+                                            buttonData: buttonData,
+                                            allButtonDatas: buttonDatas,
+                                            storyListViewController:
+                                                ScrollController());
 
-                        //                 userName.add(User_Name!);
-                        //                 if (mounted)
-                        //                   setState(() {
-                        //                     storyAdded = true;
-                        //                   });
-                        //               }
-                        //             },
-                        //             child: Column(
-                        //               mainAxisSize: MainAxisSize.min,
-                        //               children: [
-                        //                 DottedBorder(
-                        //                   borderType: BorderType.Circle,
-                        //                   dashPattern: [5, 5, 5, 5],
-                        //                   color: ColorConstant.primary_color,
-                        //                   child: Container(
-                        //                     height: 67,
-                        //                     width: 67,
-                        //                     decoration: BoxDecoration(
-                        //                         shape: BoxShape.circle,
-                        //                         color: Color(0x4CED1C25)),
-                        //                     child: Icon(
-                        //                       Icons.add_circle_outline_rounded,
-                        //                       color:
-                        //                           ColorConstant.primary_color,
-                        //                     ),
-                        //                   ),
-                        //                 ),
-                        //                 Text(
-                        //                   'Share Story',
-                        //                   style: TextStyle(
-                        //                       color: Colors.black,
-                        //                       fontSize: 16),
-                        //                 )
-                        //               ],
-                        //             ),
-                        //           );
-                        //         else if (storyButtons[index] != null) {
-                        //           return SizedBox(
-                        //             child: Column(
-                        //               mainAxisSize: MainAxisSize.min,
-                        //               children: [
-                        //                 Expanded(
-                        //                   child: Stack(
-                        //                     children: [
-                        //                       storyButtons[index]!,
-                        //                       Positioned(
-                        //                         bottom: 0,
-                        //                         right: 0,
-                        //                         child: GestureDetector(
-                        //                           onTap: methodCalling,
-                        //                           child: Container(
-                        //                             decoration: BoxDecoration(
-                        //                                 color: Colors.white,
-                        //                                 shape: BoxShape.circle),
-                        //                             child: Icon(
-                        //                               Icons.add_circle_rounded,
-                        //                               color: ColorConstant
-                        //                                   .primary_color,
-                        //                             ),
-                        //                           ),
-                        //                         ),
-                        //                       )
-                        //                     ],
-                        //                   ),
-                        //                   flex: 1,
-                        //                 ),
-                        //                 Text(
-                        //                   '${userName[index]}',
-                        //                   style: TextStyle(
-                        //                       color: Colors.black,
-                        //                       fontSize: 16),
-                        //                 ),
-                        //               ],
-                        //             ),
-                        //           );
-                        //         }
-                        //       } else {
-                        //         return SizedBox(
-                        //           child: Column(
-                        //             mainAxisSize: MainAxisSize.min,
-                        //             children: [
-                        //               Expanded(
-                        //                 child: storyButtons[index]!,
-                        //                 flex: 1,
-                        //               ),
-                        //               Text(
-                        //                 '${userName[index]}',
-                        //                 style: TextStyle(
-                        //                     color: Colors.black, fontSize: 16),
-                        //               )
-                        //             ],
-                        //           ),
-                        //         );
-                        //       }
-                        //     },
-                        //     separatorBuilder: (context, index) {
-                        //       return SizedBox(
-                        //         width: 8,
-                        //       );
-                        //     },
-                        //     itemCount: storyButtons.length,
-                        //     scrollDirection: Axis.horizontal,
-                        //   ),
-                        // ),
+                                        userName.add(User_Name!);
+                                        if (mounted)
+                                          setState(() {
+                                            storyAdded = true;
+                                          });
+                                      }
+                                    },
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        DottedBorder(
+                                          borderType: BorderType.Circle,
+                                          dashPattern: [5, 5, 5, 5],
+                                          color: ColorConstant.primary_color,
+                                          child: Container(
+                                            height: 67,
+                                            width: 67,
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Color(0x4CED1C25)),
+                                            child: Icon(
+                                              Icons.add_circle_outline_rounded,
+                                              color:
+                                                  ColorConstant.primary_color,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          'Share Story',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                else if (storyButtons[index] != null) {
+                                  return SizedBox(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Expanded(
+                                          child: Stack(
+                                            children: [
+                                              storyButtons[index]!,
+                                              Positioned(
+                                                bottom: 0,
+                                                right: 0,
+                                                child: GestureDetector(
+                                                  onTap: methodCalling,
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        shape: BoxShape.circle),
+                                                    child: Icon(
+                                                      Icons.add_circle_rounded,
+                                                      color: ColorConstant
+                                                          .primary_color,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          flex: 1,
+                                        ),
+                                        Text(
+                                          '${userName[index]}',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              } else {
+                                return SizedBox(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Expanded(
+                                        child: storyButtons[index]!,
+                                        flex: 1,
+                                      ),
+                                      Text(
+                                        '${userName[index]}',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 16),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
+                            },
+                            separatorBuilder: (context, index) {
+                              return SizedBox(
+                                width: 8,
+                              );
+                            },
+                            itemCount: storyButtons.length,
+                            scrollDirection: Axis.horizontal,
+                          ),
+                        ),
                         SizedBox(
                           height: 15,
                         ),
@@ -1128,7 +1585,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               ),
                                                             ),
                                                             Text(
-                                                              customFormat(
+                                                              getTimeDifference(
                                                                   parsedDateTime),
                                                               style: TextStyle(
                                                                 fontSize: 12,
@@ -1525,7 +1982,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       AllGuestPostRoomData?.object?.content?[index].repostOn ==
                                                                               null
                                                                           ? ""
-                                                                          : customFormat(
+                                                                          : getTimeDifference(
                                                                               repostTime!),
                                                                       style:
                                                                           TextStyle(
@@ -2087,8 +2544,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             .bold),
                                                               ),
                                                             ),
+                                                            //FIndText
                                                             Text(
-                                                              customFormat(
+                                                              getTimeDifference(
                                                                   parsedDateTime),
                                                               style: TextStyle(
                                                                 fontSize: 12,
@@ -3194,7 +3652,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         width:
                                                                             15,
                                                                       ),
-                                                                      SizedBox(
+                                                                      /* SizedBox(
                                                                         height:
                                                                             15,
                                                                         child:
@@ -3204,7 +3662,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           child:
                                                                               Image.asset(ImageConstant.arrowright),
                                                                         ),
-                                                                      ),
+                                                                      ), */
                                                                       Spacer(),
                                                                       GestureDetector(
                                                                         onTap:

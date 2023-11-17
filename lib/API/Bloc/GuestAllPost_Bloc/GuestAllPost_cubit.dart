@@ -117,7 +117,7 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostErrorState(likepost));
     }
   }
-
+  // this is the follwing method
   Future<void> followWIngMethod(String? followedToUid, BuildContext context,
       {bool showAlert = false}) async {
     dynamic likepost;
