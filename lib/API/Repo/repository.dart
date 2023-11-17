@@ -210,10 +210,9 @@ class Repository {
         return Config.loginerror;
       case 500:
         return Config.servernotreachable;
-      case 403:
-        return LoginModel.fromJson(jsonString);
+        
       default:
-        return LoginModel.fromJson(jsonString);
+        return jsonString;
     }
   }
 
