@@ -12,8 +12,6 @@ import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/%20new/profileNew.dart';
-import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -173,7 +171,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                   physics: BouncingScrollPhysics(),
                   child: Column(
                     children: [
-                      Container(
+                   /*    Container(
                         child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -257,7 +255,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                 ),
                               ),
                             ]),
-                      ),
+                      ), */
                       Padding(
                         padding: const EdgeInsets.only(bottom: 70),
                         child: ListView.builder(
@@ -332,17 +330,23 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                     SizedBox(
                                                       width: 5,
                                                     ),
-                                                    Text(
-                                                        // "1w",
-                                                        customadateFormat(
-                                                            parsedDateTime),
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'outfit',
-                                                            fontSize: 13,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500)),
+                                                    Container(
+                                                      width: _width/3,
+                                                     
+                                                      child: Text(
+                                                          // "1w",
+                                                          customadateFormat(
+                                                              parsedDateTime),
+                                                        overflow: TextOverflow.ellipsis,
+
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'outfit',
+                                                              fontSize: 13,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500)),
+                                                    ),
                                                     Spacer(),
                                                     GestureDetector(
                                                       onTap: () {
@@ -658,29 +662,29 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
   String _getMonthName(int month) {
     switch (month) {
       case 1:
-        return 'January';
+        return '/01/';
       case 2:
-        return 'February';
+        return '/02/';
       case 3:
-        return 'March';
+        return '/03/';
       case 4:
-        return 'April';
+        return '/04/';
       case 5:
-        return 'May';
+        return '/05/';
       case 6:
-        return 'June';
+        return '/06/';
       case 7:
-        return 'July';
+        return '/07/';
       case 8:
-        return 'August';
+        return '/08/';
       case 9:
-        return 'September';
+        return '/09/';
       case 10:
-        return 'October';
+        return '/10/';
       case 11:
-        return 'November';
+        return '/11/';
       case 12:
-        return 'December';
+        return '/12/';
       default:
         return '';
     }

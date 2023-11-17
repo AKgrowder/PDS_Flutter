@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
 import 'package:pds/presentation/%20new/RePost_Screen.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dots_indicator/dots_indicator.dart';
@@ -40,11 +41,13 @@ import 'package:pds/presentation/create_story/create_story.dart';
 import 'package:pds/presentation/create_story/full_story_page.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
+import 'package:pds/presentation/splash_screen/splash_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pds/presentation/recent_blog/recent_blog_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
 
@@ -94,8 +97,23 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   bool isDataget = false;
   DateTime? parsedDateTimeBlogs;
   FocusNode _focusNode = FocusNode();
+
+String? appApkMinVersion;
+String? appApkLatestVersion;
+String? appApkRouteVersion;
+String? ipaIosLatestVersion;
+String? ipaIosRoutVersion;
+String? ipaIosMainversion;
+
+String? ApkMinVersion;
+String? ApkLatestVersion;
+String? ApkRouteVersion;
+String? IosLatestVersion;
+String? IosRoutVersion;
+String? IosMainversion;
+
   final focusNode = FocusNode();
-   String getTimeDifference(DateTime dateTime) {
+  String getTimeDifference(DateTime dateTime) {
     final difference = DateTime.now().difference(dateTime);
     if (difference.inDays > 0) {
       if (difference.inDays == 1) {
@@ -122,10 +140,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       return 'Just now';
     }
   }
+
   @override
   void initState() {
     Get_UserToken();
     storycontext = context;
+    SetUi();
     super.initState();
   }
 
@@ -180,6 +200,398 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       }
     });
   }
+
+  AlertHardUpdate() {
+  var height = MediaQuery.of(context).size.height;
+  var width = MediaQuery.of(context).size.width;
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: Dialog(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)),
+            child: Container(
+              height: height / 2,
+              width: width,
+              // color: Colors.white,
+              child: Column(
+                children: [
+                  Image.asset(
+                    ImageConstant.alertimage,
+                    height: height / 4.8,
+                    width: width,
+                    fit: BoxFit.fill,
+                  ),
+                  Container(
+                    height: height / 7,
+                    width: width,
+                    color: Colors.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "New Version Alert",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: ColorConstant.primary_color,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "New application version is available",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              color: Colors.black),
+                        ),
+                        Text(
+                          "please download latest version",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      final Uri url = Uri.parse(
+                          "https://play.google.com/store/apps/details?id=com.pds.app");
+
+                      launchUrl(url,
+                          mode: LaunchMode.externalApplication);
+                    },
+                    child: Container(
+                      height: 45,
+                      width: width,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
+                          color: ColorConstant.primary_color),
+                      child: Center(
+                          child: Text(
+                        "Update",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 17,
+                          color: Colors.white,
+                        ),
+                      )),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      });
+}
+
+AlertSoftUpdate() {
+  var height = MediaQuery.of(context).size.height;
+  var width = MediaQuery.of(context).size.width;
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: Dialog(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)),
+            child: Container(
+              height: height / 2,
+              width: width,
+              // color: Colors.white,
+              child: Column(
+                children: [
+                  Image.asset(
+                    ImageConstant.alertimage,
+                    height: height / 4.8,
+                    width: width,
+                    fit: BoxFit.fill,
+                  ),
+                  Container(
+                    height: height / 7,
+                    width: width,
+                    color: Colors.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "New Version Alert",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: ColorConstant.primary_color,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "New application version is available",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              color: Colors.black),
+                        ),
+                        Text(
+                          "please download latest version",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          saveAlertStatus();
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          height: 50,
+                          width: width / 2.5,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: ColorConstant.primary_color),
+                              color: Colors.white),
+                          child: Center(
+                              child: Text(
+                            "Later",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17,
+                              color: ColorConstant.primary_color,
+                            ),
+                          )),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          height: 50,
+                          width: width / 2.5,
+                          decoration: BoxDecoration(
+                              color: ColorConstant.primary_color),
+                          child: Center(
+                              child: Text(
+                            "Update",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17,
+                              color: Colors.white,
+                            ),
+                          )),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      });
+}
+
+SetUi() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  // prefs.setString(PreferencesKey.module, user_Module);
+  // prefs.setString(PreferencesKey.UserProfile, User_profile);
+
+  prefs.setString(PreferencesKey.appApkRouteVersion, "1");
+  prefs.setString(PreferencesKey.appApkLatestVersion, "1");
+  prefs.setString(PreferencesKey.appApkMinVersion, "2");
+
+  prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
+  prefs.setString(PreferencesKey.IPAIosRoutVersion, "1");
+  prefs.setString(PreferencesKey.IPAIosMainversion, "1");
+
+  /*systemConfigModel?.object?.forEach((element) async {
+    if (element.name == "MaxDocUploadSizeInMB") {
+      var fileSize = element.value!;
+      prefs.setString(PreferencesKey.fileSize, fileSize);
+    } else if (element.name == "MaxMediaUploadSizeInMB") {
+      var mediaSize = int.parse(element.value!);
+      prefs.setInt(PreferencesKey.mediaSize, mediaSize);
+    } else if (element.name == "ResendTimerInSeconds") {
+      var otpTimer = int.parse(element.value!);
+      print(" otp timer  ${otpTimer}");
+      prefs.setInt(PreferencesKey.otpTimer, otpTimer);
+    } else if (element.name == "ApkMinVersion") {
+      var ApkMinVersion = element.value ?? "";
+      print("ApkMinVersion  ${ApkMinVersion}");
+      prefs.setString(PreferencesKey.ApkMinVersion, ApkMinVersion);
+    } else if (element.name == "ApkLatestVersion") {
+      var ApkLatestVersion = element.value ?? "";
+      print(" ApkLatestVersion  ${ApkLatestVersion}");
+      prefs.setString(PreferencesKey.ApkLatestVersion, ApkLatestVersion);
+    } else if (element.name == "ApkRouteVersion") {
+      var ApkRouteVersion = element.value ?? "";
+      print(" ApkRouteVersion  ${ApkRouteVersion}");
+      prefs.setString(PreferencesKey.ApkRouteVersion, ApkRouteVersion);
+    } else if (element.name == "MaxPostUploadSizeInMB") {
+      print(" ApkRouteVersion  ${ApkRouteVersion}");
+      prefs.setString(
+          PreferencesKey.MaxPostUploadSizeInMB, element.value ?? '');
+    }
+
+    /// -----
+
+    else if (element.name == "IosLatestVersion") {
+      var IosLatestVersion = element.value ?? "";
+      print(" IosLatestVersion  ${IosLatestVersion}");
+      prefs.setString(PreferencesKey.IosLatestVersion, IosLatestVersion);
+    } else if (element.name == "IosRoutVersion") {
+      var IosRoutVersion = element.value ?? "";
+      print("IosRoutVersion  ${IosRoutVersion}");
+      prefs.setString(PreferencesKey.IosRoutVersion, IosRoutVersion);
+    } else if (element.name == "IosMainversion") {
+      var IosMainversion = element.value ?? "";
+      print(" IosMainversion  ${IosMainversion}");
+      prefs.setString(PreferencesKey.IosMainversion, IosMainversion);
+    }
+
+    /// ---------
+
+    else if (element.name == "SocketLink") {
+      var SocketLink = element.value ?? "";
+      print(" SocketLink  ${SocketLink}");
+      prefs.setString(PreferencesKey.SocketLink, SocketLink);
+    } else if (element.name == "RoutURL") {
+      var RoutURL = element.value ?? "";
+      print(" RoutURL  ${RoutURL}");
+      prefs.setString(PreferencesKey.RoutURL, RoutURL);
+    } else if (element.name == "SupportEmailId") {
+      var SupportEmailId = element.value ?? "";
+      print(" SupportEmailId  ${SupportEmailId}");
+      prefs.setString(PreferencesKey.SupportEmailId, SupportEmailId);
+    } else if (element.name == "SupportPhoneNumber") {
+      var SupportPhoneNumber = element.value ?? "";
+      print(" SupportPhoneNumber  ${SupportPhoneNumber}");
+      prefs.setString(PreferencesKey.SupportPhoneNumber, SupportPhoneNumber);
+    } else if (element.name == "MaxPublicRoomSave") {
+      var MaxPublicRoomSave = element.value ?? "";
+      print("SupportPhoneNumber  ${MaxPublicRoomSave}");
+      prefs.setString(PreferencesKey.MaxPublicRoomSave, MaxPublicRoomSave);
+    }
+  });*/
+  VersionControll();
+}
+
+VersionControll() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  ApkMinVersion = prefs.getString(PreferencesKey.ApkMinVersion);
+  ApkLatestVersion = prefs.getString(PreferencesKey.ApkLatestVersion);
+  ApkRouteVersion = prefs.getString(PreferencesKey.ApkRouteVersion);
+
+  IosLatestVersion = prefs.getString(PreferencesKey.IosLatestVersion);
+  IosRoutVersion = prefs.getString(PreferencesKey.IosRoutVersion);
+  IosMainversion = prefs.getString(PreferencesKey.IosMainversion);
+
+  appApkRouteVersion = prefs.getString(PreferencesKey.appApkRouteVersion);
+  appApkLatestVersion = prefs.getString(PreferencesKey.appApkLatestVersion);
+  appApkMinVersion = prefs.getString(PreferencesKey.appApkMinVersion);
+
+  ipaIosLatestVersion = prefs.getString(PreferencesKey.IPAIosLatestVersion);
+  ipaIosRoutVersion = prefs.getString(PreferencesKey.IPAIosRoutVersion);
+  ipaIosMainversion = prefs.getString(PreferencesKey.IPAIosMainversion);
+
+  // ShowSoftAlert = prefs.getBool(PreferencesKey.ShowSoftAlert);
+  VersionAlert();
+}
+
+VersionAlert() {
+  if (Platform.isAndroid) {
+    if (int.parse(ApkMinVersion ?? "") >
+        (int.parse( appApkMinVersion ?? ""))) {
+      print("Moti1");
+      AlertHardUpdate();
+    }
+
+    if (int.parse(ApkLatestVersion ?? "") >
+        (int.parse(appApkLatestVersion ?? ""))) {
+      print("Moti2");
+      // if (ShowSoftAlert == false || ShowSoftAlert == null) {
+      AlertSoftUpdate();
+      // }
+    }
+
+    if (int.parse(ApkRouteVersion ?? "") ==
+        (int.parse(appApkRouteVersion ?? ""))) {
+      print("same");
+      setLOGOUT(context);
+    }
+  }
+
+  /// -----------------------------------------
+  if (Platform.isIOS) {
+    if (int.parse(IosMainversion ?? "") >
+        (int.parse(ipaIosMainversion ?? ""))) {
+      print("Moti1");
+      AlertHardUpdate();
+    }
+
+    if (int.parse(IosLatestVersion ?? "") >
+        (int.parse(ipaIosLatestVersion ?? ""))) {
+      print("Moti2");
+      AlertSoftUpdate();
+    }
+
+    if (int.parse(IosRoutVersion ?? "") ==
+        (int.parse(ipaIosRoutVersion ?? ""))) {
+      print("same");
+      setLOGOUT(context);
+    }
+  }
+}
+
+  saveAlertStatus() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setBool(PreferencesKey.ShowSoftAlert, true);
+}
+
+setLOGOUT(BuildContext context) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.clear();
+  await Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+          builder: (context) => MultiBlocProvider(
+                providers: [
+                  BlocProvider<SystemConfigCubit>(
+                    create: (context) => SystemConfigCubit(),
+                  ),
+                ],
+                child: SplashScreen(),
+              )),
+      (route) => false);
+}
 
   void showDeleteConfirmationDialog(
       BuildContext context, String PostUID, int index) {
@@ -449,7 +861,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           }
 
           if (state is likeBlogLoadedState) {
-            
             SnackBar snackBar = SnackBar(
               content: Text(state.LikeBlogModeData.object.toString()),
               backgroundColor: ColorConstant.primary_color,
@@ -462,13 +873,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             getAllStoryModel = state.getAllStoryModel;
             buttonDatas.clear();
             storyButtons.clear();
+            userName.clear();
             storyButtons = List.filled(1, null, growable: true);
             if (state.getAllStoryModel.object != null ||
                 ((state.getAllStoryModel.object?.isNotEmpty == true) ??
                     false)) {
               state.getAllStoryModel.object?.forEach((element) {
                 if (element.userUid == User_ID) {
-                  userName.add(element.userName.toString());
+                  userName.insert(0,element.userName.toString());
                   buttonDatas.insert(
                       0,
                       StoryButtonData(
@@ -480,7 +892,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                   image: NetworkImage(element.profilePic))
                               : DecorationImage(
                                   image: AssetImage(
-                                    ImageConstant.placeholder2,
+                                    ImageConstant.tomcruse,
                                   ),
                                   fit: BoxFit.cover,
                                 ),
@@ -643,14 +1055,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             AllGuestPostRoomData = state.GetGuestAllPostRoomData;
           }
           if (state is PostLikeLoadedState) {
-              if (state.likePost.object != 'Post Liked Successfully' &&
-                  state.likePost.object != 'Post Unliked Successfully') {
-                SnackBar snackBar = SnackBar(
-                  content: Text(state.likePost.object.toString()),
-                  backgroundColor: ColorConstant.primary_color,
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
+            if (state.likePost.object != 'Post Liked Successfully' &&
+                state.likePost.object != 'Post Unliked Successfully') {
+              SnackBar snackBar = SnackBar(
+                content: Text(state.likePost.object.toString()),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
 
             likePost = state.likePost;
           }
@@ -1173,7 +1585,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               ),
                                                             ),
                                                             Text(
-                                                              customFormat(
+                                                              getTimeDifference(
                                                                   parsedDateTime),
                                                               style: TextStyle(
                                                                 fontSize: 12,
@@ -1570,7 +1982,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       AllGuestPostRoomData?.object?.content?[index].repostOn ==
                                                                               null
                                                                           ? ""
-                                                                          : customFormat(
+                                                                          : getTimeDifference(
                                                                               repostTime!),
                                                                       style:
                                                                           TextStyle(

@@ -75,7 +75,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
     super.initState();
     getDocumentSize();
     BlocProvider.of<CreatFourmCubit>(context).IndustryTypeAPI(context);
-    dopcument = 'Upload Image';
+    dopcument = 'Upload Document';
   }
 
   @override
@@ -91,7 +91,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             Navigator.pop(context);
           },
           child: Icon(
-            Icons.arrow_back,
+            Icons.arrow_back, 
             color: Colors.black,
           ),
         ),
@@ -399,7 +399,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                   style: TextStyle(fontSize: 16),
                                 ),
                               )),
-                          dopcument == "Upload Image"
+                          dopcument == "Upload Document"
                               ? GestureDetector(
                                   onTap: () async {
                                     filepath = await prepareTestPdf(0);
@@ -439,7 +439,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                           bottomRight: Radius.circular(5))),
                                   child: GestureDetector(
                                       onTap: () {
-                                        dopcument = "Upload Image";
+                                        dopcument = "Upload Document";
                                         chooseDocument?.object = null;
 
                                         setState(() {});
@@ -534,10 +534,10 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             backgroundColor: ColorConstant.primary_color,
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        } else if (dopcument == 'Upload Image') {
+                        } else if (dopcument == 'Upload Document') {
                           print('upolded imah');
                           SnackBar snackBar = SnackBar(
-                            content: Text('Please Upload Image'),
+                            content: Text('Please Upload Document'),
                             backgroundColor: ColorConstant.primary_color,
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);

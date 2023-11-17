@@ -117,7 +117,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
     getDocumentSize();
     BlocProvider.of<FetchExprtiseRoomCubit>(context).fetchExprties(context);
     BlocProvider.of<FetchExprtiseRoomCubit>(context).IndustryTypeAPI(context);
-    dopcument = 'Upload Image';
+    dopcument = 'Upload Document';
   }
 
   @override
@@ -693,7 +693,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   style: TextStyle(fontSize: 16),
                                 ),
                               )),
-                          dopcument == "Upload Image"
+                          dopcument == "Upload Document"
                               ? GestureDetector(
                                   onTap: () async {
                                     filepath = await prepareTestPdf(0);
@@ -731,7 +731,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                           bottomRight: Radius.circular(5))),
                                   child: GestureDetector(
                                       onTap: () {
-                                        dopcument = "Upload Image";
+                                        dopcument = "Upload Document";
                                         chooseDocument?.object = null;
 
                                         setState(() {});
@@ -851,9 +851,9 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
-                          } else if (dopcument == 'Upload Image') {
+                          } else if (dopcument == 'Upload Document') {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please Upload Image'),
+                              content: Text('Please Upload Document'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -902,10 +902,10 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                               print('this conidison yes');
                               if (_endTime != null && _startTime != null) {
                                 print('i want to check data -$dopcument');
-                                if (dopcument == 'Upload Image') {
+                                if (dopcument == 'Upload Document') {
                                   print('upolded imah');
                                   SnackBar snackBar = SnackBar(
-                                    content: Text('Please Upload Image'),
+                                    content: Text('Please Upload Document'),
                                     backgroundColor:
                                         ColorConstant.primary_color,
                                   );

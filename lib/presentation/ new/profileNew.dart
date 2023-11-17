@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
@@ -104,10 +105,38 @@ class _ProfileScreenState extends State<ProfileScreen>
   int? value1;
   bool isDataGet = false;
   bool isAbourtMe = true;
+  bool AbboutMeShow = true;
   dynamic dataSetup;
   String? User_Module;
   FollowersClassModel? followersClassModel1;
   FollowersClassModel? followersClassModel2;
+  String getTimeDifference(DateTime dateTime) {
+    final difference = DateTime.now().difference(dateTime);
+    if (difference.inDays > 0) {
+      if (difference.inDays == 1) {
+        return '1 day ago';
+      } else if (difference.inDays < 7) {
+        return '${difference.inDays} days ago';
+      } else {
+        final weeks = (difference.inDays / 7).floor();
+        return '$weeks week${weeks == 1 ? '' : 's'} ago';
+      }
+    } else if (difference.inHours > 0) {
+      if (difference.inHours == 1) {
+        return '1 hour ago';
+      } else {
+        return '${difference.inHours} hours ago';
+      }
+    } else if (difference.inMinutes > 0) {
+      if (difference.inMinutes == 1) {
+        return '1 minute ago';
+      } else {
+        return '${difference.inMinutes} minutes ago';
+      }
+    } else {
+      return 'Just now';
+    }
+  }
 
   var arrNotiyTypeList = [
     NotificationModel(
@@ -181,6 +210,9 @@ class _ProfileScreenState extends State<ProfileScreen>
 
       if (state is AboutMeLoadedState1) {
         print("this data i will get-->${state.aboutMe.object}");
+        if (state.aboutMe.object?.isNotEmpty == true) {
+          AbboutMeShow = false;
+        }
         aboutMe.text = state.aboutMe.object.toString();
       }
       if (state is saveAllBlogModelLoadedState1) {
@@ -315,6 +347,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       if (state is AboutMeLoadedState) {
         isAbourtMe = true;
         isUpDate = false;
+        print("dfgsfgdsfg-${isAbourtMe}");
         SnackBar snackBar = SnackBar(
           content: Text('Saved successfully'),
           backgroundColor: ColorConstant.primary_color,
@@ -428,85 +461,93 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                       ),
 
-                      /*  Padding(
-                        padding: const EdgeInsets.only(top: 15),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Flexible(
-                              child: Container(
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color:
-                                      NewProfileData?.object?.approvalStatus ==
-                                              "PARTIALLY_REGISTERED"
-                                          ? Color(0xffB6D9EC)
-                                          : NewProfileData?.object
-                                                      ?.approvalStatus ==
-                                                  "PENDING"
-                                              ? Color(0xffFFDBA8)
-                                              : NewProfileData?.object
-                                                          ?.approvalStatus ==
-                                                      "APPROVED"
-                                                  ? Color(0xffD5EED5)
-                                                  : Color(0xffFFE0E1),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 15, right: 15),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        height: 10,
-                                        width: 10,
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: NewProfileData?.object
+                      User_ID == NewProfileData?.object?.userUid
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 15),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Flexible(
+                                    child: Container(
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: NewProfileData
+                                                    ?.object?.approvalStatus ==
+                                                "PARTIALLY_REGISTERED"
+                                            ? Color(0xffB6D9EC)
+                                            : NewProfileData?.object
                                                         ?.approvalStatus ==
-                                                    "PARTIALLY_REGISTERED"
-                                                ? Color(0xff1A94D7)
+                                                    "PENDING"
+                                                ? Color(0xffFFDBA8)
                                                 : NewProfileData?.object
                                                             ?.approvalStatus ==
-                                                        "PENDING"
-                                                    ? Color(0xffC28432)
-                                                    : NewProfileData?.object
-                                                                ?.approvalStatus ==
-                                                            "APPROVED"
-                                                        ? Color(0xff019801)
-                                                        : Color(0xffFF000B)),
+                                                        "APPROVED"
+                                                    ? Color(0xffD5EED5)
+                                                    : Color(0xffFFE0E1),
                                       ),
-                                      SizedBox(
-                                        width: 10,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 15, right: 15),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Container(
+                                              height: 10,
+                                              width: 10,
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: NewProfileData?.object
+                                                              ?.approvalStatus ==
+                                                          "PARTIALLY_REGISTERED"
+                                                      ? Color(0xff1A94D7)
+                                                      : NewProfileData?.object
+                                                                  ?.approvalStatus ==
+                                                              "PENDING"
+                                                          ? Color(0xffC28432)
+                                                          : NewProfileData
+                                                                      ?.object
+                                                                      ?.approvalStatus ==
+                                                                  "APPROVED"
+                                                              ? Color(
+                                                                  0xff019801)
+                                                              : Color(
+                                                                  0xffFF000B)),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              "Profile ${NewProfileData?.object?.approvalStatus}",
+                                              style: TextStyle(
+                                                  color: NewProfileData?.object
+                                                              ?.approvalStatus ==
+                                                          "PARTIALLY_REGISTERED"
+                                                      ? Color(0xff1A94D7)
+                                                      : NewProfileData?.object
+                                                                  ?.approvalStatus ==
+                                                              "PENDING"
+                                                          ? Color(0xffC28432)
+                                                          : NewProfileData
+                                                                      ?.object
+                                                                      ?.approvalStatus ==
+                                                                  "APPROVED"
+                                                              ? Color(
+                                                                  0xff019801)
+                                                              : Color(
+                                                                  0xffFF000B),
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w600),
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                      Text(
-                                        "Profile ${NewProfileData?.object?.approvalStatus}",
-                                        style: TextStyle(
-                                            color: NewProfileData?.object
-                                                        ?.approvalStatus ==
-                                                    "PARTIALLY_REGISTERED"
-                                                ? Color(0xff1A94D7)
-                                                : NewProfileData?.object
-                                                            ?.approvalStatus ==
-                                                        "PENDING"
-                                                    ? Color(0xffC28432)
-                                                    : NewProfileData?.object
-                                                                ?.approvalStatus ==
-                                                            "APPROVED"
-                                                        ? Color(0xff019801)
-                                                        : Color(0xffFF000B),
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600),
-                                      )
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ), */
+                            )
+                          : SizedBox(),
                       Padding(
                         padding: EdgeInsets.only(top: 20),
                         child: Center(
@@ -737,7 +778,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       Followers(
-                                                        appBarName: 'FOLLOWERS',
+                                                        // OLLOWERS
+                                                        appBarName: 'Followers',
                                                         followersClassModel:
                                                             followersClassModel1!,
                                                         userId: User_ID,
@@ -797,7 +839,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       Followers(
-                                                        appBarName: 'FOLLOWING',
+                                                        // FOLLOWING
+                                                        appBarName: 'Following',
                                                         followersClassModel:
                                                             followersClassModel2!,
                                                         userId: User_ID,
@@ -1022,54 +1065,58 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 },
                               ),
                             ),
-                            Expanded(
-                              child: GestureDetector(
-                                child: Container(
-                                    height: 40,
-                                    alignment: Alignment.center,
-                                    // color: arrNotiyTypeList[3].isSelected
-                                    //     ? Color(0xFFED1C25)
-                                    //     : Theme.of(context).brightness == Brightness.light
-                                    //         ? Colors.white
-                                    //         : Colors.black,
-                                    child: Center(
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              const Spacer(),
-                                              Text("Saved",
-                                                  textScaleFactor: 1.0,
-                                                  style: TextStyle(
-                                                      // color: arrNotiyTypeList[3].isSelected
-                                                      //     ? Colors.white
-                                                      //     : Colors.black,
-                                                      fontSize: 18,
-                                                      fontFamily: 'Outfit',
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              Spacer(),
-                                            ],
-                                          ),
-                                          arrNotiyTypeList[3].isSelected
-                                              ? Divider(
-                                                  endIndent: 25,
-                                                  indent: 25,
-                                                  color: Colors.black,
-                                                )
-                                              : SizedBox(),
-                                        ],
-                                      ),
-                                    )),
-                                onTap: () {
-                                  setState(() {
-                                    updateType();
-                                    arrNotiyTypeList[3].isSelected = true;
-                                  });
-                                  print("abcd");
-                                },
-                              ),
-                            ),
+                            User_ID == NewProfileData?.object?.userUid
+                                ? Expanded(
+                                    child: GestureDetector(
+                                      child: Container(
+                                          height: 40,
+                                          alignment: Alignment.center,
+                                          // color: arrNotiyTypeList[3].isSelected
+                                          //     ? Color(0xFFED1C25)
+                                          //     : Theme.of(context).brightness == Brightness.light
+                                          //         ? Colors.white
+                                          //         : Colors.black,
+                                          child: Center(
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    const Spacer(),
+                                                    Text("Saved",
+                                                        textScaleFactor: 1.0,
+                                                        style: TextStyle(
+                                                            // color: arrNotiyTypeList[3].isSelected
+                                                            //     ? Colors.white
+                                                            //     : Colors.black,
+                                                            fontSize: 18,
+                                                            fontFamily:
+                                                                'Outfit',
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                    Spacer(),
+                                                  ],
+                                                ),
+                                                arrNotiyTypeList[3].isSelected
+                                                    ? Divider(
+                                                        endIndent: 25,
+                                                        indent: 25,
+                                                        color: Colors.black,
+                                                      )
+                                                    : SizedBox(),
+                                              ],
+                                            ),
+                                          )),
+                                      onTap: () {
+                                        setState(() {
+                                          updateType();
+                                          arrNotiyTypeList[3].isSelected = true;
+                                        });
+                                        print("abcd");
+                                      },
+                                    ),
+                                  )
+                                : SizedBox.shrink(),
                           ],
                         ),
                       if (NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
@@ -1211,18 +1258,48 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             SizedBox(
                                                               height: 5,
                                                             ),
-                                                            TextFormField(
-                                                              readOnly:
-                                                                  isAbourtMe,
-                                                              controller:
-                                                                  aboutMe,
-                                                              maxLines: 5,
-                                                              decoration:
-                                                                  InputDecoration(
-                                                                border:
-                                                                    OutlineInputBorder(),
-                                                              ),
-                                                            ),
+                                                            AbboutMeShow == true
+                                                                ? Container(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .center,
+                                                                    height: 50,
+                                                                    width:
+                                                                        _width /
+                                                                            2,
+                                                                    decoration: BoxDecoration(
+                                                                        // color: Colors.amber
+                                                                        borderRadius: BorderRadius.circular(10),
+                                                                        border: Border.all(color: Color(0xffEFEFEF))),
+                                                                    child: Text(
+                                                                      'Enter About Me',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              14,
+                                                                          fontWeight: FontWeight
+                                                                              .w300,
+                                                                          color:
+                                                                              Colors.black),
+                                                                    ),
+                                                                  )
+                                                                : TextFormField(
+                                                                    inputFormatters: [
+                                                                      LengthLimitingTextInputFormatter(
+                                                                          500),
+                                                                    ],
+                                                                    readOnly:
+                                                                        isAbourtMe,
+                                                                    controller:
+                                                                        aboutMe,
+                                                                    maxLines: 5,
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      border:
+                                                                          OutlineInputBorder(),
+                                                                    ),
+                                                                  ),
+                                                            //wiil DataGet
+                                                            /*   : */
                                                             SizedBox(
                                                               height: 12,
                                                             ),
@@ -1334,7 +1411,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 /// Content of Tab 2
                                 arrNotiyTypeList[1].isSelected
                                     ? Container(
-                                        height: FinalPostCount * 190,
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                1,
                                         // color: Colors.yellow,
                                         child: Padding(
                                           padding: EdgeInsets.only(
@@ -1406,7 +1485,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 /// Content of Tab 3
                                 arrNotiyTypeList[2].isSelected
                                     ? Container(
-                                         height: _height *70,
+                                        height: _height * 70,
                                         child: Padding(
                                           padding: const EdgeInsets.only(
                                               left: 16, right: 16, top: 0),
@@ -1486,7 +1565,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                     .GetPostCommetAPI(
                                                                         context,
                                                                         "${NewProfileData?.object?.userUid}",
-                                                                        "asc");//asc
+                                                                        "asc"); //asc
                                                               } else if (newValue ==
                                                                   "oldest to Newest") {
                                                                 BlocProvider.of<
@@ -1626,6 +1705,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           ?.object?.length,
                                                   itemBuilder:
                                                       (context, index) {
+                                                    DateTime parsedDateTime =
+                                                        DateTime.parse(
+                                                            '${GetUserPostCommetData?.object?[index].createdAt ?? ""}');
                                                     return Center(
                                                       child: Padding(
                                                         padding:
@@ -1735,22 +1817,22 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 child: Column(
                                                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                                                   children: [
+                                                                                    GetUserPostCommetData?.object?[index].description != null
+                                                                                        ? Text(
+                                                                                            '${GetUserPostCommetData?.object?[index].description}',
+                                                                                            style: TextStyle(
+                                                                                              color: Colors.black,
+                                                                                              fontSize: 14,
+                                                                                              fontFamily: 'outfit',
+                                                                                              fontWeight: FontWeight.w400,
+                                                                                            ),
+                                                                                          )
+                                                                                        : SizedBox(),
                                                                                     Text(
-                                                                                      '${GetUserPostCommetData?.object?[index].description}',
+                                                                                      getTimeDifference(parsedDateTime),
                                                                                       style: TextStyle(
-                                                                                        color: Colors.black,
-                                                                                        fontSize: 14,
-                                                                                        fontFamily: 'outfit',
-                                                                                        fontWeight: FontWeight.w400,
-                                                                                      ),
-                                                                                    ),
-                                                                                    Text(
-                                                                                      '1w',
-                                                                                      style: TextStyle(
-                                                                                        color: Color(0xFF8F8F8F),
                                                                                         fontSize: 12,
-                                                                                        fontFamily: 'outfit',
-                                                                                        fontWeight: FontWeight.w400,
+                                                                                        fontFamily: "outfit",
                                                                                       ),
                                                                                     ),
                                                                                     Expanded(
@@ -1760,6 +1842,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                           physics: NeverScrollableScrollPhysics(),
                                                                                           itemCount: GetUserPostCommetData?.object?[index].comments?.length == null ? 0 : ((GetUserPostCommetData?.object?[index].comments?.length ?? 0) > 2 ? 2 : GetUserPostCommetData?.object?[index].comments?.length),
                                                                                           itemBuilder: (context, index2) {
+                                                                                            DateTime parsedDateTime2 = DateTime.parse('${GetUserPostCommetData?.object?[index].comments?[index2].createdAt}');
                                                                                             return Row(
                                                                                               crossAxisAlignment: CrossAxisAlignment.start,
                                                                                               children: [
@@ -1804,14 +1887,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                                         ),
                                                                                                       ),
                                                                                                       Text(
-                                                                                                        '1w',
+                                                                                                        getTimeDifference(parsedDateTime2),
                                                                                                         style: TextStyle(
-                                                                                                          color: Color(0xFF8F8F8F),
                                                                                                           fontSize: 12,
                                                                                                           fontFamily: "outfit",
-                                                                                                          fontWeight: FontWeight.w400,
                                                                                                         ),
-                                                                                                      )
+                                                                                                      ),
                                                                                                     ],
                                                                                                   ),
                                                                                                 )
@@ -2021,20 +2102,23 @@ class _ProfileScreenState extends State<ProfileScreen>
         ),
       ));
     } else {
-      return Expanded(
-        child: ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: saveAllBlogModelData?.object?.length,
-          itemBuilder: (context, index) {
-            parsedDateTimeBlogs = DateTime.parse(
-                '${saveAllBlogModelData?.object?[index].createdAt ?? ""}');
-            return Container(
-              height: 150,
-              // color: Colors.red,
-              child: Padding(
-                padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                child: Center(
-                  child: GestureDetector(
+      return Padding(
+        padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: List.generate(saveAllBlogModelData?.object?.length ?? 0,
+                (index) {
+              parsedDateTimeBlogs = DateTime.parse(
+                  '${saveAllBlogModelData?.object?[index].createdAt ?? ""}');
+              return Container(
+                margin: EdgeInsets.only(bottom: 10),
+                height: 150,
+                // color: Colors.amber,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Color(0xffF1F1F1))),
+                child: GestureDetector(
                     onTap: () {
                       Navigator.push(
                           context,
@@ -2054,122 +2138,126 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     ""),
                           ));
                     },
-                    child: Container(
-                      height: 140,
-                      decoration: BoxDecoration(
-                          // color: Colors.green,
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: Colors.grey, width: 0.5)),
-                      child: Padding(
-                        padding: EdgeInsets.all(5.0),
-                        child: Row(
-                          children: [
-                            CustomImageView(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, top: 10),
+                          child: Container(
+                            width: 135,
+                            height: 135,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: CustomImageView(
                               url:
                                   "${saveAllBlogModelData?.object?[index].image}",
-                              width: 135,
-                              height: 135,
+                              fit: BoxFit.fill,
                             ),
-                            // Image.asset(
-                            //   ImageConstant.dummyImage,
-                            //   width: 135,
-                            // ),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width / 1.73,
+                          // color: Colors.amber,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Text(
+                                  "G${saveAllBlogModelData?.object?[index].title}",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Text(
+                                  "${saveAllBlogModelData?.object?[index].description}",
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.grey),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 10),
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        customFormat(parsedDateTimeBlogs!),
+                                        style: TextStyle(
+                                            fontSize: 9.5,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.grey),
+                                      ),
+                                      // Text(
+                                      //   "10:47 pm",
+                                      //   style: TextStyle(
+                                      //       fontSize: 9.5,
+                                      //       fontWeight: FontWeight.w400,
+                                      //       color: Colors.grey),
+                                      // ),
 
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 5),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            "G${saveAllBlogModelData?.object?[index].title}",
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.black),
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            "${saveAllBlogModelData?.object?[index].description}",
-                                            maxLines: 3,
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.grey),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          customFormat(parsedDateTimeBlogs!),
-                                          style: TextStyle(
-                                              fontSize: 9.5,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.grey),
-                                        ),
-                                        // Text(
-                                        //   "10:47 pm",
-                                        //   style: TextStyle(
-                                        //       fontSize: 9.5,
-                                        //       fontWeight: FontWeight.w400,
-                                        //       color: Colors.grey),
-                                        // ),
+                                      Text(
+                                        " ",
+                                        style: TextStyle(
+                                            fontSize: 9.5,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.grey),
+                                      ),
+                                      Spacer(),
+                                      GestureDetector(
+                                        onTap: () {
+                                          print("click on Blog like button");
 
-                                        Text(
-                                          " ",
-                                          style: TextStyle(
-                                              fontSize: 9.5,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.grey),
-                                        ),
-                                        Spacer(),
-                                        GestureDetector(
-                                          onTap: () {
-                                            print("click on Blog like button");
-
-                                            BlocProvider.of<NewProfileSCubit>(
-                                                    context)
-                                                .ProfileLikeBlog(
-                                                    context,
-                                                    "${User_ID}",
-                                                    "${saveAllBlogModelData?.object?[index].uid}");
-                                            if (saveAllBlogModelData
+                                          BlocProvider.of<NewProfileSCubit>(
+                                                  context)
+                                              .ProfileLikeBlog(
+                                                  context,
+                                                  "${User_ID}",
+                                                  "${saveAllBlogModelData?.object?[index].uid}");
+                                          if (saveAllBlogModelData
+                                                  ?.object?[index].isLiked ==
+                                              false) {
+                                            saveAllBlogModelData
+                                                ?.object?[index].isLiked = true;
+                                          } else {
+                                            saveAllBlogModelData?.object?[index]
+                                                .isLiked = false;
+                                          }
+                                        },
+                                        child: saveAllBlogModelData
                                                     ?.object?[index].isLiked ==
-                                                false) {
-                                              saveAllBlogModelData
-                                                  ?.object?[index]
-                                                  .isLiked = true;
-                                            } else {
-                                              saveAllBlogModelData
-                                                  ?.object?[index]
-                                                  .isLiked = false;
-                                            }
-                                          },
-                                          child: saveAllBlogModelData
-                                                      ?.object?[index]
-                                                      .isLiked ==
-                                                  false
-                                              ? Icon(Icons.favorite_border)
-                                              : Icon(
-                                                  Icons.favorite,
-                                                  color: Colors.red,
-                                                ),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        GestureDetector(
+                                                false
+                                            ? Icon(Icons.favorite_border)
+                                            : Icon(
+                                                Icons.favorite,
+                                                color: Colors.red,
+                                              ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      GestureDetector(
                                           onTap: () {
                                             print("Unsave Button");
 
@@ -2193,54 +2281,37 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               });
                                             }
                                           },
-                                          child: Positioned(
-                                              top: 8,
-                                              left: 8,
-                                              child: Container(
-                                                height: 25,
-                                                width: 25,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    color: Colors.white),
-                                                child: Center(
-                                                    child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(5.0),
-                                                  child: Image.asset(
-                                                    saveAllBlogModelData
-                                                                ?.object?[index]
-                                                                .isSaved ==
-                                                            false
-                                                        ? ImageConstant.savePin
-                                                        : ImageConstant
-                                                            .Savefill,
-                                                    width: 12.5,
-                                                  ),
-                                                )),
-                                              )),
-                                        ),
-                                        /* Image.asset(
-                                          ImageConstant.arrowright,
-                                          height: 15,
-                                        ), */
-                                      ],
-                                    )
-                                  ],
-                                ),
+                                          child: Container(
+                                            height: 25,
+                                            width: 25,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                color: Colors.white),
+                                            child: Center(
+                                                child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: Image.asset(
+                                                saveAllBlogModelData
+                                                            ?.object?[index]
+                                                            .isSaved ==
+                                                        false
+                                                    ? ImageConstant.savePin
+                                                    : ImageConstant.Savefill,
+                                                width: 12.5,
+                                              ),
+                                            )),
+                                          )),
+                                    ]),
                               ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
+                            ],
+                          ),
+                        )
+                      ],
+                    )),
+              );
+            })),
       );
     }
   }
