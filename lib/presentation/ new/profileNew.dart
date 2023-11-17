@@ -253,7 +253,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             .GetSavePostAPI(context, "${NewProfileData?.object?.userUid}");
 
         BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
-            context, "${NewProfileData?.object?.userUid}", "desc");
+            context, "${NewProfileData?.object?.userUid}", "asc");
         savedataFuntion(NewProfileData?.object?.userUid ?? '');
         NewProfileData?.object?.industryTypes?.forEach((element) {
           print(element.industryTypeName);
@@ -1317,7 +1317,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         true;
                                                                     isAbourtMe =
                                                                         false;
-                                                                        AbboutMeShow = false;
                                                                   });
                                                                 },
                                                                 child: isUpDate ==
@@ -1460,7 +1459,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 )),
                                                       );
                                                     },
-                                                    //Ankur will code
                                                     child: Container(
                                                         margin:
                                                             EdgeInsets.all(0.0),

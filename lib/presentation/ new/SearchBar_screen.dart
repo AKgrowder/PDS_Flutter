@@ -42,11 +42,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     ImageConstant.Rectangle,
   ];
   Timer? _timer;
-
   ScrollController scrollController = ScrollController();
-  ScrollController scrollController1 = ScrollController();
-  ScrollController scrollController2 = ScrollController();
-
   int? indexxx;
   bool isSerch = false;
   GetDataInSerch? getDataInSerch;
@@ -76,8 +72,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   void initState() {
     super.initState();
     getUserData();
-    BlocProvider.of<HashTagCubit>(context)
-        .HashTagForYouAPI(context, 'FOR YOU', '1');
+    BlocProvider.of<HashTagCubit>(context).HashTagForYouAPI(context, 'FOR YOU');
     BlocProvider.of<HashTagCubit>(context).serchDataGet(context);
 
     // BlocProvider.of<HashTagCubit>(context).HashTagBannerAPI(context);
@@ -256,6 +251,8 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 isSerch = true;
                               });
                             }
+
+                            print("xfhdsfhsdfgsdfg-$isSerch");
                           },
                           onChanged: (value) {
                             if (value.isNotEmpty) {
@@ -392,11 +389,10 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                       //TRENDING
                                       BlocProvider.of<HashTagCubit>(context)
                                           .HashTagForYouAPI(
-                                              context, 'TRENDING', '1');
+                                              context, 'TRENDING');
                                     } else {
                                       BlocProvider.of<HashTagCubit>(context)
-                                          .HashTagForYouAPI(
-                                              context, 'FOR YOU', '1');
+                                          .HashTagForYouAPI(context, 'FOR YOU');
                                     }
                                     if (mounted) {
                                       setState(() {
@@ -470,7 +466,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           child: historyData(),
                         )
                       : SizedBox(), */
-              /*       isSerch == true
+        /*       isSerch == true
                   ? SizedBox()
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -501,9 +497,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                   ? dataget == true
                       ? NavagtionPassing1()
                       : SizedBox()
-                  : apiDataSetup == true
-                      ? NavagtionPassing(hashtagModel: hashtagModel)
-                      : SizedBox()
+                  : NavagtionPassing(hashtagModel: hashtagModel),
             ],
           );
         },
@@ -653,181 +647,138 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     if (indexxx != null) {
       if (indexxx == 0) {
         return Expanded(
-          child: SingleChildScrollView(
-            controller: scrollController,
-            child: PaginationWidget(
-              scrollController: scrollController1,
-              totalSize: hashtagModel?.object?.totalElements,
-              offSet: hashtagModel?.object?.pageable?.pageNumber,
-              onPagination: (p0) async {
-                BlocProvider.of<HashTagCubit>(context)
-                    .HashTagForYouAPIDataGet(context, 'FOR YOU', '${(p0 + 1)}');
-              },
-              items: ListView.builder(
-                padding: EdgeInsets.zero,
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                primary: true,
-                itemCount: hashtagModel?.object?.content?.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      index == 0
-                          ? SizedBox()
-                          : Divider(
-                              height: 3,
-                              color: Colors.grey,
-                            ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                              top: 5, left: 10, right: 10, bottom: 5),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              HashTagText(
-                                text:
-                                    "${hashtagModel?.object?.content?[index].hashtagName}",
-                                decoratedStyle: TextStyle(
-                                    fontFamily: "outfit",
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorConstant.HasTagColor),
-                                basicStyle: TextStyle(
-                                    fontFamily: "outfit",
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
-                                onTap: (text) {
-                                  print('sdshfsdfh');
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            BlocProvider<HashTagCubit>(
-                                          create: (context) => HashTagCubit(),
-                                          child: HashTagViewScreen(
-                                              title:
-                                                  "${hashtagModel?.object?.content?[index].hashtagName}"),
-                                        ),
-                                      ));
-                                },
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 5),
-                                child: Text(
-                                  "${hashtagModel?.object?.content?[index].postCount} posts",
-                                  style: TextStyle(
-                                    color: Color(0xff808080),
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              )
-                            ],
+          child: ListView.builder(
+            padding: EdgeInsets.zero,
+            itemCount: hashtagModel?.object?.length,
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  Divider(
+                    height: 3,
+                    color: Colors.grey,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: 5, left: 10, right: 10, bottom: 5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          HashTagText(
+                            text: "${hashtagModel?.object?[index].hashtagName}",
+                            decoratedStyle: TextStyle(
+                                fontFamily: "outfit",
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: ColorConstant.HasTagColor),
+                            basicStyle: TextStyle(
+                                fontFamily: "outfit",
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                            onTap: (text) {
+                              print(text);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        BlocProvider<HashTagCubit>(
+                                      create: (context) => HashTagCubit(),
+                                      child: HashTagViewScreen(
+                                          title:
+                                              "${hashtagModel?.object?[index].hashtagName}"),
+                                    ),
+                                  ));
+                            },
                           ),
-                        ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 5),
+                            child: Text(
+                              "${hashtagModel?.object?[index].postCount} posts",
+                              style: TextStyle(
+                                color: Color(0xff808080),
+                                fontSize: 12,
+                              ),
+                            ),
+                          )
+                        ],
                       ),
-                    ],
-                  );
-                },
-              ),
-            ),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         );
       } else {
         return apiDataSetup == true
             ? Expanded(
-                child: SingleChildScrollView(
-                  controller: scrollController2,
-                  child: Column(
-                    children: [
-                      PaginationWidget(
-                        scrollController: scrollController2,
-                        totalSize: hashtagModel?.object?.totalElements,
-                        offSet: hashtagModel?.object?.pageable?.pageNumber,
-                        onPagination: (p0) async {
-                          BlocProvider.of<HashTagCubit>(context)
-                              .HashTagForYouAPIDataGet(
-                                  context, 'TRENDING', '${(p0 + 1)}');
-                        },
-                        items: ListView.builder(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.zero,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: hashtagModel?.object?.content?.length,
-                          itemBuilder: (context, index) {
-                            return Column(
+                child: ListView.builder(
+                  padding: EdgeInsets.zero,
+                  itemCount: hashtagModel?.object?.length,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        Divider(
+                          height: 3,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                top: 5, left: 10, right: 10, bottom: 5),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                index == 0
-                                    ? SizedBox()
-                                    : Divider(
-                                        height: 3,
-                                        color: Colors.grey,
-                                      ),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 5, left: 10, right: 10, bottom: 5),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        HashTagText(
-                                          text:
-                                              "${hashtagModel?.object?.content?[index].hashtagName}",
-                                          decoratedStyle: TextStyle(
-                                              fontFamily: "outfit",
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: ColorConstant.HasTagColor),
-                                          basicStyle: TextStyle(
-                                              fontFamily: "outfit",
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black),
-                                          onTap: (text) {
-                                            print(text);
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      BlocProvider<
-                                                          HashTagCubit>(
-                                                    create: (context) =>
-                                                        HashTagCubit(),
-                                                    child: HashTagViewScreen(
-                                                        title:
-                                                            "${hashtagModel?.object?.content?[index].hashtagName}"),
-                                                  ),
-                                                ));
-                                          },
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 5),
-                                          child: Text(
-                                            "${hashtagModel?.object?.content?[index].postCount} posts",
-                                            style: TextStyle(
-                                              color: Color(0xff808080),
-                                              fontSize: 12,
-                                            ),
+                                HashTagText(
+                                  text:
+                                      "${hashtagModel?.object?[index].hashtagName}",
+                                  decoratedStyle: TextStyle(
+                                      fontFamily: "outfit",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: ColorConstant.HasTagColor),
+                                  basicStyle: TextStyle(
+                                      fontFamily: "outfit",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                  onTap: (text) {
+                                    print(text);
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              BlocProvider<HashTagCubit>(
+                                            create: (context) => HashTagCubit(),
+                                            child: HashTagViewScreen(
+                                                title:
+                                                    "${hashtagModel?.object?[index].hashtagName}"),
                                           ),
-                                        )
-                                      ],
+                                        ));
+                                  },
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    "${hashtagModel?.object?[index].postCount} posts",
+                                    style: TextStyle(
+                                      color: Color(0xff808080),
+                                      fontSize: 12,
                                     ),
                                   ),
-                                ),
+                                )
                               ],
-                            );
-                          },
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    );
+                  },
                 ),
               )
             : SizedBox();
@@ -965,7 +916,6 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                             },
                             child: Container(
                               height: 50,
-                              
                               width: _width / 1.1,
                               decoration: BoxDecoration(
                                   border: Border.all(color: Colors.grey),
@@ -1115,7 +1065,6 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () {
-                           
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -1140,7 +1089,6 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                     width: 8,
                                   ),
                                   Container(
-                                 
                                     width: _width / 1.5,
                                     child: Text(
                                       "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}",

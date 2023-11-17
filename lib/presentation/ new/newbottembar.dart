@@ -45,7 +45,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
     SearchBarScreen(value2: 1),
     // NotificationsScreen(),
 
-    InboxScreen1(),
+    InboxScreen(),
     NewNotifactionScreen(),
     // SettingScreen(),
 

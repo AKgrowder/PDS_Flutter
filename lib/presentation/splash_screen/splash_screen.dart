@@ -141,6 +141,7 @@ class _SplashScreenState extends State<SplashScreen> {
     prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
     prefs.setString(PreferencesKey.IPAIosRoutVersion, "1");
     prefs.setString(PreferencesKey.IPAIosMainversion, "1");
+    prefs.setBool(PreferencesKey.RoutURl, false);
 
     systemConfigModel?.object?.forEach((element) async {
       if (element.name == "MaxDocUploadSizeInMB") {
@@ -193,7 +194,7 @@ class _SplashScreenState extends State<SplashScreen> {
         var SocketLink = element.value ?? "";
         print(" SocketLink  ${SocketLink}");
         prefs.setString(PreferencesKey.SocketLink, SocketLink);
-      } else if (element.name == "RoutURL") {
+      } else if (element.name == "ApkRouteURL") {
         var RoutURL = element.value ?? "";
         print(" RoutURL  ${RoutURL}");
         prefs.setString(PreferencesKey.RoutURL, RoutURL);
@@ -211,7 +212,7 @@ class _SplashScreenState extends State<SplashScreen> {
         prefs.setString(PreferencesKey.MaxPublicRoomSave, MaxPublicRoomSave);
       }
     });
-    VersionControll();
+    // VersionControll();
   }
 
   VersionControll() async {
@@ -233,7 +234,7 @@ class _SplashScreenState extends State<SplashScreen> {
     ipaIosMainversion = prefs.getString(PreferencesKey.IPAIosMainversion);
 
     // ShowSoftAlert = prefs.getBool(PreferencesKey.ShowSoftAlert);
-    VersionAlert();
+    // VersionAlert();
   }
 
   initDynamicLinks(BuildContext context) async {
