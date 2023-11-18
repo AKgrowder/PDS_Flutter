@@ -45,7 +45,7 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
         emit(GetUserPostCommetLoadedState(PublicRModel));
       }
     } catch (e) {
-      emit(NewProfileSErrorState(PublicRModel));
+      emit(NewProfileSErrorState(e.toString()));
     }
   }
 
