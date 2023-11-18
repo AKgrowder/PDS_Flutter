@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
+import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
 import 'package:pds/presentation/%20new/RePost_Screen.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dots_indicator/dots_indicator.dart';
@@ -87,6 +88,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   List<Widget> storyPagedata = [];
   GetAllStoryModel? getAllStoryModel;
   FetchAllExpertsModel? AllExperData;
+  SystemConfigModel? systemConfigModel;
   bool apiCalingdone = false;
   int sliderCurrentPosition = 0;
   List<PageController> _pageControllers = [];
@@ -145,7 +147,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   void initState() {
     Get_UserToken();
     storycontext = context;
-    SetUi();
+    VersionControll();
     super.initState();
   }
 
@@ -425,86 +427,74 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
   SetUi() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    // prefs.setString(PreferencesKey.module, user_Module);
-    // prefs.setString(PreferencesKey.UserProfile, User_profile);
+    systemConfigModel?.object?.forEach((element) async {
+      if (element.name == "MaxDocUploadSizeInMB") {
+        var fileSize = element.value!;
+        prefs.setString(PreferencesKey.fileSize, fileSize);
+      } else if (element.name == "MaxMediaUploadSizeInMB") {
+        var mediaSize = int.parse(element.value!);
+        prefs.setInt(PreferencesKey.mediaSize, mediaSize);
+      } else if (element.name == "ResendTimerInSeconds") {
+        var otpTimer = int.parse(element.value!);
+        print(" otp timer  ${otpTimer}");
+        prefs.setInt(PreferencesKey.otpTimer, otpTimer);
+      } else if (element.name == "ApkMinVersion") {
+        var ApkMinVersion = element.value ?? "";
+        print("ApkMinVersion  ${ApkMinVersion}");
+        prefs.setString(PreferencesKey.ApkMinVersion, ApkMinVersion);
+      } else if (element.name == "ApkLatestVersion") {
+        var ApkLatestVersion = element.value ?? "";
+        print(" ApkLatestVersion  ${ApkLatestVersion}");
+        prefs.setString(PreferencesKey.ApkLatestVersion, ApkLatestVersion);
+      } else if (element.name == "ApkRouteVersion") {
+        var ApkRouteVersion = element.value ?? "";
+        print(" ApkRouteVersion  ${ApkRouteVersion}");
+        prefs.setString(PreferencesKey.ApkRouteVersion, ApkRouteVersion);
+      } else if (element.name == "MaxPostUploadSizeInMB") {
+        prefs.setString(
+            PreferencesKey.MaxPostUploadSizeInMB, element.value ?? '');
+      }
 
-    prefs.setString(PreferencesKey.appApkRouteVersion, "2");
-    prefs.setString(PreferencesKey.appApkLatestVersion, "1");
-    prefs.setString(PreferencesKey.appApkMinVersion, "2");
+      /// -----
 
-    prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
-    prefs.setString(PreferencesKey.IPAIosRoutVersion, "1");
-    prefs.setString(PreferencesKey.IPAIosMainversion, "1");
+      else if (element.name == "IosLatestVersion") {
+        var IosLatestVersion = element.value ?? "";
+        print(" IosLatestVersion  ${IosLatestVersion}");
+        prefs.setString(PreferencesKey.IosLatestVersion, IosLatestVersion);
+      } else if (element.name == "IosRoutVersion") {
+        var IosRoutVersion = element.value ?? "";
+        print("IosRoutVersion  ${IosRoutVersion}");
+        prefs.setString(PreferencesKey.IosRoutVersion, IosRoutVersion);
+      } else if (element.name == "IosMainversion") {
+        var IosMainversion = element.value ?? "";
+        print(" IosMainversion  ${IosMainversion}");
+        prefs.setString(PreferencesKey.IosMainversion, IosMainversion);
+      }
 
-    /*systemConfigModel?.object?.forEach((element) async {
-    if (element.name == "MaxDocUploadSizeInMB") {
-      var fileSize = element.value!;
-      prefs.setString(PreferencesKey.fileSize, fileSize);
-    } else if (element.name == "MaxMediaUploadSizeInMB") {
-      var mediaSize = int.parse(element.value!);
-      prefs.setInt(PreferencesKey.mediaSize, mediaSize);
-    } else if (element.name == "ResendTimerInSeconds") {
-      var otpTimer = int.parse(element.value!);
-      print(" otp timer  ${otpTimer}");
-      prefs.setInt(PreferencesKey.otpTimer, otpTimer);
-    } else if (element.name == "ApkMinVersion") {
-      var ApkMinVersion = element.value ?? "";
-      print("ApkMinVersion  ${ApkMinVersion}");
-      prefs.setString(PreferencesKey.ApkMinVersion, ApkMinVersion);
-    } else if (element.name == "ApkLatestVersion") {
-      var ApkLatestVersion = element.value ?? "";
-      print(" ApkLatestVersion  ${ApkLatestVersion}");
-      prefs.setString(PreferencesKey.ApkLatestVersion, ApkLatestVersion);
-    } else if (element.name == "ApkRouteVersion") {
-      var ApkRouteVersion = element.value ?? "";
-      print(" ApkRouteVersion  ${ApkRouteVersion}");
-      prefs.setString(PreferencesKey.ApkRouteVersion, ApkRouteVersion);
-    } else if (element.name == "MaxPostUploadSizeInMB") {
-      print(" ApkRouteVersion  ${ApkRouteVersion}");
-      prefs.setString(
-          PreferencesKey.MaxPostUploadSizeInMB, element.value ?? '');
-    }
+      /// ---------
 
-    /// -----
-
-    else if (element.name == "IosLatestVersion") {
-      var IosLatestVersion = element.value ?? "";
-      print(" IosLatestVersion  ${IosLatestVersion}");
-      prefs.setString(PreferencesKey.IosLatestVersion, IosLatestVersion);
-    } else if (element.name == "IosRoutVersion") {
-      var IosRoutVersion = element.value ?? "";
-      print("IosRoutVersion  ${IosRoutVersion}");
-      prefs.setString(PreferencesKey.IosRoutVersion, IosRoutVersion);
-    } else if (element.name == "IosMainversion") {
-      var IosMainversion = element.value ?? "";
-      print(" IosMainversion  ${IosMainversion}");
-      prefs.setString(PreferencesKey.IosMainversion, IosMainversion);
-    }
-
-    /// ---------
-
-    else if (element.name == "SocketLink") {
-      var SocketLink = element.value ?? "";
-      print(" SocketLink  ${SocketLink}");
-      prefs.setString(PreferencesKey.SocketLink, SocketLink);
-    } else if (element.name == "RoutURL") {
-      var RoutURL = element.value ?? "";
-      print(" RoutURL  ${RoutURL}");
-      prefs.setString(PreferencesKey.RoutURL, RoutURL);
-    } else if (element.name == "SupportEmailId") {
-      var SupportEmailId = element.value ?? "";
-      print(" SupportEmailId  ${SupportEmailId}");
-      prefs.setString(PreferencesKey.SupportEmailId, SupportEmailId);
-    } else if (element.name == "SupportPhoneNumber") {
-      var SupportPhoneNumber = element.value ?? "";
-      print(" SupportPhoneNumber  ${SupportPhoneNumber}");
-      prefs.setString(PreferencesKey.SupportPhoneNumber, SupportPhoneNumber);
-    } else if (element.name == "MaxPublicRoomSave") {
-      var MaxPublicRoomSave = element.value ?? "";
-      print("SupportPhoneNumber  ${MaxPublicRoomSave}");
-      prefs.setString(PreferencesKey.MaxPublicRoomSave, MaxPublicRoomSave);
-    }
-  });*/
+      else if (element.name == "SocketLink") {
+        var SocketLink = element.value ?? "";
+        print(" SocketLink  ${SocketLink}");
+        prefs.setString(PreferencesKey.SocketLink, SocketLink);
+      } else if (element.name == "ApkRouteURL") {
+        var RoutURL = element.value ?? "";
+        print(" RoutURL  ${RoutURL}");
+        prefs.setString(PreferencesKey.RoutURL, RoutURL);
+      } else if (element.name == "SupportEmailId") {
+        var SupportEmailId = element.value ?? "";
+        print(" SupportEmailId  ${SupportEmailId}");
+        prefs.setString(PreferencesKey.SupportEmailId, SupportEmailId);
+      } else if (element.name == "SupportPhoneNumber") {
+        var SupportPhoneNumber = element.value ?? "";
+        print(" SupportPhoneNumber  ${SupportPhoneNumber}");
+        prefs.setString(PreferencesKey.SupportPhoneNumber, SupportPhoneNumber);
+      } else if (element.name == "MaxPublicRoomSave") {
+        var MaxPublicRoomSave = element.value ?? "";
+        print("SupportPhoneNumber  ${MaxPublicRoomSave}");
+        prefs.setString(PreferencesKey.MaxPublicRoomSave, MaxPublicRoomSave);
+      }
+    });
     VersionControll();
   }
 
@@ -527,10 +517,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     ipaIosMainversion = prefs.getString(PreferencesKey.IPAIosMainversion);
 
     bool ShowSoftAlert = prefs.getBool(PreferencesKey.ShowSoftAlert) ?? false;
-    VersionAlert(ShowSoftAlert);
+    bool OnetimeRoutChange =
+        prefs.getBool(PreferencesKey.OnetimeRoutChange) ?? false;
+    VersionAlert(ShowSoftAlert, OnetimeRoutChange);
   }
 
-  VersionAlert(bool ShowSoftAlert) async {
+  VersionAlert(bool ShowSoftAlert, bool OnetimeRoutChange) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (Platform.isAndroid) {
       if (int.parse(ApkMinVersion ?? "") >
@@ -549,10 +541,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
       if (int.parse(ApkRouteVersion ?? "") ==
           (int.parse(appApkRouteVersion ?? ""))) {
-        print("same");
-        setLOGOUT(context);
+        if (OnetimeRoutChange == false) {
+          setLOGOUT(context);
+        }
       } else {
-        prefs.setBool(PreferencesKey.RoutURl, false);
+        prefs.setBool(PreferencesKey.OnetimeRoutChange, false);
+        prefs.setBool(PreferencesKey.RoutURlChnage, false);
+
       }
     }
 
@@ -575,9 +570,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       if (int.parse(IosRoutVersion ?? "") ==
           (int.parse(ipaIosRoutVersion ?? ""))) {
         print("same");
-        setLOGOUT(context);
+        if (OnetimeRoutChange == false) {
+          setLOGOUT(context);
+        }
       } else {
-        prefs.setBool(PreferencesKey.RoutURl, false);
+        prefs.setBool(PreferencesKey.OnetimeRoutChange, false);
+        prefs.setBool(PreferencesKey.RoutURlChnage, false);
+   
       }
     }
   }
@@ -590,33 +589,27 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   setLOGOUT(BuildContext context) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     // prefs.clear();
-
+    // prefs.setBool(PreferencesKey.OnetimeRoutChange, true);
     prefs.remove(PreferencesKey.loginUserID);
     prefs.remove(PreferencesKey.loginJwt);
     prefs.remove(PreferencesKey.module);
     prefs.remove(PreferencesKey.UserProfile);
 
-    prefs.setBool(PreferencesKey.RoutURl, true);
+    prefs.setBool(PreferencesKey.RoutURlChnage, true);
     prefs.setBool(PreferencesKey.UpdateURLinSplash, true);
 
-    if (User_ID != "") {
-      BlocProvider.of<SystemConfigCubit>(context).UserModel(context);
-    }
-
-    BlocProvider.of<SystemConfigCubit>(context).SystemConfig(context);
-    Get_UserToken();
-    /*await Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MultiBlocProvider(
-                      providers: [
-                        BlocProvider<SystemConfigCubit>(
-                          create: (context) => SystemConfigCubit(),
-                        ),
-                      ],
-                      child: SplashScreen(),
-                    )),
-            (route) => false);*/
+    await Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider<SystemConfigCubit>(
+                      create: (context) => SystemConfigCubit(),
+                    ),
+                  ],
+                  child: SplashScreen(),
+                )),
+        (route) => false);
   }
 
   void showDeleteConfirmationDialog(
@@ -726,10 +719,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
   api() async {
     await BlocProvider.of<GetGuestAllPostCubit>(context)
+        .SystemConfigHome(context);
+    await BlocProvider.of<GetGuestAllPostCubit>(context)
         .GetGuestAllPostAPI(context, '1', showAlert: true);
   }
 
   NewApi() async {
+    await BlocProvider.of<GetGuestAllPostCubit>(context)
+        .SystemConfigHome(context);
     print("1111111111111 :- ${User_ID}");
     // /user/api/get_all_post
     await BlocProvider.of<GetGuestAllPostCubit>(context)
@@ -749,7 +746,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     if (uuid == null) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => RegisterCreateAccountScreen()));
-    } else if (apiName == 'Follow') {
+    } /* else if (apiName == 'Follow') {
       print("dfhsdfhsdfhsdgf");
       await BlocProvider.of<GetGuestAllPostCubit>(context).followWIngMethod(
           AllGuestPostRoomData?.object?.content?[index ?? 0].userUid, context);
@@ -760,6 +757,41 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       } else {
         AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing =
             'FOLLOW';
+      }
+    }  */ else if (apiName == 'Follow') {
+      print("dfhsdfhsdfhsdgf");
+      await BlocProvider.of<GetGuestAllPostCubit>(context).followWIngMethod(
+          AllGuestPostRoomData?.object?.content?[index ?? 0].userUid, context);
+      if (AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing ==
+          'FOLLOW') {
+        /* AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing =
+            'REQUESTED'; */
+        for (int i = 0;
+            i < (AllGuestPostRoomData?.object?.content?.length ?? 0);
+            i++) {
+              print("i-${i}");
+          if (AllGuestPostRoomData?.object?.content?[index ?? 0].userUid ==
+              AllGuestPostRoomData?.object?.content?[i].userUid) {
+            AllGuestPostRoomData?.object?.content?[i].isFollowing = 'REQUESTED';
+            print("check data-${AllGuestPostRoomData?.object?.content?[i].isFollowing}");
+          }
+          else{
+             AllGuestPostRoomData?.object?.content?[i].isFollowing = 'REQUESTED';
+          }
+        }
+      } else {
+        /* AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing =
+            'FOLLOW'; */
+            for (int i = 0;
+            i < (AllGuestPostRoomData?.object?.content?.length ?? 0);
+            i++) {
+          if (AllGuestPostRoomData?.object?.content?[index ?? 0].userUid ==
+              AllGuestPostRoomData?.object?.content?[i].userUid) {
+            AllGuestPostRoomData?.object?.content?[i].isFollowing = 'FOLLOW';
+          }else{
+             AllGuestPostRoomData?.object?.content?[i].isFollowing = 'FOLLOW';
+          }
+        }
       }
     } else if (apiName == 'like_post') {
       await BlocProvider.of<GetGuestAllPostCubit>(context).like_post(
@@ -845,6 +877,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
           if (state is FetchAllExpertsLoadedState) {
             AllExperData = state.AllExperData;
+          }
+          if (state is SystemConfigLoadedState) {
+            systemConfigModel = state.SystemConfigModelData;
+            SetUi();
           }
           if (state is GetGuestAllPostLoadingState) {
             Center(
