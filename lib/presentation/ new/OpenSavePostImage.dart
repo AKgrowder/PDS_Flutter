@@ -184,6 +184,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                 ))
                           ])
                     ])),
+                    OpenSaveModelData?.object?.postDataType == null ? SizedBox():
                 Container(
                   height: _height / 1.5,
                   width: _width,
@@ -303,18 +304,21 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                 ),
                 OpenSaveModelData?.object?.description == null
                     ? SizedBox()
-                    : Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "${OpenSaveModelData?.object?.description ?? ""}",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontFamily: 'outfit',
-                            fontWeight: FontWeight.w600,
+                    : Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "${OpenSaveModelData?.object?.description ?? ""}",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontFamily: 'outfit',
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
-                      ),
+                    ),
                 Container(
                   // color: Colors.white,
                   child: Padding(
