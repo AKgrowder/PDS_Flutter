@@ -29,7 +29,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     signingConfigs {
         release {
-            storeFile file('/home/anandpatel/Documents/PDS_Flutter/PDSApp.jks')
+            storeFile file('/Users/techgrowder/Archit Kheni/PDS_Flutter/PDS_Flutter/pds.jks')
             storePassword 'pds@123'
             keyAlias 'key0'
             keyPassword 'pds@123'

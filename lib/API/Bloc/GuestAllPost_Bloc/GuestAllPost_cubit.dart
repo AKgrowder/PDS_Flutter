@@ -245,4 +245,17 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostErrorState(getallBlogmodel));
     }
   }
+
+  Future<void> SystemConfigHome(BuildContext context) async {
+    dynamic systemConfigModel;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      systemConfigModel = await Repository().SystemConfig(context);
+      if (systemConfigModel.success == true) {
+        emit(SystemConfigLoadedState(systemConfigModel));
+      }
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(systemConfigModel));
+    }
+  }
 }
