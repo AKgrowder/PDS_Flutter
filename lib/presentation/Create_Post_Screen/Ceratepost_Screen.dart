@@ -739,7 +739,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
     try {
       final pickedFile = await _imagePicker.pickMultiImage();
       List<XFile> xFilePicker = pickedFile;
-
+      pickedImage.clear();
       if (xFilePicker.isNotEmpty) {
         if (xFilePicker.length <= 5) {
           for (var i = 0; i < xFilePicker.length; i++) {

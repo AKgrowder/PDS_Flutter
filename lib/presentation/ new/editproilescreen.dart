@@ -591,7 +591,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         Padding(
                           padding: const EdgeInsets.only(top: 10, bottom: 10),
                           child: Text(
-                            "User Name",
+                            "User ID",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
@@ -602,7 +602,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         customTextFeild(
                           controller: userNameController,
                           width: _width / 1.1,
-                          hintText: "Enter User Name",
+                          hintText: "Enter User ID",
                         ),
                         Row(
                           children: [

@@ -98,19 +98,19 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   DateTime? parsedDateTimeBlogs;
   FocusNode _focusNode = FocusNode();
 
-String? appApkMinVersion;
-String? appApkLatestVersion;
-String? appApkRouteVersion;
-String? ipaIosLatestVersion;
-String? ipaIosRoutVersion;
-String? ipaIosMainversion;
+  String? appApkMinVersion;
+  String? appApkLatestVersion;
+  String? appApkRouteVersion;
+  String? ipaIosLatestVersion;
+  String? ipaIosRoutVersion;
+  String? ipaIosMainversion;
 
-String? ApkMinVersion;
-String? ApkLatestVersion;
-String? ApkRouteVersion;
-String? IosLatestVersion;
-String? IosRoutVersion;
-String? IosMainversion;
+  String? ApkMinVersion;
+  String? ApkLatestVersion;
+  String? ApkRouteVersion;
+  String? IosLatestVersion;
+  String? IosRoutVersion;
+  String? IosMainversion;
 
   final focusNode = FocusNode();
   String getTimeDifference(DateTime dateTime) {
@@ -202,237 +202,241 @@ String? IosMainversion;
   }
 
   AlertHardUpdate() {
-  var height = MediaQuery.of(context).size.height;
-  var width = MediaQuery.of(context).size.width;
-  showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () async => false,
-          child: Dialog(
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)),
-            child: Container(
-              height: height / 2,
-              width: width,
-              // color: Colors.white,
-              child: Column(
-                children: [
-                  Image.asset(
-                    ImageConstant.alertimage,
-                    height: height / 4.8,
-                    width: width,
-                    fit: BoxFit.fill,
-                  ),
-                  Container(
-                    height: height / 7,
-                    width: width,
-                    color: Colors.white,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "New Version Alert",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: ColorConstant.primary_color,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "New application version is available",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15,
-                              color: Colors.black),
-                        ),
-                        Text(
-                          "please download latest version",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15,
-                              color: Colors.black),
-                        ),
-                      ],
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      final Uri url = Uri.parse(
-                          "https://play.google.com/store/apps/details?id=com.pds.app");
-
-                      launchUrl(url,
-                          mode: LaunchMode.externalApplication);
-                    },
-                    child: Container(
-                      height: 45,
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: Dialog(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              child: Container(
+                height: height / 2,
+                width: width,
+                // color: Colors.white,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      ImageConstant.alertimage,
+                      height: height / 4.8,
                       width: width,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10)),
-                          color: ColorConstant.primary_color),
-                      child: Center(
-                          child: Text(
-                        "Update",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 17,
-                          color: Colors.white,
-                        ),
-                      )),
+                      fit: BoxFit.fill,
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      });
-}
-
-AlertSoftUpdate() {
-  var height = MediaQuery.of(context).size.height;
-  var width = MediaQuery.of(context).size.width;
-  showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () async => false,
-          child: Dialog(
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)),
-            child: Container(
-              height: height / 2,
-              width: width,
-              // color: Colors.white,
-              child: Column(
-                children: [
-                  Image.asset(
-                    ImageConstant.alertimage,
-                    height: height / 4.8,
-                    width: width,
-                    fit: BoxFit.fill,
-                  ),
-                  Container(
-                    height: height / 7,
-                    width: width,
-                    color: Colors.white,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "New Version Alert",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: ColorConstant.primary_color,
+                    Container(
+                      height: height / 7,
+                      width: width,
+                      color: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 10,
                           ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "New application version is available",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15,
-                              color: Colors.black),
-                        ),
-                        Text(
-                          "please download latest version",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15,
-                              color: Colors.black),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          saveAlertStatus();
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          height: 50,
-                          width: width / 2.5,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: ColorConstant.primary_color),
-                              color: Colors.white),
-                          child: Center(
-                              child: Text(
-                            "Later",
+                          Text(
+                            "New Version Alert",
                             style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 17,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
                               color: ColorConstant.primary_color,
                             ),
-                          )),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          height: 50,
-                          width: width / 2.5,
-                          decoration: BoxDecoration(
-                              color: ColorConstant.primary_color),
-                          child: Center(
-                              child: Text(
-                            "Update",
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "New application version is available",
                             style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 17,
-                              color: Colors.white,
-                            ),
-                          )),
-                        ),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.black),
+                          ),
+                          Text(
+                            "please download latest version",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.black),
+                          ),
+                        ],
                       ),
-                    ],
-                  )
-                ],
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        final Uri url = Uri.parse(
+                            "https://play.google.com/store/apps/details?id=com.pds.app");
+
+                        launchUrl(url, mode: LaunchMode.externalApplication);
+                      },
+                      child: Container(
+                        height: 45,
+                        width: width,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10)),
+                            color: ColorConstant.primary_color),
+                        child: Center(
+                            child: Text(
+                          "Update",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 17,
+                            color: Colors.white,
+                          ),
+                        )),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      });
-}
+          );
+        });
+  }
 
-SetUi() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  // prefs.setString(PreferencesKey.module, user_Module);
-  // prefs.setString(PreferencesKey.UserProfile, User_profile);
+  AlertSoftUpdate() async {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
 
-  prefs.setString(PreferencesKey.appApkRouteVersion, "1");
-  prefs.setString(PreferencesKey.appApkLatestVersion, "1");
-  prefs.setString(PreferencesKey.appApkMinVersion, "2");
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: Dialog(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              child: Container(
+                height: height / 2,
+                width: width,
+                // color: Colors.white,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      ImageConstant.alertimage,
+                      height: height / 4.8,
+                      width: width,
+                      fit: BoxFit.fill,
+                    ),
+                    Container(
+                      height: height / 7,
+                      width: width,
+                      color: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "New Version Alert",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: ColorConstant.primary_color,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "New application version is available",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.black),
+                          ),
+                          Text(
+                            "please download latest version",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            saveAlertStatus();
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            height: 50,
+                            width: width / 2.5,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: ColorConstant.primary_color),
+                                color: Colors.white),
+                            child: Center(
+                                child: Text(
+                              "Later",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                                color: ColorConstant.primary_color,
+                              ),
+                            )),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            final Uri url = Uri.parse(
+                                "https://play.google.com/store/apps/details?id=com.pds.app");
 
-  prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
-  prefs.setString(PreferencesKey.IPAIosRoutVersion, "1");
-  prefs.setString(PreferencesKey.IPAIosMainversion, "1");
+                            launchUrl(url,
+                                mode: LaunchMode.externalApplication);
+                          },
+                          child: Container(
+                            height: 50,
+                            width: width / 2.5,
+                            decoration: BoxDecoration(
+                                color: ColorConstant.primary_color),
+                            child: Center(
+                                child: Text(
+                              "Update",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                                color: Colors.white,
+                              ),
+                            )),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
 
-  /*systemConfigModel?.object?.forEach((element) async {
+  SetUi() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // prefs.setString(PreferencesKey.module, user_Module);
+    // prefs.setString(PreferencesKey.UserProfile, User_profile);
+
+    prefs.setString(PreferencesKey.appApkRouteVersion, "2");
+    prefs.setString(PreferencesKey.appApkLatestVersion, "1");
+    prefs.setString(PreferencesKey.appApkMinVersion, "2");
+
+    prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
+    prefs.setString(PreferencesKey.IPAIosRoutVersion, "1");
+    prefs.setString(PreferencesKey.IPAIosMainversion, "1");
+
+    /*systemConfigModel?.object?.forEach((element) async {
     if (element.name == "MaxDocUploadSizeInMB") {
       var fileSize = element.value!;
       prefs.setString(PreferencesKey.fileSize, fileSize);
@@ -501,97 +505,119 @@ SetUi() async {
       prefs.setString(PreferencesKey.MaxPublicRoomSave, MaxPublicRoomSave);
     }
   });*/
-  VersionControll();
-}
-
-VersionControll() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  ApkMinVersion = prefs.getString(PreferencesKey.ApkMinVersion);
-  ApkLatestVersion = prefs.getString(PreferencesKey.ApkLatestVersion);
-  ApkRouteVersion = prefs.getString(PreferencesKey.ApkRouteVersion);
-
-  IosLatestVersion = prefs.getString(PreferencesKey.IosLatestVersion);
-  IosRoutVersion = prefs.getString(PreferencesKey.IosRoutVersion);
-  IosMainversion = prefs.getString(PreferencesKey.IosMainversion);
-
-  appApkRouteVersion = prefs.getString(PreferencesKey.appApkRouteVersion);
-  appApkLatestVersion = prefs.getString(PreferencesKey.appApkLatestVersion);
-  appApkMinVersion = prefs.getString(PreferencesKey.appApkMinVersion);
-
-  ipaIosLatestVersion = prefs.getString(PreferencesKey.IPAIosLatestVersion);
-  ipaIosRoutVersion = prefs.getString(PreferencesKey.IPAIosRoutVersion);
-  ipaIosMainversion = prefs.getString(PreferencesKey.IPAIosMainversion);
-
-  // ShowSoftAlert = prefs.getBool(PreferencesKey.ShowSoftAlert);
-  VersionAlert();
-}
-
-VersionAlert() {
-  if (Platform.isAndroid) {
-    if (int.parse(ApkMinVersion ?? "") >
-        (int.parse( appApkMinVersion ?? ""))) {
-      print("Moti1");
-      AlertHardUpdate();
-    }
-
-    if (int.parse(ApkLatestVersion ?? "") >
-        (int.parse(appApkLatestVersion ?? ""))) {
-      print("Moti2");
-      // if (ShowSoftAlert == false || ShowSoftAlert == null) {
-      AlertSoftUpdate();
-      // }
-    }
-
-    if (int.parse(ApkRouteVersion ?? "") ==
-        (int.parse(appApkRouteVersion ?? ""))) {
-      print("same");
-      setLOGOUT(context);
-    }
+    VersionControll();
   }
 
-  /// -----------------------------------------
-  if (Platform.isIOS) {
-    if (int.parse(IosMainversion ?? "") >
-        (int.parse(ipaIosMainversion ?? ""))) {
-      print("Moti1");
-      AlertHardUpdate();
+  VersionControll() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    ApkMinVersion = prefs.getString(PreferencesKey.ApkMinVersion);
+    ApkLatestVersion = prefs.getString(PreferencesKey.ApkLatestVersion);
+    ApkRouteVersion = prefs.getString(PreferencesKey.ApkRouteVersion);
+
+    IosLatestVersion = prefs.getString(PreferencesKey.IosLatestVersion);
+    IosRoutVersion = prefs.getString(PreferencesKey.IosRoutVersion);
+    IosMainversion = prefs.getString(PreferencesKey.IosMainversion);
+
+    appApkRouteVersion = prefs.getString(PreferencesKey.appApkRouteVersion);
+    appApkLatestVersion = prefs.getString(PreferencesKey.appApkLatestVersion);
+    appApkMinVersion = prefs.getString(PreferencesKey.appApkMinVersion);
+
+    ipaIosLatestVersion = prefs.getString(PreferencesKey.IPAIosLatestVersion);
+    ipaIosRoutVersion = prefs.getString(PreferencesKey.IPAIosRoutVersion);
+    ipaIosMainversion = prefs.getString(PreferencesKey.IPAIosMainversion);
+
+    bool ShowSoftAlert = prefs.getBool(PreferencesKey.ShowSoftAlert) ?? false;
+    VersionAlert(ShowSoftAlert);
+  }
+
+  VersionAlert(bool ShowSoftAlert) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (Platform.isAndroid) {
+      if (int.parse(ApkMinVersion ?? "") >
+          (int.parse(appApkMinVersion ?? ""))) {
+        print("Moti1");
+        AlertHardUpdate();
+      }
+
+      if (int.parse(ApkLatestVersion ?? "") >
+          (int.parse(appApkLatestVersion ?? ""))) {
+        print("Moti2");
+        if (ShowSoftAlert == false || ShowSoftAlert == null) {
+          AlertSoftUpdate();
+        }
+      }
+
+      if (int.parse(ApkRouteVersion ?? "") ==
+          (int.parse(appApkRouteVersion ?? ""))) {
+        print("same");
+        setLOGOUT(context);
+      } else {
+        prefs.setBool(PreferencesKey.RoutURl, false);
+      }
     }
 
-    if (int.parse(IosLatestVersion ?? "") >
-        (int.parse(ipaIosLatestVersion ?? ""))) {
-      print("Moti2");
-      AlertSoftUpdate();
-    }
+    /// -----------------------------------------
+    if (Platform.isIOS) {
+      if (int.parse(IosMainversion ?? "") >
+          (int.parse(ipaIosMainversion ?? ""))) {
+        print("Moti1");
+        AlertHardUpdate();
+      }
 
-    if (int.parse(IosRoutVersion ?? "") ==
-        (int.parse(ipaIosRoutVersion ?? ""))) {
-      print("same");
-      setLOGOUT(context);
+      if (int.parse(IosLatestVersion ?? "") >
+          (int.parse(ipaIosLatestVersion ?? ""))) {
+        print("Moti2");
+        if (ShowSoftAlert == false || ShowSoftAlert == null) {
+          AlertSoftUpdate();
+        }
+      }
+
+      if (int.parse(IosRoutVersion ?? "") ==
+          (int.parse(ipaIosRoutVersion ?? ""))) {
+        print("same");
+        setLOGOUT(context);
+      } else {
+        prefs.setBool(PreferencesKey.RoutURl, false);
+      }
     }
   }
-}
 
   saveAlertStatus() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool(PreferencesKey.ShowSoftAlert, true);
-}
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(PreferencesKey.ShowSoftAlert, true);
+  }
 
-setLOGOUT(BuildContext context) async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.clear();
-  await Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-          builder: (context) => MultiBlocProvider(
-                providers: [
-                  BlocProvider<SystemConfigCubit>(
-                    create: (context) => SystemConfigCubit(),
-                  ),
-                ],
-                child: SplashScreen(),
-              )),
-      (route) => false);
-}
+  setLOGOUT(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // prefs.clear();
+
+    prefs.remove(PreferencesKey.loginUserID);
+    prefs.remove(PreferencesKey.loginJwt);
+    prefs.remove(PreferencesKey.module);
+    prefs.remove(PreferencesKey.UserProfile);
+
+    prefs.setBool(PreferencesKey.RoutURl, true);
+    prefs.setBool(PreferencesKey.UpdateURLinSplash, true);
+
+    if (User_ID != "") {
+      BlocProvider.of<SystemConfigCubit>(context).UserModel(context);
+    }
+
+    BlocProvider.of<SystemConfigCubit>(context).SystemConfig(context);
+    Get_UserToken();
+    /*await Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MultiBlocProvider(
+                      providers: [
+                        BlocProvider<SystemConfigCubit>(
+                          create: (context) => SystemConfigCubit(),
+                        ),
+                      ],
+                      child: SplashScreen(),
+                    )),
+            (route) => false);*/
+  }
 
   void showDeleteConfirmationDialog(
       BuildContext context, String PostUID, int index) {
@@ -880,7 +906,7 @@ setLOGOUT(BuildContext context) async {
                     false)) {
               state.getAllStoryModel.object?.forEach((element) {
                 if (element.userUid == User_ID) {
-                  userName.insert(0,element.userName.toString());
+                  userName.insert(0, element.userName.toString());
                   buttonDatas.insert(
                       0,
                       StoryButtonData(
@@ -892,7 +918,7 @@ setLOGOUT(BuildContext context) async {
                                   image: NetworkImage(element.profilePic))
                               : DecorationImage(
                                   image: AssetImage(
-                                    ImageConstant.tomcruse,
+                                    ImageConstant.placeholder2,
                                   ),
                                   fit: BoxFit.cover,
                                 ),
@@ -3159,275 +3185,260 @@ setLOGOUT(BuildContext context) async {
                                               ? SizedBox(
                                                   height: 30,
                                                 )
-                                              : Column(
-                                                  children: [
-                                                    SizedBox(
-                                                      height: 30,
-                                                    ),
-                                                    Row(
+                                              : AllExperData?.object
+                                                          ?.isNotEmpty ==
+                                                      false
+                                                  ? SizedBox(
+                                                      height: 20,
+                                                    )
+                                                  : Column(
                                                       children: [
-                                                        Container(
-                                                          margin:
-                                                              EdgeInsets.only(
-                                                                  left: 10),
-                                                          child: Text(
-                                                            'Experts',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    "outfit",
-                                                                fontSize: 18,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
+                                                        SizedBox(
+                                                          height: 30,
                                                         ),
-                                                        Spacer(),
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                      builder: (context) => MultiBlocProvider(
-                                                                          providers: [
+                                                        Row(
+                                                          children: [
+                                                            Container(
+                                                              margin: EdgeInsets
+                                                                  .only(
+                                                                      left: 10),
+                                                              child: Text(
+                                                                'Experts',
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        "outfit",
+                                                                    fontSize:
+                                                                        18,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .black),
+                                                              ),
+                                                            ),
+                                                            Spacer(),
+                                                            GestureDetector(
+                                                              onTap: () {
+                                                                Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              MultiBlocProvider(providers: [
                                                                             BlocProvider<SherInviteCubit>(
                                                                               create: (_) => SherInviteCubit(),
                                                                             ),
-                                                                          ],
-                                                                          child:
-                                                                              ExpertsScreen(RoomUUID: "")),
-                                                                      // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
-                                                                    ))
-                                                                .then((value) =>
-                                                                    setState(
-                                                                        () {
-                                                                      // refresh = true;
-                                                                    }));
-                                                          },
-                                                          child: SizedBox(
-                                                              height: 20,
-                                                              child: Icon(
-                                                                Icons
-                                                                    .arrow_forward_rounded,
-                                                                color: Colors
-                                                                    .black,
-                                                              )),
+                                                                          ], child: ExpertsScreen(RoomUUID: "")),
+                                                                          // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
+                                                                        ))
+                                                                    .then((value) =>
+                                                                        setState(
+                                                                            () {
+                                                                          // refresh = true;
+                                                                        }));
+                                                              },
+                                                              child: SizedBox(
+                                                                  height: 20,
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .arrow_forward_rounded,
+                                                                    color: Colors
+                                                                        .black,
+                                                                  )),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                          ],
                                                         ),
-                                                        SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Container(
-                                                      // color: Colors.green,
-                                                      height: 230,
-                                                      width: _width,
-                                                      child: ListView.builder(
-                                                        itemCount: AllExperData
-                                                            ?.object?.length,
-                                                        scrollDirection:
-                                                            Axis.horizontal,
-                                                        itemBuilder:
-                                                            (context, index) {
-                                                          return Center(
-                                                            child: Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(
+                                                        Container(
+                                                          // color: Colors.green,
+                                                          height: 230,
+                                                          width: _width,
+                                                          child:
+                                                              ListView.builder(
+                                                            itemCount:
+                                                                AllExperData
+                                                                    ?.object
+                                                                    ?.length,
+                                                            scrollDirection:
+                                                                Axis.horizontal,
+                                                            itemBuilder:
+                                                                (context,
+                                                                    index) {
+                                                              return Center(
+                                                                child: Padding(
+                                                                  padding: EdgeInsets.only(
                                                                       left: index ==
                                                                               0
                                                                           ? 16
                                                                           : 4,
                                                                       right: 4),
-                                                              child: Container(
-                                                                height: 190,
-                                                                width: 130,
-                                                                decoration:
-                                                                    BoxDecoration(
+                                                                  child:
+                                                                      Container(
+                                                                    height: 190,
+                                                                    width: 130,
+                                                                    decoration: BoxDecoration(
                                                                         // color: Colors.red,
-                                                                        border: Border.all(
-                                                                            color: Colors
-                                                                                .red,
+                                                                        border: Border.all(color: Colors.red, width: 3),
+                                                                        borderRadius: BorderRadius.circular(14)),
+                                                                    child:
+                                                                        Stack(
+                                                                      children: [
+                                                                        CustomImageView(
+                                                                          height:
+                                                                              180,
+                                                                          width:
+                                                                              128,
+                                                                          radius: BorderRadius.only(
+                                                                              topLeft: Radius.circular(10),
+                                                                              topRight: Radius.circular(10)),
+                                                                          url:
+                                                                              "${AllExperData?.object?[index].profilePic}",
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                        ),
+                                                                        Align(
+                                                                          alignment:
+                                                                              Alignment.topCenter,
+                                                                          child:
+                                                                              Container(
+                                                                            height:
+                                                                                24,
+                                                                            alignment:
+                                                                                Alignment.center,
                                                                             width:
-                                                                                3),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(14)),
-                                                                child: Stack(
-                                                                  children: [
-                                                                    CustomImageView(
-                                                                      height:
-                                                                          180,
-                                                                      width:
-                                                                          128,
-                                                                      radius: BorderRadius.only(
-                                                                          topLeft: Radius.circular(
-                                                                              10),
-                                                                          topRight:
-                                                                              Radius.circular(10)),
-                                                                      url:
-                                                                          "${AllExperData?.object?[index].profilePic}",
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    ),
-                                                                    Align(
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .topCenter,
-                                                                      child:
-                                                                          Container(
-                                                                        height:
-                                                                            24,
-                                                                        alignment:
-                                                                            Alignment.center,
-                                                                        width:
-                                                                            70,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          borderRadius:
-                                                                              BorderRadius.only(
-                                                                            bottomLeft:
-                                                                                Radius.circular(8),
-                                                                            bottomRight:
-                                                                                Radius.circular(8),
-                                                                          ),
-                                                                          color: Color.fromRGBO(
-                                                                              237,
-                                                                              28,
-                                                                              37,
-                                                                              0.5),
-                                                                        ),
-                                                                        child:
-                                                                            Row(
-                                                                          children: [
-                                                                            Padding(
-                                                                              padding: EdgeInsets.only(left: 8, right: 4),
-                                                                              child: Icon(
-                                                                                Icons.person_add_alt,
-                                                                                size: 16,
-                                                                                color: Colors.white,
+                                                                                70,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              borderRadius: BorderRadius.only(
+                                                                                bottomLeft: Radius.circular(8),
+                                                                                bottomRight: Radius.circular(8),
                                                                               ),
+                                                                              color: Color.fromRGBO(237, 28, 37, 0.5),
                                                                             ),
-                                                                            Text(
-                                                                              'Follow',
-                                                                              style: TextStyle(fontFamily: "outfit", fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold),
-                                                                            )
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    Padding(
-                                                                      padding: EdgeInsets.only(
-                                                                          bottom:
-                                                                              25),
-                                                                      child:
-                                                                          Align(
-                                                                        alignment:
-                                                                            Alignment.bottomCenter,
-                                                                        child:
-                                                                            Container(
-                                                                          height:
-                                                                              40,
-                                                                          width:
-                                                                              115,
-                                                                          // color: Colors.amber,
-                                                                          child:
-                                                                              Column(
-                                                                            children: [
-                                                                              Row(
-                                                                                children: [
-                                                                                  Text(
-                                                                                    "${AllExperData?.object?[index].userName}",
-                                                                                    style: TextStyle(fontSize: 11, color: Colors.white, fontFamily: "outfit", fontWeight: FontWeight.bold),
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: 2,
-                                                                                  ),
-                                                                                  Image.asset(
-                                                                                    ImageConstant.Star,
-                                                                                    height: 11,
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                              Row(
-                                                                                children: [
-                                                                                  SizedBox(height: 13, child: Image.asset(ImageConstant.beg)),
-                                                                                  SizedBox(
-                                                                                    width: 2,
-                                                                                  ),
-                                                                                  Text(
-                                                                                    'Expertise in ${AllExperData?.object?[index].expertise?[0].expertiseName}',
-                                                                                    maxLines: 1,
-                                                                                    style: TextStyle(fontFamily: "outfit", fontSize: 11, overflow: TextOverflow.ellipsis, color: Colors.white, fontWeight: FontWeight.bold),
-                                                                                  ),
-                                                                                ],
-                                                                              )
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    GestureDetector(
-                                                                      onTap:
-                                                                          () {
-                                                                        Navigator
-                                                                            .push(
-                                                                                context,
-                                                                                MaterialPageRoute(
-                                                                                  builder: (context) => MultiBlocProvider(providers: [
-                                                                                    BlocProvider<SherInviteCubit>(
-                                                                                      create: (_) => SherInviteCubit(),
-                                                                                    ),
-                                                                                  ], child: ExpertsScreen(RoomUUID: "")),
-                                                                                  // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
-                                                                                )).then((value) =>
-                                                                            setState(() {
-                                                                              // refresh = true;
-                                                                            }));
-                                                                      },
-                                                                      child:
-                                                                          Align(
-                                                                        alignment:
-                                                                            Alignment.bottomCenter,
-                                                                        child:
-                                                                            Container(
-                                                                          height:
-                                                                              25,
-                                                                          width:
-                                                                              130,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            borderRadius:
-                                                                                BorderRadius.only(
-                                                                              bottomLeft: Radius.circular(8),
-                                                                              bottomRight: Radius.circular(8),
-                                                                            ),
-                                                                            color:
-                                                                                Color(0xffED1C25),
-                                                                          ),
-                                                                          child:
-                                                                              Center(
                                                                             child:
+                                                                                Row(
+                                                                              children: [
+                                                                                Padding(
+                                                                                  padding: EdgeInsets.only(left: 8, right: 4),
+                                                                                  child: Icon(
+                                                                                    Icons.person_add_alt,
+                                                                                    size: 16,
+                                                                                    color: Colors.white,
+                                                                                  ),
+                                                                                ),
                                                                                 Text(
-                                                                              'Invite',
-                                                                              style: TextStyle(fontFamily: "outfit", fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold),
+                                                                                  'Follow',
+                                                                                  style: TextStyle(fontFamily: "outfit", fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold),
+                                                                                )
+                                                                              ],
                                                                             ),
                                                                           ),
                                                                         ),
-                                                                      ),
+                                                                        Padding(
+                                                                          padding:
+                                                                              EdgeInsets.only(bottom: 25),
+                                                                          child:
+                                                                              Align(
+                                                                            alignment:
+                                                                                Alignment.bottomCenter,
+                                                                            child:
+                                                                                Container(
+                                                                              height: 40,
+                                                                              width: 115,
+                                                                              // color: Colors.amber,
+                                                                              child: Column(
+                                                                                children: [
+                                                                                  Row(
+                                                                                    children: [
+                                                                                      Text(
+                                                                                        "${AllExperData?.object?[index].userName}",
+                                                                                        style: TextStyle(fontSize: 11, color: Colors.white, fontFamily: "outfit", fontWeight: FontWeight.bold),
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        width: 2,
+                                                                                      ),
+                                                                                      Image.asset(
+                                                                                        ImageConstant.Star,
+                                                                                        height: 11,
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                  Row(
+                                                                                    children: [
+                                                                                      SizedBox(height: 13, child: Image.asset(ImageConstant.beg)),
+                                                                                      SizedBox(
+                                                                                        width: 2,
+                                                                                      ),
+                                                                                      Text(
+                                                                                        'Expertise in ${AllExperData?.object?[index].expertise?[0].expertiseName}',
+                                                                                        maxLines: 1,
+                                                                                        style: TextStyle(fontFamily: "outfit", fontSize: 11, overflow: TextOverflow.ellipsis, color: Colors.white, fontWeight: FontWeight.bold),
+                                                                                      ),
+                                                                                    ],
+                                                                                  )
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        GestureDetector(
+                                                                          onTap:
+                                                                              () {
+                                                                            Navigator
+                                                                                .push(
+                                                                                    context,
+                                                                                    MaterialPageRoute(
+                                                                                      builder: (context) => MultiBlocProvider(providers: [
+                                                                                        BlocProvider<SherInviteCubit>(
+                                                                                          create: (_) => SherInviteCubit(),
+                                                                                        ),
+                                                                                      ], child: ExpertsScreen(RoomUUID: "")),
+                                                                                      // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
+                                                                                    )).then((value) =>
+                                                                                setState(() {
+                                                                                  // refresh = true;
+                                                                                }));
+                                                                          },
+                                                                          child:
+                                                                              Align(
+                                                                            alignment:
+                                                                                Alignment.bottomCenter,
+                                                                            child:
+                                                                                Container(
+                                                                              height: 25,
+                                                                              width: 130,
+                                                                              decoration: BoxDecoration(
+                                                                                borderRadius: BorderRadius.only(
+                                                                                  bottomLeft: Radius.circular(8),
+                                                                                  bottomRight: Radius.circular(8),
+                                                                                ),
+                                                                                color: Color(0xffED1C25),
+                                                                              ),
+                                                                              child: Center(
+                                                                                child: Text(
+                                                                                  'Invite',
+                                                                                  style: TextStyle(fontFamily: "outfit", fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
                                                                     ),
-                                                                  ],
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ),
-                                                          );
-                                                        },
-                                                      ),
-                                                    )
-                                                  ],
-                                                );
+                                                              );
+                                                            },
+                                                          ),
+                                                        )
+                                                      ],
+                                                    );
                                     }
 
-                                    if (index == 4) {
+                                    if (getallBlogModel1?.object?.isNotEmpty ==
+                                            true &&
+                                        index == 0) {
                                       // print("index check$index");
                                       return User_ID == null
                                           ? SizedBox(

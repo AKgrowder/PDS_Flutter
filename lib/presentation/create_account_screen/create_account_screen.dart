@@ -88,7 +88,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   void initState() {
     dataGet();
     getDocumentSize();
-    _requestPermissions();
+    /* _requestPermissions(); */
   }
 
   @override
@@ -363,7 +363,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               top: 18,
                             ),
                             child: Text(
-                              "User Name",
+                              "User ID",
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.left,
                               style: TextStyle(
@@ -389,7 +389,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             validator: (value) {
                               RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                               if (value!.isEmpty) {
-                                return 'Please Enter User Name';
+                                return 'Please Enter User ID';
                               } else if (!nameRegExp.hasMatch(value)) {
                                 return 'Input cannot contains prohibited special characters';
                               } else if (value.length < 1 ||
@@ -399,7 +399,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               return null;
                             },
                             // textStyle: theme.textTheme.titleMedium!,
-                            hintText: "User Name",
+                            hintText: "User Id",
                             // hintStyle: theme.textTheme.titleMedium!,
                             textInputAction: TextInputAction.next,
                             filled: true,
@@ -414,7 +414,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               top: 20,
                             ),
                             child: Text(
-                              "Name",
+                              "@Name",
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.left,
                               style: TextStyle(
@@ -455,7 +455,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               bottom: 14,
                             ),
                             // textStyle: theme.textTheme.titleMedium!,
-                            hintText: "Enter Name",
+                            hintText: "Enter @Name",
                             // hintStyle: theme.textTheme.titleMedium!,
                             textInputAction: TextInputAction.next,
                             filled: true,

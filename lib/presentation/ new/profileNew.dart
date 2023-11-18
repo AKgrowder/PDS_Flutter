@@ -253,7 +253,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             .GetSavePostAPI(context, "${NewProfileData?.object?.userUid}");
 
         BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
-            context, "${NewProfileData?.object?.userUid}", "asc");
+            context, "${NewProfileData?.object?.userUid}", "desc");
         savedataFuntion(NewProfileData?.object?.userUid ?? '');
         NewProfileData?.object?.industryTypes?.forEach((element) {
           print(element.industryTypeName);
@@ -622,7 +622,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         border: Border.all(
                                             color: Color(0xffED1C25))),
                                     child: Text(
-                                      'Edit Profile',
+                                      'Personal Details',
                                       style: TextStyle(
                                           fontFamily: "outfit",
                                           fontSize: 18,
@@ -1013,58 +1013,64 @@ class _ProfileScreenState extends State<ProfileScreen>
                               height: 1,
                               color: Colors.black12,
                             ),
-                            Expanded(
-                              child: GestureDetector(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                        height: 40,
-                                        alignment: Alignment.center,
-                                        // color: arrNotiyTypeList[2].isSelected
-                                        //     ? Color(0xFFED1C25)
-                                        //     : Theme.of(context).brightness == Brightness.light
-                                        //         ? Colors.white
-                                        //         : Colors.black,
-                                        child: Center(
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  const Spacer(),
-                                                  Text("Comments",
-                                                      textScaleFactor: 1.0,
-                                                      style: TextStyle(
-                                                          // color: arrNotiyTypeList[3].isSelected
-                                                          //     ? Colors.white
-                                                          //     : Colors.black,
-                                                          fontSize: 18,
-                                                          fontFamily: 'Outfit',
-                                                          fontWeight:
-                                                              FontWeight.bold)),
-                                                  Spacer(),
-                                                ],
-                                              ),
-                                              arrNotiyTypeList[2].isSelected
-                                                  ? Divider(
-                                                      endIndent: 5,
-                                                      indent: 5,
-                                                      color: Colors.black,
-                                                    )
-                                                  : SizedBox(),
-                                            ],
-                                          ),
-                                        )),
-                                  ],
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    updateType();
-                                    arrNotiyTypeList[2].isSelected = true;
-                                  });
-                                  print("abcd");
-                                },
-                              ),
-                            ),
+                            User_ID == NewProfileData?.object?.userUid
+                                ? Expanded(
+                                    child: GestureDetector(
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                              height: 40,
+                                              alignment: Alignment.center,
+                                              // color: arrNotiyTypeList[2].isSelected
+                                              //     ? Color(0xFFED1C25)
+                                              //     : Theme.of(context).brightness == Brightness.light
+                                              //         ? Colors.white
+                                              //         : Colors.black,
+                                              child: Center(
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        const Spacer(),
+                                                        Text("Comments",
+                                                            textScaleFactor:
+                                                                1.0,
+                                                            style: TextStyle(
+                                                                // color: arrNotiyTypeList[3].isSelected
+                                                                //     ? Colors.white
+                                                                //     : Colors.black,
+                                                                fontSize: 18,
+                                                                fontFamily:
+                                                                    'Outfit',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                        Spacer(),
+                                                      ],
+                                                    ),
+                                                    arrNotiyTypeList[2]
+                                                            .isSelected
+                                                        ? Divider(
+                                                            endIndent: 5,
+                                                            indent: 5,
+                                                            color: Colors.black,
+                                                          )
+                                                        : SizedBox(),
+                                                  ],
+                                                ),
+                                              )),
+                                        ],
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          updateType();
+                                          arrNotiyTypeList[2].isSelected = true;
+                                        });
+                                        print("abcd");
+                                      },
+                                    ),
+                                  )
+                                : SizedBox(),
                             User_ID == NewProfileData?.object?.userUid
                                 ? Expanded(
                                     child: GestureDetector(
@@ -1123,15 +1129,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                           User_ID == NewProfileData?.object?.userUid)
                         Container(
                           // color: Colors.red,
-                          height: _height,
-                          /* arrNotiyTypeList[0].isSelected == true
+                          /*  height: _height, */
+                          height: arrNotiyTypeList[0].isSelected == true
                               ? NewProfileData?.object?.module == "EMPLOYEE"
                                   ? _height / 3
                                   : NewProfileData?.object?.module == "EXPERT"
-                                      ? 630
+                                      ? 830
                                       : NewProfileData?.object?.module ==
                                               "COMPANY"
-                                          ? 450
+                                          ? 650
                                           : 0
                               : arrNotiyTypeList[1].isSelected == true
                                   ? FinalPostCount * 190
@@ -1141,9 +1147,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           ? /* value1 == 0
                                     ? FinalSavePostCount * 230
                                     : */
-                                          SaveBlogCount * 145 + 100
-                                          : 10, */
+                                          SaveBlogCount * 155 + 100
+                                          : 10,
                           child: SingleChildScrollView(
+                            physics: NeverScrollableScrollPhysics(),
                             child: Column(
                               children: <Widget>[
                                 /// Content of Tab 1
@@ -1317,6 +1324,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         true;
                                                                     isAbourtMe =
                                                                         false;
+                                                                    AbboutMeShow =
+                                                                        false;
                                                                   });
                                                                 },
                                                                 child: isUpDate ==
@@ -1411,9 +1420,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 /// Content of Tab 2
                                 arrNotiyTypeList[1].isSelected
                                     ? Container(
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                1,
+                                        height: FinalPostCount * 190,
                                         // color: Colors.yellow,
                                         child: Padding(
                                           padding: EdgeInsets.only(
@@ -1459,20 +1466,71 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 )),
                                                       );
                                                     },
-                                                    child: Container(
-                                                        margin:
-                                                            EdgeInsets.all(0.0),
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20)), // Remove margin
+                                                    //Ankur will code
+                                                    child:
 
-                                                        child: CustomImageView(
-                                                          fit: BoxFit.cover,
-                                                          url:
-                                                              "${GetAllPostData?.object?[index].postData?[0]}",
-                                                        )),
+                                                        ///   TEST IMAGE
+
+                                                        GetAllPostData
+                                                                    ?.object?[
+                                                                        index]
+                                                                    .postDataType ==
+                                                                "IMAGE"
+                                                            ? Container(
+                                                                margin: EdgeInsets.all(
+                                                                    0.0),
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            20)), // Remove margin
+
+                                                                child:
+                                                                    CustomImageView(
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  url:
+                                                                      "${GetAllPostData?.object?[index].postData?[0]}",
+                                                                ))
+                                                            : GetAllPostData
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .postDataType ==
+                                                                    "ATTACHMENT"
+                                                                ? Container(
+                                                                    margin:
+                                                                        EdgeInsets.all(
+                                                                            0.0),
+                                                                    decoration: BoxDecoration(
+                                                                        borderRadius: BorderRadius.circular(
+                                                                            20)), // Remove margin
+
+                                                                    child:
+                                                                        DocumentViewScreen1(
+                                                                      path: GetAllPostData
+                                                                          ?.object?[
+                                                                              index]
+                                                                          .postData?[0],
+                                                                    ))
+                                                                : GetAllPostData
+                                                                            ?.object?[index]
+                                                                            .postDataType ==
+                                                                        null
+                                                                    ? Container(
+                                                                        margin: EdgeInsets.all(0.0),
+                                                                        decoration: BoxDecoration(border: Border.all(color: Color(0xffF0F0F0)), borderRadius: BorderRadius.circular(20)),
+                                                                        child: Padding(
+                                                                          padding: const EdgeInsets.only(
+                                                                              top: 15,
+                                                                              left: 8,
+                                                                              right: 10),
+                                                                          child:
+                                                                              Text(
+                                                                            '${GetAllPostData?.object?[index].description}',
+                                                                            style:
+                                                                                TextStyle(color: Colors.black, fontSize: 16),
+                                                                          ),
+                                                                        ))
+                                                                    : SizedBox(),
                                                   ),
                                                 ),
                                               );
@@ -1951,16 +2009,12 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                 arrNotiyTypeList[3].isSelected
                                     ? Container(
-                                        height: _height,
-                                        // color: Colors.amber,
-
-                                        /*  value1 == 0
-                                  ? FinalSavePostCount * 230
-                                  :  */
-                                        // SaveBlogCount * 145 + 100,
+                                        height: value1 == 0
+                                            ? FinalSavePostCount * 230
+                                            : SaveBlogCount * 155 + 100,
                                         // color: Colors.green,
                                         child: Padding(
-                                          padding: EdgeInsets.only(top: 10),
+                                          padding: EdgeInsets.only(top: 0),
                                           child: Column(
                                             children: [
                                               Row(
@@ -2113,9 +2167,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                   '${saveAllBlogModelData?.object?[index].createdAt ?? ""}');
               return Container(
                 margin: EdgeInsets.only(bottom: 10),
-                height: 150,
-                // color: Colors.amber,
+                height: 155,
                 decoration: BoxDecoration(
+                    // color: Colors.amber,
+
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: Color(0xffF1F1F1))),
                 child: GestureDetector(
@@ -2157,8 +2212,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                           ),
                         ),
                         Container(
-                          width: MediaQuery.of(context).size.width / 1.73,
-                          // color: Colors.amber,
+                          width: MediaQuery.of(context).size.width - 187,
+                          // color: Colors.blue,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -2168,7 +2223,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               Padding(
                                 padding: const EdgeInsets.only(left: 20),
                                 child: Text(
-                                  "G${saveAllBlogModelData?.object?[index].title}",
+                                  "${saveAllBlogModelData?.object?[index].title}",
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       fontSize: 15,
@@ -2191,12 +2246,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       color: Colors.grey),
                                 ),
                               ),
-                              SizedBox(
-                                height: 30,
-                              ),
+                              Spacer(),
                               Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 10),
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 10, bottom: 10),
                                 child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
