@@ -918,7 +918,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                   image: NetworkImage(element.profilePic))
                               : DecorationImage(
                                   image: AssetImage(
-                                    ImageConstant.tomcruse,
+                                    ImageConstant.placeholder2,
                                   ),
                                   fit: BoxFit.cover,
                                 ),
