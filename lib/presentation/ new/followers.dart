@@ -6,6 +6,7 @@ import 'package:pds/API/Bloc/followerBlock/followBlock.dart';
 import 'package:pds/API/Bloc/followerBlock/follwerState.dart';
 import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
+import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/theme/theme_helper.dart';
 
@@ -74,14 +75,19 @@ class Followers extends StatelessWidget {
                                               .object?[index].isFollow
                                               .toString())));
                             },
-                            child: CircleAvatar(
-                              backgroundImage: followersClassModel
+                            child:followersClassModel
                                           .object?[index].userProfilePic !=
-                                      null
-                                  ? NetworkImage(
-                                      "${followersClassModel.object?[index].userProfilePic}")
-                                  : NetworkImage(
-                                      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"),
+                                      null? CircleAvatar(
+                              backgroundImage: 
+                                   NetworkImage(
+                                      "${followersClassModel.object?[index].userProfilePic}"),
+                                
+                              radius: 25,
+                            ):CircleAvatar(
+                              backgroundImage: 
+                                   AssetImage(
+                                      ImageConstant.tomcruse),
+                                
                               radius: 25,
                             ),
                           ),
