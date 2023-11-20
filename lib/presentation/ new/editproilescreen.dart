@@ -541,26 +541,38 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(
-                        text:
-                            " ${widget.newProfileData?.object?.approvalStatus}",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: widget
-                                      .newProfileData?.object?.approvalStatus ==
+                      User_Module == "EMPLOYEE" &&
+                              widget.newProfileData?.object?.approvalStatus ==
                                   "PARTIALLY_REGISTERED"
-                              ? Color(0xff1A94D7)
-                              : widget.newProfileData?.object?.approvalStatus ==
-                                      "PENDING"
-                                  ? Color(0xffC28432)
-                                  : widget.newProfileData?.object
-                                              ?.approvalStatus ==
-                                          "APPROVED"
-                                      ? Color(0xff019801)
-                                      : Color(0xffFF000B),
-                        ),
-                      )
+                          ? TextSpan(
+                              text: "APPROVED",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xff019801),
+                              ),
+                            )
+                          : TextSpan(
+                              text:
+                                  "${widget.newProfileData?.object?.approvalStatus}",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: widget.newProfileData?.object
+                                            ?.approvalStatus ==
+                                        "PARTIALLY_REGISTERED"
+                                    ? Color(0xff1A94D7)
+                                    : widget.newProfileData?.object
+                                                ?.approvalStatus ==
+                                            "PENDING"
+                                        ? Color(0xffC28432)
+                                        : widget.newProfileData?.object
+                                                    ?.approvalStatus ==
+                                                "APPROVED"
+                                            ? Color(0xff019801)
+                                            : Color(0xffFF000B),
+                              ),
+                            )
                     ],
                     text: "Status:",
                     style: TextStyle(
@@ -1190,101 +1202,103 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             controller: fees,
             width: _width / 1.1,
           ),
-        Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 10),
-          child: Text(
-            'workingHours',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
+        if (widget.newProfileData?.object?.workingHours != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: Text(
+              'workingHours',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
             ),
           ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            GestureDetector(
-              onTap: () {
-                _selectStartTime(context);
-              },
-              child: Container(
-                height: 50,
-                width: 140,
-                decoration: BoxDecoration(
-                    color: Color(0xffF6F6F6),
-                    borderRadius: BorderRadius.circular(5)),
-                child: Row(
-                  children: [
-                    Padding(
-                        padding: EdgeInsets.only(left: 20),
-                        child: Text(
-                          start != null ? start.toString() : '00:00',
-                          style:
-                              TextStyle(fontSize: 16, color: Color(0xff989898)),
-                        )),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 6),
-                      child: VerticalDivider(
-                        thickness: 2,
-                        color: Color(0xff989898),
+        if (widget.newProfileData?.object?.workingHours != null)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  _selectStartTime(context);
+                },
+                child: Container(
+                  height: 50,
+                  width: 140,
+                  decoration: BoxDecoration(
+                      color: Color(0xffF6F6F6),
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Text(
+                            start != null ? start.toString() : '00:00',
+                            style: TextStyle(
+                                fontSize: 16, color: Color(0xff989898)),
+                          )),
+                      SizedBox(
+                        width: 20,
                       ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(startAm != null ? startAm.toString() : 'AM',
-                        style:
-                            TextStyle(fontSize: 16, color: Color(0xff989898))),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 6),
+                        child: VerticalDivider(
+                          thickness: 2,
+                          color: Color(0xff989898),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(startAm != null ? startAm.toString() : 'AM',
+                          style: TextStyle(
+                              fontSize: 16, color: Color(0xff989898))),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Text('To'),
-            GestureDetector(
-              onTap: () {
-                _selectEndTime(context);
-              },
-              child: Container(
-                height: 50,
-                width: 140,
-                decoration: BoxDecoration(
-                    color: Color(0xffF6F6F6),
-                    borderRadius: BorderRadius.circular(5)),
-                child: Row(
-                  children: [
-                    Padding(
-                        padding: EdgeInsets.only(left: 20),
-                        child: Text(
-                          end != null ? end.toString() : '00:00',
-                          style:
-                              TextStyle(fontSize: 16, color: Color(0xff989898)),
-                        )),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 6),
-                      child: VerticalDivider(
-                        thickness: 2,
-                        color: Color(0xff989898),
+              Text('To'),
+              GestureDetector(
+                onTap: () {
+                  _selectEndTime(context);
+                },
+                child: Container(
+                  height: 50,
+                  width: 140,
+                  decoration: BoxDecoration(
+                      color: Color(0xffF6F6F6),
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Text(
+                            end != null ? end.toString() : '00:00',
+                            style: TextStyle(
+                                fontSize: 16, color: Color(0xff989898)),
+                          )),
+                      SizedBox(
+                        width: 20,
                       ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(endAm != null ? endAm.toString() : 'PM',
-                        style:
-                            TextStyle(fontSize: 16, color: Color(0xff989898))),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 6),
+                        child: VerticalDivider(
+                          thickness: 2,
+                          color: Color(0xff989898),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(endAm != null ? endAm.toString() : 'PM',
+                          style: TextStyle(
+                              fontSize: 16, color: Color(0xff989898))),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
         if (widget.newProfileData?.object?.userDocument != null)
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
