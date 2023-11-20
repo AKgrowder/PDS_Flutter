@@ -623,6 +623,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             color: Color(0xffED1C25))),
                                     child: Text(
                                       'Personal Details',
+                                      maxLines: 1,
                                       style: TextStyle(
                                           fontFamily: "outfit",
                                           fontSize: 18,

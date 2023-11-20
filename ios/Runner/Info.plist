@@ -2,12 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>NSCameraUsageDescription</key>
-    <string>PDS Application User Profile image and Create Post time user photo library please Allow</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>PDS Application User Profile image and Create Post time user photo library please Allow</string>
-    <key>NSPhotoLibraryAddUsageDescription</key>
-    <string>PDS Application User Profile image and Create Post time user photo library please Allow</string>
+	<key>NSCameraUsageDescription</key>
+	<string>PDS Application User Profile image and Create Post time user photo library please Allow</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>PDS Application User Profile image and Create Post time user photo library please Allow</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>PDS Application User Profile image and Create Post time user photo library please Allow</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -21,11 +21,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
+	<string>1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>0.1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

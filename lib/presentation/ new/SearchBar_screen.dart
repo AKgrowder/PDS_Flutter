@@ -78,7 +78,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     getUserData();
     BlocProvider.of<HashTagCubit>(context)
         .HashTagForYouAPI(context, 'FOR YOU', '1');
-    BlocProvider.of<HashTagCubit>(context).serchDataGet(context);
+    // BlocProvider.of<HashTagCubit>(context).serchDataGet(context);
 
     // BlocProvider.of<HashTagCubit>(context).HashTagBannerAPI(context);
   }
