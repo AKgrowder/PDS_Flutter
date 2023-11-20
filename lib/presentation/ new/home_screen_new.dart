@@ -547,7 +547,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       } else {
         prefs.setBool(PreferencesKey.OnetimeRoutChange, false);
         prefs.setBool(PreferencesKey.RoutURlChnage, false);
-
       }
     }
 
@@ -576,7 +575,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       } else {
         prefs.setBool(PreferencesKey.OnetimeRoutChange, false);
         prefs.setBool(PreferencesKey.RoutURlChnage, false);
-   
       }
     }
   }
@@ -758,7 +756,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing =
             'FOLLOW';
       }
-    }  */ else if (apiName == 'Follow') {
+    }  */
+    else if (apiName == 'Follow') {
       print("dfhsdfhsdfhsdgf");
       await BlocProvider.of<GetGuestAllPostCubit>(context).followWIngMethod(
           AllGuestPostRoomData?.object?.content?[index ?? 0].userUid, context);
@@ -769,27 +768,27 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         for (int i = 0;
             i < (AllGuestPostRoomData?.object?.content?.length ?? 0);
             i++) {
-              print("i-${i}");
+          print("i-${i}");
           if (AllGuestPostRoomData?.object?.content?[index ?? 0].userUid ==
               AllGuestPostRoomData?.object?.content?[i].userUid) {
             AllGuestPostRoomData?.object?.content?[i].isFollowing = 'REQUESTED';
-            print("check data-${AllGuestPostRoomData?.object?.content?[i].isFollowing}");
-          }
-          else{
-             AllGuestPostRoomData?.object?.content?[i].isFollowing = 'REQUESTED';
+            print(
+                "check data-${AllGuestPostRoomData?.object?.content?[i].isFollowing}");
+          } else {
+            AllGuestPostRoomData?.object?.content?[i].isFollowing = 'REQUESTED';
           }
         }
       } else {
         /* AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing =
             'FOLLOW'; */
-            for (int i = 0;
+        for (int i = 0;
             i < (AllGuestPostRoomData?.object?.content?.length ?? 0);
             i++) {
           if (AllGuestPostRoomData?.object?.content?[index ?? 0].userUid ==
               AllGuestPostRoomData?.object?.content?[i].userUid) {
             AllGuestPostRoomData?.object?.content?[i].isFollowing = 'FOLLOW';
-          }else{
-             AllGuestPostRoomData?.object?.content?[i].isFollowing = 'FOLLOW';
+          } else {
+            AllGuestPostRoomData?.object?.content?[i].isFollowing = 'FOLLOW';
           }
         }
       }
@@ -1207,6 +1206,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                               UserProfileImage != ""
                                           ? CustomImageView(
                                               url: "${UserProfileImage}",
+                                              color: Colors.transparent,
                                               height: 50,
                                               width: 50,
                                               fit: BoxFit.fill,
@@ -1214,6 +1214,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                             )
                                           : CustomImageView(
                                               imagePath: ImageConstant.tomcruse,
+                                              // color: Colors.transparent,
                                               height: 50,
                                               width: 50,
                                               fit: BoxFit.fill,
@@ -1613,6 +1614,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   backgroundImage:
                                                                       NetworkImage(
                                                                           "${AllGuestPostRoomData?.object?.content?[index].userProfilePic}"),
+                                                                          backgroundColor: Colors.transparent,
                                                                   radius: 25,
                                                                 )
                                                               : CustomImageView(
@@ -2006,6 +2008,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       ? CircleAvatar(
                                                                           backgroundImage:
                                                                               NetworkImage("${AllGuestPostRoomData?.object?.content?[index].repostOn?.userProfilePic}"),
+                                                                              backgroundColor: Colors.transparent,
                                                                           radius:
                                                                               25,
                                                                         )
@@ -2168,14 +2171,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                         if (AllGuestPostRoomData?.object?.content?[index].repostOn?.postDataType == "IMAGE") {
                                                                                           return GestureDetector(
                                                                                             onTap: () {
-                                                                                              Navigator.push(
-                                                                                                context,
-                                                                                                MaterialPageRoute(
-                                                                                                    builder: (context) => OpenSavePostImage(
-                                                                                                          PostID: AllGuestPostRoomData?.object?.content?[index].repostOn?.postUid,
-                                                                                                          index: index,
-                                                                                                        )),
-                                                                                              );
+                                                                                              print("Repost Opne Full screen");
+                                                                                              // Navigator.push(
+                                                                                              //   context,
+                                                                                              //   MaterialPageRoute(
+                                                                                              //       builder: (context) => OpenSavePostImage(
+                                                                                              //             PostID: AllGuestPostRoomData?.object?.content?[index].repostOn?.postUid,
+                                                                                              //             index: index,
+                                                                                              //           )),
+                                                                                              // );
                                                                                             },
                                                                                             child: Container(
                                                                                               width: _width,
@@ -2245,7 +2249,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.only(
-                                                              top: 3,
+                                                              top: 0,
                                                               right: 16),
                                                       child: Row(
                                                         children: [
@@ -2259,25 +2263,39 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       'like_post',
                                                                   index: index);
                                                             },
-                                                            child: AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .isLiked !=
-                                                                    true
-                                                                ? Image.asset(
-                                                                    ImageConstant
-                                                                        .likewithout,
-                                                                    height: 20,
-                                                                  )
-                                                                : Image.asset(
-                                                                    ImageConstant
-                                                                        .like,
-                                                                    height: 20,
-                                                                  ),
+                                                            child: Container(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        5.0),
+                                                                child: AllGuestPostRoomData
+                                                                            ?.object
+                                                                            ?.content?[
+                                                                                index]
+                                                                            .isLiked !=
+                                                                        true
+                                                                    ? Image
+                                                                        .asset(
+                                                                        ImageConstant
+                                                                            .likewithout,
+                                                                        height:
+                                                                            20,
+                                                                      )
+                                                                    : Image
+                                                                        .asset(
+                                                                        ImageConstant
+                                                                            .like,
+                                                                        height:
+                                                                            20,
+                                                                      ),
+                                                              ),
+                                                            ),
                                                           ),
                                                           SizedBox(
-                                                            width: 5,
+                                                            width: 0,
                                                           ),
                                                           GestureDetector(
                                                             onTap: () {
@@ -2298,16 +2316,27 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 },
                                                               ));
                                                             },
-                                                            child: Text(
-                                                              "${AllGuestPostRoomData?.object?.content?[index].likedCount}",
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      "outfit",
-                                                                  fontSize: 14),
+                                                            child: Container(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        5.0),
+                                                                child: Text(
+                                                                  "${AllGuestPostRoomData?.object?.content?[index].likedCount}",
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          "outfit",
+                                                                      fontSize:
+                                                                          14),
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                           SizedBox(
-                                                            width: 18,
+                                                            width: 8,
                                                           ),
                                                           GestureDetector(
                                                             onTap: () async {
@@ -2331,46 +2360,22 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     index,
                                                                     _width);
                                                               }
-                                                              /*     await Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) {
-                                                          return CommentsScreen(
-                                                            image:
-                                                                AllGuestPostRoomData
-                                                                    ?.object
-                                                                    ?.content?[
-                                                                        index]
-                                                                    .userProfilePic,
-                                                            userName:
-                                                                AllGuestPostRoomData
-                                                                    ?.object
-                                                                    ?.content?[
-                                                                        index]
-                                                                    .postUserName,
-                                                            description:
-                                                                AllGuestPostRoomData
-                                                                    ?.object
-                                                                    ?.content?[
-                                                                        index]
-                                                                    .description,
-                                                            PostUID:
-                                                                '${AllGuestPostRoomData?.object?.content?[index].postUid}',
-                                                            date: AllGuestPostRoomData
-                                                                    ?.object
-                                                                    ?.content?[
-                                                                        index]
-                                                                    .createdAt ??
-                                                                "",
-                                                          );
-                                                        })).then((value) =>
-                                                            methodtoReffrser()); */
                                                             },
-                                                            child: Image.asset(
-                                                              ImageConstant
-                                                                  .meesage,
-                                                              height: 14,
+                                                            child: Container(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        5.0),
+                                                                child:
+                                                                    Image.asset(
+                                                                  ImageConstant
+                                                                      .meesage,
+                                                                  height: 15,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                           SizedBox(
@@ -2384,7 +2389,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 fontSize: 14),
                                                           ),
                                                           SizedBox(
-                                                            width: 18,
+                                                            width: 8,
                                                           ),
                                                           GestureDetector(
                                                             onTap: () {
@@ -2437,10 +2442,21 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 },
                                                               ));
                                                             },
-                                                            child: Image.asset(
-                                                              ImageConstant
-                                                                  .vector2,
-                                                              height: 12,
+                                                            child: Container(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        5.0),
+                                                                child:
+                                                                    Image.asset(
+                                                                  ImageConstant
+                                                                      .vector2,
+                                                                  height: 13,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                           SizedBox(
@@ -2477,25 +2493,36 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       'savedata',
                                                                   index: index);
                                                             },
-                                                            child: Image.asset(
-                                                              AllGuestPostRoomData
-                                                                          ?.object
-                                                                          ?.content?[
-                                                                              index]
-                                                                          .isSaved ==
-                                                                      false
-                                                                  ? ImageConstant
-                                                                      .savePin
-                                                                  : ImageConstant
-                                                                      .Savefill,
-                                                              height: 16,
+                                                            child: Container(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        5.0),
+                                                                child:
+                                                                    Image.asset(
+                                                                  AllGuestPostRoomData
+                                                                              ?.object
+                                                                              ?.content?[
+                                                                                  index]
+                                                                              .isSaved ==
+                                                                          false
+                                                                      ? ImageConstant
+                                                                          .savePin
+                                                                      : ImageConstant
+                                                                          .Savefill,
+                                                                  height: 17,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                         ],
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      height: 10,
+                                                      height: 5,
                                                     ),
                                                   ],
                                                 ),
@@ -2569,6 +2596,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   backgroundImage:
                                                                       NetworkImage(
                                                                           "${AllGuestPostRoomData?.object?.content?[index].userProfilePic}"),
+                                                                          backgroundColor: Colors.transparent,
                                                                   radius: 25,
                                                                 )
                                                               : CustomImageView(
@@ -2941,7 +2969,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.only(
-                                                              top: 3,
+                                                              top: 0,
                                                               right: 16),
                                                       child: Row(
                                                         children: [
@@ -2955,25 +2983,39 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       'like_post',
                                                                   index: index);
                                                             },
-                                                            child: AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .isLiked !=
-                                                                    true
-                                                                ? Image.asset(
-                                                                    ImageConstant
-                                                                        .likewithout,
-                                                                    height: 20,
-                                                                  )
-                                                                : Image.asset(
-                                                                    ImageConstant
-                                                                        .like,
-                                                                    height: 20,
-                                                                  ),
+                                                            child: Container(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              child: Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            5.0),
+                                                                child: AllGuestPostRoomData
+                                                                            ?.object
+                                                                            ?.content?[
+                                                                                index]
+                                                                            .isLiked !=
+                                                                        true
+                                                                    ? Image
+                                                                        .asset(
+                                                                        ImageConstant
+                                                                            .likewithout,
+                                                                        height:
+                                                                            18,
+                                                                      )
+                                                                    : Image
+                                                                        .asset(
+                                                                        ImageConstant
+                                                                            .like,
+                                                                        height:
+                                                                            18,
+                                                                      ),
+                                                              ),
+                                                            ),
                                                           ),
                                                           SizedBox(
-                                                            width: 5,
+                                                            width: 0,
                                                           ),
                                                           GestureDetector(
                                                             onTap: () {
@@ -2994,81 +3036,67 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 },
                                                               ));
                                                             },
-                                                            child: Text(
-                                                              "${AllGuestPostRoomData?.object?.content?[index].likedCount}",
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      "outfit",
-                                                                  fontSize: 14),
+                                                            child: Container(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              child: Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            5.0),
+                                                                child: Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .centerLeft,
+                                                                  child: Text(
+                                                                    "${AllGuestPostRoomData?.object?.content?[index].likedCount}",
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            "outfit",
+                                                                        fontSize:
+                                                                            14),
+                                                                  ),
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                           SizedBox(
-                                                            width: 18,
+                                                            width: 8,
                                                           ),
                                                           GestureDetector(
-                                                            onTap: () async {
-                                                              BlocProvider.of<
-                                                                          AddcommentCubit>(
-                                                                      context)
-                                                                  .Addcomment(
-                                                                      context,
-                                                                      '${AllGuestPostRoomData?.object?.content?[index].postUid}');
-                                                              if (uuid ==
-                                                                  null) {
-                                                                Navigator.of(
+                                                              onTap: () async {
+                                                                BlocProvider.of<
+                                                                            AddcommentCubit>(
                                                                         context)
-                                                                    .push(MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                RegisterCreateAccountScreen()));
-                                                              } else {
-                                                                _settingModalBottomSheet1(
-                                                                    context,
-                                                                    index,
-                                                                    _width);
-                                                              }
-                                                              /*     await Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) {
-                                                          return CommentsScreen(
-                                                            image:
-                                                                AllGuestPostRoomData
-                                                                    ?.object
-                                                                    ?.content?[
-                                                                        index]
-                                                                    .userProfilePic,
-                                                            userName:
-                                                                AllGuestPostRoomData
-                                                                    ?.object
-                                                                    ?.content?[
-                                                                        index]
-                                                                    .postUserName,
-                                                            description:
-                                                                AllGuestPostRoomData
-                                                                    ?.object
-                                                                    ?.content?[
-                                                                        index]
-                                                                    .description,
-                                                            PostUID:
-                                                                '${AllGuestPostRoomData?.object?.content?[index].postUid}',
-                                                            date: AllGuestPostRoomData
-                                                                    ?.object
-                                                                    ?.content?[
-                                                                        index]
-                                                                    .createdAt ??
-                                                                "",
-                                                          );
-                                                        })).then((value) =>
-                                                            methodtoReffrser()); */
-                                                            },
-                                                            child: Image.asset(
-                                                              ImageConstant
-                                                                  .meesage,
-                                                              height: 14,
-                                                            ),
-                                                          ),
+                                                                    .Addcomment(
+                                                                        context,
+                                                                        '${AllGuestPostRoomData?.object?.content?[index].postUid}');
+                                                                if (uuid ==
+                                                                    null) {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .push(MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              RegisterCreateAccountScreen()));
+                                                                } else {
+                                                                  _settingModalBottomSheet1(
+                                                                      context,
+                                                                      index,
+                                                                      _width);
+                                                                }
+                                                              },
+                                                              child: Container(
+                                                                  color: Colors
+                                                                      .transparent,
+                                                                  child: Padding(
+                                                                      padding: EdgeInsets.all(5.0),
+                                                                      child: Image.asset(
+                                                                        ImageConstant
+                                                                            .meesage,
+                                                                        height:
+                                                                            15,
+                                                                        // width: 15,
+                                                                      )))),
                                                           SizedBox(
                                                             width: 5,
                                                           ),
@@ -3080,7 +3108,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 fontSize: 14),
                                                           ),
                                                           SizedBox(
-                                                            width: 18,
+                                                            width: 5,
                                                           ),
                                                           GestureDetector(
                                                             onTap: () {
@@ -3143,10 +3171,21 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 ));
                                                               }
                                                             },
-                                                            child: Image.asset(
-                                                              ImageConstant
-                                                                  .vector2,
-                                                              height: 12,
+                                                            child: Container(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        5.0),
+                                                                child:
+                                                                    Image.asset(
+                                                                  ImageConstant
+                                                                      .vector2,
+                                                                  height: 13,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                           SizedBox(
@@ -3185,25 +3224,36 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       'savedata',
                                                                   index: index);
                                                             },
-                                                            child: Image.asset(
-                                                              AllGuestPostRoomData
-                                                                          ?.object
-                                                                          ?.content?[
-                                                                              index]
-                                                                          .isSaved ==
-                                                                      false
-                                                                  ? ImageConstant
-                                                                      .savePin
-                                                                  : ImageConstant
-                                                                      .Savefill,
-                                                              height: 16,
+                                                            child: Container(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        5.0),
+                                                                child:
+                                                                    Image.asset(
+                                                                  AllGuestPostRoomData
+                                                                              ?.object
+                                                                              ?.content?[
+                                                                                  index]
+                                                                              .isSaved ==
+                                                                          false
+                                                                      ? ImageConstant
+                                                                          .savePin
+                                                                      : ImageConstant
+                                                                          .Savefill,
+                                                                  height: 17,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                         ],
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      height: 10,
+                                                      height: 5,
                                                     ),
                                                   ],
                                                 ),
@@ -3759,7 +3809,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 );
                                     } else {
                                       return SizedBox(
-                                        height: 30,
+                                        height: 10,
                                       );
                                     }
                                   },
