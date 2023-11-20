@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pds/API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'package:pds/API/Bloc/postData_Bloc/postData_state.dart';
@@ -45,6 +46,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   XFile? pickedFile;
   ImagePicker _imagePicker = ImagePicker();
   List<File> pickedImage = [];
+  List<File>? croppedFiles;
   bool isTrue = false;
   String? User_ID;
   Medium? medium1;
@@ -60,7 +62,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   Color primaryColor = ColorConstant.primaryLight_color;
   Color textColor = ColorConstant.primary_color;
   List<String>? HasetagList = [];
-   String?UserProfileImage; 
+  String? UserProfileImage;
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -202,21 +204,23 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                   isFollowing: 'FOLLOW',
                                                 )));
                                   },
-                                  child:UserProfileImage?.isEmpty == true? SizedBox(
-                                    height: 50,
-                                    width: 50,
-                                    child: CircleAvatar(
-                                      backgroundImage:
-                                          AssetImage(ImageConstant.tomcruse),
-                                    ),
-                                  ):SizedBox(
-                                    height: 50,
-                                    width: 50,
-                                    child: CircleAvatar(
-                                     backgroundImage: NetworkImage(UserProfileImage.toString()),
-                                         
-                                    ),
-                                  ),
+                                  child: UserProfileImage?.isEmpty == true
+                                      ? SizedBox(
+                                          height: 50,
+                                          width: 50,
+                                          child: CircleAvatar(
+                                            backgroundImage: AssetImage(
+                                                ImageConstant.tomcruse),
+                                          ),
+                                        )
+                                      : SizedBox(
+                                          height: 50,
+                                          width: 50,
+                                          child: CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                                UserProfileImage.toString()),
+                                          ),
+                                        ),
                                 ),
                               ),
                               Padding(
@@ -559,8 +563,6 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                           GestureDetector(
                                                         onTap: () async {
                                                           medium1 = medium;
-                                                          selectImage = true;
-
                                                           file =
                                                               await PhotoGallery
                                                                   .getFile(
@@ -570,20 +572,85 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                                 MediumType
                                                                     .image,
                                                           );
+
+                                                          selectImage = true;
+
                                                           file12 = null;
                                                           pickedImage.isEmpty;
                                                           setState(() {});
-                                                          print(
-                                                              "medium1!.id--.${medium1?.filename}");
-                                                          BlocProvider.of<
-                                                                      AddPostCubit>(
-                                                                  context)
-                                                              .UplodeImageAPI(
-                                                                  context,
-                                                                  medium1?.filename ??
-                                                                      '',
-                                                                  file?.path ??
-                                                                      '');
+
+                                                          CroppedFile?
+                                                              croppedFile =
+                                                              await ImageCropper()
+                                                                  .cropImage(
+                                                            sourcePath: file!
+                                                                .path
+                                                                .toString(),
+                                                            aspectRatioPresets: [
+                                                              CropAspectRatioPreset
+                                                                  .square,
+                                                              CropAspectRatioPreset
+                                                                  .ratio3x2,
+                                                              CropAspectRatioPreset
+                                                                  .original,
+                                                              CropAspectRatioPreset
+                                                                  .ratio4x3,
+                                                              CropAspectRatioPreset
+                                                                  .ratio16x9
+                                                            ],
+                                                            uiSettings: [
+                                                              AndroidUiSettings(
+                                                                  toolbarTitle:
+                                                                      'Cropper',
+                                                                  activeControlsWidgetColor:
+                                                                      Color(
+                                                                          0xffED1C25),
+                                                                  toolbarColor:
+                                                                      Color(
+                                                                          0xffED1C25),
+                                                                  toolbarWidgetColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  initAspectRatio:
+                                                                      CropAspectRatioPreset
+                                                                          .original,
+                                                                  lockAspectRatio:
+                                                                      false),
+                                                              IOSUiSettings(
+                                                                title:
+                                                                    'Cropper',
+                                                              ),
+                                                              WebUiSettings(
+                                                                context:
+                                                                    context,
+                                                              ),
+                                                            ],
+                                                          );
+
+                                                          if (croppedFile !=
+                                                              null) {
+                                                            print(
+                                                                'Image cropped and saved at: ${croppedFile.path}');
+                                                            BlocProvider.of<
+                                                                        AddPostCubit>(
+                                                                    context)
+                                                                .UplodeImageAPI(
+                                                                    context,
+                                                                    medium1?.filename ??
+                                                                        '',
+                                                                    croppedFile
+                                                                        .path);
+                                                          } else {
+                                                            BlocProvider.of<
+                                                                        AddPostCubit>(
+                                                                    context)
+                                                                .UplodeImageAPI(
+                                                                    context,
+                                                                    medium1?.filename ??
+                                                                        '',
+                                                                    file?.path ??
+                                                                        '');
+                                                          }
                                                         },
                                                         child: Container(
                                                           height: 100,
@@ -659,7 +726,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                   height: 20,
                                 ),
                               ),
-                             /*  SizedBox(
+                              /*  SizedBox(
                                 width: 30,
                               ),
                               Image.asset(
@@ -735,14 +802,19 @@ class _CreateNewPostState extends State<CreateNewPost> {
     } catch (e) {}
   }
 
+
   Future<void> _getImageFromSource() async {
     try {
       final pickedFile = await _imagePicker.pickMultiImage();
       List<XFile> xFilePicker = pickedFile;
+      
       pickedImage.clear();
       if (xFilePicker.isNotEmpty) {
+       
         if (xFilePicker.length <= 5) {
+          
           for (var i = 0; i < xFilePicker.length; i++) {
+            
             if (!_isGifOrSvg(xFilePicker[i].path)) {
               pickedImage.add(File(xFilePicker[i].path));
               setState(() {});
@@ -815,8 +887,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
             (file.path?.contains(".png") ?? false) ||
             (file.path?.contains(".doc") ?? false) ||
             (file.path?.contains(".jpg") ?? false) ||
-            (file.path?.contains(".m4a") ?? false) || 
-             (file.path?.contains(".gif") ?? false) ) {
+            (file.path?.contains(".m4a") ?? false) ||
+            (file.path?.contains(".gif") ?? false)) {
           showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
