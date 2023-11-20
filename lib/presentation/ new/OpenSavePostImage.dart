@@ -112,61 +112,203 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
       return SafeArea(
         child: Scaffold(
           backgroundColor: Colors.black,
-          body: Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16),
-            child: Column(
-              children: [
-                Container(
-                  height: 55,
-                  width: _width,
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          height: 25,
-                          width: 25,
-                          color: Color.fromRGBO(255, 255, 255, 0.3),
-                          child: Center(
-                            child: Image.asset(
-                              ImageConstant.whiteClose,
-                              fit: BoxFit.fill,
-                              height: 20,
-                              width: 20,
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              child: Column(
+                children: [
+                  Container(
+                    height: 55,
+                    width: _width,
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            height: 25,
+                            width: 25,
+                            color: Color.fromRGBO(255, 255, 255, 0.3),
+                            child: Center(
+                              child: Image.asset(
+                                ImageConstant.whiteClose,
+                                fit: BoxFit.fill,
+                                height: 20,
+                                width: 20,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                    padding: const EdgeInsets.only(top: 15, bottom: 15),
-                    child: Row(children: [
-                      OpenSaveModelData?.object?.userProfilePic != null
-                          ? CustomImageView(
-                              url:
-                                  "${OpenSaveModelData?.object?.userProfilePic}",
-                              height: 50,
-                              width: 50,
-                              fit: BoxFit.fill,
-                              radius: BorderRadius.circular(25),
-                            )
-                          : CustomImageView(
-                              imagePath: ImageConstant.tomcruse,
-                              height: 50,
-                              width: 50,
-                              fit: BoxFit.fill,
-                              radius: BorderRadius.circular(25),
-                            ),
-                      SizedBox(width: 10),
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${OpenSaveModelData?.object?.postUserName}',
+                  Padding(
+                      padding: const EdgeInsets.only(top: 15, bottom: 15),
+                      child: Row(children: [
+                        OpenSaveModelData?.object?.userProfilePic != null
+                            ? CustomImageView(
+                                url:
+                                    "${OpenSaveModelData?.object?.userProfilePic}",
+                                height: 50,
+                                width: 50,
+                                fit: BoxFit.fill,
+                                radius: BorderRadius.circular(25),
+                              )
+                            : CustomImageView(
+                                imagePath: ImageConstant.tomcruse,
+                                height: 50,
+                                width: 50,
+                                fit: BoxFit.fill,
+                                radius: BorderRadius.circular(25),
+                              ),
+                        SizedBox(width: 10),
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${OpenSaveModelData?.object?.postUserName}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontFamily: 'outfit',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(height: 7),
+                              Text(customFormat(parsedDateTimeBlogs!),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontFamily: 'outfit',
+                                    fontWeight: FontWeight.w600,
+                                  ))
+                            ])
+                      ])),
+                      OpenSaveModelData?.object?.postDataType == null ? SizedBox():
+                  Container(
+                    
+                    // height: _height / 1.5,
+                    // width: _width,
+                    child: OpenSaveModelData?.object?.postDataType == null
+                        ? SizedBox()
+                        : OpenSaveModelData?.object?.postData?.length == 1
+                            ? OpenSaveModelData?.object?.postDataType == "IMAGE"
+                                ? Center(
+                                    child: CustomImageView(
+                                      fit:BoxFit.cover,
+                                  url:
+                                      "${OpenSaveModelData?.object?.postData?[0]}",
+                                ))
+                                : OpenSaveModelData?.object?.postDataType ==
+                                        "ATTACHMENT"
+                                    ? Container(
+                                        height: 400,
+                                        width: _width,
+                                        child: DocumentViewScreen1(
+                                          path: "",
+                                        ))
+                                    : SizedBox()
+                            : Column(
+                                children: [
+                                  Stack(
+                                    children: [
+                                      if ((OpenSaveModelData
+                                              ?.object?.postData?.isNotEmpty ??
+                                          false)) ...[
+                                        Container(
+                                          color: Colors.transparent,
+                                          height: _height / 1.5,
+                                          child: PageView.builder(
+                                            onPageChanged: (page) {
+                                              setState(() {
+                                                currentPages[widget.index ?? 0] =
+                                                    page;
+                                              });
+                                            },
+                                            controller: pageControllers[
+                                                widget.index ?? 0],
+                                            itemCount: OpenSaveModelData
+                                                ?.object?.postData?.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index1) {
+                                              if (OpenSaveModelData
+                                                      ?.object?.postDataType ==
+                                                  "IMAGE") {
+                                                return Container(
+                                                  width: _width,
+                                                  margin: EdgeInsets.only(
+                                                      left: 16,
+                                                      top: 15,
+                                                      right: 16),
+                                                  child: Center(
+                                                      child: CustomImageView(
+                                                    url:
+                                                        "${OpenSaveModelData?.object?.postData?[index1]}",
+                                                  )),
+                                                );
+                                              } else if (OpenSaveModelData
+                                                      ?.object?.postDataType ==
+                                                  "ATTACHMENT") {
+                                                return Container(
+                                                    height: 400,
+                                                    width: _width,
+                                                    // color: Colors.green,
+                                                    child: DocumentViewScreen1(
+                                                      path: OpenSaveModelData
+                                                          ?.object
+                                                          ?.postData?[index1]
+                                                          .toString(),
+                                                    ));
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                        Positioned(
+                                            bottom: 5,
+                                            left: 0,
+                                            right: 0,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.only(top: 0),
+                                              child: Container(
+                                                height: 20,
+                                                child: DotsIndicator(
+                                                  dotsCount: OpenSaveModelData
+                                                          ?.object
+                                                          ?.postData
+                                                          ?.length ??
+                                                      1,
+                                                  position: currentPages[
+                                                          widget.index ?? 0]
+                                                      .toDouble(),
+                                                  decorator: DotsDecorator(
+                                                    size: const Size(10.0, 7.0),
+                                                    activeSize:
+                                                        const Size(10.0, 10.0),
+                                                    spacing: const EdgeInsets
+                                                        .symmetric(horizontal: 2),
+                                                    activeColor:
+                                                        Color(0xffED1C25),
+                                                    color: Color(0xff6A6A6A),
+                                                  ),
+                                                ),
+                                              ),
+                                            ))
+                                      ]
+                                    ],
+                                  ),
+                                ],
+                              ),
+                  ),
+                  OpenSaveModelData?.object?.description == null
+                      ? SizedBox()
+                      : Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "${OpenSaveModelData?.object?.description ?? ""}",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -174,305 +316,187 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            SizedBox(height: 7),
-                            Text(customFormat(parsedDateTimeBlogs!),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontFamily: 'outfit',
-                                  fontWeight: FontWeight.w600,
-                                ))
-                          ])
-                    ])),
-                    OpenSaveModelData?.object?.postDataType == null ? SizedBox():
-                Container(
-                  height: _height / 1.5,
-                  width: _width,
-                  child: OpenSaveModelData?.object?.postDataType == null
-                      ? SizedBox()
-                      : OpenSaveModelData?.object?.postData?.length == 1
-                          ? OpenSaveModelData?.object?.postDataType == "IMAGE"
-                              ? Container(
-                                  width: _width,
-                                  height: 150,
-                                  margin: EdgeInsets.only(
-                                      left: 16, top: 15, right: 16),
-                                  child: Center(
-                                      child: CustomImageView(
-                                    url:
-                                        "${OpenSaveModelData?.object?.postData?[0]}",
-                                  )),
-                                )
-                              : OpenSaveModelData?.object?.postDataType ==
-                                      "ATTACHMENT"
-                                  ? Container(
-                                      height: 400,
-                                      width: _width,
-                                      child: DocumentViewScreen1(
-                                        path: "",
-                                      ))
-                                  : SizedBox()
-                          : Column(
-                              children: [
-                                Stack(
-                                  children: [
-                                    if ((OpenSaveModelData
-                                            ?.object?.postData?.isNotEmpty ??
-                                        false)) ...[
-                                      SizedBox(
-                                        height: _height / 1.6,
-                                        child: PageView.builder(
-                                          onPageChanged: (page) {
-                                            setState(() {
-                                              currentPages[widget.index ?? 0] =
-                                                  page;
-                                            });
-                                          },
-                                          controller: pageControllers[
-                                              widget.index ?? 0],
-                                          itemCount: OpenSaveModelData
-                                              ?.object?.postData?.length,
-                                          itemBuilder: (BuildContext context,
-                                              int index1) {
-                                            if (OpenSaveModelData
-                                                    ?.object?.postDataType ==
-                                                "IMAGE") {
-                                              return Container(
-                                                width: _width,
-                                                margin: EdgeInsets.only(
-                                                    left: 16,
-                                                    top: 15,
-                                                    right: 16),
-                                                child: Center(
-                                                    child: CustomImageView(
-                                                  url:
-                                                      "${OpenSaveModelData?.object?.postData?[index1]}",
-                                                )),
-                                              );
-                                            } else if (OpenSaveModelData
-                                                    ?.object?.postDataType ==
-                                                "ATTACHMENT") {
-                                              return Container(
-                                                  height: 400,
-                                                  width: _width,
-                                                  child: DocumentViewScreen1(
-                                                    path: OpenSaveModelData
-                                                        ?.object
-                                                        ?.postData?[index1]
-                                                        .toString(),
-                                                  ));
-                                            }
-                                          },
-                                        ),
+                          ),
+                      ),
+                  Container(
+                    // color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 15, right:0,bottom: 20),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 0,
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              await soicalFunation(
+                                apiName: 'like_post',
+                              );
+                            },
+                            child: Container(
+                              color: Colors.transparent,
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: OpenSaveModelData?.object?.isLiked != true
+                                    ? Image.asset(
+                                        ImageConstant.likewithout,
+                                        height: 20,
+                                        color: Colors.white,
+                                      )
+                                    : Image.asset(
+                                        ImageConstant.like,
+                                        height: 20,
                                       ),
-                                      Positioned(
-                                          bottom: 5,
-                                          left: 0,
-                                          right: 0,
-                                          child: Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 0),
-                                            child: Container(
-                                              height: 20,
-                                              child: DotsIndicator(
-                                                dotsCount: OpenSaveModelData
-                                                        ?.object
-                                                        ?.postData
-                                                        ?.length ??
-                                                    1,
-                                                position: currentPages[
-                                                        widget.index ?? 0]
-                                                    .toDouble(),
-                                                decorator: DotsDecorator(
-                                                  size: const Size(10.0, 7.0),
-                                                  activeSize:
-                                                      const Size(10.0, 10.0),
-                                                  spacing: const EdgeInsets
-                                                      .symmetric(horizontal: 2),
-                                                  activeColor:
-                                                      Color(0xffED1C25),
-                                                  color: Color(0xff6A6A6A),
-                                                ),
-                                              ),
-                                            ),
-                                          ))
-                                    ]
-                                  ],
-                                ),
-                              ],
-                            ),
-                ),
-                OpenSaveModelData?.object?.description == null
-                    ? SizedBox()
-                    : Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "${OpenSaveModelData?.object?.description ?? ""}",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontFamily: 'outfit',
-                              fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
-                        ),
-                    ),
-                Container(
-                  // color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 3, right: 16),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 14,
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            await soicalFunation(
-                              apiName: 'like_post',
-                            );
-                          },
-                          child: OpenSaveModelData?.object?.isLiked != true
-                              ? Image.asset(
-                                  ImageConstant.likewithout,
-                                  height: 20,
-                                  color: Colors.white,
-                                )
-                              : Image.asset(
-                                  ImageConstant.like,
-                                  height: 20,
+                          SizedBox(
+                            width: 0,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              /* Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                        
+                                                            ShowAllPostLike("${AllGuestPostRoomData?.object?[index].postUid}"))); */
+          
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) {
+                                  return ShowAllPostLike(
+                                      "${OpenSaveModelData?.object?.postUid}");
+                                },
+                              ));
+                            },
+                            child: Container(
+                              color: Colors.transparent,
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(
+                                  "${OpenSaveModelData?.object?.likedCount}",
+                                  style: TextStyle(
+                                    fontFamily: "outfit",
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            /* Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                      
-                                                          ShowAllPostLike("${AllGuestPostRoomData?.object?[index].postUid}"))); */
-
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (context) {
-                                return ShowAllPostLike(
-                                    "${OpenSaveModelData?.object?.postUid}");
-                              },
-                            ));
-                          },
-                          child: Text(
-                            "${OpenSaveModelData?.object?.likedCount}",
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              BlocProvider.of<AddcommentCubit>(context)
+                                  .Addcomment(context,
+                                      '${OpenSaveModelData?.object?.postUid}');
+          
+                              _settingModalBottomSheet1(context, 0, _width);
+          
+                              /*     await Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) {
+                                                              return CommentsScreen(
+                                                                image:
+                                                                    AllGuestPostRoomData
+                                                                        ?.object
+                                                                        ?.content?[
+                                                                            index]
+                                                                        .userProfilePic,
+                                                                userName:
+                                                                    AllGuestPostRoomData
+                                                                        ?.object
+                                                                        ?.content?[
+                                                                            index]
+                                                                        .postUserName,
+                                                                description:
+                                                                    AllGuestPostRoomData
+                                                                        ?.object
+                                                                        ?.content?[
+                                                                            index]
+                                                                        .description,
+                                                                PostUID:
+                                                                    '${AllGuestPostRoomData?.object?.content?[index].postUid}',
+                                                                date: AllGuestPostRoomData
+                                                                        ?.object
+                                                                        ?.content?[
+                                                                            index]
+                                                                        .createdAt ??
+                                                                    "",
+                                                              );
+                                                            })).then((value) =>
+                                                                methodtoReffrser()); */
+                            },
+                            child: Container(
+                              color: Colors.transparent,
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Image.asset(
+                                  ImageConstant.meesage,
+                                  height: 15,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "${OpenSaveModelData?.object?.commentCount}",
                             style: TextStyle(
                               fontFamily: "outfit",
                               fontSize: 14,
                               color: Colors.white,
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 18,
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            BlocProvider.of<AddcommentCubit>(context)
-                                .Addcomment(context,
-                                    '${OpenSaveModelData?.object?.postUid}');
-
-                            _settingModalBottomSheet1(context, 0, _width);
-
-                            /*     await Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) {
-                                                            return CommentsScreen(
-                                                              image:
-                                                                  AllGuestPostRoomData
-                                                                      ?.object
-                                                                      ?.content?[
-                                                                          index]
-                                                                      .userProfilePic,
-                                                              userName:
-                                                                  AllGuestPostRoomData
-                                                                      ?.object
-                                                                      ?.content?[
-                                                                          index]
-                                                                      .postUserName,
-                                                              description:
-                                                                  AllGuestPostRoomData
-                                                                      ?.object
-                                                                      ?.content?[
-                                                                          index]
-                                                                      .description,
-                                                              PostUID:
-                                                                  '${AllGuestPostRoomData?.object?.content?[index].postUid}',
-                                                              date: AllGuestPostRoomData
-                                                                      ?.object
-                                                                      ?.content?[
-                                                                          index]
-                                                                      .createdAt ??
-                                                                  "",
-                                                            );
-                                                          })).then((value) =>
-                                                              methodtoReffrser()); */
-                          },
-                          child: Image.asset(
-                            ImageConstant.meesage,
-                            height: 14,
-                            color: Colors.white,
+                          /*  SizedBox(
+                                                          width: 18,
+                                                        ),
+                                                        Image.asset(
+                                                          ImageConstant.vector2,
+                                                          height: 12,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                        Text(
+                                                          '1335',
+                                                          style: TextStyle(
+                                                              fontFamily: "outfit",
+                                                              fontSize: 14),
+                                                        ), */
+                          Spacer(),
+                          GestureDetector(
+                            onTap: () async {
+                              await soicalFunation(
+                                apiName: 'savedata',
+                              );
+                            },
+                            child: Container(
+                              color: Colors.transparent,
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Image.asset(
+                                  OpenSaveModelData?.object?.isSaved == false
+                                      ? ImageConstant.savePin
+                                      : ImageConstant.Savefill,
+                                  height: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "${OpenSaveModelData?.object?.commentCount}",
-                          style: TextStyle(
-                            fontFamily: "outfit",
-                            fontSize: 14,
-                            color: Colors.white,
-                          ),
-                        ),
-                        /*  SizedBox(
-                                                        width: 18,
-                                                      ),
-                                                      Image.asset(
-                                                        ImageConstant.vector2,
-                                                        height: 12,
-                                                      ),
-                                                      SizedBox(
-                                                        width: 5,
-                                                      ),
-                                                      Text(
-                                                        '1335',
-                                                        style: TextStyle(
-                                                            fontFamily: "outfit",
-                                                            fontSize: 14),
-                                                      ), */
-                        Spacer(),
-                        GestureDetector(
-                          onTap: () async {
-                            await soicalFunation(
-                              apiName: 'savedata',
-                            );
-                          },
-                          child: Image.asset(
-                            OpenSaveModelData?.object?.isSaved == false
-                                ? ImageConstant.savePin
-                                : ImageConstant.Savefill,
-                            height: 16,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

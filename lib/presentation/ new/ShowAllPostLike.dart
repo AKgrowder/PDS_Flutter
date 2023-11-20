@@ -5,11 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GetPostAllLike_Bloc/GetPostAllLike_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GetPostAllLike_Bloc/GetPostAllLike_state.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetPostLike_Model.dart';
+import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
-import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
-import 'package:pds/theme/theme_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ShowAllPostLike extends StatefulWidget {
@@ -124,16 +123,36 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
                                               "${GetPostAllLikeRoomData?.object?[index].isFollowing}",
                                         )));
                           },
-                          child: CircleAvatar(
+                          child: GetPostAllLikeRoomData
+                                      ?.object?[index].profilePic !=
+                                  null
+                              ? CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      "${GetPostAllLikeRoomData?.object?[index].profilePic}"),
+                                  backgroundColor: Colors.transparent,
+                                  radius: 25,
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.only(left: 5),
+                                  child: CustomImageView(
+                                    imagePath: ImageConstant.tomcruse,
+                                    height: 40,
+                                    width: 40,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+
+                          /* CircleAvatar(
                             backgroundImage: GetPostAllLikeRoomData
                                         ?.object?[index].profilePic !=
                                     null
+                                    
                                 ? NetworkImage(
                                     "${GetPostAllLikeRoomData?.object?[index].profilePic}")
                                 : NetworkImage(
                                     "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"),
                             radius: 25,
-                          ),
+                          ), */
                         ),
                         title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
