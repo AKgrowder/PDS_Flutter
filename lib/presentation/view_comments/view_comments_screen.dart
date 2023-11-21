@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
@@ -15,7 +13,6 @@ import 'package:intl/intl.dart';
 import 'package:pds/API/Model/coment/coment_model.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stomp_dart_client/parser.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
 import '../../API/ApiService/socket.dart';
@@ -1364,9 +1361,9 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
       FocusScope.of(context).unfocus();
     }
 
-    // setState(() {
+    setState(() {
     isEmojiVisible = !isEmojiVisible;
-    // });
+    });
   }
 
   void onEmojiSelected(String emoji) => setState(() {
