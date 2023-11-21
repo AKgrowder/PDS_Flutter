@@ -267,11 +267,11 @@ class _ProfileScreenState extends State<ProfileScreen>
           }
         });
 
-        NewProfileData?.object?.expertise?.forEach((element) {
+      NewProfileData?.object?.expertise?.forEach((element) {
           if (ExpertiseData == "") {
-            ExpertiseData = "${ExpertiseData}${element.expertiseName}";
+            ExpertiseData = "${element.expertiseName}";
           } else {
-            ExpertiseData = "${ExpertiseData}, ${element.expertiseName}";
+            ExpertiseData = "${element.expertiseName}";
           }
         });
 
@@ -398,7 +398,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       NewProfileData
                                               ?.object?.userBackgroundPic ==
                                           ''
-                                  ? Image.asset(ImageConstant.pdslogo)
+                                  ? Image.asset(ImageConstant.splashImage)
                                   : CustomImageView(
                                       url:
                                           "${NewProfileData?.object?.userBackgroundPic}",
@@ -446,7 +446,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               NewProfileData?.object
                                                       ?.userProfilePic ==
                                                   ''
-                                          ? Image.asset(ImageConstant.pdslogo)
+                                          ? Image.asset(ImageConstant.splashImage)
                                           : CircleAvatar(
                                               backgroundImage: NetworkImage(
                                                   "${NewProfileData?.object?.userProfilePic}"),
@@ -1065,8 +1065,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               height: 1,
                               color: Colors.black12,
                             ),
-                            User_ID == NewProfileData?.object?.userUid
-                                ? Expanded(
+                           Expanded(
                                     child: GestureDetector(
                                       child: Column(
                                         children: [
@@ -1121,8 +1120,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         print("abcd");
                                       },
                                     ),
-                                  )
-                                : SizedBox(),
+                                  ),
+                               
                             User_ID == NewProfileData?.object?.userUid
                                 ? Expanded(
                                     child: GestureDetector(
@@ -1197,7 +1196,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ? CommentsPostCount * 310 + 100
                                       : arrNotiyTypeList[3].isSelected == true
                                           ? value1 == 0
-                                              ?  FinalSavePostCount == 0 ? 40 : FinalSavePostCount * 230
+                                              ? FinalSavePostCount == 0
+                                                  ? 40
+                                                  : FinalSavePostCount * 230
                                               : SaveBlogCount * 155 + 100
                                           : 10,
                           child: SingleChildScrollView(
@@ -1235,9 +1236,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         /*  child: expertUser(_height, _width) */
                                                         child: Column(
                                                           children: [
-                                                            
                                                             ListTile(
-                                                          /*     leading:
+                                                              /*     leading:
                                                                   Container(
                                                                 width: 35,
                                                                 height: 35,
@@ -1285,7 +1285,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               15.0),
                                                     ),
                                                     child: ListTile(
-                                                       /*  leading: Container(
+                                                        /*  leading: Container(
                                                           width: 35,
                                                           height: 35,
                                                           decoration:
@@ -1296,7 +1296,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           ),
                                                         ), */
                                                         title: Padding(
-                                                          padding: const EdgeInsets.only(left: 0),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 0),
                                                           child: Column(
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
@@ -1307,7 +1310,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               ),
                                                               Text(
                                                                 'About Me',
-                                                                style: TextStyle(
+                                                                style:
+                                                                    TextStyle(
                                                                   color: Colors
                                                                       .black,
                                                                   fontSize: 18,
@@ -1319,12 +1323,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               SizedBox(
                                                                 height: 5,
                                                               ),
-                                                              AbboutMeShow == true
+                                                              AbboutMeShow ==
+                                                                      true
                                                                   ? Container(
                                                                       alignment:
                                                                           Alignment
                                                                               .center,
-                                                                      height: 50,
+                                                                      height:
+                                                                          50,
                                                                       width:
                                                                           _width /
                                                                               2,
@@ -1332,15 +1338,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           // color: Colors.amber
                                                                           borderRadius: BorderRadius.circular(10),
                                                                           border: Border.all(color: Color(0xffEFEFEF))),
-                                                                      child: Text(
+                                                                      child:
+                                                                          Text(
                                                                         'Enter About Me',
                                                                         style: TextStyle(
                                                                             fontSize:
                                                                                 14,
-                                                                            fontWeight: FontWeight
-                                                                                .w300,
-                                                                            color:
-                                                                                Colors.black),
+                                                                            fontWeight:
+                                                                                FontWeight.w300,
+                                                                            color: Colors.black),
                                                                       ),
                                                                     )
                                                                   : TextFormField(
@@ -1352,7 +1358,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           isAbourtMe,
                                                                       controller:
                                                                           aboutMe,
-                                                                      maxLines: 5,
+                                                                      maxLines:
+                                                                          5,
                                                                       decoration:
                                                                           InputDecoration(
                                                                         border:
@@ -2065,7 +2072,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 arrNotiyTypeList[3].isSelected
                                     ? Container(
                                         height: value1 == 0
-                                            ? FinalSavePostCount == 0 ? 40 : FinalSavePostCount * 230
+                                            ? FinalSavePostCount == 0
+                                                ? 40
+                                                : FinalSavePostCount * 230
                                             : SaveBlogCount * 155 + 100,
                                         // color: Colors.green,
                                         child: Padding(
@@ -2428,7 +2437,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     return Column(
       children: [
         ListTile(
-         /*  leading: Container(
+          /*  leading: Container(
             width: 35,
             height: 35,
             decoration: ShapeDecoration(
@@ -2468,7 +2477,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           width: _width,
           //  color: Colors.amber,
           child: Padding(
-            padding: const EdgeInsets.only(left: 16,right: 16),
+            padding: const EdgeInsets.only(left: 16, right: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -2489,7 +2498,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     margin: EdgeInsets.only(
                       top: 10,
                     ),
-          
+
                     validator: (value) {
                       RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                       if (value!.isEmpty) {
@@ -2501,7 +2510,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       } else if (value.contains('..')) {
                         return 'username does not contain is correct';
                       }
-          
+
                       return null;
                     },
                     // textStyle: theme.textTheme.titleMedium!,
@@ -2533,7 +2542,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     margin: EdgeInsets.only(
                       top: 10,
                     ),
-          
+
                     validator: (value) {
                       RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                       if (value!.isEmpty) {
@@ -2545,7 +2554,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       } else if (value.contains('..')) {
                         return 'username does not contain is correct';
                       }
-          
+
                       return null;
                     },
                     // textStyle: theme.textTheme.titleMedium!,
@@ -2577,7 +2586,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     margin: EdgeInsets.only(
                       top: 10,
                     ),
-          
+
                     validator: (value) {
                       RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                       if (value!.isEmpty) {
@@ -2589,7 +2598,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       } else if (value.contains('..')) {
                         return 'username does not contain is correct';
                       }
-          
+
                       return null;
                     },
                     // textStyle: theme.textTheme.titleMedium!,
@@ -2616,14 +2625,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                 if (NewProfileData?.object?.fees != null)
                   Container(
-                    width: _width ,
+                    width: _width,
                     child: CustomTextFormField(
                       readOnly: true,
                       controller: priceContrller,
                       margin: EdgeInsets.only(
                         top: 10,
                       ),
-          
+
                       validator: (value) {
                         RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                         if (value!.isEmpty) {
@@ -2635,7 +2644,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         } else if (value.contains('..')) {
                           return 'username does not contain is correct';
                         }
-          
+
                         return null;
                       },
                       // textStyle: theme.textTheme.titleMedium!,
@@ -2663,7 +2672,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: Row(
-                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       GestureDetector(
                         onTap: () {
@@ -2766,7 +2775,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   children: [
                     Container(
                         height: 50,
-                        width: _width -175,
+                        width: _width - 175,
                         decoration: BoxDecoration(
                             color: Color(0XFFF6F6F6),
                             borderRadius: BorderRadius.only(
@@ -2819,9 +2828,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                             child: GestureDetector(
                               onTap: () async {
                                 // dopcument = "Upload Image";
-          
+
                                 // setState(() {});
-          
+
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => DocumentViewScreen(
                                           path: dopcument,
@@ -2896,10 +2905,8 @@ class _ProfileScreenState extends State<ProfileScreen>
         Container(
           height: 350,
           width: _width,
-
-            
           child: Padding(
-            padding: const EdgeInsets.only(right: 16,left: 16),
+            padding: const EdgeInsets.only(right: 16, left: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -2920,7 +2927,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     margin: EdgeInsets.only(
                       top: 10,
                     ),
-          
+
                     validator: (value) {
                       RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                       if (value!.isEmpty) {
@@ -2932,11 +2939,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                       } else if (value.contains('..')) {
                         return 'username does not contain is correct';
                       }
-          
+
                       return null;
                     },
                     // textStyle: theme.textTheme.titleMedium!,
-          
+
                     hintText: "Company Name",
                     // hintStyle: theme.textTheme.titleMedium!,
                     textInputAction: TextInputAction.next,
@@ -2958,14 +2965,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                 ),
                 Container(
-                  width: _width ,
+                  width: _width,
                   child: CustomTextFormField(
                     readOnly: true,
                     controller: jobprofileController,
                     margin: EdgeInsets.only(
                       top: 10,
                     ),
-          
+
                     validator: (value) {
                       RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                       if (value!.isEmpty) {
@@ -2977,7 +2984,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       } else if (value.contains('..')) {
                         return 'username does not contain is correct';
                       }
-          
+
                       return null;
                     },
                     // textStyle: theme.textTheme.titleMedium!,
@@ -3002,14 +3009,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                 ),
                 Container(
-                  width: _width ,
+                  width: _width,
                   child: CustomTextFormField(
                     readOnly: true,
                     controller: IndustryType,
                     margin: EdgeInsets.only(
                       top: 10,
                     ),
-          
+
                     validator: (value) {
                       RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                       if (value!.isEmpty) {
@@ -3021,7 +3028,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       } else if (value.contains('..')) {
                         return 'username does not contain is correct';
                       }
-          
+
                       return null;
                     },
                     // textStyle: theme.textTheme.titleMedium!,
@@ -3058,7 +3065,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15, left: 10),
                           child: Text(
-                            '${dopcument.toString()}',
+                            '${dopcument.toString().split('/').last}',
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(fontSize: 16),
                           ),
@@ -3091,26 +3098,26 @@ class _ProfileScreenState extends State<ProfileScreen>
                               ),
                             ),
                           )
-                        : Container(
-                            height: 50,
-                            width: _width / 4.5,
-                            decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 228, 228, 228),
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(5),
-                                    bottomRight: Radius.circular(5))),
-                            child: GestureDetector(
-                              onTap: () async {
-                                // dopcument = "Upload Image";
-          
-                                // setState(() {});
-          
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => DocumentViewScreen(
-                                          path: dopcument,
-                                          title: 'Pdf',
-                                        )));
-                              },
+                        : GestureDetector(
+                            onTap: () async {
+                              // dopcument = "Upload Image";
+
+                              // setState(() {});
+              print("dfsdfgsdfgdfg-${dopcument}");
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => DocumentViewScreen(
+                                        path: dopcument,
+                                        title: 'Pdf',
+                                      )));
+                            },
+                            child: Container(
+                              height: 50,
+                              width: _width / 4.5,
+                              decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 228, 228, 228),
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(5),
+                                      bottomRight: Radius.circular(5))),
                               child: Center(
                                 child: Text(
                                   "Open",
@@ -3121,10 +3128,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                              ), /* Icon(
-                                  Icons.delete_forever,
-                                  color: ColorConstant.primary_color,
-                                ) */
+                              ),
                             ),
                           ),
                   ],

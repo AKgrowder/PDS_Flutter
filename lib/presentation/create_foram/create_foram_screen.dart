@@ -20,6 +20,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../theme/theme_helper.dart';
 import '../policy_of_company/policy_screen.dart';
 import '../policy_of_company/privecy_policy.dart';
+import 'package:image/image.dart' as img;
+
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 
 class CreateForamScreen extends StatefulWidget {
   const CreateForamScreen({Key? key}) : super(key: key);
@@ -779,12 +783,11 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
         print("Done file size KB");
         switch (Index) {
           case 0:
+            print('filenamecheckdocmenut-${dopcument}');
             setState(() {
               uplopdfile.text = file1.name;
               dopcument = file1.name;
             });
-            print('filenamecheckdocmenut-${dopcument}');
-
             break;
           default:
         }
@@ -792,7 +795,9 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
           print("this fucntion is caaling");
 
           CroppedFile? croppedFile = await ImageCropper().cropImage(
-            sourcePath: file1.path.toString(),
+            sourcePath: 
+            // "", 
+            file1.path.toString(),
             aspectRatioPresets: [
               CropAspectRatioPreset.square,
               CropAspectRatioPreset.ratio3x2,
@@ -810,6 +815,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                   lockAspectRatio: false),
               IOSUiSettings(
                 title: 'Cropper',
+                
               ),
               WebUiSettings(
                 context: context,
@@ -817,12 +823,43 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             ],
           );
           if (croppedFile != null) {
-            print('Image cropped and saved at: ${croppedFile.path}');
-            BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
-                dopcument.toString(), croppedFile.path, context);
+              print("save thisData");
+            int x = 0; // Replace with your desired value
+            int y = 0; // Replace with your desired value
+            int width = 100; // Replace with your desired value
+            int height = 100;
+            print("SDgfgdfdfgg-${croppedFile.path}");
+
+            /* String savePath =
+                "${croppedFile.path.split('_').first}_${dopcument}"; */
+
+
+            print(
+                'Image cropped and saved at: ${croppedFile.path.split('_').first}');
+            Directory appDocDir = await getApplicationDocumentsDirectory();
+            img.Image? originalImage =
+                img.decodeImage(File(croppedFile.path).readAsBytesSync());
+              // img.Image? croppedImage = img.copyCrop(originalImage!,0, 0, 100, 100); 
+            
+            Directory appDocumentsDirectory =
+                await getApplicationDocumentsDirectory();
+            String appDocumentsPath = appDocumentsDirectory.path;
+            // File(savePath).writeAsBytesSync(img.encodePng());
+
+            /* String stroeData= croppedFile.path.split("_").first;
+            print("dfsdvfsfgdfg-$stroeData"); */
+
+
+           /*  BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
+                dopcument.toString(), croppedFile.path, context); */
           } else {
             BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
                 dopcument.toString(), file1.path!, context);
+            setState(() {
+              uplopdfile.text = file1.name;
+              dopcument = file1.name;
+            });
+            print("cheeck wihout cutting--${file1.name}");
           }
         }
 
