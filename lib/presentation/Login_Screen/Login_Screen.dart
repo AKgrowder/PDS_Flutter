@@ -329,7 +329,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             validator: (value) {
                               RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                               if (value!.isEmpty) {
-                                return 'Please Enter Name';
+                                return ' Please Enter User ID / Mobile Number';
                               } else if (value.trim().isEmpty) {
                                 return 'Name can\'t be just blank spaces';
                               } else if (!nameRegExp.hasMatch(value)) {

@@ -425,16 +425,23 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                         MediumType.image
                                                     ? GestureDetector(
                                                         onTap: () async {
-                                                          print("fgfgfhg");
+                                                          print(
+                                                              "this is the Medium");
                                                         },
-                                                        child: FadeInImage(
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          imageUrl:
+                                                              '${imageDataPost?.object?.data?[0]}',
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                        /*    child: FadeInImage(
                                                           fit: BoxFit.cover,
                                                           placeholder: MemoryImage(
                                                               kTransparentImage),
                                                           image: PhotoProvider(
                                                               mediumId:
                                                                   medium1!.id),
-                                                        ),
+                                                        ), */
                                                       )
                                                     : VideoProvider(
                                                         mediumId: medium1!.id,
@@ -770,57 +777,85 @@ class _CreateNewPostState extends State<CreateNewPost> {
           pickedImage.add(File(pickedFile!.path));
           getFileSize1(pickedImage[0].path, 1, pickedImage[0], 0);
         } else {
-          Navigator.pop(context);
-
-          showDialog(
-            context: context,
-            builder: (ctx) => AlertDialog(
-              title: Text(
-                "Selected File Error",
-                textScaleFactor: 1.0,
-              ),
-              content: Text(
-                "Only PNG, JPG Supported.",
-                textScaleFactor: 1.0,
-              ),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                  },
-                  child: Container(
-                    // color: Colors.green,
-                    padding: const EdgeInsets.all(10),
-                    child: const Text("Okay"),
-                  ),
+          if ((pickedFile?.path.contains(".mp4") ?? false) ||
+              (pickedFile?.path.contains(".mov") ?? false) ||
+              (pickedFile?.path.contains(".mp3") ?? false) ||
+              (pickedFile?.path.contains(".m4a") ?? false)) {
+            showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: Text(
+                  "Selected File Error",
+                  textScaleFactor: 1.0,
                 ),
-              ],
-            ),
-          );
+                content: Text(
+                  "Only PNG, JPG Supported.",
+                  textScaleFactor: 1.0,
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
+                    child: Container(
+                      // color: Colors.green,
+                      padding: const EdgeInsets.all(10),
+                      child: const Text("Okay"),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
         }
       }
     } catch (e) {}
   }
 
-
   Future<void> _getImageFromSource() async {
     try {
       final pickedFile = await _imagePicker.pickMultiImage();
       List<XFile> xFilePicker = pickedFile;
-      
+
       pickedImage.clear();
       if (xFilePicker.isNotEmpty) {
-       
         if (xFilePicker.length <= 5) {
-          
           for (var i = 0; i < xFilePicker.length; i++) {
-            
             if (!_isGifOrSvg(xFilePicker[i].path)) {
               pickedImage.add(File(xFilePicker[i].path));
               setState(() {});
               getFileSize1(pickedImage[i].path, 1, pickedImage[i], 0);
+              if ((xFilePicker[i].path.contains(".mp4")) ||
+                  (xFilePicker[i].path.contains(".mov")) ||
+                  (xFilePicker[i].path.contains(".mp3")) ||
+                  (xFilePicker[i].path.contains(".m4a"))) {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: Text(
+                      "Selected File Error",
+                      textScaleFactor: 1.0,
+                    ),
+                    content: Text(
+                      "Only PNG, JPG Supported.",
+                      textScaleFactor: 1.0,
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(ctx).pop();
+                        },
+                        child: Container(
+                          // color: Colors.green,
+                          padding: const EdgeInsets.all(10),
+                          child: const Text("Okay"),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
             }
-            print("xFilePickerxFilePicker - ${xFilePicker[i].path}");
           }
         } else {
           SnackBar snackBar = SnackBar(
@@ -829,41 +864,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
-      }
-      /*   if (!_isGifOrSvg(pickedFile!.path)) {
-          pickedImage = File(pickedFile!.path);
-          setState(() {});
-          getFileSize1(pickedImage!.path, 1, pickedImage!, 0);
-        } */
-      else {
-        Navigator.pop(context);
-
-        showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: Text(
-              "Selected File Error",
-              textScaleFactor: 1.0,
-            ),
-            content: Text(
-              "Only PNG, JPG Supported.",
-              textScaleFactor: 1.0,
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                },
-                child: Container(
-                  // color: Colors.green,
-                  padding: const EdgeInsets.all(10),
-                  child: const Text("Okay"),
-                ),
-              ),
-            ],
-          ),
-        );
-      }
+      } else {}
     } catch (e) {}
   }
 

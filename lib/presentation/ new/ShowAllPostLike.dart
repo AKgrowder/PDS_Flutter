@@ -125,7 +125,8 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
                           },
                           child: GetPostAllLikeRoomData
                                       ?.object?[index].profilePic !=
-                                  null
+                                  null && GetPostAllLikeRoomData
+                                      ?.object?[index].profilePic != ""
                               ? CircleAvatar(
                                   backgroundImage: NetworkImage(
                                       "${GetPostAllLikeRoomData?.object?[index].profilePic}"),

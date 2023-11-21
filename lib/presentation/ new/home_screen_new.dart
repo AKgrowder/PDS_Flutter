@@ -846,8 +846,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     var _width = MediaQuery.of(context).size.width;
 
     return WillPopScope(
-      onWillPop: ()async {
-
+      onWillPop: () async {
         return true;
       },
       child: Scaffold(
@@ -878,7 +877,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-    
+
             if (state is FetchAllExpertsLoadedState) {
               AllExperData = state.AllExperData;
             }
@@ -925,7 +924,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
               saveBlogModeData = state.saveBlogModeData;
             }
-    
+
             if (state is likeBlogLoadedState) {
               SnackBar snackBar = SnackBar(
                 content: Text(state.LikeBlogModeData.object.toString()),
@@ -934,7 +933,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
               LikeBlogModeData = state.LikeBlogModeData;
             }
-    
+
             if (state is GetAllStoryLoadedState) {
               getAllStoryModel = state.getAllStoryModel;
               buttonDatas.clear();
@@ -1002,19 +1001,21 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                           storyPages: List.generate(
                               element.storyData?.length ?? 0, (index) {
                             return FullStoryPage(
-                              imageName: '${element.storyData?[index].storyData}',
+                              imageName:
+                                  '${element.storyData?[index].storyData}',
                             );
                           }),
                           segmentDuration: const Duration(seconds: 3),
                         ));
-    
+
                     storyButtons[0] = (StoryButton(
                         onPressed: (data) {
                           Navigator.of(storycontext!).push(
                             StoryRoute(
                               storyContainerSettings: StoryContainerSettings(
                                 buttonData: buttonDatas[0],
-                                tapPosition: buttonDatas[0].buttonCenterPosition!,
+                                tapPosition:
+                                    buttonDatas[0].buttonCenterPosition!,
                                 curve: buttonDatas[0].pageAnimationCurve,
                                 allButtonDatas: buttonDatas,
                                 pageTransform: StoryPage3DTransform(),
@@ -1027,7 +1028,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                         buttonData: buttonDatas[0],
                         allButtonDatas: buttonDatas,
                         storyListViewController: ScrollController()));
-    
+
                     storyAdded = true;
                   } else {
                     if (!storyAdded) userName.add("Share Story");
@@ -1084,8 +1085,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                           ),
                         ),
                       ),
-                      storyPages:
-                          List.generate(element.storyData?.length ?? 0, (index) {
+                      storyPages: List.generate(element.storyData?.length ?? 0,
+                          (index) {
                         return FullStoryPage(
                           imageName: '${element.storyData?[index].storyData}',
                         );
@@ -1129,7 +1130,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
-    
+
               likePost = state.likePost;
             }
           }, builder: (context, state) {
@@ -1189,7 +1190,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     RegisterCreateAccountScreen()));
                                       } else {
                                         Navigator.push(context,
-                                            MaterialPageRoute(builder: (context) {
+                                            MaterialPageRoute(
+                                                builder: (context) {
                                           return ProfileScreen(
                                             User_ID: "${User_ID}",
                                             isFollowing: 'FOLLOW',
@@ -1204,8 +1206,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 fontFamily: "outfit",
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.bold,
-                                                color:
-                                                    ColorConstant.primary_color),
+                                                color: ColorConstant
+                                                    .primary_color),
                                           )
                                         : UserProfileImage != null &&
                                                 UserProfileImage != ""
@@ -1215,15 +1217,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 height: 50,
                                                 width: 50,
                                                 fit: BoxFit.fill,
-                                                radius: BorderRadius.circular(25),
+                                                radius:
+                                                    BorderRadius.circular(25),
                                               )
                                             : CustomImageView(
-                                                imagePath: ImageConstant.tomcruse,
+                                                imagePath:
+                                                    ImageConstant.tomcruse,
                                                 // color: Colors.transparent,
                                                 height: 50,
                                                 width: 50,
                                                 fit: BoxFit.fill,
-                                                radius: BorderRadius.circular(25),
+                                                radius:
+                                                    BorderRadius.circular(25),
                                               )),
                               ],
                             ),
@@ -1243,17 +1248,20 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                         ImageDataPostOne? imageDataPost;
                                         if (uuid != null) {
                                           if (Platform.isAndroid) {
-                                            final info = await DeviceInfoPlugin()
-                                                .androidInfo;
+                                            final info =
+                                                await DeviceInfoPlugin()
+                                                    .androidInfo;
                                             if (num.parse(await info
                                                         .version.release)
                                                     .toInt() >=
                                                 13) {
-                                              if (await permissionHandler(context,
+                                              if (await permissionHandler(
+                                                      context,
                                                       Permission.photos) ??
                                                   false) {
                                                 imageDataPost =
-                                                    await Navigator.push(context,
+                                                    await Navigator.push(
+                                                        context,
                                                         MaterialPageRoute(
                                                             builder: (context) {
                                                   return CreateStoryPage();
@@ -1280,11 +1288,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 return CreateStoryPage();
                                               }));
                                               var parmes = {
-                                                "storyData": imageDataPost?.object
+                                                "storyData": imageDataPost
+                                                    ?.object
                                                     .toString()
                                               };
-                                              await Repository().cretateStoryApi(
-                                                  context, parmes);
+                                              await Repository()
+                                                  .cretateStoryApi(
+                                                      context, parmes);
                                             }
                                           }
                                         } else {
@@ -1293,22 +1303,36 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   builder: (context) =>
                                                       RegisterCreateAccountScreen()));
                                         }
-    
+
                                         if (imageDataPost?.object != null) {
                                           StoryButtonData buttonData =
                                               StoryButtonData(
-                                            timelineBackgroundColor: Colors.grey,
-                                            buttonDecoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                image: AssetImage(
-                                                  ImageConstant.pdslogo,
-                                                ),
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
+                                            timelineBackgroundColor:
+                                                Colors.grey,
+                                            buttonDecoration:
+                                                UserProfileImage != null &&
+                                                        UserProfileImage != ""
+                                                    ? BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        image: DecorationImage(
+                                                          image: NetworkImage(
+                                                              "${UserProfileImage}"),
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      )
+                                                    : BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        image: DecorationImage(
+                                                          image: AssetImage(
+                                                            ImageConstant
+                                                                .tomcruse,
+                                                          ),
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
                                             child: Padding(
-                                              padding: const EdgeInsets.all(5.0),
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.max,
                                                 mainAxisAlignment:
@@ -1318,7 +1342,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     '',
                                                     style: const TextStyle(
                                                       color: Colors.white,
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
                                                   ),
                                                 ],
@@ -1356,11 +1381,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                             segmentDuration:
                                                 const Duration(seconds: 3),
                                           );
-    
+
                                           buttonDatas.insert(0, buttonData);
                                           storyButtons[0] = StoryButton(
                                               onPressed: (data) {
-                                                Navigator.of(storycontext!).push(
+                                                Navigator.of(storycontext!)
+                                                    .push(
                                                   StoryRoute(
                                                     storyContainerSettings:
                                                         StoryContainerSettings(
@@ -1369,7 +1395,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           .buttonCenterPosition!,
                                                       curve: buttonData
                                                           .pageAnimationCurve,
-                                                      allButtonDatas: buttonDatas,
+                                                      allButtonDatas:
+                                                          buttonDatas,
                                                       pageTransform:
                                                           StoryPage3DTransform(),
                                                       storyListScrollController:
@@ -1384,7 +1411,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                               allButtonDatas: buttonDatas,
                                               storyListViewController:
                                                   ScrollController());
-    
+
                                           userName.add(User_Name!);
                                           if (mounted)
                                             setState(() {
@@ -1406,7 +1433,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   shape: BoxShape.circle,
                                                   color: Color(0x4CED1C25)),
                                               child: Icon(
-                                                Icons.add_circle_outline_rounded,
+                                                Icons
+                                                    .add_circle_outline_rounded,
                                                 color:
                                                     ColorConstant.primary_color,
                                               ),
@@ -1438,9 +1466,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     child: Container(
                                                       decoration: BoxDecoration(
                                                           color: Colors.white,
-                                                          shape: BoxShape.circle),
+                                                          shape:
+                                                              BoxShape.circle),
                                                       child: Icon(
-                                                        Icons.add_circle_rounded,
+                                                        Icons
+                                                            .add_circle_rounded,
                                                         color: ColorConstant
                                                             .primary_color,
                                                       ),
@@ -1473,7 +1503,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                         Text(
                                           '${userName[index]}',
                                           style: TextStyle(
-                                              color: Colors.black, fontSize: 16),
+                                              color: Colors.black,
+                                              fontSize: 16),
                                         )
                                       ],
                                     ),
@@ -1498,20 +1529,20 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                       true
                               ? PaginationWidget(
                                   scrollController: scrollController,
-                                  totalSize:
-                                      AllGuestPostRoomData?.object?.totalElements,
+                                  totalSize: AllGuestPostRoomData
+                                      ?.object?.totalElements,
                                   offSet: AllGuestPostRoomData
                                       ?.object?.pageable?.pageNumber,
                                   onPagination: ((p0) async {
                                     if (User_ID != null) {
-                                      await BlocProvider.of<GetGuestAllPostCubit>(
-                                              context)
+                                      await BlocProvider.of<
+                                              GetGuestAllPostCubit>(context)
                                           .GetUserAllPostAPIPagantion(
                                               context, (p0 + 1).toString(),
                                               showAlert: true);
                                     } else {
-                                      await BlocProvider.of<GetGuestAllPostCubit>(
-                                              context)
+                                      await BlocProvider.of<
+                                              GetGuestAllPostCubit>(context)
                                           .GetGuestAllPostAPIPagantion(
                                               context, (p0 + 1).toString(),
                                               showAlert: true);
@@ -1528,7 +1559,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                       if (!added) {
                                         AllGuestPostRoomData?.object?.content
                                             ?.forEach((element) {
-                                          _pageControllers.add(PageController());
+                                          _pageControllers
+                                              .add(PageController());
                                           _currentPages.add(0);
                                         });
                                         WidgetsBinding.instance
@@ -1540,14 +1572,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                       DateTime parsedDateTime = DateTime.parse(
                                           '${AllGuestPostRoomData?.object?.content?[index].createdAt ?? ""}');
                                       DateTime? repostTime;
-                                      if (AllGuestPostRoomData!
-                                              .object!.content![index].repostOn !=
+                                      if (AllGuestPostRoomData!.object!
+                                              .content![index].repostOn !=
                                           null) {
                                         repostTime = DateTime.parse(
                                             '${AllGuestPostRoomData?.object?.content?[index].repostOn!.createdAt ?? ""}');
                                         print("repost time = $parsedDateTime");
                                       }
-    
+
                                       GlobalKey buttonKey = GlobalKey(); //
                                       return AllGuestPostRoomData?.object
                                                   ?.content?[index].repostOn !=
@@ -1574,7 +1606,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   width: _width,
                                                   child: Column(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       SizedBox(
                                                         height: 10,
@@ -1585,7 +1618,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           leading:
                                                               GestureDetector(
                                                             onTap: () {
-                                                              if (uuid == null) {
+                                                              if (uuid ==
+                                                                  null) {
                                                                 Navigator.of(
                                                                         context)
                                                                     .push(MaterialPageRoute(
@@ -1619,7 +1653,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     backgroundImage:
                                                                         NetworkImage(
                                                                             "${AllGuestPostRoomData?.object?.content?[index].userProfilePic}"),
-                                                                            backgroundColor: Colors.transparent,
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .transparent,
                                                                     radius: 25,
                                                                   )
                                                                 : CustomImageView(
@@ -1656,7 +1692,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               Text(
                                                                 getTimeDifference(
                                                                     parsedDateTime),
-                                                                style: TextStyle(
+                                                                style:
+                                                                    TextStyle(
                                                                   fontSize: 12,
                                                                   fontFamily:
                                                                       "outfit",
@@ -1671,7 +1708,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           index]
                                                                       .userUid
                                                               ? GestureDetector(
-                                                                  key: buttonKey,
+                                                                  key:
+                                                                      buttonKey,
                                                                   onTap: () {
                                                                     showPopupMenu(
                                                                         context,
@@ -1712,21 +1750,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         Alignment
                                                                             .center,
                                                                     width: 65,
-                                                                    margin: EdgeInsets
-                                                                        .only(
-                                                                            bottom:
-                                                                                5),
+                                                                    margin: EdgeInsets.only(
+                                                                        bottom:
+                                                                            5),
                                                                     decoration: BoxDecoration(
                                                                         color: Color(
                                                                             0xffED1C25),
                                                                         borderRadius:
-                                                                            BorderRadius.circular(
-                                                                                4)),
-                                                                    child: AllGuestPostRoomData
-                                                                                ?.object
-                                                                                ?.content?[
-                                                                                    index]
-                                                                                .isFollowing ==
+                                                                            BorderRadius.circular(4)),
+                                                                    child: AllGuestPostRoomData?.object?.content?[index].isFollowing ==
                                                                             'FOLLOW'
                                                                         ? Text(
                                                                             'Follow',
@@ -1764,13 +1796,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   const EdgeInsets
                                                                           .only(
                                                                       left: 16),
-                                                              child: HashTagText(
+                                                              child:
+                                                                  HashTagText(
                                                                 text:
                                                                     "${AllGuestPostRoomData?.object?.content?[index].description}",
                                                                 decoratedStyle: TextStyle(
                                                                     fontFamily:
                                                                         "outfit",
-                                                                    fontSize: 14,
+                                                                    fontSize:
+                                                                        14,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .bold,
@@ -1779,7 +1813,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 basicStyle: TextStyle(
                                                                     fontFamily:
                                                                         "outfit",
-                                                                    fontSize: 14,
+                                                                    fontSize:
+                                                                        14,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .bold,
@@ -1799,16 +1834,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     Navigator.push(
                                                                         context,
                                                                         MaterialPageRoute(
-                                                                          builder:
-                                                                              (context) =>
-                                                                                  HashTagViewScreen(title: text),
+                                                                          builder: (context) =>
+                                                                              HashTagViewScreen(title: text),
                                                                         ));
                                                                   }
                                                                 },
                                                               ),
                                                             )
                                                           : SizedBox(),
-    
+
                                                       (AllGuestPostRoomData
                                                                   ?.object
                                                                   ?.content?[
@@ -1837,8 +1871,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       ? (AllGuestPostRoomData?.object?.content?[index].postDataType ==
                                                                               "IMAGE"
                                                                           ? GestureDetector(
-                                                                              onTap:
-                                                                                  () {
+                                                                              onTap: () {
                                                                                 Navigator.push(
                                                                                   context,
                                                                                   MaterialPageRoute(
@@ -1848,8 +1881,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                           )),
                                                                                 );
                                                                               },
-                                                                              child:
-                                                                                  Container(
+                                                                              child: Container(
                                                                                 height: 200,
                                                                                 width: _width,
                                                                                 margin: EdgeInsets.only(left: 16, top: 15, right: 16),
@@ -1859,8 +1891,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 )),
                                                                               ),
                                                                             )
-                                                                          : AllGuestPostRoomData?.object?.content?[index].postDataType ==
-                                                                                  "ATTACHMENT"
+                                                                          : AllGuestPostRoomData?.object?.content?[index].postDataType == "ATTACHMENT"
                                                                               ? (AllGuestPostRoomData?.object?.content?[index].postData?.isNotEmpty == true)
                                                                                   ? Container(
                                                                                       height: 200,
@@ -1947,17 +1978,19 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         ),
                                                             ),
                                                       // inner post portion
-    
+
                                                       Padding(
                                                         padding:
-                                                            const EdgeInsets.only(
+                                                            const EdgeInsets
+                                                                    .only(
                                                                 left: 10,
                                                                 right: 10,
                                                                 bottom: 10,
                                                                 top: 20),
                                                         child: Container(
                                                           decoration: BoxDecoration(
-                                                              color: Colors.white,
+                                                              color:
+                                                                  Colors.white,
                                                               border: Border.all(
                                                                   color: Color
                                                                       .fromRGBO(
@@ -1987,33 +2020,29 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     onTap: () {
                                                                       if (uuid ==
                                                                           null) {
-                                                                        Navigator.of(
-                                                                                context)
-                                                                            .push(
-                                                                                MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                        Navigator.of(context).push(MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                RegisterCreateAccountScreen()));
                                                                       } else {
                                                                         Navigator.push(
                                                                             context,
                                                                             MaterialPageRoute(builder:
                                                                                 (context) {
                                                                           return ProfileScreen(
-                                                                              User_ID:
-                                                                                  "${AllGuestPostRoomData?.object?.content?[index].repostOn?.userUid}",
-                                                                              isFollowing:
-                                                                                  AllGuestPostRoomData?.object?.content?[index].repostOn?.isFollowing);
+                                                                              User_ID: "${AllGuestPostRoomData?.object?.content?[index].repostOn?.userUid}",
+                                                                              isFollowing: AllGuestPostRoomData?.object?.content?[index].repostOn?.isFollowing);
                                                                         }));
                                                                       }
                                                                     },
-                                                                    child: AllGuestPostRoomData
-                                                                                ?.object
-                                                                                ?.content?[index]
-                                                                                .repostOn
-                                                                                ?.userProfilePic !=
-                                                                            null
+                                                                    child: AllGuestPostRoomData?.object?.content?[index].repostOn?.userProfilePic !=
+                                                                                null &&
+                                                                            AllGuestPostRoomData?.object?.content?[index].repostOn?.userProfilePic !=
+                                                                                ""
                                                                         ? CircleAvatar(
                                                                             backgroundImage:
                                                                                 NetworkImage("${AllGuestPostRoomData?.object?.content?[index].repostOn?.userProfilePic}"),
-                                                                                backgroundColor: Colors.transparent,
+                                                                            backgroundColor:
+                                                                                Colors.transparent,
                                                                             radius:
                                                                                 25,
                                                                           )
@@ -2024,8 +2053,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 50,
                                                                             width:
                                                                                 50,
-                                                                            fit: BoxFit
-                                                                                .fill,
+                                                                            fit:
+                                                                                BoxFit.fill,
                                                                             radius:
                                                                                 BorderRadius.circular(25),
                                                                           ),
@@ -2040,20 +2069,16 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             Text(
                                                                           "${AllGuestPostRoomData?.object?.content?[index].repostOn?.postUserName}",
                                                                           style: TextStyle(
-                                                                              fontSize:
-                                                                                  20,
-                                                                              fontFamily:
-                                                                                  "outfit",
-                                                                              fontWeight:
-                                                                                  FontWeight.bold),
+                                                                              fontSize: 20,
+                                                                              fontFamily: "outfit",
+                                                                              fontWeight: FontWeight.bold),
                                                                         ),
                                                                       ),
                                                                       Text(
                                                                         AllGuestPostRoomData?.object?.content?[index].repostOn ==
                                                                                 null
                                                                             ? ""
-                                                                            : getTimeDifference(
-                                                                                repostTime!),
+                                                                            : getTimeDifference(repostTime!),
                                                                         style:
                                                                             TextStyle(
                                                                           fontSize:
@@ -2090,19 +2115,17 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 "outfit",
                                                                             fontSize:
                                                                                 14,
-                                                                            fontWeight: FontWeight
-                                                                                .bold,
-                                                                            color:
-                                                                                ColorConstant.HasTagColor),
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            color: ColorConstant.HasTagColor),
                                                                         basicStyle: TextStyle(
                                                                             fontFamily:
                                                                                 "outfit",
                                                                             fontSize:
                                                                                 14,
-                                                                            fontWeight: FontWeight
-                                                                                .bold,
-                                                                            color:
-                                                                                Colors.black),
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            color: Colors.black),
                                                                         onTap:
                                                                             (text) {},
                                                                       ),
@@ -2118,13 +2141,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             ?.postDataType ==
                                                                         null
                                                                     ? SizedBox()
-                                                                    : AllGuestPostRoomData
-                                                                                ?.object
-                                                                                ?.content?[
-                                                                                    index]
-                                                                                .repostOn
-                                                                                ?.postData
-                                                                                ?.length ==
+                                                                    : AllGuestPostRoomData?.object?.content?[index].repostOn?.postData?.length ==
                                                                             1
                                                                         ? (AllGuestPostRoomData?.object?.content?[index].repostOn?.postDataType ==
                                                                                 "IMAGE"
@@ -2242,8 +2259,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       ),
                                                       Padding(
                                                         padding:
-                                                            const EdgeInsets.only(
-                                                                left: 13),
+                                                            const EdgeInsets
+                                                                .only(left: 13),
                                                         child: Divider(
                                                           thickness: 1,
                                                         ),
@@ -2253,7 +2270,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       ),
                                                       Padding(
                                                         padding:
-                                                            const EdgeInsets.only(
+                                                            const EdgeInsets
+                                                                    .only(
                                                                 top: 0,
                                                                 right: 16),
                                                         child: Row(
@@ -2266,7 +2284,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 await soicalFunation(
                                                                     apiName:
                                                                         'like_post',
-                                                                    index: index);
+                                                                    index:
+                                                                        index);
                                                               },
                                                               child: Container(
                                                                 color: Colors
@@ -2302,6 +2321,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             SizedBox(
                                                               width: 0,
                                                             ),
+                                                             AllGuestPostRoomData
+                                                                        ?.object
+                                                                        ?.content?[
+                                                                            index]
+                                                                        .likedCount ==
+                                                                    0
+                                                                ? SizedBox()
+                                                                :
                                                             GestureDetector(
                                                               onTap: () {
                                                                 /* Navigator.push(
@@ -2310,7 +2337,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       builder: (context) =>
                                                       
                                                           ShowAllPostLike("${AllGuestPostRoomData?.object?[index].postUid}"))); */
-    
+
                                                                 Navigator.push(
                                                                     context,
                                                                     MaterialPageRoute(
@@ -2356,9 +2383,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   Navigator.of(
                                                                           context)
                                                                       .push(MaterialPageRoute(
-                                                                          builder:
-                                                                              (context) =>
-                                                                                  RegisterCreateAccountScreen()));
+                                                                          builder: (context) =>
+                                                                              RegisterCreateAccountScreen()));
                                                                 } else {
                                                                   _settingModalBottomSheet1(
                                                                       context,
@@ -2374,8 +2400,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       const EdgeInsets
                                                                               .all(
                                                                           5.0),
-                                                                  child:
-                                                                      Image.asset(
+                                                                  child: Image
+                                                                      .asset(
                                                                     ImageConstant
                                                                         .meesage,
                                                                     height: 15,
@@ -2386,6 +2412,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             SizedBox(
                                                               width: 5,
                                                             ),
+                                                             AllGuestPostRoomData?.object?.content?[index].commentCount ==
+                                                                    0
+                                                                ? SizedBox()
+                                                                :
                                                             Text(
                                                               "${AllGuestPostRoomData?.object?.content?[index].commentCount}",
                                                               style: TextStyle(
@@ -2455,8 +2485,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       const EdgeInsets
                                                                               .all(
                                                                           5.0),
-                                                                  child:
-                                                                      Image.asset(
+                                                                  child: Image
+                                                                      .asset(
                                                                     ImageConstant
                                                                         .vector2,
                                                                     height: 13,
@@ -2467,6 +2497,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             SizedBox(
                                                               width: 5,
                                                             ),
+                                                            AllGuestPostRoomData
+                                                                        ?.object
+                                                                        ?.content?[
+                                                                            index]
+                                                                        .repostCount ==
+                                                                    0
+                                                                ? SizedBox()
+                                                                :
                                                             Text(
                                                               '${AllGuestPostRoomData?.object?.content?[index].repostCount}',
                                                               style: TextStyle(
@@ -2496,7 +2534,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 await soicalFunation(
                                                                     apiName:
                                                                         'savedata',
-                                                                    index: index);
+                                                                    index:
+                                                                        index);
                                                               },
                                                               child: Container(
                                                                 color: Colors
@@ -2506,13 +2545,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       const EdgeInsets
                                                                               .all(
                                                                           5.0),
-                                                                  child:
-                                                                      Image.asset(
-                                                                    AllGuestPostRoomData
-                                                                                ?.object
-                                                                                ?.content?[
-                                                                                    index]
-                                                                                .isSaved ==
+                                                                  child: Image
+                                                                      .asset(
+                                                                    AllGuestPostRoomData?.object?.content?[index].isSaved ==
                                                                             false
                                                                         ? ImageConstant
                                                                             .savePin
@@ -2556,7 +2591,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   width: _width,
                                                   child: Column(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       SizedBox(
                                                         height: 10,
@@ -2567,7 +2603,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           leading:
                                                               GestureDetector(
                                                             onTap: () {
-                                                              if (uuid == null) {
+                                                              if (uuid ==
+                                                                  null) {
                                                                 Navigator.of(
                                                                         context)
                                                                     .push(MaterialPageRoute(
@@ -2601,7 +2638,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     backgroundImage:
                                                                         NetworkImage(
                                                                             "${AllGuestPostRoomData?.object?.content?[index].userProfilePic}"),
-                                                                            backgroundColor: Colors.transparent,
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .transparent,
                                                                     radius: 25,
                                                                   )
                                                                 : CustomImageView(
@@ -2643,7 +2682,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               Text(
                                                                 getTimeDifference(
                                                                     parsedDateTime),
-                                                                style: TextStyle(
+                                                                style:
+                                                                    TextStyle(
                                                                   fontSize: 12,
                                                                   fontFamily:
                                                                       "outfit",
@@ -2666,7 +2706,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           index]
                                                                       .userUid
                                                               ? GestureDetector(
-                                                                  key: buttonKey,
+                                                                  key:
+                                                                      buttonKey,
                                                                   onTap: () {
                                                                     showPopupMenu(
                                                                         context,
@@ -2707,21 +2748,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         Alignment
                                                                             .center,
                                                                     width: 65,
-                                                                    margin: EdgeInsets
-                                                                        .only(
-                                                                            bottom:
-                                                                                5),
+                                                                    margin: EdgeInsets.only(
+                                                                        bottom:
+                                                                            5),
                                                                     decoration: BoxDecoration(
                                                                         color: Color(
                                                                             0xffED1C25),
                                                                         borderRadius:
-                                                                            BorderRadius.circular(
-                                                                                4)),
-                                                                    child: AllGuestPostRoomData
-                                                                                ?.object
-                                                                                ?.content?[
-                                                                                    index]
-                                                                                .isFollowing ==
+                                                                            BorderRadius.circular(4)),
+                                                                    child: AllGuestPostRoomData?.object?.content?[index].isFollowing ==
                                                                             'FOLLOW'
                                                                         ? Text(
                                                                             'Follow',
@@ -2759,13 +2794,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   const EdgeInsets
                                                                           .only(
                                                                       left: 16),
-                                                              child: HashTagText(
+                                                              child:
+                                                                  HashTagText(
                                                                 text:
                                                                     "${AllGuestPostRoomData?.object?.content?[index].description}",
                                                                 decoratedStyle: TextStyle(
                                                                     fontFamily:
                                                                         "outfit",
-                                                                    fontSize: 14,
+                                                                    fontSize:
+                                                                        14,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .bold,
@@ -2774,7 +2811,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 basicStyle: TextStyle(
                                                                     fontFamily:
                                                                         "outfit",
-                                                                    fontSize: 14,
+                                                                    fontSize:
+                                                                        14,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .bold,
@@ -2794,9 +2832,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     Navigator.push(
                                                                         context,
                                                                         MaterialPageRoute(
-                                                                          builder:
-                                                                              (context) =>
-                                                                                  HashTagViewScreen(title: text),
+                                                                          builder: (context) =>
+                                                                              HashTagViewScreen(title: text),
                                                                         ));
                                                                   }
                                                                 },
@@ -2804,7 +2841,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             )
                                                           : SizedBox(),
                                                       // index == 0
-    
+
                                                       Container(
                                                         width: _width,
                                                         child: AllGuestPostRoomData
@@ -2832,11 +2869,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             () {
                                                                           if (uuid ==
                                                                               null) {
-                                                                            Navigator.of(context)
-                                                                                .push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                           } else {
-                                                                            Navigator
-                                                                                .push(
+                                                                            Navigator.push(
                                                                               context,
                                                                               MaterialPageRoute(
                                                                                   builder: (context) => OpenSavePostImage(
@@ -2851,12 +2886,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           width:
                                                                               _width,
                                                                           margin: EdgeInsets.only(
-                                                                              left:
-                                                                                  16,
-                                                                              top:
-                                                                                  15,
-                                                                              right:
-                                                                                  16),
+                                                                              left: 16,
+                                                                              top: 15,
+                                                                              right: 16),
                                                                           child: Center(
                                                                               child: CustomImageView(
                                                                             url:
@@ -2864,11 +2896,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           )),
                                                                         ),
                                                                       )
-                                                                    : AllGuestPostRoomData
-                                                                                ?.object
-                                                                                ?.content?[
-                                                                                    index]
-                                                                                .postDataType ==
+                                                                    : AllGuestPostRoomData?.object?.content?[index].postDataType ==
                                                                             "ATTACHMENT"
                                                                         ? (AllGuestPostRoomData?.object?.content?[index].postData?.isNotEmpty ==
                                                                                 true)
@@ -2887,10 +2915,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           if ((AllGuestPostRoomData?.object?.content?[index].postData?.isNotEmpty ??
                                                                               false)) ...[
                                                                             SizedBox(
-                                                                              height:
-                                                                                  300,
-                                                                              child:
-                                                                                  PageView.builder(
+                                                                              height: 300,
+                                                                              child: PageView.builder(
                                                                                 onPageChanged: (page) {
                                                                                   setState(() {
                                                                                     _currentPages[index] = page;
@@ -2959,11 +2985,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     ],
                                                                   ),
                                                       ),
-    
+
                                                       Padding(
                                                         padding:
-                                                            const EdgeInsets.only(
-                                                                left: 13),
+                                                            const EdgeInsets
+                                                                .only(left: 13),
                                                         child: Divider(
                                                           thickness: 1,
                                                         ),
@@ -2973,7 +2999,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       ),
                                                       Padding(
                                                         padding:
-                                                            const EdgeInsets.only(
+                                                            const EdgeInsets
+                                                                    .only(
                                                                 top: 0,
                                                                 right: 16),
                                                         child: Row(
@@ -2986,7 +3013,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 await soicalFunation(
                                                                     apiName:
                                                                         'like_post',
-                                                                    index: index);
+                                                                    index:
+                                                                        index);
                                                               },
                                                               child: Container(
                                                                 color: Colors
@@ -3022,6 +3050,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             SizedBox(
                                                               width: 0,
                                                             ),
+                                                             AllGuestPostRoomData?.object?.content?[index].likedCount ==
+                                                                    0
+                                                                ? SizedBox()
+                                                                :
                                                             GestureDetector(
                                                               onTap: () {
                                                                 /* Navigator.push(
@@ -3030,7 +3062,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       builder: (context) =>
     
                                                           ShowAllPostLike("${AllGuestPostRoomData?.object?[index].postUid}"))); */
-    
+
                                                                 Navigator.push(
                                                                     context,
                                                                     MaterialPageRoute(
@@ -3069,7 +3101,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               width: 8,
                                                             ),
                                                             GestureDetector(
-                                                                onTap: () async {
+                                                                onTap:
+                                                                    () async {
                                                                   BlocProvider.of<
                                                                               AddcommentCubit>(
                                                                           context)
@@ -3091,8 +3124,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   }
                                                                 },
                                                                 child: Container(
-                                                                    color: Colors
-                                                                        .transparent,
+                                                                    color: Colors.transparent,
                                                                     child: Padding(
                                                                         padding: EdgeInsets.all(5.0),
                                                                         child: Image.asset(
@@ -3105,6 +3137,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             SizedBox(
                                                               width: 5,
                                                             ),
+                                                            AllGuestPostRoomData?.object?.content?[index].commentCount ==
+                                                                    0
+                                                                ? SizedBox()
+                                                                :
                                                             Text(
                                                               "${AllGuestPostRoomData?.object?.content?[index].commentCount}",
                                                               style: TextStyle(
@@ -3122,9 +3158,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   Navigator.of(
                                                                           context)
                                                                       .push(MaterialPageRoute(
-                                                                          builder:
-                                                                              (context) =>
-                                                                                  RegisterCreateAccountScreen()));
+                                                                          builder: (context) =>
+                                                                              RegisterCreateAccountScreen()));
                                                                 } else {
                                                                   Navigator.push(
                                                                       context,
@@ -3134,33 +3169,27 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       return RePostScreen(
                                                                         userProfile: AllGuestPostRoomData
                                                                             ?.object
-                                                                            ?.content?[
-                                                                                index]
+                                                                            ?.content?[index]
                                                                             .userProfilePic,
                                                                         username: AllGuestPostRoomData
                                                                             ?.object
-                                                                            ?.content?[
-                                                                                index]
+                                                                            ?.content?[index]
                                                                             .postUserName,
                                                                         date: AllGuestPostRoomData
                                                                             ?.object
-                                                                            ?.content?[
-                                                                                index]
+                                                                            ?.content?[index]
                                                                             .createdAt,
                                                                         desc: AllGuestPostRoomData
                                                                             ?.object
-                                                                            ?.content?[
-                                                                                index]
+                                                                            ?.content?[index]
                                                                             .description,
                                                                         postData: AllGuestPostRoomData
                                                                             ?.object
-                                                                            ?.content?[
-                                                                                index]
+                                                                            ?.content?[index]
                                                                             .postData,
                                                                         postDataType: AllGuestPostRoomData
                                                                             ?.object
-                                                                            ?.content?[
-                                                                                index]
+                                                                            ?.content?[index]
                                                                             .postDataType,
                                                                         index:
                                                                             index,
@@ -3168,8 +3197,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             AllGuestPostRoomData,
                                                                         postUid: AllGuestPostRoomData
                                                                             ?.object
-                                                                            ?.content?[
-                                                                                index]
+                                                                            ?.content?[index]
                                                                             .postUid,
                                                                       );
                                                                     },
@@ -3184,8 +3212,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       const EdgeInsets
                                                                               .all(
                                                                           5.0),
-                                                                  child:
-                                                                      Image.asset(
+                                                                  child: Image
+                                                                      .asset(
                                                                     ImageConstant
                                                                         .vector2,
                                                                     height: 13,
@@ -3196,6 +3224,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             SizedBox(
                                                               width: 5,
                                                             ),
+                                                            AllGuestPostRoomData?.object?.content?[index].repostCount ==
+                                                                    0
+                                                                ? SizedBox()
+                                                                :
                                                             Text(
                                                               uuid == null
                                                                   ? ""
@@ -3227,7 +3259,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 await soicalFunation(
                                                                     apiName:
                                                                         'savedata',
-                                                                    index: index);
+                                                                    index:
+                                                                        index);
                                                               },
                                                               child: Container(
                                                                 color: Colors
@@ -3237,13 +3270,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       const EdgeInsets
                                                                               .all(
                                                                           5.0),
-                                                                  child:
-                                                                      Image.asset(
-                                                                    AllGuestPostRoomData
-                                                                                ?.object
-                                                                                ?.content?[
-                                                                                    index]
-                                                                                .isSaved ==
+                                                                  child: Image
+                                                                      .asset(
+                                                                    AllGuestPostRoomData?.object?.content?[index].isSaved ==
                                                                             false
                                                                         ? ImageConstant
                                                                             .savePin
@@ -3292,7 +3321,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               Container(
                                                                 margin: EdgeInsets
                                                                     .only(
-                                                                        left: 10),
+                                                                        left:
+                                                                            10),
                                                                 child: Text(
                                                                   'Experts',
                                                                   style: TextStyle(
@@ -3310,7 +3340,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               Spacer(),
                                                               GestureDetector(
                                                                 onTap: () {
-                                                                  Navigator.push(
+                                                                  Navigator
+                                                                      .push(
                                                                           context,
                                                                           MaterialPageRoute(
                                                                             builder: (context) =>
@@ -3320,8 +3351,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               ),
                                                                             ], child: ExpertsScreen(RoomUUID: "")),
                                                                             // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
-                                                                          ))
-                                                                      .then((value) =>
+                                                                          )).then(
+                                                                      (value) =>
                                                                           setState(
                                                                               () {
                                                                             // refresh = true;
@@ -3345,8 +3376,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             // color: Colors.green,
                                                             height: 230,
                                                             width: _width,
-                                                            child:
-                                                                ListView.builder(
+                                                            child: ListView
+                                                                .builder(
                                                               itemCount:
                                                                   AllExperData
                                                                       ?.object
@@ -3357,17 +3388,21 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   (context,
                                                                       index) {
                                                                 return Center(
-                                                                  child: Padding(
+                                                                  child:
+                                                                      Padding(
                                                                     padding: EdgeInsets.only(
                                                                         left: index ==
                                                                                 0
                                                                             ? 16
                                                                             : 4,
-                                                                        right: 4),
+                                                                        right:
+                                                                            4),
                                                                     child:
                                                                         Container(
-                                                                      height: 190,
-                                                                      width: 130,
+                                                                      height:
+                                                                          190,
+                                                                      width:
+                                                                          130,
                                                                       decoration: BoxDecoration(
                                                                           // color: Colors.red,
                                                                           border: Border.all(color: Colors.red, width: 3),
@@ -3380,35 +3415,29 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 180,
                                                                             width:
                                                                                 128,
-                                                                            radius: BorderRadius.only(
-                                                                                topLeft: Radius.circular(10),
-                                                                                topRight: Radius.circular(10)),
+                                                                            radius:
+                                                                                BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                                                                             url:
                                                                                 "${AllExperData?.object?[index].profilePic}",
-                                                                            fit: BoxFit
-                                                                                .cover,
+                                                                            fit:
+                                                                                BoxFit.cover,
                                                                           ),
                                                                           Align(
                                                                             alignment:
                                                                                 Alignment.topCenter,
                                                                             child:
                                                                                 Container(
-                                                                              height:
-                                                                                  24,
-                                                                              alignment:
-                                                                                  Alignment.center,
-                                                                              width:
-                                                                                  70,
-                                                                              decoration:
-                                                                                  BoxDecoration(
+                                                                              height: 24,
+                                                                              alignment: Alignment.center,
+                                                                              width: 70,
+                                                                              decoration: BoxDecoration(
                                                                                 borderRadius: BorderRadius.only(
                                                                                   bottomLeft: Radius.circular(8),
                                                                                   bottomRight: Radius.circular(8),
                                                                                 ),
                                                                                 color: Color.fromRGBO(237, 28, 37, 0.5),
                                                                               ),
-                                                                              child:
-                                                                                  Row(
+                                                                              child: Row(
                                                                                 children: [
                                                                                   Padding(
                                                                                     padding: EdgeInsets.only(left: 8, right: 4),
@@ -3431,10 +3460,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 EdgeInsets.only(bottom: 25),
                                                                             child:
                                                                                 Align(
-                                                                              alignment:
-                                                                                  Alignment.bottomCenter,
-                                                                              child:
-                                                                                  Container(
+                                                                              alignment: Alignment.bottomCenter,
+                                                                              child: Container(
                                                                                 height: 40,
                                                                                 width: 115,
                                                                                 // color: Colors.amber,
@@ -3486,17 +3513,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                           ),
                                                                                         ], child: ExpertsScreen(RoomUUID: "")),
                                                                                         // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
-                                                                                      )).then((value) =>
-                                                                                  setState(() {
+                                                                                      )).then((value) => setState(() {
                                                                                     // refresh = true;
                                                                                   }));
                                                                             },
                                                                             child:
                                                                                 Align(
-                                                                              alignment:
-                                                                                  Alignment.bottomCenter,
-                                                                              child:
-                                                                                  Container(
+                                                                              alignment: Alignment.bottomCenter,
+                                                                              child: Container(
                                                                                 height: 25,
                                                                                 width: 130,
                                                                                 decoration: BoxDecoration(
@@ -3526,8 +3550,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         ],
                                                       );
                                       }
-    
-                                      if (getallBlogModel1?.object?.isNotEmpty ==
+
+                                      if (getallBlogModel1
+                                                  ?.object?.isNotEmpty ==
                                               true &&
                                           index == 0) {
                                         // print("index check$index");
@@ -3575,8 +3600,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   ?.length,
                                                           scrollDirection:
                                                               Axis.horizontal,
-                                                          itemBuilder:
-                                                              (context, index1) {
+                                                          itemBuilder: (context,
+                                                              index1) {
                                                             if (getallBlogModel1
                                                                         ?.object
                                                                         ?.length !=
@@ -3596,22 +3621,21 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     context,
                                                                     MaterialPageRoute(
                                                                       builder: (context) => RecentBlogScren(
-                                                                          description1:
-                                                                              getallBlogModel1?.object?[index1].description.toString() ??
-                                                                                  "",
+                                                                          description1: getallBlogModel1?.object?[index1].description.toString() ??
+                                                                              "",
                                                                           title: getallBlogModel1?.object?[index1].title.toString() ??
                                                                               "",
                                                                           imageURL:
-                                                                              getallBlogModel1?.object?[index1].image.toString() ??
-                                                                                  ""),
+                                                                              getallBlogModel1?.object?[index1].image.toString() ?? ""),
                                                                     ));
                                                               },
                                                               child: Container(
                                                                 height: 220,
-                                                                width:
-                                                                    _width / 1.6,
-                                                                margin: EdgeInsets
-                                                                    .only(
+                                                                width: _width /
+                                                                    1.6,
+                                                                margin:
+                                                                    EdgeInsets
+                                                                        .only(
                                                                   left: 10,
                                                                 ),
                                                                 decoration: BoxDecoration(
@@ -3632,7 +3656,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               .image
                                                                               .toString() ??
                                                                           "",
-                                                                      height: 150,
+                                                                      height:
+                                                                          150,
                                                                       width:
                                                                           _width,
                                                                       fit: BoxFit
@@ -3644,9 +3669,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     Padding(
                                                                       padding: const EdgeInsets
                                                                               .only(
-                                                                          left: 9,
-                                                                          top: 7),
-                                                                      child: Text(
+                                                                          left:
+                                                                              9,
+                                                                          top:
+                                                                              7),
+                                                                      child:
+                                                                          Text(
                                                                         "${getallBlogModel1?.object?[index1].title}",
                                                                         maxLines:
                                                                             1,
@@ -3665,18 +3693,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       children: [
                                                                         Padding(
                                                                           padding: const EdgeInsets.only(
-                                                                              left:
-                                                                                  10,
-                                                                              top:
-                                                                                  3),
+                                                                              left: 10,
+                                                                              top: 3),
                                                                           child:
                                                                               Text(
                                                                             /*  getallBlogModel?.object?.length != 0 ||
                                                                                       getallBlogModel?.object != null
                                                                                   ?
                                                                                   : */
-                                                                            customFormat(
-                                                                                parsedDateTimeBlogs!),
+                                                                            customFormat(parsedDateTimeBlogs!),
                                                                             style: TextStyle(
                                                                                 fontFamily: "outfit",
                                                                                 fontSize: 12,
@@ -3690,27 +3715,21 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           width:
                                                                               7,
                                                                           margin: EdgeInsets.only(
-                                                                              top:
-                                                                                  5,
-                                                                              left:
-                                                                                  2),
+                                                                              top: 5,
+                                                                              left: 2),
                                                                           decoration: BoxDecoration(
-                                                                              shape:
-                                                                                  BoxShape.circle,
+                                                                              shape: BoxShape.circle,
                                                                               color: Color(0xffABABAB)),
                                                                         ),
                                                                         Padding(
                                                                           padding: const EdgeInsets.only(
-                                                                              top:
-                                                                                  4,
-                                                                              left:
-                                                                                  1),
+                                                                              top: 4,
+                                                                              left: 1),
                                                                           child:
                                                                               Text(
                                                                             '12.3K Views',
-                                                                            style: TextStyle(
-                                                                                fontSize: 11,
-                                                                                color: Color(0xffABABAB)),
+                                                                            style:
+                                                                                TextStyle(fontSize: 11, color: Color(0xffABABAB)),
                                                                           ),
                                                                         ),
                                                                       ],
@@ -3720,28 +3739,24 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         GestureDetector(
                                                                           onTap:
                                                                               () {
-                                                                            print(
-                                                                                "Click On Like Button");
-    
+                                                                            print("Click On Like Button");
+
                                                                             BlocProvider.of<GetGuestAllPostCubit>(context).LikeBlog(
                                                                                 context,
                                                                                 "${User_ID}",
                                                                                 "${getallBlogModel1?.object?[index1].uid}");
-    
+
                                                                             if (getallBlogModel1?.object?[index1].isLiked ==
                                                                                 false) {
-                                                                              getallBlogModel1?.object?[index1].isLiked =
-                                                                                  true;
+                                                                              getallBlogModel1?.object?[index1].isLiked = true;
                                                                             } else {
-                                                                              getallBlogModel1?.object?[index1].isLiked =
-                                                                                  false;
+                                                                              getallBlogModel1?.object?[index1].isLiked = false;
                                                                             }
                                                                           },
                                                                           child:
                                                                               Padding(
-                                                                            padding: const EdgeInsets.only(
-                                                                                left: 7,
-                                                                                top: 4),
+                                                                            padding:
+                                                                                const EdgeInsets.only(left: 7, top: 4),
                                                                             child: getallBlogModel1?.object?[index1].isLiked == false
                                                                                 ? Icon(Icons.favorite_border)
                                                                                 : Icon(
@@ -3769,20 +3784,17 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         GestureDetector(
                                                                           onTap:
                                                                               () {
-                                                                            print(
-                                                                                "Save Blogs");
-    
+                                                                            print("Save Blogs");
+
                                                                             BlocProvider.of<GetGuestAllPostCubit>(context).SaveBlog(
                                                                                 context,
                                                                                 "${User_ID}",
                                                                                 "${getallBlogModel1?.object?[index1].uid}");
                                                                             if (getallBlogModel1?.object?[index1].isSaved ==
                                                                                 false) {
-                                                                              getallBlogModel1?.object?[index1].isSaved =
-                                                                                  true;
+                                                                              getallBlogModel1?.object?[index1].isSaved = true;
                                                                             } else {
-                                                                              getallBlogModel1?.object?[index1].isSaved =
-                                                                                  false;
+                                                                              getallBlogModel1?.object?[index1].isSaved = false;
                                                                             }
                                                                           },
                                                                           child:

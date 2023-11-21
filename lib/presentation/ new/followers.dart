@@ -12,6 +12,7 @@ import 'package:pds/theme/theme_helper.dart';
 
 class Followers extends StatelessWidget {
   String appBarName;
+
   FollowersClassModel followersClassModel;
   String? userId;
   Followers(
@@ -75,21 +76,22 @@ class Followers extends StatelessWidget {
                                               .object?[index].isFollow
                                               .toString())));
                             },
-                            child:followersClassModel
-                                          .object?[index].userProfilePic !=
-                                      null? CircleAvatar(
-                              backgroundImage: 
-                                   NetworkImage(
-                                      "${followersClassModel.object?[index].userProfilePic}"),
-                                
-                              radius: 25,
-                            ):CircleAvatar(
-                              backgroundImage: 
-                                   AssetImage(
-                                      ImageConstant.tomcruse),
-                                
-                              radius: 25,
-                            ),
+                            child: followersClassModel
+                                        .object?[index].userProfilePic !=
+
+                                    null && followersClassModel
+                                        .object?[index].userProfilePic != ""
+
+                                ? CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        "${followersClassModel.object?[index].userProfilePic}"),
+                                    radius: 25,
+                                  )
+                                : CircleAvatar(
+                                    backgroundImage:
+                                        AssetImage(ImageConstant.tomcruse),
+                                    radius: 25,
+                                  ),
                           ),
                           title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,16 +146,17 @@ class Followers extends StatelessWidget {
                                         color: Color(0xffEFEFEF),
                                         borderRadius:
                                             BorderRadius.circular(10)),
-                                    child: Text('Remove'),
+                                    child: Text(
+                                        "${followersClassModel.object?[index].isFollow}"),
                                   ),
                                 )
                               : Container(
                                   height: 60,
                                   alignment: Alignment.center,
-                                  width: 80,
+                                  width: 90,
                                   margin: EdgeInsets.all(10),
                                   decoration: BoxDecoration(
-                                      color: Color(0xffEFEFEF),
+                                      color: ColorConstant.primary_color,
                                       borderRadius: BorderRadius.circular(10)),
                                   child: Text(
                                     followersClassModel.object?[index].isFollow
@@ -161,7 +164,8 @@ class Followers extends StatelessWidget {
                                         '',
                                     style: TextStyle(
                                         fontSize: 12,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
                                   ),
                                 ),
                         ),
