@@ -1031,11 +1031,11 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                       shape: BoxShape
                                                                           .circle),
                                                                   child:
-                                                                      CustomImageView(
-                                                                    url: PriveateRoomData?.object?[index].usersList?[0].userProfilePic?.isNotEmpty ??
-                                                                            false
-                                                                        ? "${PriveateRoomData?.object?[index].usersList?[0].userProfilePic}"
-                                                                        : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                                                     PriveateRoomData?.object?[index].usersList?[0].userProfilePic?.isNotEmpty ??
+                                                                            false? CustomImageView(
+                                                                    url: 
+                                                                         "${PriveateRoomData?.object?[index].usersList?[0].userProfilePic}",
+                                                                         
                                                                     height: 20,
                                                                     radius: BorderRadius
                                                                         .circular(
@@ -1043,7 +1043,18 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                     width: 20,
                                                                     fit: BoxFit
                                                                         .fill,
-                                                                  ) /* Image.network(
+                                                                  ):CustomImageView(
+                                                                   imagePath: ImageConstant.tomcruse, 
+                                                                         
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  )
+                                                                   /* Image.network(
                                                                     "",
                                                                     
                                                                     size: 20,
