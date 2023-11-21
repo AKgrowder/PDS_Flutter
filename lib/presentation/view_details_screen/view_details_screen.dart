@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/ViewDetails_Bloc/ViewDetails_state.dart';
 import 'package:pds/API/Model/ViewDetails_Model/ViewDetails_model.dart';
+import 'package:pds/core/utils/image_constant.dart';
+
 import '../../API/Bloc/ViewDetails_Bloc/ViewDetails_cubit.dart';
 import '../../core/utils/color_constant.dart';
 import '../../theme/theme_helper.dart';
@@ -81,8 +83,7 @@ class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
                           width: _width / 3.7,
                           child: viewDetailsModel?.object?.profilePic == null
                               ? CustomImageView(
-                                  url:
-                                      "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                  imagePath: ImageConstant.pdslogo,
                                   height: 50,
                                   radius: BorderRadius.circular(5),
                                   width: 50,
