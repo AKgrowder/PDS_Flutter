@@ -215,7 +215,10 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                     ?.object
                                                     ?.posts?[index]
                                                     .userProfilePic !=
-                                                null
+                                                null && hashTagViewData
+                                                    ?.object
+                                                    ?.posts?[index]
+                                                    .userProfilePic != ""
                                             ? CircleAvatar(
                                                 backgroundImage: NetworkImage(
                                                     "${hashTagViewData?.object?.posts?[index].userProfilePic}"),
@@ -598,6 +601,11 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                         SizedBox(
                                           width: 0,
                                         ),
+                                         hashTagViewData?.object?.posts?[index]
+                                                    .likedCount ==
+                                                0
+                                            ? SizedBox()
+                                            : 
                                         GestureDetector(
                                           onTap: () {
                                             Navigator.push(context,
@@ -676,6 +684,11 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                         SizedBox(
                                           width: 3,
                                         ),
+                                         hashTagViewData?.object?.posts?[index]
+                                                    .commentCount ==
+                                                0
+                                            ? SizedBox()
+                                            :
                                         Text(
                                           "${hashTagViewData?.object?.posts?[index].commentCount}",
                                           style: TextStyle(
