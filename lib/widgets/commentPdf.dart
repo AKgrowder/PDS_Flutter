@@ -74,6 +74,7 @@ class DocumentViewScreen1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("dsfgdhfhfbgh-${path}");
     return Scaffold(
       body: path != null
           ? Container(

@@ -483,8 +483,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           child: ClipOval(
                                             child: FittedBox(
                                               child: Image.asset(
-                                                ImageConstant.tomcruse,
-                                                fit: BoxFit.cover,
+                                                ImageConstant.splashImage,
+                                                // fit: BoxFit.cover,
                                                 height: 150,
                                                 width: 150,
                                               ),
@@ -622,6 +622,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           controller: userNameController,
                           width: _width / 1.1,
                           hintText: "Enter User ID",
+                          color: Color(0xffFFF3F4)
                         ),
                         Row(
                           children: [
@@ -945,6 +946,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   expertUserData() async {
+    print("this is the expertDetials");
     if (jobProfile.text == null || jobProfile.text == "") {
       SnackBar snackBar = SnackBar(
         content: Text('Please Enter Job Profile'),
@@ -1051,6 +1053,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print("parmas-$params");
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
+      } else {
+        var params = {
+          "document":
+              "${widget.newProfileData?.object?.userDocument?.toString()}",
+          "expertUId": ["${selectedExpertise?.uid}"],
+          "fees": fees.text,
+          "workingHours": time.toString(),
+          "jobProfile": jobProfile.text,
+          "profileUid": widget.newProfileData?.object?.profileUid,
+          "industryTypesUid": industryUUIDinApi
+        };
+        BlocProvider.of<MyAccountCubit>(context)
+            .addExpertProfile(params, context);
+        print("else condison working");
       }
     }
   }
@@ -1335,7 +1351,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 15, left: 20),
                       child: Text(
-                        '${dopcument.toString()}',
+                        '${dopcument.toString().split('/').last}',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 16),
                       ),
@@ -1423,18 +1439,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  customTextFeild(
+   customTextFeild(
       {double? width,
       TextEditingController? controller,
+      Color? color,
       String? hintText,
       bool? isReadOnly}) {
     return Container(
       // height: 50,
       width: width,
       decoration: BoxDecoration(
-          color: Color(0xffFFF3F4),
+          color: color ,
           border: Border.all(
-            color: Color(0xffFFC8CA),
+            color: Color.fromARGB(255, 157, 157, 157),
           ),
           borderRadius: BorderRadius.circular(5)),
       child: Padding(
@@ -1486,15 +1503,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       title: new Text('See Profile Picture'),
                       onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => DocumentViewScreen1(
-                                  path: widget.newProfileData?.object
-                                              ?.userProfilePic ==
-                                          null
-                                      ? 'https://pds-testing-images.s3.amazonaws.com/PROFILE_PIC/%2Fc0fabd0c-c623-4ee8-be53-e76699248782_83c3b85e_d254_46de_9e60_7bbb136fc051.rofileimage.png'
-                                      : '${widget.newProfileData?.object?.userProfilePic}',
-                                  title: 'Pdf',
-                                )));
+                        if (widget.newProfileData?.object
+                                        ?.userProfilePic !=
+                                    null &&
+                                widget.newProfileData?.object
+                                        ?.userProfilePic !=
+                                    "")
+                              {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => DocumentViewScreen1(
+                                          path:
+                                              '${widget.newProfileData?.object?.userProfilePic}',
+                                          title: 'Pdf',
+                                        )));
+                              }else{
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => DocumentViewScreen1(
+                                          path:
+                                              'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
+                                          title: 'Pdf',
+                                        )));
+                              }
                       }),
                 ),
                 SizedBox(
@@ -1550,15 +1579,37 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       title: new Text('See Cover Picture'),
                       onTap: () => {
-                            Navigator.of(context).push(MaterialPageRoute(
+                            if (widget.newProfileData?.object
+                                        ?.userBackgroundPic !=
+                                    null &&
+                                widget.newProfileData?.object
+                                        ?.userBackgroundPic !=
+                                    "")
+                              {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => DocumentViewScreen1(
+                                          path:
+                                              '${widget.newProfileData?.object?.userBackgroundPic}',
+                                          title: 'Pdf',
+                                        )))
+                              }else{
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => DocumentViewScreen1(
+                                          path:
+                                              'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
+                                          title: 'Pdf',
+                                        )))
+                              }
+                            /* Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => DocumentViewScreen1(
                                       path: widget.newProfileData?.object
                                                   ?.userBackgroundPic ==
-                                              null
+                                              null && widget.newProfileData?.object
+                                                  ?.userBackgroundPic == ""
                                           ? "https://pds-testing-images.s3.amazonaws.com/PROFILE_PIC/%2Fb5bd8d53-625e-4d6c-9b74-4c3771257375_cd1371fd_d116_4a2f_9786_4124554ee79e.inal_logo-3.png"
                                           : '${widget.newProfileData?.object?.userBackgroundPic}',
                                       title: 'Pdf',
-                                    )))
+                                    ))) */
                           }),
                 ),
                 SizedBox(
