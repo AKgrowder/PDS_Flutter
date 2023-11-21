@@ -381,7 +381,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   // color: Colors.red,
                                   child: Image.asset(
                                     ImageConstant.pdslogo,
-                                    fit: BoxFit.fill,
+                                    // fit: BoxFit.fill,
                                     height: 150,
                                     width: 150,
                                   ),

@@ -75,21 +75,20 @@ class Followers extends StatelessWidget {
                                               .object?[index].isFollow
                                               .toString())));
                             },
-                            child:followersClassModel
-                                          .object?[index].userProfilePic !=
-                                      null? CircleAvatar(
-                              backgroundImage: 
-                                   NetworkImage(
-                                      "${followersClassModel.object?[index].userProfilePic}"),
-                                
-                              radius: 25,
-                            ):CircleAvatar(
-                              backgroundImage: 
-                                   AssetImage(
-                                      ImageConstant.tomcruse),
-                                
-                              radius: 25,
-                            ),
+                            child: followersClassModel
+                                        .object?[index].userProfilePic !=
+                                    null && followersClassModel
+                                        .object?[index].userProfilePic != ""
+                                ? CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        "${followersClassModel.object?[index].userProfilePic}"),
+                                    radius: 25,
+                                  )
+                                : CircleAvatar(
+                                    backgroundImage:
+                                        AssetImage(ImageConstant.tomcruse),
+                                    radius: 25,
+                                  ),
                           ),
                           title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

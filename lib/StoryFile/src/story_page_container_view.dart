@@ -137,7 +137,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                   child: SizedBox(
                 child: Row(
                   children: [
-                    widget.buttonData.images[0].profileImage != null
+                    widget.buttonData.images[0].profileImage != null &&
+                            widget.buttonData.images[0].profileImage != ""
                         ? CustomImageView(
                             url: "${widget.buttonData.images[0].profileImage}",
                             height: 32,
@@ -424,17 +425,22 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                                                   "${StoryViewListModelData?.object?[index].isFollowing}",
                                                             )));
                                               },
-                                              child: CircleAvatar(
-                                                backgroundImage: StoryViewListModelData
-                                                            ?.object?[index]
-                                                            .profilePic !=
-                                                        null
-                                                    ? NetworkImage(
-                                                        "${StoryViewListModelData?.object?[index].profilePic}")
-                                                    : NetworkImage(
-                                                        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"),
-                                                radius: 25,
-                                              ),
+                                              child: StoryViewListModelData
+                                                              ?.object?[index]
+                                                              .profilePic !=
+                                                          null &&
+                                                      StoryViewListModelData
+                                                              ?.object?[index]
+                                                              .profilePic !=
+                                                          ""
+                                                  ? CircleAvatar(
+                                                      backgroundImage: NetworkImage(
+                                                          "${StoryViewListModelData?.object?[index].profilePic}"),
+                                                      radius: 25,
+                                                    )
+                                                  : CustomImageView(
+                                                      imagePath: (ImageConstant
+                                                          .tomcruse)),
                                             ),
                                             title: Column(
                                               crossAxisAlignment:

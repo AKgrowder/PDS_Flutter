@@ -577,7 +577,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                           padding: const EdgeInsets.only(
                                                                               left: 3,
                                                                               right: 10),
-                                                                          child: AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic?.isNotEmpty ?? false
+                                                                          child: AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic != null && AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic != ""
                                                                               ? CustomImageView(
                                                                                   url: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic}",
                                                                                   height: 20,
