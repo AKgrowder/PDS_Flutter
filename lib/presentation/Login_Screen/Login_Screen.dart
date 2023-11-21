@@ -160,7 +160,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           buttomIndex: 0,
                         );
                       })); */
-                      Navigator.push(context,
+
+                      /* Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return MultiBlocProvider(
                             providers: [
@@ -171,7 +172,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: NewBottomBar(
                               buttomIndex: 0,
                             ));
-                      }));
+                      })); */
+
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                        builder: (context) {
+                          return NewBottomBar(buttomIndex: 0);
+                        },
+                      ), (route) => false);
                     }
 
                     SnackBar snackBar = SnackBar(
@@ -202,18 +209,25 @@ class _LoginScreenState extends State<LoginScreen> {
                         buttomIndex: 0,
                       );
                     })); */
-                     Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return MultiBlocProvider(
-                            providers: [
-                              BlocProvider<GetGuestAllPostCubit>(
-                                create: (context) => GetGuestAllPostCubit(),
-                              ),
-                            ],
-                            child: NewBottomBar(
-                              buttomIndex: 0,
-                            ));
-                      }));
+
+                    /* Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return MultiBlocProvider(
+                          providers: [
+                            BlocProvider<GetGuestAllPostCubit>(
+                              create: (context) => GetGuestAllPostCubit(),
+                            ),
+                          ],
+                          child: NewBottomBar(
+                            buttomIndex: 0,
+                          ));
+                    })); */
+
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+        builder: (context) {
+          return NewBottomBar(buttomIndex: 0);
+        },
+      ), (route) => false);
                   } else {
                     SnackBar snackBar = SnackBar(
                       content: Text('Otp send successfully'),
