@@ -276,7 +276,7 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                   Colors.white.withOpacity(1),
                                               borderRadius:
                                                   BorderRadius.circular(15)),
-                                          child: Row(children: [
+                                          child: Row(children: [SizedBox(width: 5,),
                                             GestureDetector(
                                               onTap: () {
                                                 Navigator.push(context,
@@ -316,7 +316,7 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                             SizedBox(
                                               width: 10,
                                             ),
-                                            Column(
+                                            Column(crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Row(
                                                   children: [
@@ -357,7 +357,7 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                                 "${RequestListModelData?.object?[index].followUuid}");
                                                       },
                                                       child: Container(
-                                                        height: 30,
+                                                        height: 28,
                                                         width: 100,
                                                         decoration: BoxDecoration(
                                                             color: Color(
@@ -365,7 +365,7 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        10)),
+                                                                        6)),
                                                         child: Center(
                                                             child: Text(
                                                           "Accept",
@@ -391,13 +391,13 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                                 "${RequestListModelData?.object?[index].followUuid}");
                                                       },
                                                       child: Container(
-                                                        height: 30,
+                                                        height: 28,
                                                         width: 100,
                                                         decoration: BoxDecoration(
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        10),
+                                                                        6),
                                                             border: Border.all(
                                                                 color: Color(
                                                                     0xFFED1C25))),
@@ -413,12 +413,9 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                       ),
                                                     )
                                                   ],
-                                                ),
+                                                ),SizedBox(height: 3,),
                                                 Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 70.0,
-                                                          right: 10),
+                                                  padding: const EdgeInsets.only(left:100),
                                                   child: Text(
                                                     customFormat(
                                                         DateTime.now()),
@@ -1120,20 +1117,20 @@ String customFormat(DateTime date) {
   String year = date.year.toString();
   String time = DateFormat('h:mm a').format(date);
 
-  String formattedDate = '$day$month $year $time';
+  String formattedDate = '$day $month $year $time';
   return formattedDate;
 }
 
 String _getMonthName(int month) {
   switch (month) {
     case 1:
-      return 'January';
+      return 'Jan';
     case 2:
-      return 'February';
+      return 'Feb';
     case 3:
-      return 'March';
+      return 'Mar';
     case 4:
-      return 'April';
+      return 'Apr';
     case 5:
       return 'May';
     case 6:
@@ -1141,15 +1138,15 @@ String _getMonthName(int month) {
     case 7:
       return 'July';
     case 8:
-      return 'August';
+      return 'Aug';
     case 9:
-      return 'September';
+      return 'Sept';
     case 10:
-      return 'October';
+      return 'Oct';
     case 11:
-      return 'November';
+      return 'Nov';
     case 12:
-      return 'December';
+      return 'Dec';
     default:
       return '';
   }
