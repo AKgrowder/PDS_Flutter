@@ -1235,8 +1235,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         /*  child: expertUser(_height, _width) */
                                                         child: Column(
                                                           children: [
+                                                            
                                                             ListTile(
-                                                              leading:
+                                                          /*     leading:
                                                                   Container(
                                                                 width: 35,
                                                                 height: 35,
@@ -1247,7 +1248,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                   shape:
                                                                       OvalBorder(),
                                                                 ),
-                                                              ),
+                                                              ), */
                                                               title: Text(
                                                                 'About Me',
                                                                 style:
@@ -1284,7 +1285,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               15.0),
                                                     ),
                                                     child: ListTile(
-                                                        leading: Container(
+                                                       /*  leading: Container(
                                                           width: 35,
                                                           height: 35,
                                                           decoration:
@@ -1293,75 +1294,78 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 0xFFED1C25),
                                                             shape: OvalBorder(),
                                                           ),
-                                                        ),
-                                                        title: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            SizedBox(
-                                                              height: 15,
-                                                            ),
-                                                            Text(
-                                                              'About Me',
-                                                              style: TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize: 18,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
+                                                        ), */
+                                                        title: Padding(
+                                                          padding: const EdgeInsets.only(left: 0),
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 15,
                                                               ),
-                                                            ),
-                                                            SizedBox(
-                                                              height: 5,
-                                                            ),
-                                                            AbboutMeShow == true
-                                                                ? Container(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    height: 50,
-                                                                    width:
-                                                                        _width /
-                                                                            2,
-                                                                    decoration: BoxDecoration(
-                                                                        // color: Colors.amber
-                                                                        borderRadius: BorderRadius.circular(10),
-                                                                        border: Border.all(color: Color(0xffEFEFEF))),
-                                                                    child: Text(
-                                                                      'Enter About Me',
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              14,
-                                                                          fontWeight: FontWeight
-                                                                              .w300,
-                                                                          color:
-                                                                              Colors.black),
+                                                              Text(
+                                                                'About Me',
+                                                                style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 5,
+                                                              ),
+                                                              AbboutMeShow == true
+                                                                  ? Container(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .center,
+                                                                      height: 50,
+                                                                      width:
+                                                                          _width /
+                                                                              2,
+                                                                      decoration: BoxDecoration(
+                                                                          // color: Colors.amber
+                                                                          borderRadius: BorderRadius.circular(10),
+                                                                          border: Border.all(color: Color(0xffEFEFEF))),
+                                                                      child: Text(
+                                                                        'Enter About Me',
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                14,
+                                                                            fontWeight: FontWeight
+                                                                                .w300,
+                                                                            color:
+                                                                                Colors.black),
+                                                                      ),
+                                                                    )
+                                                                  : TextFormField(
+                                                                      inputFormatters: [
+                                                                        LengthLimitingTextInputFormatter(
+                                                                            500),
+                                                                      ],
+                                                                      readOnly:
+                                                                          isAbourtMe,
+                                                                      controller:
+                                                                          aboutMe,
+                                                                      maxLines: 5,
+                                                                      decoration:
+                                                                          InputDecoration(
+                                                                        border:
+                                                                            OutlineInputBorder(),
+                                                                      ),
                                                                     ),
-                                                                  )
-                                                                : TextFormField(
-                                                                    inputFormatters: [
-                                                                      LengthLimitingTextInputFormatter(
-                                                                          500),
-                                                                    ],
-                                                                    readOnly:
-                                                                        isAbourtMe,
-                                                                    controller:
-                                                                        aboutMe,
-                                                                    maxLines: 5,
-                                                                    decoration:
-                                                                        InputDecoration(
-                                                                      border:
-                                                                          OutlineInputBorder(),
-                                                                    ),
-                                                                  ),
-                                                            //wiil DataGet
-                                                            /*   : */
-                                                            SizedBox(
-                                                              height: 12,
-                                                            ),
-                                                          ],
+                                                              //wiil DataGet
+                                                              /*   : */
+                                                              SizedBox(
+                                                                height: 12,
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
                                                         trailing: User_ID !=
                                                                 NewProfileData
@@ -2424,14 +2428,14 @@ class _ProfileScreenState extends State<ProfileScreen>
     return Column(
       children: [
         ListTile(
-          leading: Container(
+         /*  leading: Container(
             width: 35,
             height: 35,
             decoration: ShapeDecoration(
               color: Color(0xFFED1C25),
               shape: OvalBorder(),
             ),
-          ),
+          ), */
           title: Text(
             'Work/ Business Details',
             style: TextStyle(
@@ -2459,12 +2463,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                 : SizedBox(),
           ),
         ),
-        Transform.translate(
-          offset: Offset(72, 0),
-          child: Container(
-            height: 550,
-            width: _width,
-            //  color: Colors.amber,
+        Container(
+          height: 550,
+          width: _width,
+          //  color: Colors.amber,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16,right: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -2478,14 +2482,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                 ),
                 Container(
-                  width: _width / 1.46,
+                  width: _width,
                   child: CustomTextFormField(
                     readOnly: true,
                     controller: jobprofileController,
                     margin: EdgeInsets.only(
                       top: 10,
                     ),
-
+          
                     validator: (value) {
                       RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                       if (value!.isEmpty) {
@@ -2497,7 +2501,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       } else if (value.contains('..')) {
                         return 'username does not contain is correct';
                       }
-
+          
                       return null;
                     },
                     // textStyle: theme.textTheme.titleMedium!,
@@ -2522,14 +2526,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                 ),
                 Container(
-                  width: _width / 1.46,
+                  width: _width,
                   child: CustomTextFormField(
                     readOnly: true,
                     controller: IndustryType,
                     margin: EdgeInsets.only(
                       top: 10,
                     ),
-
+          
                     validator: (value) {
                       RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                       if (value!.isEmpty) {
@@ -2541,7 +2545,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       } else if (value.contains('..')) {
                         return 'username does not contain is correct';
                       }
-
+          
                       return null;
                     },
                     // textStyle: theme.textTheme.titleMedium!,
@@ -2566,14 +2570,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                 ),
                 Container(
-                  width: _width / 1.46,
+                  width: _width,
                   child: CustomTextFormField(
                     readOnly: true,
                     controller: Expertise,
                     margin: EdgeInsets.only(
                       top: 10,
                     ),
-
+          
                     validator: (value) {
                       RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                       if (value!.isEmpty) {
@@ -2585,7 +2589,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       } else if (value.contains('..')) {
                         return 'username does not contain is correct';
                       }
-
+          
                       return null;
                     },
                     // textStyle: theme.textTheme.titleMedium!,
@@ -2612,14 +2616,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                 if (NewProfileData?.object?.fees != null)
                   Container(
-                    width: _width / 1.46,
+                    width: _width ,
                     child: CustomTextFormField(
                       readOnly: true,
                       controller: priceContrller,
                       margin: EdgeInsets.only(
                         top: 10,
                       ),
-
+          
                       validator: (value) {
                         RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                         if (value!.isEmpty) {
@@ -2631,7 +2635,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         } else if (value.contains('..')) {
                           return 'username does not contain is correct';
                         }
-
+          
                         return null;
                       },
                       // textStyle: theme.textTheme.titleMedium!,
@@ -2659,6 +2663,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       GestureDetector(
                         onTap: () {
@@ -2666,7 +2671,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         },
                         child: Container(
                           height: 40,
-                          width: 120,
+                          width: 130,
                           decoration: BoxDecoration(
                               color: Color(0xffF6F6F6),
                               borderRadius: BorderRadius.circular(10)),
@@ -2715,7 +2720,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         },
                         child: Container(
                           height: 40,
-                          width: 120,
+                          width: 130,
                           decoration: BoxDecoration(
                               color: Color(0xffF6F6F6),
                               borderRadius: BorderRadius.circular(10)),
@@ -2761,7 +2766,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   children: [
                     Container(
                         height: 50,
-                        width: _width / 2.2,
+                        width: _width -175,
                         decoration: BoxDecoration(
                             color: Color(0XFFF6F6F6),
                             borderRadius: BorderRadius.only(
@@ -2814,9 +2819,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                             child: GestureDetector(
                               onTap: () async {
                                 // dopcument = "Upload Image";
-
+          
                                 // setState(() {});
-
+          
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => DocumentViewScreen(
                                           path: dopcument,
@@ -2853,14 +2858,14 @@ class _ProfileScreenState extends State<ProfileScreen>
     return Column(
       children: [
         ListTile(
-          leading: Container(
+          /* leading: Container(
             width: 35,
             height: 35,
             decoration: ShapeDecoration(
               color: Color(0xFFED1C25),
               shape: OvalBorder(),
             ),
-          ),
+          ), */
           title: Text(
             'Work/ Business Details',
             style: TextStyle(
@@ -2888,12 +2893,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                 : SizedBox(),
           ),
         ),
-        Transform.translate(
-          offset: Offset(72, 0),
-          child: Container(
-            height: 350,
-            width: _width,
-            //  color: Colors.amber,
+        Container(
+          height: 350,
+          width: _width,
+
+            
+          child: Padding(
+            padding: const EdgeInsets.only(right: 16,left: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -2907,14 +2913,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                 ),
                 Container(
-                  width: _width / 1.46,
+                  width: _width,
                   child: CustomTextFormField(
                     controller: CompanyName,
                     readOnly: true,
                     margin: EdgeInsets.only(
                       top: 10,
                     ),
-
+          
                     validator: (value) {
                       RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                       if (value!.isEmpty) {
@@ -2926,11 +2932,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                       } else if (value.contains('..')) {
                         return 'username does not contain is correct';
                       }
-
+          
                       return null;
                     },
                     // textStyle: theme.textTheme.titleMedium!,
-
+          
                     hintText: "Company Name",
                     // hintStyle: theme.textTheme.titleMedium!,
                     textInputAction: TextInputAction.next,
@@ -2952,14 +2958,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                 ),
                 Container(
-                  width: _width / 1.46,
+                  width: _width ,
                   child: CustomTextFormField(
                     readOnly: true,
                     controller: jobprofileController,
                     margin: EdgeInsets.only(
                       top: 10,
                     ),
-
+          
                     validator: (value) {
                       RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                       if (value!.isEmpty) {
@@ -2971,7 +2977,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       } else if (value.contains('..')) {
                         return 'username does not contain is correct';
                       }
-
+          
                       return null;
                     },
                     // textStyle: theme.textTheme.titleMedium!,
@@ -2996,14 +3002,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                 ),
                 Container(
-                  width: _width / 1.46,
+                  width: _width ,
                   child: CustomTextFormField(
                     readOnly: true,
                     controller: IndustryType,
                     margin: EdgeInsets.only(
                       top: 10,
                     ),
-
+          
                     validator: (value) {
                       RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                       if (value!.isEmpty) {
@@ -3015,7 +3021,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       } else if (value.contains('..')) {
                         return 'username does not contain is correct';
                       }
-
+          
                       return null;
                     },
                     // textStyle: theme.textTheme.titleMedium!,
@@ -3043,7 +3049,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   children: [
                     Container(
                         height: 50,
-                        width: _width / 2.2,
+                        width: _width - 175,
                         decoration: BoxDecoration(
                             color: Color(0XFFF6F6F6),
                             borderRadius: BorderRadius.only(
@@ -3096,9 +3102,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                             child: GestureDetector(
                               onTap: () async {
                                 // dopcument = "Upload Image";
-
+          
                                 // setState(() {});
-
+          
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => DocumentViewScreen(
                                           path: dopcument,

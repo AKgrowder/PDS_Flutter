@@ -163,10 +163,22 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
               'jobProfile': profile.text,
               'industryTypesUid': industryType
             };
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
+
+            // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+            //   builder: (context) {
+            //     return NewBottomBar(buttomIndex: 0);
+            //   },
+            // ), (route) => false).then((value) =>
+            //     BlocProvider.of<CreatFourmCubit>(context).CreatFourm(
+            //         params, uplopdfile.text, filepath.toString(), context));
+            // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            // print('check Status--${state.createForm.success}');
+
+            Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) {
               return NewBottomBar(buttomIndex: 0);
-            })).then((value) => BlocProvider.of<CreatFourmCubit>(context)
-                .CreatFourm(
+            }), (route) => false).then((value) =>
+                BlocProvider.of<CreatFourmCubit>(context).CreatFourm(
                     params, uplopdfile.text, filepath.toString(), context));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             print('check Status--${state.createForm.success}');
@@ -431,17 +443,18 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                   ),
                                 )
                               : GestureDetector(
-                                 onTap: () {
-                                          dopcument = "Upload Document";
-                                          chooseDocument?.object = null;
-                              
-                                          setState(() {});
-                                        },
-                                child: Container(
+                                  onTap: () {
+                                    dopcument = "Upload Document";
+                                    chooseDocument?.object = null;
+
+                                    setState(() {});
+                                  },
+                                  child: Container(
                                     height: 50,
                                     width: _width / 4.5,
                                     decoration: BoxDecoration(
-                                        color: Color.fromARGB(255, 228, 228, 228),
+                                        color:
+                                            Color.fromARGB(255, 228, 228, 228),
                                         borderRadius: BorderRadius.only(
                                             topRight: Radius.circular(5),
                                             bottomRight: Radius.circular(5))),
@@ -450,7 +463,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                       color: ColorConstant.primary_color,
                                     ),
                                   ),
-                              ),
+                                ),
                         ],
                       ),
                     ),
@@ -775,7 +788,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             break;
           default:
         }
-     if (file1.path?.split('.') != 'pdf') {
+        if (file1.path?.split('.') != 'pdf') {
           print("this fucntion is caaling");
 
           CroppedFile? croppedFile = await ImageCropper().cropImage(
@@ -787,15 +800,13 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
               CropAspectRatioPreset.ratio4x3,
               CropAspectRatioPreset.ratio16x9
             ],
-      
             uiSettings: [
               AndroidUiSettings(
-             
                   toolbarTitle: 'Cropper',
                   toolbarColor: Color(0xffED1C25),
                   toolbarWidgetColor: Colors.white,
                   initAspectRatio: CropAspectRatioPreset.original,
-                  activeControlsWidgetColor:Color(0xffED1C25),
+                  activeControlsWidgetColor: Color(0xffED1C25),
                   lockAspectRatio: false),
               IOSUiSettings(
                 title: 'Cropper',
@@ -807,16 +818,14 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
           );
           if (croppedFile != null) {
             print('Image cropped and saved at: ${croppedFile.path}');
-            BlocProvider.of<CreatFourmCubit>(context)
-                .chooseDocumentprofile(
-                    dopcument.toString(), croppedFile.path, context);
+            BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
+                dopcument.toString(), croppedFile.path, context);
           } else {
-            BlocProvider.of<CreatFourmCubit>(context)
-                .chooseDocumentprofile(
-                    dopcument.toString(), file1.path!, context);
+            BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
+                dopcument.toString(), file1.path!, context);
           }
         }
-       
+
         setState(() {});
         break;
       case 2:
