@@ -1225,7 +1225,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                   .InvitationAPI(context, param);
             } else {
               SnackBar snackBar = SnackBar(
-                content: Text('please select image either fill Text'),
+                content: Text('Please select image either fill Text'),
                 backgroundColor: ColorConstant.primary_color,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
