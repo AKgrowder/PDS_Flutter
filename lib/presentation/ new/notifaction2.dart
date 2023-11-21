@@ -328,7 +328,7 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                               FontWeight.bold,
                                                           fontSize: 13),
                                                     ),
-                                                    SizedBox(
+                                                    /* SizedBox(
                                                       width: 4,
                                                     ),
                                                     Text(
@@ -338,7 +338,7 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                           fontWeight:
                                                               FontWeight.w200,
                                                           fontSize: 13),
-                                                    ),
+                                                    ), */
                                                   ],
                                                 ),
                                                 SizedBox(

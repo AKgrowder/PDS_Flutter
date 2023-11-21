@@ -5,10 +5,12 @@ import 'package:hashtagable/widgets/hashtag_text.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
 import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_state.dart';
+import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
+import 'package:pds/presentation/%20new/comment_bottom_sheet.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,6 +29,7 @@ class HashTagViewScreen extends StatefulWidget {
   State<HashTagViewScreen> createState() => _HashTagViewScreenState();
 }
 
+final ScrollController scroll = ScrollController();
 HashtagViewDataModel? hashTagViewData;
 DateTime? parsedDateTime;
 String? uuid;
@@ -208,18 +211,21 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                             }));
                                           }
                                         },
-                                        child: CircleAvatar(
-                                          backgroundImage: hashTagViewData
-                                                      ?.object
-                                                      ?.posts?[index]
-                                                      .userProfilePic !=
-                                                  null
-                                              ? NetworkImage(
-                                                  "${hashTagViewData?.object?.posts?[index].userProfilePic}")
-                                              : NetworkImage(
-                                                  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"),
-                                          radius: 25,
-                                        ),
+                                        child: hashTagViewData
+                                                    ?.object
+                                                    ?.posts?[index]
+                                                    .userProfilePic !=
+                                                null
+                                            ? CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                    "${hashTagViewData?.object?.posts?[index].userProfilePic}"),
+                                                    backgroundColor: Colors.transparent,
+                                                radius: 25,
+                                              )
+                                            : CircleAvatar(
+                                                backgroundImage: AssetImage(
+                                                    ImageConstant.tomcruse),
+                                              ),
                                       ),
                                       title: Text(
                                         "${hashTagViewData?.object?.posts?[index].postUserName}",
@@ -360,19 +366,22 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                       ?.posts?[index]
                                                       .postDataType ==
                                                   "IMAGE"
-                                              ? GestureDetector( 
-                                                 onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            OpenSavePostImage(
-                                                              PostID:
-                                                                   hashTagViewData?.object?.posts?[index].postUid ?? ""
-                                                            )),
-                                                  );
-                                                },
-                                                child: Container( 
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              OpenSavePostImage(
+                                                                  PostID: hashTagViewData
+                                                                          ?.object
+                                                                          ?.posts?[
+                                                                              index]
+                                                                          .postUid ??
+                                                                      "")),
+                                                    );
+                                                  },
+                                                  child: Container(
                                                     // height: 230,
                                                     // width: _width,
                                                     margin: EdgeInsets.only(
@@ -385,7 +394,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                           "${hashTagViewData?.object?.posts?[index].postData?[0]}",
                                                     )),
                                                   ),
-                                              )
+                                                )
                                               : hashTagViewData
                                                           ?.object
                                                           ?.posts?[index]
@@ -556,7 +565,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 20, right: 20, top: 15),
+                                        left: 16, right: 16, top: 0),
                                     child: Row(
                                       children: [
                                         GestureDetector(
@@ -565,20 +574,29 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                 apiName: 'like_post',
                                                 index: index);
                                           },
-                                          child: hashTagViewData?.object
-                                                      ?.posts?[index].isLiked !=
-                                                  true
-                                              ? Image.asset(
-                                                  ImageConstant.likewithout,
-                                                  height: 20,
-                                                )
-                                              : Image.asset(
-                                                  ImageConstant.like,
-                                                  height: 20,
-                                                ),
+                                          child: Container(
+                                            color: Colors.transparent,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: hashTagViewData
+                                                          ?.object
+                                                          ?.posts?[index]
+                                                          .isLiked !=
+                                                      true
+                                                  ? Image.asset(
+                                                      ImageConstant.likewithout,
+                                                      height: 20,
+                                                    )
+                                                  : Image.asset(
+                                                      ImageConstant.like,
+                                                      height: 20,
+                                                    ),
+                                            ),
+                                          ),
                                         ),
                                         SizedBox(
-                                          width: 5,
+                                          width: 0,
                                         ),
                                         GestureDetector(
                                           onTap: () {
@@ -590,20 +608,27 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                               },
                                             ));
                                           },
-                                          child: Text(
-                                            "${hashTagViewData?.object?.posts?[index].likedCount}",
-                                            style: TextStyle(
-                                                fontFamily: "outfit",
-                                                fontSize: 14),
+                                          child: Container(
+                                            color: Colors.transparent,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: Text(
+                                                "${hashTagViewData?.object?.posts?[index].likedCount}",
+                                                style: TextStyle(
+                                                    fontFamily: "outfit",
+                                                    fontSize: 14),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                         SizedBox(
-                                          width: 18,
+                                          width: 8,
                                         ),
                                         //this bottomsheet will  remaing --ankur
                                         GestureDetector(
                                           onTap: () async {
-                                            /* await Navigator.push(context,
+                                            /*  await Navigator.push(context,
                                                     MaterialPageRoute(builder: (context) {
                                                   return CommentsScreen(
                                                     image: hashTagViewData?.object
@@ -622,14 +647,34 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                     BlocProvider.of<HashTagCubit>(context)
                                                         .HashTagViewDataAPI(context,
                                                             widget.title.toString())); */
+
+                                            BlocProvider.of<AddcommentCubit>(
+                                                    context)
+                                                .Addcomment(context,
+                                                    '${hashTagViewData?.object?.posts?[index].postUid}');
+                                            if (uuid == null) {
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          RegisterCreateAccountScreen()));
+                                            } else {
+                                              _settingModalBottomSheet1(
+                                                  context, index, _width);
+                                            }
                                           },
-                                          child: Image.asset(
-                                            ImageConstant.meesage,
-                                            height: 14,
+                                          child: Container(
+                                            color: Colors.transparent,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(5.0),
+                                              child: Image.asset(
+                                                ImageConstant.meesage,
+                                                height: 14,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                         SizedBox(
-                                          width: 5,
+                                          width: 3,
                                         ),
                                         Text(
                                           "${hashTagViewData?.object?.posts?[index].commentCount}",
@@ -659,22 +704,28 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                 apiName: 'savedata',
                                                 index: index);
                                           },
-                                          child: Image.asset(
-                                            hashTagViewData
-                                                        ?.object
-                                                        ?.posts?[index]
-                                                        .isSaved ==
-                                                    false
-                                                ? ImageConstant.savePin
-                                                : ImageConstant.Savefill,
-                                            height: 16,
+                                          child: Container(
+                                            color: Colors.transparent,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(5.0),
+                                              child: Image.asset(
+                                                hashTagViewData
+                                                            ?.object
+                                                            ?.posts?[index]
+                                                            .isSaved ==
+                                                        false
+                                                    ? ImageConstant.savePin
+                                                    : ImageConstant.Savefill,
+                                                height: 17,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 10,
+                                    height: 5,
                                   )
                                 ],
                               ),
@@ -691,6 +742,36 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
         },
       )),
     );
+  }
+
+  void _settingModalBottomSheet1(context, index, _width) {
+    void _goToElement() {
+      scroll.animateTo((1000 * 20),
+          duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+    }
+
+    showModalBottomSheet(
+        isScrollControlled: true,
+        useSafeArea: true,
+        isDismissible: true,
+        showDragHandle: true,
+        enableDrag: true,
+        constraints: BoxConstraints.tight(Size.infinite),
+        context: context,
+        builder: (BuildContext bc) {
+          return CommentBottomSheet(
+              useruid:
+                  hashTagViewData?.object?.posts?[index].userUid ?? "",
+              userProfile: hashTagViewData?.object?.posts?[index].userProfilePic ??
+                  "",
+              UserName:
+                  hashTagViewData?.object?.posts?[index].postUserName ??
+                      "",
+              desc: hashTagViewData?.object?.posts?[index].description ??
+                  "",
+              postUuID:
+                  hashTagViewData?.object?.posts?[index].postUid ?? "");
+        });
   }
 
   String customFormat(DateTime date) {

@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
@@ -91,7 +92,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             Navigator.pop(context);
           },
           child: Icon(
-            Icons.arrow_back, 
+            Icons.arrow_back,
             color: Colors.black,
           ),
         ),
@@ -162,10 +163,22 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
               'jobProfile': profile.text,
               'industryTypesUid': industryType
             };
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
+
+            // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+            //   builder: (context) {
+            //     return NewBottomBar(buttomIndex: 0);
+            //   },
+            // ), (route) => false).then((value) =>
+            //     BlocProvider.of<CreatFourmCubit>(context).CreatFourm(
+            //         params, uplopdfile.text, filepath.toString(), context));
+            // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            // print('check Status--${state.createForm.success}');
+
+            Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) {
               return NewBottomBar(buttomIndex: 0);
-            })).then((value) => BlocProvider.of<CreatFourmCubit>(context)
-                .CreatFourm(
+            }), (route) => false).then((value) =>
+                BlocProvider.of<CreatFourmCubit>(context).CreatFourm(
                     params, uplopdfile.text, filepath.toString(), context));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             print('check Status--${state.createForm.success}');
@@ -429,25 +442,27 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                     ),
                                   ),
                                 )
-                              : Container(
-                                  height: 50,
-                                  width: _width / 4.5,
-                                  decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 228, 228, 228),
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(5),
-                                          bottomRight: Radius.circular(5))),
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        dopcument = "Upload Document";
-                                        chooseDocument?.object = null;
+                              : GestureDetector(
+                                  onTap: () {
+                                    dopcument = "Upload Document";
+                                    chooseDocument?.object = null;
 
-                                        setState(() {});
-                                      },
-                                      child: Icon(
-                                        Icons.delete_forever,
-                                        color: ColorConstant.primary_color,
-                                      )),
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    width: _width / 4.5,
+                                    decoration: BoxDecoration(
+                                        color:
+                                            Color.fromARGB(255, 228, 228, 228),
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(5),
+                                            bottomRight: Radius.circular(5))),
+                                    child: Icon(
+                                      Icons.delete_forever,
+                                      color: ColorConstant.primary_color,
+                                    ),
+                                  ),
                                 ),
                         ],
                       ),
@@ -741,7 +756,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
     const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
     var i = (log(bytes) / log(1024)).floor();
     var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
-    print('getFileSizevariable-${file1.path}');
+    print('getFileSizevariable-${file1.path.toString().split('.').last}');
+
     value2 = double.parse(STR);
 
     print(value2);
@@ -772,9 +788,44 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             break;
           default:
         }
-        print('filenamecheckKB-${file1.path}');
-        BlocProvider.of<CreatFourmCubit>(context)
-            .chooseDocumentprofile(dopcument.toString(), file1.path!, context);
+        if (file1.path?.split('.') != 'pdf') {
+          print("this fucntion is caaling");
+
+          CroppedFile? croppedFile = await ImageCropper().cropImage(
+            sourcePath: file1.path.toString(),
+            aspectRatioPresets: [
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio3x2,
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.ratio4x3,
+              CropAspectRatioPreset.ratio16x9
+            ],
+            uiSettings: [
+              AndroidUiSettings(
+                  toolbarTitle: 'Cropper',
+                  toolbarColor: Color(0xffED1C25),
+                  toolbarWidgetColor: Colors.white,
+                  initAspectRatio: CropAspectRatioPreset.original,
+                  activeControlsWidgetColor: Color(0xffED1C25),
+                  lockAspectRatio: false),
+              IOSUiSettings(
+                title: 'Cropper',
+              ),
+              WebUiSettings(
+                context: context,
+              ),
+            ],
+          );
+          if (croppedFile != null) {
+            print('Image cropped and saved at: ${croppedFile.path}');
+            BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
+                dopcument.toString(), croppedFile.path, context);
+          } else {
+            BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
+                dopcument.toString(), file1.path!, context);
+          }
+        }
+
         setState(() {});
         break;
       case 2:

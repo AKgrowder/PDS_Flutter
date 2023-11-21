@@ -126,8 +126,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (widget.newProfileData?.object?.fees != null) {
       fees.text = widget.newProfileData?.object?.fees.toString() ?? '';
     }
+    print("dddhdhdh-${widget.newProfileData?.object?.userDocument}");
+
     if (widget.newProfileData?.object?.userDocument != null) {
+      print("fdhfdhfhghf");
       dopcument = widget.newProfileData?.object?.userDocument;
+      print("document --${dopcument}");
     } else {
       dopcument = 'Upload Image';
     }
@@ -318,13 +322,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   MaterialPageRoute(
                       builder: (context) => NewBottomBar(buttomIndex: 0)));
             }
-             if (state is EmailVerifactionLoadedState) {
-          SnackBar snackBar = SnackBar(
-            content: Text(state.emailVerifaction.message.toString()),
-            backgroundColor: ColorConstant.primary_color,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        }
+            if (state is EmailVerifactionLoadedState) {
+              SnackBar snackBar = SnackBar(
+                content: Text(state.emailVerifaction.message.toString()),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
           },
           builder: (context, state) {
             return Column(
@@ -336,7 +340,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       BoxDecoration(borderRadius: BorderRadius.circular(20)),
                   child: Stack(
                     children: [
-                      widget.newProfileData?.object?.userBackgroundPic != null
+                      widget.newProfileData?.object?.userBackgroundPic
+                                  ?.isNotEmpty ==
+                              true
                           ? Container(
                               height: _height / 3,
                               width: _width,
@@ -434,8 +440,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               shape: BoxShape.circle, color: Colors.white),
                           child: Stack(
                             children: [
-                              widget.newProfileData?.object?.userProfilePic !=
-                                      null
+                              widget.newProfileData?.object?.userProfilePic
+                                          ?.isNotEmpty ==
+                                      true
                                   ? Padding(
                                       padding: const EdgeInsets.all(4.0),
                                       child: ClipOval(
@@ -534,26 +541,38 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(
-                        text:
-                            " ${widget.newProfileData?.object?.approvalStatus}",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: widget
-                                      .newProfileData?.object?.approvalStatus ==
+                      User_Module == "EMPLOYEE" &&
+                              widget.newProfileData?.object?.approvalStatus ==
                                   "PARTIALLY_REGISTERED"
-                              ? Color(0xff1A94D7)
-                              : widget.newProfileData?.object?.approvalStatus ==
-                                      "PENDING"
-                                  ? Color(0xffC28432)
-                                  : widget.newProfileData?.object
-                                              ?.approvalStatus ==
-                                          "APPROVED"
-                                      ? Color(0xff019801)
-                                      : Color(0xffFF000B),
-                        ),
-                      )
+                          ? TextSpan(
+                              text: "APPROVED",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xff019801),
+                              ),
+                            )
+                          : TextSpan(
+                              text:
+                                  "${widget.newProfileData?.object?.approvalStatus}",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: widget.newProfileData?.object
+                                            ?.approvalStatus ==
+                                        "PARTIALLY_REGISTERED"
+                                    ? Color(0xff1A94D7)
+                                    : widget.newProfileData?.object
+                                                ?.approvalStatus ==
+                                            "PENDING"
+                                        ? Color(0xffC28432)
+                                        : widget.newProfileData?.object
+                                                    ?.approvalStatus ==
+                                                "APPROVED"
+                                            ? Color(0xff019801)
+                                            : Color(0xffFF000B),
+                              ),
+                            )
                     ],
                     text: "Status:",
                     style: TextStyle(
@@ -591,7 +610,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         Padding(
                           padding: const EdgeInsets.only(top: 10, bottom: 10),
                           child: Text(
-                            "User Name",
+                            "User ID",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
@@ -602,7 +621,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         customTextFeild(
                           controller: userNameController,
                           width: _width / 1.1,
-                          hintText: "Enter User Name",
+                          hintText: "Enter User ID",
                         ),
                         Row(
                           children: [
@@ -644,7 +663,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         fontFamily: "outfit",
                                         fontSize: 15),
                                   ),
-                                  SizedBox(width: 5,),
+                            SizedBox(
+                              width: 5,
+                            ),
                             widget.newProfileData?.object?.isEmailVerified ==
                                     false
                                 ? GestureDetector(
@@ -744,11 +765,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             }
                           },
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 20,bottom: 20),
+                            padding: const EdgeInsets.only(top: 20, bottom: 20),
                             child: Center(
                               child: Container(
                                 height: 55,
-                                width: _width -65,
+                                width: _width - 65,
                                 decoration: BoxDecoration(
                                     color: ColorConstant.primary_color,
                                     borderRadius: BorderRadius.circular(10)),
@@ -942,7 +963,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: ColorConstant.primary_color,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    } else if (fees.text == null || fees.text == '') {
+    } /*  else if (fees.text == null || fees.text == '') {
       SnackBar snackBar = SnackBar(
         content: Text('Please select Fees'),
         backgroundColor: ColorConstant.primary_color,
@@ -954,7 +975,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: ColorConstant.primary_color,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    } else if ((start?.isEmpty ?? false) &&
+    } */
+    else if ((start?.isEmpty ?? false) &&
         (startAm?.isEmpty ?? false) &&
         (end?.isEmpty ?? false) &&
         (endAm?.isEmpty ?? false)) {
@@ -980,6 +1002,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (chooseDocumentuploded?.object.toString() != null &&
           chooseDocumentuploded1?.object.toString() != null) {
         print("both condison");
+
         var params = {
           "document":
               "${widget.newProfileData?.object?.userDocument?.toString()}",
@@ -992,6 +1015,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "profileUid": widget.newProfileData?.object?.profileUid,
           "industryTypesUid": industryUUIDinApi
         };
+
         print("parmas-$params");
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
@@ -1032,6 +1056,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   TextFiledCommenWiget(_width) {
+    print(
+        "check docuimen1111t--${widget.newProfileData?.object?.userDocument}");
     selectedIndustryTypes2.forEach((element) {});
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1207,7 +1233,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       Padding(
                           padding: EdgeInsets.only(left: 20),
                           child: Text(
-                            start.toString(),
+                            start != null ? start.toString() : '00:00',
                             style: TextStyle(
                                 fontSize: 16, color: Color(0xff989898)),
                           )),
@@ -1224,7 +1250,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       SizedBox(
                         width: 10,
                       ),
-                      Text(startAm.toString(),
+                      Text(startAm != null ? startAm.toString() : 'AM',
                           style: TextStyle(
                               fontSize: 16, color: Color(0xff989898))),
                     ],
@@ -1247,7 +1273,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       Padding(
                           padding: EdgeInsets.only(left: 20),
                           child: Text(
-                            end.toString(),
+                            end != null ? end.toString() : '00:00',
                             style: TextStyle(
                                 fontSize: 16, color: Color(0xff989898)),
                           )),
@@ -1264,7 +1290,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       SizedBox(
                         width: 5,
                       ),
-                      Text(endAm.toString(),
+                      Text(endAm != null ? endAm.toString() : 'PM',
                           style: TextStyle(
                               fontSize: 16, color: Color(0xff989898))),
                     ],

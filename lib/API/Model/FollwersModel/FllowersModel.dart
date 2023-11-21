@@ -34,6 +34,7 @@ class Object {
   String? name;
   String? userProfilePic;
   String? isFollow;
+  
 
   Object(
       {this.followerUid,

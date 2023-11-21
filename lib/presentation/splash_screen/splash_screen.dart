@@ -23,6 +23,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   int GetTimeSplash = 0;
+  bool setLOGOUTValue = false;
   var user_Module = "";
   var User_profile = "";
   var UserID = "";
@@ -49,10 +50,9 @@ class _SplashScreenState extends State<SplashScreen> {
       Duration(seconds: 1),
       () async {
         if (UserID != "") {
-          BlocProvider.of<SystemConfigCubit>(context).UserModel(context);
+          await BlocProvider.of<SystemConfigCubit>(context).UserModel(context);
         }
-
-        BlocProvider.of<SystemConfigCubit>(context).SystemConfig(context);
+        await BlocProvider.of<SystemConfigCubit>(context).SystemConfig(context);
       },
     );
   }
@@ -96,19 +96,11 @@ class _SplashScreenState extends State<SplashScreen> {
       if (state is fetchUserModulemodelLoadedState) {
         user_Module = state.fetchUserModule.object?.userModule ?? "";
         User_profile = state.fetchUserModule.object?.userProfilePic ?? "";
-        await SetUi();
+        saveUSerProfileAndUserModel();
       }
       if (state is SystemConfigLoadedState) {
         systemConfigModel = state.systemConfigModel;
         await SetUi();
-
-        Future.delayed(Duration(seconds: 0), () {
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-            builder: (context) {
-              return NewBottomBar(buttomIndex: 0);
-            },
-          ), (route) => false);
-        });
       }
     }, builder: (context, state) {
       return Container(
@@ -129,18 +121,23 @@ class _SplashScreenState extends State<SplashScreen> {
     UserID = prefs.getString(PreferencesKey.loginUserID) ?? "";
   }
 
-  SetUi() async {
+  saveUSerProfileAndUserModel() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKey.module, user_Module);
     prefs.setString(PreferencesKey.UserProfile, User_profile);
+  }
 
-    prefs.setString(PreferencesKey.appApkRouteVersion, "1");
+  SetUi() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(PreferencesKey.appApkMinVersion, "13");
     prefs.setString(PreferencesKey.appApkLatestVersion, "1");
-    prefs.setString(PreferencesKey.appApkMinVersion, "1");
+    prefs.setString(PreferencesKey.appApkRouteVersion, "1");
 
+    prefs.setString(PreferencesKey.IPAIosMainversion, "1");
     prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
     prefs.setString(PreferencesKey.IPAIosRoutVersion, "1");
-    prefs.setString(PreferencesKey.IPAIosMainversion, "1");
+
+    // prefs.setBool(PreferencesKey.RoutURlChnage, false);
 
     systemConfigModel?.object?.forEach((element) async {
       if (element.name == "MaxDocUploadSizeInMB") {
@@ -193,7 +190,7 @@ class _SplashScreenState extends State<SplashScreen> {
         var SocketLink = element.value ?? "";
         print(" SocketLink  ${SocketLink}");
         prefs.setString(PreferencesKey.SocketLink, SocketLink);
-      } else if (element.name == "RoutURL") {
+      } else if (element.name == "ApkRouteURL") {
         var RoutURL = element.value ?? "";
         print(" RoutURL  ${RoutURL}");
         prefs.setString(PreferencesKey.RoutURL, RoutURL);
@@ -220,17 +217,17 @@ class _SplashScreenState extends State<SplashScreen> {
     ApkLatestVersion = prefs.getString(PreferencesKey.ApkLatestVersion);
     ApkRouteVersion = prefs.getString(PreferencesKey.ApkRouteVersion);
 
+    IosMainversion = prefs.getString(PreferencesKey.IosMainversion);
     IosLatestVersion = prefs.getString(PreferencesKey.IosLatestVersion);
     IosRoutVersion = prefs.getString(PreferencesKey.IosRoutVersion);
-    IosMainversion = prefs.getString(PreferencesKey.IosMainversion);
 
-    appApkRouteVersion = prefs.getString(PreferencesKey.appApkRouteVersion);
-    appApkLatestVersion = prefs.getString(PreferencesKey.appApkLatestVersion);
     appApkMinVersion = prefs.getString(PreferencesKey.appApkMinVersion);
+    appApkLatestVersion = prefs.getString(PreferencesKey.appApkLatestVersion);
+    appApkRouteVersion = prefs.getString(PreferencesKey.appApkRouteVersion);
 
+    ipaIosMainversion = prefs.getString(PreferencesKey.IPAIosMainversion);
     ipaIosLatestVersion = prefs.getString(PreferencesKey.IPAIosLatestVersion);
     ipaIosRoutVersion = prefs.getString(PreferencesKey.IPAIosRoutVersion);
-    ipaIosMainversion = prefs.getString(PreferencesKey.IPAIosMainversion);
 
     // ShowSoftAlert = prefs.getBool(PreferencesKey.ShowSoftAlert);
     VersionAlert();
@@ -253,307 +250,314 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  VersionAlert() {
-    if (Platform.isAndroid) {
-      if (int.parse(ApkMinVersion ?? "") >
-          (int.parse(appApkMinVersion ?? ""))) {
-        print("Moti1");
-        AlertHardUpdate();
-      }
+  VersionAlert() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      if (int.parse(ApkLatestVersion ?? "") >
-          (int.parse(appApkLatestVersion ?? ""))) {
-        print("Moti2");
-        // if (ShowSoftAlert == false || ShowSoftAlert == null) {
-          AlertSoftUpdate();
-        // }
-      }
+    if (Platform.isAndroid) {
+      // if (int.parse(ApkMinVersion ?? "") >
+      //     (int.parse(appApkMinVersion ?? ""))) {
+      //   print("Moti1");
+      //   AlertHardUpdate();
+      // }
+
+      // if (int.parse(ApkLatestVersion ?? "") >
+      //     (int.parse(appApkLatestVersion ?? ""))) {
+      //   print("Moti2");
+      //   // if (ShowSoftAlert == false || ShowSoftAlert == null) {
+      //   AlertSoftUpdate();
+      //   // }
+      // }
 
       if (int.parse(ApkRouteVersion ?? "") ==
           (int.parse(appApkRouteVersion ?? ""))) {
         print("same");
-        // setLOGOUT(context);
+        if (setLOGOUTValue == false) {
+          setLOGOUT(context);
+        }
+      } else {
+        Future.delayed(Duration(seconds: 0), () {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+            builder: (context) {
+              return NewBottomBar(buttomIndex: 0);
+            },
+          ), (route) => false);
+        });
       }
     }
 
     /// -----------------------------------------
     if (Platform.isIOS) {
-      if (int.parse(IosMainversion ?? "") >
-          (int.parse(ipaIosMainversion ?? ""))) {
-        print("Moti1");
-        AlertHardUpdate();
-      }
+      // if (int.parse(IosMainversion ?? "") >
+      //     (int.parse(ipaIosMainversion ?? ""))) {
+      //   print("Moti1");
+      //   AlertHardUpdate();
+      // }
 
-      if (int.parse(IosLatestVersion ?? "") >
-          (int.parse(ipaIosLatestVersion ?? ""))) {
-        print("Moti2");
-        AlertSoftUpdate();
-      }
+      // if (int.parse(IosLatestVersion ?? "") >
+      //     (int.parse(ipaIosLatestVersion ?? ""))) {
+      //   print("Moti2");
+      //   AlertSoftUpdate();
+      // }
 
       if (int.parse(IosRoutVersion ?? "") ==
           (int.parse(ipaIosRoutVersion ?? ""))) {
         print("same");
-        // setLOGOUT(context);
+        if (setLOGOUTValue == false) {
+          setLOGOUT(context);
+        }
+      } else {
+        Future.delayed(Duration(seconds: 0), () {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+            builder: (context) {
+              return NewBottomBar(buttomIndex: 0);
+            },
+          ), (route) => false);
+        });
       }
     }
   }
 
   setLOGOUT(BuildContext context) async {
+    setLOGOUTValue = true;
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    // prefs.clear();
-
+    prefs.setBool(PreferencesKey.OnetimeRoutChange, true);
     prefs.remove(PreferencesKey.loginUserID);
     prefs.remove(PreferencesKey.loginJwt);
     prefs.remove(PreferencesKey.module);
     prefs.remove(PreferencesKey.UserProfile);
 
-    prefs.setBool(PreferencesKey.RoutURl, true);
+    prefs.setBool(PreferencesKey.RoutURlChnage, true);
     prefs.setBool(PreferencesKey.UpdateURLinSplash, true);
 
-    if (UserID != "") {
-      BlocProvider.of<SystemConfigCubit>(context).UserModel(context);
-    }
+    Future.delayed(Duration(seconds: 0), () {
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+        builder: (context) {
+          return NewBottomBar(buttomIndex: 0);
+        },
+      ), (route) => false);
+    });
 
-    BlocProvider.of<SystemConfigCubit>(context).SystemConfig(context);
-
-    // final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // setLogOut(context);
+    // if (UserID != "") {
+    //   BlocProvider.of<SystemConfigCubit>(context).UserModel(context);
+    // }
   }
 
-  // setLogOut(BuildContext context) async {
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   prefs.clear();
-  //   await Navigator.pushAndRemoveUntil(
-  //       context,
-  //       MaterialPageRoute(
-  //           builder: (context) => MultiBlocProvider(
-  //                 providers: [
-  //                   BlocProvider<SystemConfigCubit>(
-  //                     create: (context) => SystemConfigCubit(),
-  //                   ),
-  //                 ],
-  //                 child: SplashScreen(),
-  //               )),
-  //       (route) => false);
-  // }
-
   AlertHardUpdate() {
-  var height = MediaQuery.of(context).size.height;
-  var width = MediaQuery.of(context).size.width;
-  showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () async => false,
-          child: Dialog(
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)),
-            child: Container(
-              height: height / 2,
-              width: width,
-              // color: Colors.white,
-              child: Column(
-                children: [
-                  Image.asset(
-                    ImageConstant.alertimage,
-                    height: height / 4.8,
-                    width: width,
-                    fit: BoxFit.fill,
-                  ),
-                  Container(
-                    height: height / 7,
-                    width: width,
-                    color: Colors.white,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "New Version Alert",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: ColorConstant.primary_color,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "New application version is available",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15,
-                              color: Colors.black),
-                        ),
-                        Text(
-                          "please download latest version",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15,
-                              color: Colors.black),
-                        ),
-                      ],
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      height: 45,
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: Dialog(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              child: Container(
+                height: height / 2,
+                width: width,
+                // color: Colors.white,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      ImageConstant.alertimage,
+                      height: height / 4.8,
                       width: width,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10)),
-                          color: ColorConstant.primary_color),
-                      child: Center(
-                          child: Text(
-                        "Update",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 17,
-                          color: Colors.white,
-                        ),
-                      )),
+                      fit: BoxFit.fill,
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      });
-}
-
-AlertSoftUpdate() {
-  var height = MediaQuery.of(context).size.height;
-  var width = MediaQuery.of(context).size.width;
-  showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () async => false,
-          child: Dialog(
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)),
-            child: Container(
-              height: height / 2,
-              width: width,
-              // color: Colors.white,
-              child: Column(
-                children: [
-                  Image.asset(
-                    ImageConstant.alertimage,
-                    height: height / 4.8,
-                    width: width,
-                    fit: BoxFit.fill,
-                  ),
-                  Container(
-                    height: height / 7,
-                    width: width,
-                    color: Colors.white,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "New Version Alert",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: ColorConstant.primary_color,
+                    Container(
+                      height: height / 7,
+                      width: width,
+                      color: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 10,
                           ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "New application version is available",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15,
-                              color: Colors.black),
-                        ),
-                        Text(
-                          "please download latest version",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15,
-                              color: Colors.black),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          saveAlertStatus();
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          height: 50,
-                          width: width / 2.5,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: ColorConstant.primary_color),
-                              color: Colors.white),
-                          child: Center(
-                              child: Text(
-                            "Later",
+                          Text(
+                            "New Version Alert",
                             style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 17,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
                               color: ColorConstant.primary_color,
                             ),
-                          )),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          height: 50,
-                          width: width / 2.5,
-                          decoration: BoxDecoration(
-                              color: ColorConstant.primary_color),
-                          child: Center(
-                              child: Text(
-                            "Update",
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "New application version is available",
                             style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 17,
-                              color: Colors.white,
-                            ),
-                          )),
-                        ),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.black),
+                          ),
+                          Text(
+                            "please download latest version",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.black),
+                          ),
+                        ],
                       ),
-                    ],
-                  )
-                ],
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        height: 45,
+                        width: width,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10)),
+                            color: ColorConstant.primary_color),
+                        child: Center(
+                            child: Text(
+                          "Update",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 17,
+                            color: Colors.white,
+                          ),
+                        )),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      });
-}
+          );
+        });
+  }
 
-saveAlertStatus() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool(PreferencesKey.ShowSoftAlert, true);
-}
+  AlertSoftUpdate() {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: Dialog(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              child: Container(
+                height: height / 2,
+                width: width,
+                // color: Colors.white,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      ImageConstant.alertimage,
+                      height: height / 4.8,
+                      width: width,
+                      fit: BoxFit.fill,
+                    ),
+                    Container(
+                      height: height / 7,
+                      width: width,
+                      color: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "New Version Alert",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: ColorConstant.primary_color,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "New application version is available",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.black),
+                          ),
+                          Text(
+                            "please download latest version",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            saveAlertStatus();
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            height: 50,
+                            width: width / 2.5,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: ColorConstant.primary_color),
+                                color: Colors.white),
+                            child: Center(
+                                child: Text(
+                              "Later",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                                color: ColorConstant.primary_color,
+                              ),
+                            )),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            height: 50,
+                            width: width / 2.5,
+                            decoration: BoxDecoration(
+                                color: ColorConstant.primary_color),
+                            child: Center(
+                                child: Text(
+                              "Update",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                                color: Colors.white,
+                              ),
+                            )),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  saveAlertStatus() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(PreferencesKey.ShowSoftAlert, true);
+  }
 }
