@@ -1190,6 +1190,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
     print('getFileSizevariable-${file1.path?.split('.').last}');
     value2 = double.parse(STR);
     print("value2-->$value2");
+    print("file1.name-->${file1.name}");
     switch (i) {
       case 0:
         print("Done file size B");
@@ -1212,14 +1213,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         print("Done file size KB");
         switch (Index) {
           case 0:
-            print("file1.name-->${file1.name}");
-
-            if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
-                uplopdfile.text = file1.name;
-                dopcument = file1.name;
-              });
-            }
+            if (file1.name.isNotEmpty || file1.name.toString() == null) {}
             print('filenamecheckdocmenut-${dopcument}');
 
             break;
@@ -1227,8 +1221,6 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         }
 
         if (file1.path?.split('.') != 'pdf') {
-          print("this fucntion is caaling");
-
           CroppedFile? croppedFile = await ImageCropper().cropImage(
             sourcePath: file1.path.toString(),
             aspectRatioPresets: [
@@ -1241,10 +1233,10 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             uiSettings: [
               AndroidUiSettings(
                   toolbarTitle: 'Cropper',
-                   toolbarColor: Color(0xffED1C25),
+                  toolbarColor: Color(0xffED1C25),
                   toolbarWidgetColor: Colors.white,
                   initAspectRatio: CropAspectRatioPreset.original,
-                   activeControlsWidgetColor:Color(0xffED1C25),
+                  activeControlsWidgetColor: Color(0xffED1C25),
                   lockAspectRatio: false),
               IOSUiSettings(
                 title: 'Cropper',
@@ -1259,10 +1251,21 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             BlocProvider.of<FetchExprtiseRoomCubit>(context)
                 .chooseDocumentprofile(
                     dopcument.toString(), croppedFile.path, context);
+            print("cropendfileNamessss-${croppedFile.path}");
+            print("dsghdfhdfghdf-$dopcument");
+
+            setState(() {
+              uplopdfile.text = croppedFile.path.split('/').last.toString();
+              dopcument = croppedFile.path.split('/').last.toString();
+            });
           } else {
             BlocProvider.of<FetchExprtiseRoomCubit>(context)
                 .chooseDocumentprofile(
                     dopcument.toString(), file1.path!, context);
+            setState(() {
+              uplopdfile.text = file1.name;
+              dopcument = file1.name;
+            });
           }
         }
 
@@ -1311,50 +1314,55 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             default:
           }
           print('filecheckPath1-${file1.name}');
-          setState(() {
-            uplopdfile.text = file1.name;
-            dopcument = file1.name;
-          });
+
           if (file1.path?.split('.') != 'pdf') {
-          print("this fucntion is caaling");
+            print("this fucntion is caaling");
 
-          CroppedFile? croppedFile = await ImageCropper().cropImage(
-            sourcePath: file1.path.toString(),
-            aspectRatioPresets: [
-              CropAspectRatioPreset.square,
-              CropAspectRatioPreset.ratio3x2,
-              CropAspectRatioPreset.original,
-              CropAspectRatioPreset.ratio4x3,
-              CropAspectRatioPreset.ratio16x9
-            ],
-            uiSettings: [
-              AndroidUiSettings(
-                  toolbarTitle: 'Cropper',
-                  toolbarColor: Colors.deepOrange,
-                  toolbarWidgetColor: Colors.white,
-                  initAspectRatio: CropAspectRatioPreset.original,
-                  lockAspectRatio: false),
-              IOSUiSettings(
-                title: 'Cropper',
-              ),
-              WebUiSettings(
-                context: context,
-              ),
-            ],
-          );
-          if (croppedFile != null) {
-            print('Image cropped and saved at: ${croppedFile.path}');
-            BlocProvider.of<FetchExprtiseRoomCubit>(context)
-                .chooseDocumentprofile(
-                    dopcument.toString(), croppedFile.path, context);
-          } else {
-            BlocProvider.of<FetchExprtiseRoomCubit>(context)
-                .chooseDocumentprofile(
-                    dopcument.toString(), file1.path!, context);
+            CroppedFile? croppedFile = await ImageCropper().cropImage(
+              sourcePath: file1.path.toString(),
+              aspectRatioPresets: [
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio16x9
+              ],
+              uiSettings: [
+                AndroidUiSettings(
+                    toolbarTitle: 'Cropper',
+                    toolbarColor: Colors.deepOrange,
+                    toolbarWidgetColor: Colors.white,
+                    initAspectRatio: CropAspectRatioPreset.original,
+                    lockAspectRatio: false),
+                IOSUiSettings(
+                  title: 'Cropper',
+                ),
+                WebUiSettings(
+                  context: context,
+                ),
+              ],
+            );
+            if (croppedFile != null) {
+              print('Image cropped and saved at: ${croppedFile.path}');
+            
+              BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                  .chooseDocumentprofile(
+                      dopcument.toString(),croppedFile.path, context);
+
+              setState(() {
+                uplopdfile.text = croppedFile.path.split('/').last.toString();
+                dopcument = croppedFile.path.split('/').last.toString();
+              });
+            } else {
+              BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                  .chooseDocumentprofile(
+                      dopcument.toString(), file1.path!, context);
+              setState(() {
+                uplopdfile.text = file1.name;
+                dopcument = file1.name;
+              });
+            }
           }
-        }
-
-        
         }
 
         break;

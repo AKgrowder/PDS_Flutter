@@ -78,7 +78,10 @@ class Followers extends StatelessWidget {
                             },
                             child: followersClassModel
                                         .object?[index].userProfilePic !=
-                                    null
+
+                                    null && followersClassModel
+                                        .object?[index].userProfilePic != ""
+
                                 ? CircleAvatar(
                                     backgroundImage: NetworkImage(
                                         "${followersClassModel.object?[index].userProfilePic}"),
