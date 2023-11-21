@@ -330,47 +330,46 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                     SizedBox(
                                                       width: 5,
                                                     ),
-                                                    Container(
-                                                      width: _width/3,
-                                                     
-                                                      child: Text(
-                                                          // "1w",
-                                                          customadateFormat(
-                                                              parsedDateTime),
-                                                        overflow: TextOverflow.ellipsis,
+                                                    Text(
+                                                        // "1w",
+                                                        customadateFormat(
+                                                            parsedDateTime),
+                                                      overflow: TextOverflow.ellipsis,
 
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'outfit',
-                                                              fontSize: 13,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500)),
-                                                    ),
-                                                    Spacer(),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        Deletecommentdilog(
-                                                            addCommentModeldata
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'outfit',
+                                                            fontSize: 11,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500)),
+                                                   
+                                                    Container(
+                                                     width: 30,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          Deletecommentdilog(
+                                                              addCommentModeldata
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .commentUid ??
+                                                                  "",
+                                                              index);
+                                                        },
+                                                        child: addCommentModeldata
                                                                     ?.object?[
                                                                         index]
-                                                                    .commentUid ??
-                                                                "",
-                                                            index);
-                                                      },
-                                                      child: addCommentModeldata
-                                                                  ?.object?[
-                                                                      index]
-                                                                  .commentByLoggedInUser ==
-                                                              true
-                                                          ? Icon(
-                                                              Icons
-                                                                  .delete_outline_rounded,
-                                                              size: 20,
-                                                              color:
-                                                                  Colors.grey,
-                                                            )
-                                                          : SizedBox(),
+                                                                    .commentByLoggedInUser ==
+                                                                true
+                                                            ? Icon(
+                                                                Icons
+                                                                    .delete_outline_rounded,
+                                                                size: 20,
+                                                                color:
+                                                                    Colors.grey,
+                                                              )
+                                                            : SizedBox(),
+                                                      ),
                                                     ),
                                                   ],
                                                 ),

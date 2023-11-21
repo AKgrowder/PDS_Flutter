@@ -160,7 +160,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           buttomIndex: 0,
                         );
                       })); */
-                      Navigator.push(context,
+
+                      /* Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return MultiBlocProvider(
                             providers: [
@@ -171,7 +172,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: NewBottomBar(
                               buttomIndex: 0,
                             ));
-                      }));
+                      })); */
+
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                        builder: (context) {
+                          return NewBottomBar(buttomIndex: 0);
+                        },
+                      ), (route) => false);
                     }
 
                     SnackBar snackBar = SnackBar(
@@ -202,18 +209,25 @@ class _LoginScreenState extends State<LoginScreen> {
                         buttomIndex: 0,
                       );
                     })); */
-                     Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return MultiBlocProvider(
-                            providers: [
-                              BlocProvider<GetGuestAllPostCubit>(
-                                create: (context) => GetGuestAllPostCubit(),
-                              ),
-                            ],
-                            child: NewBottomBar(
-                              buttomIndex: 0,
-                            ));
-                      }));
+
+                    /* Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return MultiBlocProvider(
+                          providers: [
+                            BlocProvider<GetGuestAllPostCubit>(
+                              create: (context) => GetGuestAllPostCubit(),
+                            ),
+                          ],
+                          child: NewBottomBar(
+                            buttomIndex: 0,
+                          ));
+                    })); */
+
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+        builder: (context) {
+          return NewBottomBar(buttomIndex: 0);
+        },
+      ), (route) => false);
                   } else {
                     SnackBar snackBar = SnackBar(
                       content: Text('Otp send successfully'),
@@ -301,7 +315,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 top: 41,
                               ),
                               child: Text(
-                                "User Name / Mobile Number",
+                                "User ID / Mobile Number",
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
@@ -359,7 +373,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               bottom: 14,
                             ),
                             // textStyle: theme.textTheme.titleMedium!,
-                            hintText: "User Name / Mobile Number",
+                            hintText: "User Id / Mobile Number",
                             hintStyle: TextStyle(
                                 fontFamily: 'outfit',
                                 fontSize: 15,

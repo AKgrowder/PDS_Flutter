@@ -36,6 +36,8 @@ dependencies:
   hashtagable: ^2.3.0+1
   carousel_slider: ^4.2.1
   dots_indicator: ^2.1.0
+  image_cropper:
+  multi_image_crop: ^0.0.2
   getwidget:
   # flutter_instagram_storyboard: ^0.0.8
   flutter_slidable: ^3.0.0 

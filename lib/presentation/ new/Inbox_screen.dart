@@ -364,3 +364,15 @@ class _InboxScreenState extends State<InboxScreen> {
     }
   }
 }
+
+
+class InboxScreen1 extends StatelessWidget {
+  const InboxScreen1({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text("coming soon",style: TextStyle(fontSize: 20,color: Colors.red),),
+    );
+  }
+}
