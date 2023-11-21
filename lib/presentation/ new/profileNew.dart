@@ -2784,7 +2784,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15, left: 20),
                           child: Text(
-                            '${dopcument.toString()}',
+                           '${dopcument.toString().split('/').last}',
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(fontSize: 16),
                           ),
