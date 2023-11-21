@@ -1648,7 +1648,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         ?.content?[
                                                                             index]
                                                                         .userProfilePic !=
-                                                                    null
+                                                                    null && AllGuestPostRoomData
+                                                                        ?.object
+                                                                        ?.content?[
+                                                                            index]
+                                                                        .userProfilePic != ""
                                                                 ? CircleAvatar(
                                                                     backgroundImage:
                                                                         NetworkImage(
@@ -2633,7 +2637,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         ?.content?[
                                                                             index]
                                                                         .userProfilePic !=
-                                                                    null
+                                                                    null && AllGuestPostRoomData
+                                                                        ?.object
+                                                                        ?.content?[
+                                                                            index]
+                                                                        .userProfilePic != ""
                                                                 ? CircleAvatar(
                                                                     backgroundImage:
                                                                         NetworkImage(
