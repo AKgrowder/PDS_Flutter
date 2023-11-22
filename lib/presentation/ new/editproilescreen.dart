@@ -619,11 +619,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                         ),
                         customTextFeild(
-                          controller: userNameController,
-                          width: _width / 1.1,
-                          hintText: "Enter User ID",
-                          color: Color(0xffFFF3F4)
-                        ),
+                            controller: userNameController,
+                            width: _width / 1.1,
+                            hintText: "Enter User ID",
+                            color: Color(0xffFFF3F4)),
                         Row(
                           children: [
                             Padding(
@@ -1201,7 +1200,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.fees != null)
+        if (widget.newProfileData?.object?.module == "EXPERT")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1213,11 +1212,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.fees != null)
+        if (widget.newProfileData?.object?.module == "EXPERT")
           customTextFeild(
-            controller: fees,
-            width: _width / 1.1,
-          ),
+              controller: fees,
+              width: _width / 1.1,
+              hintText: "Price / hr",
+              color: Color(0xffFFF3F4)),
         if (widget.newProfileData?.object?.workingHours != null)
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -1439,7 +1439,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-   customTextFeild(
+  customTextFeild(
       {double? width,
       TextEditingController? controller,
       Color? color,
@@ -1449,7 +1449,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       // height: 50,
       width: width,
       decoration: BoxDecoration(
-          color: color ,
+          color: color,
           border: Border.all(
             color: Color.fromARGB(255, 157, 157, 157),
           ),
@@ -1503,27 +1503,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       title: new Text('See Profile Picture'),
                       onTap: () {
-                        if (widget.newProfileData?.object
-                                        ?.userProfilePic !=
-                                    null &&
-                                widget.newProfileData?.object
-                                        ?.userProfilePic !=
-                                    "")
-                              {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => DocumentViewScreen1(
-                                          path:
-                                              '${widget.newProfileData?.object?.userProfilePic}',
-                                          title: 'Pdf',
-                                        )));
-                              }else{
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => DocumentViewScreen1(
-                                          path:
-                                              'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
-                                          title: 'Pdf',
-                                        )));
-                              }
+                        if (widget.newProfileData?.object?.userProfilePic !=
+                                null &&
+                            widget.newProfileData?.object?.userProfilePic !=
+                                "") {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => DocumentViewScreen1(
+                                    path:
+                                        '${widget.newProfileData?.object?.userProfilePic}',
+                                    title: 'Pdf',
+                                  )));
+                        } else {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => DocumentViewScreen1(
+                                    path:
+                                        'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
+                                    title: 'Pdf',
+                                  )));
+                        }
                       }),
                 ),
                 SizedBox(
@@ -1592,7 +1589,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               '${widget.newProfileData?.object?.userBackgroundPic}',
                                           title: 'Pdf',
                                         )))
-                              }else{
+                              }
+                            else
+                              {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => DocumentViewScreen1(
                                           path:
