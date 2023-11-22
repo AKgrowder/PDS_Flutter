@@ -429,12 +429,18 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                           print(
                                                               "this is the Medium");
                                                         },
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          imageUrl:
-                                                              '${imageDataPost?.object?.data?[0]}',
-                                                          fit: BoxFit.cover,
-                                                        ),
+                                                        child: imageDataPost
+                                                                        ?.object
+                                                                        ?.data?[
+                                                                    0] !=
+                                                                null
+                                                            ? CachedNetworkImage(
+                                                                imageUrl:
+                                                                    '${imageDataPost?.object?.data?[0]}',
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              )
+                                                            : SizedBox(),
                                                         /*    child: FadeInImage(
                                                           fit: BoxFit.cover,
                                                           placeholder: MemoryImage(

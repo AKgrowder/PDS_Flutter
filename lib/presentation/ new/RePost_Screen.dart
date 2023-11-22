@@ -19,6 +19,8 @@ import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/home_screen_new.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/example/lib/main.dart';
 import 'package:pds/widgets/commentPdf.dart';
@@ -154,7 +156,13 @@ class _RePostScreenState extends State<RePostScreen> {
           backgroundColor: ColorConstant.primary_color,
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        Navigator.pop(context);
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+          builder: (context) {
+            return NewBottomBar(
+              buttomIndex: 0,
+            );
+          },
+        ), (Route<dynamic> route) => false);
       }
     }, builder: (context, state) {
       return SafeArea(
