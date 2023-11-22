@@ -320,7 +320,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                         snackBar =
                                                                         SnackBar(
                                                                       content: Text(
-                                                                          state.DeleteRoom.message ??
+                                                                          state.DeleteRoom.object ??
                                                                               ""),
                                                                       backgroundColor:
                                                                           ColorConstant
@@ -424,7 +424,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                               decoration: BoxDecoration(color: Color(0xFFED1C25), borderRadius: BorderRadius.circular(10)),
                                                                               child: Center(
                                                                                   child: Text(
-                                                                                "Delete",
+                                                                                "Exit",
                                                                                 style: TextStyle(
                                                                                   fontFamily: 'outfit',
                                                                                   fontSize: 15,

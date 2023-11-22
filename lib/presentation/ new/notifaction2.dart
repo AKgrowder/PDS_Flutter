@@ -277,6 +277,9 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                               borderRadius:
                                                   BorderRadius.circular(15)),
                                           child: Row(children: [
+                                            SizedBox(
+                                              width: 5,
+                                            ),
                                             GestureDetector(
                                               onTap: () {
                                                 Navigator.push(context,
@@ -317,6 +320,8 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                               width: 10,
                                             ),
                                             Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Row(
                                                   children: [
@@ -357,7 +362,7 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                                 "${RequestListModelData?.object?[index].followUuid}");
                                                       },
                                                       child: Container(
-                                                        height: 30,
+                                                        height: 28,
                                                         width: 100,
                                                         decoration: BoxDecoration(
                                                             color: Color(
@@ -365,7 +370,7 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        10)),
+                                                                        6)),
                                                         child: Center(
                                                             child: Text(
                                                           "Accept",
@@ -391,13 +396,13 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                                 "${RequestListModelData?.object?[index].followUuid}");
                                                       },
                                                       child: Container(
-                                                        height: 30,
+                                                        height: 28,
                                                         width: 100,
                                                         decoration: BoxDecoration(
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        10),
+                                                                        6),
                                                             border: Border.all(
                                                                 color: Color(
                                                                     0xFFED1C25))),
@@ -414,11 +419,13 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                     )
                                                   ],
                                                 ),
+                                                SizedBox(
+                                                  height: 3,
+                                                ),
                                                 Padding(
                                                   padding:
                                                       const EdgeInsets.only(
-                                                          left: 70.0,
-                                                          right: 10),
+                                                          left: 100),
                                                   child: Text(
                                                     customFormat(
                                                         DateTime.now()),
@@ -748,20 +755,32 @@ class _InviationClassState extends State<InviationClass> {
                                                                           .primary_color,
                                                                       shape: BoxShape
                                                                           .circle),
-                                                                  child:
-                                                                      CustomImageView(
-                                                                    url: InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ??
-                                                                            false
-                                                                        ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
-                                                                        : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                    height: 20,
-                                                                    radius: BorderRadius
-                                                                        .circular(
-                                                                            20),
-                                                                    width: 20,
-                                                                    fit: BoxFit
-                                                                        .fill,
-                                                                  )),
+                                                                  child: InvitationRoomData
+                                                                              ?.object?[index]
+                                                                              .roomMembers?[0]
+                                                                              .userProfilePic
+                                                                              ?.isNotEmpty ??
+                                                                          false
+                                                                      ? CustomImageView(
+                                                                          url:
+                                                                              "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}",
+                                                                          radius:
+                                                                              BorderRadius.circular(20),
+                                                                          width:
+                                                                              20,
+                                                                          fit: BoxFit
+                                                                              .fill,
+                                                                        )
+                                                                      : CustomImageView(
+                                                                          imagePath:
+                                                                              ImageConstant.tomcruse,
+                                                                          radius:
+                                                                              BorderRadius.circular(20),
+                                                                          width:
+                                                                              20,
+                                                                          fit: BoxFit
+                                                                              .fill,
+                                                                        )),
                                                             ),
                                                           ],
                                                         ),
@@ -783,20 +802,21 @@ class _InviationClassState extends State<InviationClass> {
                                                                       width: 26.88,
                                                                       height: 26.87,
                                                                       decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                      child: CustomImageView(
-                                                                        url: InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ??
-                                                                                false
-                                                                            ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
-                                                                            : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                        height:
-                                                                            20,
-                                                                        radius:
-                                                                            BorderRadius.circular(20),
-                                                                        width:
-                                                                            20,
-                                                                        fit: BoxFit
-                                                                            .fill,
-                                                                      )),
+                                                                      child: InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ?? false
+                                                                          ? CustomImageView(
+                                                                              url: "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}",
+                                                                              height: 20,
+                                                                              radius: BorderRadius.circular(20),
+                                                                              width: 20,
+                                                                              fit: BoxFit.fill,
+                                                                            )
+                                                                          : CustomImageView(
+                                                                              imagePath: ImageConstant.tomcruse,
+                                                                              height: 20,
+                                                                              radius: BorderRadius.circular(20),
+                                                                              width: 20,
+                                                                              fit: BoxFit.fill,
+                                                                            )),
                                                                 ),
                                                                 Positioned(
                                                                   left: 22.56,
@@ -805,20 +825,21 @@ class _InviationClassState extends State<InviationClass> {
                                                                       width: 26.88,
                                                                       height: 26.87,
                                                                       decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                      child: CustomImageView(
-                                                                        url: InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic?.isNotEmpty ??
-                                                                                false
-                                                                            ? "${InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}"
-                                                                            : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                        height:
-                                                                            20,
-                                                                        radius:
-                                                                            BorderRadius.circular(20),
-                                                                        width:
-                                                                            20,
-                                                                        fit: BoxFit
-                                                                            .fill,
-                                                                      )),
+                                                                      child: InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic?.isNotEmpty ?? false
+                                                                          ? CustomImageView(
+                                                                              url: "${InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}",
+                                                                              height: 20,
+                                                                              radius: BorderRadius.circular(20),
+                                                                              width: 20,
+                                                                              fit: BoxFit.fill,
+                                                                            )
+                                                                          : CustomImageView(
+                                                                              imagePath: ImageConstant.tomcruse,
+                                                                              height: 20,
+                                                                              radius: BorderRadius.circular(20),
+                                                                              width: 20,
+                                                                              fit: BoxFit.fill,
+                                                                            )),
                                                                 ),
                                                               ],
                                                             ),
@@ -841,19 +862,21 @@ class _InviationClassState extends State<InviationClass> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                          child: InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ?? false
+                                                                              ? CustomImageView(
+                                                                                  url: "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}",
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )
+                                                                              : CustomImageView(
+                                                                                  imagePath: ImageConstant.tomcruse,
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )),
                                                                     ),
                                                                     Positioned(
                                                                       left:
@@ -863,19 +886,21 @@ class _InviationClassState extends State<InviationClass> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                          child: InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic?.isNotEmpty ?? false
+                                                                              ? CustomImageView(
+                                                                                  url: "${InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}",
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )
+                                                                              : CustomImageView(
+                                                                                  imagePath: ImageConstant.tomcruse,
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )),
                                                                     ),
                                                                     // error get
                                                                     Positioned(
@@ -886,19 +911,21 @@ class _InviationClassState extends State<InviationClass> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                          child: InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic?.isNotEmpty ?? false
+                                                                              ? CustomImageView(
+                                                                                  url: "${InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic}",
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )
+                                                                              : CustomImageView(
+                                                                                  imagePath: ImageConstant.tomcruse,
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )),
                                                                     ),
                                                                   ],
                                                                 ),
@@ -915,19 +942,21 @@ class _InviationClassState extends State<InviationClass> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                          child: InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ?? false
+                                                                              ? CustomImageView(
+                                                                                  url: "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}",
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )
+                                                                              : CustomImageView(
+                                                                                  imagePath: ImageConstant.tomcruse,
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )),
                                                                     ),
                                                                     Positioned(
                                                                       left:
@@ -937,19 +966,21 @@ class _InviationClassState extends State<InviationClass> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                          child: InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic?.isNotEmpty ?? false
+                                                                              ? CustomImageView(
+                                                                                  url: "${InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}",
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )
+                                                                              : CustomImageView(
+                                                                                  imagePath: ImageConstant.tomcruse,
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )),
                                                                     ),
                                                                     Positioned(
                                                                       left:
@@ -959,19 +990,21 @@ class _InviationClassState extends State<InviationClass> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                          child: InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic?.isNotEmpty ?? false
+                                                                              ? CustomImageView(
+                                                                                  url: "${InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic}",
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )
+                                                                              : CustomImageView(
+                                                                                  imagePath: ImageConstant.tomcruse,
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )),
                                                                     ),
                                                                     Positioned(
                                                                       left: 78,
@@ -1120,20 +1153,20 @@ String customFormat(DateTime date) {
   String year = date.year.toString();
   String time = DateFormat('h:mm a').format(date);
 
-  String formattedDate = '$day$month $year $time';
+  String formattedDate = '$day $month $year $time';
   return formattedDate;
 }
 
 String _getMonthName(int month) {
   switch (month) {
     case 1:
-      return 'January';
+      return 'Jan';
     case 2:
-      return 'February';
+      return 'Feb';
     case 3:
-      return 'March';
+      return 'Mar';
     case 4:
-      return 'April';
+      return 'Apr';
     case 5:
       return 'May';
     case 6:
@@ -1141,15 +1174,15 @@ String _getMonthName(int month) {
     case 7:
       return 'July';
     case 8:
-      return 'August';
+      return 'Aug';
     case 9:
-      return 'September';
+      return 'Sept';
     case 10:
-      return 'October';
+      return 'Oct';
     case 11:
-      return 'November';
+      return 'Nov';
     case 12:
-      return 'December';
+      return 'Dec';
     default:
       return '';
   }

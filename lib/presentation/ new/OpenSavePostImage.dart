@@ -11,6 +11,7 @@ import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comment_bottom_sheet.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_image_view.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_state.dart';
 
@@ -146,7 +147,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                   Padding(
                       padding: const EdgeInsets.only(top: 15, bottom: 15),
                       child: Row(children: [
-                        OpenSaveModelData?.object?.userProfilePic != null&& OpenSaveModelData?.object?.userProfilePic != ""
+                        OpenSaveModelData?.object?.userProfilePic != null &&
+                                OpenSaveModelData?.object?.userProfilePic != ""
                             ? CustomImageView(
                                 url:
                                     "${OpenSaveModelData?.object?.userProfilePic}",
@@ -515,6 +517,22 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                       : ImageConstant.Savefill,
                                   height: 18,
                                   color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Share.share(
+                                  'https://play.google.com/store/apps/details?id=com.pds.app');
+                            },
+                            child: Container(
+                              color: Colors.transparent,
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Image.asset(
+                                  ImageConstant.shareWhite,
+                                  height: 17,
                                 ),
                               ),
                             ),

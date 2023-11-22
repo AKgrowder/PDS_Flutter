@@ -114,23 +114,23 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
 
             if (state is AddnewCommentLoadedState) {
               print("dgdfhgdfhdfghhdfgh-${state.addnewCommentsModeldata}");
-              if(state.addnewCommentsModeldata['message'] =='Comment contains a restricted word'){
-                 SnackBar snackBar = SnackBar(
-                content: Text(state.addnewCommentsModeldata['message']),
-                backgroundColor: ColorConstant.primary_color,
-              );
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }else{
+              if (state.addnewCommentsModeldata['message'] ==
+                  'Comment contains a restricted word') {
+                SnackBar snackBar = SnackBar(
+                  content: Text(state.addnewCommentsModeldata['message']),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              } else {
                 addcomment.clear();
 
-              Object1 object =
-                  Object1.fromJson(state.addnewCommentsModeldata['object']);
+                Object1 object =
+                    Object1.fromJson(state.addnewCommentsModeldata['object']);
 
-              addCommentModeldata?.object?.add(object);
+                addCommentModeldata?.object?.add(object);
 
-              _goToElement();
+                _goToElement();
               }
-              
             }
             if (state is DeletecommentLoadedState) {
               DeletecommentDataa = state.Deletecomment;
@@ -171,7 +171,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                   physics: BouncingScrollPhysics(),
                   child: Column(
                     children: [
-                   /*    Container(
+                      /*    Container(
                         child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -284,27 +284,34 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          addCommentModeldata?.object?[index]
-                                                      .profilePic ==
-                                                  null
-                                              ? CustomImageView(
-                                                  radius:
-                                                      BorderRadius.circular(50),
-                                                  imagePath:
-                                                      ImageConstant.pdslogo,
-                                                  fit: BoxFit.fill,
-                                                  height: 35,
-                                                  width: 35,
-                                                )
-                                              : CustomImageView(
-                                                  radius:
-                                                      BorderRadius.circular(50),
-                                                  url:
-                                                      "${addCommentModeldata?.object?[index].profilePic}",
-                                                  fit: BoxFit.fill,
-                                                  height: 35,
-                                                  width: 35,
-                                                ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.all(0.0),
+                                            child: addCommentModeldata
+                                                        ?.object?[index]
+                                                        .profilePic ==
+                                                    null
+                                                ? CustomImageView(
+                                                    radius:
+                                                        BorderRadius.circular(
+                                                            50),
+                                                    imagePath:
+                                                        ImageConstant.pdslogo,
+                                                    fit: BoxFit.fill,
+                                                    height: 35,
+                                                    width: 35,
+                                                  )
+                                                : CustomImageView(
+                                                    radius:
+                                                        BorderRadius.circular(
+                                                            50),
+                                                    url:
+                                                        "${addCommentModeldata?.object?[index].profilePic}",
+                                                    fit: BoxFit.fill,
+                                                    height: 35,
+                                                    width: 35,
+                                                  ),
+                                          ),
                                           SizedBox(
                                             width: 10,
                                           ),
@@ -334,8 +341,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                         // "1w",
                                                         customadateFormat(
                                                             parsedDateTime),
-                                                      overflow: TextOverflow.ellipsis,
-
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'outfit',
@@ -343,9 +350,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                             fontWeight:
                                                                 FontWeight
                                                                     .w500)),
-                                                   
                                                     Container(
-                                                     width: 30,
+                                                      width: 30,
                                                       child: GestureDetector(
                                                         onTap: () {
                                                           Deletecommentdilog(
