@@ -5,6 +5,7 @@ import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import '../../API/Bloc/sherinvite_Block/sherinvite_state.dart';
 import '../../core/utils/color_constant.dart';
@@ -214,7 +215,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                   });
                                 },
                                 child: Padding(
-                                  padding: EdgeInsets.all(8.0),
+                                  padding: EdgeInsets.only(top:10.0,left: 8,right: 8,bottom: 25),
                                   child: Container(
                                       decoration: BoxDecoration(
                                         border: Border.all(
@@ -452,9 +453,10 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                     ],
                                   ),
                                 ), */
-                                          SizedBox(
+                                          /* SizedBox(
                                             height: 17.2,
-                                          ),
+                                          ), */
+                                          Spacer(),
                                           // index == 1 || index == 0
                                           //     ?
                                           GestureDetector(

@@ -181,15 +181,17 @@ class _InboxScreenState extends State<InboxScreen> {
                                             children: [
                                               Stack(children: [
                                                 Container(
-                                                    height: 60,
-                                                    width: 60,
+                                                    height: 55,
+                                                    width: 55,
                                                     decoration: BoxDecoration(
                                                       shape: BoxShape.circle,
                                                     ),
                                                     child: PersonalChatListModelData
                                                                 ?.object?[index]
                                                                 .userProfilePic !=
-                                                            null
+                                                            null && PersonalChatListModelData
+                                                                ?.object?[index]
+                                                                .userProfilePic != ""
                                                         ? CustomImageView(
                                                             url:
                                                                 "${PersonalChatListModelData?.object?[index].userProfilePic}",
@@ -201,7 +203,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                                           )
                                                         : CustomImageView(
                                                             imagePath: ImageConstant
-                                                                .placeholder2)),
+                                                                .tomcruse)),
                                                 Positioned(
                                                     bottom: 1,
                                                     right: 5,
