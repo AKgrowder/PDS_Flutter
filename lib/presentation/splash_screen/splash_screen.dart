@@ -129,7 +129,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   SetUi() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(PreferencesKey.appApkMinVersion, "13");
+    prefs.setString(PreferencesKey.appApkMinVersion, "2");
     prefs.setString(PreferencesKey.appApkLatestVersion, "1");
     prefs.setString(PreferencesKey.appApkRouteVersion, "1");
 

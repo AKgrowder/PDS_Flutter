@@ -12,7 +12,6 @@ import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -285,53 +284,33 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                             
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(builder: (
-                                                  context,
-                                                ) {
-                                                  return ProfileScreen(
-                                                      User_ID:
-                                                          addCommentModeldata
-                                                                  ?.object?[
-                                                                      index]
-                                                                  .commentUid ??
-                                                              "",
-                                                      isFollowing:
-                                                          widget.isFoollinng);
-                                                }));
-                                           
-                                            },
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(0.0),
-                                              child: addCommentModeldata
-                                                          ?.object?[index]
-                                                          .profilePic ==
-                                                      null
-                                                  ? CustomImageView(
-                                                      radius:
-                                                          BorderRadius.circular(
-                                                              50),
-                                                      imagePath:
-                                                          ImageConstant.pdslogo,
-                                                      fit: BoxFit.fill,
-                                                      height: 35,
-                                                      width: 35,
-                                                    )
-                                                  : CustomImageView(
-                                                      radius:
-                                                          BorderRadius.circular(
-                                                              50),
-                                                      url:
-                                                          "${addCommentModeldata?.object?[index].profilePic}",
-                                                      fit: BoxFit.fill,
-                                                      height: 35,
-                                                      width: 35,
-                                                    ),
-                                            ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.all(0.0),
+                                            child: addCommentModeldata
+                                                        ?.object?[index]
+                                                        .profilePic ==
+                                                    null
+                                                ? CustomImageView(
+                                                    radius:
+                                                        BorderRadius.circular(
+                                                            50),
+                                                    imagePath:
+                                                        ImageConstant.pdslogo,
+                                                    fit: BoxFit.fill,
+                                                    height: 35,
+                                                    width: 35,
+                                                  )
+                                                : CustomImageView(
+                                                    radius:
+                                                        BorderRadius.circular(
+                                                            50),
+                                                    url:
+                                                        "${addCommentModeldata?.object?[index].profilePic}",
+                                                    fit: BoxFit.fill,
+                                                    height: 35,
+                                                    width: 35,
+                                                  ),
                                           ),
                                           SizedBox(
                                             width: 10,
