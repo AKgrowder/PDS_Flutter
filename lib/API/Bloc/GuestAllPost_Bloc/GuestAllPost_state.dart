@@ -9,6 +9,7 @@ import 'package:pds/API/Model/myaccountModel/myaccountModel.dart';
 import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
 
 import '../../Model/Get_all_blog_Model/get_all_blog_model.dart';
+import '../../Model/RePost_Model/RePost_model.dart';
 
 abstract class GetGuestAllPostState {}
 
@@ -72,7 +73,10 @@ class likeBlogLoadedState extends GetGuestAllPostState {
   likeBlogLoadedState(this.LikeBlogModeData);
 }
 
-
+class RePostLoadedState extends GetGuestAllPostState {
+  final RePostModel RePost;
+  RePostLoadedState(this.RePost);
+}
 
 class SystemConfigLoadedState extends GetGuestAllPostState {
   final SystemConfigModel SystemConfigModelData;

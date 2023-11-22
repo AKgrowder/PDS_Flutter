@@ -117,6 +117,7 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostErrorState(likepost));
     }
   }
+
   // this is the follwing method
   Future<void> followWIngMethod(String? followedToUid, BuildContext context,
       {bool showAlert = false}) async {
@@ -256,6 +257,21 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       }
     } catch (e) {
       emit(GetGuestAllPostErrorState(systemConfigModel));
+    }
+  }
+
+  Future<void> RePostAPI(
+      BuildContext context, Map<String, dynamic> params, String? uuid) async {
+    dynamic addPostData;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      addPostData = await Repository().RePost(context, params, uuid);
+      print("addPostDataaaaaaaaaaaa-->${addPostData}");
+      if (addPostData.success == true) {
+        emit(RePostLoadedState(addPostData));
+      }
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(addPostData));
     }
   }
 }
