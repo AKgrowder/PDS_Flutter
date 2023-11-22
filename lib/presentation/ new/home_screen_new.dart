@@ -46,12 +46,14 @@ import 'package:pds/presentation/splash_screen/splash_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pds/presentation/recent_blog/recent_blog_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
-
+import 'package:share_plus/share_plus.dart';
 class HomeScreenNew extends StatefulWidget {
   const HomeScreenNew({Key? key}) : super(key: key);
 
@@ -75,6 +77,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     ImageConstant.placeholder4,
     ImageConstant.placeholder4,
   ];
+  int imageCount = 1;
+  int imageCount1 = 1;
+  Uint8List? firstPageImage;
+
   LikePost? likePost;
   GetGuestAllPostModel? AllGuestPostRoomData;
   DeleteCommentModel? DeletecommentDataa;
@@ -99,15 +105,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   bool isDataget = false;
   DateTime? parsedDateTimeBlogs;
   FocusNode _focusNode = FocusNode();
-
   String? appApkMinVersion;
   String? appApkLatestVersion;
   String? appApkRouteVersion;
   String? ipaIosLatestVersion;
   String? ipaIosRoutVersion;
   String? ipaIosMainversion;
-
-  String? ApkMinVersion;
+   String? ApkMinVersion;
   String? ApkLatestVersion;
   String? ApkRouteVersion;
   String? IosLatestVersion;
@@ -914,8 +918,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               User_Name = state.myAccontDetails.object?.userName;
               User_Module = state.myAccontDetails.object?.module;
               UserProfileImage = state.myAccontDetails.object?.userProfilePic;
-              print(" UserProfileImage  UserProfileImage  UserProfileImage  UserProfileImage  UserProfileImage  UserProfileImage  UserProfileImage  ");
-              print(UserProfileImage);
               Save_UserData();
             }
             if (state is saveBlogLoadedState) {
@@ -934,6 +936,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
               LikeBlogModeData = state.LikeBlogModeData;
+            }
+              if (state is RePostLoadedState) {
+              SnackBar snackBar = SnackBar(
+                content: Text(state.RePost.object.toString()),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              Navigator.pop(context);
             }
 
             if (state is GetAllStoryLoadedState) {
@@ -954,12 +964,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                           timelineBackgroundColor: Colors.grey,
                           buttonDecoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            image: element.profilePic != null && element.profilePic != ""
+                            image: element.profilePic != null
                                 ? DecorationImage(
                                     image: NetworkImage(element.profilePic))
                                 : DecorationImage(
                                     image: AssetImage(
-                                      ImageConstant.tomcruse,
+                                      ImageConstant.placeholder2,
                                     ),
                                     fit: BoxFit.cover,
                                   ),
@@ -1122,6 +1132,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             if (state is GetGuestAllPostLoadedState) {
               apiCalingdone = true;
               AllGuestPostRoomData = state.GetGuestAllPostRoomData;
+      
+              
             }
             if (state is PostLikeLoadedState) {
               if (state.likePost.object != 'Post Liked Successfully' &&
@@ -1646,15 +1658,16 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               }
                                                             },
                                                             child: AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .userProfilePic !=
-                                                                    null && AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .userProfilePic != ""
+                                                                            ?.object
+                                                                            ?.content?[
+                                                                                index]
+                                                                            .userProfilePic !=
+                                                                        null &&
+                                                                    AllGuestPostRoomData
+                                                                            ?.object
+                                                                            ?.content?[index]
+                                                                            .userProfilePic !=
+                                                                        ""
                                                                 ? CircleAvatar(
                                                                     backgroundImage:
                                                                         NetworkImage(
@@ -1897,6 +1910,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 )),
                                                                               ),
                                                                             )
+
+                                                                            //this is the ATTACHMENT
                                                                           : AllGuestPostRoomData?.object?.content?[index].postDataType == "ATTACHMENT"
                                                                               ? (AllGuestPostRoomData?.object?.content?[index].postData?.isNotEmpty == true)
                                                                                   ? Container(
@@ -1918,6 +1933,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                       onPageChanged: (page) {
                                                                                         setState(() {
                                                                                           _currentPages[index] = page;
+                                                                                          imageCount1 =page+1;
                                                                                         });
                                                                                       },
                                                                                       controller: _pageControllers[index],
@@ -1939,8 +1955,34 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                                           )),
                                                                                                 );
                                                                                               },
-                                                                                              child: CustomImageView(
-                                                                                                url: "${AllGuestPostRoomData?.object?.content?[index].postData?[index1]}",
+                                                                                              child: Stack(
+                                                                                                children: [
+                                                                                                  Align(
+                                                                                                    alignment: Alignment.topCenter,
+                                                                                                    child: CustomImageView(
+                                                                                                      url: "${AllGuestPostRoomData?.object?.content?[index].postData?[index1]}",
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                  Align(
+                                                                                                    alignment: Alignment.topRight,
+                                                                                                    child: Card(
+                                                                                                      color: Colors.transparent,
+                                                                                                      elevation: 0,
+                                                                                                      child: Container(
+                                                                                                          alignment: Alignment.center,
+                                                                                                          height: 30,
+                                                                                                          width: 50,
+                                                                                                          decoration: BoxDecoration(
+                                                                                                            color: Color.fromARGB(255, 2, 1, 1),
+                                                                                                            borderRadius: BorderRadius.all(Radius.circular(50)),
+                                                                                                          ),
+                                                                                                          child: Text(
+                                                                                                            imageCount1.toString() + '/' + '${AllGuestPostRoomData?.object?.content?[index].postData?.length}',
+                                                                                                            style: TextStyle(color: Colors.white),
+                                                                                                          )),
+                                                                                                    ),
+                                                                                                  )
+                                                                                                ],
                                                                                               ),
                                                                                             )),
                                                                                           );
@@ -2219,6 +2261,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                               ),
                                                                                             );
                                                                                           } else if (AllGuestPostRoomData?.object?.content?[index].repostOn?.postDataType == "ATTACHMENT") {
+                                                                                            
                                                                                             return Container(
                                                                                                 height: 400,
                                                                                                 width: _width,
@@ -2327,52 +2370,50 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             SizedBox(
                                                               width: 0,
                                                             ),
-                                                             AllGuestPostRoomData
+                                                            AllGuestPostRoomData
                                                                         ?.object
                                                                         ?.content?[
                                                                             index]
                                                                         .likedCount ==
                                                                     0
                                                                 ? SizedBox()
-                                                                :
-                                                            GestureDetector(
-                                                              onTap: () {
-                                                                /* Navigator.push(
+                                                                : GestureDetector(
+                                                                    onTap: () {
+                                                                      /* Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
                                                       
                                                           ShowAllPostLike("${AllGuestPostRoomData?.object?[index].postUid}"))); */
 
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) {
-                                                                    return ShowAllPostLike(
-                                                                        "${AllGuestPostRoomData?.object?.content?[index].postUid}");
-                                                                  },
-                                                                ));
-                                                              },
-                                                              child: Container(
-                                                                color: Colors
-                                                                    .transparent,
-                                                                child: Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                              .all(
-                                                                          5.0),
-                                                                  child: Text(
-                                                                    "${AllGuestPostRoomData?.object?.content?[index].likedCount}",
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            "outfit",
-                                                                        fontSize:
-                                                                            14),
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) {
+                                                                          return ShowAllPostLike(
+                                                                              "${AllGuestPostRoomData?.object?.content?[index].postUid}");
+                                                                        },
+                                                                      ));
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      color: Colors
+                                                                          .transparent,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.all(5.0),
+                                                                        child:
+                                                                            Text(
+                                                                          "${AllGuestPostRoomData?.object?.content?[index].likedCount}",
+                                                                          style: TextStyle(
+                                                                              fontFamily: "outfit",
+                                                                              fontSize: 14),
+                                                                        ),
+                                                                      ),
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                              ),
-                                                            ),
                                                             SizedBox(
                                                               width: 8,
                                                             ),
@@ -2418,70 +2459,29 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             SizedBox(
                                                               width: 5,
                                                             ),
-                                                             AllGuestPostRoomData?.object?.content?[index].commentCount ==
+                                                            AllGuestPostRoomData
+                                                                        ?.object
+                                                                        ?.content?[
+                                                                            index]
+                                                                        .commentCount ==
                                                                     0
                                                                 ? SizedBox()
-                                                                :
-                                                            Text(
-                                                              "${AllGuestPostRoomData?.object?.content?[index].commentCount}",
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      "outfit",
-                                                                  fontSize: 14),
-                                                            ),
+                                                                : Text(
+                                                                    "${AllGuestPostRoomData?.object?.content?[index].commentCount}",
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            "outfit",
+                                                                        fontSize:
+                                                                            14),
+                                                                  ),
                                                             SizedBox(
                                                               width: 8,
                                                             ),
                                                             GestureDetector(
                                                               onTap: () {
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) {
-                                                                    return RePostScreen(
-                                                                      userProfile: AllGuestPostRoomData
-                                                                          ?.object
-                                                                          ?.content?[
-                                                                              index]
-                                                                          .userProfilePic,
-                                                                      username: AllGuestPostRoomData
-                                                                          ?.object
-                                                                          ?.content?[
-                                                                              index]
-                                                                          .postUserName,
-                                                                      date: AllGuestPostRoomData
-                                                                          ?.object
-                                                                          ?.content?[
-                                                                              index]
-                                                                          .createdAt,
-                                                                      desc: AllGuestPostRoomData
-                                                                          ?.object
-                                                                          ?.content?[
-                                                                              index]
-                                                                          .description,
-                                                                      postData: AllGuestPostRoomData
-                                                                          ?.object
-                                                                          ?.content?[
-                                                                              index]
-                                                                          .postData,
-                                                                      postDataType: AllGuestPostRoomData
-                                                                          ?.object
-                                                                          ?.content?[
-                                                                              index]
-                                                                          .postDataType,
-                                                                      index:
-                                                                          index,
-                                                                      AllGuestPostRoomData:
-                                                                          AllGuestPostRoomData,
-                                                                      postUid: AllGuestPostRoomData
-                                                                          ?.object
-                                                                          ?.content?[
-                                                                              index]
-                                                                          .postUid,
-                                                                    );
-                                                                  },
-                                                                ));
+                                                                rePostBottomSheet(
+                                                                      context,
+                                                                      index);
                                                               },
                                                               child: Container(
                                                                 color: Colors
@@ -2510,14 +2510,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         .repostCount ==
                                                                     0
                                                                 ? SizedBox()
-                                                                :
-                                                            Text(
-                                                              '${AllGuestPostRoomData?.object?.content?[index].repostCount}',
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      "outfit",
-                                                                  fontSize: 14),
-                                                            ),
+                                                                : Text(
+                                                                    '${AllGuestPostRoomData?.object?.content?[index].repostCount}',
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            "outfit",
+                                                                        fontSize:
+                                                                            14),
+                                                                  ),
                                                             /*  SizedBox(
                                                         width: 18,
                                                       ),
@@ -2559,6 +2559,28 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             .savePin
                                                                         : ImageConstant
                                                                             .Savefill,
+                                                                    height: 17,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                               GestureDetector(
+                                                              onTap: () {
+                                                                Share.share(
+                                                                    'https://play.google.com/store/apps/details?id=com.pds.app');
+                                                              },
+                                                              child: Container(
+                                                                color: Colors
+                                                                    .transparent,
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                              .all(
+                                                                          5.0),
+                                                                  child: Image
+                                                                      .asset(
+                                                                    ImageConstant
+                                                                        .shareBlack,
                                                                     height: 17,
                                                                   ),
                                                                 ),
@@ -2635,15 +2657,16 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               }
                                                             },
                                                             child: AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .userProfilePic !=
-                                                                    null && AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .userProfilePic != ""
+                                                                            ?.object
+                                                                            ?.content?[
+                                                                                index]
+                                                                            .userProfilePic !=
+                                                                        null &&
+                                                                    AllGuestPostRoomData
+                                                                            ?.object
+                                                                            ?.content?[index]
+                                                                            .userProfilePic !=
+                                                                        ""
                                                                 ? CircleAvatar(
                                                                     backgroundImage:
                                                                         NetworkImage(
@@ -2930,6 +2953,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 onPageChanged: (page) {
                                                                                   setState(() {
                                                                                     _currentPages[index] = page;
+                                                                                    imageCount = page + 1;
                                                                                   });
                                                                                 },
                                                                                 controller: _pageControllers[index],
@@ -2951,8 +2975,61 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                                     )),
                                                                                           );
                                                                                         },
-                                                                                        child: CustomImageView(
-                                                                                          url: "${AllGuestPostRoomData?.object?.content?[index].postData?[index1]}",
+                                                                                        //this is the cusotmImageView
+                                                                                        /* child: Container(
+                                                                                          color: Colors.white,
+                                                                                          width: MediaQuery.of(context).size.width,
+                                                                                          height: MediaQuery.of(context).size.height * 0.5, //tththth
+                                                                                          child: Stack(
+                                                                                            children: [
+                                                                                              PhotoViewGallery(
+                                                                                                onPageChanged: (value) {
+                                                                                                  setState(() {
+                                                                                                    imageCount = value + 1;
+                                                                                                  });
+                                                                                                  print("imageCountcheck--${imageCount}");
+                                                                                                },
+                                                                                                backgroundDecoration: BoxDecoration(color: Colors.white),
+                                                                                                pageOptions: AllGuestPostRoomData?.object?.content?[index].postData
+                                                                                                    ?.map((images) => PhotoViewGalleryPageOptions(
+                                                                                                          imageProvider: NetworkImage(images),
+                                                                                                          minScale: PhotoViewComputedScale.contained,
+                                                                                                          maxScale: PhotoViewComputedScale.covered * 2,
+                                                                                                        ))
+                                                                                                    .toList(),
+                                                                                              ),
+                                                                                              Align(alignment: Alignment.topRight, child: Text(imageCount.toString() + '/' + '${AllGuestPostRoomData?.object?.content?[index].postData?.length}'))
+                                                                                            ],
+                                                                                          ),
+                                                                                        ), */
+                                                                                        child: Stack(
+                                                                                          children: [
+                                                                                            Align(
+                                                                                              alignment: Alignment.topCenter,
+                                                                                              child: CustomImageView(
+                                                                                                url: "${AllGuestPostRoomData?.object?.content?[index].postData?[index1]}",
+                                                                                              ),
+                                                                                            ),
+                                                                                            Align(
+                                                                                              alignment: Alignment.topRight,
+                                                                                              child: Card(
+                                                                                                color: Colors.transparent,
+                                                                                                elevation: 0,
+                                                                                                child: Container(
+                                                                                                    alignment: Alignment.center,
+                                                                                                    height: 30,
+                                                                                                    width: 50,
+                                                                                                    decoration: BoxDecoration(
+                                                                                                      color: Color.fromARGB(255, 2, 1, 1),
+                                                                                                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                                                                                                    ),
+                                                                                                    child: Text(
+                                                                                                      imageCount.toString() + '/' + '${AllGuestPostRoomData?.object?.content?[index].postData?.length}',
+                                                                                                      style: TextStyle(color: Colors.white),
+                                                                                                    )),
+                                                                                              ),
+                                                                                            )
+                                                                                          ],
                                                                                         ),
                                                                                       )),
                                                                                     );
@@ -3060,53 +3137,54 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             SizedBox(
                                                               width: 0,
                                                             ),
-                                                             AllGuestPostRoomData?.object?.content?[index].likedCount ==
+                                                            AllGuestPostRoomData
+                                                                        ?.object
+                                                                        ?.content?[
+                                                                            index]
+                                                                        .likedCount ==
                                                                     0
                                                                 ? SizedBox()
-                                                                :
-                                                            GestureDetector(
-                                                              onTap: () {
-                                                                /* Navigator.push(
+                                                                : GestureDetector(
+                                                                    onTap: () {
+                                                                      /* Navigator.push(  
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
     
                                                           ShowAllPostLike("${AllGuestPostRoomData?.object?[index].postUid}"))); */
 
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) {
-                                                                    return ShowAllPostLike(
-                                                                        "${AllGuestPostRoomData?.object?.content?[index].postUid}");
-                                                                  },
-                                                                ));
-                                                              },
-                                                              child: Container(
-                                                                color: Colors
-                                                                    .transparent,
-                                                                child: Padding(
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .all(
-                                                                              5.0),
-                                                                  child: Align(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .centerLeft,
-                                                                    child: Text(
-                                                                      "${AllGuestPostRoomData?.object?.content?[index].likedCount}",
-                                                                      style: TextStyle(
-                                                                          fontFamily:
-                                                                              "outfit",
-                                                                          fontSize:
-                                                                              14),
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) {
+                                                                          return ShowAllPostLike(
+                                                                              "${AllGuestPostRoomData?.object?.content?[index].postUid}");
+                                                                        },
+                                                                      ));
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      color: Colors
+                                                                          .transparent,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            EdgeInsets.all(5.0),
+                                                                        child:
+                                                                            Align(
+                                                                          alignment:
+                                                                              Alignment.centerLeft,
+                                                                          child:
+                                                                              Text(
+                                                                            "${AllGuestPostRoomData?.object?.content?[index].likedCount}",
+                                                                            style:
+                                                                                TextStyle(fontFamily: "outfit", fontSize: 14),
+                                                                          ),
+                                                                        ),
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                              ),
-                                                            ),
                                                             SizedBox(
                                                               width: 8,
                                                             ),
@@ -3147,17 +3225,21 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             SizedBox(
                                                               width: 5,
                                                             ),
-                                                            AllGuestPostRoomData?.object?.content?[index].commentCount ==
+                                                            AllGuestPostRoomData
+                                                                        ?.object
+                                                                        ?.content?[
+                                                                            index]
+                                                                        .commentCount ==
                                                                     0
                                                                 ? SizedBox()
-                                                                :
-                                                            Text(
-                                                              "${AllGuestPostRoomData?.object?.content?[index].commentCount}",
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      "outfit",
-                                                                  fontSize: 14),
-                                                            ),
+                                                                : Text(
+                                                                    "${AllGuestPostRoomData?.object?.content?[index].commentCount}",
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            "outfit",
+                                                                        fontSize:
+                                                                            14),
+                                                                  ),
                                                             SizedBox(
                                                               width: 5,
                                                             ),
@@ -3171,47 +3253,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           builder: (context) =>
                                                                               RegisterCreateAccountScreen()));
                                                                 } else {
-                                                                  Navigator.push(
+                                                                   rePostBottomSheet(
                                                                       context,
-                                                                      MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) {
-                                                                      return RePostScreen(
-                                                                        userProfile: AllGuestPostRoomData
-                                                                            ?.object
-                                                                            ?.content?[index]
-                                                                            .userProfilePic,
-                                                                        username: AllGuestPostRoomData
-                                                                            ?.object
-                                                                            ?.content?[index]
-                                                                            .postUserName,
-                                                                        date: AllGuestPostRoomData
-                                                                            ?.object
-                                                                            ?.content?[index]
-                                                                            .createdAt,
-                                                                        desc: AllGuestPostRoomData
-                                                                            ?.object
-                                                                            ?.content?[index]
-                                                                            .description,
-                                                                        postData: AllGuestPostRoomData
-                                                                            ?.object
-                                                                            ?.content?[index]
-                                                                            .postData,
-                                                                        postDataType: AllGuestPostRoomData
-                                                                            ?.object
-                                                                            ?.content?[index]
-                                                                            .postDataType,
-                                                                        index:
-                                                                            index,
-                                                                        AllGuestPostRoomData:
-                                                                            AllGuestPostRoomData,
-                                                                        postUid: AllGuestPostRoomData
-                                                                            ?.object
-                                                                            ?.content?[index]
-                                                                            .postUid,
-                                                                      );
-                                                                    },
-                                                                  ));
+                                                                      index);
                                                                 }
                                                               },
                                                               child: Container(
@@ -3234,19 +3278,23 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             SizedBox(
                                                               width: 5,
                                                             ),
-                                                            AllGuestPostRoomData?.object?.content?[index].repostCount ==
+                                                            AllGuestPostRoomData
+                                                                        ?.object
+                                                                        ?.content?[
+                                                                            index]
+                                                                        .repostCount ==
                                                                     0
                                                                 ? SizedBox()
-                                                                :
-                                                            Text(
-                                                              uuid == null
-                                                                  ? ""
-                                                                  : '${AllGuestPostRoomData?.object?.content?[index].repostCount}',
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      "outfit",
-                                                                  fontSize: 14),
-                                                            ),
+                                                                : Text(
+                                                                    uuid == null
+                                                                        ? ""
+                                                                        : '${AllGuestPostRoomData?.object?.content?[index].repostCount}',
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            "outfit",
+                                                                        fontSize:
+                                                                            14),
+                                                                  ),
                                                             /*  SizedBox(
                                                         width: 18,
                                                       ),
@@ -3288,6 +3336,28 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             .savePin
                                                                         : ImageConstant
                                                                             .Savefill,
+                                                                    height: 17,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            GestureDetector(
+                                                              onTap: () {
+                                                                Share.share(
+                                                                    'https://play.google.com/store/apps/details?id=com.pds.app');
+                                                              },
+                                                              child: Container(
+                                                                color: Colors
+                                                                    .transparent,
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                              .all(
+                                                                          5.0),
+                                                                  child: Image
+                                                                      .asset(
+                                                                    ImageConstant
+                                                                        .shareBlack,
                                                                     height: 17,
                                                                   ),
                                                                 ),
@@ -3640,7 +3710,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     ));
                                                               },
                                                               child: Container(
-                                                                height: 220,
+                                                                height: 230,
                                                                 width: _width /
                                                                     1.6,
                                                                 margin:
@@ -3667,7 +3737,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               .toString() ??
                                                                           "",
                                                                       height:
-                                                                          150,
+                                                                          40,
                                                                       width:
                                                                           _width,
                                                                       fit: BoxFit
@@ -4359,5 +4429,105 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     }
 
     return Future.value(false);
+  }
+    void rePostBottomSheet(context, index) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            height: 200,
+            child: new Wrap(
+              children: [
+                Container(
+                  height: 20,
+                  width: 50,
+                  color: Colors.transparent,
+                ),
+                Center(
+                    child: Container(
+                  height: 5,
+                  width: 150,
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(25)),
+                )),
+                SizedBox(
+                  height: 35,
+                ),
+                Center(
+                  child: new ListTile(
+                      leading: new Image.asset(
+                        ImageConstant.vector2,
+                        height: 20,
+                      ),
+                      title: new Text('RePost'),
+                      subtitle: Text(
+                        "Share this post with your followers",
+                        style: TextStyle(fontSize: 10, color: Colors.grey),
+                      ),
+                      onTap: () async {
+                        Map<String, dynamic> param = {
+                          "description": "",
+                          "postData": "",
+                          "postDataType": "",
+                          "postType": ""
+                        };
+                        BlocProvider.of<GetGuestAllPostCubit>(context)
+                            .RePostAPI(
+                                context,
+                                param,
+                                AllGuestPostRoomData
+                                    ?.object?.content?[index].postUid);
+                        Navigator.pop(context);
+                      }),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Center(
+                  child: new ListTile(
+                    leading: new Icon(
+                      Icons.edit_outlined,
+                      color: Colors.black,
+                    ),
+                    title: new Text('Quote'),
+                    subtitle: Text(
+                      "Add a comment, photo or GIF before you share this post",
+                      style: TextStyle(fontSize: 10, color: Colors.grey),
+                    ),
+                    onTap: () async {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return RePostScreen(
+                            userProfile: AllGuestPostRoomData
+                                ?.object?.content?[index].userProfilePic,
+                            username: AllGuestPostRoomData
+                                ?.object?.content?[index].postUserName,
+                            date: AllGuestPostRoomData
+                                ?.object?.content?[index].createdAt,
+                            desc: AllGuestPostRoomData
+                                ?.object?.content?[index].description,
+                            postData: AllGuestPostRoomData
+                                ?.object?.content?[index].postData,
+                            postDataType: AllGuestPostRoomData
+                                ?.object?.content?[index].postDataType,
+                            index: index,
+                            AllGuestPostRoomData: AllGuestPostRoomData,
+                            postUid: AllGuestPostRoomData
+                                ?.object?.content?[index].postUid,
+                          );
+                        },
+                      ));
+                      // Navigator.pop(context);
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
+          );
+        });
   }
 }
