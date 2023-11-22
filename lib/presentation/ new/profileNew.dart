@@ -2625,8 +2625,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             width: _width,
                             child: CustomTextFormField(
                               readOnly: true,
-
-                              margin: EdgeInsets.only(
+                       margin: EdgeInsets.only(
                                 top: 10,
                               ),
 
