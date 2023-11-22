@@ -1357,7 +1357,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                     )),
               ),
-              dopcument == "Upload Image"
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => DocumentViewScreen(
+                            path: widget.newProfileData?.object?.userDocument
+                                .toString(),
+                            title: 'Pdf',
+                          )));
+                },
+                child: Container(
+                  height: 50,
+                  width: _width / 5,
+                  decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 226, 226, 226),
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(5),
+                          bottomRight: Radius.circular(5))),
+                  child: Center(
+                    child: Icon(
+                      Icons.remove_red_eye_outlined,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ),
+              /*   dopcument == "Upload Image"
                   ? GestureDetector(
                       onTap: () async {
                         filepath = await prepareTestPdf(0);
@@ -1432,7 +1457,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                             ),
                           ),
-                        ),
+                        ), */
             ],
           )
       ],
