@@ -228,4 +228,7 @@ class ImageConstant {
   static String whiteClose = "assets/images/whiteClose.png";
   static String StoryViewListeye = "assets/images/StoryViewListeye.png";
   static String ChatimageIcon = "assets/images/ChatimageIcon.png";
+  static String shareBlack = "assets/images/share.png";
+  static String shareWhite = "assets/images/share_white.png";
 }
+ 
