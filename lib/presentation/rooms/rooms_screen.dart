@@ -1083,20 +1083,30 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                       width: 26.88,
                                                                       height: 26.87,
                                                                       decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                      child: CustomImageView(
-                                                                        url: PriveateRoomData?.object?[index].usersList?[0].userProfilePic?.isNotEmpty ??
-                                                                                false
-                                                                            ? "${PriveateRoomData?.object?[index].usersList?[0].userProfilePic}"
-                                                                            : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                        height:
-                                                                            20,
-                                                                        radius:
-                                                                            BorderRadius.circular(20),
-                                                                        width:
-                                                                            20,
-                                                                        fit: BoxFit
-                                                                            .fill,
-                                                                      )),
+                                                                      child:
+                                                                     PriveateRoomData?.object?[index].usersList?[0].userProfilePic?.isNotEmpty ??
+                                                                            false? CustomImageView(
+                                                                    url: 
+                                                                         "${PriveateRoomData?.object?[index].usersList?[0].userProfilePic}",
+                                                                         
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  ):CustomImageView(
+                                                                   imagePath: ImageConstant.tomcruse, 
+                                                                         
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  )),
                                                                 ),
                                                                 Positioned(
                                                                   left: 22.56,
@@ -1105,20 +1115,30 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                       width: 26.88,
                                                                       height: 26.87,
                                                                       decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                      child: CustomImageView(
-                                                                        url: PriveateRoomData?.object?[index].usersList?[1].userProfilePic?.isNotEmpty ??
-                                                                                false
-                                                                            ? "${PriveateRoomData?.object?[index].usersList?[1].userProfilePic}"
-                                                                            : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                        height:
-                                                                            20,
-                                                                        radius:
-                                                                            BorderRadius.circular(20),
-                                                                        width:
-                                                                            20,
-                                                                        fit: BoxFit
-                                                                            .fill,
-                                                                      )),
+                                                                     child:
+                                                                     PriveateRoomData?.object?[index].usersList?[1].userProfilePic?.isNotEmpty ??
+                                                                            false? CustomImageView(
+                                                                    url: 
+                                                                         "${PriveateRoomData?.object?[index].usersList?[1].userProfilePic}",
+                                                                         
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  ):CustomImageView(
+                                                                   imagePath: ImageConstant.tomcruse, 
+                                                                         
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  )),
                                                                 ),
                                                               ],
                                                             ),
@@ -1141,19 +1161,30 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: PriveateRoomData?.object?[index].usersList?[0].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${PriveateRoomData?.object?[index].usersList?[0].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                         child:
+                                                                     PriveateRoomData?.object?[index].usersList?[0].userProfilePic?.isNotEmpty ??
+                                                                            false? CustomImageView(
+                                                                    url: 
+                                                                         "${PriveateRoomData?.object?[index].usersList?[0].userProfilePic}",
+                                                                         
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  ):CustomImageView(
+                                                                   imagePath: ImageConstant.tomcruse, 
+                                                                         
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  )),
                                                                     ),
                                                                     Positioned(
                                                                       left:
@@ -1163,19 +1194,30 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: PriveateRoomData?.object?[index].usersList?[1].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${PriveateRoomData?.object?[index].usersList?[1].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                          child:
+                                                                     PriveateRoomData?.object?[index].usersList?[1].userProfilePic?.isNotEmpty ??
+                                                                            false? CustomImageView(
+                                                                    url: 
+                                                                         "${PriveateRoomData?.object?[index].usersList?[1].userProfilePic}",
+                                                                         
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  ):CustomImageView(
+                                                                   imagePath: ImageConstant.tomcruse, 
+                                                                         
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  )),
                                                                     ),
                                                                     Positioned(
                                                                       left:
@@ -1185,19 +1227,30 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: PriveateRoomData?.object?[index].usersList?[2].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${PriveateRoomData?.object?[index].usersList?[2].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                          child:
+                                                                     PriveateRoomData?.object?[index].usersList?[2].userProfilePic?.isNotEmpty ??
+                                                                            false? CustomImageView(
+                                                                    url: 
+                                                                         "${PriveateRoomData?.object?[index].usersList?[2].userProfilePic}",
+                                                                         
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  ):CustomImageView(
+                                                                   imagePath: ImageConstant.tomcruse, 
+                                                                         
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  )),
                                                                     ),
                                                                   ],
                                                                 ),
@@ -1214,19 +1267,30 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: PriveateRoomData?.object?[index].usersList?[0].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${PriveateRoomData?.object?[index].usersList?[0].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                          child:
+                                                                     PriveateRoomData?.object?[index].usersList?[0].userProfilePic?.isNotEmpty ??
+                                                                            false? CustomImageView(
+                                                                    url: 
+                                                                         "${PriveateRoomData?.object?[index].usersList?[0].userProfilePic}",
+                                                                         
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  ):CustomImageView(
+                                                                   imagePath: ImageConstant.tomcruse, 
+                                                                         
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  )),
                                                                     ),
                                                                     Positioned(
                                                                       left:
@@ -1236,19 +1300,30 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: PriveateRoomData?.object?[index].usersList?[1].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${PriveateRoomData?.object?[index].usersList?[1].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                          child:
+                                                                     PriveateRoomData?.object?[index].usersList?[1].userProfilePic?.isNotEmpty ??
+                                                                            false? CustomImageView(
+                                                                    url: 
+                                                                         "${PriveateRoomData?.object?[index].usersList?[1].userProfilePic}",
+                                                                         
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  ):CustomImageView(
+                                                                   imagePath: ImageConstant.tomcruse, 
+                                                                         
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  )),
                                                                     ),
                                                                     Positioned(
                                                                       left:
@@ -1258,19 +1333,30 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: PriveateRoomData?.object?[index].usersList?[2].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${PriveateRoomData?.object?[index].usersList?[2].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                         child:
+                                                                     PriveateRoomData?.object?[index].usersList?[2].userProfilePic?.isNotEmpty ??
+                                                                            false? CustomImageView(
+                                                                    url: 
+                                                                         "${PriveateRoomData?.object?[index].usersList?[2].userProfilePic}",
+                                                                         
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  ):CustomImageView(
+                                                                   imagePath: ImageConstant.tomcruse, 
+                                                                         
+                                                                    height: 20,
+                                                                    radius: BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                                    width: 20,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  )),
                                                                     ),
                                                                     Positioned(
                                                                       left: 78,

@@ -914,6 +914,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               User_Name = state.myAccontDetails.object?.userName;
               User_Module = state.myAccontDetails.object?.module;
               UserProfileImage = state.myAccontDetails.object?.userProfilePic;
+              print(" UserProfileImage  UserProfileImage  UserProfileImage  UserProfileImage  UserProfileImage  UserProfileImage  UserProfileImage  ");
+              print(UserProfileImage);
               Save_UserData();
             }
             if (state is saveBlogLoadedState) {
@@ -952,12 +954,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                           timelineBackgroundColor: Colors.grey,
                           buttonDecoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            image: element.profilePic != null
+                            image: element.profilePic != null && element.profilePic != ""
                                 ? DecorationImage(
                                     image: NetworkImage(element.profilePic))
                                 : DecorationImage(
                                     image: AssetImage(
-                                      ImageConstant.placeholder2,
+                                      ImageConstant.tomcruse,
                                     ),
                                     fit: BoxFit.cover,
                                   ),
