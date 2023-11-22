@@ -1255,8 +1255,8 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             print("dsghdfhdfghdf-$dopcument");
 
             setState(() {
-              uplopdfile.text = croppedFile.path.split('/').last.toString();
-              dopcument = croppedFile.path.split('/').last.toString();
+              uplopdfile.text = file1.name;
+              dopcument = file1.name;
             });
           } else {
             BlocProvider.of<FetchExprtiseRoomCubit>(context)
@@ -1350,9 +1350,9 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                       dopcument.toString(),croppedFile.path, context);
 
               setState(() {
-                uplopdfile.text = croppedFile.path.split('/').last.toString();
-                dopcument = croppedFile.path.split('/').last.toString();
-              });
+              uplopdfile.text = file1.name;
+              dopcument = file1.name;
+            });
             } else {
               BlocProvider.of<FetchExprtiseRoomCubit>(context)
                   .chooseDocumentprofile(

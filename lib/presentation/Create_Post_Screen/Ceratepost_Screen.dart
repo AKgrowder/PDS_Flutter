@@ -344,7 +344,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                             height: 400,
                                             width: _width,
                                             child: DocumentViewScreen1(
-                                              path: imageDataPost?.object
+                                              path: imageDataPost
+                                                  ?.object!.data!.first
                                                   .toString(),
                                             ))
                                         : pickedImage.isNotEmpty
