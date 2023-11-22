@@ -1,9 +1,6 @@
 // import 'package:pds/core/utils/size_utils.dart';
 // ignore_for_file: must_be_immutable
 
-import 'dart:math';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,11 +12,8 @@ import 'package:pds/API/Bloc/ViewDetails_Bloc/ViewDetails_cubit.dart';
 import 'package:pds/API/Bloc/ViewDetails_Bloc/ViewDetails_state.dart';
 import 'package:pds/API/Model/FatchAllMembers/fatchallmembers_model.dart';
 import 'package:pds/core/utils/color_constant.dart';
-import 'package:pds/presentation/add_threads/add_threads.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/utils/image_constant.dart';
-import '../../core/utils/sharedPreferences.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
 import '../view_details_screen/view_details_screen.dart';
@@ -225,12 +219,19 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              CustomImageView(
-                                url: _data?.object?[index].userProfilePic
+                            _data?.object?[index].userProfilePic
                                             ?.isNotEmpty ??
-                                        false
-                                    ? "${_data?.object?[index].userProfilePic}"
-                                    : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
+                                        false?  CustomImageView(
+                                url: 
+                                     "${_data?.object?[index].userProfilePic}",
+                                    
+                                height: 50,
+                                radius: BorderRadius.circular(25),
+                                width: 50,
+                                fit: BoxFit.fill,
+                              ):CustomImageView(
+                               imagePath: ImageConstant.tomcruse,
+                                    
                                 height: 50,
                                 radius: BorderRadius.circular(25),
                                 width: 50,

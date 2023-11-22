@@ -267,7 +267,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           }
         });
 
-      NewProfileData?.object?.expertise?.forEach((element) {
+        NewProfileData?.object?.expertise?.forEach((element) {
           if (ExpertiseData == "") {
             ExpertiseData = "${element.expertiseName}";
           } else {
@@ -440,18 +440,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     color: Colors.white),
                                 child: Padding(
                                   padding: const EdgeInsets.all(4.0),
-                                  child:
-                                      NewProfileData?.object?.userProfilePic ==
-                                                  null ||
-                                              NewProfileData?.object
-                                                      ?.userProfilePic ==
-                                                  ''
-                                          ? Image.asset(ImageConstant.splashImage)
-                                          : CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                  "${NewProfileData?.object?.userProfilePic}"),
-                                              radius: 25,
-                                            ),
+                                  child: NewProfileData
+                                                  ?.object?.userProfilePic ==
+                                              null ||
+                                          NewProfileData
+                                                  ?.object?.userProfilePic ==
+                                              ''
+                                      ? Image.asset(ImageConstant.splashImage)
+                                      : CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                              "${NewProfileData?.object?.userProfilePic}"),
+                                          radius: 25,
+                                        ),
                                 ),
                               ),
                             ),
@@ -1065,63 +1065,58 @@ class _ProfileScreenState extends State<ProfileScreen>
                               height: 1,
                               color: Colors.black12,
                             ),
-                           Expanded(
-                                    child: GestureDetector(
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                              height: 40,
-                                              alignment: Alignment.center,
-                                              // color: arrNotiyTypeList[2].isSelected
-                                              //     ? Color(0xFFED1C25)
-                                              //     : Theme.of(context).brightness == Brightness.light
-                                              //         ? Colors.white
-                                              //         : Colors.black,
-                                              child: Center(
-                                                child: Column(
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        const Spacer(),
-                                                        Text("Comments",
-                                                            textScaleFactor:
-                                                                1.0,
-                                                            style: TextStyle(
-                                                                // color: arrNotiyTypeList[3].isSelected
-                                                                //     ? Colors.white
-                                                                //     : Colors.black,
-                                                                fontSize: 18,
-                                                                fontFamily:
-                                                                    'Outfit',
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold)),
-                                                        Spacer(),
-                                                      ],
-                                                    ),
-                                                    arrNotiyTypeList[2]
-                                                            .isSelected
-                                                        ? Divider(
-                                                            endIndent: 5,
-                                                            indent: 5,
-                                                            color: Colors.black,
-                                                          )
-                                                        : SizedBox(),
-                                                  ],
-                                                ),
-                                              )),
-                                        ],
-                                      ),
-                                      onTap: () {
-                                        setState(() {
-                                          updateType();
-                                          arrNotiyTypeList[2].isSelected = true;
-                                        });
-                                        print("abcd");
-                                      },
-                                    ),
-                                  ),
-                               
+                            Expanded(
+                              child: GestureDetector(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                        height: 40,
+                                        alignment: Alignment.center,
+                                        // color: arrNotiyTypeList[2].isSelected
+                                        //     ? Color(0xFFED1C25)
+                                        //     : Theme.of(context).brightness == Brightness.light
+                                        //         ? Colors.white
+                                        //         : Colors.black,
+                                        child: Center(
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  const Spacer(),
+                                                  Text("Comments",
+                                                      textScaleFactor: 1.0,
+                                                      style: TextStyle(
+                                                          // color: arrNotiyTypeList[3].isSelected
+                                                          //     ? Colors.white
+                                                          //     : Colors.black,
+                                                          fontSize: 18,
+                                                          fontFamily: 'Outfit',
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  Spacer(),
+                                                ],
+                                              ),
+                                              arrNotiyTypeList[2].isSelected
+                                                  ? Divider(
+                                                      endIndent: 5,
+                                                      indent: 5,
+                                                      color: Colors.black,
+                                                    )
+                                                  : SizedBox(),
+                                            ],
+                                          ),
+                                        )),
+                                  ],
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    updateType();
+                                    arrNotiyTypeList[2].isSelected = true;
+                                  });
+                                  print("abcd");
+                                },
+                              ),
+                            ),
                             User_ID == NewProfileData?.object?.userUid
                                 ? Expanded(
                                     child: GestureDetector(
@@ -2613,7 +2608,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                 SizedBox(
                   height: 10,
                 ),
-                if (NewProfileData?.object?.fees != null)
+                if (NewProfileData?.object?.module == "EXPERT")
+                  //ss
                   Text(
                     "Fees",
                     overflow: TextOverflow.ellipsis,
@@ -2623,39 +2619,61 @@ class _ProfileScreenState extends State<ProfileScreen>
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                if (NewProfileData?.object?.fees != null)
-                  Container(
-                    width: _width,
-                    child: CustomTextFormField(
-                      readOnly: true,
-                      controller: priceContrller,
-                      margin: EdgeInsets.only(
-                        top: 10,
-                      ),
+                NewProfileData?.object?.module == "EXPERT"
+                    ? NewProfileData?.object?.fees == null
+                        ? Container(
+                            width: _width,
+                            child: CustomTextFormField(
+                              readOnly: true,
 
-                      validator: (value) {
-                        RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
-                        if (value!.isEmpty) {
-                          return 'Please Enter Name';
-                        } else if (!nameRegExp.hasMatch(value)) {
-                          return 'Input cannot contains prohibited special characters';
-                        } else if (value.length <= 0 || value.length > 50) {
-                          return 'Minimum length required';
-                        } else if (value.contains('..')) {
-                          return 'username does not contain is correct';
-                        }
+                              margin: EdgeInsets.only(
+                                top: 10,
+                              ),
 
-                        return null;
-                      },
-                      // textStyle: theme.textTheme.titleMedium!,
-                      hintText: "Price / hr",
-                      // hintStyle: theme.textTheme.titleMedium!,
-                      textInputAction: TextInputAction.next,
-                      filled: true,
-                      maxLength: 100,
-                      fillColor: appTheme.gray100,
-                    ),
-                  ),
+                              // textStyle: theme.textTheme.titleMedium!,
+                              hintText: "Price / hr",
+                              // hintStyle: theme.textTheme.titleMedium!,
+                              textInputAction: TextInputAction.next,
+                              filled: true,
+                              maxLength: 100,
+                              fillColor: appTheme.gray100,
+                            ),
+                          )
+                        : Container(
+                          width: _width,
+                          child: CustomTextFormField(
+                            readOnly: true,
+                            controller: priceContrller,
+                            margin: EdgeInsets.only(
+                              top: 10,
+                            ),
+
+                            validator: (value) {
+                              RegExp nameRegExp =
+                                  RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                              if (value!.isEmpty) {
+                                return 'Please Enter Name';
+                              } else if (!nameRegExp.hasMatch(value)) {
+                                return 'Input cannot contains prohibited special characters';
+                              } else if (value.length <= 0 ||
+                                  value.length > 50) {
+                                return 'Minimum length required';
+                              } else if (value.contains('..')) {
+                                return 'username does not contain is correct';
+                              }
+
+                              return null;
+                            },
+                            // textStyle: theme.textTheme.titleMedium!,
+                            hintText: "Price / hr",
+                            // hintStyle: theme.textTheme.titleMedium!,
+                            textInputAction: TextInputAction.next,
+                            filled: true,
+                            maxLength: 100,
+                            fillColor: appTheme.gray100,
+                          ),
+                        )
+                    : SizedBox(),
                 SizedBox(
                   height: 10,
                 ),
@@ -2784,7 +2802,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15, left: 20),
                           child: Text(
-                           '${dopcument.toString().split('/').last}',
+                            '${dopcument.toString().split('/').last}',
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(fontSize: 16),
                           ),
@@ -3103,7 +3121,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               // dopcument = "Upload Image";
 
                               // setState(() {});
-              print("dfsdfgsdfgdfg-${dopcument}");
+                              print("dfsdfgsdfgdfg-${dopcument}");
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => DocumentViewScreen(
                                         path: dopcument,
