@@ -230,5 +230,6 @@ class ImageConstant {
   static String ChatimageIcon = "assets/images/ChatimageIcon.png";
   static String shareBlack = "assets/images/share.png";
   static String shareWhite = "assets/images/share_white.png";
+  static String profileLock ="assets/images/lock profile.png";
 }
  

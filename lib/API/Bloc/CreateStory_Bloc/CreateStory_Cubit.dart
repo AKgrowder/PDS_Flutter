@@ -17,7 +17,7 @@ class CreateStoryCubit extends Cubit<CreateStoryState> {
       addPostImageUploded = await Repository()
           .AddPostImageUploded1(context, fileName ?? '', file ?? '');
   
-      if (addPostImageUploded.success == true) {
+      if (addPostImageUploded.success == true ) {
               print("dvfsdvfdfg-$addPostImageUploded");  
         emit(AddPostImaegState(addPostImageUploded));
       }
