@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:pds/API/Bloc/DeleteUser_Bloc/DeleteUser_cubit.dart';
 import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
 import 'package:pds/API/Bloc/logOut_bloc/logOut_cubit.dart';
+import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/change_password_screen/change_password_screen.dart';
 import 'package:pds/presentation/settings/LogOut_dailog.dart';
+import 'package:pds/widgets/custom_switch.dart';
 import 'package:pds/widgets/delete_dailog.dart';
 import 'package:pds/widgets/rateUS_dailog.dart';
 import 'package:share_plus/share_plus.dart';
@@ -29,6 +32,7 @@ var Setting_Array = [
   // "My Details",
   "Saved Threads",
   "Saved Pins",
+  // "Public & Private Profile",
   "Change Password",
   "Prefrences",
   "Support",
@@ -36,6 +40,7 @@ var Setting_Array = [
   "Invite Friends",
   "Rate Us",
   "Delete Account",
+  "Private & Public Profile",
   "Log Out",
 ];
 
@@ -50,9 +55,11 @@ var Setting_Array = [
 var SettingImage_Array = [
   // ImageConstant.setting_profile,
   // ImageConstant.setting_shouteprofile,
+
   ImageConstant.setting_save,
   ImageConstant.pin,
-  ImageConstant.setting_lock,
+  // ImageConstant.setting_lock,
+  ImageConstant.profileLock,
   ImageConstant.setting_settingimage,
   ImageConstant.setting_phone,
   // ImageConstant.Raised_Tickets,
@@ -63,6 +70,7 @@ var SettingImage_Array = [
   ImageConstant.setting_star,
   // ImageConstant.Invite_Friends,
   ImageConstant.setting_delete,
+  ImageConstant.profileLock,
   ImageConstant.setting_power,
   // ImageConstant.setting_power,
   // ImageConstant.setting_phone,
@@ -80,6 +88,7 @@ var businessName;
 var accountUrl;
 var IsGuestUserEnabled;
 var GetTimeSplash;
+bool isSwitched = false;
 
 class _SettingScreenState extends State<SettingScreen> {
   String? userStatus;
@@ -282,7 +291,10 @@ class _SettingScreenState extends State<SettingScreen> {
                     physics: BouncingScrollPhysics(),
                     itemCount: Setting_Array.length,
                     itemBuilder: (BuildContext context, int index) {
-                      if (index == 1 ||  index == 4 || index == 0 || index == 3) {
+                      if (index == 1 ||
+                          index == 4 ||
+                          index == 0 ||
+                          index == 3) {
                         return SizedBox();
                       }
                       return GestureDetector(
@@ -353,7 +365,8 @@ class _SettingScreenState extends State<SettingScreen> {
                               }));
                               break;
                             case 6:
-                              Share.share('https://play.google.com/store/apps/details?id=com.pds.app');
+                              Share.share(
+                                  'https://play.google.com/store/apps/details?id=com.pds.app');
                               // Navigator.push(context,
                               //     MaterialPageRoute(builder: (context) {
                               //   return RoomDetailScreen();
@@ -405,6 +418,9 @@ class _SettingScreenState extends State<SettingScreen> {
 
                               break;
                             case 9:
+                              print("profile");
+                              break;
+                            case 10:
                               showDialog(
                                   context: context,
                                   builder: (_) => BlocProvider<LogOutCubit>(
@@ -476,18 +492,47 @@ class _SettingScreenState extends State<SettingScreen> {
                                           fontWeight: FontWeight.w500),
                                     ),
                                     Spacer(),
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 0),
-                                      child: Container(
-                                        // color: Colors.amber,
-                                        height: 30,
-                                        width: 60,
-                                        child: Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: Color(0xFF3F3F3F),
-                                        ),
-                                      ),
-                                    ),
+                                    index == 9
+                                        ? Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 10),
+                                            child: FlutterSwitch(
+                                              width: 60.0,
+                                              height: 30.0,
+                                              value: isSwitched,
+                                              activeToggleColor:
+                                                  ColorConstant.primary_color,
+                                              activeColor: Colors.white,
+                                              onToggle: (val) {
+                                                setState(() {
+                                                  isSwitched = val;
+                                                });
+                                              },
+                                            ),
+                                          )
+
+                                        // CustomSwitch(
+                                        //     onChange: (value) {
+                                        //       print("VALUE : $value");
+                                        //       setState(() {
+                                        //         isSwitched = value;
+                                        //       });
+                                        //     },
+                                        //     value: isSwitched,
+                                        //   )
+                                        : Padding(
+                                            padding:
+                                                const EdgeInsets.only(right: 0),
+                                            child: Container(
+                                              // color: Colors.amber,
+                                              height: 30,
+                                              width: 60,
+                                              child: Icon(
+                                                Icons.arrow_forward_ios,
+                                                color: Color(0xFF3F3F3F),
+                                              ),
+                                            ),
+                                          ),
                                   ],
                                 ),
                               ),

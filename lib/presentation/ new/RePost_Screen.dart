@@ -239,7 +239,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                     ? SizedBox(
                                         height: 50,
                                         width: 50,
-                                        child: CircleAvatar(
+                                        child: CircleAvatar(backgroundColor: Colors.white,
                                           backgroundImage: AssetImage(
                                               ImageConstant.tomcruse),
                                         ),
@@ -247,7 +247,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                     : SizedBox(
                                         height: 50,
                                         width: 50,
-                                        child: CircleAvatar(
+                                        child: CircleAvatar(backgroundColor: Colors.white,
                                           backgroundImage: NetworkImage(
                                               UserProfileImage.toString()),
                                         ),
@@ -393,7 +393,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                                 .loader,
                                                             fit: BoxFit.cover,
                                                             height: 100,
-                                                            width: 100),
+                                                            width: 100), 
                                                       ),
                                                     ),
                                                   )
@@ -543,7 +543,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                 // }
                                               },
                                               child: widget.userProfile != null
-                                                  ? CircleAvatar(
+                                                  ? CircleAvatar(backgroundColor: Colors.white,
                                                       backgroundImage: NetworkImage(
                                                           "${widget.userProfile}"),
                                                       radius: 25,

@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:getwidget/types/gf_loader_type.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:path_provider/path_provider.dart';
 
 class DocumentViewScreen extends StatelessWidget {
   String? path;
@@ -25,6 +28,33 @@ class DocumentViewScreen extends StatelessWidget {
           "Document",
           style: TextStyle(color: Colors.black),
         ),
+        // actions: [
+        //   GestureDetector(
+        //       onTap: () async {
+        //         print("file download !!");
+
+        //         // final status = await Permission.storage.request();
+
+        //         // if (status.isGranted) {
+        //         // final externalDir = await getExternalStorageDirectory();
+        //         // print("externalDirexternalDir -- >> ${externalDir}");
+
+        //         await FlutterDownloader.enqueue(
+        //           url: path!,
+        //           savedDir: "/storage/emulated/0/Download",
+        //           showNotification: true,
+        //           openFileFromNotification:
+        //               true, // click on notification to open downloaded file (for Android)
+        //         );
+        //         // } else {
+        //         //   print('Permission Denied');
+        //         // }
+        //       },
+        //       child: Icon(Icons.download_sharp, color: Colors.black)),
+        //   SizedBox(
+        //     width: 20,
+        //   )
+        // ],
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: Container(
@@ -106,6 +136,3 @@ class DocumentViewScreen1 extends StatelessWidget {
     );
   }
 }
-
-
-

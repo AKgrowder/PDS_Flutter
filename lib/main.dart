@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:pds/API/Bloc/SelectChat_bloc/SelectChat_cubit.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,8 @@ Future<void> _messageHandler(RemoteMessage message) async {
 }
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FlutterDownloader.initialize();
   await WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations([
@@ -108,7 +111,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<CreateStoryCubit>(
           create: (context) => CreateStoryCubit(),
         ),
-         BlocProvider<SelectChatMemberListCubit>(
+        BlocProvider<SelectChatMemberListCubit>(
           create: (context) => SelectChatMemberListCubit(),
         ),
         BlocProvider<GetPostAllLikeCubit>(
@@ -195,7 +198,6 @@ class MyApp extends StatelessWidget {
         BlocProvider<RePostCubit>(
           create: (context) => RePostCubit(),
         ),
-        
       ],
       child: MaterialApp(
           theme: ThemeData(

@@ -602,11 +602,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                         ),
                         customTextFeild(
-                          isReadOnly: true,
-                          controller: nameController,
-                          width: _width / 1.1,
-                          hintText: "Enter Name",
-                        ),
+                            // isReadOnly: true,
+                            controller: nameController,
+                            width: _width / 1.1,
+                            hintText: "Enter Name",
+                            color: Color(0xffFFF3F4)),
                         Padding(
                           padding: const EdgeInsets.only(top: 10, bottom: 10),
                           child: Text(
@@ -1368,7 +1368,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 },
                 child: Container(
                   height: 50,
-                  width: _width / 5,
+                  width: _width / 5.4,
                   decoration: BoxDecoration(
                       color: Color.fromARGB(255, 226, 226, 226),
                       borderRadius: BorderRadius.only(
