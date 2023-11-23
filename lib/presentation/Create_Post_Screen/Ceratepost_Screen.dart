@@ -21,6 +21,7 @@ import 'package:pds/widgets/commentPdf.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/utils/image_constant.dart';
 import 'dart:async';
@@ -54,6 +55,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   TextEditingController postText = TextEditingController();
   File? file;
   ImageDataPost? imageDataPost;
+  FocusNode _focusNode = FocusNode();
   String? userUiid;
   double _opacity = 0.0;
   // bool _mounted = false;
@@ -62,6 +64,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   Color primaryColor = ColorConstant.primaryLight_color;
   Color textColor = ColorConstant.primary_color;
   List<String>? HasetagList = [];
+  bool colorVaralble = false;
   String? UserProfileImage;
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -98,6 +101,11 @@ class _CreateNewPostState extends State<CreateNewPost> {
 //Public
 // Following
   List<String> soicalData = ["Public", "Following"];
+  bool _isLink(String input) {
+    RegExp linkRegex = RegExp(
+        r'^https?:\/\/(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z]+)+(?:[^\s]*)$');
+    return linkRegex.hasMatch(input);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -209,6 +217,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                           height: 50,
                                           width: 50,
                                           child: CircleAvatar(
+                                            backgroundColor: Colors.white,
                                             backgroundImage: AssetImage(
                                                 ImageConstant.tomcruse),
                                           ),
@@ -217,6 +226,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                           height: 50,
                                           width: 50,
                                           child: CircleAvatar(
+                                            backgroundColor: Colors.white,
                                             backgroundImage: NetworkImage(
                                                 UserProfileImage.toString()),
                                           ),
@@ -284,54 +294,79 @@ class _CreateNewPostState extends State<CreateNewPost> {
                             child: Column(
                               children: [
                                 Center(
-                                  child: Container(
-                                    height: 80,
-                                    width: _width,
-                                    decoration: BoxDecoration(
-                                        color: Colors.transparent,
-                                        border: Border.all(
-                                            color: Colors.grey.shade300),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Padding(
-                                      padding:
-                                          EdgeInsets.only(top: 0.0, left: 10),
-                                      child: TextFormField(
-                                        controller: postText,
-                                        maxLines: 5,
-                                        cursorColor: Colors.grey,
-                                        decoration: InputDecoration(
-                                          hintText: 'What’s on your head?',
-                                          border: InputBorder.none,
-                                        ),
-                                        inputFormatters: [
-                                          // Custom formatter to trim leading spaces
-                                          TextInputFormatter.withFunction(
-                                              (oldValue, newValue) {
-                                            if (newValue.text.startsWith(' ')) {
-                                              return TextEditingValue(
-                                                text: newValue.text.trimLeft(),
-                                                selection:
-                                                    TextSelection.collapsed(
-                                                        offset: newValue.text
-                                                            .trimLeft()
-                                                            .length),
-                                              );
-                                            }
-                                            return newValue;
-                                          }),
-                                        ],
-                                        onChanged: (value) {
-                                          setState(() {
-                                            primaryColor = value.isNotEmpty
-                                                ? ColorConstant.primary_color
-                                                : ColorConstant
-                                                    .primaryLight_color;
-                                            textColor = value.isNotEmpty
-                                                ? Colors.white
-                                                : ColorConstant.primary_color;
-                                          });
-                                        },
+                                  child: Padding( 
+                                    padding:
+                                        EdgeInsets.only(top: 0.0, left: 10),
+                                    child: TextFormField(
+                                      
+                                      controller: postText,
+                                      maxLines: 7,
+                                      cursorColor: Colors.grey,
+                                      decoration: InputDecoration(
+                                        hintText: 'What’s on your head?',
+                                        border: InputBorder.none,
+                                      ),
+                                      inputFormatters: [
+                                        // Custom formatter to trim leading spaces
+                                        TextInputFormatter.withFunction(
+                                            (oldValue, newValue) {
+                                          if (newValue.text.startsWith(' ')) {
+                                            return TextEditingValue(  
+                                              text: newValue.text.trimLeft(),
+                                              selection:
+                                                  TextSelection.collapsed(
+                                                      offset: newValue.text
+                                                          .trimLeft()
+                                                          .length),
+                                            );
+                                          }
+                                          return newValue;
+                                        }),
+                                      ],
+                                      onChanged: (value) async {
+                                        print("values -$value");
+                                        //this is the link
+                                        bool valueDataGet =
+                                            _isLink(postText.text);
+                                        if (valueDataGet == true) {
+                                          colorVaralble = true;
+                                        }else{
+                                          colorVaralble =false;
+                                        }
+                                        if(value.contains('other')){
+                                          colorVaralble =false;
+                                        }
+                                        setState(() {
+                                          primaryColor = value.isNotEmpty
+                                              ? ColorConstant.primary_color
+                                              : ColorConstant
+                                                  .primaryLight_color;
+                                          textColor = value.isNotEmpty
+                                              ? Colors.white
+                                              : ColorConstant.primary_color;
+                                        });
+                                      },
+                                      onTap: () async {
+                                        bool valueDataGet =
+                                            _isLink(postText.text);
+                                        //this is the link
+                                        if (valueDataGet == true) {
+                                          colorVaralble = true;
+                                          print(
+                                              "valueDataGet---$valueDataGet");
+                                          await launch(postText.text,
+                                              forceWebView: true,
+                                              enableJavaScript: true);
+                                        }
+                                      },
+                                      style: TextStyle(
+                                        color: colorVaralble == true
+                                            ? Colors.blue
+                                            : Colors.black,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: colorVaralble == true
+                                            ? Colors.blue
+                                            : Colors.white,
                                       ),
                                     ),
                                   ),

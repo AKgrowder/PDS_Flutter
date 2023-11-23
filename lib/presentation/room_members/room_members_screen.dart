@@ -369,7 +369,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                       Center(
                                                                           child:
                                                                               Text(
-                                                                        "Are You Sure You Want To Delete This Room",
+                                                                        "Are You Sure You Want To Exit This Room",
                                                                         style:
                                                                             TextStyle(
                                                                           fontFamily:
