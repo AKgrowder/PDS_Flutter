@@ -222,10 +222,10 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                             ? CircleAvatar(
                                                 backgroundImage: NetworkImage(
                                                     "${hashTagViewData?.object?.posts?[index].userProfilePic}"),
-                                                    backgroundColor: Colors.transparent,
+                                                    backgroundColor: Colors.white,
                                                 radius: 25,
                                               )
-                                            : CircleAvatar(
+                                            : CircleAvatar(backgroundColor: Colors.white,
                                                 backgroundImage: AssetImage(
                                                     ImageConstant.tomcruse),
                                               ),

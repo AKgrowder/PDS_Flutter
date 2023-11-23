@@ -82,12 +82,12 @@ class Followers extends StatelessWidget {
                                     null && followersClassModel
                                         .object?[index].userProfilePic != ""
 
-                                ? CircleAvatar(
+                                ? CircleAvatar(backgroundColor: Colors.white,
                                     backgroundImage: NetworkImage(
                                         "${followersClassModel.object?[index].userProfilePic}"),
                                     radius: 25,
                                   )
-                                : CircleAvatar(
+                                : CircleAvatar(backgroundColor: Colors.white,
                                     backgroundImage:
                                         AssetImage(ImageConstant.tomcruse),
                                     radius: 25,

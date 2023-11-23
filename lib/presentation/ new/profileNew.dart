@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'dart:math';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +23,7 @@ import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/editproilescreen.dart';
 import 'package:pds/presentation/%20new/followers.dart';
+import 'package:pds/presentation/%20new/view_profile_background.dart';
 import 'package:pds/presentation/recent_blog/recent_blog_screen.dart';
 import 'package:pds/presentation/settings/setting_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
@@ -105,6 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool isDataGet = false;
   bool isAbourtMe = true;
   bool AbboutMeShow = true;
+  var uploadimage = "";
   dynamic dataSetup;
   String? User_Module;
   FollowersClassModel? followersClassModel1;
@@ -389,25 +392,53 @@ class _ProfileScreenState extends State<ProfileScreen>
                         height: _height / 2.6,
                         child: Stack(
                           children: [
-                            Container(
-                              // color: Colors.red,
-                              height: _height / 3.4,
-                              width: _width,
-                              child: NewProfileData?.object?.userBackgroundPic ==
-                                          null ||
-                                      NewProfileData
-                                              ?.object?.userBackgroundPic ==
-                                          ''
-                                  ? Image.asset(ImageConstant.splashImage)
-                                  : CustomImageView(
-                                      url:
-                                          "${NewProfileData?.object?.userBackgroundPic}",
-                                      fit: BoxFit.cover,
-                                      radius: BorderRadius.only(
-                                          bottomRight: Radius.circular(20),
-                                          bottomLeft: Radius.circular(20))
-                                      // BorderRadius.circular(25),
-                                      ),
+                            GestureDetector(
+                              onTap: () {
+                                if (NewProfileData?.object?.userBackgroundPic
+                                            ?.isNotEmpty ==
+                                        true &&
+                                    NewProfileData?.object?.userBackgroundPic !=
+                                        '') {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProfileandDocumentScreen(
+                                          path: NewProfileData
+                                              ?.object?.userBackgroundPic,
+                                          title: "",
+                                        ),
+                                      ));
+                                } else {
+                                   Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => DocumentViewScreen1(
+                                          path:
+                                              'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
+                                          title: 'Pdf',
+                                        )));
+                                }
+                              },
+                              child: Container(
+                                // color: Colors.red,
+                                height: _height / 3.4,
+                                width: _width,
+                                child: NewProfileData
+                                                ?.object?.userBackgroundPic ==
+                                            null ||
+                                        NewProfileData
+                                                ?.object?.userBackgroundPic ==
+                                            ''
+                                    ? Image.asset(ImageConstant.splashImage)
+                                    : CustomImageView(
+                                        url:
+                                            "${NewProfileData?.object?.userBackgroundPic}",
+                                        fit: BoxFit.cover,
+                                        radius: BorderRadius.only(
+                                            bottomRight: Radius.circular(20),
+                                            bottomLeft: Radius.circular(20))
+                                        // BorderRadius.circular(25),
+                                        ),
+                              ),
                             ),
                             Padding(
                               padding: EdgeInsets.only(top: 55, left: 16),
@@ -432,26 +463,55 @@ class _ProfileScreenState extends State<ProfileScreen>
                             ),
                             Align(
                               alignment: Alignment.bottomCenter,
-                              child: Container(
-                                height: 150,
-                                width: 150,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: NewProfileData
-                                                  ?.object?.userProfilePic ==
-                                              null ||
-                                          NewProfileData
-                                                  ?.object?.userProfilePic ==
-                                              ''
-                                      ? Image.asset(ImageConstant.splashImage)
-                                      : CircleAvatar(
-                                          backgroundImage: NetworkImage(
-                                              "${NewProfileData?.object?.userProfilePic}"),
-                                          radius: 25,
+                              child: GestureDetector(
+
+                                onTap: () {
+                                if (NewProfileData?.object?.userProfilePic
+                                            ?.isNotEmpty ==
+                                        true &&
+                                    NewProfileData?.object?.userProfilePic !=
+                                        '') {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProfileandDocumentScreen(
+                                          path: NewProfileData
+                                              ?.object?.userProfilePic,
+                                          title: "",
                                         ),
+                                      ));
+                                } else {
+                                   Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => DocumentViewScreen1(
+                                          path:
+                                              'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
+                                          title: 'Pdf',
+                                        )));
+                                }
+                              },
+                                child: Container(
+                                  height: 150,
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: NewProfileData
+                                                    ?.object?.userProfilePic ==
+                                                null ||
+                                            NewProfileData
+                                                    ?.object?.userProfilePic ==
+                                                ''
+                                        ? Image.asset(ImageConstant.splashImage)
+                                        : CircleAvatar(backgroundColor: Colors.white,
+                                            backgroundImage: NetworkImage(
+                                              
+                                                "${NewProfileData?.object?.userProfilePic}"),
+                                            radius: 25,
+                                          ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -1886,7 +1946,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               left: 5,
                                                                               top: 10),
                                                                           child:
-                                                                              CircleAvatar(
+                                                                              CircleAvatar(backgroundColor: Colors.white,
                                                                             backgroundImage:
                                                                                 NetworkImage("${GetUserPostCommetData?.object?[index].userProfilePic}"),
                                                                             radius:
@@ -1965,7 +2025,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                                   width: 45,
                                                                                                   height: 45,
                                                                                                   margin: EdgeInsets.only(top: 15),
-                                                                                                  child: CircleAvatar(
+                                                                                                  child: CircleAvatar(backgroundColor: Colors.white,
                                                                                                     backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].comments?[index2].profilePic}"),
                                                                                                     radius: 25,
                                                                                                   ),
@@ -2639,39 +2699,39 @@ class _ProfileScreenState extends State<ProfileScreen>
                             ),
                           )
                         : Container(
-                          width: _width,
-                          child: CustomTextFormField(
-                            readOnly: true,
-                            controller: priceContrller,
-                            margin: EdgeInsets.only(
-                              top: 10,
+                            width: _width,
+                            child: CustomTextFormField(
+                              readOnly: true,
+                              controller: priceContrller,
+                              margin: EdgeInsets.only(
+                                top: 10,
+                              ),
+
+                              validator: (value) {
+                                RegExp nameRegExp =
+                                    RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                                if (value!.isEmpty) {
+                                  return 'Please Enter Name';
+                                } else if (!nameRegExp.hasMatch(value)) {
+                                  return 'Input cannot contains prohibited special characters';
+                                } else if (value.length <= 0 ||
+                                    value.length > 50) {
+                                  return 'Minimum length required';
+                                } else if (value.contains('..')) {
+                                  return 'username does not contain is correct';
+                                }
+
+                                return null;
+                              },
+                              // textStyle: theme.textTheme.titleMedium!,
+                              hintText: "Price / hr",
+                              // hintStyle: theme.textTheme.titleMedium!,
+                              textInputAction: TextInputAction.next,
+                              filled: true,
+                              maxLength: 100,
+                              fillColor: appTheme.gray100,
                             ),
-
-                            validator: (value) {
-                              RegExp nameRegExp =
-                                  RegExp(r"^[a-zA-Z0-9\s'@]+$");
-                              if (value!.isEmpty) {
-                                return 'Please Enter Name';
-                              } else if (!nameRegExp.hasMatch(value)) {
-                                return 'Input cannot contains prohibited special characters';
-                              } else if (value.length <= 0 ||
-                                  value.length > 50) {
-                                return 'Minimum length required';
-                              } else if (value.contains('..')) {
-                                return 'username does not contain is correct';
-                              }
-
-                              return null;
-                            },
-                            // textStyle: theme.textTheme.titleMedium!,
-                            hintText: "Price / hr",
-                            // hintStyle: theme.textTheme.titleMedium!,
-                            textInputAction: TextInputAction.next,
-                            filled: true,
-                            maxLength: 100,
-                            fillColor: appTheme.gray100,
-                          ),
-                        )
+                          )
                     : SizedBox(),
                 SizedBox(
                   height: 10,

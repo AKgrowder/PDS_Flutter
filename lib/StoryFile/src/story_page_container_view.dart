@@ -434,6 +434,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                                               .profilePic !=
                                                           ""
                                                   ? CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.white,
                                                       backgroundImage: NetworkImage(
                                                           "${StoryViewListModelData?.object?[index].profilePic}"),
                                                       radius: 25,
