@@ -54,6 +54,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
 import 'package:share_plus/share_plus.dart';
+
 class HomeScreenNew extends StatefulWidget {
   const HomeScreenNew({Key? key}) : super(key: key);
 
@@ -111,7 +112,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   String? ipaIosLatestVersion;
   String? ipaIosRoutVersion;
   String? ipaIosMainversion;
-   String? ApkMinVersion;
+  String? ApkMinVersion;
   String? ApkLatestVersion;
   String? ApkRouteVersion;
   String? IosLatestVersion;
@@ -937,7 +938,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
               LikeBlogModeData = state.LikeBlogModeData;
             }
-              if (state is RePostLoadedState) {
+            if (state is RePostLoadedState) {
               SnackBar snackBar = SnackBar(
                 content: Text(state.RePost.object.toString()),
                 backgroundColor: ColorConstant.primary_color,
@@ -1132,8 +1133,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             if (state is GetGuestAllPostLoadedState) {
               apiCalingdone = true;
               AllGuestPostRoomData = state.GetGuestAllPostRoomData;
-      
-              
             }
             if (state is PostLikeLoadedState) {
               if (state.likePost.object != 'Post Liked Successfully' &&
@@ -1891,14 +1890,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               "IMAGE"
                                                                           ? GestureDetector(
                                                                               onTap: () {
-                                                                                Navigator.push(
-                                                                                  context,
-                                                                                  MaterialPageRoute(
-                                                                                      builder: (context) => OpenSavePostImage(
-                                                                                            PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
-                                                                                            index: index,
-                                                                                          )),
-                                                                                );
+                                                                                if (uuid == null) {
+                                                                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                } else {
+                                                                                  Navigator.push(
+                                                                                    context,
+                                                                                    MaterialPageRoute(
+                                                                                        builder: (context) => OpenSavePostImage(
+                                                                                              PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
+                                                                                              index: index,
+                                                                                            )),
+                                                                                  );
+                                                                                }
                                                                               },
                                                                               child: Container(
                                                                                 height: 200,
@@ -1911,7 +1914,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               ),
                                                                             )
 
-                                                                            //this is the ATTACHMENT
+                                                                          //this is the ATTACHMENT
                                                                           : AllGuestPostRoomData?.object?.content?[index].postDataType == "ATTACHMENT"
                                                                               ? (AllGuestPostRoomData?.object?.content?[index].postData?.isNotEmpty == true)
                                                                                   ? Container(
@@ -1933,7 +1936,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                       onPageChanged: (page) {
                                                                                         setState(() {
                                                                                           _currentPages[index] = page;
-                                                                                          imageCount1 =page+1;
+                                                                                          imageCount1 = page + 1;
                                                                                         });
                                                                                       },
                                                                                       controller: _pageControllers[index],
@@ -1946,14 +1949,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                             child: Center(
                                                                                                 child: GestureDetector(
                                                                                               onTap: () {
-                                                                                                Navigator.push(
-                                                                                                  context,
-                                                                                                  MaterialPageRoute(
-                                                                                                      builder: (context) => OpenSavePostImage(
-                                                                                                            PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
-                                                                                                            index: index1,
-                                                                                                          )),
-                                                                                                );
+                                                                                                if (uuid == null) {
+                                                                                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                } else {
+                                                                                                  Navigator.push(
+                                                                                                    context,
+                                                                                                    MaterialPageRoute(
+                                                                                                        builder: (context) => OpenSavePostImage(
+                                                                                                              PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
+                                                                                                              index: index1,
+                                                                                                            )),
+                                                                                                  );
+                                                                                                }
                                                                                               },
                                                                                               child: Stack(
                                                                                                 children: [
@@ -2195,14 +2202,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 "IMAGE"
                                                                             ? GestureDetector(
                                                                                 onTap: () {
-                                                                                  Navigator.push(
-                                                                                    context,
-                                                                                    MaterialPageRoute(
-                                                                                        builder: (context) => OpenSavePostImage(
-                                                                                              PostID: AllGuestPostRoomData?.object?.content?[index].repostOn?.postUid,
-                                                                                              index: index,
-                                                                                            )),
-                                                                                  );
+                                                                                  if (uuid == null) {
+                                                                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                  } else {
+                                                                                    Navigator.push(
+                                                                                      context,
+                                                                                      MaterialPageRoute(
+                                                                                          builder: (context) => OpenSavePostImage(
+                                                                                                PostID: AllGuestPostRoomData?.object?.content?[index].repostOn?.postUid,
+                                                                                                index: index,
+                                                                                              )),
+                                                                                    );
+                                                                                  }
                                                                                 },
                                                                                 child: Container(
                                                                                   width: _width,
@@ -2242,6 +2253,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                             return GestureDetector(
                                                                                               onTap: () {
                                                                                                 print("Repost Opne Full screen");
+                                                                                                // if (uuid == null) {
+                                                                                                //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                // } else {
                                                                                                 // Navigator.push(
                                                                                                 //   context,
                                                                                                 //   MaterialPageRoute(
@@ -2250,6 +2264,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                                 //             index: index,
                                                                                                 //           )),
                                                                                                 // );
+                                                                                                // }
                                                                                               },
                                                                                               child: Container(
                                                                                                 width: _width,
@@ -2261,7 +2276,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                               ),
                                                                                             );
                                                                                           } else if (AllGuestPostRoomData?.object?.content?[index].repostOn?.postDataType == "ATTACHMENT") {
-                                                                                            
                                                                                             return Container(
                                                                                                 height: 400,
                                                                                                 width: _width,
@@ -2480,8 +2494,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             GestureDetector(
                                                               onTap: () {
                                                                 rePostBottomSheet(
-                                                                      context,
-                                                                      index);
+                                                                    context,
+                                                                    index);
                                                               },
                                                               child: Container(
                                                                 color: Colors
@@ -2564,7 +2578,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 ),
                                                               ),
                                                             ),
-                                                               GestureDetector(
+                                                            GestureDetector(
                                                               onTap: () {
                                                                 Share.share(
                                                                     'https://play.google.com/store/apps/details?id=com.pds.app');
@@ -2966,14 +2980,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                       child: Center(
                                                                                           child: GestureDetector(
                                                                                         onTap: () {
-                                                                                          Navigator.push(
-                                                                                            context,
-                                                                                            MaterialPageRoute(
-                                                                                                builder: (context) => OpenSavePostImage(
-                                                                                                      PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
-                                                                                                      index: index1,
-                                                                                                    )),
-                                                                                          );
+                                                                                          if (uuid == null) {
+                                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                          } else {
+                                                                                            Navigator.push(
+                                                                                              context,
+                                                                                              MaterialPageRoute(
+                                                                                                  builder: (context) => OpenSavePostImage(
+                                                                                                        PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
+                                                                                                        index: index1,
+                                                                                                      )),
+                                                                                            );
+                                                                                          }
                                                                                         },
                                                                                         //this is the cusotmImageView
                                                                                         /* child: Container(
@@ -3253,7 +3271,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           builder: (context) =>
                                                                               RegisterCreateAccountScreen()));
                                                                 } else {
-                                                                   rePostBottomSheet(
+                                                                  rePostBottomSheet(
                                                                       context,
                                                                       index);
                                                                 }
@@ -3737,7 +3755,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               .toString() ??
                                                                           "",
                                                                       height:
-                                                                          40,
+                                                                          155,
                                                                       width:
                                                                           _width,
                                                                       fit: BoxFit
@@ -4430,7 +4448,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
     return Future.value(false);
   }
-    void rePostBottomSheet(context, index) {
+
+  void rePostBottomSheet(context, index) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
