@@ -130,7 +130,7 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
                               ? CircleAvatar(
                                   backgroundImage: NetworkImage(
                                       "${GetPostAllLikeRoomData?.object?[index].profilePic}"),
-                                  backgroundColor: Colors.transparent,
+                                 backgroundColor: Colors.white,
                                   radius: 25,
                                 )
                               : Padding(
