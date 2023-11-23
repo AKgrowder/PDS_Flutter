@@ -107,7 +107,7 @@ class _SelectChatMemberState extends State<SelectChatMember> {
                                         // "${SelectChatMemberListModelData?.object?[index].isFollowing}",
                                       )));
                         },
-                        child: CircleAvatar(
+                        child: CircleAvatar(backgroundColor: Colors.white,
                           backgroundImage: SelectChatMemberListModelData
                                       ?.object?[index].userProfilePic !=
                                   null

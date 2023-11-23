@@ -1671,9 +1671,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     backgroundImage:
                                                                         NetworkImage(
                                                                             "${AllGuestPostRoomData?.object?.content?[index].userProfilePic}"),
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .transparent,
+                                                                   backgroundColor: Colors.white,
                                                                     radius: 25,
                                                                   )
                                                                 : CustomImageView(
@@ -2096,8 +2094,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         ? CircleAvatar(
                                                                             backgroundImage:
                                                                                 NetworkImage("${AllGuestPostRoomData?.object?.content?[index].repostOn?.userProfilePic}"),
-                                                                            backgroundColor:
-                                                                                Colors.transparent,
+                                                                           backgroundColor: Colors.white,
                                                                             radius:
                                                                                 25,
                                                                           )
@@ -2685,9 +2682,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     backgroundImage:
                                                                         NetworkImage(
                                                                             "${AllGuestPostRoomData?.object?.content?[index].userProfilePic}"),
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .transparent,
+                                                                    backgroundColor: Colors.white,
                                                                     radius: 25,
                                                                   )
                                                                 : CustomImageView(

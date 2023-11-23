@@ -507,7 +507,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                               },
                               child: CircleAvatar(
                                 maxRadius: 25,
-                                backgroundColor: ColorConstant.primary_color,
+                                backgroundColor: Colors.white,
                                 child: Center(
                                   child: Image.asset(
                                     ImageConstant.commentarrow,

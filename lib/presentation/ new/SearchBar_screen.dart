@@ -906,10 +906,12 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                                 .userProfile ==
                                             null
                                         ? CircleAvatar(
+                                            backgroundColor: Colors.white,
                                             radius: 25,
                                             child: Image.asset(
-                                                ImageConstant.pdslogo))
+                                                ImageConstant.tomcruse))
                                         : CircleAvatar(
+                                            backgroundColor: Colors.white,
                                             backgroundImage: NetworkImage(
                                               "${getalluserlistModel?.object?.content?[index].userProfile}",
                                             ),
@@ -965,7 +967,6 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                             },
                             child: Container(
                               height: 50,
-                              
                               width: _width / 1.1,
                               decoration: BoxDecoration(
                                   border: Border.all(color: Colors.grey),
@@ -1071,10 +1072,12 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                                 .userProfile ==
                                             null
                                         ? CircleAvatar(
+                                            backgroundColor: Colors.white,
                                             radius: 25,
                                             child: Image.asset(
-                                                ImageConstant.pdslogo))
+                                                ImageConstant.tomcruse))
                                         : CircleAvatar(
+                                            backgroundColor: Colors.white,
                                             backgroundImage: NetworkImage(
                                               "${getalluserlistModel?.object?.content?[index].userProfile}",
                                             ),
@@ -1115,7 +1118,6 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () {
-                           
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -1140,7 +1142,6 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                     width: 8,
                                   ),
                                   Container(
-                                 
                                     width: _width / 1.5,
                                     child: Text(
                                       "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}",
