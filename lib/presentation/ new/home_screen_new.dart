@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
 import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
 import 'package:pds/presentation/%20new/RePost_Screen.dart';
@@ -118,6 +119,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   String? IosLatestVersion;
   String? IosRoutVersion;
   String? IosMainversion;
+  bool _isLink(String input) {
+    RegExp linkRegex = RegExp(
+        r'^https?:\/\/(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z]+)+(?:[^\s]*)$');
+    return linkRegex.hasMatch(input);
+  }
 
   final focusNode = FocusNode();
   String getTimeDifference(DateTime dateTime) {
@@ -1592,6 +1598,20 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                             '${AllGuestPostRoomData?.object?.content?[index].repostOn!.createdAt ?? ""}');
                                         print("repost time = $parsedDateTime");
                                       }
+                                      bool DataGet = false;
+                                      if (AllGuestPostRoomData
+                                                  ?.object
+                                                  ?.content?[index]
+                                                  .description !=
+                                              null &&
+                                          AllGuestPostRoomData
+                                                  ?.object
+                                                  ?.content?[index]
+                                                  .description !=
+                                              '') {
+                                        DataGet = _isLink(
+                                            '${AllGuestPostRoomData?.object?.content?[index].description}');
+                                      }
 
                                       GlobalKey buttonKey = GlobalKey(); //
                                       return AllGuestPostRoomData?.object
@@ -1671,7 +1691,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     backgroundImage:
                                                                         NetworkImage(
                                                                             "${AllGuestPostRoomData?.object?.content?[index].userProfilePic}"),
-                                                                   backgroundColor: Colors.white,
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .white,
                                                                     radius: 25,
                                                                   )
                                                                 : CustomImageView(
@@ -1801,6 +1823,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       SizedBox(
                                                         height: 10,
                                                       ),
+
                                                       AllGuestPostRoomData
                                                                   ?.object
                                                                   ?.content?[
@@ -1812,50 +1835,73 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   const EdgeInsets
                                                                           .only(
                                                                       left: 16),
-                                                              child:
-                                                                  HashTagText(
-                                                                text:
-                                                                    "${AllGuestPostRoomData?.object?.content?[index].description}",
-                                                                decoratedStyle: TextStyle(
-                                                                    fontFamily:
-                                                                        "outfit",
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: ColorConstant
-                                                                        .HasTagColor),
-                                                                basicStyle: TextStyle(
-                                                                    fontFamily:
-                                                                        "outfit",
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Colors
-                                                                        .black),
-                                                                onTap: (text) {
-                                                                  if (User_ID ==
-                                                                      null) {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .push(MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                RegisterCreateAccountScreen()));
-                                                                  } else {
-                                                                    print(
-                                                                        "${text}");
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                          builder: (context) =>
-                                                                              HashTagViewScreen(title: text),
-                                                                        ));
-                                                                  }
-                                                                },
-                                                              ),
+                                                              child: GestureDetector(
+                                                                  onTap: () async {
+                                                                    if (DataGet ==
+                                                                        true) {
+                                                                      await launch(
+                                                                          '${AllGuestPostRoomData?.object?.content?[index].description}',
+                                                                          forceWebView:
+                                                                              true,
+                                                                          enableJavaScript:
+                                                                              true);
+                                                                    }
+                                                                  },
+                                                                  child: LinkifyText(
+                                                                   "${AllGuestPostRoomData?.object?.content?[index].description}",
+                                                                    linkStyle: TextStyle(
+                                                                        color: Colors
+                                                                            .blue),
+                                                                    linkTypes: [
+                                                                      LinkType
+                                                                          .url,
+                                                                      // LinkType
+                                                                      //     .userTag,
+                                                                      LinkType
+                                                                          .hashTag,
+                                                                      // LinkType
+                                                                      //     .email
+                                                                    ],
+                                                                    onTap:
+                                                                        (link) {
+                                                                      /// do stuff with `link` like
+                                                                      /// if(link.type == Link.url) launchUrl(link.value);
+                                                                       var SelectedTest = link
+                                                                              .value
+                                                                              .toString();
+                                                                          var Link =
+                                                                              SelectedTest.startsWith('https');
+                                                                          var Link1 =
+                                                                              SelectedTest.startsWith('http');
+
+                                                                          print(
+                                                                              "qqqqqqqqqqqqqqqqqqqqqqqqqqq");
+                                                                          print(
+                                                                              SelectedTest.toString());
+                                                                          print(
+                                                                              Link);
+                                                                          if (User_ID ==
+                                                                              null) {
+                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                          } else {
+                                                                            if (Link == true &&
+                                                                                Link1 == true) {
+                                                                              launch(link.value.toString(), forceWebView: true, enableJavaScript: true);
+                                                                            } else {
+                                                                              print("${link}");
+                                                                              Navigator.push(
+                                                                                  context,
+                                                                                  MaterialPageRoute(
+                                                                                    builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                  ));
+                                                                            }
+                                                                          }
+
+                                                                    
+                                                                    },
+                                                                  )
+                                                                  
+                                                                  ),
                                                             )
                                                           : SizedBox(),
 
@@ -2094,7 +2140,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         ? CircleAvatar(
                                                                             backgroundImage:
                                                                                 NetworkImage("${AllGuestPostRoomData?.object?.content?[index].repostOn?.userProfilePic}"),
-                                                                           backgroundColor: Colors.white,
+                                                                            backgroundColor:
+                                                                                Colors.white,
                                                                             radius:
                                                                                 25,
                                                                           )
@@ -2159,29 +2206,58 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           left:
                                                                               16),
                                                                       child:
-                                                                          HashTagText(
-                                                                        text:
-                                                                            "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}",
-                                                                        decoratedStyle: TextStyle(
-                                                                            fontFamily:
-                                                                                "outfit",
-                                                                            fontSize:
-                                                                                14,
-                                                                            fontWeight:
-                                                                                FontWeight.bold,
-                                                                            color: ColorConstant.HasTagColor),
-                                                                        basicStyle: TextStyle(
-                                                                            fontFamily:
-                                                                                "outfit",
-                                                                            fontSize:
-                                                                                14,
-                                                                            fontWeight:
-                                                                                FontWeight.bold,
-                                                                            color: Colors.black),
+                                                                          LinkifyText(
+                                                                       "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}",
+                                                                        linkStyle:
+                                                                            TextStyle(color: Colors.blue),
+                                                                        linkTypes: [
+                                                                          LinkType
+                                                                              .url,
+                                                                          // LinkType
+                                                                          //     .userTag,
+                                                                          LinkType
+                                                                              .hashTag,
+                                                                          // LinkType
+                                                                          //     .email
+                                                                        ],
                                                                         onTap:
-                                                                            (text) {},
-                                                                      ),
-                                                                    )
+                                                                            (link) {
+                                                                          /// do stuff with `link` like
+                                                                          /// if(link.type == Link.url) launchUrl(link.value);
+                                                                           var SelectedTest = link
+                                                                              .value
+                                                                              .toString();
+                                                                          var Link =
+                                                                              SelectedTest.startsWith('https');
+                                                                          var Link1 =
+                                                                              SelectedTest.startsWith('http');
+
+                                                                          print(
+                                                                              "qqqqqqqqqqqqqqqqqqqqqqqqqqq");
+                                                                          print(
+                                                                              SelectedTest.toString());
+                                                                          print(
+                                                                              Link);
+                                                                          if (User_ID ==
+                                                                              null) {
+                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                          } else {
+                                                                            if (Link == true &&
+                                                                                Link1 == true) {
+                                                                              launch(link.value.toString(), forceWebView: true, enableJavaScript: true);
+                                                                            } else {
+                                                                              print("${link}");
+                                                                              Navigator.push(
+                                                                                  context,
+                                                                                  MaterialPageRoute(
+                                                                                    builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                  ));
+                                                                            }
+                                                                          }
+                                                                        },
+                                                                      )
+                                                                      
+                                                                      )
                                                                   : SizedBox(),
                                                               Container(
                                                                 width: _width,
@@ -2682,7 +2758,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     backgroundImage:
                                                                         NetworkImage(
                                                                             "${AllGuestPostRoomData?.object?.content?[index].userProfilePic}"),
-                                                                    backgroundColor: Colors.white,
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .white,
                                                                     radius: 25,
                                                                   )
                                                                 : CustomImageView(
@@ -2837,49 +2915,73 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           .only(
                                                                       left: 16),
                                                               child:
-                                                                  HashTagText(
-                                                                text:
-                                                                    "${AllGuestPostRoomData?.object?.content?[index].description}",
-                                                                decoratedStyle: TextStyle(
-                                                                    fontFamily:
-                                                                        "outfit",
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: ColorConstant
-                                                                        .HasTagColor),
-                                                                basicStyle: TextStyle(
-                                                                    fontFamily:
-                                                                        "outfit",
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Colors
-                                                                        .black),
-                                                                onTap: (text) {
-                                                                  if (User_ID ==
-                                                                      null) {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .push(MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                RegisterCreateAccountScreen()));
-                                                                  } else {
-                                                                    print(
-                                                                        "${text}");
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                          builder: (context) =>
-                                                                              HashTagViewScreen(title: text),
-                                                                        ));
-                                                                  }
-                                                                },
-                                                              ),
+                                                                  //this is the despcation
+                                                                  GestureDetector(
+                                                                      onTap:
+                                                                          () async {
+                                                                        if (DataGet ==
+                                                                            true) {
+                                                                          await launch(
+                                                                              '${AllGuestPostRoomData?.object?.content?[index].description}',
+                                                                              forceWebView: true,
+                                                                              enableJavaScript: true);
+                                                                        }
+                                                                      },
+                                                                      child:
+                                                                          LinkifyText(
+                                                                           "${AllGuestPostRoomData?.object?.content?[index].description}",
+                                                                        linkStyle:
+                                                                            TextStyle(color: Colors.blue),
+                                                                        linkTypes: [
+                                                                          LinkType
+                                                                              .url,
+                                                                          // LinkType
+                                                                          //     .userTag,
+                                                                          LinkType
+                                                                              .hashTag,
+                                                                          // LinkType
+                                                                          //     .email
+                                                                        ],
+                                                                        onTap:
+                                                                            (link) {
+                                                                          /// do stuff with `link` like
+                                                                          /// if(link.type == Link.url) launchUrl(link.value);
+
+
+                                                                          var SelectedTest = link
+                                                                              .value
+                                                                              .toString();
+                                                                          var Link =
+                                                                              SelectedTest.startsWith('https');
+                                                                          var Link1 =
+                                                                              SelectedTest.startsWith('http');
+
+                                                                          print(
+                                                                              "qqqqqqqqqqqqqqqqqqqqqqqqqqq");
+                                                                          print(
+                                                                              SelectedTest.toString());
+                                                                          print(
+                                                                              Link);
+                                                                          if (User_ID ==
+                                                                              null) {
+                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                          } else {
+                                                                            if (Link == true &&
+                                                                                Link1 == true) {
+                                                                              launch(link.value.toString(), forceWebView: true, enableJavaScript: true);
+                                                                            } else {
+                                                                              print("${link}");
+                                                                              Navigator.push(
+                                                                                  context,
+                                                                                  MaterialPageRoute(
+                                                                                    builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                  ));
+                                                                            }
+                                                                          }
+                                                                        },
+                                                                      )
+                                                                    
+                                                                      ),
                                                             )
                                                           : SizedBox(),
                                                       // index == 0
