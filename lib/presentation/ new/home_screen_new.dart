@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:linkfy_text/linkfy_text.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
 import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
 import 'package:pds/presentation/%20new/RePost_Screen.dart';
@@ -125,6 +126,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     return linkRegex.hasMatch(input);
   }
 
+  
+  thubMethod()async{
+    Directory tempDir = await getTemporaryDirectory();
+  }
   final focusNode = FocusNode();
   String getTimeDifference(DateTime dateTime) {
     final difference = DateTime.now().difference(dateTime);
@@ -750,7 +755,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     await BlocProvider.of<GetGuestAllPostCubit>(context).MyAccount(context);
   }
 
-  soicalFunation({String? apiName, int? index}) async {
+     soicalFunation({String? apiName, int? index}) async {
     print("fghdfghdfgh");
     if (uuid == null) {
       Navigator.of(context).push(MaterialPageRoute(
@@ -785,22 +790,17 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             AllGuestPostRoomData?.object?.content?[i].isFollowing = 'REQUESTED';
             print(
                 "check data-${AllGuestPostRoomData?.object?.content?[i].isFollowing}");
-          } else {
-            AllGuestPostRoomData?.object?.content?[i].isFollowing = 'REQUESTED';
           }
         }
       } else {
         /* AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing =
             'FOLLOW'; */
-        for (int i = 0;
-            i < (AllGuestPostRoomData?.object?.content?.length ?? 0);
+        for (int i = 0; i<(AllGuestPostRoomData?.object?.content?.length ?? 0);
             i++) {
           if (AllGuestPostRoomData?.object?.content?[index ?? 0].userUid ==
               AllGuestPostRoomData?.object?.content?[i].userUid) {
             AllGuestPostRoomData?.object?.content?[i].isFollowing = 'FOLLOW';
-          } else {
-            AllGuestPostRoomData?.object?.content?[i].isFollowing = 'FOLLOW';
-          }
+          } 
         }
       }
     } else if (apiName == 'like_post') {
@@ -1612,7 +1612,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                         DataGet = _isLink(
                                             '${AllGuestPostRoomData?.object?.content?[index].description}');
                                       }
-
+                                      // this is the data
+                                      if(AllGuestPostRoomData?.object?.content?[index].postDataType == "ATTACHMENT"){
+                                          
+                                      }
                                       GlobalKey buttonKey = GlobalKey(); //
                                       return AllGuestPostRoomData?.object
                                                   ?.content?[index].repostOn !=
