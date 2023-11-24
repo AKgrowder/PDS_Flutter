@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>NSAllowsArbitraryLoads</key>
+          <true/>
 	<key>NSCameraUsageDescription</key>
 	<string>PDS Application User Profile image and Create Post time user photo library please Allow</string>
 	<key>NSPhotoLibraryUsageDescription</key>

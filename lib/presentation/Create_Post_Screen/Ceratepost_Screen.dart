@@ -66,9 +66,33 @@ class _CreateNewPostState extends State<CreateNewPost> {
   List<String>? HasetagList = [];
   bool colorVaralble = false;
   String? UserProfileImage;
+   List<TextSpan> _textSpans = [];
+  void _onTextChanged() {
+    String text = postText.text;
+
+    // Split the entered text by space
+    List<String> words = text.split(' ');
+
+    // Create TextSpan list with different colors
+    _textSpans.clear();
+    for (int i = 0; i < words.length; i++) {
+      String word = words[i];
+      Color textColor = Colors.black;
+
+      // Check if the word starts with '#' and set the color accordingly
+      if (word.startsWith('#')) {
+        textColor = Colors.blue;
+      }
+
+      // Add TextSpan to the list
+      _textSpans.add(TextSpan(text: word + ' ', style: TextStyle(color: textColor)));
+    }
+
+    setState(() {});
+  }
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-   documentuploadsize = await double.parse(
+    documentuploadsize = await double.parse(
         prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
 
     finalFileSize = documentuploadsize;
@@ -301,18 +325,20 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                 inputFormatters: [
                                   // Custom formatter to trim leading spaces
                                   TextInputFormatter.withFunction(
-                                      (oldValue, newValue) {
-                                    if (newValue.text.startsWith(' ')) {
-                                      return TextEditingValue(
-                                        text: newValue.text.trimLeft(),
-                                        selection: TextSelection.collapsed(
-                                            offset: newValue.text
-                                                .trimLeft()
-                                                .length),
-                                      );
-                                    }
-                                    return newValue;
-                                  }),
+                                    (oldValue, newValue) {
+                                      
+                                      if (newValue.text.startsWith(' ')) {
+                                        return TextEditingValue(
+                                          text: newValue.text.trimLeft(),
+                                          selection: TextSelection.collapsed(
+                                              offset: newValue.text
+                                                  .trimLeft()
+                                                  .length),
+                                        );
+                                      }
+                                      return newValue;
+                                    },
+                                  ),
                                 ],
                                 onChanged: (value) async {
                                   print("values -$value");
@@ -323,7 +349,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                   } else {
                                     colorVaralble = false;
                                   }
-                                 
+
                                   setState(() {
                                     primaryColor = value.isNotEmpty
                                         ? ColorConstant.primary_color
@@ -344,7 +370,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                         enableJavaScript: true);
                                   }
                                 },
-                                style: TextStyle(
+                                
+                                  style: TextStyle(
                                   color: colorVaralble == true
                                       ? Colors.blue
                                       : Colors.black,

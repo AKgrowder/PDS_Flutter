@@ -101,6 +101,8 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -120,6 +122,8 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -139,7 +143,8 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
-
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -159,6 +164,8 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -178,7 +185,8 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
-
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -200,6 +208,9 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -219,6 +230,8 @@ class Repository {
         return Config.loginerror;
       case 500:
         return Config.servernotreachable;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -238,6 +251,8 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
+      case 701:
+        return Config.somethingWentWrong;
 
       default:
         return jsonString;
@@ -258,6 +273,8 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
+      case 701:
+        return Config.somethingWentWrong;
 
       default:
         return jsonString;
@@ -278,6 +295,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -297,6 +316,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -314,6 +335,8 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
+      case 701:
+        return Config.somethingWentWrong;
 
       default:
         return jsonString;
@@ -334,6 +357,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -353,6 +378,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -371,6 +398,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -392,6 +421,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -410,6 +441,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -431,6 +464,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -451,6 +486,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -469,6 +506,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -491,6 +530,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -509,6 +550,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -529,6 +572,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -547,6 +592,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -570,6 +617,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -592,6 +641,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -610,6 +661,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -630,6 +683,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -648,6 +703,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -668,6 +725,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -687,6 +746,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -704,6 +765,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -724,6 +787,8 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
+      case 701:
+        return Config.somethingWentWrong;
 
       default:
         return jsonString;
@@ -744,6 +809,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -762,6 +829,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -782,6 +851,8 @@ class Repository {
         return Config.mobileNumberIsNotvaild;
       case 500:
         return Config.servernotreachable;
+      case 701:
+        return Config.somethingWentWrong;
 
       default:
         return jsonString;
@@ -803,6 +874,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -823,6 +896,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -841,6 +916,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -862,6 +939,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -881,6 +960,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -898,6 +979,8 @@ class Repository {
         return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
+      case 701:
+        return Config.somethingWentWrong;
 
       default:
         return jsonString;
@@ -918,6 +1001,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -936,6 +1021,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -956,6 +1043,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -974,6 +1063,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -994,6 +1085,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1012,6 +1105,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1032,6 +1127,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1050,6 +1147,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1070,6 +1169,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1089,6 +1190,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1107,6 +1210,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1129,6 +1234,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1147,6 +1254,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1167,6 +1276,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1186,6 +1297,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1204,6 +1317,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1226,6 +1341,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1245,6 +1362,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1270,6 +1389,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1294,6 +1415,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1315,6 +1438,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
 
       default:
@@ -1342,6 +1467,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1360,6 +1487,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1380,6 +1509,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1399,6 +1530,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1417,6 +1550,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1438,6 +1573,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1457,6 +1594,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1480,6 +1619,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
 
       default:
         return jsonString;
@@ -1501,6 +1642,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1519,6 +1662,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1540,6 +1685,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1558,6 +1705,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1578,6 +1727,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1597,6 +1748,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1614,6 +1767,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1633,6 +1788,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1655,6 +1812,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1679,6 +1838,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1702,6 +1863,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1735,6 +1898,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1759,6 +1924,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1777,6 +1944,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1794,6 +1963,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1814,6 +1985,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1832,6 +2005,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1855,6 +2030,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1876,6 +2053,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1895,6 +2074,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1913,6 +2094,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
@@ -1934,6 +2117,8 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }
@@ -1952,6 +2137,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
+        return Config.somethingWentWrong;
+      case 701:
         return Config.somethingWentWrong;
       default:
         return jsonString;
