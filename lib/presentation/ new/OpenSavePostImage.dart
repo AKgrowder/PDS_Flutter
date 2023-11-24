@@ -38,6 +38,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
   List<int> currentPages = [];
   List<PageController> pageControllers = [];
   bool added = false;
+   int imageCount = 1;
 
   @override
   void initState() {
@@ -222,13 +223,14 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                 false)) ...[
                                               Container(
                                                 color: Colors.transparent,
-                                                height: _height / 1.5,
+                                                height: _height / 2,
                                                 child: PageView.builder(
                                                   onPageChanged: (page) {
                                                     setState(() {
                                                       currentPages[
                                                           widget.index ??
                                                               0] = page;
+                                                      imageCount = page + 1;
                                                     });
                                                   },
                                                   controller: pageControllers[
@@ -251,11 +253,52 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                             top: 15,
                                                             right: 16),
                                                         child: Center(
-                                                            child:
-                                                                CustomImageView(
-                                                          url:
-                                                              "${OpenSaveModelData?.object?.postData?[index1]}",
-                                                        )),
+                                                          child: Stack(
+                                                            children: [
+                                                              Align(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .topCenter,
+                                                                child:
+                                                                    CustomImageView(
+                                                                  url:
+                                                                      "${OpenSaveModelData?.object?.postData?[index1]}",
+                                                                ),
+                                                              ),
+                                                              Align(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .topRight,
+                                                                child: Card(
+                                                                  color: Colors
+                                                                      .transparent,
+                                                                  elevation: 0,
+                                                                  child: Container(
+                                                                      alignment: Alignment.center,
+                                                                      height: 30,
+                                                                      width: 50,
+                                                                      decoration: BoxDecoration(
+                                                                        color: Color.fromARGB(
+                                                                            255,
+                                                                            2,
+                                                                            1,
+                                                                            1),
+                                                                        borderRadius:
+                                                                            BorderRadius.all(Radius.circular(50)),
+                                                                      ),
+                                                                      child: Text(
+                                                                        imageCount.toString() +
+                                                                            '/' +
+                                                                            '${OpenSaveModelData?.object?.postData?.length}',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.white),
+                                                                      )),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
                                                       );
                                                     } else if (OpenSaveModelData
                                                             ?.object
