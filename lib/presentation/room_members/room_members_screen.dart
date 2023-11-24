@@ -698,7 +698,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                             BorderRadius.circular(10)),
                                     child: Center(
                                         child: Text(
-                                      "Delete",
+                                      "Exit",
                                       style: TextStyle(
                                         fontFamily: 'outfit',
                                         fontSize: 15,
