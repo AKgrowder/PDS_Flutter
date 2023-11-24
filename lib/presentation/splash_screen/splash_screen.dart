@@ -49,9 +49,6 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(
       Duration(seconds: 1),
       () async {
-        print(
-            "SplashScreen  SplashScreen  SplashScreen  SplashScreen  SplashScreen  SplashScreen  SplashScreen  ");
-        print("SplashScreen  :-" + UserID);
         if (UserID != "") {
           await BlocProvider.of<SystemConfigCubit>(context).UserModel(context);
         }
@@ -65,6 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     initDynamicLinks(context);
     getData();
+    startTimer();
   }
 
   @override
@@ -121,7 +119,6 @@ class _SplashScreenState extends State<SplashScreen> {
   getData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     UserID = prefs.getString(PreferencesKey.loginUserID) ?? "";
-    startTimer();
   }
 
   saveUSerProfileAndUserModel() async {
@@ -138,7 +135,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     prefs.setString(PreferencesKey.IPAIosMainversion, "1");
     prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
-    prefs.setString(PreferencesKey.IPAIosRoutVersion, "1");
+    prefs.setString(PreferencesKey.IPAIosRoutVersion, "2");
 
     // prefs.setBool(PreferencesKey.RoutURlChnage, false);
 

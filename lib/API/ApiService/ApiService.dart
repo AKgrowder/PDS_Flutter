@@ -339,10 +339,11 @@ setLOGOUT(BuildContext context) async {
   var height = MediaQuery.of(context).size.height;
   var width = MediaQuery.of(context).size.width;
 
-  Future.delayed(const Duration(seconds: 1), () async {
+  Future.delayed(const Duration(seconds: 0), () async {
     // Navigator.pop(context);
     print("please again login");
     await setLogOut(context);
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
   });
   await showDialog(
       context: context,
