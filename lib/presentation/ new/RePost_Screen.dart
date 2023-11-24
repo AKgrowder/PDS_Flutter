@@ -19,7 +19,6 @@ import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/%20new/home_screen_new.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/example/lib/main.dart';
@@ -29,6 +28,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
 
+import '../../API/Model/HashTage_Model/HashTagView_model.dart';
 import '../Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
 
 class RePostScreen extends StatefulWidget {
@@ -41,6 +41,7 @@ class RePostScreen extends StatefulWidget {
   int? index;
   String? postUid;
   GetGuestAllPostModel? AllGuestPostRoomData;
+  HashtagViewDataModel? hashTagViewData;
   RePostScreen({
     Key? key,
     this.username,
@@ -52,6 +53,7 @@ class RePostScreen extends StatefulWidget {
     this.index,
     this.AllGuestPostRoomData,
     this.postUid,
+    this.hashTagViewData,
   }) : super(key: key);
 
   @override
@@ -130,6 +132,10 @@ class _RePostScreenState extends State<RePostScreen> {
 
     if (!added) {
       widget.AllGuestPostRoomData?.object?.content?.forEach((element) {
+        pageControllers.add(PageController());
+        currentPages.add(0);
+      });
+        widget.hashTagViewData?.object?.posts?.forEach((element) {
         pageControllers.add(PageController());
         currentPages.add(0);
       });
