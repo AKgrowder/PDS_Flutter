@@ -50,9 +50,12 @@ class _SplashScreenState extends State<SplashScreen> {
       Duration(seconds: 1),
       () async {
         if (UserID != "") {
-          await BlocProvider.of<SystemConfigCubit>(context).UserModel(context);
-        }
-        await BlocProvider.of<SystemConfigCubit>(context).SystemConfig(context);
+            await BlocProvider.of<SystemConfigCubit>(context)
+                .UserModel(context);
+          }
+          await BlocProvider.of<SystemConfigCubit>(context)
+              .SystemConfig(context);
+        // await BlocProvider.of<SystemConfigCubit>(context).Tokenvalid(context);
       },
     );
   }
@@ -102,6 +105,22 @@ class _SplashScreenState extends State<SplashScreen> {
         systemConfigModel = state.systemConfigModel;
         await SetUi();
       }
+      // if (state is TokenvalidLoadedState) {
+      //   if (state.TokenvalidData.object?.isActive == true) {
+      //     if (UserID != "") {
+      //       await BlocProvider.of<SystemConfigCubit>(context)
+      //           .UserModel(context);
+      //     }
+      //     await BlocProvider.of<SystemConfigCubit>(context)
+      //         .SystemConfig(context);
+      //   }else{
+      //        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+      //       builder: (context) {
+      //         return NewBottomBar(buttomIndex: 0);
+      //       },
+      //     ), (route) => false);
+      //   }
+      // }
     }, builder: (context, state) {
       return Container(
           padding: EdgeInsets.all(8),
@@ -131,11 +150,11 @@ class _SplashScreenState extends State<SplashScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKey.appApkMinVersion, "2");
     prefs.setString(PreferencesKey.appApkLatestVersion, "1");
-    prefs.setString(PreferencesKey.appApkRouteVersion, "1");
+    prefs.setString(PreferencesKey.appApkRouteVersion, "0");
 
     prefs.setString(PreferencesKey.IPAIosMainversion, "1");
     prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
-    prefs.setString(PreferencesKey.IPAIosRoutVersion, "2");
+    prefs.setString(PreferencesKey.IPAIosRoutVersion, "0");
 
     // prefs.setBool(PreferencesKey.RoutURlChnage, false);
 

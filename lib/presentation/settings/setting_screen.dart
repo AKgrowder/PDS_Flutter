@@ -32,7 +32,6 @@ var Setting_Array = [
   // "My Details",
   "Saved Threads",
   "Saved Pins",
-  // "Public & Private Profile",
   "Change Password",
   "Prefrences",
   "Support",
@@ -40,7 +39,7 @@ var Setting_Array = [
   "Invite Friends",
   "Rate Us",
   "Delete Account",
-  "Private & Public Profile",
+  // "Private & Public Profile",
   "Log Out",
 ];
 
@@ -70,7 +69,7 @@ var SettingImage_Array = [
   ImageConstant.setting_star,
   // ImageConstant.Invite_Friends,
   ImageConstant.setting_delete,
-  ImageConstant.profileLock,
+  // ImageConstant.profileLock,
   ImageConstant.setting_power,
   // ImageConstant.setting_power,
   // ImageConstant.setting_phone,
@@ -417,9 +416,9 @@ class _SettingScreenState extends State<SettingScreen> {
                                   .showSnackBar(snackBar); */
 
                               break;
-                            case 9:
-                              print("profile");
-                              break;
+                            // case 9:
+                            //   print("profile");
+                            //   break;
                             case 10:
                               showDialog(
                                   context: context,
@@ -492,7 +491,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                           fontWeight: FontWeight.w500),
                                     ),
                                     Spacer(),
-                                    index == 9
+                                    /*    index == 9
                                         ? Padding(
                                             padding: const EdgeInsets.only(
                                                 right: 10),
@@ -511,28 +510,20 @@ class _SettingScreenState extends State<SettingScreen> {
                                             ),
                                           )
 
-                                        // CustomSwitch(
-                                        //     onChange: (value) {
-                                        //       print("VALUE : $value");
-                                        //       setState(() {
-                                        //         isSwitched = value;
-                                        //       });
-                                        //     },
-                                        //     value: isSwitched,
-                                        //   )
-                                        : Padding(
-                                            padding:
-                                                const EdgeInsets.only(right: 0),
-                                            child: Container(
-                                              // color: Colors.amber,
-                                              height: 30,
-                                              width: 60,
-                                              child: Icon(
-                                                Icons.arrow_forward_ios,
-                                                color: Color(0xFF3F3F3F),
-                                              ),
-                                            ),
-                                          ),
+                                  
+                                        : */
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 0),
+                                      child: Container(
+                                        // color: Colors.amber,
+                                        height: 30,
+                                        width: 60,
+                                        child: Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: Color(0xFF3F3F3F),
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),

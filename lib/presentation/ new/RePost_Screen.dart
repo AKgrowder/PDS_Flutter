@@ -135,7 +135,7 @@ class _RePostScreenState extends State<RePostScreen> {
         pageControllers.add(PageController());
         currentPages.add(0);
       });
-        widget.hashTagViewData?.object?.posts?.forEach((element) {
+      widget.hashTagViewData?.object?.posts?.forEach((element) {
         pageControllers.add(PageController());
         currentPages.add(0);
       });
@@ -245,7 +245,8 @@ class _RePostScreenState extends State<RePostScreen> {
                                     ? SizedBox(
                                         height: 50,
                                         width: 50,
-                                        child: CircleAvatar(backgroundColor: Colors.white,
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.white,
                                           backgroundImage: AssetImage(
                                               ImageConstant.tomcruse),
                                         ),
@@ -253,7 +254,8 @@ class _RePostScreenState extends State<RePostScreen> {
                                     : SizedBox(
                                         height: 50,
                                         width: 50,
-                                        child: CircleAvatar(backgroundColor: Colors.white,
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.white,
                                           backgroundImage: NetworkImage(
                                               UserProfileImage.toString()),
                                         ),
@@ -320,57 +322,42 @@ class _RePostScreenState extends State<RePostScreen> {
                             width: _width,
                             child: Column(
                               children: [
-                                Center(
-                                  child: Container(
-                                    height: 80,
-                                    width: _width,
-                                    decoration: BoxDecoration(
-                                        color: Colors.transparent,
-                                        border: Border.all(
-                                            color: Colors.grey.shade300),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Padding(
-                                      padding:
-                                          EdgeInsets.only(top: 0.0, left: 10),
-                                      child: TextFormField(
-                                        controller: postText,
-                                        maxLines: 5,
-                                        cursorColor: Colors.grey,
-                                        decoration: InputDecoration(
-                                          hintText: 'What’s on your head?',
-                                          border: InputBorder.none,
-                                        ),
-                                        inputFormatters: [
-                                          // Custom formatter to trim leading spaces
-                                          TextInputFormatter.withFunction(
-                                              (oldValue, newValue) {
-                                            if (newValue.text.startsWith(' ')) {
-                                              return TextEditingValue(
-                                                text: newValue.text.trimLeft(),
-                                                selection:
-                                                    TextSelection.collapsed(
-                                                        offset: newValue.text
-                                                            .trimLeft()
-                                                            .length),
-                                              );
-                                            }
-                                            return newValue;
-                                          }),
-                                        ],
-                                        onChanged: (value) {
-                                          setState(() {
-                                            primaryColor = value.isNotEmpty
-                                                ? ColorConstant.primary_color
-                                                : ColorConstant
-                                                    .primaryLight_color;
-                                            textColor = value.isNotEmpty
-                                                ? Colors.white
-                                                : ColorConstant.primary_color;
-                                          });
-                                        },
-                                      ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 0.0, left: 10),
+                                  child: TextFormField(
+                                    controller: postText,
+                                    maxLines: null,
+                                    cursorColor: Colors.grey,
+                                    decoration: InputDecoration(
+                                      hintText: "What's on your head?",
+                                      border: InputBorder.none,
                                     ),
+                                    inputFormatters: [
+                                      // Custom formatter to trim leading spaces
+                                      TextInputFormatter.withFunction(
+                                          (oldValue, newValue) {
+                                        if (newValue.text.startsWith(' ')) {
+                                          return TextEditingValue(
+                                            text: newValue.text.trimLeft(),
+                                            selection: TextSelection.collapsed(
+                                                offset: newValue.text
+                                                    .trimLeft()
+                                                    .length),
+                                          );
+                                        }
+                                        return newValue;
+                                      }),
+                                    ],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        primaryColor = value.isNotEmpty
+                                            ? ColorConstant.primary_color
+                                            : ColorConstant.primaryLight_color;
+                                        textColor = value.isNotEmpty
+                                            ? Colors.white
+                                            : ColorConstant.primary_color;
+                                      });
+                                    },
                                   ),
                                 ),
                                 Padding(
@@ -399,7 +386,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                                 .loader,
                                                             fit: BoxFit.cover,
                                                             height: 100,
-                                                            width: 100), 
+                                                            width: 100),
                                                       ),
                                                     ),
                                                   )
@@ -549,7 +536,9 @@ class _RePostScreenState extends State<RePostScreen> {
                                                 // }
                                               },
                                               child: widget.userProfile != null
-                                                  ? CircleAvatar(backgroundColor: Colors.white,
+                                                  ? CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.white,
                                                       backgroundImage: NetworkImage(
                                                           "${widget.userProfile}"),
                                                       radius: 25,
