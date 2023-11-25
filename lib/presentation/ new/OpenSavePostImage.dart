@@ -38,7 +38,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
   List<int> currentPages = [];
   List<PageController> pageControllers = [];
   bool added = false;
-   int imageCount = 1;
+  int imageCount = 1;
 
   @override
   void initState() {
@@ -564,22 +564,22 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                               ),
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              Share.share(
-                                  'https://play.google.com/store/apps/details?id=com.pds.app');
-                            },
-                            child: Container(
-                              color: Colors.transparent,
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Image.asset(
-                                  ImageConstant.shareWhite,
-                                  height: 17,
-                                ),
-                              ),
-                            ),
-                          ),
+                          // GestureDetector(
+                          //   onTap: () {
+                          //     Share.share(
+                          //         'https://play.google.com/store/apps/details?id=com.pds.app');
+                          //   },
+                          //   child: Container(
+                          //     color: Colors.transparent,
+                          //     child: Padding(
+                          //       padding: const EdgeInsets.all(5.0),
+                          //       child: Image.asset(
+                          //         ImageConstant.shareWhite,
+                          //         height: 17,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

@@ -1,3 +1,4 @@
+import 'package:pds/API/Model/System_Config_model/Tokenvalid_Model.dart';
 import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
 
 import '../../Model/System_Config_model/fetchUserModule_model.dart';
@@ -21,4 +22,9 @@ class SystemConfigErrorState extends SystemConfigState {
 class fetchUserModulemodelLoadedState extends SystemConfigState {
   final FetchUserModulemodel fetchUserModule;
   fetchUserModulemodelLoadedState(this.fetchUserModule);
+}
+
+class TokenvalidLoadedState extends SystemConfigState {
+  final TokenvalidModel TokenvalidData;
+  TokenvalidLoadedState(this.TokenvalidData);
 }
