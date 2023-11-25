@@ -10,9 +10,12 @@ class SelectChatMemberListCubit extends Cubit<SelectChatMemberListState> {
     try {
       emit(SelectChatMemberListLoadingState());
       SelectChatMemberListModel = await Repository().SelectChatMemberList(context);
+      if (SelectChatMemberListModel == "Something Went Wrong, Try After Some Time.") {
+        emit(SelectChatMemberListErrorState("${SelectChatMemberListModel}"));
+      } else {
       if (SelectChatMemberListModel.success == true) {
         emit(SelectChatMemberListLoadedState(SelectChatMemberListModel));
-      }
+      }}
     } catch (e) {
       emit(SelectChatMemberListErrorState(SelectChatMemberListModel));
     }

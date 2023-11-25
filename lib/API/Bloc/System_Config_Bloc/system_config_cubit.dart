@@ -11,9 +11,12 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
     try {
       emit(SystemConfigLoadingState());
       systemConfigModel = await Repository().SystemConfig(context);
+      if (systemConfigModel == "Something Went Wrong, Try After Some Time.") {
+        emit(SystemConfigErrorState("${systemConfigModel}"));
+      } else {
       if (systemConfigModel.success == true) {
         emit(SystemConfigLoadedState(systemConfigModel));
-      }
+      }}
     } catch (e) {
       emit(SystemConfigErrorState(systemConfigModel));
     }
@@ -24,9 +27,12 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
     try {
       emit(SystemConfigLoadingState());
       systemConfigModel = await Repository().UserModel(context);
+      if (systemConfigModel == "Something Went Wrong, Try After Some Time.") {
+        emit(SystemConfigErrorState("${systemConfigModel}"));
+      } else {
       if (systemConfigModel.success == true) {
         emit(fetchUserModulemodelLoadedState(systemConfigModel));
-      }
+      }}
     } catch (e) {
       emit(SystemConfigErrorState(systemConfigModel));
     }
@@ -37,9 +43,12 @@ class SystemConfigCubit extends Cubit<SystemConfigState> {
     try {
       emit(SystemConfigLoadingState());
       systemConfigModel = await Repository().Tokenvalid(context);
+      if (systemConfigModel == "Something Went Wrong, Try After Some Time.") {
+        emit(SystemConfigErrorState("${systemConfigModel}"));
+      } else {
       if (systemConfigModel.success == true) {
         emit(TokenvalidLoadedState(systemConfigModel));
-      }
+      }}
     } catch (e) {
       emit(SystemConfigErrorState(systemConfigModel));
     }

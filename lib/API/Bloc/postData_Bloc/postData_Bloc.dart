@@ -16,9 +16,12 @@ class AddPostCubit extends Cubit<AddPostState> {
       emit(AddPostLoadingState());
       addPostData = await Repository().AddPostApiCalling(context, params);
       print("addPostData-->$addPostData");
+      if (addPostData == "Something Went Wrong, Try After Some Time.") {
+        emit(AddPostErrorState("${addPostData}"));
+      } else {
       if (addPostData.success == true) {
         emit(AddPostLoadedState(addPostData));
-      }
+      }}
     } catch (e) {
       emit(AddPostErrorState(addPostData));
     }
@@ -34,9 +37,12 @@ class AddPostCubit extends Cubit<AddPostState> {
       emit(AddPostLoadingState());
       addPostImageUploded = await Repository()
           .AddPostImageUploded(context, fileName ?? '', file ?? '');
+          if (addPostImageUploded == "Something Went Wrong, Try After Some Time.") {
+        emit(AddPostErrorState("${addPostImageUploded}"));
+      } else {
       if (addPostImageUploded.success == true) {
         emit(AddPostImaegState(addPostImageUploded));
-      }
+      }}
     } catch (e) {
       emit(AddPostErrorState(addPostImageUploded));
     }
@@ -47,9 +53,12 @@ class AddPostCubit extends Cubit<AddPostState> {
     try {
       emit(AddPostLoadingState());
       addPostImageUploded = await Repository().userProfile1(imageFile, context);
+      if (addPostImageUploded == "Something Went Wrong, Try After Some Time.") {
+        emit(AddPostErrorState("${addPostImageUploded}"));
+      } else {
       if (addPostImageUploded.success == true) {
         emit(AddPostImaegState(addPostImageUploded));
-      }
+      }}
     } catch (e) {
       emit(AddPostErrorState(addPostImageUploded));
     }
