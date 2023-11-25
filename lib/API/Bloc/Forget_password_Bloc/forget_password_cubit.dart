@@ -11,10 +11,14 @@ class ForgetpasswordCubit extends Cubit<ForgetpasswordState> {
     try {
       emit(ForgetpasswordLoadingState());
       forgetpassword = await Repository().forgetpassword(userNumber, context);
-      if (forgetpassword.success == true) {
-        emit(ForgetpasswordLoadedState(forgetpassword));
+      if (forgetpassword == "Something Went Wrong, Try After Some Time.") {
+        emit(ForgetpasswordErrorState("${forgetpassword}"));
       } else {
-        emit(ForgetpasswordErrorState(forgetpassword.message));
+        if (forgetpassword.success == true) {
+          emit(ForgetpasswordLoadedState(forgetpassword));
+        } else {
+          emit(ForgetpasswordErrorState(forgetpassword.message));
+        }
       }
     } catch (e) {
       emit(ForgetpasswordErrorState(forgetpassword));
@@ -26,11 +30,15 @@ class ForgetpasswordCubit extends Cubit<ForgetpasswordState> {
     dynamic changePasswordModel;
     try {
       emit(ForgetpasswordLoadingState());
-      changePasswordModel = await Repository().Changepassword(params,context);
-      if (changePasswordModel.success == true) {
-        emit(ChangePasswordLoadedState(changePasswordModel));
+      changePasswordModel = await Repository().Changepassword(params, context);
+      if (changePasswordModel == "Something Went Wrong, Try After Some Time.") {
+        emit(ForgetpasswordErrorState("${changePasswordModel}"));
       } else {
-        emit(ForgetpasswordErrorState(changePasswordModel.message));
+        if (changePasswordModel.success == true) {
+          emit(ChangePasswordLoadedState(changePasswordModel));
+        } else {
+          emit(ForgetpasswordErrorState(changePasswordModel.message));
+        }
       }
     } catch (e) {
       emit(ForgetpasswordErrorState(changePasswordModel));
@@ -44,10 +52,14 @@ class ForgetpasswordCubit extends Cubit<ForgetpasswordState> {
       emit(ForgetpasswordLoadingState());
       changePasswordModel =
           await Repository().ChangepasswordinSettingScreen(params, context);
-      if (changePasswordModel.success == true) {
-        emit(ChangePasswordInSettingScreenLoadedState(changePasswordModel));
+      if (changePasswordModel == "Something Went Wrong, Try After Some Time.") {
+        emit(ForgetpasswordErrorState("${changePasswordModel}"));
       } else {
-        emit(ForgetpasswordErrorState(changePasswordModel.message));
+        if (changePasswordModel.success == true) {
+          emit(ChangePasswordInSettingScreenLoadedState(changePasswordModel));
+        } else {
+          emit(ForgetpasswordErrorState(changePasswordModel.message));
+        }
       }
     } catch (e) {
       emit(ForgetpasswordErrorState(changePasswordModel));

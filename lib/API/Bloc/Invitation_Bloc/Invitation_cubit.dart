@@ -12,9 +12,12 @@ class InvitationCubit extends Cubit<InvitationState> {
     try {
       emit(InvitationLoadingState());
       PublicRModel = await Repository().InvitationModelAPI(context);
+      if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
+        emit(InvitationErrorState("${PublicRModel}"));
+      } else {
       if (PublicRModel.success == true) {
         emit(InvitationLoadedState(PublicRModel));
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(InvitationErrorState(PublicRModel));
@@ -28,10 +31,13 @@ class InvitationCubit extends Cubit<InvitationState> {
       emit(InvitationLoadingState());
       acceptRejectInvitationModel = await Repository()
           .acceptRejectInvitationAPI(status, roomLink, context);
+          if (acceptRejectInvitationModel == "Something Went Wrong, Try After Some Time.") {
+        emit(InvitationErrorState("${acceptRejectInvitationModel}"));
+      } else {
       if (acceptRejectInvitationModel.success == true) {
         emit(AcceptRejectInvitationModelLoadedState(
             acceptRejectInvitationModel));
-      }
+      }}
     } catch (e) {
       emit(InvitationErrorState(acceptRejectInvitationModel));
     }
@@ -42,9 +48,12 @@ class InvitationCubit extends Cubit<InvitationState> {
     try {
       emit(InvitationLoadingState());
       acceptRejectInvitationModel = await Repository().RequestListAPI(context);
+      if (acceptRejectInvitationModel == "Something Went Wrong, Try After Some Time.") {
+        emit(InvitationErrorState("${acceptRejectInvitationModel}"));
+      } else {
       if (acceptRejectInvitationModel.success == true) {
         emit(RequestListLoadedState(acceptRejectInvitationModel));
-      }
+      }}
     } catch (e) {
       emit(InvitationErrorState(acceptRejectInvitationModel));
     }
@@ -57,9 +66,12 @@ class InvitationCubit extends Cubit<InvitationState> {
       emit(InvitationLoadingState());
       acceptRejectInvitationModel =
           await Repository().accept_rejectAPI(context, isAccepted, followUid);
+          if (acceptRejectInvitationModel == "Something Went Wrong, Try After Some Time.") {
+        emit(InvitationErrorState("${acceptRejectInvitationModel}"));
+      } else {
       if (acceptRejectInvitationModel.success == true) {
         emit(accept_rejectLoadedState(acceptRejectInvitationModel));
-      }
+      }}
     } catch (e) {
       emit(InvitationErrorState(acceptRejectInvitationModel));
     }
