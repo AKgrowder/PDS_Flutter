@@ -419,7 +419,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             // case 9:
                             //   print("profile");
                             //   break;
-                            case 10:
+                            case 9:
                               showDialog(
                                   context: context,
                                   builder: (_) => BlocProvider<LogOutCubit>(
