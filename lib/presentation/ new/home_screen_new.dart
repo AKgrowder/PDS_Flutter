@@ -126,10 +126,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     return linkRegex.hasMatch(input);
   }
 
-  
-  thubMethod()async{
+  thubMethod() async {
     Directory tempDir = await getTemporaryDirectory();
   }
+
   final focusNode = FocusNode();
   String getTimeDifference(DateTime dateTime) {
     final difference = DateTime.now().difference(dateTime);
@@ -755,7 +755,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     await BlocProvider.of<GetGuestAllPostCubit>(context).MyAccount(context);
   }
 
-     soicalFunation({String? apiName, int? index}) async {
+  soicalFunation({String? apiName, int? index}) async {
     print("fghdfghdfgh");
     if (uuid == null) {
       Navigator.of(context).push(MaterialPageRoute(
@@ -795,12 +795,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       } else {
         /* AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing =
             'FOLLOW'; */
-        for (int i = 0; i<(AllGuestPostRoomData?.object?.content?.length ?? 0);
+        for (int i = 0;
+            i < (AllGuestPostRoomData?.object?.content?.length ?? 0);
             i++) {
           if (AllGuestPostRoomData?.object?.content?[index ?? 0].userUid ==
               AllGuestPostRoomData?.object?.content?[i].userUid) {
             AllGuestPostRoomData?.object?.content?[i].isFollowing = 'FOLLOW';
-          } 
+          }
         }
       }
     } else if (apiName == 'like_post') {
@@ -1613,9 +1614,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                             '${AllGuestPostRoomData?.object?.content?[index].description}');
                                       }
                                       // this is the data
-                                      if(AllGuestPostRoomData?.object?.content?[index].postDataType == "ATTACHMENT"){
-                                          
-                                      }
+                                      if (AllGuestPostRoomData?.object
+                                              ?.content?[index].postDataType ==
+                                          "ATTACHMENT") {}
                                       GlobalKey buttonKey = GlobalKey(); //
                                       return AllGuestPostRoomData?.object
                                                   ?.content?[index].repostOn !=
@@ -1838,38 +1839,38 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   const EdgeInsets
                                                                           .only(
                                                                       left: 16),
-                                                              child: GestureDetector(
-                                                                  onTap: () async {
-                                                                    if (DataGet ==
-                                                                        true) {
-                                                                      await launch(
-                                                                          '${AllGuestPostRoomData?.object?.content?[index].description}',
-                                                                          forceWebView:
-                                                                              true,
-                                                                          enableJavaScript:
-                                                                              true);
-                                                                    }
-                                                                  },
-                                                                  child: LinkifyText(
-                                                                   "${AllGuestPostRoomData?.object?.content?[index].description}",
-                                                                    linkStyle: TextStyle(
-                                                                        color: Colors
-                                                                            .blue),
-                                                                    linkTypes: [
-                                                                      LinkType
-                                                                          .url,
-                                                                      // LinkType
-                                                                      //     .userTag,
-                                                                      LinkType
-                                                                          .hashTag,
-                                                                      // LinkType
-                                                                      //     .email
-                                                                    ],
-                                                                    onTap:
-                                                                        (link) {
-                                                                      /// do stuff with `link` like
-                                                                      /// if(link.type == Link.url) launchUrl(link.value);
-                                                                       var SelectedTest = link
+                                                              child:
+                                                                  GestureDetector(
+                                                                      onTap:
+                                                                          () async {
+                                                                        if (DataGet ==
+                                                                            true) {
+                                                                          await launch(
+                                                                              '${AllGuestPostRoomData?.object?.content?[index].description}',
+                                                                              forceWebView: true,
+                                                                              enableJavaScript: true);
+                                                                        }
+                                                                      },
+                                                                      child:
+                                                                          LinkifyText(
+                                                                        "${AllGuestPostRoomData?.object?.content?[index].description}",
+                                                                        linkStyle:
+                                                                            TextStyle(color: Colors.blue),
+                                                                        linkTypes: [
+                                                                          LinkType
+                                                                              .url,
+                                                                          // LinkType
+                                                                          //     .userTag,
+                                                                          LinkType
+                                                                              .hashTag,
+                                                                          // LinkType
+                                                                          //     .email
+                                                                        ],
+                                                                        onTap:
+                                                                            (link) {
+                                                                          /// do stuff with `link` like
+                                                                          /// if(link.type == Link.url) launchUrl(link.value);
+                                                                          var SelectedTest = link
                                                                               .value
                                                                               .toString();
                                                                           var Link =
@@ -1899,12 +1900,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                   ));
                                                                             }
                                                                           }
-
-                                                                    
-                                                                    },
-                                                                  )
-                                                                  
-                                                                  ),
+                                                                        },
+                                                                      )),
                                                             )
                                                           : SizedBox(),
 
@@ -2210,7 +2207,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               16),
                                                                       child:
                                                                           LinkifyText(
-                                                                       "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}",
+                                                                        "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}",
                                                                         linkStyle:
                                                                             TextStyle(color: Colors.blue),
                                                                         linkTypes: [
@@ -2227,7 +2224,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             (link) {
                                                                           /// do stuff with `link` like
                                                                           /// if(link.type == Link.url) launchUrl(link.value);
-                                                                           var SelectedTest = link
+                                                                          var SelectedTest = link
                                                                               .value
                                                                               .toString();
                                                                           var Link =
@@ -2258,9 +2255,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             }
                                                                           }
                                                                         },
-                                                                      )
-                                                                      
-                                                                      )
+                                                                      ))
                                                                   : SizedBox(),
                                                               Container(
                                                                 width: _width,
@@ -2569,9 +2564,57 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             ),
                                                             GestureDetector(
                                                               onTap: () {
-                                                                rePostBottomSheet(
+                                                                // rePostBottomSheet(
+                                                                //     context,
+                                                                //     index);
+                                                                Navigator.push(
                                                                     context,
-                                                                    index);
+                                                                    MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) {
+                                                                    return RePostScreen(
+                                                                      userProfile: AllGuestPostRoomData
+                                                                          ?.object
+                                                                          ?.content?[
+                                                                              index]
+                                                                          .userProfilePic,
+                                                                      username: AllGuestPostRoomData
+                                                                          ?.object
+                                                                          ?.content?[
+                                                                              index]
+                                                                          .postUserName,
+                                                                      date: AllGuestPostRoomData
+                                                                          ?.object
+                                                                          ?.content?[
+                                                                              index]
+                                                                          .createdAt,
+                                                                      desc: AllGuestPostRoomData
+                                                                          ?.object
+                                                                          ?.content?[
+                                                                              index]
+                                                                          .description,
+                                                                      postData: AllGuestPostRoomData
+                                                                          ?.object
+                                                                          ?.content?[
+                                                                              index]
+                                                                          .postData,
+                                                                      postDataType: AllGuestPostRoomData
+                                                                          ?.object
+                                                                          ?.content?[
+                                                                              index]
+                                                                          .postDataType,
+                                                                      index:
+                                                                          index,
+                                                                      AllGuestPostRoomData:
+                                                                          AllGuestPostRoomData,
+                                                                      postUid: AllGuestPostRoomData
+                                                                          ?.object
+                                                                          ?.content?[
+                                                                              index]
+                                                                          .postUid,
+                                                                    );
+                                                                  },
+                                                                ));
                                                               },
                                                               child: Container(
                                                                 color: Colors
@@ -2654,28 +2697,28 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 ),
                                                               ),
                                                             ),
-                                                            GestureDetector(
-                                                              onTap: () {
-                                                                Share.share(
-                                                                    'https://play.google.com/store/apps/details?id=com.pds.app');
-                                                              },
-                                                              child: Container(
-                                                                color: Colors
-                                                                    .transparent,
-                                                                child: Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                              .all(
-                                                                          5.0),
-                                                                  child: Image
-                                                                      .asset(
-                                                                    ImageConstant
-                                                                        .shareBlack,
-                                                                    height: 17,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
+                                                            // GestureDetector(
+                                                            //   onTap: () {
+                                                            //     Share.share(
+                                                            //         'https://play.google.com/store/apps/details?id=com.pds.app');
+                                                            //   },
+                                                            //   child: Container(
+                                                            //     color: Colors
+                                                            //         .transparent,
+                                                            //     child: Padding(
+                                                            //       padding:
+                                                            //           const EdgeInsets
+                                                            //                   .all(
+                                                            //               5.0),
+                                                            //       child: Image
+                                                            //           .asset(
+                                                            //         ImageConstant
+                                                            //             .shareBlack,
+                                                            //         height: 17,
+                                                            //       ),
+                                                            //     ),
+                                                            //   ),
+                                                            // ),
                                                           ],
                                                         ),
                                                       ),
@@ -2932,7 +2975,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       },
                                                                       child:
                                                                           LinkifyText(
-                                                                           "${AllGuestPostRoomData?.object?.content?[index].description}",
+                                                                        "${AllGuestPostRoomData?.object?.content?[index].description}",
                                                                         linkStyle:
                                                                             TextStyle(color: Colors.blue),
                                                                         linkTypes: [
@@ -2949,7 +2992,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             (link) {
                                                                           /// do stuff with `link` like
                                                                           /// if(link.type == Link.url) launchUrl(link.value);
-
 
                                                                           var SelectedTest = link
                                                                               .value
@@ -2982,9 +3024,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             }
                                                                           }
                                                                         },
-                                                                      )
-                                                                    
-                                                                      ),
+                                                                      )),
                                                             )
                                                           : SizedBox(),
                                                       // index == 0
@@ -3371,9 +3411,50 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           builder: (context) =>
                                                                               RegisterCreateAccountScreen()));
                                                                 } else {
-                                                                  rePostBottomSheet(
+                                                                  // rePostBottomSheet(
+                                                                  //     context,
+                                                                  //     index);
+                                                                  Navigator.push(
                                                                       context,
-                                                                      index);
+                                                                      MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) {
+                                                                      return RePostScreen(
+                                                                        userProfile: AllGuestPostRoomData
+                                                                            ?.object
+                                                                            ?.content?[index]
+                                                                            .userProfilePic,
+                                                                        username: AllGuestPostRoomData
+                                                                            ?.object
+                                                                            ?.content?[index]
+                                                                            .postUserName,
+                                                                        date: AllGuestPostRoomData
+                                                                            ?.object
+                                                                            ?.content?[index]
+                                                                            .createdAt,
+                                                                        desc: AllGuestPostRoomData
+                                                                            ?.object
+                                                                            ?.content?[index]
+                                                                            .description,
+                                                                        postData: AllGuestPostRoomData
+                                                                            ?.object
+                                                                            ?.content?[index]
+                                                                            .postData,
+                                                                        postDataType: AllGuestPostRoomData
+                                                                            ?.object
+                                                                            ?.content?[index]
+                                                                            .postDataType,
+                                                                        index:
+                                                                            index,
+                                                                        AllGuestPostRoomData:
+                                                                            AllGuestPostRoomData,
+                                                                        postUid: AllGuestPostRoomData
+                                                                            ?.object
+                                                                            ?.content?[index]
+                                                                            .postUid,
+                                                                      );
+                                                                    },
+                                                                  ));
                                                                 }
                                                               },
                                                               child: Container(
@@ -3459,28 +3540,28 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 ),
                                                               ),
                                                             ),
-                                                            GestureDetector(
-                                                              onTap: () {
-                                                                Share.share(
-                                                                    'https://play.google.com/store/apps/details?id=com.pds.app');
-                                                              },
-                                                              child: Container(
-                                                                color: Colors
-                                                                    .transparent,
-                                                                child: Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                              .all(
-                                                                          5.0),
-                                                                  child: Image
-                                                                      .asset(
-                                                                    ImageConstant
-                                                                        .shareBlack,
-                                                                    height: 17,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
+                                                            // GestureDetector(
+                                                            //   onTap: () {
+                                                            //     Share.share(
+                                                            //         'https://play.google.com/store/apps/details?id=com.pds.app');
+                                                            //   },
+                                                            //   child: Container(
+                                                            //     color: Colors
+                                                            //         .transparent,
+                                                            //     child: Padding(
+                                                            //       padding:
+                                                            //           const EdgeInsets
+                                                            //                   .all(
+                                                            //               5.0),
+                                                            //       child: Image
+                                                            //           .asset(
+                                                            //         ImageConstant
+                                                            //             .shareBlack,
+                                                            //         height: 17,
+                                                            //       ),
+                                                            //     ),
+                                                            //   ),
+                                                            // ),
                                                           ],
                                                         ),
                                                       ),
@@ -4549,104 +4630,104 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     return Future.value(false);
   }
 
-  void rePostBottomSheet(context, index) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return Container(
-            height: 200,
-            child: new Wrap(
-              children: [
-                Container(
-                  height: 20,
-                  width: 50,
-                  color: Colors.transparent,
-                ),
-                Center(
-                    child: Container(
-                  height: 5,
-                  width: 150,
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(25)),
-                )),
-                SizedBox(
-                  height: 35,
-                ),
-                Center(
-                  child: new ListTile(
-                      leading: new Image.asset(
-                        ImageConstant.vector2,
-                        height: 20,
-                      ),
-                      title: new Text('RePost'),
-                      subtitle: Text(
-                        "Share this post with your followers",
-                        style: TextStyle(fontSize: 10, color: Colors.grey),
-                      ),
-                      onTap: () async {
-                        Map<String, dynamic> param = {
-                          "description": "",
-                          "postData": "",
-                          "postDataType": "",
-                          "postType": ""
-                        };
-                        BlocProvider.of<GetGuestAllPostCubit>(context)
-                            .RePostAPI(
-                                context,
-                                param,
-                                AllGuestPostRoomData
-                                    ?.object?.content?[index].postUid);
-                        Navigator.pop(context);
-                      }),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Center(
-                  child: new ListTile(
-                    leading: new Icon(
-                      Icons.edit_outlined,
-                      color: Colors.black,
-                    ),
-                    title: new Text('Quote'),
-                    subtitle: Text(
-                      "Add a comment, photo or GIF before you share this post",
-                      style: TextStyle(fontSize: 10, color: Colors.grey),
-                    ),
-                    onTap: () async {
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (context) {
-                          return RePostScreen(
-                            userProfile: AllGuestPostRoomData
-                                ?.object?.content?[index].userProfilePic,
-                            username: AllGuestPostRoomData
-                                ?.object?.content?[index].postUserName,
-                            date: AllGuestPostRoomData
-                                ?.object?.content?[index].createdAt,
-                            desc: AllGuestPostRoomData
-                                ?.object?.content?[index].description,
-                            postData: AllGuestPostRoomData
-                                ?.object?.content?[index].postData,
-                            postDataType: AllGuestPostRoomData
-                                ?.object?.content?[index].postDataType,
-                            index: index,
-                            AllGuestPostRoomData: AllGuestPostRoomData,
-                            postUid: AllGuestPostRoomData
-                                ?.object?.content?[index].postUid,
-                          );
-                        },
-                      ));
-                      // Navigator.pop(context);
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-              ],
-            ),
-          );
-        });
-  }
+  // void rePostBottomSheet(context, index) {
+  //   showModalBottomSheet(
+  //       context: context,
+  //       builder: (BuildContext bc) {
+  //         return Container(
+  //           height: 200,
+  //           child: new Wrap(
+  //             children: [
+  //               Container(
+  //                 height: 20,
+  //                 width: 50,
+  //                 color: Colors.transparent,
+  //               ),
+  //               Center(
+  //                   child: Container(
+  //                 height: 5,
+  //                 width: 150,
+  //                 decoration: BoxDecoration(
+  //                     color: Colors.grey,
+  //                     borderRadius: BorderRadius.circular(25)),
+  //               )),
+  //               SizedBox(
+  //                 height: 35,
+  //               ),
+  //               Center(
+  //                 child: new ListTile(
+  //                     leading: new Image.asset(
+  //                       ImageConstant.vector2,
+  //                       height: 20,
+  //                     ),
+  //                     title: new Text('RePost'),
+  //                     subtitle: Text(
+  //                       "Share this post with your followers",
+  //                       style: TextStyle(fontSize: 10, color: Colors.grey),
+  //                     ),
+  //                     onTap: () async {
+  //                       Map<String, dynamic> param = {
+  //                         "description": "",
+  //                         "postData": "",
+  //                         "postDataType": "",
+  //                         "postType": ""
+  //                       };
+  //                       BlocProvider.of<GetGuestAllPostCubit>(context)
+  //                           .RePostAPI(
+  //                               context,
+  //                               param,
+  //                               AllGuestPostRoomData
+  //                                   ?.object?.content?[index].postUid);
+  //                       Navigator.pop(context);
+  //                     }),
+  //               ),
+  //               SizedBox(
+  //                 height: 20,
+  //               ),
+  //               Center(
+  //                 child: new ListTile(
+  //                   leading: new Icon(
+  //                     Icons.edit_outlined,
+  //                     color: Colors.black,
+  //                   ),
+  //                   title: new Text('Quote'),
+  //                   subtitle: Text(
+  //                     "Add a comment, photo or GIF before you share this post",
+  //                     style: TextStyle(fontSize: 10, color: Colors.grey),
+  //                   ),
+  //                   onTap: () async {
+  //                     Navigator.push(context, MaterialPageRoute(
+  //                       builder: (context) {
+  //                         return RePostScreen(
+  //                           userProfile: AllGuestPostRoomData
+  //                               ?.object?.content?[index].userProfilePic,
+  //                           username: AllGuestPostRoomData
+  //                               ?.object?.content?[index].postUserName,
+  //                           date: AllGuestPostRoomData
+  //                               ?.object?.content?[index].createdAt,
+  //                           desc: AllGuestPostRoomData
+  //                               ?.object?.content?[index].description,
+  //                           postData: AllGuestPostRoomData
+  //                               ?.object?.content?[index].postData,
+  //                           postDataType: AllGuestPostRoomData
+  //                               ?.object?.content?[index].postDataType,
+  //                           index: index,
+  //                           AllGuestPostRoomData: AllGuestPostRoomData,
+  //                           postUid: AllGuestPostRoomData
+  //                               ?.object?.content?[index].postUid,
+  //                         );
+  //                       },
+  //                     ));
+  //                     // Navigator.pop(context);
+  //                   },
+  //                 ),
+  //               ),
+  //               SizedBox(
+  //                 height: 20,
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       });
+  // }
 }

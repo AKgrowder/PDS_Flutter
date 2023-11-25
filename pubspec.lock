@@ -241,6 +241,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  dio:
+    dependency: "direct main"
+    description:
+      name: dio
+      sha256: "01870acd87986f768e0c09cc4d7a19a59d814af7b34cbeb0b437d2c33bdfea4c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.3.4"
   dots_indicator:
     dependency: "direct main"
     description:
@@ -784,6 +792,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.7"
+  linkfy_text:
+    dependency: "direct main"
+    description:
+      name: linkfy_text
+      sha256: "57286565bfbc7d023a9ab782531c8a61dd02bfb982aee7747260f0ebe47b103a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.5"
   logging:
     dependency: transitive
     description:
