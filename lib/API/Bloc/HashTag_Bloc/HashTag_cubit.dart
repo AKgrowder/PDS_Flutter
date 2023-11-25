@@ -137,8 +137,12 @@ class HashTagCubit extends Cubit<HashTagState> {
       getalluserlistModel = await Repository().getalluser(
           pageNumber, searchName, context,
           filterModule: filterModule);
-      if (getalluserlistModel.success == true) {
-        emit(GetAllUserLoadedState(getalluserlistModel));
+      if (getalluserlistModel == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${getalluserlistModel}"));
+      } else {
+        if (getalluserlistModel.success == true) {
+          emit(GetAllUserLoadedState(getalluserlistModel));
+        }
       }
     } catch (e) {
       print('errorstateshwowData-$e');

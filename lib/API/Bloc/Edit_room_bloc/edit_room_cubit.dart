@@ -13,11 +13,14 @@ class EditroomCubit extends Cubit<EditroomState> {
     try {
       emit(EditroomLoadingState());
       editRoom = await Repository().EditroomAPI(params, roomuId, context);
-      if (editRoom.success == true) {
-        emit(EditroomLoadedState(editRoom));
-      }else{
-            emit(EditroomErrorState(editRoom.message));
-
+      if (editRoom == "Something Went Wrong, Try After Some Time.") {
+        emit(EditroomErrorState("${editRoom}"));
+      } else {
+        if (editRoom.success == true) {
+          emit(EditroomLoadedState(editRoom));
+        } else {
+          emit(EditroomErrorState(editRoom.message));
+        }
       }
     } catch (e) {
       emit(EditroomErrorState(editRoom));

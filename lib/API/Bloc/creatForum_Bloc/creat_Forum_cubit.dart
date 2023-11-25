@@ -12,8 +12,12 @@ class CreatFourmCubit extends Cubit<CreatFourmState> {
       emit(CreatFourmLoadingState());
       createForm =
           await Repository().creatFourm(params, file, fileName, context);
-      if (createForm.success == true) {
-        emit(CreatFourmLoadedState(createForm));
+      if (createForm == "Something Went Wrong, Try After Some Time.") {
+        emit(CreatFourmErrorState("${createForm}"));
+      } else {
+        if (createForm.success == true) {
+          emit(CreatFourmLoadedState(createForm));
+        }
       }
     } catch (e) {
       emit(CreatFourmErrorState(createForm));
@@ -27,8 +31,12 @@ class CreatFourmCubit extends Cubit<CreatFourmState> {
       emit(CreatFourmLoadingState());
       createForm =
           await Repository().creatFourm(params, file, fileName, context);
-      if (createForm.success == true) {
-        emit(CreatFourmLoadedState(createForm));
+      if (createForm == "Something Went Wrong, Try After Some Time.") {
+        emit(CreatFourmErrorState("${createForm}"));
+      } else {
+        if (createForm.success == true) {
+          emit(CreatFourmLoadedState(createForm));
+        }
       }
     } catch (e) {
       emit(CreatFourmErrorState(createForm));
@@ -44,9 +52,13 @@ class CreatFourmCubit extends Cubit<CreatFourmState> {
       createForm =
           await Repository().chooseProfileFile(file, fileName, context);
       print('createFormDataCheck-${createForm.message}');
-      if (createForm.success == true) {
-        print('createFormdataGet-----${createForm.object}');
-        emit(ChooseDocumeentLoadedState(createForm));
+      if (createForm == "Something Went Wrong, Try After Some Time.") {
+        emit(CreatFourmErrorState("${createForm}"));
+      } else {
+        if (createForm.success == true) {
+          print('createFormdataGet-----${createForm.object}');
+          emit(ChooseDocumeentLoadedState(createForm));
+        }
       }
     } catch (e) {
       print('error data-$e');
@@ -54,13 +66,17 @@ class CreatFourmCubit extends Cubit<CreatFourmState> {
     }
   }
 
-    Future<void> IndustryTypeAPI(BuildContext context) async {
+  Future<void> IndustryTypeAPI(BuildContext context) async {
     dynamic industryType;
     try {
       emit(CreatFourmLoadingState());
       industryType = await Repository().IndustryType(context);
-      if (industryType.success == true) {
-        emit(IndustryTypeLoadedState(industryType));
+      if (industryType == "Something Went Wrong, Try After Some Time.") {
+        emit(CreatFourmErrorState("${industryType}"));
+      } else {
+        if (industryType.success == true) {
+          emit(IndustryTypeLoadedState(industryType));
+        }
       }
     } catch (e) {
       emit(CreatFourmErrorState(industryType));

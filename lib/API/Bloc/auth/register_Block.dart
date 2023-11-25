@@ -13,10 +13,14 @@ class RegisterCubit extends Cubit<RegisterState> {
     try {
       emit(RegisterLoadingState());
       registerClassData = await Repository().registerApi(params, context);
-      if (registerClassData.success == true) {
-        emit(RegisterLoadedState(registerClassData));
-      }else{
-        emit(RegisterErrorState(registerClassData));
+      if (registerClassData == "Something Went Wrong, Try After Some Time.") {
+        RegisterErrorState("${registerClassData}");
+      } else {
+        if (registerClassData.success == true) {
+          emit(RegisterLoadedState(registerClassData));
+        } else {
+          emit(RegisterErrorState(registerClassData));
+        }
       }
     } catch (e) {
       print('LoginScreen-${e.toString()}');
@@ -29,8 +33,12 @@ class RegisterCubit extends Cubit<RegisterState> {
     try {
       emit(RegisterLoadingState());
       chooseDocument = await Repository().userProfile(imageFile, context);
-      if (chooseDocument.success == true) {
-        emit(chooseDocumentLoadedState(chooseDocument));
+      if (chooseDocument == "Something Went Wrong, Try After Some Time.") {
+        emit(RegisterErrorState("${chooseDocument}"));
+      } else {
+        if (chooseDocument.success == true) {
+          emit(chooseDocumentLoadedState(chooseDocument));
+        }
       }
     } catch (e) {
       print('LoginScreen-${e.toString()}');
