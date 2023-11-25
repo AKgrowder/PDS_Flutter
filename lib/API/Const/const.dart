@@ -105,4 +105,6 @@ class Config {
   static const String get_all_followings = "user/api/get_all_followings";
   static const String remove_follower = "user/api/remove_follower";
   static const String SelectChatMember = "user/api/search_user_for_inbox";
+  static const String validateTokenCheck = "auth/auth/validateTokenCheck";
+
 }
