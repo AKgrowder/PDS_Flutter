@@ -13,9 +13,12 @@ class HashTagCubit extends Cubit<HashTagState> {
       emit(HashTagLoadingState());
       HashTagForYouModel = await Repository()
           .HashTagForYouAPI(context, hashtagViewType, pageNumber);
+          if (HashTagForYouModel == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${HashTagForYouModel}"));
+      } else {
       if (HashTagForYouModel.success == true) {
         emit(HashTagLoadedState(HashTagForYouModel));
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(HashTagErrorState(HashTagForYouModel));
@@ -29,6 +32,9 @@ class HashTagCubit extends Cubit<HashTagState> {
       emit(HashTagLoadingState());
       HasthagpagantionDataGet = await Repository()
           .HashTagForYouAPI(context, hashtagViewType, pageNumber);
+          if (HasthagpagantionDataGet == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${HasthagpagantionDataGet}"));
+      } else {
       if (HasthagpagantionDataGet.success == true) {
         HashTagForYouModel.object.content
             .addAll(HasthagpagantionDataGet.object.content);
@@ -37,7 +43,7 @@ class HashTagCubit extends Cubit<HashTagState> {
         HashTagForYouModel.object.totalElements =
             HasthagpagantionDataGet.object.totalElements;
         emit(HashTagLoadedState(HashTagForYouModel));
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(HashTagErrorState(HashTagForYouModel));
@@ -55,10 +61,13 @@ class HashTagCubit extends Cubit<HashTagState> {
         context,
         hashTag,
       );
+      if (hashTagViewModel == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${hashTagViewModel}"));
+      } else {
       if (hashTagViewModel.success == true) {
         emit(HashTagViewDataLoadedState(hashTagViewModel));
         print(hashTagViewModel.object.posts);
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(HashTagErrorState(hashTagViewModel));
@@ -71,9 +80,12 @@ class HashTagCubit extends Cubit<HashTagState> {
     try {
       // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       likepost = await Repository().folliwingMethod(followedToUid, context);
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${likepost}"));
+      } else {
       if (likepost.success == true) {
         emit(PostLikeLoadedState(likepost));
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(HashTagErrorState(likepost));
@@ -86,9 +98,12 @@ class HashTagCubit extends Cubit<HashTagState> {
     try {
       // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       likepost = await Repository().likePostMethod(postUid, context);
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${likepost}"));
+      } else {
       if (likepost.success == true) {
         emit(PostLikeLoadedState(likepost));
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(HashTagErrorState(likepost));
@@ -101,9 +116,12 @@ class HashTagCubit extends Cubit<HashTagState> {
     try {
       // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       likepost = await Repository().savedPostMethod(postUid, context);
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${likepost}"));
+      } else {
       if (likepost.success == true) {
         emit(PostLikeLoadedState(likepost));
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(HashTagErrorState(likepost));
@@ -115,12 +133,15 @@ class HashTagCubit extends Cubit<HashTagState> {
     try {
       emit(HashTagLoadingState());
       Deletepost = await Repository().Deletepost(postUid, context);
+      if (Deletepost == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${Deletepost}"));
+      } else {
       if (Deletepost.success == true) {
         emit(DeletePostLoadedState(Deletepost));
         Navigator.pop(context);
       } else {
         emit(HashTagErrorState(Deletepost.message));
-      }
+      }}
     } catch (e) {
       emit(HashTagErrorState(Deletepost));
     }
@@ -137,13 +158,13 @@ class HashTagCubit extends Cubit<HashTagState> {
       getalluserlistModel = await Repository().getalluser(
           pageNumber, searchName, context,
           filterModule: filterModule);
-      if (getalluserlistModel == "Something Went Wrong, Try After Some Time.") {
+          if (getalluserlistModel == "Something Went Wrong, Try After Some Time.") {
         emit(HashTagErrorState("${getalluserlistModel}"));
       } else {
-        if (getalluserlistModel.success == true) {
-          emit(GetAllUserLoadedState(getalluserlistModel));
-        }
-      }
+      if (getalluserlistModel.success == true) {
+        emit(GetAllUserLoadedState(getalluserlistModel));
+      }}
+
     } catch (e) {
       print('errorstateshwowData-$e');
       emit(HashTagErrorState(e.toString()));
@@ -162,6 +183,9 @@ class HashTagCubit extends Cubit<HashTagState> {
       getalluserlistModelDataSetup = await Repository().getalluser(
           pageNumber, searchName, context,
           filterModule: filterModule);
+          if (getalluserlistModelDataSetup == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${getalluserlistModelDataSetup}"));
+      } else {
       if (getalluserlistModelDataSetup.success == true) {
         getalluserlistModel.object.content
             .addAll(getalluserlistModelDataSetup.object.content);
@@ -170,7 +194,7 @@ class HashTagCubit extends Cubit<HashTagState> {
         getalluserlistModel.object.totalElements =
             getalluserlistModelDataSetup.object.totalElements;
         emit(GetAllUserLoadedState(getalluserlistModel));
-      }
+      }}
     } catch (e) {
       emit(HashTagErrorState(e.toString()));
     }
@@ -181,10 +205,13 @@ class HashTagCubit extends Cubit<HashTagState> {
     try {
       emit(HashTagLoadingState());
       hashTagBannerModel = await Repository().HashTagBanner(context);
+      if (hashTagBannerModel == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${hashTagBannerModel}"));
+      } else {
       if (hashTagBannerModel.success == true) {
         emit(HashTagBannerLoadedState(hashTagBannerModel));
         print(hashTagBannerModel.message);
-      }
+      }}
     } catch (e) {
       emit(HashTagErrorState(e.toString()));
     }
@@ -196,10 +223,13 @@ class HashTagCubit extends Cubit<HashTagState> {
       emit(HashTagLoadingState());
       serchDataAdd =
           await Repository().search_historyDataAdd(context, typeWord);
+          if (serchDataAdd == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${serchDataAdd}"));
+      } else {
       if (serchDataAdd.success == true) {
         emit(SerchDataAddClass(serchDataAdd));
         print(serchDataAdd.message);
-      }
+      }}
     } catch (e) {
       emit(HashTagErrorState(e.toString()));
     }
@@ -210,10 +240,13 @@ class HashTagCubit extends Cubit<HashTagState> {
     try {
       emit(HashTagLoadingState());
       getSerchData = await Repository().getSerchData(context);
+      if (getSerchData == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${getSerchData}"));
+      } else {
       if (getSerchData.success == true) {
         emit(GetSerchData(getSerchData));
         print(getSerchData.message);
-      }
+      }}
     } catch (e) {
       emit(HashTagErrorState(e.toString()));
     }
