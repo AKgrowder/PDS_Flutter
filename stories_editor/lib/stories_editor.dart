@@ -48,8 +48,9 @@ class StoriesEditor extends StatefulWidget {
 
   /// gallery thumbnail quality
   final int? galleryThumbnailQuality;
+  double? finalFileSize;
 
-  const StoriesEditor(
+    StoriesEditor(
       {Key? key,
       required this.giphyKey,
       required this.onDone,
@@ -61,7 +62,8 @@ class StoriesEditor extends StatefulWidget {
       this.onBackPress,
       this.onDoneButtonStyle,
       this.editorBackgroundColor,
-      this.galleryThumbnailQuality})
+      this.galleryThumbnailQuality,
+      this.finalFileSize})
       : super(key: key);
 
   @override
@@ -107,6 +109,7 @@ class _StoriesEditorState extends State<StoriesEditor> {
             ChangeNotifierProvider(create: (_) => TextEditingNotifier()),
           ],
           child: MainView(
+            finalFileSize: widget.finalFileSize,
             giphyKey: widget.giphyKey,
             onDone: widget.onDone,
             fontFamilyList: widget.fontFamilyList,
