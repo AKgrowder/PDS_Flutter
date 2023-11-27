@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
+import 'package:pds/API/Model/IsTokenExpired/IsTokenExpired.dart';
 import 'package:pds/API/Model/RePost_Model/RePost_model.dart';
 
 import 'package:pds/API/Model/PersonalChatListModel/SelectChatMember_Model.dart';
@@ -29,6 +30,7 @@ import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
 import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
+import 'package:pds/API/Model/logoutModel/logoutModel.dart';
 import 'package:pds/API/Model/removeFolloweModel/removeFollowerModel.dart';
 import 'package:pds/API/Model/serchDataAddModel/serchDataAddModel.dart';
 import 'package:pds/API/Model/storyModel/stroyModel.dart';
@@ -54,6 +56,8 @@ import 'package:pds/API/Model/otpmodel/otpmodel.dart';
 import 'package:pds/API/Model/pinAndUnpinModel/pinAndUnpinModel.dart';
 import 'package:pds/API/Model/sherInviteModel/sherinviteModel.dart';
 import 'package:pds/API/Model/updateprofileModel/updateprofileModel.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ApiService/ApiService.dart';
 import '../Const/const.dart';
@@ -821,7 +825,7 @@ class Repository {
     final response =
         await apiServices.getApiCallWithToken(Config.myaccountApi, context);
     var jsonString = json.decode(response.body);
-    print('Myaccount$jsonString');
+    print('Myaccount${response.statusCode}');
     switch (response.statusCode) {
       case 200:
         return MyAccontDetails.fromJson(jsonString);
@@ -832,7 +836,7 @@ class Repository {
       case 400:
         return Config.somethingWentWrong;
       case 701:
-        return Config.somethingWentWrong;
+        return jsonString;
       default:
         return jsonString;
     }
@@ -1823,9 +1827,9 @@ class Repository {
     final response = await apiServices.getApiCallWithToken(
         '${Config.HashTagForYou}?hashtagViewType=$hashtagViewType&pageNumber=$pageNumber&pageSize=20',
         context);
-    print("dsgfsdgfsdg-${response}");
-    print("responce statucdoe-${response.statusCode}");
+
     var jsonString = json.decode(response.body);
+    print("jasonnStingview-${jsonString}");
     switch (response.statusCode) {
       case 200:
         return HashtagModel.fromJson(jsonString);
@@ -2154,6 +2158,28 @@ class Repository {
     switch (responce.statusCode) {
       case 200:
         return SelectChatMemberModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  logOutSettionexperied(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString(PreferencesKey.loginJwt) ?? "";
+    final responce = await apiServices.getApiCall(
+        '${Config.logOutUserSttionExperied}?token=$token', context);
+    var jsonString = json.decode(responce.body);
+    switch (responce.statusCode) {
+      case 200:
+        return IsTokenExpired.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:

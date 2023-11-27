@@ -83,7 +83,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   int imageCount = 1;
   int imageCount1 = 1;
   Uint8List? firstPageImage;
-
+  double documentuploadsize = 0;
+  double finalFileSize = 0;
   LikePost? likePost;
   GetGuestAllPostModel? AllGuestPostRoomData;
   DeleteCommentModel? DeletecommentDataa;
@@ -120,6 +121,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   String? IosLatestVersion;
   String? IosRoutVersion;
   String? IosMainversion;
+   getDocumentSize() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    documentuploadsize = await double.parse(
+        prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
+
+    finalFileSize = documentuploadsize;
+    setState(() {});
+  }
   bool _isLink(String input) {
     RegExp linkRegex = RegExp(
         r'^https?:\/\/(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z]+)+(?:[^\s]*)$');
@@ -162,8 +171,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   @override
   void initState() {
     Get_UserToken();
+    
     storycontext = context;
     VersionControll();
+    getDocumentSize();
     super.initState();
   }
 
@@ -740,6 +751,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
   NewApi() async {
     await BlocProvider.of<GetGuestAllPostCubit>(context)
+        .seetinonExpried(context);
+    await BlocProvider.of<GetGuestAllPostCubit>(context)
         .SystemConfigHome(context);
     print("1111111111111 :- ${User_ID}");
     // /user/api/get_all_post
@@ -883,11 +896,19 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           body: BlocConsumer<GetGuestAllPostCubit, GetGuestAllPostState>(
               listener: (context, state) async {
             if (state is GetGuestAllPostErrorState) {
-              SnackBar snackBar = SnackBar(
-                content: Text(state.error),
-                backgroundColor: ColorConstant.primary_color,
-              );
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              print("i want check responce---${state.error}");
+              if (state.error['errorCode'] == '701') {
+              } 
+              else if(state.error['status'] == ''){
+
+              }
+              else {
+                SnackBar snackBar = SnackBar(
+                  content: Text(state.error),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
             }
 
             if (state is FetchAllExpertsLoadedState) {
@@ -1284,7 +1305,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         context,
                                                         MaterialPageRoute(
                                                             builder: (context) {
-                                                  return CreateStoryPage();
+                                                  return CreateStoryPage(    finalFileSize:
+                                                        finalFileSize,);
                                                 }));
                                                 print(
                                                     "dfhsdfhsdfsdhf--${imageDataPost?.object}");
@@ -1305,7 +1327,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   await Navigator.push(context,
                                                       MaterialPageRoute(
                                                           builder: (context) {
-                                                return CreateStoryPage();
+                                                return CreateStoryPage(    finalFileSize:
+                                                        finalFileSize,);
                                               }));
                                               var parmes = {
                                                 "storyData": imageDataPost
@@ -2641,7 +2664,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         ?.content?[
                                                                             index]
                                                                         .repostCount ==
-                                                                    0
+                                                                    null
                                                                 ? SizedBox()
                                                                 : Text(
                                                                     '${AllGuestPostRoomData?.object?.content?[index].repostCount}',
@@ -3482,7 +3505,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         ?.content?[
                                                                             index]
                                                                         .repostCount ==
-                                                                    0
+                                                                    null
                                                                 ? SizedBox()
                                                                 : Text(
                                                                     uuid == null
@@ -4339,7 +4362,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         if (await permissionHandler(context, Permission.photos) ?? false) {
           imageDataPost = await Navigator.push(context,
               MaterialPageRoute(builder: (context) {
-            return CreateStoryPage();
+            return CreateStoryPage(    finalFileSize:
+                                                        finalFileSize,);
           }));
           print("imageData--${imageDataPost?.object.toString()}");
           var parmes = {"storyData": imageDataPost?.object.toString()};
@@ -4350,7 +4374,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           false) {
         imageDataPost =
             await Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return CreateStoryPage();
+          return CreateStoryPage(    finalFileSize:
+                                                        finalFileSize,);
         }));
         var parmes = {"storyData": imageDataPost?.object.toString()};
         Repository().cretateStoryApi(context, parmes);

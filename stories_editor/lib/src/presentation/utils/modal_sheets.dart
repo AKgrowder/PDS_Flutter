@@ -116,7 +116,7 @@ Future<bool> exitDialog({required context, required contentKey}) async {
                   ),
 
                   /// save and exit
-                  AnimatedOnTapButton(
+              /*     AnimatedOnTapButton(
                     onTap: () async {
                       final _paintingProvider =
                           Provider.of<PaintingNotifier>(context, listen: false);
@@ -149,13 +149,13 @@ Future<bool> exitDialog({required context, required contentKey}) async {
                           letterSpacing: 0.5),
                       textAlign: TextAlign.center,
                     ),
-                  ),
-                  const SizedBox(
+                  ), */
+                /*   const SizedBox(
                     height: 22,
                     child: Divider(
                       color: Colors.white10,
                     ),
-                  ),
+                  ), */
 
                   ///cancel
                   AnimatedOnTapButton(
