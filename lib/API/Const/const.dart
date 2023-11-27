@@ -106,5 +106,7 @@ class Config {
   static const String remove_follower = "user/api/remove_follower";
   static const String SelectChatMember = "user/api/search_user_for_inbox";
   static const String validateTokenCheck = "auth/auth/validateTokenCheck";
+  static const String logOutUserSttionExperied = "auth/auth/isTokenExpired";
+
 
 }

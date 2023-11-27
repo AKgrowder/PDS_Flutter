@@ -75,6 +75,8 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   @override
   void initState() {
     super.initState();
+     BlocProvider.of<HashTagCubit>(context)
+        .seetinonExpried(context);
     getUserData();
     BlocProvider.of<HashTagCubit>(context)
         .HashTagForYouAPI(context, 'FOR YOU', '1');
@@ -92,421 +94,431 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: BlocConsumer<HashTagCubit, HashTagState>(
-        listener: (context, state) {
-          if (state is HashTagErrorState) {
-            print("i want error print${state.error}");
-            SnackBar snackBar = SnackBar(
-              content: Text(state.error),
-              backgroundColor: ColorConstant.primary_color,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }
-          if (state is GetSerchData) {
-            getDataInSerch = state.getDataInSerch;
-          }
-          if (state is HashTagLoadedState) {
-            apiDataSetup = true;
-            print(
-                "HashTagLoadedStateHashTagLoadedState${state.HashTagData.message}dfdfh`${state.HashTagData.object}");
-            hashtagModel = state.HashTagData;
-          }
-          if (state is GetAllUserLoadedState) {
-            dataget = true;
-            print("api caling");
-            getalluserlistModel = state.getAllUserRoomData;
-            getalluserlistModel?.object?.content?.forEach((element) {
-              print(
-                  "i want to check dtata-${element.hashtagNamesDto?.hashtagName}");
-            });
-          }
-          /* if (state is HashTagBannerLoadedState) {
-            print("HashTagBannerLoadedState - ${hashTagImageModel?.object}");
-            hashTagImageModel = state.hashTagImageModel;
-          } */
-        },
-        builder: (context, state) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 15, right: 15, top: 60),
-                child: isSerch == true
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          NewBottomBar(buttomIndex: 2),
-                                    ));
-                              },
-                              child: Icon(Icons.arrow_back)),
-                          Container(
-                            height: 48,
-                            width: _width / 1.25,
-                            decoration: BoxDecoration(
-                                color: Color(0xffF0F0F0),
-                                borderRadius: BorderRadius.circular(30)),
-                            child: TextFormField(
-                              autofocus: true,
-                              onEditingComplete: () {
-                                print("dsfhdsfsdsgfgsd");
-                              },
-                              onTap: () {
-                                if (mounted) {
-                                  setState(() {
-                                    isSerch = true;
-                                  });
-                                }
-
-                                print("xfhdsfhsdfgsdfg-$isSerch");
-                                /*    Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return AllSearchScreen();
-                            },
-                          )); */
-                              },
-                              onChanged: (value) {
-                                print("i want to check value-${value}");
-                                if (value.contains('#')) {
-                                  print("value.contains('#')");
-                                  if (indexxx == 0) {
-                                    print("index is  0");
-                                    String hashTageValue =
-                                        value.replaceAll("#", "%23");
-                                    BlocProvider.of<HashTagCubit>(context)
-                                        .getalluser(
-                                            1, hashTageValue.trim(), context);
-                                  } else {
-                                    print("index is not 0");
-                                    String hashTageValue =
-                                        value.replaceAll("#", "%23");
-                                    BlocProvider.of<HashTagCubit>(context)
-                                        .getalluser(
-                                            1, hashTageValue.trim(), context,
-                                            filterModule: 'EXPERT');
-                                  }
-                                } else if (value.isNotEmpty) {
-                                  if (indexxx == 0) {
-                                    print("if condison woking");
-
-                                    BlocProvider.of<HashTagCubit>(context)
-                                        .getalluser(1, value.trim(), context);
-                                  } else {
-                                    print("else condison woking");
-                                    BlocProvider.of<HashTagCubit>(context)
-                                        .getalluser(1, value.trim(), context,
-                                            filterModule: 'EXPERT');
-                                  }
-                                } else {
-                                  dataget = false;
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NewBottomBar(buttomIndex: 2),
+            ));
+        return true;
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: BlocConsumer<HashTagCubit, HashTagState>(
+          listener: (context, state) {
+            if (state is HashTagErrorState) {
+              apiDataSetup = true;
+              // print("i want error print${state.error}");
+              // SnackBar snackBar = SnackBar(
+              //   content: Text(state.error),
+              //   backgroundColor: ColorConstant.primary_color,
+              // );
+              // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+            if (state is GetSerchData) {
+              getDataInSerch = state.getDataInSerch;
+            }
+            if (state is HashTagLoadedState) {
+              apiDataSetup = true;
+             
+              hashtagModel = state.HashTagData;
+            }
+            if (state is GetAllUserLoadedState) {
+              dataget = true;
+              print("api caling");
+              getalluserlistModel = state.getAllUserRoomData;
+              getalluserlistModel?.object?.content?.forEach((element) {
+                print(
+                    "i want to check dtata-${element.hashtagNamesDto?.hashtagName}");
+              });
+            }
+            /* if (state is HashTagBannerLoadedState) {
+              print("HashTagBannerLoadedState - ${hashTagImageModel?.object}");
+              hashTagImageModel = state.hashTagImageModel;
+            } */
+          },
+          builder: (context, state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 15, top: 60),
+                  child: isSerch == true
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            NewBottomBar(buttomIndex: 2),
+                                      ));
+                                },
+                                child: Icon(Icons.arrow_back)),
+                            Container(
+                              height: 48,
+                              width: _width / 1.25,
+                              decoration: BoxDecoration(
+                                  color: Color(0xffF0F0F0),
+                                  borderRadius: BorderRadius.circular(30)),
+                              child: TextFormField(
+                                autofocus: true,
+                                onEditingComplete: () {
+                                  print("dsfhdsfsdsgfgsd");
+                                },
+                                onTap: () {
                                   if (mounted) {
                                     setState(() {
-                                      // Update the widget's state.
+                                      isSerch = true;
                                     });
                                   }
-                                }
-                                print("dataGet-${value.trim()}");
-
-                                if (text.isNotEmpty) {
-                                  print("valuee check--${value.trim()}");
-                                  if (_timer != null) {
-                                    _timer?.cancel();
-                                    _timer = Timer(Duration(seconds: 5), () {
-                                      BlocProvider.of<HashTagCubit>(context)
-                                          .serchDataAdd(context, value.trim());
-                                    });
-                                  } else {
-                                    _timer = Timer(Duration(seconds: 5), () {
-                                      BlocProvider.of<HashTagCubit>(context)
-                                          .serchDataAdd(context, value.trim());
-                                    });
-                                  }
-                                }
+    
+                                  print("xfhdsfhsdfgsdfg-$isSerch");
+                                  /*    Navigator.push(context, MaterialPageRoute(
+                              builder: (context) {
+                                return AllSearchScreen();
                               },
-                              controller: searchController,
-                              cursorColor: Colors.grey,
-                              decoration: InputDecoration(
-                                  hintText: "Search....",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  border: InputBorder.none,
-                                  prefixIcon: Icon(
-                                    Icons.search,
-                                    color: Colors.grey,
-                                  )),
-                            ),
-                          ),
-                        ],
-                      )
-                    : Container(
-                        height: 48,
-                        decoration: BoxDecoration(
-                            color: Color(0xffF0F0F0),
-                            borderRadius: BorderRadius.circular(30)),
-                        child: TextFormField(
-                          onTap: () {
-                            if (mounted) {
-                              setState(() {
-                                isSerch = true;
-                              });
-                            }
-                          },
-                          onChanged: (value) {
-                            if (value.isNotEmpty) {
-                              if (indexxx == 0) {
-                                print("i want to  chrck-${value.trim()}");
-                                BlocProvider.of<HashTagCubit>(context)
-                                    .getalluser(1, value.trim(), context);
-                              } else {
-                                BlocProvider.of<HashTagCubit>(context)
-                                    .getalluser(1, value.trim(), context,
-                                        filterModule: 'EXPERT');
-                              }
-                            } else {
-                              dataget = false;
-                              if (mounted) {
-                                setState(() {
-                                  // Update the widget's state.
-                                });
-                              }
-                            }
-                          },
-                          controller: searchController,
-                          cursorColor: Colors.grey,
-                          decoration: InputDecoration(
-                              hintText: "Search....",
-                              hintStyle: TextStyle(color: Colors.grey),
-                              border: InputBorder.none,
-                              prefixIcon: Icon(
-                                Icons.search,
-                                color: Colors.grey,
-                              )),
-                        ),
-                      ),
-              ),
-              Divider(
-                color: Colors.grey,
-              ),
-              isSerch == true
-                  ? SizedBox(
-                      // height: 40,
-                      width: double.infinity,
-                      child: Column(children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: List.generate(text1.length, (index) {
-                            return GestureDetector(
-                              onTap: () {
-                                indexxx = index;
-                                dataSetup = null;
-
-                                SharedPreferencesFunction(indexxx ?? 0);
-                                if (mounted) {
-                                  setState(() {
-                                    // Update the widget's state.
-                                  });
-                                }
-                                if (searchController.text.contains('#')) {
-                                  print("value.contains('#')");
-                                  if (indexxx == 0) {
-                                    print("index is  0");
-                                    String hashTageValue = searchController.text
-                                        .replaceAll("#", "%23");
-                                    BlocProvider.of<HashTagCubit>(context)
-                                        .getalluser(
-                                            1, hashTageValue.trim(), context);
-                                  } else {
-                                    print("index is not 0");
-                                    String hashTageValue = searchController.text
-                                        .replaceAll("#", "%23");
-                                    BlocProvider.of<HashTagCubit>(context)
-                                        .getalluser(
-                                            1, hashTageValue.trim(), context,
-                                            filterModule: 'EXPERT');
-                                  }
-                                } else if (searchController.text.isNotEmpty) {
-                                  if (indexxx == 0) {
-                                    BlocProvider.of<HashTagCubit>(context)
-                                        .getalluser(
-                                            1,
-                                            searchController.text.trim(),
-                                            context);
-                                  } else {
-                                    BlocProvider.of<HashTagCubit>(context)
-                                        .getalluser(
-                                            1,
-                                            searchController.text.trim(),
-                                            context,
-                                            filterModule: 'EXPERT');
-                                  }
-                                } else {}
-                              },
-                              child: Container(
-                                margin: EdgeInsets.all(5),
-                                height: 25,
-                                width: 120,
-                                decoration: BoxDecoration(
-                                    color: indexxx == index
-                                        ? Color(0xffED1C25)
-                                        : dataSetup == index
-                                            ? Color(0xffED1C25)
-                                            : Color(0xffFBD8D9),
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: Center(
-                                    child: Text(
-                                  text1[index],
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                      color: indexxx == index
-                                          ? Colors.white
-                                          : dataSetup == index
-                                              ? Colors.white
-                                              : Color(0xffED1C25)),
-                                )),
-                              ),
-                            );
-                          }),
-                        )
-                      ]))
-                  : apiDataSetup == true
-                      ? SizedBox(
-                          width: double.infinity,
-                          child: Column(children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: List.generate(text.length, (index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    indexxx = index;
-                                    dataSetup = null;
-                                    print("indexxx$indexxx");
-                                    SharedPreferencesFunction(indexxx ?? 0);
-                                    if (indexxx == 1) {
-                                      //TRENDING
+                            )); */
+                                },
+                                onChanged: (value) {
+                                  print("i want to check value-${value}");
+                                  if (value.contains('#')) {
+                                    print("value.contains('#')");
+                                    if (indexxx == 0) {
+                                      print("index is  0");
+                                      String hashTageValue =
+                                          value.replaceAll("#", "%23");
                                       BlocProvider.of<HashTagCubit>(context)
-                                          .HashTagForYouAPI(
-                                              context, 'TRENDING', '1');
+                                          .getalluser(
+                                              1, hashTageValue.trim(), context);
                                     } else {
+                                      print("index is not 0");
+                                      String hashTageValue =
+                                          value.replaceAll("#", "%23");
                                       BlocProvider.of<HashTagCubit>(context)
-                                          .HashTagForYouAPI(
-                                              context, 'FOR YOU', '1');
+                                          .getalluser(
+                                              1, hashTageValue.trim(), context,
+                                              filterModule: 'EXPERT');
                                     }
+                                  } else if (value.isNotEmpty) {
+                                    if (indexxx == 0) {
+                                      print("if condison woking");
+    
+                                      BlocProvider.of<HashTagCubit>(context)
+                                          .getalluser(1, value.trim(), context);
+                                    } else {
+                                      print("else condison woking");
+                                      BlocProvider.of<HashTagCubit>(context)
+                                          .getalluser(1, value.trim(), context,
+                                              filterModule: 'EXPERT');
+                                    }
+                                  } else {
+                                    dataget = false;
                                     if (mounted) {
                                       setState(() {
                                         // Update the widget's state.
                                       });
                                     }
-                                  },
-                                  child: Container(
-                                    margin: EdgeInsets.all(5),
-                                    height: 25,
-                                    width: 120,
-                                    decoration: BoxDecoration(
-                                        color: indexxx == index
-                                            ? Color(0xffED1C25)
-                                            : dataSetup == index
-                                                ? Color(0xffED1C25)
-                                                : Color(0xffFBD8D9),
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: Center(
-                                        child: Text(
-                                      text[index],
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          color: indexxx == index
-                                              ? Colors.white
-                                              : dataSetup == index
-                                                  ? Colors.white
-                                                  : Color(0xffED1C25)),
+                                  }
+                                  print("dataGet-${value.trim()}");
+    
+                                  if (text.isNotEmpty) {
+                                    print("valuee check--${value.trim()}");
+                                    if (_timer != null) {
+                                      _timer?.cancel();
+                                      _timer = Timer(Duration(seconds: 5), () {
+                                        BlocProvider.of<HashTagCubit>(context)
+                                            .serchDataAdd(context, value.trim());
+                                      });
+                                    } else {
+                                      _timer = Timer(Duration(seconds: 5), () {
+                                        BlocProvider.of<HashTagCubit>(context)
+                                            .serchDataAdd(context, value.trim());
+                                      });
+                                    }
+                                  }
+                                },
+                                controller: searchController,
+                                cursorColor: Colors.grey,
+                                decoration: InputDecoration(
+                                    hintText: "Search....",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    border: InputBorder.none,
+                                    prefixIcon: Icon(
+                                      Icons.search,
+                                      color: Colors.grey,
                                     )),
-                                  ),
-                                );
-                              }),
-                            )
-                          ]))
-                      : Center(
-                          child: Container(
-                            margin: EdgeInsets.only(bottom: 100),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.asset(ImageConstant.loader,
-                                  fit: BoxFit.cover, height: 100.0, width: 100),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(
+                          height: 48,
+                          decoration: BoxDecoration(
+                              color: Color(0xffF0F0F0),
+                              borderRadius: BorderRadius.circular(30)),
+                          child: TextFormField(
+                            onTap: () {
+                              if (mounted) {
+                                setState(() {
+                                  isSerch = true;
+                                });
+                              }
+                            },
+                            onChanged: (value) {
+                              if (value.isNotEmpty) {
+                                if (indexxx == 0) {
+                                  print("i want to  chrck-${value.trim()}");
+                                  BlocProvider.of<HashTagCubit>(context)
+                                      .getalluser(1, value.trim(), context);
+                                } else {
+                                  BlocProvider.of<HashTagCubit>(context)
+                                      .getalluser(1, value.trim(), context,
+                                          filterModule: 'EXPERT');
+                                }
+                              } else {
+                                dataget = false;
+                                if (mounted) {
+                                  setState(() {
+                                    // Update the widget's state.
+                                  });
+                                }
+                              }
+                            },
+                            controller: searchController,
+                            cursorColor: Colors.grey,
+                            decoration: InputDecoration(
+                                hintText: "Search....",
+                                hintStyle: TextStyle(color: Colors.grey),
+                                border: InputBorder.none,
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: Colors.grey,
+                                )),
+                          ),
+                        ),
+                ),
+                Divider(
+                  color: Colors.grey,
+                ),
+                isSerch == true
+                    ? SizedBox(
+                        // height: 40,
+                        width: double.infinity,
+                        child: Column(children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: List.generate(text1.length, (index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  indexxx = index;
+                                  dataSetup = null;
+    
+                                  SharedPreferencesFunction(indexxx ?? 0);
+                                  if (mounted) {
+                                    setState(() {
+                                      // Update the widget's state.
+                                    });
+                                  }
+                                  if (searchController.text.contains('#')) {
+                                    print("value.contains('#')");
+                                    if (indexxx == 0) {
+                                      print("index is  0");
+                                      String hashTageValue = searchController.text
+                                          .replaceAll("#", "%23");
+                                      BlocProvider.of<HashTagCubit>(context)
+                                          .getalluser(
+                                              1, hashTageValue.trim(), context);
+                                    } else {
+                                      print("index is not 0");
+                                      String hashTageValue = searchController.text
+                                          .replaceAll("#", "%23");
+                                      BlocProvider.of<HashTagCubit>(context)
+                                          .getalluser(
+                                              1, hashTageValue.trim(), context,
+                                              filterModule: 'EXPERT');
+                                    }
+                                  } else if (searchController.text.isNotEmpty) {
+                                    if (indexxx == 0) {
+                                      BlocProvider.of<HashTagCubit>(context)
+                                          .getalluser(
+                                              1,
+                                              searchController.text.trim(),
+                                              context);
+                                    } else {
+                                      BlocProvider.of<HashTagCubit>(context)
+                                          .getalluser(
+                                              1,
+                                              searchController.text.trim(),
+                                              context,
+                                              filterModule: 'EXPERT');
+                                    }
+                                  } else {}
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(5),
+                                  height: 25,
+                                  width: 120,
+                                  decoration: BoxDecoration(
+                                      color: indexxx == index
+                                          ? Color(0xffED1C25)
+                                          : dataSetup == index
+                                              ? Color(0xffED1C25)
+                                              : Color(0xffFBD8D9),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Center(
+                                      child: Text(
+                                    text1[index],
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        color: indexxx == index
+                                            ? Colors.white
+                                            : dataSetup == index
+                                                ? Colors.white
+                                                : Color(0xffED1C25)),
+                                  )),
+                                ),
+                              );
+                            }),
+                          )
+                        ]))
+                    : apiDataSetup == true
+                        ? SizedBox(
+                            width: double.infinity,
+                            child: Column(children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: List.generate(text.length, (index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      indexxx = index;
+                                      dataSetup = null;
+                                      print("indexxx$indexxx");
+                                      SharedPreferencesFunction(indexxx ?? 0);
+                                      if (indexxx == 1) {
+                                        //TRENDING
+                                        BlocProvider.of<HashTagCubit>(context)
+                                            .HashTagForYouAPI(
+                                                context, 'TRENDING', '1');
+                                      } else {
+                                        BlocProvider.of<HashTagCubit>(context)
+                                            .HashTagForYouAPI(
+                                                context, 'FOR YOU', '1');
+                                      }
+                                      if (mounted) {
+                                        setState(() {
+                                          // Update the widget's state.
+                                        });
+                                      }
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.all(5),
+                                      height: 25,
+                                      width: 120,
+                                      decoration: BoxDecoration(
+                                          color: indexxx == index
+                                              ? Color(0xffED1C25)
+                                              : dataSetup == index
+                                                  ? Color(0xffED1C25)
+                                                  : Color(0xffFBD8D9),
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: Center(
+                                          child: Text(
+                                        text[index],
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            color: indexxx == index
+                                                ? Colors.white
+                                                : dataSetup == index
+                                                    ? Colors.white
+                                                    : Color(0xffED1C25)),
+                                      )),
+                                    ),
+                                  );
+                                }),
+                              )
+                            ]))
+                        : Center(
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: 100),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.asset(ImageConstant.loader,
+                                    fit: BoxFit.cover, height: 100.0, width: 100),
+                              ),
                             ),
                           ),
-                        ),
-              Divider(
-                color: Colors.grey,
-              ),
-              /* isSerch == true
-                  ? SizedBox()
-                  : indexxx == 0
-                      ? getDataInSerch?.object?.isEmpty == false
-                          ? SizedBox()
-                          : Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Text(
-                                "History",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                    color: ColorConstant.primary_color),
-                              ),
-                            )
-                      : SizedBox(),
-              isSerch == true
-                  ? SizedBox()
-                  : indexxx == 0
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: historyData(),
-                        )
-                      : SizedBox(), */
-              /*       isSerch == true
-                  ? SizedBox()
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Divider(
-                          height: 3,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Text(
-                            "For You",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: ColorConstant.primary_color),
+                Divider(
+                  color: Colors.grey,
+                ),
+                /* isSerch == true
+                    ? SizedBox()
+                    : indexxx == 0
+                        ? getDataInSerch?.object?.isEmpty == false
+                            ? SizedBox()
+                            : Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Text(
+                                  "History",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: ColorConstant.primary_color),
+                                ),
+                              )
+                        : SizedBox(),
+                isSerch == true
+                    ? SizedBox()
+                    : indexxx == 0
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: historyData(),
+                          )
+                        : SizedBox(), */
+                /*       isSerch == true
+                    ? SizedBox()
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Divider(
+                            height: 3,
+                            color: Colors.grey,
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    ), */
-              isSerch == true
-                  ? dataget == true
-                      ? NavagtionPassing1()
-                      : SizedBox()
-                  : apiDataSetup == true
-                      ? NavagtionPassing(hashtagModel: hashtagModel)
-                      : SizedBox()
-            ],
-          );
-        },
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text(
+                              "For You",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: ColorConstant.primary_color),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ), */
+                isSerch == true
+                    ? dataget == true
+                        ? NavagtionPassing1()
+                        : SizedBox()
+                    : apiDataSetup == true
+                        ? NavagtionPassing(hashtagModel: hashtagModel)
+                        : SizedBox()
+              ],
+            );
+          },
+        ),
       ),
     );
   }

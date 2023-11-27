@@ -29,4 +29,22 @@ class FollowerBlock extends Cubit<FolllwerBlockState> {
       emit(FollwertErrroState(e.toString()));
     }
   }
+
+    Future<void> followWIngMethod(String? followedToUid, BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic likepost;
+    try {
+      // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
+      likepost = await Repository().folliwingMethod(followedToUid, context);
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(FollwertErrroState("${likepost}"));
+      } else {
+      if (likepost.success == true) {
+        emit(PostLikeLoadedState(likepost));
+      }}
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(FollwertErrroState(likepost));
+    }
+  }
 }
