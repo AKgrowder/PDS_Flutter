@@ -11,9 +11,12 @@ class FatchAllMembersCubit extends Cubit<FatchAllMembersState> {
     try {
       emit(FatchAllMembersLoadingState());
       PublicRModel = await Repository().FatchAllMembersAPI(Roomuid, context);
+      if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
+        emit(FatchAllMembersErrorState("${PublicRModel}"));
+      } else {
       if (PublicRModel.success == true) {
         emit(FatchAllMembersLoadedState(PublicRModel));
-      }
+      }}
     } catch (e) {
       emit(FatchAllMembersErrorState(PublicRModel));
     }

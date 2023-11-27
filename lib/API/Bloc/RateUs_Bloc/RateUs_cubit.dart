@@ -12,9 +12,12 @@ class RateUsCubit extends Cubit<RateUSState> {
     try {
       emit(RateUSLoadingState());
       logOutModel = await Repository().RateUs(params, context);
+      if (logOutModel == "Something Went Wrong, Try After Some Time.") {
+        emit(RateUSErrorState("${logOutModel}"));
+      } else {
       if (logOutModel.success == true) {
         emit(RateUSLoadedState(logOutModel));
-      }
+      }}
     } catch (e) {
       emit(RateUSErrorState(logOutModel));
     }

@@ -12,9 +12,12 @@ class CreatPublicRoomCubit extends Cubit<CreatPublicRoomState> {
     try {
       emit(CreatPublicRoomLoadingState());
       PublicRModel = await Repository().CreatPublicRoom(params, context);
+      if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
+        emit(CreatPublicRoomErrorState("${PublicRModel}"));
+      } else {
       if (PublicRModel.success == true) {
         emit(CreatPublicRoomLoadedState(PublicRModel));
-      }
+      }}
     } catch (e) {
       emit(CreatPublicRoomErrorState(PublicRModel));
     }

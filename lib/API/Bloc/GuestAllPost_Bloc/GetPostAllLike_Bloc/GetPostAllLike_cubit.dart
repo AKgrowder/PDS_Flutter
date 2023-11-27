@@ -10,9 +10,12 @@ class GetPostAllLikeCubit extends Cubit<GetPostAllLikeState> {
     try {
       emit(GetGuestAllPostLoadingState());
       PublicRModel = await Repository().GetPostAllLike(context,PostUID);
+      if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${PublicRModel}"));
+      } else {
       if (PublicRModel.success == true) {
         emit(GetGuestAllPostLoadedState(PublicRModel));
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(GetGuestAllPostErrorState(PublicRModel));
@@ -25,9 +28,12 @@ class GetPostAllLikeCubit extends Cubit<GetPostAllLikeState> {
     try {
       // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       likepost = await Repository().folliwingMethod(followedToUid, context);
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${likepost}"));
+      } else {
       if (likepost.success == true) {
         emit(PostLikeLoadedState(likepost));
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(GetGuestAllPostErrorState(likepost));
