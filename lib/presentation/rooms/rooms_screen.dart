@@ -77,10 +77,13 @@ class _RoomsScreenState extends State<RoomsScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_Mood = prefs.getString(PreferencesKey.module);
     var User_ID = prefs.getString(PreferencesKey.loginUserID);
-    if (User_ID != "") {
+    if (User_ID != "" && User_ID?.isNotEmpty == true) {
+      await BlocProvider.of<GetAllPrivateRoomCubit>(context)
+          .seetinonExpried(context);
       await BlocProvider.of<GetAllPrivateRoomCubit>(context)
           .chckUserStaus(context);
     }
+
     await BlocProvider.of<GetAllPrivateRoomCubit>(context)
         .GetAllPrivateRoomAPI(context);
   }
@@ -1258,18 +1261,14 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                   height: 20,
                                                                                   radius: BorderRadius.circular(20),
                                                                                   width: 20,
-                                                                                  fit: BoxFit
-                                                                        .fill,
-                                                                                ):CustomImageView(
+                                                                                  fit: BoxFit.fill,
+                                                                                )
+                                                                              : CustomImageView(
                                                                                   imagePath: ImageConstant.tomcruse,
-
                                                                                   height: 20,
-                                                                                  radius: BorderRadius
-                                                                        .circular(
-                                                                            20),
+                                                                                  radius: BorderRadius.circular(20),
                                                                                   width: 20,
-                                                                                  fit: BoxFit
-                                                                        .fill,
+                                                                                  fit: BoxFit.fill,
                                                                                 )),
                                                                     ),
                                                                     Positioned(
@@ -1280,29 +1279,20 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child:
-                                                                     PriveateRoomData?.object?[index].usersList?[2].userProfilePic?.isNotEmpty ??
-                                                                            false? CustomImageView(
-                                                                                  url: 
-                                                                         "${PriveateRoomData?.object?[index].usersList?[2].userProfilePic}",
-
+                                                                          child: PriveateRoomData?.object?[index].usersList?[2].userProfilePic?.isNotEmpty ?? false
+                                                                              ? CustomImageView(
+                                                                                  url: "${PriveateRoomData?.object?[index].usersList?[2].userProfilePic}",
                                                                                   height: 20,
-                                                                                  radius: BorderRadius
-                                                                        .circular(
-                                                                            20),
+                                                                                  radius: BorderRadius.circular(20),
                                                                                   width: 20,
-                                                                                  fit: BoxFit
-                                                                        .fill,
-                                                                                ):CustomImageView(
+                                                                                  fit: BoxFit.fill,
+                                                                                )
+                                                                              : CustomImageView(
                                                                                   imagePath: ImageConstant.tomcruse,
-
                                                                                   height: 20,
-                                                                                  radius: BorderRadius
-                                                                        .circular(
-                                                                            20),
+                                                                                  radius: BorderRadius.circular(20),
                                                                                   width: 20,
-                                                                                  fit: BoxFit
-                                                                        .fill,
+                                                                                  fit: BoxFit.fill,
                                                                                 )),
                                                                     ),
                                                                     Positioned(

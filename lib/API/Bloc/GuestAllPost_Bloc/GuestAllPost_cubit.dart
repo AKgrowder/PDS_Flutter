@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/ApiService/ApiService.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
 import 'package:pds/API/Repo/repository.dart';
 
@@ -8,6 +9,23 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
   dynamic PublicRModel;
 
   GetGuestAllPostCubit() : super(GetGuestAllPostInitialState()) {}
+  Future<void> seetinonExpried(BuildContext context,
+      {bool showAlert = false}) async {
+    try {
+      emit(GetGuestAllPostLoadingState());
+    dynamic settionExperied = await Repository().logOutSettionexperied(context);
+    print("checkDatWant--$settionExperied");
+      if (settionExperied.success == true) {
+      await setLOGOUT(context);
+      }
+      else{
+        print("failed--check---${settionExperied}");
+      }
+    } catch (e) {
+      print('errorstate-$e');
+      // emit(GetGuestAllPostErrorState(e.toString()));
+    }
+  }
   Future<void> GetGuestAllPostAPI(BuildContext context, String pageNumber,
       {bool showAlert = false}) async {
     try {
@@ -236,6 +254,9 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       } else {
       if (myAccontDetails.success == true) {
         emit(GetUserProfileLoadedState(myAccontDetails));
+      } else {
+        emit(GetGuestAllPostErrorState(myAccontDetails));
+      }
       }}
     } catch (e) {
       emit(GetGuestAllPostErrorState(myAccontDetails));
@@ -326,4 +347,4 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostErrorState(addPostData));
     }
   }
-}
+
