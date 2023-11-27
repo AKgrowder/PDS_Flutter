@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/ApiService/ApiService.dart';
 import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_state.dart';
 import 'package:pds/API/Repo/repository.dart';
 
@@ -7,6 +8,21 @@ class HashTagCubit extends Cubit<HashTagState> {
   HashTagCubit() : super(HashTagInitialState()) {}
   dynamic getalluserlistModel;
   dynamic HashTagForYouModel;
+    Future<void> seetinonExpried(BuildContext context,
+      {bool showAlert = false}) async {
+    try {
+      emit(HashTagLoadingState());
+    dynamic settionExperied = await Repository().logOutSettionexperied(context);
+      if (settionExperied.success == true) {
+      await setLOGOUT(context);
+      }
+      else{
+        print("failed--check---${settionExperied}");
+      }
+    } catch (e) {
+      print('errorstate-$e');
+    }
+  }
   Future<void> HashTagForYouAPI(
       BuildContext context, String hashtagViewType, String pageNumber) async {
     try {
@@ -18,7 +34,7 @@ class HashTagCubit extends Cubit<HashTagState> {
       }
     } catch (e) {
       // print('errorstate-$e');
-      emit(HashTagErrorState(HashTagForYouModel));
+      emit(HashTagErrorState(e.toString()));
     }
   }
 

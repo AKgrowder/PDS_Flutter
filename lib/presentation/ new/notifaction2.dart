@@ -166,6 +166,7 @@ class RequestOrderClass extends StatefulWidget {
 class _RequestOrderClassState extends State<RequestOrderClass> {
   @override
   void initState() {
+    BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
     BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
     super.initState();
   }
@@ -497,6 +498,8 @@ class _InviationClassState extends State<InviationClass> {
   String? User_Mood;
   @override
   void initState() {
+    BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
+
     BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
     super.initState();
   }

@@ -1,3 +1,4 @@
+import 'package:pds/API/ApiService/ApiService.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/acceptRejectInvitaion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +8,21 @@ import 'Invitation_state.dart';
 
 class InvitationCubit extends Cubit<InvitationState> {
   InvitationCubit() : super(InvitationInitialState()) {}
+   Future<void> seetinonExpried(BuildContext context,
+      {bool showAlert = false}) async {
+    try {
+      emit(InvitationLoadingState());
+    dynamic settionExperied = await Repository().logOutSettionexperied(context);
+      if (settionExperied.success == true) {
+      await setLOGOUT(context);
+      }
+      else{
+        print("failed--check---${settionExperied}");
+      }
+    } catch (e) {
+      print('errorstate-$e');
+    }
+  }
   Future<void> InvitationAPI(BuildContext context) async {
     dynamic PublicRModel;
     try {

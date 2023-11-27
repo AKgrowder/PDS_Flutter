@@ -1,11 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/ApiService/ApiService.dart';
 
 import '../../Repo/repository.dart';
 import 'GetAllPrivateRoom_state.dart';
 
 class GetAllPrivateRoomCubit extends Cubit<GetAllPrivateRoomState> {
   GetAllPrivateRoomCubit() : super(GetAllPrivateRoomInitialState()) {}
+
+    Future<void> seetinonExpried(BuildContext context,
+      {bool showAlert = false}) async {
+    try {
+      emit(GetAllPrivateRoomLoadingState());
+    dynamic settionExperied = await Repository().logOutSettionexperied(context);
+    print('settionExperied--$settionExperied');
+      if (settionExperied.success == true) {
+      await setLOGOUT(context);
+      }
+      else{
+        print("failed--check---${settionExperied}");
+      }
+    } catch (e) {
+      print('errorstate-$e');
+    }
+  }
   Future<void> GetAllPrivateRoomAPI(BuildContext context) async {
     dynamic PublicRModel;
     try {
