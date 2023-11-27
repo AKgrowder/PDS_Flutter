@@ -1,19 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/ApiService/ApiService.dart';
 
 import '../../Repo/repository.dart';
 import 'GetAllPrivateRoom_state.dart';
 
 class GetAllPrivateRoomCubit extends Cubit<GetAllPrivateRoomState> {
   GetAllPrivateRoomCubit() : super(GetAllPrivateRoomInitialState()) {}
+
+    Future<void> seetinonExpried(BuildContext context,
+      {bool showAlert = false}) async {
+    try {
+      emit(GetAllPrivateRoomLoadingState());
+    dynamic settionExperied = await Repository().logOutSettionexperied(context);
+    print('settionExperied--$settionExperied');
+      if (settionExperied.success == true) {
+      await setLOGOUT(context);
+      }
+      else{
+        print("failed--check---${settionExperied}");
+      }
+    } catch (e) {
+      print('errorstate-$e');
+    }
+  }
   Future<void> GetAllPrivateRoomAPI(BuildContext context) async {
     dynamic PublicRModel;
     try {
       emit(GetAllPrivateRoomLoadingState());
       PublicRModel = await Repository().GetAllPrivateRoom(context);
+      if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
+        emit(GetAllPrivateRoomErrorState("${PublicRModel}"));
+      } else {
       if (PublicRModel.success == true) {
         emit(GetAllPrivateRoomLoadedState(PublicRModel));
-      }
+      }}
     } catch (e) {
       emit(GetAllPrivateRoomErrorState(PublicRModel));
     }
@@ -24,11 +45,14 @@ class GetAllPrivateRoomCubit extends Cubit<GetAllPrivateRoomState> {
     try {
       emit(GetAllPrivateRoomLoadingState());
       GetAllPrivateRoom = await Repository().DeleteRoomApi(roomuId, context);
+      if (GetAllPrivateRoom == "Something Went Wrong, Try After Some Time.") {
+        emit(GetAllPrivateRoomErrorState("${GetAllPrivateRoom}"));
+      } else {
       if (GetAllPrivateRoom.success == true) {
         emit(DeleteRoomLoadedState(GetAllPrivateRoom));
       }else{
         emit(GetAllPrivateRoomErrorState(GetAllPrivateRoom.message));
-      }
+      }}
     } catch (e) {
       emit(GetAllPrivateRoomErrorState(GetAllPrivateRoom));
     }
@@ -39,9 +63,12 @@ class GetAllPrivateRoomCubit extends Cubit<GetAllPrivateRoomState> {
     try {
       emit(GetAllPrivateRoomLoadingState());
       checkUserStausModel = await Repository().checkUserActive(context);
+      if (checkUserStausModel == "Something Went Wrong, Try After Some Time.") {
+        emit(GetAllPrivateRoomErrorState("${checkUserStausModel}"));
+      } else {
       if (checkUserStausModel.success == true) {
         emit(CheckuserLoadedState(checkUserStausModel));
-      }
+      }}
     } catch (e) {
       emit(GetAllPrivateRoomErrorState(checkUserStausModel));
     }

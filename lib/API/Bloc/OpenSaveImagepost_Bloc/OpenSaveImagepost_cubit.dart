@@ -11,9 +11,12 @@ class OpenSaveCubit extends Cubit<OpenSaveState> {
     try {
       emit(OpenSaveLoadingState());
       OpenSaveModel = await Repository().openSaveImagePost(context, PostUID);
+      if (OpenSaveModel == "Something Went Wrong, Try After Some Time.") {
+        emit(OpenSaveErrorState("${OpenSaveModel}"));
+      } else {
       if (OpenSaveModel.success == true) {
         emit(OpenSaveLoadedState(OpenSaveModel));
-      }
+      }}
     } catch (e) {
       emit(OpenSaveErrorState(OpenSaveModel));
     }
@@ -25,9 +28,12 @@ class OpenSaveCubit extends Cubit<OpenSaveState> {
     try {
       // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       likepost = await Repository().likePostMethod(postUid, context);
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(OpenSaveErrorState("${likepost}"));
+      } else {
       if (likepost.success == true) {
         emit(PostLikeLoadedState(likepost));
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(OpenSaveErrorState(likepost));
@@ -40,9 +46,12 @@ class OpenSaveCubit extends Cubit<OpenSaveState> {
     try {
       // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       likepost = await Repository().savedPostMethod(postUid, context);
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(OpenSaveErrorState("${likepost}"));
+      } else {
       if (likepost.success == true) {
         emit(PostLikeLoadedState(likepost));
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(OpenSaveErrorState(likepost));

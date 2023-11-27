@@ -10,8 +10,12 @@ class AddcommentCubit extends Cubit<AddCommentState> {
     try {
       emit(AddCommentLoadingState());
       commentdata = await Repository().Addcomment(context, PostUID);
-      if (commentdata.success == true) {
-        emit(AddCommentLoadedState(commentdata));
+      if (commentdata == "Something Went Wrong, Try After Some Time.") {
+        emit(AddCommentErrorState("${commentdata}"));
+      } else {
+        if (commentdata.success == true) {
+          emit(AddCommentLoadedState(commentdata));
+        }
       }
     } catch (e) {
       emit(AddCommentErrorState(commentdata));
@@ -27,11 +31,14 @@ class AddcommentCubit extends Cubit<AddCommentState> {
     try {
       addnewcommentdata = await Repository().AddNewcomment(context, params);
       print("addPostData-->$addnewcommentdata");
-      if (addnewcommentdata['success'] == true) {
-        emit(AddnewCommentLoadedState(addnewcommentdata));
-      }else{
-        emit(AddnewCommentLoadedState(addnewcommentdata));
-
+      if (addnewcommentdata == "Something Went Wrong, Try After Some Time.") {
+        emit(AddCommentErrorState("${addnewcommentdata}"));
+      } else {
+        if (addnewcommentdata['success'] == true) {
+          emit(AddnewCommentLoadedState(addnewcommentdata));
+        } else {
+          emit(AddnewCommentLoadedState(addnewcommentdata));
+        }
       }
     } catch (e) {
       print("fdhfsdfhsdfh");
@@ -44,9 +51,12 @@ class AddcommentCubit extends Cubit<AddCommentState> {
     try {
       emit(AddCommentLoadingState());
       Deletecomment = await Repository().Deletecomment(commentuid, context);
-      
-      if (Deletecomment.success == true) {
-        emit(DeletecommentLoadedState(Deletecomment));
+      if (Deletecomment == "Something Went Wrong, Try After Some Time.") {
+        emit(AddCommentErrorState("${Deletecomment}"));
+      } else {
+        if (Deletecomment.success == true) {
+          emit(DeletecommentLoadedState(Deletecomment));
+        }
       }
     } catch (e) {
       emit(AddCommentErrorState(e.toString()));

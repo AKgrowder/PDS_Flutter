@@ -70,10 +70,7 @@ class LogOutdailogState extends State<LogOutdailog>
                     if (state is LogOutLoadedState) {
                       final SharedPreferences prefs =
                           await SharedPreferences.getInstance();
-                      prefs.remove(PreferencesKey.loginUserID);
-                      prefs.remove(PreferencesKey.loginJwt);
-                      prefs.remove(PreferencesKey.module);
-                      prefs.remove(PreferencesKey.ProfileUserName);
+                      prefs.clear();
 
                       SnackBar snackBar = SnackBar(
                         content: Text(state.LoginOutModel.message.toString()),

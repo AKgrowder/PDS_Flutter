@@ -12,9 +12,12 @@ class FetchRoomDetailCubit extends Cubit<FetchRoomDetailState> {
       emit(FetchRoomDetailLoadingState());
       fetchRoomDetailModel =
           await Repository().fetchRoomDetails(userId, context);
+          if (fetchRoomDetailModel == "Something Went Wrong, Try After Some Time.") {
+        emit(FetchRoomDetailErrorState("${fetchRoomDetailModel}"));
+      } else {
       if (fetchRoomDetailModel.success == true) {
         emit(FetchRoomDetailLoadedState(fetchRoomDetailModel));
-      }
+      }}
     } catch (e) {
       emit(FetchRoomDetailErrorState(fetchRoomDetailModel));
     }

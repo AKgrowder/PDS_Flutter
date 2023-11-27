@@ -13,9 +13,12 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
     try {
       emit(NewProfileSLoadingState());
       PublicRModel = await Repository().NewProfileAPI(context, otherUserUid);
+      if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${PublicRModel}"));
+      } else {
       if (PublicRModel.success == true) {
         emit(NewProfileSLoadedState(PublicRModel));
-      }
+      }}
     } catch (e) {
       emit(NewProfileSErrorState(PublicRModel));
     }
@@ -26,9 +29,12 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
     try {
       emit(NewProfileSLoadingState());
       PublicRModel = await Repository().GetAppPostAPI(context, userUid);
+      if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${PublicRModel}"));
+      } else {
       if (PublicRModel.success == true) {
         emit(GetAppPostByUserLoadedState(PublicRModel));
-      }
+      }}
     } catch (e) {
       emit(NewProfileSErrorState(PublicRModel));
     }
@@ -41,9 +47,12 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       emit(NewProfileSLoadingState());
       PublicRModel =
           await Repository().GetPostCommetAPI(context, userUid, orderBy);
+          if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${PublicRModel}"));
+      } else {
       if (PublicRModel.success == true) {
         emit(GetUserPostCommetLoadedState(PublicRModel));
-      }
+      }}
     } catch (e) {
       emit(NewProfileSErrorState(e.toString()));
     }
@@ -54,9 +63,12 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
     try {
       emit(NewProfileSLoadingState());
       PublicRModel = await Repository().GetSavePostAPI(context, userUid);
+      if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${PublicRModel}"));
+      } else {
       if (PublicRModel.success == true) {
         emit(GetSavePostLoadedState(PublicRModel));
-      }
+      }}
     } catch (e) {
       emit(NewProfileSErrorState(PublicRModel));
     }
@@ -67,9 +79,12 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
     try {
       emit(NewProfileSLoadingState());
       PublicRModel = await Repository().GetSavePostAPI(context, userUid);
+      if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${PublicRModel}"));
+      } else {
       if (PublicRModel.success == true) {
         emit(GetSavePostLoadedState(PublicRModel));
-      }
+      }}
     } catch (e) {
       emit(NewProfileSErrorState(PublicRModel));
     }
@@ -80,9 +95,12 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
     try {
       emit(NewProfileSLoadingState());
       aboutMedataSet = await Repository().aboutMe(context, aboutMe);
+      if (aboutMedataSet == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${aboutMedataSet}"));
+      } else {
       if (aboutMedataSet.success == true) {
         emit(AboutMeLoadedState(aboutMedataSet));
-      }
+      }}
     } catch (e) {
       emit(NewProfileSErrorState(e.toString()));
     }
@@ -93,9 +111,12 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
     try {
       emit(NewProfileSLoadingState());
       aboutMedataSet = await Repository().getAllDataGet(context, userId);
+      if (aboutMedataSet == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${aboutMedataSet}"));
+      } else {
       if (aboutMedataSet.success == true) {
         emit(AboutMeLoadedState1(aboutMedataSet));
-      }
+      }}
     } catch (e) {
       emit(NewProfileSErrorState(e.toString()));
     }
@@ -106,9 +127,12 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
     try {
       emit(NewProfileSLoadingState());
       aboutMedataSet = await Repository().GetAllSaveBlog(context, userId);
+      if (aboutMedataSet == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${aboutMedataSet}"));
+      } else {
       if (aboutMedataSet.success == true) {
         emit(saveAllBlogModelLoadedState1(aboutMedataSet));
-      }
+      }}
     } catch (e) {
       emit(NewProfileSErrorState(e.toString()));
     }
@@ -119,9 +143,12 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
     try {
       // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       likepost = await Repository().folliwingMethod(followedToUid, context);
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${likepost}"));
+      } else {
       if (likepost.success == true) {
         emit(PostLikeLoadedState(likepost));
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(NewProfileSErrorState(e.toString()));
@@ -133,9 +160,12 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
     try {
       emit(NewProfileSLoadingState());
       getallBlogmodel = await Repository().SaveBlog(context, userUid, blogUid);
+      if (getallBlogmodel == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${getallBlogmodel}"));
+      } else {
       if (getallBlogmodel.success == true) {
         emit(ProfilesaveBlogLoadedState(getallBlogmodel));
-      }
+      }}
     } catch (e) {
       emit(NewProfileSErrorState(getallBlogmodel));
     }
@@ -147,9 +177,12 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
     try {
       emit(NewProfileSLoadingState());
       getallBlogmodel = await Repository().LikeBlog(context, userUid, blogUid);
+      if (getallBlogmodel == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${getallBlogmodel}"));
+      } else {
       if (getallBlogmodel.success == true) {
         emit(ProfilelikeBlogLoadedState(getallBlogmodel));
-      }
+      }}
     } catch (e) {
       emit(NewProfileSErrorState(getallBlogmodel));
     }
@@ -166,9 +199,12 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
         context,
         userUid,
       );
+      if (getAllFollwerData == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${getAllFollwerData}"));
+      } else {
       if (getAllFollwerData.success == true) {
         emit(FollowersClass(getAllFollwerData));
-      }
+      }}
     } catch (e) {
       emit(NewProfileSErrorState(getAllFollwerData));
     }
@@ -184,9 +220,12 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
         context,
         userUid,
       );
+      if (getAllFollwerData == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${getAllFollwerData}"));
+      } else {
       if (getAllFollwerData.success == true) {
         emit(FollowersClass1(getAllFollwerData));
-      }
+      }}
     } catch (e) {
       emit(NewProfileSErrorState(getAllFollwerData));
     }

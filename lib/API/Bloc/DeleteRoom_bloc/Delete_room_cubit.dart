@@ -11,10 +11,14 @@ class DeleteRoomCubit extends Cubit<DeleteRoomState> {
     try {
       emit(DeleteRoomLoadingState());
       DeleteRoom = await Repository().DeleteRoomApi(roomuId, context);
-      if (DeleteRoom.success == true) {
-        emit(DeleteRoomLoadedState(DeleteRoom));
+      if (DeleteRoom == "Something Went Wrong, Try After Some Time.") {
+        emit(DeleteRoomErrorState("${DeleteRoom}"));
       } else {
-        emit(DeleteRoomErrorState(DeleteRoom.message));
+        if (DeleteRoom.success == true) {
+          emit(DeleteRoomLoadedState(DeleteRoom));
+        } else {
+          emit(DeleteRoomErrorState(DeleteRoom.message));
+        }
       }
     } catch (e) {
       emit(DeleteRoomErrorState(DeleteRoom));

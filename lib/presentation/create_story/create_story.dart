@@ -11,7 +11,8 @@ import '../../API/Model/CreateStory_Model/CreateStory_model.dart';
 import '../../core/utils/color_constant.dart';
 
 class CreateStoryPage extends StatefulWidget {
-  const CreateStoryPage({key});
+  double? finalFileSize;
+  CreateStoryPage({key, this.finalFileSize});
 
   @override
   State<CreateStoryPage> createState() => _CreateStoryPageState();
@@ -38,11 +39,12 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
         if (state is AddPostImaegState) {
           print("dsfdfhsdhfh");
           imageDataPost = state.imageDataPost;
-           Navigator.pop(context, imageDataPost);
+          Navigator.pop(context, imageDataPost);
         }
       },
       builder: (context, state) {
         return StoriesEditor(
+          finalFileSize: widget.finalFileSize,
           giphyKey: 'API KEY',
           //fontFamilyList: const ['Shizuru', 'Aladin'],
           galleryThumbnailQuality: 300,

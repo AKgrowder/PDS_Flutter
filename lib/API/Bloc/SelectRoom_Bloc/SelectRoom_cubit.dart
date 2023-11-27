@@ -12,9 +12,12 @@ class SelectedRoomCubit extends Cubit<SelectedRoomState> {
     try {
       emit(SelectedRoomLoadingState());
       SelectedRoom = await Repository().SelectRoomAPI(context);
+      if (SelectedRoom == "Something Went Wrong, Try After Some Time.") {
+        emit(SelectedRoomErrorState("${SelectedRoom}"));
+      } else {
       if (SelectedRoom.success == true) {
         emit(SelectedRoomLoadedState(SelectedRoom));
-      }
+      }}
     } catch (e) {
       emit(SelectedRoomErrorState(SelectedRoom));
     }
@@ -26,11 +29,14 @@ class SelectedRoomCubit extends Cubit<SelectedRoomState> {
     try {
       emit(SelectedRoomLoadingState());
       sherInvite = await Repository().sherInvite(userRoomId, email, context);
+      if (sherInvite == "Something Went Wrong, Try After Some Time.") {
+        emit(SelectedRoomErrorState("${sherInvite}"));
+      } else {
       if (sherInvite.success == true) {
         emit(SherInvite2LoadedState(sherInvite));
       }else{
        emit(SelectedRoomErrorState(sherInvite.message));
-      }
+      }}
     } catch (e) {
       emit(SelectedRoomErrorState(sherInvite));
     }

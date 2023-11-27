@@ -10,7 +10,7 @@ import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/theme/theme_helper.dart';
 
-class Followers extends StatelessWidget {
+class Followers extends StatefulWidget {
   String appBarName;
 
   FollowersClassModel followersClassModel;
@@ -19,6 +19,12 @@ class Followers extends StatelessWidget {
       {required this.appBarName,
       required this.followersClassModel,
       required this.userId});
+
+  @override
+  State<Followers> createState() => _FollowersState();
+}
+
+class _FollowersState extends State<Followers> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +43,7 @@ class Followers extends StatelessWidget {
           ),
         ),
         title: Text(
-          appBarName,
+          widget.appBarName,
           style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.black,
@@ -54,11 +60,18 @@ class Followers extends StatelessWidget {
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
+          if (state is PostLikeLoadedState) {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.likePost.object.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
         },
         builder: (context, state) {
           return Column(
               children: List.generate(
-                  followersClassModel.object?.length ?? 0,
+                  widget.followersClassModel.object?.length ?? 0,
                   (index) => SizedBox(
                         height: 80,
                         child: ListTile(
@@ -68,26 +81,30 @@ class Followers extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => ProfileScreen(
-                                          User_ID: followersClassModel
+                                          User_ID: widget.followersClassModel
                                                   .object?[index].userUid
                                                   .toString() ??
                                               '',
-                                          isFollowing: followersClassModel
-                                              .object?[index].isFollow
+                                          isFollowing: widget
+                                              .followersClassModel
+                                              .object?[index]
+                                              .isFollow
                                               .toString())));
                             },
-                            child: followersClassModel
-                                        .object?[index].userProfilePic !=
-
-                                    null && followersClassModel
-                                        .object?[index].userProfilePic != ""
-
-                                ? CircleAvatar(backgroundColor: Colors.white,
+                            child: widget.followersClassModel.object?[index]
+                                            .userProfilePic !=
+                                        null &&
+                                    widget.followersClassModel.object?[index]
+                                            .userProfilePic !=
+                                        ""
+                                ? CircleAvatar(
+                                    backgroundColor: Colors.white,
                                     backgroundImage: NetworkImage(
-                                        "${followersClassModel.object?[index].userProfilePic}"),
+                                        "${widget.followersClassModel.object?[index].userProfilePic}"),
                                     radius: 25,
                                   )
-                                : CircleAvatar(backgroundColor: Colors.white,
+                                : CircleAvatar(
+                                    backgroundColor: Colors.white,
                                     backgroundImage:
                                         AssetImage(ImageConstant.tomcruse),
                                     radius: 25,
@@ -102,7 +119,7 @@ class Followers extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(left: 10),
                                 child: Text(
-                                  "${followersClassModel.object?[index].userName}",
+                                  "${widget.followersClassModel.object?[index].userName}",
                                   style: TextStyle(
                                       fontSize: 20,
                                       fontFamily: "outfit",
@@ -115,7 +132,7 @@ class Followers extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(left: 10),
                                 child: Text(
-                                  "${followersClassModel.object?[index].name}",
+                                  "${widget.followersClassModel.object?[index].name}",
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontFamily: "outfit",
@@ -124,18 +141,21 @@ class Followers extends StatelessWidget {
                               ),
                             ],
                           ),
-                          trailing: followersClassModel
-                                      .object?[index].isFollow ==
+                          trailing: widget.followersClassModel.object?[index]
+                                      .isFollow ==
                                   null
                               ? GestureDetector(
                                   onTap: () {
                                     BlocProvider.of<FollowerBlock>(context)
                                         .removeFollwerApi(
                                             context,
-                                            followersClassModel.object?[index]
+                                            widget
+                                                    .followersClassModel
+                                                    .object?[index]
                                                     .followerUid ??
                                                 '');
-                                    followersClassModel.object?.removeAt(index);
+                                    widget.followersClassModel.object
+                                        ?.removeAt(index);
                                   },
                                   child: Container(
                                     height: 60,
@@ -147,25 +167,52 @@ class Followers extends StatelessWidget {
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     child: Text(
-                                        "${followersClassModel.object?[index].isFollow}"),
+                                        "${widget.followersClassModel.object?[index].isFollow}"),
                                   ),
                                 )
-                              : Container(
-                                  height: 60,
-                                  alignment: Alignment.center,
-                                  width: 90,
-                                  margin: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                      color: ColorConstant.primary_color,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Text(
-                                    followersClassModel.object?[index].isFollow
-                                            .toString() ??
-                                        '',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
+                              : GestureDetector(
+                                  onTap: () {
+                                    folloFuction(index);
+                                  },
+                                  child: Container(
+                                    height: 60,
+                                    alignment: Alignment.center,
+                                    width: 90,
+                                    margin: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        color: ColorConstant.primary_color,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: widget.followersClassModel
+                                                .object?[index].isFollow ==
+                                            'FOLLOW'
+                                        ? Text(
+                                            'Follow',
+                                            style: TextStyle(
+                                                fontFamily: "outfit",
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          )
+                                        : widget.followersClassModel
+                                                    .object?[index].isFollow ==
+                                                'REQUESTED'
+                                            ? Text(
+                                                'Requested',
+                                                style: TextStyle(
+                                                    fontFamily: "outfit",
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white),
+                                              )
+                                            : Text(
+                                                'Following ',
+                                                style: TextStyle(
+                                                    fontFamily: "outfit",
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white),
+                                              ),
                                   ),
                                 ),
                         ),
@@ -173,5 +220,35 @@ class Followers extends StatelessWidget {
         },
       ),
     );
+  }
+
+  folloFuction(int index) {
+    BlocProvider.of<FollowerBlock>(context).followWIngMethod(
+        widget.followersClassModel.object?[index].userUid, context);
+    if (widget.followersClassModel.object?[index].isFollow == 'FOLLOW') {
+      /* AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing =
+            'REQUESTED'; */
+      for (int i = 0;
+          i < (widget.followersClassModel.object?.length ?? 0);
+          i++) {
+        print("i-${i}");
+        if (widget.followersClassModel.object?[index].userUid ==
+            widget.followersClassModel.object?[i].userUid) {
+          widget.followersClassModel.object?[i].isFollow = 'REQUESTED';
+          print("check data-${widget.followersClassModel.object?[i].isFollow}");
+        }
+      }
+    } else {
+      /* AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing =
+            'FOLLOW'; */
+      for (int i = 0;
+          i < (widget.followersClassModel.object?.length ?? 0);
+          i++) {
+        if (widget.followersClassModel.object?[index].userUid ==
+            widget.followersClassModel.object?[i].userUid) {
+          widget.followersClassModel.object?[i].isFollow = 'FOLLOW';
+        }
+      }
+    }
   }
 }

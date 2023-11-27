@@ -13,11 +13,14 @@ class DevicesInfoCubit extends Cubit<DevicesInfoState> {
     try {
       emit(DevicesInfoLoadingState());
       DeviceinfoModelData = await Repository().deviceInfoq(param, context);
+      if (DeviceinfoModelData == "Something Went Wrong, Try After Some Time.") {
+        emit(DevicesInfoErrorState("${DeviceinfoModelData}"));
+      } else {
       if (DeviceinfoModelData.success == true) {
         emit(DevicesInfoLoadedState(DeviceinfoModelData));
         print("+++++++++++++++++++++++++++++++++++++");
         print(DeviceinfoModelData.message);
-      }
+      }}
     } catch (e) {
       print('LoginScreen-${e.toString()}');
       emit(DevicesInfoErrorState(DeviceinfoModelData));
