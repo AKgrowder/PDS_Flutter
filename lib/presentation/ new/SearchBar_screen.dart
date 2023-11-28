@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hashtagable/widgets/hashtag_text.dart';
+import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Model/Getalluset_list_Model/get_all_userlist_model.dart';
 import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
@@ -893,12 +894,21 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           child: GestureDetector(
                             onTap: () {
                               Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return ProfileScreen(
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider<NewProfileSCubit>(
+                                                  create: (context) =>
+                                                      NewProfileSCubit(),
+                                                ),
+                                              ],
+                                              child: ProfileScreen(
                                     User_ID:
                                         "${getalluserlistModel?.object?.content?[index].userUid}",
-                                    isFollowing: "REQUESTED");
-                              }));
+                                    isFollowing: "REQUESTED"));
+                                        }));
+                             
                             },
                             child: Container(
                               height: 55,
@@ -1059,12 +1069,21 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           child: GestureDetector(
                             onTap: () {
                               Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return ProfileScreen(
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider<NewProfileSCubit>(
+                                                  create: (context) =>
+                                                      NewProfileSCubit(),
+                                                ),
+                                              ],
+                                              child: ProfileScreen(
                                     User_ID:
                                         "${getalluserlistModel?.object?.content?[index].userUid}",
-                                    isFollowing: "REQUESTED");
-                              }));
+                                    isFollowing: "REQUESTED"));
+                                        }));
+                              
                             },
                             child: Container(
                               height: 55,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GetPostAllLike_Bloc/GetPostAllLike_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GetPostAllLike_Bloc/GetPostAllLike_state.dart';
+import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetPostLike_Model.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
@@ -113,15 +114,24 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
                       child: ListTile(
                         leading: GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ProfileScreen(
+                            Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider<NewProfileSCubit>(
+                                                  create: (context) =>
+                                                      NewProfileSCubit(),
+                                                ),
+                                              ],
+                                              child: ProfileScreen(
                                           User_ID:
                                               "${GetPostAllLikeRoomData?.object?[index].userUid}",
                                           isFollowing:
                                               "${GetPostAllLikeRoomData?.object?[index].isFollowing}",
-                                        )));
+                                        ));
+                                        }));
+                           
                           },
                           child: GetPostAllLikeRoomData
                                       ?.object?[index].profilePic !=
