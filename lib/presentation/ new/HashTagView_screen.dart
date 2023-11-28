@@ -31,19 +31,18 @@ class HashTagViewScreen extends StatefulWidget {
   State<HashTagViewScreen> createState() => _HashTagViewScreenState();
 }
 
-final ScrollController scroll = ScrollController();
-HashtagViewDataModel? hashTagViewData;
-DateTime? parsedDateTime;
-String? uuid;
-int indexx = 0;
-GetGuestAllPostModel? AllGuestPostRoomData;
-List<PageController> _pageControllers = [];
-List<int> _currentPages = [];
-
 class _HashTagViewScreenState extends State<HashTagViewScreen> {
+  final ScrollController scroll = ScrollController();
+  HashtagViewDataModel? hashTagViewData;
+  DateTime? parsedDateTime;
+  String? uuid;
+  int indexx = 0;
+  GetGuestAllPostModel? AllGuestPostRoomData;
+  List<PageController> _pageControllers = [];
+  List<int> _currentPages = [];
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Get_UserToken();
     BlocProvider.of<HashTagCubit>(context)
@@ -351,7 +350,6 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                   fontWeight: FontWeight.bold,
                                                   color: ColorConstant
                                                       .HasTagColor),
-                                                      
                                               basicStyle: TextStyle(
                                                   fontFamily: "outfit",
                                                   fontSize: 14,
