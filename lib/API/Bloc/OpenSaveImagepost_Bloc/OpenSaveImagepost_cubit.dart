@@ -57,4 +57,18 @@ class OpenSaveCubit extends Cubit<OpenSaveState> {
       emit(OpenSaveErrorState(likepost));
     }
   }
+  //   Future<void> RePostAPI(
+  //     BuildContext context, Map<String, dynamic> params, String? uuid) async {
+  //   dynamic addPostData;
+  //   try {
+  //     emit(OpenSaveLoadingState());
+  //     addPostData = await Repository().RePost(context, params, uuid);
+  //     print("addPostDataaaaaaaaaaaa-->${addPostData}");
+  //     if (addPostData.success == true) {
+  //       emit(RePostLoadedState(addPostData));
+  //     }
+  //   } catch (e) {
+  //     emit(OpenSaveErrorState(addPostData));
+  //   }
+  // }
 }

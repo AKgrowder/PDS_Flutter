@@ -8,6 +8,7 @@ import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart'
 import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/room_members/room_members_screen.dart';
 import 'package:pds/widgets/custom_image_view.dart';
@@ -29,128 +30,138 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-    return DefaultTabController(
-      length: 3,
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              Center(
-                child: Text(
-                  'Notifications',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22,
-                    fontFamily: "outfit",
-                    fontWeight: FontWeight.w600,
-                  ),
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => NewBottomBar(buttomIndex: 0)),
+            (Route<dynamic> route) => false);
+
+        return true;
+      },
+      child: DefaultTabController(
+        length: 3,
+        child: SafeArea(
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 10,
                 ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                decoration:
-                    BoxDecoration(border: Border.all(color: Colors.grey)),
-                child: TabBar(
-                  onTap: (value) {},
-                  controller: _tabController,
-                  unselectedLabelStyle: TextStyle(
-                    color: Colors.black,
-                  ),
-                  unselectedLabelColor: Colors.black,
-                  indicator: BoxDecoration(
-                      // borderRadius: BorderRadius.circular(8.0),
-                      color: Color(0xFFED1C25)),
-                  tabs: [
-                    Container(
-                      width: 150,
-                      height: 50,
-                      // color: Color(0xFFED1C25),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Spacer(),
-                            Text(
-                              "All",
-                              textScaleFactor: 1.0,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontFamily: 'Outfit',
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Spacer(),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      // color: Color(0xFFED1C25),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Requests",
-                              textScaleFactor: 1.0,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontFamily: 'Outfit',
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      // color: Color(0xFFED1C25),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Invitations",
-                              textScaleFactor: 1.0,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontFamily: 'Outfit',
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: TabBarView(children: [
-                  Center(
-                      child: Text(
-                    'No Record Available',
+                Center(
+                  child: Text(
+                    'Notifications',
                     style: TextStyle(
-                      fontFamily: 'outfit',
-                      fontSize: 20,
-                      color: Color(0XFFED1C25),
-                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 22,
+                      fontFamily: "outfit",
+                      fontWeight: FontWeight.w600,
                     ),
-                  )),
-                  RequestOrderClass(),
-                  InviationClass()
-                ]),
-              ),
-            ],
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  decoration:
+                      BoxDecoration(border: Border.all(color: Colors.grey)),
+                  child: TabBar(
+                    onTap: (value) {},
+                    controller: _tabController,
+                    unselectedLabelStyle: TextStyle(
+                      color: Colors.black,
+                    ),
+                    unselectedLabelColor: Colors.black,
+                    indicator: BoxDecoration(
+                        // borderRadius: BorderRadius.circular(8.0),
+                        color: Color(0xFFED1C25)),
+                    tabs: [
+                      Container(
+                        width: 150,
+                        height: 50,
+                        // color: Color(0xFFED1C25),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Spacer(),
+                              Text(
+                                "All",
+                                textScaleFactor: 1.0,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontFamily: 'Outfit',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Spacer(),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 50,
+                        // color: Color(0xFFED1C25),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Requests",
+                                textScaleFactor: 1.0,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontFamily: 'Outfit',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 50,
+                        // color: Color(0xFFED1C25),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Invitations",
+                                textScaleFactor: 1.0,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontFamily: 'Outfit',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: TabBarView(children: [
+                    Center(
+                        child: Text(
+                      'No Record Available',
+                      style: TextStyle(
+                        fontFamily: 'outfit',
+                        fontSize: 20,
+                        color: Color(0XFFED1C25),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                    RequestOrderClass(),
+                    InviationClass()
+                  ]),
+                ),
+              ],
+            ),
           ),
         ),
       ),
