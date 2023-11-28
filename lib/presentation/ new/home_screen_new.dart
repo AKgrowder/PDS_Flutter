@@ -121,7 +121,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   String? IosLatestVersion;
   String? IosRoutVersion;
   String? IosMainversion;
-   getDocumentSize() async {
+  getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     documentuploadsize = await double.parse(
         prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
@@ -129,6 +129,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     finalFileSize = documentuploadsize;
     setState(() {});
   }
+
   bool _isLink(String input) {
     RegExp linkRegex = RegExp(
         r'^https?:\/\/(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z]+)+(?:[^\s]*)$');
@@ -171,7 +172,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   @override
   void initState() {
     Get_UserToken();
-    
+
     storycontext = context;
     VersionControll();
     getDocumentSize();
@@ -898,11 +899,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             if (state is GetGuestAllPostErrorState) {
               print("i want check responce---${state.error}");
               if (state.error['errorCode'] == '701') {
-              } 
-              else if(state.error['status'] == ''){
-
-              }
-              else {
+              } else if (state.error['status'] == '') {
+              } else {
                 SnackBar snackBar = SnackBar(
                   content: Text(state.error),
                   backgroundColor: ColorConstant.primary_color,
@@ -1305,8 +1303,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         context,
                                                         MaterialPageRoute(
                                                             builder: (context) {
-                                                  return CreateStoryPage(    finalFileSize:
-                                                        finalFileSize,);
+                                                  return CreateStoryPage(
+                                                    finalFileSize:
+                                                        finalFileSize,
+                                                  );
                                                 }));
                                                 print(
                                                     "dfhsdfhsdfsdhf--${imageDataPost?.object}");
@@ -1327,8 +1327,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   await Navigator.push(context,
                                                       MaterialPageRoute(
                                                           builder: (context) {
-                                                return CreateStoryPage(    finalFileSize:
-                                                        finalFileSize,);
+                                                return CreateStoryPage(
+                                                  finalFileSize: finalFileSize,
+                                                );
                                               }));
                                               var parmes = {
                                                 "storyData": imageDataPost
@@ -1879,6 +1880,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         "${AllGuestPostRoomData?.object?.content?[index].description}",
                                                                         linkStyle:
                                                                             TextStyle(color: Colors.blue),
+                                                                        textStyle:
+                                                                            TextStyle(color: Colors.black),
                                                                         linkTypes: [
                                                                           LinkType
                                                                               .url,
@@ -1900,9 +1903,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               SelectedTest.startsWith('https');
                                                                           var Link1 =
                                                                               SelectedTest.startsWith('http');
+                                                                          var Link2 =
+                                                                              SelectedTest.startsWith('www');
 
-                                                                          print(
-                                                                              "qqqqqqqqqqqqqqqqqqqqqqqqqqq");
                                                                           print(
                                                                               SelectedTest.toString());
                                                                           print(
@@ -1912,7 +1915,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                           } else {
                                                                             if (Link == true &&
-                                                                                Link1 == true) {
+                                                                                Link1 == true &&
+                                                                                Link2 == true) {
                                                                               launch(link.value.toString(), forceWebView: true, enableJavaScript: true);
                                                                             } else {
                                                                               print("${link}");
@@ -2233,6 +2237,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}",
                                                                         linkStyle:
                                                                             TextStyle(color: Colors.blue),
+                                                                        textStyle:
+                                                                            TextStyle(color: Colors.black),
                                                                         linkTypes: [
                                                                           LinkType
                                                                               .url,
@@ -2245,8 +2251,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         ],
                                                                         onTap:
                                                                             (link) {
-                                                                          /// do stuff with `link` like
-                                                                          /// if(link.type == Link.url) launchUrl(link.value);
                                                                           var SelectedTest = link
                                                                               .value
                                                                               .toString();
@@ -2254,9 +2258,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               SelectedTest.startsWith('https');
                                                                           var Link1 =
                                                                               SelectedTest.startsWith('http');
+                                                                          var Link2 =
+                                                                              SelectedTest.startsWith('www');
 
-                                                                          print(
-                                                                              "qqqqqqqqqqqqqqqqqqqqqqqqqqq");
                                                                           print(
                                                                               SelectedTest.toString());
                                                                           print(
@@ -2266,7 +2270,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                           } else {
                                                                             if (Link == true &&
-                                                                                Link1 == true) {
+                                                                                Link1 == true &&
+                                                                                Link2 == true) {
                                                                               launch(link.value.toString(), forceWebView: true, enableJavaScript: true);
                                                                             } else {
                                                                               print("${link}");
@@ -2660,11 +2665,16 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               width: 5,
                                                             ),
                                                             AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .repostCount ==
-                                                                    null
+                                                                            ?.object
+                                                                            ?.content?[
+                                                                                index]
+                                                                            .repostCount ==
+                                                                        null ||
+                                                                    AllGuestPostRoomData
+                                                                            ?.object
+                                                                            ?.content?[index]
+                                                                            .repostCount ==
+                                                                        0
                                                                 ? SizedBox()
                                                                 : Text(
                                                                     '${AllGuestPostRoomData?.object?.content?[index].repostCount}',
@@ -3001,6 +3011,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         "${AllGuestPostRoomData?.object?.content?[index].description}",
                                                                         linkStyle:
                                                                             TextStyle(color: Colors.blue),
+                                                                        textStyle:
+                                                                            TextStyle(color: Colors.black),
                                                                         linkTypes: [
                                                                           LinkType
                                                                               .url,
@@ -3023,9 +3035,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               SelectedTest.startsWith('https');
                                                                           var Link1 =
                                                                               SelectedTest.startsWith('http');
-
-                                                                          print(
-                                                                              "qqqqqqqqqqqqqqqqqqqqqqqqqqq");
+                                                                          var Link2 =
+                                                                              SelectedTest.startsWith('www');
                                                                           print(
                                                                               SelectedTest.toString());
                                                                           print(
@@ -3035,7 +3046,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                           } else {
                                                                             if (Link == true &&
-                                                                                Link1 == true) {
+                                                                                Link1 == true &&
+                                                                                Link2 == true) {
                                                                               launch(link.value.toString(), forceWebView: true, enableJavaScript: true);
                                                                             } else {
                                                                               print("${link}");
@@ -3501,11 +3513,16 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                               width: 5,
                                                             ),
                                                             AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .repostCount ==
-                                                                    null
+                                                                            ?.object
+                                                                            ?.content?[
+                                                                                index]
+                                                                            .repostCount ==
+                                                                        null ||
+                                                                    AllGuestPostRoomData
+                                                                            ?.object
+                                                                            ?.content?[index]
+                                                                            .repostCount ==
+                                                                        0
                                                                 ? SizedBox()
                                                                 : Text(
                                                                     uuid == null
@@ -4362,8 +4379,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         if (await permissionHandler(context, Permission.photos) ?? false) {
           imageDataPost = await Navigator.push(context,
               MaterialPageRoute(builder: (context) {
-            return CreateStoryPage(    finalFileSize:
-                                                        finalFileSize,);
+            return CreateStoryPage(
+              finalFileSize: finalFileSize,
+            );
           }));
           print("imageData--${imageDataPost?.object.toString()}");
           var parmes = {"storyData": imageDataPost?.object.toString()};
@@ -4374,8 +4392,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           false) {
         imageDataPost =
             await Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return CreateStoryPage(    finalFileSize:
-                                                        finalFileSize,);
+          return CreateStoryPage(
+            finalFileSize: finalFileSize,
+          );
         }));
         var parmes = {"storyData": imageDataPost?.object.toString()};
         Repository().cretateStoryApi(context, parmes);
