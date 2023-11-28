@@ -167,7 +167,7 @@ class _FollowersState extends State<Followers> {
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     child: Text(
-                                        "${widget.followersClassModel.object?[index].isFollow}"),
+                                        "${widget.followersClassModel.object?[index].isFollow??"Remove"}"),
                                   ),
                                 )
                               : GestureDetector(
