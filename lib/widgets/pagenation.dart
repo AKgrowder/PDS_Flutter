@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
+import 'package:getwidget/getwidget.dart';
+import 'package:getwidget/types/gf_loader_type.dart';
 class PaginationWidget extends StatefulWidget {
   int? offSet;
   ScrollController? scrollController;
@@ -84,7 +86,7 @@ class _PaginationWidgetState extends State<PaginationWidget> {
           : Center(
               child: Padding(
               padding: (_isLoading) ? EdgeInsets.all(5) : EdgeInsets.zero,
-              child: _isLoading ? CircularProgressIndicator() : SizedBox(),
+              child: _isLoading ?  GFLoader(type: GFLoaderType.ios,) : SizedBox(),
             )),
     ]);
   }
