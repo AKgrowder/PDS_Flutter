@@ -7,8 +7,10 @@ import 'package:pds/API/Bloc/followerBlock/follwerState.dart';
 import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/theme/theme_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Followers extends StatefulWidget {
   String appBarName;
@@ -25,6 +27,19 @@ class Followers extends StatefulWidget {
 }
 
 class _FollowersState extends State<Followers> {
+  String? User_ID;
+  @override
+  void initState() {
+    super.initState();
+    dataGetFuntion();
+  }
+
+  dataGetFuntion() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    User_ID = prefs.getString(PreferencesKey.loginUserID);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,9 +156,7 @@ class _FollowersState extends State<Followers> {
                               ),
                             ],
                           ),
-                          trailing: widget.followersClassModel.object?[index]
-                                      .isFollow ==
-                                  null
+                          trailing: User_ID == widget.userId
                               ? GestureDetector(
                                   onTap: () {
                                     BlocProvider.of<FollowerBlock>(context)
@@ -166,55 +179,93 @@ class _FollowersState extends State<Followers> {
                                         color: Color(0xffEFEFEF),
                                         borderRadius:
                                             BorderRadius.circular(10)),
-                                    child: Text(
-                                        "${widget.followersClassModel.object?[index].isFollow??"Remove"}"),
+                                    child: Text("Remove"), //remove user self
                                   ),
                                 )
-                              : GestureDetector(
-                                  onTap: () {
-                                    folloFuction(index);
-                                  },
-                                  child: Container(
-                                    height: 60,
-                                    alignment: Alignment.center,
-                                    width: 90,
-                                    margin: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        color: ColorConstant.primary_color,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: widget.followersClassModel
-                                                .object?[index].isFollow ==
-                                            'FOLLOW'
-                                        ? Text(
-                                            'Follow',
-                                            style: TextStyle(
-                                                fontFamily: "outfit",
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          )
-                                        : widget.followersClassModel
-                                                    .object?[index].isFollow ==
-                                                'REQUESTED'
-                                            ? Text(
-                                                'Requested',
-                                                style: TextStyle(
-                                                    fontFamily: "outfit",
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white),
-                                              )
-                                            : Text(
-                                                'Following ',
-                                                style: TextStyle(
-                                                    fontFamily: "outfit",
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white),
-                                              ),
-                                  ),
-                                ),
+                              : User_ID ==
+                                      widget.followersClassModel.object?[index]
+                                          .userUid
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        BlocProvider.of<FollowerBlock>(context)
+                                            .removeFollwerApi(
+                                                context,
+                                                widget
+                                                        .followersClassModel
+                                                        .object?[index]
+                                                        .followerUid ??
+                                                    '');
+                                        widget.followersClassModel.object
+                                            ?.removeAt(index);
+                                      },
+                                      child: Container(
+                                        height: 60,
+                                        alignment: Alignment.center,
+                                        width: 80,
+                                        margin: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                            color: Color(0xffEFEFEF),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child:
+                                            Text("Remove"), //remove user self
+                                      ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        print(
+                                            "check Data--${widget.followersClassModel.object?[index].userUid}");
+                                        print("dfsdfdgfg-${widget.userId}");
+                                        folloFuction(index);
+                                      },
+                                      child: Container(
+                                          height: 60,
+                                          alignment: Alignment.center,
+                                          width: 90,
+                                          margin: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  ColorConstant.primary_color,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: widget
+                                                      .followersClassModel
+                                                      .object?[index]
+                                                      .isFollow ==
+                                                  'FOLLOWING'
+                                              ? Text(
+                                                  'Following ',
+                                                  style: TextStyle(
+                                                      fontFamily: "outfit",
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white),
+                                                )
+                                              : widget
+                                                          .followersClassModel
+                                                          .object?[index]
+                                                          .isFollow ==
+                                                      'REQUESTED'
+                                                  ? Text(
+                                                      'Requested',
+                                                      style: TextStyle(
+                                                          fontFamily: "outfit",
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white),
+                                                    )
+                                                  : Text(
+                                                      'Follow',
+                                                      style: TextStyle(
+                                                          fontFamily: "outfit",
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white),
+                                                    )),
+                                    ),
                         ),
                       )));
         },
@@ -225,7 +276,24 @@ class _FollowersState extends State<Followers> {
   folloFuction(int index) {
     BlocProvider.of<FollowerBlock>(context).followWIngMethod(
         widget.followersClassModel.object?[index].userUid, context);
-    if (widget.followersClassModel.object?[index].isFollow == 'FOLLOW') {
+    print(
+        "i want check--${widget.followersClassModel.object?[index].isFollow}");
+    if (widget.followersClassModel.object?[index].isFollow == null) {
+      if (widget.followersClassModel.object?[index].userUid ==
+          widget.followersClassModel.object?[index].userUid) {
+        widget.followersClassModel.object?[index].isFollow = 'REQUESTED';
+      }
+    } else if( widget.followersClassModel.object?[index].isFollow == 'REQUESTED'){
+      if (widget.followersClassModel.object?[index].userUid ==
+          widget.followersClassModel.object?[index].userUid) {
+        widget.followersClassModel.object?[index].isFollow = 'FOLLOW';
+       
+      }
+      else{
+         widget.followersClassModel.object?[index].isFollow = 'REQUESTED';
+      }
+    }
+    /* if (widget.followersClassModel.object?[index].isFollow == 'FOLLOW') {
       /* AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing =
             'REQUESTED'; */
       for (int i = 0;
@@ -249,6 +317,6 @@ class _FollowersState extends State<Followers> {
           widget.followersClassModel.object?[i].isFollow = 'FOLLOW';
         }
       }
-    }
+    } */
   }
 }
