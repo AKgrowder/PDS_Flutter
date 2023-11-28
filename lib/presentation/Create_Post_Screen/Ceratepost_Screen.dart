@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -9,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'package:pds/API/Bloc/postData_Bloc/postData_state.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
@@ -24,8 +27,6 @@ import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/utils/image_constant.dart';
-import 'dart:async';
-import 'dart:io';
 
 class CreateNewPost extends StatefulWidget {
   const CreateNewPost({key});
@@ -227,13 +228,22 @@ class _CreateNewPostState extends State<CreateNewPost> {
                               Container(
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => ProfileScreen(
+                                    Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider<NewProfileSCubit>(
+                                                  create: (context) =>
+                                                      NewProfileSCubit(),
+                                                ),
+                                              ],
+                                              child: ProfileScreen(
                                                   User_ID: "${User_ID}",
                                                   isFollowing: 'FOLLOW',
-                                                )));
+                                                ));
+                                        }));
+                                   
                                   },
                                   child: UserProfileImage?.isEmpty == true
                                       ? SizedBox(

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/followerBlock/followBlock.dart';
 import 'package:pds/API/Bloc/followerBlock/follwerState.dart';
 import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
@@ -92,10 +93,17 @@ class _FollowersState extends State<Followers> {
                         child: ListTile(
                           leading: GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ProfileScreen(
+                              Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider<NewProfileSCubit>(
+                                                  create: (context) =>
+                                                      NewProfileSCubit(),
+                                                ),
+                                              ],
+                                              child: ProfileScreen(
                                           User_ID: widget.followersClassModel
                                                   .object?[index].userUid
                                                   .toString() ??
@@ -104,7 +112,9 @@ class _FollowersState extends State<Followers> {
                                               .followersClassModel
                                               .object?[index]
                                               .isFollow
-                                              .toString())));
+                                              .toString()));
+                                        }));
+                             
                             },
                             child: widget.followersClassModel.object?[index]
                                             .userProfilePic !=
