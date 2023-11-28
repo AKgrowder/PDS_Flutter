@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_state.dart';
+import 'package:pds/API/Bloc/followerBlock/followBlock.dart';
 import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
@@ -410,12 +411,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         ),
                                       ));
                                 } else {
-                                   Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => DocumentViewScreen1(
-                                          path:
-                                              'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
-                                          title: 'Pdf',
-                                        )));
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => DocumentViewScreen1(
+                                            path:
+                                                'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
+                                            title: 'Pdf',
+                                          )));
                                 }
                               },
                               child: Container(
@@ -464,32 +465,33 @@ class _ProfileScreenState extends State<ProfileScreen>
                             Align(
                               alignment: Alignment.bottomCenter,
                               child: GestureDetector(
-
                                 onTap: () {
-                                if (NewProfileData?.object?.userProfilePic
-                                            ?.isNotEmpty ==
-                                        true &&
-                                    NewProfileData?.object?.userProfilePic !=
-                                        '') {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ProfileandDocumentScreen(
-                                          path: NewProfileData
-                                              ?.object?.userProfilePic,
-                                          title: "",
-                                        ),
-                                      ));
-                                } else {
-                                   Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => DocumentViewScreen1(
-                                          path:
-                                              'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
-                                          title: 'Pdf',
-                                        )));
-                                }
-                              },
+                                  if (NewProfileData?.object?.userProfilePic
+                                              ?.isNotEmpty ==
+                                          true &&
+                                      NewProfileData?.object?.userProfilePic !=
+                                          '') {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProfileandDocumentScreen(
+                                            path: NewProfileData
+                                                ?.object?.userProfilePic,
+                                            title: "",
+                                          ),
+                                        ));
+                                  } else {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DocumentViewScreen1(
+                                                  path:
+                                                      'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
+                                                  title: 'Pdf',
+                                                )));
+                                  }
+                                },
                                 child: Container(
                                   height: 150,
                                   width: 150,
@@ -505,9 +507,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     ?.object?.userProfilePic ==
                                                 ''
                                         ? Image.asset(ImageConstant.splashImage)
-                                        : CircleAvatar(backgroundColor: Colors.white,
+                                        : CircleAvatar(
+                                            backgroundColor: Colors.white,
                                             backgroundImage: NetworkImage(
-                                              
                                                 "${NewProfileData?.object?.userProfilePic}"),
                                             radius: 25,
                                           ),
@@ -885,7 +887,30 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         if (followersClassModel1
                                                 ?.object?.isNotEmpty ==
                                             true) {
-                                          Navigator.push(
+                                          //this is i want this
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider<FollowerBlock>(
+                                                  create: (context) =>
+                                                      FollowerBlock(),
+                                                ),
+                                              ],
+                                              child: Followers(
+                                                appBarName: 'Followers',
+                                                followersClassModel:
+                                                    followersClassModel1!,
+                                                userId: widget.User_ID,
+                                              ),
+                                            );
+                                          })).then((value) =>
+                                              BlocProvider.of<NewProfileSCubit>(
+                                                      context)
+                                                  .NewProfileSAPI(
+                                                      context, widget.User_ID));
+                                          /*    Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
@@ -894,12 +919,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         appBarName: 'Followers',
                                                         followersClassModel:
                                                             followersClassModel1!,
-                                                        userId: User_ID,
+                                                        userId: widget.User_ID,
                                                       ))).then((value) =>
                                               BlocProvider.of<NewProfileSCubit>(
                                                       context)
                                                   .NewProfileSAPI(
-                                                      context, widget.User_ID));
+                                                      context, widget.User_ID)); */
                                         }
                                       } else {}
                                     },
@@ -946,17 +971,28 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         if (followersClassModel2
                                                 ?.object?.isNotEmpty ==
                                             true) {
-                                          Navigator.push(
-                                              context,
+                                          Navigator.push(context,
                                               MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Followers(
-                                                        // FOLLOWING
-                                                        appBarName: 'Following',
-                                                        followersClassModel:
-                                                            followersClassModel2!,
-                                                        userId: User_ID,
-                                                      ))).then((value) => null);
+                                                  builder: (context) {
+                                            return MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider<FollowerBlock>(
+                                                  create: (context) =>
+                                                      FollowerBlock(),
+                                                ),
+                                              ],
+                                              child: Followers(
+                                                appBarName: 'Following',
+                                                followersClassModel:
+                                                    followersClassModel1!,
+                                                userId: widget.User_ID,
+                                              ),
+                                            );
+                                          })).then((value) =>
+                                              BlocProvider.of<NewProfileSCubit>(
+                                                      context)
+                                                  .NewProfileSAPI(
+                                                      context, widget.User_ID));
                                         }
                                       } else {}
                                     },
@@ -1946,7 +1982,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               left: 5,
                                                                               top: 10),
                                                                           child:
-                                                                              CircleAvatar(backgroundColor: Colors.white,
+                                                                              CircleAvatar(
+                                                                            backgroundColor:
+                                                                                Colors.white,
                                                                             backgroundImage:
                                                                                 NetworkImage("${GetUserPostCommetData?.object?[index].userProfilePic}"),
                                                                             radius:
@@ -2025,7 +2063,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                                   width: 45,
                                                                                                   height: 45,
                                                                                                   margin: EdgeInsets.only(top: 15),
-                                                                                                  child: CircleAvatar(backgroundColor: Colors.white,
+                                                                                                  child: CircleAvatar(
+                                                                                                    backgroundColor: Colors.white,
                                                                                                     backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].comments?[index2].profilePic}"),
                                                                                                     radius: 25,
                                                                                                   ),
@@ -2685,7 +2724,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             width: _width,
                             child: CustomTextFormField(
                               readOnly: true,
-                       margin: EdgeInsets.only(
+                              margin: EdgeInsets.only(
                                 top: 10,
                               ),
 
