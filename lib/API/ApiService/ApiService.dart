@@ -30,7 +30,7 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.packagingdepot.store/";
           // "https://api.packagingdepot.store/";
-          "http://192.168.29.17:8081/";
+          "http://192.168.29.100:8081/";
     }
 
     print(baseURL);
@@ -67,7 +67,7 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.packagingdepot.store/";
           // "https://api.packagingdepot.store/";
-          "http://192.168.29.17:8081/";
+          "http://192.168.29.100:8081/";
     }
     print("API => ******** ${baseURL + APIurl}");
 
@@ -339,7 +339,7 @@ setLOGOUT(BuildContext context) async {
   var height = MediaQuery.of(context).size.height;
   var width = MediaQuery.of(context).size.width;
 
-  Future.delayed(const Duration(seconds: 0), () async {
+  Future.delayed(const Duration(seconds: 2), () async {
     // Navigator.pop(context);
     print("please again login");
     await setLogOut(context);

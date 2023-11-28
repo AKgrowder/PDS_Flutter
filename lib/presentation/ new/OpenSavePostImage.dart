@@ -2,16 +2,19 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_cubit.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
 import 'package:pds/API/Model/OpenSaveImagepostModel/OpenSaveImagepost_Model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comment_bottom_sheet.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_state.dart';
 
@@ -374,7 +377,48 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                           padding: const EdgeInsets.only(top: 10),
                           child: Align(
                             alignment: Alignment.centerLeft,
-                            child: Text(
+                            child: LinkifyText(
+                              "${OpenSaveModelData?.object?.description}",
+                              linkStyle: TextStyle(color: Colors.blue),
+                              textStyle: TextStyle(color: Colors.white),
+                              linkTypes: [
+                                LinkType.url,
+                                // LinkType
+                                //     .userTag,
+                                LinkType.hashTag,
+                                // LinkType
+                                //     .email
+                              ],
+                              onTap: (link) {
+                                var SelectedTest = link.value.toString();
+                                var Link = SelectedTest.startsWith('https');
+                                var Link1 = SelectedTest.startsWith('http');
+                                var Link2 = SelectedTest.startsWith('www');
+
+                                print(SelectedTest.toString());
+                                print(Link);
+                                // if (User_ID ==
+                                //     null) {
+                                //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                // } else {
+                                if (Link == true &&
+                                    Link1 == true &&
+                                    Link2 == true) {
+                                  launch(link.value.toString(),
+                                      forceWebView: true,
+                                      enableJavaScript: true);
+                                } else {
+                                  print("${link}");
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => HashTagViewScreen(
+                                            title: "${link.value}"),
+                                      ));
+                                }
+                                // }
+                              },
+                            ), /* Text(
                               "${OpenSaveModelData?.object?.description ?? ""}",
                               style: TextStyle(
                                 color: Colors.white,
@@ -382,7 +426,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                 fontFamily: 'outfit',
                                 fontWeight: FontWeight.w600,
                               ),
-                            ),
+                            ) */
                           ),
                         ),
                   Container(
