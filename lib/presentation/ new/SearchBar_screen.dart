@@ -819,7 +819,8 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                                 ));
                                           },
                                         ),
-                                        Padding(
+                                        SizedBox(height: 3,)
+                                        /* Padding(
                                           padding: EdgeInsets.only(top: 5),
                                           child: Text(
                                             "${hashtagModel?.object?.content?[index].postCount} posts",
@@ -828,7 +829,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                               fontSize: 12,
                                             ),
                                           ),
-                                        )
+                                        ) */
                                       ],
                                     ),
                                   ),
