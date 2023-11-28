@@ -16,6 +16,7 @@ import 'package:pds/API/Bloc/RePost_Bloc/RePost_cubit.dart';
 import 'package:pds/API/Bloc/RePost_Bloc/RePost_state.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
+import 'package:pds/API/Model/OpenSaveImagepostModel/OpenSaveImagepost_Model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
@@ -42,6 +43,7 @@ class RePostScreen extends StatefulWidget {
   String? postUid;
   GetGuestAllPostModel? AllGuestPostRoomData;
   HashtagViewDataModel? hashTagViewData;
+  OpenSaveImagepostModel? OpenSaveModelData;
   RePostScreen({
     Key? key,
     this.username,
@@ -54,6 +56,7 @@ class RePostScreen extends StatefulWidget {
     this.AllGuestPostRoomData,
     this.postUid,
     this.hashTagViewData,
+    this.OpenSaveModelData,
   }) : super(key: key);
 
   @override
