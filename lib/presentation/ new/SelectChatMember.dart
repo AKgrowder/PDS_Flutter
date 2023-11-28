@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/SelectChat_bloc/SelectChat_cubit.dart';
 import 'package:pds/API/Bloc/SelectChat_bloc/SelectChat_state.dart';
 import 'package:pds/API/Model/PersonalChatListModel/SelectChatMember_Model.dart';
@@ -97,15 +98,24 @@ class _SelectChatMemberState extends State<SelectChatMember> {
                     child: ListTile(
                       leading: GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProfileScreen(
+                          Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider<NewProfileSCubit>(
+                                                  create: (context) =>
+                                                      NewProfileSCubit(),
+                                                ),
+                                              ],
+                                              child: ProfileScreen(
                                         User_ID:
                                             "${SelectChatMemberListModelData?.object?[index].userUid}",
                                         isFollowing: "",
                                         // "${SelectChatMemberListModelData?.object?[index].isFollowing}",
-                                      )));
+                                      ));
+                                        }));
+                       
                         },
                         child: CircleAvatar(backgroundColor: Colors.white,
                           backgroundImage: SelectChatMemberListModelData

@@ -12,6 +12,7 @@ import 'package:getwidget/types/gf_loader_type.dart';
 import 'package:hashtagable/widgets/hashtag_text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/RePost_Bloc/RePost_cubit.dart';
 import 'package:pds/API/Bloc/RePost_Bloc/RePost_state.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
@@ -236,13 +237,22 @@ class _RePostScreenState extends State<RePostScreen> {
                             Container(
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ProfileScreen(
+                                  Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider<NewProfileSCubit>(
+                                                  create: (context) =>
+                                                      NewProfileSCubit(),
+                                                ),
+                                              ],
+                                              child:  ProfileScreen(
                                                 User_ID: "${User_ID}",
                                                 isFollowing: 'FOLLOW',
-                                              )));
+                                              ));
+                                        }));
+                                  
                                 },
                                 child: UserProfileImage?.isEmpty == true
                                     ? SizedBox(

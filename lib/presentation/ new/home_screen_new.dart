@@ -1,25 +1,25 @@
 import 'dart:io';
-import 'package:dotted_border/dotted_border.dart';
-import 'package:linkfy_text/linkfy_text.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
-import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
-import 'package:pds/presentation/%20new/RePost_Screen.dart';
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hashtagable/hashtagable.dart';
 import 'package:intl/intl.dart';
+import 'package:linkfy_text/linkfy_text.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
+import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
+import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
 import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
 import 'package:pds/API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
+import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
 import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
@@ -35,6 +35,7 @@ import 'package:pds/core/utils/image_utils.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
+import 'package:pds/presentation/%20new/RePost_Screen.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comment_bottom_sheet.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
@@ -43,19 +44,17 @@ import 'package:pds/presentation/create_foram/create_foram_screen.dart';
 import 'package:pds/presentation/create_story/create_story.dart';
 import 'package:pds/presentation/create_story/full_story_page.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
+import 'package:pds/presentation/recent_blog/recent_blog_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/presentation/splash_screen/splash_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pds/presentation/recent_blog/recent_blog_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
-import 'package:share_plus/share_plus.dart';
 
 class HomeScreenNew extends StatefulWidget {
   const HomeScreenNew({Key? key}) : super(key: key);
@@ -991,12 +990,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                           timelineBackgroundColor: Colors.grey,
                           buttonDecoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            image: element.profilePic != null
+                            image: element.profilePic != null && element.profilePic != ""
                                 ? DecorationImage(
                                     image: NetworkImage(element.profilePic))
                                 : DecorationImage(
                                     image: AssetImage(
-                                      ImageConstant.placeholder2,
+                                      ImageConstant.brandlogo,
                                     ),
                                     fit: BoxFit.cover,
                                   ),
@@ -1076,14 +1075,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                       timelineBackgroundColor: Colors.grey,
                       buttonDecoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        image: element.profilePic != null ||
+                        image: element.profilePic != null &&
                                 element.profilePic != ''
                             ? DecorationImage(
                                 image:
                                     NetworkImage(element.profilePic.toString()))
                             : DecorationImage(
                                 image: AssetImage(
-                                  ImageConstant.pdslogo,
+                                  ImageConstant.brandlogo,
                                 ),
                                 fit: BoxFit.cover,
                               ),
@@ -1231,11 +1230,19 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                                 builder: (context) {
-                                          return ProfileScreen(
-                                            User_ID: "${User_ID}",
-                                            isFollowing: 'FOLLOW',
-                                          );
+                                          return MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider<NewProfileSCubit>(
+                                                  create: (context) =>
+                                                      NewProfileSCubit(),
+                                                ),
+                                              ],
+                                              child: ProfileScreen(
+                                                User_ID: "${User_ID}",
+                                                isFollowing: 'FOLLOW',
+                                              ));
                                         }));
+                                        /////
                                       }
                                     },
                                     child: uuid == null
@@ -1693,15 +1700,24 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     MaterialPageRoute(
                                                                         builder:
                                                                             (context) {
-                                                                  return ProfileScreen(
-                                                                      User_ID:
-                                                                          "${AllGuestPostRoomData?.object?.content?[index].userUid}",
-                                                                      isFollowing: AllGuestPostRoomData
-                                                                          ?.object
-                                                                          ?.content?[
-                                                                              index]
-                                                                          .isFollowing);
+                                                                  return MultiBlocProvider(
+                                                                      providers: [
+                                                                        BlocProvider<
+                                                                            NewProfileSCubit>(
+                                                                          create: (context) =>
+                                                                              NewProfileSCubit(),
+                                                                        ),
+                                                                      ],
+                                                                      child: ProfileScreen(
+                                                                          User_ID:
+                                                                              "${AllGuestPostRoomData?.object?.content?[index].userUid}",
+                                                                          isFollowing: AllGuestPostRoomData
+                                                                              ?.object
+                                                                              ?.content?[index]
+                                                                              .isFollowing));
                                                                 }));
+
+                                                                ///
                                                               }
                                                             },
                                                             child: AllGuestPostRoomData
@@ -2154,10 +2170,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             context,
                                                                             MaterialPageRoute(builder:
                                                                                 (context) {
-                                                                          return ProfileScreen(
-                                                                              User_ID: "${AllGuestPostRoomData?.object?.content?[index].repostOn?.userUid}",
-                                                                              isFollowing: AllGuestPostRoomData?.object?.content?[index].repostOn?.isFollowing);
+                                                                          return MultiBlocProvider(
+                                                                              providers: [
+                                                                                BlocProvider<NewProfileSCubit>(
+                                                                                  create: (context) => NewProfileSCubit(),
+                                                                                ),
+                                                                              ],
+                                                                              child: ProfileScreen(User_ID: "${AllGuestPostRoomData?.object?.content?[index].repostOn?.userUid}", isFollowing: AllGuestPostRoomData?.object?.content?[index].repostOn?.isFollowing));
                                                                         }));
+                                                                        //
                                                                       }
                                                                     },
                                                                     child: AllGuestPostRoomData?.object?.content?[index].repostOn?.userProfilePic !=
@@ -2811,15 +2832,23 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     MaterialPageRoute(
                                                                         builder:
                                                                             (context) {
-                                                                  return ProfileScreen(
-                                                                      User_ID:
-                                                                          "${AllGuestPostRoomData?.object?.content?[index].userUid}",
-                                                                      isFollowing: AllGuestPostRoomData
-                                                                          ?.object
-                                                                          ?.content?[
-                                                                              index]
-                                                                          .isFollowing);
+                                                                  return MultiBlocProvider(
+                                                                      providers: [
+                                                                        BlocProvider<
+                                                                            NewProfileSCubit>(
+                                                                          create: (context) =>
+                                                                              NewProfileSCubit(),
+                                                                        ),
+                                                                      ],
+                                                                      child: ProfileScreen(
+                                                                          User_ID:
+                                                                              "${AllGuestPostRoomData?.object?.content?[index].userUid}",
+                                                                          isFollowing: AllGuestPostRoomData
+                                                                              ?.object
+                                                                              ?.content?[index]
+                                                                              .isFollowing));
                                                                 }));
+                                                                //
                                                               }
                                                             },
                                                             child: AllGuestPostRoomData
@@ -3729,7 +3758,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       child:
                                                                           Stack(
                                                                         children: [
-                                                                          AllExperData?.object?[index].profilePic == null ||  AllExperData?.object?[index].profilePic == ""
+                                                                          AllExperData?.object?[index].profilePic == null || AllExperData?.object?[index].profilePic == ""
                                                                               ? CustomImageView(
                                                                                   height: _height / 4.8,
                                                                                   width: _width,
@@ -3809,7 +3838,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                         SizedBox(
                                                                                           width: 2,
                                                                                         ),
-                                                                                        Expanded( 
+                                                                                        Expanded(
                                                                                           child: Text(
                                                                                             'Expertise in ${AllExperData?.object?[index].expertise?[0].expertiseName}',
                                                                                             maxLines: 1,
