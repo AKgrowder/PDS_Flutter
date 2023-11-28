@@ -37,7 +37,7 @@ dependencies:
 
   flutter_screenutil: ^5.9.0
   path_provider: ^2.1.1
-  file_picker: ^6.1.1
+  
   
 
 dev_dependencies:
