@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -379,7 +380,8 @@ class _MainViewState extends State<MainView> {
                   pathList: (path) {
                     controlNotifier.mediaPath = path.first.path!.toString();
                     if (controlNotifier.mediaPath.isNotEmpty) {
-                      getFileSize(controlNotifier.mediaPath, 1, itemProvider);
+                      getFileSize(
+                          controlNotifier.mediaPath, 1, context, itemProvider);
                     }
                     scrollProvider.pageController.animateToPage(0,
                         duration: const Duration(milliseconds: 300),
@@ -425,8 +427,7 @@ class _MainViewState extends State<MainView> {
     );
   }
 
-  ////
-  getFileSize(String filepath, int decimals,
+   getFileSize(String filepath, int decimals, context,
       DraggableWidgetNotifier itemProvider) async {
     var file = File(filepath);
     int bytes = await file.length();
@@ -436,36 +437,65 @@ class _MainViewState extends State<MainView> {
     var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
     value2 = double.parse(STR);
 
-    if (value2 > (widget.finalFileSize ?? 0.0)) {
-      print(
-          "this file size ${value2} ${suffixes[i]} Selected Max size ${widget.finalFileSize}MB");
+    print(value2);
+    switch (i) {
+      case 0:
+        print("Done file size B");
 
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text("Max Size ${widget.finalFileSize}MB"),
-          content: Text(
-              "This file size ${value2} ${suffixes[i]} Selected Max size ${widget.finalFileSize}MB"),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(ctx).pop();
-              },
-              child: Container(
-                // color: Colors.green,
-                padding: const EdgeInsets.all(10),
-                child: const Text("Okay"),
-              ),
+        itemProvider.draggableWidget.insert(
+            0,
+            EditableItem()
+              ..type = ItemType.image
+              ..position = const Offset(0.0, 0));
+        break;
+      case 1:
+        print("Done file size KB");
+
+        itemProvider.draggableWidget.insert(
+            0,
+            EditableItem()
+              ..type = ItemType.image
+              ..position = const Offset(0.0, 0));
+        setState(() {});
+
+        break;
+      case 2:
+        if (value2 > widget.finalFileSize!) {
+          print(
+              "this file size ${value2} ${suffixes[i]} Selected Max size ${widget.finalFileSize!}MB");
+
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text("Max Size ${widget.finalFileSize!}MB"),
+              content: Text(
+                  "This file size ${value2} ${suffixes[i]} Selected Max size ${widget.finalFileSize!}MB"),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: Container(
+                    // color: Colors.green,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("Okay"),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      );
-    } else {
-      itemProvider.draggableWidget.insert(
-          0,
-          EditableItem()
-            ..type = ItemType.image
-            ..position = const Offset(0.0, 0));
+          );
+        } else {
+          print("Done file Size 10 MB");
+
+          itemProvider.draggableWidget.insert(
+              0,
+              EditableItem()
+                ..type = ItemType.image
+                ..position = const Offset(0.0, 0));
+        }
+
+        break;
+      default:
     }
 
     return STR;

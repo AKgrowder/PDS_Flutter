@@ -54,7 +54,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? filepath;
   String? User_Module;
   String? User_ID;
-
   double documentuploadsize = 0;
   ChooseDocument? chooseDocumentuploded;
   ChooseDocument1? chooseDocumentuploded1;
@@ -724,6 +723,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             } else if (User_Module == 'EXPERT') {
                               await expertUserData();
                             } else {
+                              print("else condison is working");
                               if (chooseDocumentuploded?.object.toString() !=
                                       null &&
                                   chooseDocumentuploded1?.object.toString() !=
@@ -751,7 +751,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 };
                                 BlocProvider.of<MyAccountCubit>(context)
                                     .UpdateProfileEmployee(params, context);
-                              } else {
+                              } else if (chooseDocumentuploded1?.object
+                                      .toString() !=
+                                  null) {
                                 var params = {
                                   "userBackgroundPic":
                                       chooseDocumentuploded1?.object.toString(),
@@ -759,6 +761,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       widget.newProfileData?.object?.profileUid,
                                   "email": emailController.text,
                                 };
+                                print("parems--$params");
+                                BlocProvider.of<MyAccountCubit>(context)
+                                    .UpdateProfileEmployee(params, context);
+                              } else {
+                                var params = {
+                                  "profileUid":
+                                      widget.newProfileData?.object?.profileUid,
+                                  "email": emailController.text,
+                                };
+                                print("parems--$params");
                                 BlocProvider.of<MyAccountCubit>(context)
                                     .UpdateProfileEmployee(params, context);
                               }
