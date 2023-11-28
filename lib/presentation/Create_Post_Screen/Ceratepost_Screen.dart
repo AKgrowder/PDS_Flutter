@@ -123,7 +123,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
 
 //Public
 // Following
-  List<String> soicalData = ["Public", "Following"];
+  List<String> soicalData = ["Public", "Follower"];
   bool _isLink(String input) {
     RegExp linkRegex = RegExp(
         r'^https?:\/\/(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z]+)+(?:[^\s]*)$');
