@@ -3729,18 +3729,20 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       child:
                                                                           Stack(
                                                                         children: [
-                                                                          CustomImageView(
-                                                                            height:
-                                                                                180,
-                                                                            width:
-                                                                                128,
-                                                                            radius:
-                                                                                BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                                                                            url:
-                                                                                "${AllExperData?.object?[index].profilePic}",
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                          ),
+                                                                          AllExperData?.object?[index].profilePic == null ||  AllExperData?.object?[index].profilePic == ""
+                                                                              ? CustomImageView(
+                                                                                  height: _height / 4.8,
+                                                                                  width: _width,
+                                                                                  // fit: BoxFit.fill,
+                                                                                  imagePath: ImageConstant.brandlogo,
+                                                                                )
+                                                                              : CustomImageView(
+                                                                                  height: 180,
+                                                                                  width: 128,
+                                                                                  radius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                                                                                  url: "${AllExperData?.object?[index].profilePic}",
+                                                                                  fit: BoxFit.cover,
+                                                                                ),
                                                                           Align(
                                                                             alignment:
                                                                                 Alignment.topCenter,
@@ -3807,10 +3809,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                         SizedBox(
                                                                                           width: 2,
                                                                                         ),
-                                                                                        Text(
-                                                                                          'Expertise in ${AllExperData?.object?[index].expertise?[0].expertiseName}',
-                                                                                          maxLines: 1,
-                                                                                          style: TextStyle(fontFamily: "outfit", fontSize: 11, overflow: TextOverflow.ellipsis, color: Colors.white, fontWeight: FontWeight.bold),
+                                                                                        Expanded( 
+                                                                                          child: Text(
+                                                                                            'Expertise in ${AllExperData?.object?[index].expertise?[0].expertiseName}',
+                                                                                            maxLines: 1,
+                                                                                            style: TextStyle(fontFamily: "outfit", fontSize: 11, overflow: TextOverflow.ellipsis, color: Colors.white, fontWeight: FontWeight.bold),
+                                                                                          ),
                                                                                         ),
                                                                                       ],
                                                                                     )
