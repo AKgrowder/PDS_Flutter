@@ -584,7 +584,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                   width: 5,
                                 ),
                                 Text(
-                                  "${StoryViewListModelData?.object?.length}",
+                                  "${StoryViewListModelData?.object?.length??"0"}",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontFamily: "outfit",

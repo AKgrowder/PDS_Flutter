@@ -92,11 +92,12 @@ class _LoginScreenState extends State<LoginScreen> {
               listener: (context, state) async {
                 if (state is LoginErrorState) {
                   print("vxcvxcv-${state.error.message}");
+                  SubmitOneTime = false;
                   SnackBar snackBar = SnackBar(
                     content: Text(state.error.message),
                     backgroundColor: ColorConstant.primary_color,
                   );
-                  SubmitOneTime = false;
+                  
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
                 if (state is LoginLoadingState) {
@@ -113,6 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 }
                 if (state is LoginLoadedState) {
+                   SubmitOneTime = false;
                   if (state.loginModel.message == "User Deleted") {
                     showDialog(
                         context: context,
@@ -516,11 +518,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                   print('dataPassing-$dataPassing');
 
-                                  if (SubmitOneTime == false) {
-                                    SubmitOneTime = true;
+                                  // if (SubmitOneTime == false) {
+                                  //   SubmitOneTime = true;
                                     BlocProvider.of<LoginCubit>(context)
                                         .loginApidata(dataPassing, context);
-                                  }
+                                  // }
                                 }
                               },
                               text: "Log In",

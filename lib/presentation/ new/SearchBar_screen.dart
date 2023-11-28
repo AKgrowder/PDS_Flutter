@@ -75,8 +75,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   @override
   void initState() {
     super.initState();
-     BlocProvider.of<HashTagCubit>(context)
-        .seetinonExpried(context);
+    BlocProvider.of<HashTagCubit>(context).seetinonExpried(context);
     getUserData();
     BlocProvider.of<HashTagCubit>(context)
         .HashTagForYouAPI(context, 'FOR YOU', '1');
@@ -96,13 +95,9 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     var _width = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: () async {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NewBottomBar(buttomIndex: 2),
-            ));
-        return true;
-      },
+            
+            return false;
+          },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: BlocConsumer<HashTagCubit, HashTagState>(
@@ -121,7 +116,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
             }
             if (state is HashTagLoadedState) {
               apiDataSetup = true;
-             
+    
               hashtagModel = state.HashTagData;
             }
             if (state is GetAllUserLoadedState) {
@@ -819,7 +814,9 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                                 ));
                                           },
                                         ),
-                                        SizedBox(height: 3,)
+                                        SizedBox(
+                                          height: 3,
+                                        )
                                         /* Padding(
                                           padding: EdgeInsets.only(top: 5),
                                           child: Text(
@@ -859,6 +856,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
 
     if (indexxx != null) {
       if (indexxx == 0) {
+        print("fsgfsdfgsdgfsdg");
         return Expanded(
           child: SingleChildScrollView(
             controller: scrollController,
