@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_state.dart';
+import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Model/InvitationModel/Invitation_Model.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
@@ -295,13 +296,21 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                             GestureDetector(
                                               onTap: () {
                                                 Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                  return ProfileScreen(
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider<NewProfileSCubit>(
+                                                  create: (context) =>
+                                                      NewProfileSCubit(),
+                                                ),
+                                              ],
+                                              child: ProfileScreen(
                                                       User_ID:
                                                           "${RequestListModelData?.object?[index].followedByUserUid}",
-                                                      isFollowing: "REQUESTED");
-                                                }));
+                                                      isFollowing: "REQUESTED"));
+                                        }));
+                                                
                                               },
                                               child: RequestListModelData
                                                           ?.object?[index]

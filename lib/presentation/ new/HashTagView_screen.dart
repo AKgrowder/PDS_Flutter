@@ -5,6 +5,7 @@ import 'package:hashtagable/widgets/hashtag_text.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
 import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_state.dart';
+import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
@@ -203,13 +204,22 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                             Navigator.push(context,
                                                 MaterialPageRoute(
                                                     builder: (context) {
-                                              return ProfileScreen(
-                                                  User_ID:
-                                                      "${hashTagViewData?.object?.posts?[index].userUid}",
-                                                  isFollowing: hashTagViewData
-                                                      ?.object
-                                                      ?.posts?[index]
-                                                      .isFollowing);
+                                              return MultiBlocProvider(
+                                                  providers: [
+                                                    BlocProvider<
+                                                        NewProfileSCubit>(
+                                                      create: (context) =>
+                                                          NewProfileSCubit(),
+                                                    ),
+                                                  ],
+                                                  child: ProfileScreen(
+                                                      User_ID:
+                                                          "${hashTagViewData?.object?.posts?[index].userUid}",
+                                                      isFollowing:
+                                                          hashTagViewData
+                                                              ?.object
+                                                              ?.posts?[index]
+                                                              .isFollowing));
                                             }));
                                           }
                                         },

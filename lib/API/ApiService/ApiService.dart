@@ -2,14 +2,15 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/internet_utils.dart';
 import 'package:pds/presentation/noInterneterror/noInterNetScreen.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../../presentation/splash_screen/splash_screen.dart';
@@ -28,9 +29,9 @@ class ApiServices {
     } else {
       baseURL =
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
-          // "https://uatapi.packagingdepot.store/";
+          "https://uatapi.packagingdepot.store/";
           // "https://api.packagingdepot.store/";
-          "http://192.168.29.100:8081/";
+          // "http://192.168.29.100:8081/";
     }
 
     print(baseURL);
@@ -65,9 +66,9 @@ class ApiServices {
     if (APIurl == "user/api/fetchSysConfig") {
       baseURL =
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
-          // "https://uatapi.packagingdepot.store/";
+          "https://uatapi.packagingdepot.store/";
           // "https://api.packagingdepot.store/";
-          "http://192.168.29.100:8081/";
+          // "http://192.168.29.100:8081/";
     }
     print("API => ******** ${baseURL + APIurl}");
 
