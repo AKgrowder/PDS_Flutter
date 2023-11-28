@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_cubit.dart';
 import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_state.dart';
 import 'package:pds/API/Model/ViewStoryModel/StoryViewList_Model.dart';
@@ -414,16 +415,35 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                           child: ListTile(
                                             leading: GestureDetector(
                                               onTap: () {
-                                                Navigator.push(
-                                                    context,
+                                                Navigator.push(context,
                                                     MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ProfileScreen(
-                                                              User_ID:
-                                                                  "${StoryViewListModelData?.object?[index].userUid}",
-                                                              isFollowing:
-                                                                  "${StoryViewListModelData?.object?[index].isFollowing}",
-                                                            )));
+                                                        builder: (context) {
+                                                  return MultiBlocProvider(
+                                                      providers: [
+                                                        BlocProvider<
+                                                            NewProfileSCubit>(
+                                                          create: (context) =>
+                                                              NewProfileSCubit(),
+                                                        ),
+                                                      ],
+                                                      child: ProfileScreen(
+                                                        User_ID:
+                                                            "${StoryViewListModelData?.object?[index].userUid}",
+                                                        isFollowing:
+                                                            "${StoryViewListModelData?.object?[index].isFollowing}",
+                                                      ));
+                                                }));
+
+                                                // Navigator.push(
+                                                //     context,
+                                                //     MaterialPageRoute(
+                                                //         builder: (context) =>
+                                                //             ProfileScreen(
+                                                //               User_ID:
+                                                //                   "${StoryViewListModelData?.object?[index].userUid}",
+                                                //               isFollowing:
+                                                //                   "${StoryViewListModelData?.object?[index].isFollowing}",
+                                                //             )));
                                               },
                                               child: StoryViewListModelData
                                                               ?.object?[index]
@@ -584,7 +604,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                   width: 5,
                                 ),
                                 Text(
-                                  "${StoryViewListModelData?.object?.length??"0"}",
+                                  "${StoryViewListModelData?.object?.length ?? "0"}",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontFamily: "outfit",
