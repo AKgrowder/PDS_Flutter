@@ -197,8 +197,7 @@ class Repository {
     }
   }
 
-//http://192.168.29.100:8081/user/addExpertProfile
-//http://192.168.29.100:8081/user/addExpertProfile
+ 
   CreatPublicRoom(Map<String, String> params, BuildContext context) async {
     final response =
         await apiServices.postApiCall(Config.CreateRoom, params, context);

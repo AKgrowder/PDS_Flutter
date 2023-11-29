@@ -235,12 +235,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             }
             if (state is AddExportLoadedState) {
               print("AddExportLoadedState");
+              
               SnackBar snackBar = SnackBar(
                 content: Text(state.addExpertProfile.message.toString()),
                 backgroundColor: ColorConstant.primary_color,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NewBottomBar(buttomIndex: 0)));
             }
             if (state is UpdateProfileLoadedState) {
               SnackBar snackBar = SnackBar(
@@ -248,7 +252,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 backgroundColor: ColorConstant.primary_color,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NewBottomBar(buttomIndex: 0)));
             }
             if (state is FetchExprtiseRoomLoadedState) {
               print("FetchExprtiseRoomLoadedState");

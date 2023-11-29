@@ -13,7 +13,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:dio/dio.dart';
+// import 'package:dio/dio.dart';
 
 class DocumentViewScreen extends StatefulWidget {
   String? path;
