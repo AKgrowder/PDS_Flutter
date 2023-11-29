@@ -1653,10 +1653,10 @@ class Repository {
     }
   }
 
-  NewProfileAPI(BuildContext context, String otherUserUid) async {
-    print("sdfhsdfhsdfh-$otherUserUid");
+  NewProfileAPI(BuildContext context, String url) async {
+    print("sdfhsdfhsdfh-$url");
     final response = await apiServices.getApiCallWithToken(
-        "${Config.NewfetchUserProfile}?otherUserUid=${otherUserUid}", context);
+        url, context);
     print('AddPost$response');
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {

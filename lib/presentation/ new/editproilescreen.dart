@@ -16,7 +16,6 @@ import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/my%20account/my_account_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -216,9 +215,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       body: SingleChildScrollView(
         child: BlocConsumer<MyAccountCubit, MyAccountState>(
           listener: (context, state) {
-            // if (state is chooseDocumentLoadedState2) {
-            //   // chooseDocumentuploded2 = state.chooseDocumentuploded2;
-            // }
+            if (state is chooseDocumentLoadedState2) {
+              chooseDocumentuploded2 = state.chooseDocumentuploded2;
+              print("fsdfdgfd-${chooseDocumentuploded2?.object}");
+            }
             if (state is chooseDocumentLoadedState) {
               print("chooseDocumentLoadedState");
               if (state.chooseDocumentuploded.object == null) {
@@ -311,15 +311,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               chooseDocument2 = state.chooseDocumentuploded2;
             }
             if (state is CreatFourmLoadedState) {
+              //this is the working
               SnackBar snackBar = SnackBar(
                 content: Text(state.createForm.object.toString()),
                 backgroundColor: ColorConstant.primary_color,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => NewBottomBar(buttomIndex: 0)));
+              Navigator.pop(context);
             }
             if (state is EmailVerifactionLoadedState) {
               SnackBar snackBar = SnackBar(
@@ -618,10 +616,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                         ),
                         customTextFeild(
-                            controller: userNameController,
-                            width: _width / 1.1,
-                            hintText: "Enter User ID",
-                            color: Color(0xffFFF3F4)),
+                          isReadOnly: true,
+                          controller: userNameController,
+                          width: _width / 1.1,
+                          hintText: "Enter User ID",
+                        ),
                         Row(
                           children: [
                             Padding(
@@ -689,11 +688,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ],
                         ),
                         customTextFeild(
-                          controller: emailController,
-                          width: _width / 1.1,
-                          isReadOnly: true,
-                          hintText: "Email Address",
-                        ),
+                            controller: emailController,
+                            width: _width / 1.1,
+                            hintText: "Email Address",
+                            color: Color(0xffFFF3F4)),
                         Padding(
                           padding: const EdgeInsets.only(top: 10, bottom: 10),
                           child: Text(
@@ -728,47 +726,57 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       null &&
                                   chooseDocumentuploded1?.object.toString() !=
                                       null) {
+                                print(
+                                    "chooseDocumentuploded?.object && chooseDocumentuploded1?.object ");
                                 var params = {
                                   "userProfilePic":
                                       chooseDocumentuploded?.object.toString(),
                                   "userBackgroundPic":
                                       chooseDocumentuploded1?.object.toString(),
-                                  "profileUid":
-                                      widget.newProfileData?.object?.profileUid,
                                   "email": emailController.text,
+                                  "name": nameController.text,
+                                  // "userName": userNameController.text,
+                                  "uuid": User_ID
                                 };
+                                print("parems--$params");
                                 BlocProvider.of<MyAccountCubit>(context)
                                     .UpdateProfileEmployee(params, context);
                               } else if (chooseDocumentuploded?.object
                                       .toString() !=
                                   null) {
+                                print("chooseDocumentuploded?.object");
                                 var params = {
                                   "userProfilePic":
                                       chooseDocumentuploded?.object.toString(),
-                                  "profileUid":
-                                      widget.newProfileData?.object?.profileUid,
                                   "email": emailController.text,
+                                  "name": nameController.text,
+                                  // "userName": userNameController.text,
+                                  "uuid": User_ID
                                 };
+                                print("parems--$params");
                                 BlocProvider.of<MyAccountCubit>(context)
                                     .UpdateProfileEmployee(params, context);
                               } else if (chooseDocumentuploded1?.object
                                       .toString() !=
                                   null) {
+                                print("chooseDocumentuploded1?.object");
                                 var params = {
                                   "userBackgroundPic":
                                       chooseDocumentuploded1?.object.toString(),
-                                  "profileUid":
-                                      widget.newProfileData?.object?.profileUid,
                                   "email": emailController.text,
+                                  "name": nameController.text,
+                                  // "userName": userNameController.text,
+                                  "uuid": User_ID
                                 };
                                 print("parems--$params");
                                 BlocProvider.of<MyAccountCubit>(context)
                                     .UpdateProfileEmployee(params, context);
                               } else {
                                 var params = {
-                                  "profileUid":
-                                      widget.newProfileData?.object?.profileUid,
                                   "email": emailController.text,
+                                  "name": nameController.text,
+                                  // "userName": userNameController.text,
+                                  "uuid": User_ID
                                 };
                                 print("parems--$params");
                                 BlocProvider.of<MyAccountCubit>(context)
@@ -925,19 +933,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       Map<String, dynamic> params = {};
 
       params['companyName'] = companyName.text;
-      params['document'] =
-          widget.newProfileData?.object?.userDocument?.toString();
+
       params['jobProfile'] = jobProfile.text;
       params['name'] = nameController.text;
       params['profileUid'] =
           widget.newProfileData?.object?.profileUid.toString();
       params['email'] = emailController.text;
       params['industryTypesUid'] = industryType;
+      if (chooseDocumentuploded2?.object != null) {
+        params['document'] = chooseDocumentuploded2?.object.toString();
+      } else {
+        params['document'] =
+            widget.newProfileData?.object?.userDocument?.toString();
+      }
+
       if (chooseDocumentuploded?.object.toString() != null &&
           chooseDocumentuploded1?.object.toString() != null) {
         print("bagrounPic--${chooseDocumentuploded1?.object.toString()}");
         print("userProfilePic--${chooseDocumentuploded1?.object.toString()}");
-
         params['userProfilePic'] = chooseDocumentuploded?.object.toString();
         params['userBackgroundPic'] = chooseDocumentuploded1?.object.toString();
       } else if (chooseDocumentuploded?.object.toString() != null) {
@@ -1103,10 +1116,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         if (widget.newProfileData?.object?.companyName != null)
           customTextFeild(
-            isReadOnly: true,
-            controller: companyName,
-            width: _width / 1.1,
-          ),
+              controller: companyName,
+              width: _width / 1.1,
+              color: Color(0xffFFF3F4)),
         if (widget.newProfileData?.object?.jobProfile != null)
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -1121,7 +1133,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         if (widget.newProfileData?.object?.jobProfile != null)
           customTextFeild(
-            isReadOnly: true,
+            color: Color(0xffFFF3F4),
             controller: jobProfile,
             width: _width / 1.1,
           ),
@@ -1343,58 +1355,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => DocumentViewScreen(
-                            path: widget.newProfileData?.object?.userDocument
-                                .toString(),
-                            title: 'Pdf',
-                          )));
-                },
-                child: Container(
-                    height: 50,
-                    width: _width / 1.6,
-                    decoration: BoxDecoration(
-                        color: Color(0XFFF6F6F6),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(5),
-                            bottomLeft: Radius.circular(5))),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 15, left: 20),
-                      child: Text(
-                        '${dopcument.toString().split('/').last}',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    )),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => DocumentViewScreen(
-                            path: widget.newProfileData?.object?.userDocument
-                                .toString(),
-                            title: 'Pdf',
-                          )));
-                },
-                child: Container(
+              Container(
                   height: 50,
-                  width: _width / 5.4,
+                  width: _width / 1.6,
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 226, 226, 226),
+                      color: Color(0XFFF6F6F6),
                       borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(5),
-                          bottomRight: Radius.circular(5))),
-                  child: Center(
-                    child: Icon(
-                      Icons.remove_red_eye_outlined,
-                      color: Colors.red,
+                          topLeft: Radius.circular(5),
+                          bottomLeft: Radius.circular(5))),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 15, left: 20),
+                    child: Text(
+                      '${dopcument.toString().split('/').last}',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 16),
                     ),
-                  ),
-                ),
-              ),
-              /*   dopcument == "Upload Image"
+                  )),
+              dopcument == "Upload Image"
                   ? GestureDetector(
                       onTap: () async {
                         filepath = await prepareTestPdf(0);
@@ -1469,7 +1446,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                             ),
                           ),
-                        ), */
+                        ),
             ],
           )
       ],
@@ -1836,6 +1813,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           }
           print('filecheckPath-${file1.path}');
           print('filecheckPath-${file1.path}');
+          setState(() {
+            uplopdfile.text = file1.name;
+            dopcument = file1.name;
+          });
           BlocProvider.of<MyAccountCubit>(context).chooseDocumentprofile(
               dopcument.toString(), file1.path!, context);
         }

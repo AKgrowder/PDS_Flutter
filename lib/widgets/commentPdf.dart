@@ -116,7 +116,7 @@ class _DocumentViewScreenState extends State<DocumentViewScreen> {
           style: TextStyle(color: Colors.black),
         ),
         actions: [
-          GestureDetector(
+          /* GestureDetector(
               onTap: () async {
                 _permissionReady = await _checkPermission();
                 await _prepareSaveDir();
@@ -143,7 +143,7 @@ class _DocumentViewScreenState extends State<DocumentViewScreen> {
                   }
                 }
               },
-              child: Icon(Icons.download_sharp, color: Colors.black)),
+              child: Icon(Icons.download_sharp, color: Colors.black)), */
           SizedBox(
             width: 20,
           )
