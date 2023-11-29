@@ -1,6 +1,6 @@
 name: pds
 description: A new Flutter project.
-version: 1.0.0+6
+version: 1.0.0+7
 environment: 
   sdk: '>=2.12.0 <3.0.0'
 dependencies: 
@@ -53,7 +53,7 @@ dependencies:
   flutter_switch: ^0.3.2
   flutter_downloader: ^1.11.5
   linkfy_text: ^1.1.5
-  dio: ^5.3.4
+  # dio: ^5.3.4
   
   
   

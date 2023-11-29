@@ -7,10 +7,12 @@
     <list default="true" id="d961eb55-d03b-471a-8b69-c7586df8a238" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/release/app-release.aab" beforeDir="false" afterPath="$PROJECT_DIR$/app/release/app-release.aab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../lib/API/ApiService/ApiService.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/API/ApiService/ApiService.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/presentation/ new/profileNew.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/presentation/ new/profileNew.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/presentation/splash_screen/splash_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/presentation/splash_screen/splash_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/API/Repo/repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/API/Repo/repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/presentation/ new/editproilescreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/presentation/ new/editproilescreen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../lib/widgets/commentPdf.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/widgets/commentPdf.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../pubspec.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
