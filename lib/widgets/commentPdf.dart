@@ -13,7 +13,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:dio/dio.dart';
+// import 'package:dio/dio.dart';
 
 class DocumentViewScreen extends StatefulWidget {
   String? path;
@@ -116,7 +116,7 @@ class _DocumentViewScreenState extends State<DocumentViewScreen> {
           style: TextStyle(color: Colors.black),
         ),
         actions: [
-          GestureDetector(
+          /* GestureDetector(
               onTap: () async {
                 _permissionReady = await _checkPermission();
                 await _prepareSaveDir();
@@ -143,7 +143,7 @@ class _DocumentViewScreenState extends State<DocumentViewScreen> {
                   }
                 }
               },
-              child: Icon(Icons.download_sharp, color: Colors.black)),
+              child: Icon(Icons.download_sharp, color: Colors.black)), */
           SizedBox(
             width: 20,
           )

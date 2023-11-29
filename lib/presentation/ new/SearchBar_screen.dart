@@ -96,9 +96,14 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     var _width = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: () async {
-            
-            return false;
-          },
+        if (isSerch == true) {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> NewBottomBar(buttomIndex: 2)));
+          return true;
+        } else {
+           Navigator.of(context).push(MaterialPageRoute(builder: (context)=> NewBottomBar(buttomIndex: 0)));
+          return true;
+        }
+      },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: BlocConsumer<HashTagCubit, HashTagState>(
@@ -117,7 +122,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
             }
             if (state is HashTagLoadedState) {
               apiDataSetup = true;
-    
+
               hashtagModel = state.HashTagData;
             }
             if (state is GetAllUserLoadedState) {
@@ -171,7 +176,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                       isSerch = true;
                                     });
                                   }
-    
+
                                   print("xfhdsfhsdfgsdfg-$isSerch");
                                   /*    Navigator.push(context, MaterialPageRoute(
                               builder: (context) {
@@ -202,7 +207,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                   } else if (value.isNotEmpty) {
                                     if (indexxx == 0) {
                                       print("if condison woking");
-    
+
                                       BlocProvider.of<HashTagCubit>(context)
                                           .getalluser(1, value.trim(), context);
                                     } else {
@@ -220,19 +225,21 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                     }
                                   }
                                   print("dataGet-${value.trim()}");
-    
+
                                   if (text.isNotEmpty) {
                                     print("valuee check--${value.trim()}");
                                     if (_timer != null) {
                                       _timer?.cancel();
                                       _timer = Timer(Duration(seconds: 5), () {
                                         BlocProvider.of<HashTagCubit>(context)
-                                            .serchDataAdd(context, value.trim());
+                                            .serchDataAdd(
+                                                context, value.trim());
                                       });
                                     } else {
                                       _timer = Timer(Duration(seconds: 5), () {
                                         BlocProvider.of<HashTagCubit>(context)
-                                            .serchDataAdd(context, value.trim());
+                                            .serchDataAdd(
+                                                context, value.trim());
                                       });
                                     }
                                   }
@@ -312,7 +319,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 onTap: () {
                                   indexxx = index;
                                   dataSetup = null;
-    
+
                                   SharedPreferencesFunction(indexxx ?? 0);
                                   if (mounted) {
                                     setState(() {
@@ -323,14 +330,16 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                     print("value.contains('#')");
                                     if (indexxx == 0) {
                                       print("index is  0");
-                                      String hashTageValue = searchController.text
+                                      String hashTageValue = searchController
+                                          .text
                                           .replaceAll("#", "%23");
                                       BlocProvider.of<HashTagCubit>(context)
                                           .getalluser(
                                               1, hashTageValue.trim(), context);
                                     } else {
                                       print("index is not 0");
-                                      String hashTageValue = searchController.text
+                                      String hashTageValue = searchController
+                                          .text
                                           .replaceAll("#", "%23");
                                       BlocProvider.of<HashTagCubit>(context)
                                           .getalluser(
@@ -387,7 +396,8 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                             width: double.infinity,
                             child: Column(children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: List.generate(text.length, (index) {
                                   return GestureDetector(
                                     onTap: () {
@@ -446,7 +456,9 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
                                 child: Image.asset(ImageConstant.loader,
-                                    fit: BoxFit.cover, height: 100.0, width: 100),
+                                    fit: BoxFit.cover,
+                                    height: 100.0,
+                                    width: 100),
                               ),
                             ),
                           ),
@@ -894,21 +906,18 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           child: GestureDetector(
                             onTap: () {
                               Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return MultiBlocProvider(
-                                              providers: [
-                                                BlocProvider<NewProfileSCubit>(
-                                                  create: (context) =>
-                                                      NewProfileSCubit(),
-                                                ),
-                                              ],
-                                              child: ProfileScreen(
-                                    User_ID:
-                                        "${getalluserlistModel?.object?.content?[index].userUid}",
-                                    isFollowing: "REQUESTED"));
-                                        }));
-                             
+                                  MaterialPageRoute(builder: (context) {
+                                return MultiBlocProvider(
+                                    providers: [
+                                      BlocProvider<NewProfileSCubit>(
+                                        create: (context) => NewProfileSCubit(),
+                                      ),
+                                    ],
+                                    child: ProfileScreen(
+                                        User_ID:
+                                            "${getalluserlistModel?.object?.content?[index].userUid}",
+                                        isFollowing: "REQUESTED"));
+                              }));
                             },
                             child: Container(
                               height: 55,
@@ -1069,21 +1078,18 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           child: GestureDetector(
                             onTap: () {
                               Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return MultiBlocProvider(
-                                              providers: [
-                                                BlocProvider<NewProfileSCubit>(
-                                                  create: (context) =>
-                                                      NewProfileSCubit(),
-                                                ),
-                                              ],
-                                              child: ProfileScreen(
-                                    User_ID:
-                                        "${getalluserlistModel?.object?.content?[index].userUid}",
-                                    isFollowing: "REQUESTED"));
-                                        }));
-                              
+                                  MaterialPageRoute(builder: (context) {
+                                return MultiBlocProvider(
+                                    providers: [
+                                      BlocProvider<NewProfileSCubit>(
+                                        create: (context) => NewProfileSCubit(),
+                                      ),
+                                    ],
+                                    child: ProfileScreen(
+                                        User_ID:
+                                            "${getalluserlistModel?.object?.content?[index].userUid}",
+                                        isFollowing: "REQUESTED"));
+                              }));
                             },
                             child: Container(
                               height: 55,

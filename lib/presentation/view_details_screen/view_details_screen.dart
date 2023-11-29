@@ -17,10 +17,12 @@ class ViewDetailsScreen extends StatefulWidget {
   State<ViewDetailsScreen> createState() => _ViewDetailsScreenState();
 }
 
-ViewDetailsModel? viewDetailsModel;
+
 
 class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
+   ViewDetailsModel? viewDetailsModel;
   @override
+ 
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -122,7 +124,7 @@ class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15.0, left: 10),
                           child: Text(
-                            "${viewDetailsModel?.object?.userUuid}",
+                            "${viewDetailsModel?.object?.userId}",
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
                                 color: Colors.grey.shade700,

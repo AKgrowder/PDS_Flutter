@@ -173,8 +173,15 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   void initState() {
     _tabController = TabController(length: tabData.length, vsync: this);
-    BlocProvider.of<NewProfileSCubit>(context)
-        .NewProfileSAPI(context, widget.User_ID);
+
+    if (User_Module == 'EXPERT') {
+      BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(
+          context, 'user/getExpertProfile?uid=${widget.User_ID}');
+    } else {
+      BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(
+          context, 'user/api/fetchUserProfile?otherUserUid=${widget.User_ID}');
+    }
+
     BlocProvider.of<NewProfileSCubit>(context)
         .getFollwerApi(context, widget.User_ID);
     BlocProvider.of<NewProfileSCubit>(context)
@@ -360,8 +367,13 @@ class _ProfileScreenState extends State<ProfileScreen>
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
       if (state is PostLikeLoadedState) {
-        BlocProvider.of<NewProfileSCubit>(context)
-            .NewProfileSAPI(context, widget.User_ID);
+        if (User_Module == 'EXPERT') {
+          BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(
+              context, 'user/getExpertProfile?uid=${widget.User_ID}');
+        } else {
+          BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context,
+              'user/api/fetchUserProfile?otherUserUid=${widget.User_ID}');
+        }
         if (state.likePost.object != 'Post Liked Successfully' &&
             state.likePost.object != 'Post Unliked Successfully') {
           SnackBar snackBar = SnackBar(
@@ -719,11 +731,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           child: EditProfileScreen(
                                             newProfileData: NewProfileData,
                                           ));
-                                    })).then((value) =>
+                                    })).then((value) {
+                                      if (User_Module == 'EXPERT') {
                                         BlocProvider.of<NewProfileSCubit>(
                                                 context)
-                                            .NewProfileSAPI(
-                                                context, widget.User_ID));
+                                            .NewProfileSAPI(context,
+                                                'user/getExpertProfile?uid=${widget.User_ID}');
+                                      } else {
+                                        BlocProvider.of<NewProfileSCubit>(
+                                                context)
+                                            .NewProfileSAPI(context,
+                                                'user/api/fetchUserProfile?otherUserUid=${widget.User_ID}');
+                                      }
+                                    });
                                   },
                                   child: Container(
                                     alignment: Alignment.center,
@@ -899,17 +919,24 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ),
                                               ],
                                               child: Followers(
+                                                User_ID: widget.User_ID,
                                                 appBarName: 'Followers',
-                                                followersClassModel:
-                                                    followersClassModel1!,
                                                 userId: widget.User_ID,
                                               ),
                                             );
-                                          })).then((value) =>
+                                          })).then((value) {
+                                            if (User_Module == 'EXPERT') {
                                               BlocProvider.of<NewProfileSCubit>(
                                                       context)
-                                                  .NewProfileSAPI(
-                                                      context, widget.User_ID));
+                                                  .NewProfileSAPI(context,
+                                                      'user/getExpertProfile?uid=${widget.User_ID}');
+                                            } else {
+                                              BlocProvider.of<NewProfileSCubit>(
+                                                      context)
+                                                  .NewProfileSAPI(context,
+                                                      'user/api/fetchUserProfile?otherUserUid=${widget.User_ID}');
+                                            }
+                                          });
                                           /*    Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -982,17 +1009,24 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ),
                                               ],
                                               child: Followers(
+                                                User_ID: widget.User_ID,
                                                 appBarName: 'Following',
-                                                followersClassModel:
-                                                    followersClassModel1!,
                                                 userId: widget.User_ID,
                                               ),
                                             );
-                                          })).then((value) =>
+                                          })).then((value) {
+                                            if (User_Module == 'EXPERT') {
                                               BlocProvider.of<NewProfileSCubit>(
                                                       context)
-                                                  .NewProfileSAPI(
-                                                      context, widget.User_ID));
+                                                  .NewProfileSAPI(context,
+                                                      'user/getExpertProfile?uid=${widget.User_ID}');
+                                            } else {
+                                              BlocProvider.of<NewProfileSCubit>(
+                                                      context)
+                                                  .NewProfileSAPI(context,
+                                                      'user/api/fetchUserProfile?otherUserUid=${widget.User_ID}');
+                                            }
+                                          });
                                         }
                                       } else {}
                                     },
@@ -2554,9 +2588,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                   MaterialPageRoute(
                       builder: (context) => EditProfileScreen(
                             newProfileData: NewProfileData,
-                          ))).then((value) =>
-                  BlocProvider.of<NewProfileSCubit>(context)
-                      .NewProfileSAPI(context, widget.User_ID));
+                          ))).then((value) {
+                if (User_Module == 'EXPERT') {
+                  BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(
+                      context, 'user/getExpertProfile?uid=${widget.User_ID}');
+                } else {
+                  BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(
+                      context,
+                      'user/api/fetchUserProfile?otherUserUid=${widget.User_ID}');
+                }
+              });
             },
             child: User_ID == NewProfileData?.object?.userUid
                 ? Icon(
@@ -2933,26 +2974,26 @@ class _ProfileScreenState extends State<ProfileScreen>
                               ),
                             ),
                           )
-                        : Container(
-                            height: 50,
-                            width: _width / 4.5,
-                            decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 228, 228, 228),
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(5),
-                                    bottomRight: Radius.circular(5))),
-                            child: GestureDetector(
-                              onTap: () async {
-                                // dopcument = "Upload Image";
+                        : GestureDetector(
+                            onTap: () async {
+                              // dopcument = "Upload Image";
 
-                                // setState(() {});
+                              // setState(() {});
 
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => DocumentViewScreen(
-                                          path: dopcument,
-                                          title: 'Pdf',
-                                        )));
-                              },
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => DocumentViewScreen(
+                                        path: dopcument,
+                                        title: 'Pdf',
+                                      )));
+                            },
+                            child: Container(
+                              height: 50,
+                              width: _width / 4.5,
+                              decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 228, 228, 228),
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(5),
+                                      bottomRight: Radius.circular(5))),
                               child: Center(
                                 child: Text(
                                   "Open",
@@ -2963,12 +3004,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                              ), /* Icon(
-                                  Icons.delete_forever,
-                                  color: ColorConstant.primary_color,
-                                ) */
+                              ),
                             ),
-                          ),
+                        ),
                   ],
                 ),
               ],

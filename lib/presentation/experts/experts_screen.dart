@@ -524,7 +524,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                                 //             fontSize: 15),
                                                 //       ),
                                                 child: Text(
-                                                  "invite",
+                                                  "Invite",
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.w400,
