@@ -31,6 +31,7 @@ class Config {
   static const String addDeviceDetail = "auth/auth/addDeviceDetail";
   static const String fetchAllExperts = "user/api/fetchAllExperts";
   static const String myaccountApi = "user/api/fetchUserProfile";
+  
   static const String systemconfig = "user/api/fetchSysConfig";
   static const String fetchUserModule = "user/api/fetchUserModule";
   static const String fetchRoomDetails = "user/api/fetchRoomDetails/";
