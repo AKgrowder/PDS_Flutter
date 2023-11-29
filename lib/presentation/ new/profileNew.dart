@@ -2933,16 +2933,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                               ),
                             ),
                           )
-                        : Container(
-                            height: 50,
-                            width: _width / 4.5,
-                            decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 228, 228, 228),
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(5),
-                                    bottomRight: Radius.circular(5))),
-                            child: GestureDetector(
-                              onTap: () async {
+                        : GestureDetector(
+                          onTap: () async {
                                 // dopcument = "Upload Image";
 
                                 // setState(() {});
@@ -2953,6 +2945,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           title: 'Pdf',
                                         )));
                               },
+                          child: Container(
+                              height: 50,
+                              width: _width / 4.5,
+                              decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 228, 228, 228),
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(5),
+                                      bottomRight: Radius.circular(5))),
                               child: Center(
                                 child: Text(
                                   "Open",
@@ -2963,12 +2963,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                              ), /* Icon(
-                                  Icons.delete_forever,
-                                  color: ColorConstant.primary_color,
-                                ) */
+                              ),
                             ),
-                          ),
+                        ),
                   ],
                 ),
               ],
