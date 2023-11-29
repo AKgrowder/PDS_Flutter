@@ -228,27 +228,33 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                   fontFamily: 'outfit',
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold)),
-                          Padding(
-                              padding: EdgeInsets.only(top: 4),
-                              child: RichText(
-                                  text: TextSpan(children: [
-                                    TextSpan(
-                                        text:
-                                            "One time Password to be sent to ",
-                                        style: TextStyle(
-                                            color: appTheme.gray50001,
-                                            fontSize: 16,
-                                            fontFamily: 'Outfit',
-                                            fontWeight: FontWeight.w400)),
-                                    TextSpan(
-                                        text: widget.phonNumber,
-                                        style: TextStyle(
-                                            color: appTheme.gray50001,
-                                            fontSize: 16,
-                                            fontFamily: 'Outfit',
-                                            fontWeight: FontWeight.w400))
-                                  ]),
-                                  textAlign: TextAlign.left)),
+                          Container(
+                            height: 40,
+                            child: Padding(
+                                padding:
+                                    EdgeInsets.only(top: 4, right: 3, left: 3),
+                                child: RichText(
+                                    text: TextSpan(children: [
+                                      TextSpan(
+                                          text:
+                                              "One time Password to be sent to ",
+                                          style: TextStyle(
+                                              overflow: TextOverflow.ellipsis,
+                                              color: appTheme.gray50001,
+                                              fontSize: 14,
+                                              fontFamily: 'Outfit',
+                                              fontWeight: FontWeight.w400)),
+                                      TextSpan(
+                                          text: widget.phonNumber,
+                                          style: TextStyle(
+                                              overflow: TextOverflow.ellipsis,
+                                              color: appTheme.gray50001,
+                                              fontSize: 14,
+                                              fontFamily: 'Outfit',
+                                              fontWeight: FontWeight.w400))
+                                    ]),
+                                    textAlign: TextAlign.left)),
+                          ),
                           Align(
                               alignment: Alignment.centerLeft,
                               child: Padding(

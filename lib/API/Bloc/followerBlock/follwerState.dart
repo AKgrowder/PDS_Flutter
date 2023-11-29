@@ -1,3 +1,4 @@
+import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/removeFolloweModel/removeFollowerModel.dart';
 
@@ -25,4 +26,14 @@ class RemoveLoddingState extends FolllwerBlockState {
 class PostLikeLoadedState extends FolllwerBlockState {
   final LikePost likePost;
   PostLikeLoadedState(this.likePost);
+}
+
+class FollowersClass extends FolllwerBlockState {
+  final FollowersClassModel followersClassModel;
+  FollowersClass(this.followersClassModel);
+}
+
+class FollowersClass1 extends FolllwerBlockState {
+  final FollowersClassModel followersClassModel1;
+  FollowersClass1(this.followersClassModel1);
 }

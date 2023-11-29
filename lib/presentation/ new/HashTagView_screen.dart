@@ -367,6 +367,13 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                   color: Colors.black),
                                               onTap: (text) {
                                                 print(text);
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          HashTagViewScreen(
+                                                              title: "${text}"),
+                                                    ));
                                               },
                                             ),
                                           ),
