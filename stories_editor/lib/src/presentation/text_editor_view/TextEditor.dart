@@ -110,18 +110,18 @@ class _TextEditorState extends State<TextEditor> {
                         ),
 
                         /// font animation selector (bottom
-                        Positioned(
-                          bottom: screenUtil.screenHeight * 0.21,
-                          child: Visibility(
-                              visible: editorNotifier.isTextAnimation,
-                              child: const Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Padding(
-                                  padding: EdgeInsets.only(bottom: 20),
-                                  child: AnimationSelector(),
-                                ),
-                              )),
-                        ),
+                        // Positioned(
+                        //   // bottom: screenUtil.screenHeight * 0.21,
+                        //   child: Visibility(
+                        //       visible: editorNotifier.isTextAnimation,
+                        //       child: const Align(
+                        //         alignment: Alignment.bottomCenter,
+                        //         child: Padding(
+                        //           padding: EdgeInsets.only(bottom: 20),
+                        //           child: AnimationSelector(),
+                        //         ),
+                        //       )),
+                        // ),
                       ],
                     )),
               ),

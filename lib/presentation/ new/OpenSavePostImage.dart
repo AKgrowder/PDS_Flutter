@@ -587,34 +587,34 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                     color: Colors.white,
                                   ),
                                 ),
-                          // GestureDetector(
-                          //   onTap: () {
-                          //     rePostBottomSheet(
-                          //       context,
-                          //     );
-                          //   },
-                          //   child: Container(
-                          //     color: Colors.transparent,
-                          //     child: Padding(
-                          //       padding: const EdgeInsets.all(5.0),
-                          //       child: Image.asset(
-                          //         ImageConstant.vector2,
-                          //         height: 13,
-                          //         color: Colors.white,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
-                          // SizedBox(
-                          //   width: 5,
-                          // ),
-                          // OpenSaveModelData?.object?.repostCount == 0
-                          //     ? SizedBox()
-                          //     : Text(
-                          //         '${OpenSaveModelData?.object?.repostCount}',
-                          //         style: TextStyle(
-                          //             fontFamily: "outfit", fontSize: 14),
-                          //       ),
+                          GestureDetector(
+                            onTap: () {
+                              rePostBottomSheet(
+                                context,
+                              );
+                            },
+                            child: Container(
+                              color: Colors.transparent,
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Image.asset(
+                                  ImageConstant.vector2,
+                                  height: 13,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          OpenSaveModelData?.object?.repostCount == 0
+                              ? SizedBox()
+                              : Text(
+                                  '${OpenSaveModelData?.object?.repostCount}',
+                                  style: TextStyle(
+                                      fontFamily: "outfit", fontSize: 14),
+                                ),
                           Spacer(),
                           GestureDetector(
                             onTap: () async {
@@ -773,90 +773,90 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
     }
   }
 
-  // void rePostBottomSheet(
-  //   context,
-  // ) {
-  //   showModalBottomSheet(
-  //       context: context,
-  //       builder: (BuildContext bc) {
-  //         return Container(
-  //           height: 200,
-  //           child: new Wrap(
-  //             children: [
-  //               Container(
-  //                 height: 20,
-  //                 width: 50,
-  //                 color: Colors.transparent,
-  //               ),
-  //               Center(
-  //                   child: Container(
-  //                 height: 5,
-  //                 width: 150,
-  //                 decoration: BoxDecoration(
-  //                     color: Colors.grey,
-  //                     borderRadius: BorderRadius.circular(25)),
-  //               )),
-  //               SizedBox(
-  //                 height: 35,
-  //               ),
-  //               Center(
-  //                 child: new ListTile(
-  //                     leading: new Image.asset(
-  //                       ImageConstant.vector2,
-  //                       height: 20,
-  //                     ),
-  //                     title: new Text('RePost'),
-  //                     subtitle: Text(
-  //                       "Share this post with your followers",
-  //                       style: TextStyle(fontSize: 10, color: Colors.grey),
-  //                     ),
-  //                     onTap: () async {
-  //                       Map<String, dynamic> param = {"postType": "PUBLIC"};
-  //                       BlocProvider.of<OpenSaveCubit>(context).RePostAPI(
-  //                           context, param, OpenSaveModelData?.object?.postUid);
-  //                     }),
-  //               ),
-  //               SizedBox(
-  //                 height: 20,
-  //               ),
-  //               Center(
-  //                 child: new ListTile(
-  //                   leading: new Icon(
-  //                     Icons.edit_outlined,
-  //                     color: Colors.black,
-  //                   ),
-  //                   title: new Text('Quote'),
-  //                   subtitle: Text(
-  //                     "Add a comment, photo or GIF before you share this post",
-  //                     style: TextStyle(fontSize: 10, color: Colors.grey),
-  //                   ),
-  //                   onTap: () async {
-  //                     Navigator.push(context, MaterialPageRoute(
-  //                       builder: (context) {
-  //                         return RePostScreen(
-  //                           userProfile:
-  //                               OpenSaveModelData?.object?.userProfilePic,
-  //                           username: OpenSaveModelData?.object?.postUserName,
-  //                           date: OpenSaveModelData?.object?.createdAt,
-  //                           desc: OpenSaveModelData?.object?.description,
-  //                           postData: OpenSaveModelData?.object?.postData,
-  //                           postDataType:
-  //                               OpenSaveModelData?.object?.postDataType,
-  //                           OpenSaveModelData: OpenSaveModelData,
-  //                           postUid: OpenSaveModelData?.object?.postUid,
-  //                         );
-  //                       },
-  //                     ));
-  //                     // Navigator.pop(context);
-  //                   },
-  //                 ),
-  //               ),
-  //               SizedBox(
-  //                 height: 20,
-  //               ),
-  //             ],
-  //           ),
-  //         );
-  //       });
-  // }
+  void rePostBottomSheet(
+    context,
+  ) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            height: 200,
+            child: new Wrap(
+              children: [
+                Container(
+                  height: 20,
+                  width: 50,
+                  color: Colors.transparent,
+                ),
+                Center(
+                    child: Container(
+                  height: 5,
+                  width: 150,
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(25)),
+                )),
+                SizedBox(
+                  height: 35,
+                ),
+                Center(
+                  child: new ListTile(
+                      leading: new Image.asset(
+                        ImageConstant.vector2,
+                        height: 20,
+                      ),
+                      title: new Text('RePost'),
+                      subtitle: Text(
+                        "Share this post with your followers",
+                        style: TextStyle(fontSize: 10, color: Colors.grey),
+                      ),
+                      onTap: () async {
+                        Map<String, dynamic> param = {"postType": "PUBLIC"};
+                        BlocProvider.of<OpenSaveCubit>(context).RePostAPI(
+                            context, param, OpenSaveModelData?.object?.postUid);
+                      }),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Center(
+                  child: new ListTile(
+                    leading: new Icon(
+                      Icons.edit_outlined,
+                      color: Colors.black,
+                    ),
+                    title: new Text('Quote'),
+                    subtitle: Text(
+                      "Add a comment, photo or GIF before you share this post",
+                      style: TextStyle(fontSize: 10, color: Colors.grey),
+                    ),
+                    onTap: () async {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return RePostScreen(
+                            userProfile:
+                                OpenSaveModelData?.object?.userProfilePic,
+                            username: OpenSaveModelData?.object?.postUserName,
+                            date: OpenSaveModelData?.object?.createdAt,
+                            desc: OpenSaveModelData?.object?.description,
+                            postData: OpenSaveModelData?.object?.postData,
+                            postDataType:
+                                OpenSaveModelData?.object?.postDataType,
+                            OpenSaveModelData: OpenSaveModelData,
+                            postUid: OpenSaveModelData?.object?.postUid,
+                          );
+                        },
+                      ));
+                      // Navigator.pop(context);
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
+          );
+        });
+  }
 }
