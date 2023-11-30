@@ -12,6 +12,7 @@ import 'package:pds/API/Bloc/ViewDetails_Bloc/ViewDetails_cubit.dart';
 import 'package:pds/API/Bloc/ViewDetails_Bloc/ViewDetails_state.dart';
 import 'package:pds/API/Model/FatchAllMembers/fatchallmembers_model.dart';
 import 'package:pds/core/utils/color_constant.dart';
+import 'package:pds/presentation/%20new/profileNew.dart';
 
 import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
@@ -219,23 +220,36 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                            _data?.object?[index].userProfilePic
+                              GestureDetector(
+                                onTap: () {
+                                  // Navigator.push(context,
+                                  //     MaterialPageRoute(builder: (context) {
+                                  //   return ProfileScreen(
+                                  //     User_ID:
+                                  //         "${_data?.object?[index].userUuid}",
+                                  //     /* isFollowing:
+                                  //     _data?.object?[index].isFollowing */
+                                  //   );
+                                  // }));
+                                },
+                                child: _data?.object?[index].userProfilePic
                                             ?.isNotEmpty ??
-                                        false?  CustomImageView(
-                                url: 
-                                     "${_data?.object?[index].userProfilePic}",
-                                    
-                                height: 50,
-                                radius: BorderRadius.circular(25),
-                                width: 50,
-                                fit: BoxFit.fill,
-                              ):CustomImageView(
-                               imagePath: ImageConstant.tomcruse,
-                                    
-                                height: 50,
-                                radius: BorderRadius.circular(25),
-                                width: 50,
-                                fit: BoxFit.fill,
+                                        false
+                                    ? CustomImageView(
+                                        url:
+                                            "${_data?.object?[index].userProfilePic}",
+                                        height: 50,
+                                        radius: BorderRadius.circular(25),
+                                        width: 50,
+                                        fit: BoxFit.fill,
+                                      )
+                                    : CustomImageView(
+                                        imagePath: ImageConstant.tomcruse,
+                                        height: 50,
+                                        radius: BorderRadius.circular(25),
+                                        width: 50,
+                                        fit: BoxFit.fill,
+                                      ),
                               ),
                               SizedBox(
                                 width: 10,
@@ -874,8 +888,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                 state.removeUserModel.object?.message ?? ""),
                             backgroundColor: ColorConstant.primary_color,
                           );
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(snackBar);
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
                           Navigator.pop(context);
                         }
@@ -915,8 +928,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                               height: 40,
                             ),
                             Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 GestureDetector(
                                   onTap: () {
