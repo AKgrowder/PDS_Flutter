@@ -13,6 +13,7 @@ import 'package:pds/presentation/%20new/RePost_Screen.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comment_bottom_sheet.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
+import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:share_plus/share_plus.dart';
@@ -97,20 +98,20 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                   }));
         }
       }
-      // if (state is RePostLoadedState) {
-      //   SnackBar snackBar = SnackBar(
-      //     content: Text(state.RePost.object.toString()),
-      //     backgroundColor: ColorConstant.primary_color,
-      //   );
-      //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      //   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-      //     builder: (context) {
-      //       return NewBottomBar(
-      //         buttomIndex: 0,
-      //       );
-      //     },
-      //   ), (Route<dynamic> route) => false);
-      // }
+      if (state is RePostLoadedState) {
+        SnackBar snackBar = SnackBar(
+          content: Text(state.RePost.object.toString()),
+          backgroundColor: ColorConstant.primary_color,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+          builder: (context) {
+            return NewBottomBar(
+              buttomIndex: 0,
+            );
+          },
+        ), (Route<dynamic> route) => false);
+      }
       if (state is PostLikeLoadedState) {
         print("${state.likePost.object}");
         // SnackBar snackBar = SnackBar(
@@ -167,23 +168,37 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                   Padding(
                       padding: const EdgeInsets.only(top: 15, bottom: 15),
                       child: Row(children: [
-                        OpenSaveModelData?.object?.userProfilePic != null &&
-                                OpenSaveModelData?.object?.userProfilePic != ""
-                            ? CustomImageView(
-                                url:
-                                    "${OpenSaveModelData?.object?.userProfilePic}",
-                                height: 50,
-                                width: 50,
-                                fit: BoxFit.fill,
-                                radius: BorderRadius.circular(25),
-                              )
-                            : CustomImageView(
-                                imagePath: ImageConstant.tomcruse,
-                                height: 50,
-                                width: 50,
-                                fit: BoxFit.fill,
-                                radius: BorderRadius.circular(25),
-                              ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return ProfileScreen(
+                                  User_ID:
+                                      "${OpenSaveModelData?.object?.userUid}",
+                                  isFollowing:
+                                      OpenSaveModelData?.object?.isFollowing);
+                            }));
+                          },
+                          child: OpenSaveModelData?.object?.userProfilePic !=
+                                      null &&
+                                  OpenSaveModelData?.object?.userProfilePic !=
+                                      ""
+                              ? CustomImageView(
+                                  url:
+                                      "${OpenSaveModelData?.object?.userProfilePic}",
+                                  height: 50,
+                                  width: 50,
+                                  fit: BoxFit.fill,
+                                  radius: BorderRadius.circular(25),
+                                )
+                              : CustomImageView(
+                                  imagePath: ImageConstant.tomcruse,
+                                  height: 50,
+                                  width: 50,
+                                  fit: BoxFit.fill,
+                                  radius: BorderRadius.circular(25),
+                                ),
+                        ),
                         SizedBox(width: 10),
                         Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

@@ -38,6 +38,7 @@ import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/RePost_Screen.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comment_bottom_sheet.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/Create_Post_Screen/Ceratepost_Screen.dart';
 import 'package:pds/presentation/create_foram/create_foram_screen.dart';
@@ -81,6 +82,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   ];
   int imageCount = 1;
   int imageCount1 = 1;
+  int imageCount2 = 1;
   Uint8List? firstPageImage;
   double documentuploadsize = 0;
   double finalFileSize = 0;
@@ -969,9 +971,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 backgroundColor: ColorConstant.primary_color,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              Navigator.pop(context);
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                builder: (context) {
+                  return NewBottomBar(
+                    buttomIndex: 0,
+                  );
+                },
+              ), (Route<dynamic> route) => false);
             }
-
             if (state is GetAllStoryLoadedState) {
               getAllStoryModel = state.getAllStoryModel;
               buttonDatas.clear();
@@ -1242,7 +1249,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 User_ID: "${User_ID}",
                                                 isFollowing: 'FOLLOW',
                                               ));
-                                        }));
+                                        })).then((value) => Get_UserToken());
                                         /////
                                       }
                                     },
@@ -2365,6 +2372,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                         onPageChanged: (page) {
                                                                                           setState(() {
                                                                                             _currentPages[index] = page;
+                                                                                            imageCount2 = page + 1;
                                                                                           });
                                                                                         },
                                                                                         controller: _pageControllers[index],
@@ -2374,25 +2382,51 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                             return GestureDetector(
                                                                                               onTap: () {
                                                                                                 print("Repost Opne Full screen");
-                                                                                                // if (uuid == null) {
-                                                                                                //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                                                // } else {
-                                                                                                // Navigator.push(
-                                                                                                //   context,
-                                                                                                //   MaterialPageRoute(
-                                                                                                //       builder: (context) => OpenSavePostImage(
-                                                                                                //             PostID: AllGuestPostRoomData?.object?.content?[index].repostOn?.postUid,
-                                                                                                //             index: index,
-                                                                                                //           )),
-                                                                                                // );
-                                                                                                // }
+                                                                                                if (uuid == null) {
+                                                                                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                } else {
+                                                                                                  Navigator.push(
+                                                                                                    context,
+                                                                                                    MaterialPageRoute(
+                                                                                                        builder: (context) => OpenSavePostImage(
+                                                                                                              PostID: AllGuestPostRoomData?.object?.content?[index].repostOn?.postUid,
+                                                                                                              index: index,
+                                                                                                            )),
+                                                                                                  );
+                                                                                                }
                                                                                               },
                                                                                               child: Container(
                                                                                                 width: _width,
                                                                                                 margin: EdgeInsets.only(left: 16, top: 15, right: 16),
                                                                                                 child: Center(
-                                                                                                    child: CustomImageView(
-                                                                                                  url: "${AllGuestPostRoomData?.object?.content?[index].repostOn?.postData?[index1]}",
+                                                                                                    child: Stack(
+                                                                                                  children: [
+                                                                                                    Align(
+                                                                                                      alignment: Alignment.topCenter,
+                                                                                                      child: CustomImageView(
+                                                                                                        url: "${AllGuestPostRoomData?.object?.content?[index].repostOn?.postData?[index1]}",
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                    Align(
+                                                                                                      alignment: Alignment.topRight,
+                                                                                                      child: Card(
+                                                                                                        color: Colors.transparent,
+                                                                                                        elevation: 0,
+                                                                                                        child: Container(
+                                                                                                            alignment: Alignment.center,
+                                                                                                            height: 30,
+                                                                                                            width: 50,
+                                                                                                            decoration: BoxDecoration(
+                                                                                                              color: Color.fromARGB(255, 2, 1, 1),
+                                                                                                              borderRadius: BorderRadius.all(Radius.circular(50)),
+                                                                                                            ),
+                                                                                                            child: Text(
+                                                                                                              imageCount2.toString() + '/' + '${AllGuestPostRoomData?.object?.content?[index].repostOn?.postData?.length}',
+                                                                                                              style: TextStyle(color: Colors.white),
+                                                                                                            )),
+                                                                                                      ),
+                                                                                                    )
+                                                                                                  ],
                                                                                                 )),
                                                                                               ),
                                                                                             );
@@ -4746,12 +4780,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                         style: TextStyle(fontSize: 10, color: Colors.grey),
                       ),
                       onTap: () async {
-                        Map<String, dynamic> param = {
-                          "description": "",
-                          "postData": "",
-                          "postDataType": "",
-                          "postType": ""
-                        };
+                        Map<String, dynamic> param = {"postType": "PUBLIC"};
                         BlocProvider.of<GetGuestAllPostCubit>(context)
                             .RePostAPI(
                                 context,
