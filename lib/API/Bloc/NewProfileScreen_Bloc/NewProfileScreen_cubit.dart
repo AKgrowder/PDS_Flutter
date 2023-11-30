@@ -20,6 +20,7 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
         emit(NewProfileSLoadedState(PublicRModel));
       }}
     } catch (e) {
+      print("error-${e.toString()}");
       emit(NewProfileSErrorState(PublicRModel));
     }
   }

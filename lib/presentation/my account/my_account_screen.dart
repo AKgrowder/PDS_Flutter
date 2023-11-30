@@ -14,7 +14,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 // import 'package:pds/widgets/commentPdf.dart';
 import 'package:permission_handler/permission_handler.dart';
