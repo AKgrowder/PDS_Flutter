@@ -26,7 +26,7 @@ class NewProfileScreen_Model {
 }
 
 class Object {
-  String? isApproved;
+  bool? isApproved;
   String? userDocument;
   String? companyName;
   String? jobProfile;

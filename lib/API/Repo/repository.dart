@@ -1652,10 +1652,33 @@ class Repository {
     }
   }
 
-  NewProfileAPI(BuildContext context, String url) async {
+/*   NewProfileAPI(BuildContext context, String url) async {
     print("sdfhsdfhsdfh-$url");
     final response = await apiServices.getApiCallWithToken(
         url, context);
+
+    var jsonString = json.decode(response.body);
+    print("NewProfileAPI--$jsonString");
+    switch (response.statusCode) {
+      case 200:
+        return NewProfileScreen_Model.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  } */
+
+   NewProfileAPI(BuildContext context, String otherUserUid) async {
+    print("sdfhsdfhsdfh-$otherUserUid");
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.NewfetchUserProfile}?otherUserUid=${otherUserUid}", context);
     print('AddPost$response');
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {

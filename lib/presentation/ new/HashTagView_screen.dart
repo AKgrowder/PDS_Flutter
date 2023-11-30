@@ -41,6 +41,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
   GetGuestAllPostModel? AllGuestPostRoomData;
   List<PageController> _pageControllers = [];
   List<int> _currentPages = [];
+  int imageCount = 1;
 
   @override
   void initState() {
@@ -367,13 +368,17 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                   color: Colors.black),
                                               onTap: (text) {
                                                 print(text);
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          HashTagViewScreen(
-                                                              title: "${text}"),
-                                                    ));
+                                                if (widget.title == text) {
+                                                } else {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            HashTagViewScreen(
+                                                                title:
+                                                                    "${text}"),
+                                                      ));
+                                                }
                                               },
                                             ),
                                           ),
@@ -465,6 +470,8 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                             setState(() {
                                                               _currentPages[
                                                                   index] = page;
+                                                              imageCount =
+                                                                  page + 1;
                                                             });
                                                           },
                                                           controller:
@@ -487,21 +494,69 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                                         index]
                                                                     .postDataType ==
                                                                 "IMAGE") {
-                                                              return Container(
-                                                                width: _width,
-                                                                margin: EdgeInsets
-                                                                    .only(
-                                                                        left:
-                                                                            16,
-                                                                        top: 15,
-                                                                        right:
-                                                                            16),
-                                                                child: Center(
-                                                                    child:
-                                                                        CustomImageView(
-                                                                  url:
-                                                                      "${hashTagViewData?.object?.posts?[index].postData?[index1]}",
-                                                                )),
+                                                              return GestureDetector(
+                                                                onTap: () {
+                                                                  Navigator
+                                                                      .push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder: (context) =>
+                                                                            OpenSavePostImage(
+                                                                              PostID: hashTagViewData?.object?.posts?[index].postUid,
+                                                                              index: index,
+                                                                            )),
+                                                                  );
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  width: _width,
+                                                                  margin: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              16,
+                                                                          top:
+                                                                              15,
+                                                                          right:
+                                                                              16),
+                                                                  child: Center(
+                                                                      child:
+                                                                          Stack(
+                                                                    children: [
+                                                                      Align(
+                                                                        alignment:
+                                                                            Alignment.topCenter,
+                                                                        child:
+                                                                            CustomImageView(
+                                                                          url:
+                                                                              "${hashTagViewData?.object?.posts?[index].postData?[index1]}",
+                                                                        ),
+                                                                      ),
+                                                                      Align(
+                                                                        alignment:
+                                                                            Alignment.topRight,
+                                                                        child:
+                                                                            Card(
+                                                                          color:
+                                                                              Colors.transparent,
+                                                                          elevation:
+                                                                              0,
+                                                                          child: Container(
+                                                                              alignment: Alignment.center,
+                                                                              height: 30,
+                                                                              width: 50,
+                                                                              decoration: BoxDecoration(
+                                                                                color: Color.fromARGB(255, 2, 1, 1),
+                                                                                borderRadius: BorderRadius.all(Radius.circular(50)),
+                                                                              ),
+                                                                              child: Text(
+                                                                                imageCount.toString() + '/' + '${hashTagViewData?.object?.posts?[index].postData?.length}',
+                                                                                style: TextStyle(color: Colors.white),
+                                                                              )),
+                                                                        ),
+                                                                      )
+                                                                    ],
+                                                                  )),
+                                                                ),
                                                               );
                                                             } else if (hashTagViewData
                                                                     ?.object
@@ -1024,12 +1079,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                         style: TextStyle(fontSize: 10, color: Colors.grey),
                       ),
                       onTap: () async {
-                        Map<String, dynamic> param = {
-                          "description": "",
-                          "postData": "",
-                          "postDataType": "",
-                          "postType": ""
-                        };
+                        Map<String, dynamic> param = {"postType": "PUBLIC"};
                         BlocProvider.of<GetGuestAllPostCubit>(context)
                             .RePostAPI(
                                 context,
