@@ -133,6 +133,7 @@ class MyAccountCubit extends Cubit<MyAccountState> {
         emit(CreatFourmLoadedState(createForm));
       }}
     } catch (e) {
+      print("e --$e");
       emit(MyAccountErrorState(createForm));
     }
   }

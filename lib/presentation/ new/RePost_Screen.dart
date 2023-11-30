@@ -109,7 +109,7 @@ class _RePostScreenState extends State<RePostScreen> {
   Color primaryColor = ColorConstant.primaryLight_color;
   Color textColor = ColorConstant.primary_color;
   TextEditingController postText = TextEditingController();
-  List<String> soicalData = ["Following", "Public"];
+  List<String> soicalData = ["Follower", "Public"];
   int indexx = 0;
   String? User_ID;
   bool CreatePostDone = true;

@@ -9,6 +9,7 @@ import 'package:pds/API/Model/PersonalChatListModel/PersonalChatList_Model.dart'
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/%20new/SelectChatMember.dart';
+import 'package:pds/presentation/DMAll_Screen/DM_InboxScreen.dart';
 
 class InboxScreen extends StatefulWidget {
   const InboxScreen({Key? key}) : super(key: key);
@@ -37,7 +38,8 @@ class _InboxScreenState extends State<InboxScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const SelectChatMember()),
+                MaterialPageRoute(
+                    builder: (context) => const SelectChatMember()),
               );
             },
             child: Container(
@@ -162,140 +164,164 @@ class _InboxScreenState extends State<InboxScreen> {
                                     ]),
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 15),
-                                  child: Container(
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.grey.shade400),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Stack(children: [
-                                                Container(
-                                                    height: 55,
-                                                    width: 55,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: PersonalChatListModelData
-                                                                ?.object?[index]
-                                                                .userProfilePic !=
-                                                            null && PersonalChatListModelData
-                                                                ?.object?[index]
-                                                                .userProfilePic != ""
-                                                        ? CustomImageView(
-                                                            url:
-                                                                "${PersonalChatListModelData?.object?[index].userProfilePic}",
-                                                            height: 60,
-                                                            width: 60,
-                                                            fit: BoxFit.cover,
-                                                            radius: BorderRadius
-                                                                .circular(30),
-                                                          )
-                                                        : CustomImageView(
-                                                            imagePath: ImageConstant
-                                                                .tomcruse)),
-                                                Positioned(
-                                                    bottom: 1,
-                                                    right: 5,
-                                                    child: Container(
-                                                      height: 12,
-                                                      width: 12,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return DM_InboxScreen(
+                                          UserName:
+                                              "${PersonalChatListModelData?.object?[index].userName}",
+                                          ChatInboxUid:
+                                              "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+                                        );
+                                      }));
+                                    },
+                                    child: Container(
+                                      height: 80,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.grey.shade400),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Stack(children: [
+                                                  Container(
+                                                      height: 55,
+                                                      width: 55,
                                                       decoration: BoxDecoration(
-                                                          color: ColorConstant
-                                                              .primary_color,
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          border: Border.all(
-                                                              color:
-                                                                  Colors.white,
-                                                              width: 2)),
-                                                    ))
-                                              ]),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(6),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "${PersonalChatListModelData?.object?[index].userName}",
-                                                      style: TextStyle(
-                                                          fontSize: 15,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ),
-                                                    PersonalChatListModelData
-                                                                ?.object?[index]
-                                                                .messageType ==
-                                                            "IMAGE"
-                                                        ? Row(
-                                                            children: [
-                                                              CustomImageView(
-                                                                  height: 19,
-                                                                  width: 19,
-                                                                  imagePath:
-                                                                      ImageConstant
-                                                                          .ChatimageIcon),
-                                                              SizedBox(
-                                                                width: 7,
-                                                              ),
-                                                              Text(
-                                                                "Photo",
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize: 15,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  color: Colors
-                                                                      .grey,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: PersonalChatListModelData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .userProfilePic !=
+                                                                  null &&
+                                                              PersonalChatListModelData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .userProfilePic !=
+                                                                  ""
+                                                          ? CustomImageView(
+                                                              url:
+                                                                  "${PersonalChatListModelData?.object?[index].userProfilePic}",
+                                                              height: 60,
+                                                              width: 60,
+                                                              fit: BoxFit.cover,
+                                                              radius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          30),
+                                                            )
+                                                          : CustomImageView(
+                                                              imagePath:
+                                                                  ImageConstant
+                                                                      .tomcruse)),
+                                                  Positioned(
+                                                      bottom: 1,
+                                                      right: 5,
+                                                      child: Container(
+                                                        height: 12,
+                                                        width: 12,
+                                                        decoration: BoxDecoration(
+                                                            color: ColorConstant
+                                                                .primary_color,
+                                                            shape:
+                                                                BoxShape.circle,
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                    .white,
+                                                                width: 2)),
+                                                      ))
+                                                ]),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(6),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "${PersonalChatListModelData?.object?[index].userName}",
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
+                                                      PersonalChatListModelData
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .messageType ==
+                                                              "IMAGE"
+                                                          ? Row(
+                                                              children: [
+                                                                CustomImageView(
+                                                                    height: 19,
+                                                                    width: 19,
+                                                                    imagePath:
+                                                                        ImageConstant
+                                                                            .ChatimageIcon),
+                                                                SizedBox(
+                                                                  width: 7,
                                                                 ),
+                                                                Text(
+                                                                  "Photo",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            )
+                                                          : Text(
+                                                              "${PersonalChatListModelData?.object?[index].message}",
+                                                              style: TextStyle(
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                color:
+                                                                    Colors.grey,
                                                               ),
-                                                            ],
-                                                          )
-                                                        : Text(
-                                                            "${PersonalChatListModelData?.object?[index].message}",
-                                                            style: TextStyle(
-                                                              fontSize: 15,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              color:
-                                                                  Colors.grey,
-                                                            ),
-                                                          )
-                                                  ],
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 6),
-                                            child: Text(
-                                              customFormat(parsedDateTime),
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.grey,
-                                              ),
+                                                            )
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                          )
-                                        ],
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(top: 6),
+                                              child: Text(
+                                                customFormat(parsedDateTime),
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -367,14 +393,16 @@ class _InboxScreenState extends State<InboxScreen> {
   }
 }
 
-
 class InboxScreen1 extends StatelessWidget {
   const InboxScreen1({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text("coming soon",style: TextStyle(fontSize: 20,color: Colors.red),),
+      child: Text(
+        "coming soon",
+        style: TextStyle(fontSize: 20, color: Colors.red),
+      ),
     );
   }
 }

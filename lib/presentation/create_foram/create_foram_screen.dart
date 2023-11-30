@@ -21,7 +21,6 @@ import '../../theme/theme_helper.dart';
 import '../policy_of_company/policy_screen.dart';
 import '../policy_of_company/privecy_policy.dart';
 import 'package:image/image.dart' as img;
-
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
@@ -879,7 +878,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             default:
           }
 
-       /*    setState(() {
+          /*    setState(() {
             uplopdfile.text = file1.name;
             dopcument = file1.name;
           }); */
