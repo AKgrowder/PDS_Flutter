@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
@@ -16,6 +17,7 @@ import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/my%20account/my_account_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -46,6 +48,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   List<MultiSelectItem<IndustryType>>? _industryTypes = [];
   List<IndustryType> selectedIndustryTypes = [];
   List<IndustryType> selectedIndustryTypes2 = [];
+  List<IndustryType> selectedIndustryTypes3 = [];
+
   String? dopcument;
   File? _image;
   File? _image1;
@@ -235,16 +239,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             }
             if (state is AddExportLoadedState) {
               print("AddExportLoadedState");
-              
+
               SnackBar snackBar = SnackBar(
                 content: Text(state.addExpertProfile.message.toString()),
                 backgroundColor: ColorConstant.primary_color,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => NewBottomBar(buttomIndex: 0)));
+              Navigator.pop(context);
             }
             if (state is UpdateProfileLoadedState) {
               SnackBar snackBar = SnackBar(
@@ -252,10 +253,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 backgroundColor: ColorConstant.primary_color,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => NewBottomBar(buttomIndex: 0)));
+              Navigator.pop(context);
             }
             if (state is FetchExprtiseRoomLoadedState) {
               print("FetchExprtiseRoomLoadedState");
@@ -295,6 +293,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   element.industryTypeUid.toString(),
                   element.industryTypeName.toString(),
                 )));
+                Map<String, IndustryType> uniqueMap = {};
+
+                for (var industryType in selectedIndustryTypes2) {
+                  if (!uniqueMap.containsKey(industryType.industryTypeUid)) {
+                    uniqueMap[industryType.industryTypeUid] = industryType;
+                  }
+                }
+                selectedIndustryTypes3 = uniqueMap.values.toList();
               });
 
               List<IndustryType> industryTypeData1 = state
@@ -304,9 +310,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       industryType.industryTypeName ?? ''))
                   .toList();
               _industryTypes = industryTypeData1
-                  .map((industryType) => MultiSelectItem(
-                      industryType, industryType.industryTypeName))
+                  .map((industryType) {
+                    return MultiSelectItem(
+                        industryType, industryType.industryTypeName);
+                  })
+                  .toSet()
                   .toList();
+
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                 setState(() {});
               });
@@ -723,18 +733,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 "Dfsdfsdhgfsdgfg-${widget.newProfileData?.object?.module}");
                             print("i want to check UserId-${User_ID}");
                             userAllRqureidData();
-                            if (User_Module == 'COMPANY') {
+                            if (widget.newProfileData?.object?.module ==
+                                'COMPANY') {
                               companyUserData();
-                            } else if (User_Module == 'EXPERT') {
+                            } else if (widget.newProfileData?.object?.module ==
+                                'EXPERT') {
                               await expertUserData();
                             } else {
-                              print("else condison is working");
                               if (chooseDocumentuploded?.object.toString() !=
                                       null &&
                                   chooseDocumentuploded1?.object.toString() !=
                                       null) {
-                                print(
-                                    "chooseDocumentuploded?.object && chooseDocumentuploded1?.object ");
                                 var params = {
                                   "userProfilePic":
                                       chooseDocumentuploded?.object.toString(),
@@ -751,10 +760,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               } else if (chooseDocumentuploded?.object
                                       .toString() !=
                                   null) {
-                                print("chooseDocumentuploded?.object");
                                 var params = {
                                   "userProfilePic":
                                       chooseDocumentuploded?.object.toString(),
+                                  "userBackgroundPic": widget.newProfileData
+                                              ?.object?.userBackgroundPic !=
+                                          null
+                                      ? widget.newProfileData?.object
+                                          ?.userBackgroundPic
+                                      : null,
                                   "email": emailController.text,
                                   "name": nameController.text,
                                   // "userName": userNameController.text,
@@ -766,11 +780,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               } else if (chooseDocumentuploded1?.object
                                       .toString() !=
                                   null) {
-                                print("chooseDocumentuploded1?.object");
                                 var params = {
                                   "userBackgroundPic":
                                       chooseDocumentuploded1?.object.toString(),
                                   "email": emailController.text,
+                                  "userProfilePic": widget.newProfileData
+                                              ?.object?.userProfilePic !=
+                                          null
+                                      ? widget.newProfileData?.object
+                                          ?.userProfilePic
+                                      : null,
                                   "name": nameController.text,
                                   // "userName": userNameController.text,
                                   "uuid": User_ID
@@ -780,6 +799,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     .UpdateProfileEmployee(params, context);
                               } else {
                                 var params = {
+                                  "userBackgroundPic": widget.newProfileData
+                                              ?.object?.userBackgroundPic !=
+                                          null
+                                      ? widget.newProfileData?.object
+                                          ?.userBackgroundPic
+                                      : null,
+                                  "userProfilePic": widget.newProfileData
+                                              ?.object?.userProfilePic !=
+                                          null
+                                      ? widget.newProfileData?.object
+                                          ?.userProfilePic
+                                      : null,
                                   "email": emailController.text,
                                   "name": nameController.text,
                                   // "userName": userNameController.text,
@@ -940,7 +971,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       Map<String, dynamic> params = {};
 
       params['companyName'] = companyName.text;
-
       params['jobProfile'] = jobProfile.text;
       params['name'] = nameController.text;
       params['profileUid'] =
@@ -953,20 +983,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         params['document'] =
             widget.newProfileData?.object?.userDocument?.toString();
       }
-
-      if (chooseDocumentuploded?.object.toString() != null &&
-          chooseDocumentuploded1?.object.toString() != null) {
-        print("bagrounPic--${chooseDocumentuploded1?.object.toString()}");
-        print("userProfilePic--${chooseDocumentuploded1?.object.toString()}");
+      print("userProfiePicture---${chooseDocumentuploded?.object.toString()}");
+      print("userBackgroundPic---${chooseDocumentuploded1?.object.toString()}");
+      if (chooseDocumentuploded1?.object.toString() != null &&
+          chooseDocumentuploded?.object.toString() != null) {
         params['userProfilePic'] = chooseDocumentuploded?.object.toString();
         params['userBackgroundPic'] = chooseDocumentuploded1?.object.toString();
       } else if (chooseDocumentuploded?.object.toString() != null) {
-        print("userProfilePic--${chooseDocumentuploded1?.object.toString()}");
-
         params['userProfilePic'] = chooseDocumentuploded?.object.toString();
-      } else {
-        print("bagrounPic--${chooseDocumentuploded1?.object.toString()}");
+      } else if (chooseDocumentuploded1?.object.toString() != null) {
         params['userBackgroundPic'] = chooseDocumentuploded1?.object.toString();
+      } else {
+        print("else dataPassing condiosn");
       }
 
       BlocProvider.of<MyAccountCubit>(context).cretaForumUpdate(
@@ -1002,13 +1030,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: ColorConstant.primary_color,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    } else if (fees.text == null || fees.text == '') {
-      SnackBar snackBar = SnackBar(
-        content: Text('Please select Fees'),
-        backgroundColor: ColorConstant.primary_color,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    } */
+    }  */
     else if ((start?.isEmpty ?? false) &&
         (startAm?.isEmpty ?? false) &&
         (end?.isEmpty ?? false) &&
@@ -1035,77 +1057,109 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (chooseDocumentuploded?.object.toString() != null &&
           chooseDocumentuploded1?.object.toString() != null) {
         print("both condison");
-
+        //ankur is working on
         var params = {
-          "document":
-              "${widget.newProfileData?.object?.userDocument?.toString()}",
+          "document": chooseDocumentuploded2?.object != null
+              ? chooseDocumentuploded2?.object.toString()
+              : "${widget.newProfileData?.object?.userDocument?.toString()}",
           "expertUId": ["${selectedExpertise?.uid}"],
+          "industryTypesUid": industryUUIDinApi,
+          "fees": fees.text,
+          "jobProfile": jobProfile.text,
+          "workingHours": time.toString(),
+          "email": emailController.text,
           "userProfilePic": chooseDocumentuploded?.object.toString(),
           "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
-          "fees": fees.text,
-          "workingHours": time.toString(),
-          "jobProfile": jobProfile.text,
-          "profileUid": widget.newProfileData?.object?.profileUid,
-          "industryTypesUid": industryUUIDinApi
+          //  "userName":"AnkurTestTest17",
+          "uid": User_ID,
+          "name": nameController.text
         };
 
         print("parmas-$params");
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
       } else if (chooseDocumentuploded?.object.toString() != null) {
+        // "userProfilePic": chooseDocumentuploded?.object.toString(),
         var params = {
-          "document":
-              "${widget.newProfileData?.object?.userDocument?.toString()}",
+          "document": chooseDocumentuploded2?.object != null
+              ? chooseDocumentuploded2?.object.toString()
+              : "${widget.newProfileData?.object?.userDocument?.toString()}",
           "expertUId": ["${selectedExpertise?.uid}"],
-          "userProfilePic": chooseDocumentuploded?.object.toString(),
+          "industryTypesUid": industryUUIDinApi,
           "fees": fees.text,
-          "workingHours": time.toString(),
           "jobProfile": jobProfile.text,
-          "profileUid": widget.newProfileData?.object?.profileUid,
-          "industryTypesUid": industryUUIDinApi
+          "workingHours": time.toString(),
+          "email": emailController.text,
+          "userProfilePic": chooseDocumentuploded?.object.toString(),
+          "userBackgroundPic":
+              widget.newProfileData?.object?.userBackgroundPic != null
+                  ? widget.newProfileData?.object?.userBackgroundPic
+                  : null,
+          //  "userName":"AnkurTestTest17",
+          "uid": User_ID,
+          "name": nameController.text
         };
         print("parmas-$params");
-
+        //asssss
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
       } else if (chooseDocumentuploded1?.object.toString() != null) {
         print("userBackgroundPic condiosn working");
+
         var params = {
-          "document":
-              "${widget.newProfileData?.object?.userDocument?.toString()}",
+          "document": chooseDocumentuploded2?.object != null
+              ? chooseDocumentuploded2?.object.toString()
+              : "${widget.newProfileData?.object?.userDocument?.toString()}",
           "expertUId": ["${selectedExpertise?.uid}"],
           "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
+          "userProfilePic":
+              widget.newProfileData?.object?.userProfilePic != null
+                  ? widget.newProfileData?.object?.userProfilePic
+                  : null,
           "fees": fees.text,
           "workingHours": time.toString(),
           "jobProfile": jobProfile.text,
           "profileUid": widget.newProfileData?.object?.profileUid,
-          "industryTypesUid": industryUUIDinApi
+          "industryTypesUid": industryUUIDinApi,
+          "name": nameController.text,
+          "email": emailController.text,
+          "uid": User_ID,
         };
         print("parmas-$params");
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
       } else {
+        print("else working on");
         var params = {
-          "document":
-              "${widget.newProfileData?.object?.userDocument?.toString()}",
+          "userProfilePic":
+              widget.newProfileData?.object?.userProfilePic != null
+                  ? widget.newProfileData?.object?.userProfilePic
+                  : null,
+          "userBackgroundPic":
+              widget.newProfileData?.object?.userBackgroundPic != null
+                  ? widget.newProfileData?.object?.userBackgroundPic
+                  : null,
+          "document": chooseDocumentuploded2?.object != null
+              ? chooseDocumentuploded2?.object.toString()
+              : "${widget.newProfileData?.object?.userDocument?.toString()}",
           "expertUId": ["${selectedExpertise?.uid}"],
           "fees": fees.text,
           "workingHours": time.toString(),
           "jobProfile": jobProfile.text,
           "profileUid": widget.newProfileData?.object?.profileUid,
-          "industryTypesUid": industryUUIDinApi
+          "industryTypesUid": industryUUIDinApi,
+          "name": nameController.text,
+          "email": emailController.text,
+          "uid": User_ID,
         };
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
-        print("else condison working");
+        print("else condison working--$params");
       }
     }
   }
 
   TextFiledCommenWiget(_width) {
-    print(
-        "check docuimen1111t--${widget.newProfileData?.object?.userDocument}");
-    selectedIndustryTypes2.forEach((element) {});
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1163,7 +1217,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: Padding(
                 padding: EdgeInsets.only(left: 12),
                 child: MultiSelectDialogField<IndustryType>(
-                  initialValue: [...selectedIndustryTypes2],
+                  initialValue: [...selectedIndustryTypes3],
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.transparent)),
                   buttonIcon: Icon(
@@ -1219,7 +1273,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       });
                     }
                   }, */
-                  onChanged: null,
+                  onChanged: (Expertiseclass? newValue) {
+                    // When the user selects an option from the dropdown.
+                    if (newValue != null) {
+                      setState(() {
+                        selectedExpertise = newValue;
+                        print("Selectedexpertise: ${newValue.uid}");
+                      });
+                    }
+                  },
                   items: expertiseData.map<DropdownMenuItem<Expertiseclass>>(
                       (Expertiseclass expertise) {
                     return DropdownMenuItem<Expertiseclass>(
@@ -1248,6 +1310,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               controller: fees,
               width: _width / 1.1,
               hintText: "Price / hr",
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(
+                    RegExp(r'^\d{0,4}(\.\d{0,2})?')),
+              ],
               color: Color(0xffFFF3F4)),
         if (widget.newProfileData?.object?.workingHours != null)
           Padding(
@@ -1346,7 +1412,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ],
           ),
-        if (widget.newProfileData?.object?.userDocument != null)
+        if (widget.newProfileData?.object?.module != 'EMPLOYEE')
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1358,7 +1424,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.userDocument != null)
+        if (widget.newProfileData?.object?.module != 'EMPLOYEE')
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -1378,10 +1444,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       style: TextStyle(fontSize: 16),
                     ),
                   )),
-              dopcument == "Upload Image"
+              dopcument == "Upload Document"
                   ? GestureDetector(
                       onTap: () async {
                         filepath = await prepareTestPdf(0);
+                        print('dopcument.toString()--${dopcument.toString()}');
                       },
                       child: Container(
                         height: 50,
@@ -1404,58 +1471,124 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                       ),
                     )
-                  : widget.newProfileData?.object?.approvalStatus != 'APPROVED'
-                      ? Container(
+                  : Container(
+                      height: 50,
+                      width: _width / 5,
+                      decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 228, 228, 228),
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(5),
+                              bottomRight: Radius.circular(5))),
+                      child: GestureDetector(
+                          onTap: () {
+                            dopcument = "Upload Document";
+                            // chooseDocument2?.object = null;
+
+                            setState(() {});
+                          },
+                          child: Icon(
+                            Icons.delete_forever,
+                            color: ColorConstant.primary_color,
+                          )),
+                    ),
+            ],
+          ),
+        /* Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+                height: 50,
+                width: _width / 1.6,
+                decoration: BoxDecoration(
+                    color: Color(0XFFF6F6F6),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(5),
+                        bottomLeft: Radius.circular(5))),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 15, left: 20),
+                  child: Text(
+                    '${dopcument.toString().split('/').last}',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                )),
+            dopcument == "Upload Image"
+                ? GestureDetector(
+                    onTap: () async {
+                      filepath = await prepareTestPdf(0);
+                    },
+                    child: Container(
+                      height: 50,
+                      width: _width / 5,
+                      decoration: BoxDecoration(
+                          color: Color(0XFF777777),
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(5),
+                              bottomRight: Radius.circular(5))),
+                      child: Center(
+                        child: Text(
+                          "Choose",
+                          style: TextStyle(
+                            fontFamily: 'outfit',
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+               /*  : widget.newProfileData?.object?.approvalStatus != 'APPROVED'
+                    ? Container(
+                        height: 50,
+                        width: _width / 5,
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 228, 228, 228),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(5),
+                                bottomRight: Radius.circular(5))),
+                        child: GestureDetector(
+                            onTap: () {
+                              dopcument = "Upload Image";
+                              setState(() {});
+                            },
+                            child: Icon(
+                              Icons.delete_forever,
+                              color: ColorConstant.primary_color,
+                            )),
+                      ) */
+                    : GestureDetector(
+                        onTap: () {
+                         /*  SnackBar snackBar = SnackBar(
+                            content: Text(
+                                "Your Profile is Approved,You can't Change Document!"),
+                            backgroundColor: ColorConstant.primary_color,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar); */
+                        },
+                        child: Container(
                           height: 50,
                           width: _width / 5,
                           decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 228, 228, 228),
+                              color: Color.fromARGB(255, 189, 189, 189),
                               borderRadius: BorderRadius.only(
                                   topRight: Radius.circular(5),
                                   bottomRight: Radius.circular(5))),
-                          child: GestureDetector(
-                              onTap: () {
-                                dopcument = "Upload Image";
-                                setState(() {});
-                              },
-                              child: Icon(
-                                Icons.delete_forever,
-                                color: ColorConstant.primary_color,
-                              )),
-                        )
-                      : GestureDetector(
-                          onTap: () {
-                            SnackBar snackBar = SnackBar(
-                              content: Text(
-                                  "Your Profile is Approved,You can't Change Document!"),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          },
-                          child: Container(
-                            height: 50,
-                            width: _width / 5,
-                            decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 189, 189, 189),
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(5),
-                                    bottomRight: Radius.circular(5))),
-                            child: Center(
-                              child: Text(
-                                "Change",
-                                style: TextStyle(
-                                  fontFamily: 'outfit',
-                                  fontSize: 15,
-                                  color: Colors.black45,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                          child: Center(
+                            child: Text(
+                              "Change",
+                              style: TextStyle(
+                                fontFamily: 'outfit',
+                                fontSize: 15,
+                                color: Colors.black45,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
                         ),
-            ],
-          )
+                      ),
+          ],
+        ) */
       ],
     );
   }
@@ -1465,7 +1598,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       TextEditingController? controller,
       Color? color,
       String? hintText,
-      bool? isReadOnly}) {
+      bool? isReadOnly,
+      List<TextInputFormatter>? inputFormatters}) {
     return Container(
       // height: 50,
       width: width,
@@ -1481,6 +1615,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           readOnly: isReadOnly ?? false,
           controller: controller,
           autofocus: false,
+          inputFormatters: inputFormatters,
           cursorColor: ColorConstant.primary_color,
           decoration: InputDecoration(
             hintText: hintText,
