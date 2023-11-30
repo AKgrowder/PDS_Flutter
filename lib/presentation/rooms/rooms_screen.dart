@@ -140,12 +140,12 @@ class _RoomsScreenState extends State<RoomsScreen> {
 
     return WillPopScope(
       onWillPop: () async {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                    builder: (context) => NewBottomBar(buttomIndex: 0)),
-                (Route<dynamic> route) => false);
-            return true;
-          },
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => NewBottomBar(buttomIndex: 0)),
+            (Route<dynamic> route) => false);
+        return true;
+      },
       child: Scaffold(
           backgroundColor: theme.colorScheme.onPrimary,
           appBar: AppBar(
@@ -175,7 +175,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
             }
-    
+
             if (state is GetAllPrivateRoomLoadingState) {
               Center(
                 child: Container(
@@ -197,17 +197,17 @@ class _RoomsScreenState extends State<RoomsScreen> {
               } else {
                 Show_NoData_Image = false;
               }
-    
+
               print(PriveateRoomData?.message);
             }
-    
+
             if (state is CheckuserLoadedState) {
               print('User Create Forum -${state.checkUserStausModel.object}');
               checkuserdata = state.checkUserStausModel.object ?? "";
             }
           }, builder: (context, state) {
             print('hear this builder can build');
-    
+
             if (state is GetAllPrivateRoomLoadedState) {
               return Show_NoData_Image == false
                   ? Stack(
@@ -229,7 +229,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                 //         ?.object?[index].createdDate
                                 //         .toString() ??
                                 //     '');
-    
+
                                 DateTime parsedDateTime = DateTime.parse(
                                     '${PriveateRoomData?.object?[index].createdDate ?? ""}');
                                 return Padding(
@@ -261,7 +261,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                 width: 10,
                                               ),
                                               // Text(formattedDate),
-    
+
                                               Text(
                                                 customFormat(parsedDateTime),
                                                 // "${parsedDateTime}"  ,
@@ -317,7 +317,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                       ),
                                                                     ),
                                                                   );
-    
+
                                                                   // showDialog(
                                                                   //   context: context,
                                                                   //   builder:
@@ -399,11 +399,11 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                 (context, state) {
                                                                               if (state is DeleteRoomLoadedState) {
                                                                                 SnackBar snackBar = SnackBar(
-                                                                                  content: Text(state.DeleteRoom.message ?? ""),
+                                                                                  content: Text(state.DeleteRoom.object ?? ""),
                                                                                   backgroundColor: ColorConstant.primary_color,
                                                                                 );
                                                                                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    
+
                                                                                 method();
                                                                                 Navigator.pop(context);
                                                                               }
@@ -800,7 +800,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                               ),
                                             ),
                                           ),
-    
+
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 8.0),
@@ -1344,7 +1344,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                               onTap: () {
                                                                 print("Room invited Link --> " +
                                                                     "${PriveateRoomData?.object?[index].roomLink}");
-    
+
                                                                 showDialog(
                                                                   context:
                                                                       context,
@@ -1418,10 +1418,10 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                               ),
                                             ),
                                           ),
-    
+
                                           // PriveateRoomData?.object?[index].usersList?[0]
                                           // PriveateRoomData?.object?[index].usersList?.forEach((element) {
-    
+
                                           // })
                                           Padding(
                                             padding:
@@ -1431,7 +1431,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                               color: Colors.grey,
                                             ),
                                           ),
-    
+
                                           PriveateRoomData?.object?[index]
                                                       .expertUserProfile !=
                                                   null
@@ -1485,11 +1485,11 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   ),
                                                 )
                                               : SizedBox(),
-    
+
                                           // index == 1 || index == 2 || index == 3
                                           //     ? Divider(color: Colors.grey)
                                           //     : SizedBox(),
-    
+
                                           // index == 1 || index == 3
                                           //     ? Padding(
                                           //         padding:
@@ -1534,7 +1534,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                           //         ),
                                           //       )
                                           //     : SizedBox(),
-    
+
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -1649,7 +1649,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   : SizedBox(),
                                             ],
                                           ),
-    
+
                                           // Container(
                                           //   color: Colors.amber,
                                           //   child: Stack(
@@ -1712,7 +1712,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                         Center(
                           child: Container(
                             height: _height / 2.5,
-    
+
                             child: CustomImageView(
                               imagePath: checkuserdata == "PARTIALLY_REGISTERED"
                                   ? ImageConstant.CreateForum
@@ -1722,7 +1722,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                           ? ImageConstant.noRoom
                                           : ImageConstant.Rejected,
                             ),
-    
+
                             // color: Colors.red,
                           ),
                         ),
@@ -1741,10 +1741,10 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                   create: (context) => CreateRoomCubit(),
                                   child: CreateRoomScreen()),
                             ); */
-    
+
                                     //  CreatRoom(_height, _width)
                                     //                                     : CreateForum()
-    
+
                                     checkuserdata == "PARTIALLY_REGISTERED"
                                         ? CreateForum()
                                         : checkuserdata == "PENDING"
