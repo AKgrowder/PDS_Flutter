@@ -91,6 +91,13 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
             print(state.GetPostAllLikeRoomData.message);
             GetPostAllLikeRoomData = state.GetPostAllLikeRoomData;
           }
+          if (state is PostLikeLoadedState) {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.likePost.object.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
         }, builder: (context, state) {
           return GetPostAllLikeRoomData?.object?.length == 0 ||
                   GetPostAllLikeRoomData?.object?.isEmpty == true
@@ -115,32 +122,31 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
                         leading: GestureDetector(
                           onTap: () {
                             Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return MultiBlocProvider(
-                                              providers: [
-                                                BlocProvider<NewProfileSCubit>(
-                                                  create: (context) =>
-                                                      NewProfileSCubit(),
-                                                ),
-                                              ],
-                                              child: ProfileScreen(
-                                          User_ID:
-                                              "${GetPostAllLikeRoomData?.object?[index].userUid}",
-                                          isFollowing:
-                                              "${GetPostAllLikeRoomData?.object?[index].isFollowing}",
-                                        ));
-                                        }));
-                           
+                                MaterialPageRoute(builder: (context) {
+                              return MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider<NewProfileSCubit>(
+                                      create: (context) => NewProfileSCubit(),
+                                    ),
+                                  ],
+                                  child: ProfileScreen(
+                                    User_ID:
+                                        "${GetPostAllLikeRoomData?.object?[index].userUid}",
+                                    isFollowing:
+                                        "${GetPostAllLikeRoomData?.object?[index].isFollowing}",
+                                  ));
+                            }));
                           },
                           child: GetPostAllLikeRoomData
-                                      ?.object?[index].profilePic !=
-                                  null && GetPostAllLikeRoomData
-                                      ?.object?[index].profilePic != ""
+                                          ?.object?[index].profilePic !=
+                                      null &&
+                                  GetPostAllLikeRoomData
+                                          ?.object?[index].profilePic !=
+                                      ""
                               ? CircleAvatar(
                                   backgroundImage: NetworkImage(
                                       "${GetPostAllLikeRoomData?.object?[index].profilePic}"),
-                                 backgroundColor: Colors.white,
+                                  backgroundColor: Colors.white,
                                   radius: 25,
                                 )
                               : Padding(
@@ -245,15 +251,23 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
   }
 
   followFunction({String? apiName, int? index}) async {
-    print("fghdfghdfgh");
-    if (apiName == 'Follow') {
-      print("dfhsdfhsdfhsdgf");
-      await BlocProvider.of<GetPostAllLikeCubit>(context).followWIngMethod(
-          GetPostAllLikeRoomData?.object?[index ?? 0].userUid, context);
-      if (GetPostAllLikeRoomData?.object?[index ?? 0].isFollowing == 'FOLLOW') {
-        GetPostAllLikeRoomData?.object?[index ?? 0].isFollowing = 'REQUESTED';
-      } else {
-        GetPostAllLikeRoomData?.object?[index ?? 0].isFollowing = 'FOLLOW';
+    await BlocProvider.of<GetPostAllLikeCubit>(context).followWIngMethod(
+        GetPostAllLikeRoomData?.object?[index ?? 0].userUid, context);
+    if (GetPostAllLikeRoomData?.object?[index ?? 0].isFollowing == 'FOLLOW') {
+      for (int i = 0; i < (GetPostAllLikeRoomData?.object?.length ?? 0); i++) {
+        print("i-${i}");
+        if (GetPostAllLikeRoomData?.object?[index ?? 0].userUid ==
+            GetPostAllLikeRoomData?.object?[i].userUid) {
+          GetPostAllLikeRoomData?.object?[i].isFollowing = 'REQUESTED';
+          print("check data-${GetPostAllLikeRoomData?.object?[i].isFollowing}");
+        }
+      }
+    } else {
+      for (int i = 0; i < (GetPostAllLikeRoomData?.object?.length ?? 0); i++) {
+        if (GetPostAllLikeRoomData?.object?[index ?? 0].userUid ==
+            GetPostAllLikeRoomData?.object?[i].userUid) {
+          GetPostAllLikeRoomData?.object?[i].isFollowing = 'FOLLOW';
+        }
       }
     }
   }
