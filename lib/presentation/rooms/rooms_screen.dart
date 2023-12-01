@@ -86,7 +86,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
     }
 
     await BlocProvider.of<GetAllPrivateRoomCubit>(context)
-        .GetAllPrivateRoomAPI(context);
+        . GetAllPrivateRoomAPI(context);
   }
 
   String customFormat(DateTime date) {
