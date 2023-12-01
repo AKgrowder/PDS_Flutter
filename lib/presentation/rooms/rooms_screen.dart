@@ -86,7 +86,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
     }
 
     await BlocProvider.of<GetAllPrivateRoomCubit>(context)
-        .GetAllPrivateRoomAPI(context);
+        . GetAllPrivateRoomAPI(context);
   }
 
   String customFormat(DateTime date) {
@@ -416,7 +416,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                     height: 10,
                                                                                   ),
                                                                                   Text(
-                                                                                    "Delete Room",
+                                                                                    "Exit Room",
                                                                                     style: TextStyle(
                                                                                       fontFamily: 'outfit',
                                                                                       fontSize: 20,
@@ -432,7 +432,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                   ),
                                                                                   Center(
                                                                                       child: Text(
-                                                                                    "Are You Sure You Want To Delete This Room",
+                                                                                    "Are You Sure You Want To Exit This Room",
                                                                                     style: TextStyle(
                                                                                       fontFamily: 'outfit',
                                                                                       fontSize: 15,
@@ -474,7 +474,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                           decoration: BoxDecoration(color: Color(0xFFED1C25), borderRadius: BorderRadius.circular(10)),
                                                                                           child: Center(
                                                                                               child: Text(
-                                                                                            "Delete",
+                                                                                            "Exit",
                                                                                             style: TextStyle(
                                                                                               fontFamily: 'outfit',
                                                                                               fontSize: 15,
