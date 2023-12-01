@@ -376,10 +376,10 @@ class _MainViewState extends State<MainView> {
                       ? const NeverScrollableScrollPhysics()
                       : const ScrollPhysics(),
                   pathList: (path) {
-                    controlNotifier.mediaPath = path.first.path!.toString();
-                    if (controlNotifier.mediaPath.isNotEmpty) {
-                      getFileSize(
-                          controlNotifier.mediaPath, 1, context, itemProvider);
+                    //  controlNotifier.mediaPath = path.first.path!.toString();
+                    if (path.first.path.toString().isNotEmpty) {
+                      getFileSize(path.first.path.toString(), 1, context,
+                          controlNotifier, itemProvider);
                     }
                     scrollProvider.pageController.animateToPage(0,
                         duration: const Duration(milliseconds: 300),
@@ -425,7 +425,11 @@ class _MainViewState extends State<MainView> {
     );
   }
 
-   getFileSize(String filepath, int decimals, context,
+  getFileSize(
+      String filepath,
+      int decimals,
+      context,
+      ControlNotifier controlNotifier,
       DraggableWidgetNotifier itemProvider) async {
     var file = File(filepath);
     int bytes = await file.length();
@@ -439,7 +443,7 @@ class _MainViewState extends State<MainView> {
     switch (i) {
       case 0:
         print("Done file size B");
-
+        controlNotifier.mediaPath = filepath;
         itemProvider.draggableWidget.insert(
             0,
             EditableItem()
@@ -449,6 +453,7 @@ class _MainViewState extends State<MainView> {
       case 1:
         print("Done file size KB");
 
+        controlNotifier.mediaPath = filepath;
         itemProvider.draggableWidget.insert(
             0,
             EditableItem()
@@ -484,7 +489,7 @@ class _MainViewState extends State<MainView> {
           );
         } else {
           print("Done file Size 10 MB");
-
+          controlNotifier.mediaPath = filepath;
           itemProvider.draggableWidget.insert(
               0,
               EditableItem()
