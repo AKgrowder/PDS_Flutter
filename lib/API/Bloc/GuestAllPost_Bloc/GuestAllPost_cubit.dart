@@ -15,12 +15,15 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostLoadingState());
     dynamic settionExperied = await Repository().logOutSettionexperied(context);
     print("checkDatWant--$settionExperied");
+    if (settionExperied == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${settionExperied}"));
+      } else {
       if (settionExperied.success == true) {
       await setLOGOUT(context);
       }
       else{
         print("failed--check---${settionExperied}");
-      }
+      }}
     } catch (e) {
       print('errorstate-$e');
       // emit(GetGuestAllPostErrorState(e.toString()));
@@ -31,9 +34,12 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     try {
       emit(GetGuestAllPostLoadingState());
       PublicRModel = await Repository().GetGuestAllPost(context, pageNumber);
+       if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${PublicRModel}"));
+      } else {
       if (PublicRModel.success == true) {
         emit(GetGuestAllPostLoadedState(PublicRModel));
-      }
+      }}
     } catch (e) {
       print('errorstate-$e');
       emit(GetGuestAllPostErrorState(e.toString()));
@@ -49,6 +55,9 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       gestUserDatasetUp =
           await Repository().GetGuestAllPost(context, pageNumber);
+           if (gestUserDatasetUp == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${gestUserDatasetUp}"));
+      } else {
       if (gestUserDatasetUp.success == true) {
         if (gestUserDatasetUp.object != null) {
           PublicRModel.object.content.addAll(gestUserDatasetUp.object.content);
@@ -58,7 +67,7 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
               gestUserDatasetUp.object.totalElements;
         }
         emit(GetGuestAllPostLoadedState(PublicRModel));
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(GetGuestAllPostErrorState(e.toString()));
@@ -71,10 +80,13 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       print("showAlert-->$showAlert");
       showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       gestUserData = await Repository().GetUserAllPost(context, pageNumber);
+       if (gestUserData == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${gestUserData}"));
+      } else {
       if (gestUserData.success == true) {
         print("GetUserAllPostAPI data get");
         emit(GetGuestAllPostLoadedState(gestUserData));
-      }
+      }}
     } catch (e) {
       print('aaaaaaaa-$e');
       emit(GetGuestAllPostErrorState(e.toString()));
@@ -90,6 +102,9 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       gestUserDatasetUp =
           await Repository().GetUserAllPost(context, pageNumber);
+           if (gestUserDatasetUp == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${gestUserDatasetUp}"));
+      } else {
       if (gestUserDatasetUp.success == true) {
         if (gestUserDatasetUp.object != null) {
           gestUserData.object.content.addAll(gestUserDatasetUp.object.content);
@@ -99,7 +114,7 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
               gestUserDatasetUp.object.totalElements;
         }
         emit(GetGuestAllPostLoadedState(gestUserData));
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(GetGuestAllPostErrorState(gestUserData));
@@ -112,9 +127,12 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     try {
       // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       likepost = await Repository().likePostMethod(postUid, context);
+       if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${likepost}"));
+      } else {
       if (likepost.success == true) {
         emit(PostLikeLoadedState(likepost));
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(GetGuestAllPostErrorState(likepost));
@@ -127,9 +145,12 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     try {
       // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       likepost = await Repository().savedPostMethod(postUid, context);
+       if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${likepost}"));
+      } else {
       if (likepost.success == true) {
         emit(PostLikeLoadedState(likepost));
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(GetGuestAllPostErrorState(likepost));
@@ -143,9 +164,12 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     try {
       // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       likepost = await Repository().folliwingMethod(followedToUid, context);
+       if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${likepost}"));
+      } else {
       if (likepost.success == true) {
         emit(PostLikeLoadedState(likepost));
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(GetGuestAllPostErrorState(likepost));
@@ -158,9 +182,12 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     try {
       emit(GetGuestAllPostLoadingState());
       getAllStory = await Repository().GetAllStory(context);
+       if (getAllStory == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${getAllStory}"));
+      } else {
       if (getAllStory.success == true) {
         emit(GetAllStoryLoadedState(getAllStory));
-      }
+      }}
     } catch (e) {
       print('errorstate-$e');
       emit(GetGuestAllPostErrorState(e));
@@ -172,9 +199,12 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     try {
       emit(GetGuestAllPostLoadingState());
       PublicRModel = await Repository().FetchAllExpertsAPI(context);
+       if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${PublicRModel}"));
+      } else {
       if (PublicRModel.success == true) {
         emit(FetchAllExpertsLoadedState(PublicRModel));
-      }
+      }}
     } catch (e) {
       emit(GetGuestAllPostErrorState(PublicRModel));
     }
@@ -186,9 +216,12 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     try {
       emit(GetGuestAllPostLoadingState());
       create_story = await Repository().cretateStoryApi(context, params);
+       if (create_story == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${create_story}"));
+      } else {
       if (create_story.success == true) {
         emit(GetAllStoryLoadedState(create_story));
-      }
+      }}
     } catch (e) {
       // print('errorstate-$e');
       emit(GetGuestAllPostErrorState(create_story));
@@ -200,12 +233,15 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     try {
       emit(GetGuestAllPostLoadingState());
       Deletepost = await Repository().Deletepost(postUid, context);
+       if (Deletepost == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${Deletepost}"));
+      } else {
       if (Deletepost.success == true) {
         emit(DeletePostLoadedState(Deletepost));
         Navigator.pop(context);
       } else {
         emit(GetGuestAllPostErrorState(Deletepost.message));
-      }
+      }}
     } catch (e) {
       emit(GetGuestAllPostErrorState(Deletepost));
     }
@@ -216,11 +252,14 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     try {
       emit(GetGuestAllPostLoadingState());
       myAccontDetails = await Repository().myAccount(context);
+       if (myAccontDetails == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${myAccontDetails}"));
+      } else {
       if (myAccontDetails.success == true) {
         emit(GetUserProfileLoadedState(myAccontDetails));
       } else {
         emit(GetGuestAllPostErrorState(myAccontDetails));
-      }
+      }}
     } catch (e) {
       emit(GetGuestAllPostErrorState(myAccontDetails));
     }
@@ -231,9 +270,12 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     try {
       emit(GetGuestAllPostLoadingState());
       getallBlogmodel = await Repository().GetallBlog(context, userUid);
+       if (getallBlogmodel == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${getallBlogmodel}"));
+      } else {
       if (getallBlogmodel.success == true) {
         emit(GetallblogsLoadedState(getallBlogmodel));
-      }
+      }}
     } catch (e) {
       emit(GetGuestAllPostErrorState(getallBlogmodel));
     }
@@ -245,9 +287,12 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     try {
       emit(GetGuestAllPostLoadingState());
       getallBlogmodel = await Repository().SaveBlog(context, userUid, blogUid);
+       if (getallBlogmodel == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${getallBlogmodel}"));
+      } else {
       if (getallBlogmodel.success == true) {
         emit(saveBlogLoadedState(getallBlogmodel));
-      }
+      }}
     } catch (e) {
       emit(GetGuestAllPostErrorState(getallBlogmodel));
     }
@@ -259,9 +304,12 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     try {
       emit(GetGuestAllPostLoadingState());
       getallBlogmodel = await Repository().LikeBlog(context, userUid, blogUid);
+       if (getallBlogmodel == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${getallBlogmodel}"));
+      } else {
       if (getallBlogmodel.success == true) {
         emit(likeBlogLoadedState(getallBlogmodel));
-      }
+      }}
     } catch (e) {
       emit(GetGuestAllPostErrorState(getallBlogmodel));
     }
@@ -272,9 +320,12 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     try {
       emit(GetGuestAllPostLoadingState());
       systemConfigModel = await Repository().SystemConfig(context);
+       if (systemConfigModel == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${systemConfigModel}"));
+      } else {
       if (systemConfigModel.success == true) {
         emit(SystemConfigLoadedState(systemConfigModel));
-      }
+      }}
     } catch (e) {
       emit(GetGuestAllPostErrorState(systemConfigModel));
     }
@@ -287,9 +338,12 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostLoadingState());
       addPostData = await Repository().RePost(context, params, uuid);
       print("addPostDataaaaaaaaaaaa-->${addPostData}");
+       if (addPostData == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${addPostData}"));
+      } else {
       if (addPostData.success == true) {
         emit(RePostLoadedState(addPostData));
-      }
+      }}
     } catch (e) {
       emit(GetGuestAllPostErrorState(addPostData));
     }

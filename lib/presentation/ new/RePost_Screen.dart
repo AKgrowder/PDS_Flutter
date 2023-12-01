@@ -109,7 +109,7 @@ class _RePostScreenState extends State<RePostScreen> {
   Color primaryColor = ColorConstant.primaryLight_color;
   Color textColor = ColorConstant.primary_color;
   TextEditingController postText = TextEditingController();
-  List<String> soicalData = ["Following", "Public"];
+  List<String> soicalData = ["Follower", "Public"];
   int indexx = 0;
   String? User_ID;
   bool CreatePostDone = true;
@@ -238,21 +238,19 @@ class _RePostScreenState extends State<RePostScreen> {
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return MultiBlocProvider(
-                                              providers: [
-                                                BlocProvider<NewProfileSCubit>(
-                                                  create: (context) =>
-                                                      NewProfileSCubit(),
-                                                ),
-                                              ],
-                                              child:  ProfileScreen(
-                                                User_ID: "${User_ID}",
-                                                isFollowing: 'FOLLOW',
-                                              ));
-                                        }));
-                                  
+                                      MaterialPageRoute(builder: (context) {
+                                    return MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider<NewProfileSCubit>(
+                                            create: (context) =>
+                                                NewProfileSCubit(),
+                                          ),
+                                        ],
+                                        child: ProfileScreen(
+                                          User_ID: "${User_ID}",
+                                          isFollowing: 'FOLLOW',
+                                        ));
+                                  }));
                                 },
                                 child: UserProfileImage?.isEmpty == true
                                     ? SizedBox(
@@ -381,7 +379,8 @@ class _RePostScreenState extends State<RePostScreen> {
                                             height: 400,
                                             width: _width,
                                             child: DocumentViewScreen1(
-                                              path: imageDataPost?.object
+                                              path: imageDataPost
+                                                  ?.object?.data?.first
                                                   .toString(),
                                             ))
                                         : pickedImage.isNotEmpty
@@ -451,11 +450,11 @@ class _RePostScreenState extends State<RePostScreen> {
                                                             ),
                                                           )
                                                         : Container()
-                                                    : Center(
+                                                    : SizedBox() /* Center(
                                                         child: GFLoader(
                                                             type: GFLoaderType
                                                                 .ios),
-                                                      )
+                                                      ) */
                                             : selectImage == true
                                                 ? medium1?.mediumType ==
                                                         MediumType.image
@@ -978,10 +977,10 @@ class _RePostScreenState extends State<RePostScreen> {
                             SizedBox(
                               width: 30,
                             ),
-                            Image.asset(
-                              ImageConstant.Gif_icon,
-                              height: 20,
-                            ),
+                            // Image.asset(
+                            //   ImageConstant.Gif_icon,
+                            //   height: 20,
+                            // ),
                           ],
                         ),
                       ),
@@ -1002,49 +1001,53 @@ class _RePostScreenState extends State<RePostScreen> {
       List<XFile> xFilePicker = pickedFile;
 
       if (xFilePicker.isNotEmpty) {
-        for (var i = 0; i < xFilePicker.length; i++) {
-          if (!_isGifOrSvg(xFilePicker[i].path)) {
-            pickedImage.add(File(xFilePicker[i].path));
-            setState(() {});
-            getFileSize1(pickedImage[i].path, 1, pickedImage[i], 0);
+        if (xFilePicker.length <= 5) {
+          for (var i = 0; i < xFilePicker.length; i++) {
+            if (!_isGifOrSvg(xFilePicker[i].path)) {
+              pickedImage.add(File(xFilePicker[i].path));
+              setState(() {});
+              getFileSize1(pickedImage[i].path, 1, pickedImage[i], 0);
+              if ((xFilePicker[i].path.contains(".mp4")) ||
+                  (xFilePicker[i].path.contains(".mov")) ||
+                  (xFilePicker[i].path.contains(".mp3")) ||
+                  (xFilePicker[i].path.contains(".m4a"))) {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: Text(
+                      "Selected File Error",
+                      textScaleFactor: 1.0,
+                    ),
+                    content: Text(
+                      "Only PNG, JPG Supported.",
+                      textScaleFactor: 1.0,
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(ctx).pop();
+                        },
+                        child: Container(
+                          // color: Colors.green,
+                          padding: const EdgeInsets.all(10),
+                          child: const Text("Okay"),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            }
+            print("xFilePickerxFilePicker - ${xFilePicker[i].path}");
           }
-          print("xFilePickerxFilePicker - ${xFilePicker[i].path}");
+        } else {
+          SnackBar snackBar = SnackBar(
+            content: Text('Max 5 images upload allowed !'),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
-      }
-      /*   if (!_isGifOrSvg(pickedFile!.path)) {
-          pickedImage = File(pickedFile!.path);
-          setState(() {});
-          getFileSize1(pickedImage!.path, 1, pickedImage!, 0);
-        } */
-      else {
-        Navigator.pop(context);
-
-        showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: Text(
-              "Selected File Error",
-              textScaleFactor: 1.0,
-            ),
-            content: Text(
-              "Only PNG, JPG Supported.",
-              textScaleFactor: 1.0,
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                },
-                child: Container(
-                  // color: Colors.green,
-                  padding: const EdgeInsets.all(10),
-                  child: const Text("Okay"),
-                ),
-              ),
-            ],
-          ),
-        );
-      }
+      } else {}
     } catch (e) {}
   }
 
@@ -1180,6 +1183,8 @@ class _RePostScreenState extends State<RePostScreen> {
   prepareTestPdf(
     int Index,
   ) async {
+    this.file = null;
+    pickedImage = [];
     PlatformFile file;
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -1195,7 +1200,8 @@ class _RePostScreenState extends State<RePostScreen> {
             (file.path?.contains(".png") ?? false) ||
             (file.path?.contains(".doc") ?? false) ||
             (file.path?.contains(".jpg") ?? false) ||
-            (file.path?.contains(".m4a") ?? false)) {
+            (file.path?.contains(".m4a") ?? false) ||
+            (file.path?.contains(".gif") ?? false)) {
           showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
@@ -1204,7 +1210,7 @@ class _RePostScreenState extends State<RePostScreen> {
                 textScaleFactor: 1.0,
               ),
               content: Text(
-                "Only PDF Allowed",
+                "Only PDF Allowed.",
                 textScaleFactor: 1.0,
               ),
               actions: <Widget>[

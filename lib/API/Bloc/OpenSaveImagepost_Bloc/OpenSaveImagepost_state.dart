@@ -18,10 +18,10 @@ class PostLikeLoadedState extends OpenSaveState {
   PostLikeLoadedState(this.likePost);
 }
 
-// class RePostLoadedState extends OpenSaveState {
-//   final RePostModel RePost;
-//   RePostLoadedState(this.RePost);
-// }
+class RePostLoadedState extends OpenSaveState {
+  final RePostModel RePost;
+  RePostLoadedState(this.RePost);
+}
 
 class OpenSaveErrorState extends OpenSaveState {
   final dynamic error;

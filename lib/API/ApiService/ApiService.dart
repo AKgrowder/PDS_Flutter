@@ -29,9 +29,9 @@ class ApiServices {
     } else {
       baseURL =
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
-          "https://uatapi.packagingdepot.store/";
+          // "https://uatapi.packagingdepot.store/";
           // "https://api.packagingdepot.store/";
-          // "http://192.168.29.100:8081/";
+          "http://192.168.29.100:8081/";
     }
 
     print(baseURL);
@@ -66,9 +66,9 @@ class ApiServices {
     if (APIurl == "user/api/fetchSysConfig") {
       baseURL =
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
-          "https://uatapi.packagingdepot.store/";
+          // "https://uatapi.packagingdepot.store/";
           // "https://api.packagingdepot.store/";
-          // "http://192.168.29.100:8081/";
+          "http://192.168.29.100:8081/";
     }
     print("API => ******** ${baseURL + APIurl}");
 
@@ -161,31 +161,50 @@ class ApiServices {
     };
     final response =
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
+    print("API =>******${baseURL + APIurl}");
 
     response.headers.addAll(headers1);
-
     if (params != null) {
-      if (params['userProfilePic'].toString().isNotEmpty &&
+      /* if (params['userProfilePic'].toString().isNotEmpty &&
           params['userBackgroundPic'].toString().isNotEmpty) {
-        response.fields["userProfilePic"] = params['userProfilePic'] ?? "";
-        response.fields["userBackgroundPic"] =
-            params['userBackgroundPic'] ?? "";
-      } else if (params['userProfilePic'].toString().isNotEmpty) {
-        response.fields["userProfilePic"] = params['userProfilePic'] ?? "";
+        print("multipartIfcondison");
+        response.fields["userProfilePic"] = params['userProfilePic'];
+        response.fields["userBackgroundPic"] = params['userBackgroundPic'];
+      } else if (params['userProfilePic'].toString().isNotEmpty ) {
+        print("multipart else if");
+        response.fields["userProfilePic"] = params['userProfilePic'];
       } else {
-        response.fields["userBackgroundPic"] =
-            params['userBackgroundPic'] ?? "";
+        if (params['userBackgroundPic'].toString().isNotEmpty ) {
+          print("multipart else ");
+          response.fields["userBackgroundPic"] = params['userBackgroundPic'];
+        }
+      } */
+      print("userProfiePictureResponce---${params['userProfilePic']}");
+      print("userBackgroundPicResponce---${params['userBackgroundPic']}");
+      if (params['userProfilePic'] != null &&
+          params['userBackgroundPic'] != null) {
+        response.fields["userProfilePic"] = params['userProfilePic'];
+        response.fields["userBackgroundPic"] = params['userBackgroundPic'];
+      } else if (params['userBackgroundPic'] != null) {
+        response.fields["userBackgroundPic"] = params['userBackgroundPic'];
+      }else if(params['userProfilePic'] != null){
+        response.fields["userProfilePic"] = params['userProfilePic'];
+
+      } else{
+        print("multipartFile2 else condions working on--");
       }
-      response.fields["document"] = params['document'] ?? "";
-      response.fields["companyName"] = params['companyName'] ?? "";
-      response.fields["jobProfile"] = params['jobProfile'] ?? "";
-      response.fields["profileUid"] = params['profileUid'] ?? "";
-      response.fields["name"] = params['name'] ?? "";
-      response.fields["email"] = params['email'] ?? "";
+      response.fields["document"] = params['document'];
+      response.fields["companyName"] = params['companyName'];
+      response.fields["jobProfile"] = params['jobProfile'];
+      response.fields["profileUid"] = params['profileUid'];
+      response.fields["name"] = params['name'];
+      response.fields["email"] = params['email'];
       response.fields["industryTypesUid"] = params['industryTypesUid'];
     }
-    print("check responce fields--${params}");
-    log("message${params}");
+    log('companyUserAllData-${response.fields}');
+    print("check userProfilePic--${params?['userProfilePic']}");
+    print("check userBackgroundPic--${params?['userBackgroundPic']}");
+
     var res = await response.send();
     print('responce stauscode-${res.statusCode.toString()}');
     if (res.statusCode == 602) {
@@ -201,6 +220,7 @@ class ApiServices {
       String APIurl, String fileName, String file, BuildContext context,
       {String? apiName, Map<String, dynamic>? params, bool? AadPost}) async {
     await UpdateBaseURL();
+
     print('fileApi-$file');
     print('fileName-$fileName');
 

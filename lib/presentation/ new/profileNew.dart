@@ -110,6 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool AbboutMeShow = true;
   var uploadimage = "";
   dynamic dataSetup;
+
   String? User_Module;
   FollowersClassModel? followersClassModel1;
   FollowersClassModel? followersClassModel2;
@@ -259,10 +260,12 @@ class _ProfileScreenState extends State<ProfileScreen>
         BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
             context, "${NewProfileData?.object?.userUid}", "desc");
         savedataFuntion(NewProfileData?.object?.userUid ?? '');
+
         NewProfileData?.object?.industryTypes?.forEach((element) {
-          print(element.industryTypeName);
           // industryTypesArray.add("${element.industryTypeName}");
+          
           if (industryTypesArray == "") {
+          
             industryTypesArray =
                 "${industryTypesArray}${element.industryTypeName}";
           } else {
@@ -284,7 +287,12 @@ class _ProfileScreenState extends State<ProfileScreen>
         CompanyName.text = "${NewProfileData?.object?.companyName}";
         jobprofileController.text = "${NewProfileData?.object?.jobProfile}";
         IndustryType.text = industryTypesArray;
-        dopcument = NewProfileData?.object?.userDocument;
+
+        if (NewProfileData?.object?.userDocument != null) {
+          dopcument = NewProfileData?.object?.userDocument;
+        } else {
+          dopcument = 'Upload Image';
+        }
 
         priceContrller.text = "${NewProfileData?.object?.fees}";
         Expertise.text = ExpertiseData;
@@ -899,9 +907,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ),
                                               ],
                                               child: Followers(
+                                                User_ID: widget.User_ID,
                                                 appBarName: 'Followers',
-                                                followersClassModel:
-                                                    followersClassModel1!,
                                                 userId: widget.User_ID,
                                               ),
                                             );
@@ -982,9 +989,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ),
                                               ],
                                               child: Followers(
+                                                User_ID: widget.User_ID,
                                                 appBarName: 'Following',
-                                                followersClassModel:
-                                                    followersClassModel1!,
                                                 userId: widget.User_ID,
                                               ),
                                             );
@@ -1375,30 +1381,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           BorderRadius.circular(
                                                               15.0),
                                                     ),
-                                                    child: ListTile(
-                                                        /*  leading: Container(
-                                                          width: 35,
-                                                          height: 35,
-                                                          decoration:
-                                                              ShapeDecoration(
-                                                            color: Color(
-                                                                0xFFED1C25),
-                                                            shape: OvalBorder(),
-                                                          ),
-                                                        ), */
-                                                        title: Padding(
+                                                    child: Column(
+                                                      children: [
+                                                        Padding(
                                                           padding:
                                                               const EdgeInsets
                                                                       .only(
-                                                                  left: 0),
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
+                                                                  top: 10,
+                                                                  right: 20,
+                                                                  left: 20),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
                                                             children: [
-                                                              SizedBox(
-                                                                height: 15,
-                                                              ),
                                                               Text(
                                                                 'About Me',
                                                                 style:
@@ -1411,50 +1407,134 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           .w600,
                                                                 ),
                                                               ),
+                                                              User_ID !=
+                                                                      NewProfileData
+                                                                          ?.object
+                                                                          ?.userUid
+                                                                  ? SizedBox
+                                                                      .shrink()
+                                                                  : GestureDetector(
+                                                                      onTap:
+                                                                          () {
+                                                                        setState(
+                                                                            () {
+                                                                          isUpDate =
+                                                                              true;
+                                                                          isAbourtMe =
+                                                                              false;
+                                                                          AbboutMeShow =
+                                                                              false;
+                                                                        });
+                                                                      },
+                                                                      child: isUpDate ==
+                                                                              true
+                                                                          ? GestureDetector(
+                                                                              onTap: () {
+                                                                                if (aboutMe.text.isNotEmpty) {
+                                                                                  BlocProvider.of<NewProfileSCubit>(context).abboutMeApi(context, aboutMe.text);
+                                                                                } else {
+                                                                                  SnackBar snackBar = SnackBar(
+                                                                                    content: Text('Please Enter About Me'),
+                                                                                    backgroundColor: ColorConstant.primary_color,
+                                                                                  );
+                                                                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                                }
+                                                                              },
+                                                                              child: Container(
+                                                                                alignment: Alignment.center,
+                                                                                height: 24,
+                                                                                width: 50,
+                                                                                decoration: BoxDecoration(
+                                                                                  borderRadius: BorderRadius.circular(5),
+                                                                                  color: Color(0xFFED1C25),
+                                                                                ),
+                                                                                child: Text(
+                                                                                  'SAVE',
+                                                                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                                                                ),
+                                                                              ),
+                                                                            )
+                                                                          : Icon(
+                                                                              Icons.edit,
+                                                                              color: Colors.black,
+                                                                            ),
+                                                                    )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 0),
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 15,
+                                                              ),
+
                                                               SizedBox(
                                                                 height: 5,
                                                               ),
                                                               AbboutMeShow ==
                                                                       true
-                                                                  ? Container(
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .center,
-                                                                      height:
-                                                                          50,
-                                                                      width:
-                                                                          _width /
-                                                                              2,
-                                                                      decoration: BoxDecoration(
-                                                                          // color: Colors.amber
-                                                                          borderRadius: BorderRadius.circular(10),
-                                                                          border: Border.all(color: Color(0xffEFEFEF))),
+                                                                  ? Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .only(
+                                                                          left:
+                                                                              20,
+                                                                          right:
+                                                                              20),
                                                                       child:
-                                                                          Text(
-                                                                        'Enter About Me',
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                14,
-                                                                            fontWeight:
-                                                                                FontWeight.w300,
-                                                                            color: Colors.black),
+                                                                          Container(
+                                                                        alignment:
+                                                                            Alignment.center,
+                                                                        height:
+                                                                            50,
+                                                                        // width:
+                                                                        //     _width /
+                                                                        //         1.5,
+                                                                        decoration: BoxDecoration(
+                                                                            // color: Colors.amber
+                                                                            borderRadius: BorderRadius.circular(10),
+                                                                            border: Border.all(color: Color(0xffEFEFEF))),
+                                                                        child:
+                                                                            Text(
+                                                                          'Enter About Me',
+                                                                          style: TextStyle(
+                                                                              fontSize: 14,
+                                                                              fontWeight: FontWeight.w300,
+                                                                              color: Colors.black),
+                                                                        ),
                                                                       ),
                                                                     )
-                                                                  : TextFormField(
-                                                                      inputFormatters: [
-                                                                        LengthLimitingTextInputFormatter(
-                                                                            500),
-                                                                      ],
-                                                                      readOnly:
-                                                                          isAbourtMe,
-                                                                      controller:
-                                                                          aboutMe,
-                                                                      maxLines:
-                                                                          5,
-                                                                      decoration:
-                                                                          InputDecoration(
-                                                                        border:
-                                                                            OutlineInputBorder(),
+                                                                  : Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .only(
+                                                                          left:
+                                                                              20,
+                                                                          right:
+                                                                              20),
+                                                                      child:
+                                                                          TextFormField(
+                                                                        inputFormatters: [
+                                                                          LengthLimitingTextInputFormatter(
+                                                                              500),
+                                                                        ],
+                                                                        readOnly:
+                                                                            isAbourtMe,
+                                                                        controller:
+                                                                            aboutMe,
+                                                                        maxLines:
+                                                                            5,
+                                                                        decoration:
+                                                                            InputDecoration(
+                                                                          border:
+                                                                              OutlineInputBorder(),
+                                                                        ),
                                                                       ),
                                                                     ),
                                                               //wiil DataGet
@@ -1465,72 +1545,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             ],
                                                           ),
                                                         ),
-                                                        trailing: User_ID !=
-                                                                NewProfileData
-                                                                    ?.object
-                                                                    ?.userUid
-                                                            ? SizedBox.shrink()
-                                                            : GestureDetector(
-                                                                onTap: () {
-                                                                  setState(() {
-                                                                    isUpDate =
-                                                                        true;
-                                                                    isAbourtMe =
-                                                                        false;
-                                                                    AbboutMeShow =
-                                                                        false;
-                                                                  });
-                                                                },
-                                                                child: isUpDate ==
-                                                                        true
-                                                                    ? GestureDetector(
-                                                                        onTap:
-                                                                            () {
-                                                                          if (aboutMe
-                                                                              .text
-                                                                              .isNotEmpty) {
-                                                                            BlocProvider.of<NewProfileSCubit>(context).abboutMeApi(context,
-                                                                                aboutMe.text);
-                                                                          } else {
-                                                                            SnackBar
-                                                                                snackBar =
-                                                                                SnackBar(
-                                                                              content: Text('Please Enter About Me'),
-                                                                              backgroundColor: ColorConstant.primary_color,
-                                                                            );
-                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                                          }
-                                                                        },
-                                                                        child:
-                                                                            Container(
-                                                                          alignment:
-                                                                              Alignment.center,
-                                                                          height:
-                                                                              30,
-                                                                          width:
-                                                                              70,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(10),
-                                                                            color:
-                                                                                Color(0xFFED1C25),
-                                                                          ),
-                                                                          child:
-                                                                              Text(
-                                                                            'SAVE',
-                                                                            style:
-                                                                                TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                                                          ),
-                                                                        ),
-                                                                      )
-                                                                    : Icon(
-                                                                        Icons
-                                                                            .edit,
-                                                                        color: Colors
-                                                                            .black,
-                                                                      ),
-                                                              ))),
+                                                      ],
+                                                    )
+),
                                             NewProfileData?.object?.module ==
                                                     "EXPERT"
                                                 ? Card(
@@ -2943,15 +2960,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     bottomRight: Radius.circular(5))),
                             child: GestureDetector(
                               onTap: () async {
-                                // dopcument = "Upload Image";
-
-                                // setState(() {});
-
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => DocumentViewScreen(
-                                          path: dopcument,
-                                          title: 'Pdf',
-                                        )));
+                                if (dopcument != null) {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => DocumentViewScreen(
+                                            path: dopcument,
+                                            title: 'Pdf',
+                                          )));
+                                }
                               },
                               child: Center(
                                 child: Text(

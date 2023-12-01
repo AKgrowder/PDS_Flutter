@@ -197,8 +197,7 @@ class Repository {
     }
   }
 
-//http://192.168.29.100:8081/user/addExpertProfile
-//http://192.168.29.100:8081/user/addExpertProfile
+ 
   CreatPublicRoom(Map<String, String> params, BuildContext context) async {
     final response =
         await apiServices.postApiCall(Config.CreateRoom, params, context);
@@ -1653,7 +1652,30 @@ class Repository {
     }
   }
 
-  NewProfileAPI(BuildContext context, String otherUserUid) async {
+/*   NewProfileAPI(BuildContext context, String url) async {
+    print("sdfhsdfhsdfh-$url");
+    final response = await apiServices.getApiCallWithToken(
+        url, context);
+
+    var jsonString = json.decode(response.body);
+    print("NewProfileAPI--$jsonString");
+    switch (response.statusCode) {
+      case 200:
+        return NewProfileScreen_Model.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  } */
+
+   NewProfileAPI(BuildContext context, String otherUserUid) async {
     print("sdfhsdfhsdfh-$otherUserUid");
     final response = await apiServices.getApiCallWithToken(
         "${Config.NewfetchUserProfile}?otherUserUid=${otherUserUid}", context);
