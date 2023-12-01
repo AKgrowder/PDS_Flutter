@@ -628,7 +628,9 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                               : Text(
                                   '${OpenSaveModelData?.object?.repostCount}',
                                   style: TextStyle(
-                                      fontFamily: "outfit", fontSize: 14),
+                                      color: Colors.white,
+                                      fontFamily: "outfit",
+                                      fontSize: 14),
                                 ),
                           Spacer(),
                           GestureDetector(
@@ -749,6 +751,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
         context: context,
         builder: (BuildContext bc) {
           return CommentBottomSheet(
+              useruid: OpenSaveModelData?.object?.userUid,
               userProfile: OpenSaveModelData?.object?.userProfilePic ?? "",
               UserName: OpenSaveModelData?.object?.postUserName ?? "",
               desc: OpenSaveModelData?.object?.description ?? "",
