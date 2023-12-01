@@ -302,9 +302,9 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 },
                                                 child: addCommentModeldata
                                                             ?.object?[index]
-                                                            .profilePic ==
-                                                        null
-                                                    ? CustomImageView(
+                                                            .profilePic?.isEmpty== true ||addCommentModeldata
+                                                            ?.object?[index]
+                                                            .profilePic == null? CustomImageView(
                                                         radius: BorderRadius
                                                             .circular(50),
                                                         imagePath: ImageConstant
