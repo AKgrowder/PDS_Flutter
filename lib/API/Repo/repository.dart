@@ -24,6 +24,7 @@ import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
 import 'package:pds/API/Model/OpenSaveImagepostModel/OpenSaveImagepost_Model.dart';
 import 'package:pds/API/Model/PersonalChatListModel/PersonalChatList_Model.dart';
+import 'package:pds/API/Model/RoomExistsModel/RoomExistsModel.dart';
 import 'package:pds/API/Model/System_Config_model/Tokenvalid_Model.dart';
 import 'package:pds/API/Model/ViewStoryModel/ViewStory_Model.dart';
 import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
@@ -761,7 +762,7 @@ class Repository {
     final response =
         await apiServices.multipartFile2(Config.company, params, context);
     var jsonString = json.decode(response.body);
-    print('jsonString-$jsonString');
+    print('dfsdfgsdfgg-$jsonString');
     switch (response.statusCode) {
       case 200:
         return CreateForm.fromJson(jsonString);
@@ -2202,6 +2203,28 @@ class Repository {
     switch (responce.statusCode) {
       case 200:
         return IsTokenExpired.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+
+   roomExists(Map<String, dynamic> params, BuildContext context) async {
+    final response =
+        await apiServices.postApiCall(Config.roomExists, params, context);
+    var jsonString = json.decode(response.body);
+    print('jsonString-$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return RoomExistsModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:

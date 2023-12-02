@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../API/Model/FatchAllMembers/fatchallmembers_model.dart';
 import '../core/utils/image_constant.dart';
+import '../core/utils/sharedPreferences.dart';
 import '../widgets/custom_image_view.dart';
 
 class AssignAdminScreenn extends StatefulWidget {
+  FatchAllMembersModel? data;
+  AssignAdminScreenn({
+    Key? key,
+    this.data,
+  }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _AssignAdminScreennState();
 }
@@ -24,10 +33,12 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
   double? rateStar = 5.0;
   var IsGuestUserEnabled;
   var GetTimeSplash;
+  String? User_ID;
   @override
   void initState() {
     // setUserRating();
     super.initState();
+    uuID();
 
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 450));
@@ -41,6 +52,11 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
     controller.forward();
   }
 
+  uuID() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    User_ID = prefs.getString(PreferencesKey.loginUserID);
+  }
+
   var userRating;
 
   @override
@@ -52,7 +68,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
 
   @override
   Widget build(BuildContext context) {
-   var _height = MediaQuery.of(context).size.height;
+    var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Center(
       child: Material(
@@ -73,7 +89,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
               children: [
                 Center(
                   child: Container(
-                    height: 400,
+                    // height: 400,
                     width: _width / 1.25,
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -110,45 +126,75 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                           color: Colors.grey,
                         ),
                         ListView.builder(
-                          itemCount: 5,
+                          itemCount: widget.data?.object?.length,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  CustomImageView(
-                                    imagePath: ImageConstant.workimage,
-                                    height: 30,
-                                  ),
-                                  Padding(
+                            print(
+                                "userProfilePic == ${widget.data?.object?[index].userProfilePic}");
+                            return User_ID ==
+                                    widget.data?.object?[index].userUuid
+                                ? SizedBox()
+                                : Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Text(users[index]),
-                                  ),
-                                  Spacer(),
-                                  Container(
-                                    width: 80,
-                                    height: 20,
-                                    decoration: ShapeDecoration(
-                                      color: Color(0xFFED1C25),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(49.46),
-                                      ),
+                                    child: Row(
+                                      children: [
+                                        widget.data?.object?[index]
+                                                        .userProfilePic !=
+                                                    null &&
+                                                widget
+                                                        .data
+                                                        ?.object?[index]
+                                                        .userProfilePic
+                                                        ?.isNotEmpty ==
+                                                    true
+                                            ? CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                    "${widget.data?.object?[index].userProfilePic}"),
+                                                backgroundColor: Colors.white,
+                                                radius: 25,
+                                              )
+                                            : CircleAvatar(
+                                                radius: 25,
+                                                backgroundColor: Colors.white,
+                                                backgroundImage: AssetImage(
+                                                    ImageConstant.tomcruse),
+                                              ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            widget.data?.object?[index].fullName
+                                                    .toString() ??
+                                                "",
+                                            style: TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Container(
+                                          width: 80,
+                                          height: 20,
+                                          decoration: ShapeDecoration(
+                                            color: Color(0xFFED1C25),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(49.46),
+                                            ),
+                                          ),
+                                          child: Center(
+                                              child: Text(
+                                            "Assign",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.white,
+                                                fontFamily: "outfit",
+                                                fontSize: 10),
+                                          )),
+                                        ),
+                                      ],
                                     ),
-                                    child: Center(
-                                        child: Text(
-                                      "Assign",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.white,
-                                          fontFamily: "outfit",
-                                          fontSize: 10),
-                                    )),
-                                  ),
-                                ],
-                              ),
-                            );
+                                  );
                           },
                         ),
                         Center(
@@ -179,6 +225,9 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                               ],
                             ),
                           ),
+                        ),
+                        SizedBox(
+                          height: 20,
                         )
                       ],
                     ),
