@@ -610,8 +610,8 @@ class _RePostScreenState extends State<RePostScreen> {
                                                   basicStyle: TextStyle(
                                                       fontFamily: "outfit",
                                                       fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      // fontWeight:
+                                                      //     FontWeight.bold,
                                                       color: Colors.black),
                                                   onTap: (text) {},
                                                 ),
@@ -662,7 +662,8 @@ class _RePostScreenState extends State<RePostScreen> {
                                                                 width: _width,
                                                                 child:
                                                                     DocumentViewScreen1(
-                                                                  path: "",
+                                                                  path: widget
+                                                                      .postData?[0],
                                                                 ))
                                                             : SizedBox()
                                                     : Column(
