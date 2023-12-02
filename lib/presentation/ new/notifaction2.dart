@@ -162,8 +162,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                               ),
                             ),
                           ),
-                       
-                             Container(
+                          Container(
                             height: 50,
                             // color: Color(0xFFED1C25),
                             child: Center(
@@ -183,15 +182,18 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                                   ),
                                   Container(
                                     child: Text(
-                                    '${RequestListModelData?.object?.length}',
+                                     RequestListModelData?.object?.length!= 0? '${RequestListModelData?.object?.length?? ""}'
+                                     :'',
                                       style: TextStyle(
-                                        overflow: TextOverflow.ellipsis,
+                                          overflow: TextOverflow.ellipsis,
                                           fontFamily: "outfit",
                                           fontWeight: FontWeight.bold,
                                           fontSize: 13),
                                     ),
                                   ),
-                                  SizedBox(width: 1,),
+                                  SizedBox(
+                                    width: 1,
+                                  ),
                                 ],
                               ),
                             ),
@@ -215,14 +217,16 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                                     width: 4,
                                   ),
                                   Text(
-                                  '${invitationRoomData?.object?.length}',
+                                    '${invitationRoomData?.object?.length ?? ""}',
                                     style: TextStyle(
-                                      overflow: TextOverflow.ellipsis,
+                                        overflow: TextOverflow.ellipsis,
                                         fontFamily: "outfit",
                                         fontWeight: FontWeight.bold,
                                         fontSize: 13),
                                   ),
-                                  SizedBox(width: 1,),
+                                  SizedBox(
+                                    width: 1,
+                                  ),
                                 ],
                               ),
                             ),

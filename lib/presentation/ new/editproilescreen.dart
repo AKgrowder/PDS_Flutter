@@ -237,23 +237,39 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               }
               Navigator.pop(context);
             }
-            if (state is AddExportLoadedState) {
-              print("AddExportLoadedState");
-
-              SnackBar snackBar = SnackBar(
-                content: Text(state.addExpertProfile.message.toString()),
-                backgroundColor: ColorConstant.primary_color,
-              );
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              Navigator.pop(context);
+           if (state is AddExportLoadedState) {
+              if (state.addExpertProfile.message.toString() ==
+                  "Profile Created Successfully") {
+                SnackBar snackBar = SnackBar(
+                  content: Text(state.addExpertProfile.message.toString()),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                Navigator.pop(context);
+              } else {
+                SnackBar snackBar = SnackBar(
+                  content: Text(state.addExpertProfile.message.toString()),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
             }
             if (state is UpdateProfileLoadedState) {
-              SnackBar snackBar = SnackBar(
-                content: Text(state.updateProfile.object.toString()),
-                backgroundColor: ColorConstant.primary_color,
-              );
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              Navigator.pop(context);
+              if (state.updateProfile.object.toString() ==
+                  "Profile Updated Successfully") {
+                SnackBar snackBar = SnackBar(
+                  content: Text(state.updateProfile.object.toString()),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                Navigator.pop(context);
+              } else {
+                SnackBar snackBar = SnackBar(
+                  content: Text(state.updateProfile.object.toString()),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
             }
             if (state is FetchExprtiseRoomLoadedState) {
               print("FetchExprtiseRoomLoadedState");
@@ -329,12 +345,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             }
             if (state is CreatFourmLoadedState) {
               //this is the working
-              SnackBar snackBar = SnackBar(
-                content: Text(state.createForm.object.toString()),
-                backgroundColor: ColorConstant.primary_color,
-              );
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              Navigator.pop(context);
+              if (state.createForm.object.toString() ==
+                  "Profile Updated Successfully") {
+                SnackBar snackBar = SnackBar(
+                  content: Text(state.createForm.object.toString()),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                Navigator.pop(context);
+              } else {
+                SnackBar snackBar = SnackBar(
+                  content: Text(state.createForm.object.toString()),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
             }
             if (state is EmailVerifactionLoadedState) {
               SnackBar snackBar = SnackBar(
@@ -1632,7 +1657,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         context: context,
         builder: (BuildContext bc) {
           return Container(
-            height: 180,
+            height: 250,
             child: new Wrap(
               children: [
                 Container(
@@ -1694,10 +1719,35 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     },
                   ),
                 ),
+                SizedBox(
+                  height: 20,
+                ),
+                Center(
+                  child: new ListTile(
+                      leading: Icon(
+                        Icons.delete,
+                        size: 40,
+                        color: Colors.red,
+                      ),
+                      title: new Text('Remove Profile Picture'),
+                      onTap: () => removeuserProfilePic()),
+                ),
               ],
             ),
           );
         });
+  }
+
+  removeuserProfilePic() async {
+    widget.newProfileData?.object?.userProfilePic = null;
+    setState(() {});
+    Navigator.pop(context);
+  }
+
+  removeUserCover() async {
+    widget.newProfileData?.object?.userBackgroundPic = null;
+    setState(() {});
+    Navigator.pop(context);
   }
 
   void _settingModalBottomSheet1(context) {
@@ -1705,7 +1755,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         context: context,
         builder: (BuildContext bc) {
           return Container(
-            height: 180,
+            height: 230,
             child: new Wrap(
               children: [
                 Container(
@@ -1781,6 +1831,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       gallerypicker1(),
                     },
                   ),
+
+                  
+                ),
+                 SizedBox(
+                  height: 20,
+                ),
+                Center(
+                  child: new ListTile(
+                      leading: Icon(
+                        Icons.delete,
+                        size: 40,
+                        color: Colors.red,
+                      ),
+                      title: new Text('Remove Cover Picture'),
+                      onTap: () => removeUserCover()),
                 ),
               ],
             ),

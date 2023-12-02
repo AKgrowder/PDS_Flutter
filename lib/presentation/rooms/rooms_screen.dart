@@ -416,7 +416,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                     height: 10,
                                                                                   ),
                                                                                   Text(
-                                                                                    "Exit Room",
+                                                                                    "Delete Room",
                                                                                     style: TextStyle(
                                                                                       fontFamily: 'outfit',
                                                                                       fontSize: 20,
@@ -432,7 +432,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                   ),
                                                                                   Center(
                                                                                       child: Text(
-                                                                                    "Are You Sure You Want To Exit This Room",
+                                                                                    "Are You Sure You Want To Delete This Room",
                                                                                     style: TextStyle(
                                                                                       fontFamily: 'outfit',
                                                                                       fontSize: 15,

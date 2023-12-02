@@ -849,7 +849,194 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 ),
                               )
                             : SizedBox(),
-                        Row(
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  maxLines: null,
+                                  controller: Add_Comment,
+                                  cursorColor: Colors.grey,
+                                  decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Color(0x82EFEFEF),
+                                      prefixIcon: IconButton(
+                                        icon: Icon(
+                                          isEmojiVisible
+                                              ? Icons.keyboard_rounded
+                                              : Icons.emoji_emotions_outlined,
+                                        ),
+                                        onPressed: onClickedEmoji,
+                                      ),
+                                      hintText: "Add Comment",
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 1,
+                                            color: Color(
+                                                0xffE6E6E6)), //<-- SEE HERE
+                                        borderRadius:
+                                            BorderRadius.circular(30.0),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 1,
+                                            color: Color(
+                                                0xffE6E6E6)), //<-- SEE HERE
+                                        borderRadius:
+                                            BorderRadius.circular(30.0),
+                                      ),
+                                      suffixIcon: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              pickProfileImage();
+                                            },
+                                            child: Image.asset(
+                                              "assets/images/paperclip-2.png",
+                                              height: 23,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 13,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              camerapicker();
+                                            },
+                                            child: Image.asset(
+                                              "assets/images/Vector (12).png",
+                                              height: 20,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 15,
+                                          ),
+                                        ],
+                                      )),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () async {
+                                  if (_image != null) {
+                                    if (SubmitOneTime == false) {
+                                      await checkGuestUser();
+                                    }
+                                  } else {
+                                    if (Add_Comment.text.isNotEmpty) {
+                                      if (Add_Comment.text.length >= 255) {
+                                        SnackBar snackBar = SnackBar(
+                                          content: Text(
+                                              'One Time Message Lenght only for 255 Your Meassge -> ${Add_Comment.text.length}'),
+                                          backgroundColor:
+                                              ColorConstant.primary_color,
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                      } else {
+                                        checkGuestUser();
+                                        Room_ID_stomp = "${widget.Room_ID}";
+                                        stompClient.subscribe(
+                                            destination:
+                                                "/topic/getMessage/${widget.Room_ID}",
+                                            callback: (StompFrame frame) {
+                                              Map<String, dynamic> jsonString =
+                                                  json.decode(frame.body ?? "");
+
+                                              Content content1 =
+                                                  Content.fromJson(
+                                                      jsonString['object']);
+
+                                              var msgUUID = content1.uid;
+                                              if (AddNewData == false) {
+                                                print(
+                                                    "Array length count 0000000000000000000");
+                                                print(AllChatmodelData
+                                                    ?.object
+                                                    ?.messageOutputList
+                                                    ?.content
+                                                    ?.length);
+                                                if (AllChatmodelData
+                                                        ?.object
+                                                        ?.messageOutputList
+                                                        ?.content ==
+                                                    null) {
+                                                  BlocProvider.of<senMSGCubit>(
+                                                          context)
+                                                      .coomentPage(
+                                                          widget.Room_ID,
+                                                          context,
+                                                          "${0}",
+                                                          ShowLoader: true);
+                                                } else {
+                                                  if (addmsg != msgUUID) {
+                                                    Content content =
+                                                        Content.fromJson(
+                                                            jsonString[
+                                                                'object']);
+
+                                                    AllChatmodelData
+                                                        ?.object
+                                                        ?.messageOutputList
+                                                        ?.content
+                                                        ?.add(content);
+                                                    _goToElement(AllChatmodelData
+                                                            ?.object
+                                                            ?.messageOutputList
+                                                            ?.content
+                                                            ?.length ??
+                                                        0);
+
+                                                    setState(() {
+                                                      addDataSccesfully = true;
+                                                      addmsg =
+                                                          content.uid ?? "";
+                                                    });
+                                                  }
+                                                }
+                                              }
+                                            });
+                                        stompClient.send(
+                                          destination:
+                                              "/sendMessage/${widget.Room_ID}",
+                                          body: json.encode({
+                                            "message": "${Add_Comment.text}",
+                                            "messageType": "TEXT",
+                                            "roomUid": "${widget.Room_ID}",
+                                            "userCode": "${UserCode}"
+                                          }),
+                                        );
+                                      }
+                                    } else {
+                                      SnackBar snackBar = SnackBar(
+                                        content: Text('Please Enter Comment'),
+                                        backgroundColor:
+                                            ColorConstant.primary_color,
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    }
+                                  }
+                                },
+                                child: Container(
+                                  height: 50,
+                                  margin: EdgeInsets.only(right: 5),
+                                  decoration: BoxDecoration(
+                                      color: Color(0xFFED1C25),
+                                      borderRadius: BorderRadius.circular(25)),
+                                  child: Image.asset(
+                                    "assets/images/Vector (13).png",
+                                    color: Colors.white,
+                                  ),
+
+                                  // width: width - 95,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        /* Row(
                           children: [
                             Container(
                               height: 50,
@@ -1036,7 +1223,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                               ),
                             ),
                           ],
-                        ),
+                        ), */
                         // Offstage(
                         //   child:
                         //       EmojiPicker(/* onEmojiSelected: onEmojiSelected */),
@@ -1362,7 +1549,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     }
 
     setState(() {
-    isEmojiVisible = !isEmojiVisible;
+      isEmojiVisible = !isEmojiVisible;
     });
   }
 
