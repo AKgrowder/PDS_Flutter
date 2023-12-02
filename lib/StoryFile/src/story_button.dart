@@ -121,7 +121,7 @@ class _StoryButtonState extends State<StoryButton>
         AspectRatio(
           aspectRatio: widget.buttonData.aspectRatio,
           child: Container(
-            decoration: widget.buttonData._isWatched
+            decoration: widget.buttonData.isWatch ?? false
                 ? null
                 : widget.buttonData.borderDecoration,
             child: Padding(
@@ -191,10 +191,6 @@ class StoryButtonData {
   /// after the story was watched
   /// the border will disappear
   bool _isWatched = false;
-  void markAsWatched() {
-    _isWatched = true;
-    _iWatchMarkable?.markAsWatched();
-  }
 
   int currentSegmentIndex = 0;
 
@@ -223,6 +219,7 @@ class StoryButtonData {
   final EdgeInsets? timlinePadding;
   final IsVisibleCallback isVisibleCallback;
   List<StoryModel> images = [];
+  bool? isWatch;
 
   /// Usualy this is required for the final story
   /// to pop it out to its button mosition
@@ -268,6 +265,7 @@ class StoryButtonData {
     required this.child,
     required this.segmentDuration,
     required this.images,
+    this.isWatch,
     this.containerBackgroundDecoration = const BoxDecoration(
       color: Color.fromARGB(255, 0, 0, 0),
     ),
@@ -294,6 +292,11 @@ class StoryButtonData {
               segmentDuration.inMilliseconds >= 1000,
           'Segment duration in milliseconds must be a multiple of $kStoryTimerTickMillis and not less than 1000 milliseconds',
         );
+  void markAsWatched() {
+    isWatch = true;
+    _isWatched = isWatch ?? false;
+    _iWatchMarkable?.markAsWatched();
+  }
 }
 
 abstract class IWatchMarkable {
