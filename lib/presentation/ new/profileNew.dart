@@ -823,7 +823,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       SizedBox(
                         height: 12,
                       ),
-                      Center(
+                      /*    Center(
                         child: Padding(
                           padding: const EdgeInsets.only(left: 15, right: 15),
                           child: Container(
@@ -1029,6 +1029,213 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 ],
                               ),
                             ),
+                          ),
+                        ),
+                      ), */
+                      Center(
+                        child: Container(
+                          margin: EdgeInsets.only(left: 15, right: 15),
+                          height: 80,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Color(0xffD2D2D2),
+                              )),
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    updateType();
+                                    arrNotiyTypeList[1].isSelected = true;
+                                  });
+                                },
+                                child: Container(
+                                  width: _width / 3.3,
+                                  // color: Colors.amber,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        '${NewProfileData?.object?.postCount}',
+                                        style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 25,
+                                            color: Color(0xff000000),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        'Post',
+                                        style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 16,
+                                            color: Color(0xff444444),
+                                            fontWeight: FontWeight.w500),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 20, bottom: 20),
+                                child: VerticalDivider(
+                                  thickness: 1.5,
+                                  color: Color(0xffC2C2C2),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  if (NewProfileData?.object?.isFollowing ==
+                                          'FOLLOWING' ||
+                                      User_ID ==
+                                          NewProfileData?.object?.userUid) {
+                                    if (followersClassModel1
+                                            ?.object?.isNotEmpty ==
+                                        true) {
+                                      //this is i want this
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return MultiBlocProvider(
+                                          providers: [
+                                            BlocProvider<FollowerBlock>(
+                                              create: (context) =>
+                                                  FollowerBlock(),
+                                            ),
+                                          ],
+                                          child: Followers(
+                                            User_ID: widget.User_ID,
+                                            appBarName: 'Followers',
+                                            userId: widget.User_ID,
+                                          ),
+                                        );
+                                      })).then((value){
+                                         BlocProvider.of<NewProfileSCubit>(
+                                                  context)
+                                              .NewProfileSAPI(
+                                                  context, widget.User_ID);
+                                                  BlocProvider.of<NewProfileSCubit>(
+                                                    context)
+                                                .getFollwerApi(
+                                                    context, widget.User_ID);
+
+                                      } 
+                                         );
+                                      /*    Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Followers(
+                                                        // OLLOWERS
+                                                        appBarName: 'Followers',
+                                                        followersClassModel:
+                                                            followersClassModel1!,
+                                                        userId: widget.User_ID,
+                                                      ))).then((value) =>
+                                              BlocProvider.of<NewProfileSCubit>(
+                                                      context)
+                                                  .NewProfileSAPI(
+                                                      context, widget.User_ID)); */
+                                    }
+                                  } else {}
+                                },
+                                child: Container(
+                                  width: _width / 3.6,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 11,
+                                      ),
+                                      Text(
+                                        '${NewProfileData?.object?.followersCount}',
+                                        style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 25,
+                                            color: Color(0xff000000),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        'Followers',
+                                        style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 16,
+                                            color: Color(0xff444444),
+                                            fontWeight: FontWeight.w500),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 20, bottom: 20),
+                                child: VerticalDivider(
+                                  thickness: 1.5,
+                                  color: Color(0xffC2C2C2),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  if (NewProfileData?.object?.isFollowing ==
+                                          'FOLLOWING' ||
+                                      User_ID ==
+                                          NewProfileData?.object?.userUid) {
+                                    if (followersClassModel2
+                                            ?.object?.isNotEmpty ==
+                                        true) {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return MultiBlocProvider(
+                                          providers: [
+                                            BlocProvider<FollowerBlock>(
+                                              create: (context) =>
+                                                  FollowerBlock(),
+                                            ),
+                                          ],
+                                          child: Followers(
+                                            User_ID: widget.User_ID,
+                                            appBarName: 'Following',
+                                            userId: widget.User_ID,
+                                          ),
+                                        );
+                                      })).then((value) =>
+                                          BlocProvider.of<NewProfileSCubit>(
+                                                  context)
+                                              .NewProfileSAPI(
+                                                  context, widget.User_ID));
+                                    }
+                                  } else {}
+                                },
+                                child: Container(
+                                  width: _width / 4.3,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 11,
+                                      ),
+                                      Text(
+                                        '${NewProfileData?.object?.followingCount}',
+                                        style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 25,
+                                            color: Color(0xff000000),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        'Following',
+                                        style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 16,
+                                            color: Color(0xff444444),
+                                            fontWeight: FontWeight.w500),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -2922,8 +3129,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                     dopcument == "Upload Image"
                         ? GestureDetector(
                             onTap: () async {
-                              print(
-                                  'dopcument.toString()--${dopcument.toString()}');
                               filepath = await prepareTestPdf(0);
                             },
                             child: Container(
@@ -2962,7 +3167,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       builder: (context) => DocumentViewScreen(
                                             path: dopcument,
                                             title: 'Pdf',
-                                          )));
+                                           )));
                                 }
                               },
                               child: Center(

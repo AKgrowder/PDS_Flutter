@@ -301,10 +301,15 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                   }));
                                                 },
                                                 child: addCommentModeldata
-                                                            ?.object?[index]
-                                                            .profilePic?.isEmpty== true ||addCommentModeldata
-                                                            ?.object?[index]
-                                                            .profilePic == null? CustomImageView(
+                                                                ?.object?[index]
+                                                                .profilePic
+                                                                ?.isEmpty ==
+                                                            true ||
+                                                        addCommentModeldata
+                                                                ?.object?[index]
+                                                                .profilePic ==
+                                                            null
+                                                    ? CustomImageView(
                                                         radius: BorderRadius
                                                             .circular(50),
                                                         imagePath: ImageConstant
@@ -428,7 +433,96 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Padding(
+                            padding:
+                                const EdgeInsets.only(left: 10, bottom: 10),
+                            child: TextFormField(
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(300),
+                              ],
+                              maxLines: null,
+                              controller: addcomment,
+                              decoration: InputDecoration(
+                                prefixIcon: IconButton(
+                                  icon: Icon(
+                                    isEmojiVisible
+                                        ? Icons.keyboard_alt_outlined
+                                        : Icons.emoji_emotions_outlined,
+                                  ),
+                                  onPressed: () async {
+                                    if (isEmojiVisible) {
+                                      focusNode.requestFocus();
+                                    } else if (isKeyboardVisible) {
+                                      await SystemChannels.textInput
+                                          .invokeMethod('TextInput.hide');
+                                      await Future.delayed(
+                                          Duration(milliseconds: 100));
+                                    }
+                                    if (isKeyboardVisible) {
+                                      FocusScope.of(context).unfocus();
+                                    }
+
+                                    setState(() {
+                                      isEmojiVisible = !isEmojiVisible;
+                                    });
+                                  },
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 2,
+                                      color: Colors.red), //<-- SEE HERE
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 2,
+                                      color: Colors.red), //<-- SEE HERE
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                              ),
+                            ),
+                          )),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                right: 10, left: 10, bottom: 10),
+                            child: GestureDetector(
+                              onTap: () {
+                                if (addcomment.text.isEmpty) {
+                                  SnackBar snackBar = SnackBar(
+                                    content: Text('Please Add Comment'),
+                                    backgroundColor:
+                                        ColorConstant.primary_color,
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                } else {
+                                  Map<String, dynamic> params = {
+                                    "comment": addcomment.text,
+                                    "postUid": '${widget.postUuID}',
+                                  };
+
+                                  BlocProvider.of<AddcommentCubit>(context)
+                                      .AddPostApiCalling(context, params);
+                                }
+                              },
+                              child: CircleAvatar(
+                                maxRadius: 25,
+                                backgroundColor: ColorConstant.primary_color,
+                                child: Center(
+                                  child: Image.asset(
+                                    ImageConstant.commentarrow,
+                                    height: 18,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      /*   Container(
                         height: 70,
                         color: Colors.white,
                         child: Row(
@@ -447,6 +541,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                               child: Padding(
                                 padding: const EdgeInsets.only(right: 10),
                                 child: TextField(
+                                  expands: true,
+                                    maxLines: null,
                                   onTap: () {
                                     if (isEmojiVisible) {
                                       setState(() {
@@ -461,6 +557,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                   cursorColor: ColorConstant.primary_color,
                                   decoration: InputDecoration(
                                     counterText: "",
+                                    
                                     border: InputBorder.none,
                                     hintText: "Add Comment",
                                     icon: Container(
@@ -529,7 +626,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                             )
                           ],
                         ),
-                      ),
+                      ), */
                       Offstage(
                         offstage: !isEmojiVisible,
                         child: SizedBox(
