@@ -1079,7 +1079,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                   } else {
                     if (!storyAdded) userName.add("Share Story");
                     userName.add(element.userName.toString());
+
+                    int count = 0;
+                    element.storyData?.forEach((element) {
+                      if (element.storySeen!) {
+                        count++;
+                      }
+                    });
                     StoryButtonData buttonData1 = StoryButtonData(
+                      isWatch: element.storyData?.length == count,
                       timelineBackgroundColor: Colors.grey,
                       buttonDecoration: BoxDecoration(
                         shape: BoxShape.circle,
@@ -2390,7 +2398,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                                     MaterialPageRoute(
                                                                                                         builder: (context) => OpenSavePostImage(
                                                                                                               PostID: AllGuestPostRoomData?.object?.content?[index].repostOn?.postUid,
-                                                                                                              index: index,
+                                                                                                              index: index1,
                                                                                                             )),
                                                                                                   );
                                                                                                 }

@@ -67,7 +67,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   List<String>? HasetagList = [];
   bool colorVaralble = false;
   String? UserProfileImage;
-   List<TextSpan> _textSpans = [];
+  List<TextSpan> _textSpans = [];
   void _onTextChanged() {
     String text = postText.text;
 
@@ -86,11 +86,13 @@ class _CreateNewPostState extends State<CreateNewPost> {
       }
 
       // Add TextSpan to the list
-      _textSpans.add(TextSpan(text: word + ' ', style: TextStyle(color: textColor)));
+      _textSpans
+          .add(TextSpan(text: word + ' ', style: TextStyle(color: textColor)));
     }
 
     setState(() {});
   }
+
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     documentuploadsize = await double.parse(
@@ -229,21 +231,19 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                 child: GestureDetector(
                                   onTap: () {
                                     Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return MultiBlocProvider(
-                                              providers: [
-                                                BlocProvider<NewProfileSCubit>(
-                                                  create: (context) =>
-                                                      NewProfileSCubit(),
-                                                ),
-                                              ],
-                                              child: ProfileScreen(
-                                                  User_ID: "${User_ID}",
-                                                  isFollowing: 'FOLLOW',
-                                                ));
-                                        }));
-                                   
+                                        MaterialPageRoute(builder: (context) {
+                                      return MultiBlocProvider(
+                                          providers: [
+                                            BlocProvider<NewProfileSCubit>(
+                                              create: (context) =>
+                                                  NewProfileSCubit(),
+                                            ),
+                                          ],
+                                          child: ProfileScreen(
+                                            User_ID: "${User_ID}",
+                                            isFollowing: 'FOLLOW',
+                                          ));
+                                    }));
                                   },
                                   child: UserProfileImage?.isEmpty == true
                                       ? SizedBox(
@@ -336,7 +336,6 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                   // Custom formatter to trim leading spaces
                                   TextInputFormatter.withFunction(
                                     (oldValue, newValue) {
-                                      
                                       if (newValue.text.startsWith(' ')) {
                                         return TextEditingValue(
                                           text: newValue.text.trimLeft(),
@@ -380,15 +379,14 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                         enableJavaScript: true);
                                   }
                                 },
-                                
-                                  style: TextStyle(
+                                style: TextStyle(
                                   color: colorVaralble == true
                                       ? Colors.blue
                                       : Colors.black,
                                   decoration: TextDecoration.underline,
                                   decorationColor: colorVaralble == true
                                       ? Colors.blue
-                                      : Colors.white,
+                                      : Colors.transparent,
                                 ),
                               ),
                               Padding(
@@ -832,7 +830,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
       if (pickedFile != null) {
         if (!_isGifOrSvg(pickedFile!.path)) {
           pickedImage.add(File(pickedFile!.path));
-          getFileSize1(pickedImage[0].path, 1, pickedImage[0], 0);
+          getFileSize1(pickedImage, 1, 0);
         } else {
           if ((pickedFile?.path.contains(".mp4") ?? false) ||
               (pickedFile?.path.contains(".mov") ?? false) ||
@@ -881,7 +879,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
             if (!_isGifOrSvg(xFilePicker[i].path)) {
               pickedImage.add(File(xFilePicker[i].path));
               setState(() {});
-              getFileSize1(pickedImage[i].path, 1, pickedImage[i], 0);
+              getFileSize1(pickedImage, 1, i);
               if ((xFilePicker[i].path.contains(".mp4")) ||
                   (xFilePicker[i].path.contains(".mov")) ||
                   (xFilePicker[i].path.contains(".mp3")) ||
@@ -981,32 +979,32 @@ class _CreateNewPostState extends State<CreateNewPost> {
     // "${fileparth}";
   }
 
-  getFileSize1(String filepath, int decimals, File file1, int Index) async {
-    var file = File(filepath);
+  getFileSize1(List<File> filepath, int decimals, int Index) async {
+    var file = filepath[Index];
     int bytes = await file.length();
     if (bytes <= 0) return "0 B";
     const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
     var i = (log(bytes) / log(1024)).floor();
     var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
-    print('getFileSizevariable-${file1.path}');
+
     value2 = double.parse(STR);
-    print(file1);
+
     print(value2);
     switch (i) {
       case 0:
         print("Done file size B");
 
-        print('xfjsdjfjfilenamecheckKB-${file1.path}');
-
         break;
       case 1:
         print("Done file size KB");
-
-        print('filenamecheckKB-${file1.path}');
-        BlocProvider.of<AddPostCubit>(context).UplodeImageAPIImane(
-          context,
-          pickedImage,
-        );
+        if (Index + 1 < filepath.length) {
+          getFileSize1(filepath, decimals, Index + 1);
+        } else {
+          BlocProvider.of<AddPostCubit>(context).UplodeImageAPIImane(
+            context,
+            pickedImage,
+          );
+        }
 
         setState(() {});
 
@@ -1025,6 +1023,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
+                    if (Index + 1 < filepath.length) {
+                      getFileSize1(filepath, decimals, Index + 1);
+                    }
                     Navigator.of(ctx).pop();
                   },
                   child: Container(
@@ -1038,12 +1039,14 @@ class _CreateNewPostState extends State<CreateNewPost> {
           );
         } else {
           print("Done file Size 12MB");
-          print('filecheckPath-${file1.path}');
-          print('filecheckPath-${file1.path}');
-          BlocProvider.of<AddPostCubit>(context).UplodeImageAPIImane(
-            context,
-            pickedImage,
-          );
+          if (Index + 1 < filepath.length) {
+            getFileSize1(filepath, decimals, Index + 1);
+          } else {
+            BlocProvider.of<AddPostCubit>(context).UplodeImageAPIImane(
+              context,
+              pickedImage,
+            );
+          }
         }
 
         break;
