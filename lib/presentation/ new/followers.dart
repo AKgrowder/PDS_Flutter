@@ -29,6 +29,7 @@ class _FollowersState extends State<Followers> {
   String? User_ID;
   bool apiDataGet = false;
   FollowersClassModel? followersClassModel1;
+  int? indexxCheckAllTime;
   @override
   void initState() {
     super.initState();
@@ -77,18 +78,19 @@ class _FollowersState extends State<Followers> {
       body: BlocConsumer<FollowerBlock, FolllwerBlockState>(
         listener: (context, state) {
           if (state is FollowersClass) {
+            //get all follwers
             followersClassModel1 = state.followersClassModel;
-            if (followersClassModel1?.object?.isNotEmpty == true) {
-              apiDataGet = true;
-            }
+
+            apiDataGet = true;
           }
           if (state is FollowersClass1) {
+            //get all follwing
             followersClassModel1 = state.followersClassModel1;
-            if (followersClassModel1?.object?.isNotEmpty == true) {
-              apiDataGet = true;
-            }
+            apiDataGet = true;
           }
           if (state is RemoveLoddingState) {
+            followersClassModel1?.object?.removeAt(indexxCheckAllTime!);
+
             SnackBar snackBar = SnackBar(
               content: Text(state.remove_Follower!.object.toString()),
               backgroundColor: ColorConstant.primary_color,
@@ -105,124 +107,104 @@ class _FollowersState extends State<Followers> {
         },
         builder: (context, state) {
           return apiDataGet == true
-              ? Column(
-                  children: List.generate(
-                      followersClassModel1?.object?.length ?? 0,
-                      (index) => SizedBox(
-                            height: 80,
-                            child: ListTile(
-                              leading: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return MultiBlocProvider(
-                                        providers: [
-                                          BlocProvider<NewProfileSCubit>(
-                                            create: (context) =>
-                                                NewProfileSCubit(),
-                                          ),
-                                        ],
-                                        child: ProfileScreen(
-                                            User_ID: followersClassModel1
-                                                    ?.object?[index].userUid
-                                                    .toString() ??
-                                                '',
-                                            isFollowing: followersClassModel1
-                                                ?.object?[index].isFollow
-                                                .toString()));
-                                  }));
-                                },
-                                child: followersClassModel1?.object?[index]
-                                                .userProfilePic !=
-                                            null &&
-                                        followersClassModel1?.object?[index]
-                                                .userProfilePic !=
-                                            ""
-                                    ? CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        backgroundImage: NetworkImage(
-                                            "${followersClassModel1?.object?[index].userProfilePic}"),
-                                        radius: 25,
-                                      )
-                                    : CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        backgroundImage:
-                                            AssetImage(ImageConstant.tomcruse),
-                                        radius: 25,
-                                      ),
-                              ),
-                              title: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10),
-                                    child: Text(
-                                      "${followersClassModel1?.object?[index].userName}",
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontFamily: "outfit",
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: Text(
-                                      "${followersClassModel1?.object?[index].name}",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontFamily: "outfit",
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              trailing: User_ID == widget.userId
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        BlocProvider.of<FollowerBlock>(context)
-                                            .removeFollwerApi(
-                                                context,
-                                                followersClassModel1
+              ? SingleChildScrollView(
+                  child: Column(
+                      children: List.generate(
+                          followersClassModel1?.object?.length ?? 0,
+                          (index) => SizedBox(
+                                height: 80,
+                                child: ListTile(
+                                  leading: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return MultiBlocProvider(
+                                            providers: [
+                                              BlocProvider<NewProfileSCubit>(
+                                                create: (context) =>
+                                                    NewProfileSCubit(),
+                                              ),
+                                            ],
+                                            child: ProfileScreen(
+                                                User_ID: followersClassModel1
+                                                        ?.object?[index].userUid
+                                                        .toString() ??
+                                                    '',
+                                                isFollowing:
+                                                    followersClassModel1
                                                         ?.object?[index]
-                                                        .followerUid ??
-                                                    '');
-                                     if (widget.appBarName ==
-                                                'Followers') {
-                                              BlocProvider.of<FollowerBlock>(
-                                                      context)
-                                                  .getFollwerApi(
-                                                      context, widget.User_ID);
-                                            } else {
-                                              BlocProvider.of<FollowerBlock>(
-                                                      context)
-                                                  .getAllFollwing(
-                                                      context, widget.User_ID);
-                                            }
-                                      },
-                                      child: Container(
-                                        height: 60,
-                                        alignment: Alignment.center,
-                                        width: 80,
-                                        margin: EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                            color: Color(0xffEFEFEF),
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child:
-                                            Text("Remove"), //remove user self
+                                                        .isFollow
+                                                        .toString()));
+                                      }));
+                                    },
+                                    child: followersClassModel1?.object?[index]
+                                                    .userProfilePic !=
+                                                null &&
+                                            followersClassModel1?.object?[index]
+                                                    .userProfilePic !=
+                                                ""
+                                        ? CircleAvatar(
+                                            backgroundColor: Colors.white,
+                                            backgroundImage: NetworkImage(
+                                                "${followersClassModel1?.object?[index].userProfilePic}"),
+                                            radius: 25,
+                                          )
+                                        : CircleAvatar(
+                                            backgroundColor: Colors.white,
+                                            backgroundImage: AssetImage(
+                                                ImageConstant.tomcruse),
+                                            radius: 25,
+                                          ),
+                                  ),
+                                  title: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        height: 20,
                                       ),
-                                    )
-                                  : User_ID ==
-                                          followersClassModel1
-                                              ?.object?[index].userUid
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 10),
+                                        child: Text(
+                                          "${followersClassModel1?.object?[index].userName}",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontFamily: "outfit",
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Text(
+                                          "${followersClassModel1?.object?[index].name}",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontFamily: "outfit",
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  trailing: User_ID == widget.userId
                                       ? GestureDetector(
                                           onTap: () {
+                                            if (widget.appBarName ==
+                                                'Followers') {
+                                              UserSelfRemoveFunction(index);
+                                            } else {
+                                              UserSelfRemoveFunction(index);
+                                            }
+                                            /*  if (widget.appBarName == 'Following') {
+                                            folloFuction(index);
+                                            BlocProvider.of<FollowerBlock>(
+                                                    context)
+                                                .getAllFollwing(
+                                                    context, widget.User_ID);
+                                          } else {
                                             BlocProvider.of<FollowerBlock>(
                                                     context)
                                                 .removeFollwerApi(
@@ -231,18 +213,11 @@ class _FollowersState extends State<Followers> {
                                                             ?.object?[index]
                                                             .followerUid ??
                                                         '');
-                                            if (widget.appBarName ==
-                                                'Followers') {
-                                              BlocProvider.of<FollowerBlock>(
-                                                      context)
-                                                  .getFollwerApi(
-                                                      context, widget.User_ID);
-                                            } else {
-                                              BlocProvider.of<FollowerBlock>(
-                                                      context)
-                                                  .getAllFollwing(
-                                                      context, widget.User_ID);
-                                            }
+                                            BlocProvider.of<FollowerBlock>(
+                                                    context)
+                                                .getFollwerApi(
+                                                    context, widget.User_ID);
+                                          } */
                                           },
                                           child: Container(
                                             height: 60,
@@ -253,44 +228,81 @@ class _FollowersState extends State<Followers> {
                                                 color: Color(0xffEFEFEF),
                                                 borderRadius:
                                                     BorderRadius.circular(10)),
-                                            child: Text(
-                                                "Remove"), //remove user self
+                                            child: widget.appBarName ==
+                                                    'Following'
+                                                ? Text(followersClassModel1
+                                                        ?.object?[index]
+                                                        .isFollow
+                                                        .toString()
+                                                        .toLowerCase() ??
+                                                    '')
+                                                : Text(
+                                                    "Remove"), //remove user self
                                           ),
-                                        )
-                                      : GestureDetector(
-                                          onTap: () {
-                                            folloFuction(index);
-                                          },
-                                          child: Container(
+                                        ) //
+                                      : User_ID ==
+                                              followersClassModel1
+                                                  ?.object?[index].userUid
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                print(
+                                                    "this is the match condison");
+                                                /*   BlocProvider.of<FollowerBlock>(
+                                                      context)
+                                                  .removeFollwerApi(
+                                                      context,
+                                                      followersClassModel1
+                                                              ?.object?[index]
+                                                              .followerUid ??
+                                                          '');
+                                              if (widget.appBarName ==
+                                                  'Followers') {
+                                                BlocProvider.of<FollowerBlock>(
+                                                        context)
+                                                    .getFollwerApi(
+                                                        context, widget.User_ID);
+                                              } else {
+                                                BlocProvider.of<FollowerBlock>(
+                                                        context)
+                                                    .getAllFollwing(
+                                                        context, widget.User_ID);
+                                              } */
+                                              },
+                                              child: SizedBox(),
+                                              /*  child: Container(
                                               height: 60,
                                               alignment: Alignment.center,
-                                              width: 90,
+                                              width: 80,
                                               margin: EdgeInsets.all(10),
                                               decoration: BoxDecoration(
-                                                  color: ColorConstant
-                                                      .primary_color,
+                                                  color: Color(0xffEFEFEF),
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: followersClassModel1
-                                                          ?.object?[index]
-                                                          .isFollow ==
-                                                      'FOLLOWING'
-                                                  ? Text(
-                                                      'Following ',
-                                                      style: TextStyle(
-                                                          fontFamily: "outfit",
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white),
-                                                    )
-                                                  : followersClassModel1
+                                                      BorderRadius.circular(10)),
+                                              child: Text(
+                                                  "Remove"), //remove user self
+                                            ), */
+                                            )
+                                          : GestureDetector(
+                                              onTap: () {
+                                                folloFuction(index);
+                                              },
+                                              child: Container(
+                                                  height: 60,
+                                                  alignment: Alignment.center,
+                                                  width: 90,
+                                                  margin: EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                      color: ColorConstant
+                                                          .primary_color,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child: followersClassModel1
                                                               ?.object?[index]
                                                               .isFollow ==
-                                                          'REQUESTED'
+                                                          'FOLLOWING'
                                                       ? Text(
-                                                          'Requested',
+                                                          'Following',
                                                           style: TextStyle(
                                                               fontFamily:
                                                                   "outfit",
@@ -301,21 +313,39 @@ class _FollowersState extends State<Followers> {
                                                               color:
                                                                   Colors.white),
                                                         )
-                                                      : Text(
-                                                          'Follow',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  "outfit",
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.white),
-                                                        )),
-                                        ),
-                            ),
-                          )))
+                                                      : followersClassModel1
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .isFollow ==
+                                                              'REQUESTED'
+                                                          ? Text(
+                                                              'Requested',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      "outfit",
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .white),
+                                                            )
+                                                          : Text(
+                                                              'Follow',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      "outfit",
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .white),
+                                                            )),
+                                            ),
+                                ),
+                              ))),
+                )
               : Center(
                   child: Container(
                     margin: EdgeInsets.only(bottom: 100),
@@ -379,5 +409,19 @@ class _FollowersState extends State<Followers> {
         }
       }
     } */
+  }
+
+  UserSelfRemoveFunction(index) async {
+    BlocProvider.of<FollowerBlock>(context).removeFollwerApi(
+        context, followersClassModel1?.object?[index].followerUid ?? '');
+    indexxCheckAllTime = index;
+
+    if (widget.appBarName == 'Followers') {
+      BlocProvider.of<FollowerBlock>(context)
+          .getFollwerApi(context, widget.User_ID);
+    } else {
+      BlocProvider.of<FollowerBlock>(context)
+          .getAllFollwing(context, widget.User_ID);
+    }
   }
 }

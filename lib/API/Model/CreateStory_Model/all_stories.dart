@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 class GetAllStoryModel {
   String? message;
   List<Object>? object;
@@ -8,7 +6,6 @@ class GetAllStoryModel {
   GetAllStoryModel({this.message, this.object, this.success});
 
   GetAllStoryModel.fromJson(Map<String, dynamic> json) {
-    log('message$json');
     message = json['message'];
     if (json['object'] != null) {
       object = <Object>[];
@@ -66,10 +63,11 @@ class StoryData {
   String? storyUid;
   String? storyData;
   String? userUid;
-  dynamic profilePic;
+  String? profilePic;
   String? userName;
   String? createdAt;
   bool? isLoggedIn;
+  bool? storySeen;
 
   StoryData(
       {this.storyUid,
@@ -78,7 +76,8 @@ class StoryData {
       this.profilePic,
       this.userName,
       this.createdAt,
-      this.isLoggedIn});
+      this.isLoggedIn,
+      this.storySeen});
 
   StoryData.fromJson(Map<String, dynamic> json) {
     storyUid = json['storyUid'];
@@ -88,6 +87,7 @@ class StoryData {
     userName = json['userName'];
     createdAt = json['createdAt'];
     isLoggedIn = json['isLoggedIn'];
+    storySeen = json['storySeen'];
   }
 
   Map<String, dynamic> toJson() {
@@ -99,6 +99,7 @@ class StoryData {
     data['userName'] = this.userName;
     data['createdAt'] = this.createdAt;
     data['isLoggedIn'] = this.isLoggedIn;
+    data['storySeen'] = this.storySeen;
     return data;
   }
 }
