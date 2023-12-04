@@ -11,6 +11,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Model/coment/coment_model.dart';
+import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
@@ -421,7 +422,20 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                     /* horizontal: 35, vertical: 5 */),
                                                                 child:
                                                                     GestureDetector(
-                                                                  onTap: () {},
+                                                                  onTap: () {
+                                                                    print(
+                                                                        "recieve user id -- ${AllChatmodelData?.object?.messageOutputList?.content?[index].uid}");
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(builder:
+                                                                            (context) {
+                                                                      return ProfileScreen(
+                                                                          User_ID:
+                                                                              "${AllChatmodelData?.object?.messageOutputList?.content?[index].userCode}",
+                                                                          isFollowing:
+                                                                              "");
+                                                                    }));
+                                                                  },
                                                                   child: Column(
                                                                     crossAxisAlignment:
                                                                         CrossAxisAlignment
@@ -571,22 +585,28 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                               fontSize: 14),
                                                                         ),
                                                                         Padding(
-                                                                          padding: const EdgeInsets.only(
-                                                                              left: 3,
-                                                                              right: 10),
-                                                                          child: AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic != null && AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic != ""
-                                                                              ? CustomImageView(
-                                                                                  url: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic}",
-                                                                                  height: 20,
-                                                                                  radius: BorderRadius.circular(20),
-                                                                                  width: 20,
-                                                                                  fit: BoxFit.fill,
-                                                                                )
-                                                                              : CustomImageView(
-                                                                                  imagePath: ImageConstant.tomcruse,
-                                                                                  height: 20,
-                                                                                ),
-                                                                        ),
+                                                                            padding:
+                                                                                const EdgeInsets.only(left: 3, right: 10),
+                                                                            child: GestureDetector(
+                                                                              onTap: () {
+                                                                                print("send user id -- ${AllChatmodelData?.object?.messageOutputList?.content?[index].uid}");
+                                                                                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                  return ProfileScreen(User_ID: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userCode}", isFollowing: "");
+                                                                                }));
+                                                                              },
+                                                                              child: AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic != null && AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic != ""
+                                                                                  ? CustomImageView(
+                                                                                      url: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic}",
+                                                                                      height: 20,
+                                                                                      radius: BorderRadius.circular(20),
+                                                                                      width: 20,
+                                                                                      fit: BoxFit.fill,
+                                                                                    )
+                                                                                  : CustomImageView(
+                                                                                      imagePath: ImageConstant.tomcruse,
+                                                                                      height: 20,
+                                                                                    ),
+                                                                            )),
                                                                       ],
                                                                     ),
                                                                     Padding(

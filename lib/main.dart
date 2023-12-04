@@ -27,6 +27,7 @@ import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:pds/API/Bloc/SelectRoom_Bloc/SelectRoom_cubit.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
 import 'package:pds/API/Bloc/ViewDetails_Bloc/ViewDetails_cubit.dart';
+import 'package:pds/API/Bloc/accounttype_bloc/account_cubit.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
 import 'package:pds/API/Bloc/auth/login_Block.dart';
 import 'package:pds/API/Bloc/auth/otp_block.dart';
@@ -201,6 +202,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<RoomExistsCubit>(
           create: (context) => RoomExistsCubit(),
+        ),
+          BlocProvider<AccountCubit>(
+          create: (context) => AccountCubit(),
         ),
       ],
       child: MaterialApp(
