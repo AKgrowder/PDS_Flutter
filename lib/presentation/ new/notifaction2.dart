@@ -180,17 +180,19 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                                   SizedBox(
                                     width: 4,
                                   ),
-                                  Container(
-                                    child: Text(
-                                     RequestListModelData?.object?.length!= 0? '${RequestListModelData?.object?.length?? ""}'
-                                     :'',
-                                      style: TextStyle(
-                                          overflow: TextOverflow.ellipsis,
-                                          fontFamily: "outfit",
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13),
-                                    ),
-                                  ),
+                                  RequestListModelData?.object?.length == 0 || RequestListModelData?.object?.length ==
+                                              null
+                                      ? SizedBox()
+                                      : Container(
+                                          child: Text(
+                                            '${RequestListModelData?.object?.length ?? ""}',
+                                            style: TextStyle(
+                                                overflow: TextOverflow.ellipsis,
+                                                fontFamily: "outfit",
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13),
+                                          ),
+                                        ),
                                   SizedBox(
                                     width: 1,
                                   ),
@@ -216,14 +218,18 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                                   SizedBox(
                                     width: 4,
                                   ),
-                                  Text(
-                                    '${invitationRoomData?.object?.length ?? ""}',
-                                    style: TextStyle(
-                                        overflow: TextOverflow.ellipsis,
-                                        fontFamily: "outfit",
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13),
-                                  ),
+                                  invitationRoomData?.object?.length == 0 ||
+                                          invitationRoomData?.object?.length ==
+                                              null
+                                      ? SizedBox()
+                                      : Text(
+                                        '${invitationRoomData?.object?.length}',
+                                        style: TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            fontFamily: "outfit",
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13),
+                                      ),
                                   SizedBox(
                                     width: 1,
                                   ),

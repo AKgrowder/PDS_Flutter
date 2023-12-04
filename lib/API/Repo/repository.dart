@@ -34,6 +34,7 @@ import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
 import 'package:pds/API/Model/logoutModel/logoutModel.dart';
 import 'package:pds/API/Model/removeFolloweModel/removeFollowerModel.dart';
 import 'package:pds/API/Model/serchDataAddModel/serchDataAddModel.dart';
+import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 import 'package:pds/API/Model/storyModel/stroyModel.dart';
 import 'package:pds/API/Model/HashTage_Model/HashTagView_model.dart';
 import 'package:pds/API/Model/HashTage_Model/HashTag_model.dart';
@@ -198,7 +199,6 @@ class Repository {
     }
   }
 
- 
   CreatPublicRoom(Map<String, String> params, BuildContext context) async {
     final response =
         await apiServices.postApiCall(Config.CreateRoom, params, context);
@@ -1676,7 +1676,7 @@ class Repository {
     }
   } */
 
-   NewProfileAPI(BuildContext context, String otherUserUid) async {
+  NewProfileAPI(BuildContext context, String otherUserUid) async {
     print("sdfhsdfhsdfh-$otherUserUid");
     final response = await apiServices.getApiCallWithToken(
         "${Config.NewfetchUserProfile}?otherUserUid=${otherUserUid}", context);
@@ -2216,15 +2216,34 @@ class Repository {
     }
   }
 
-
-   roomExists(Map<String, dynamic> params, BuildContext context) async {
+  roomExists(String? otherMemberID,String roomID, BuildContext context) async {
     final response =
-        await apiServices.postApiCall(Config.roomExists, params, context);
+        await apiServices.getApiCallWithToken('${Config.roomExists}?otherMemberUid=$otherMemberID&roomUid=$roomID', context);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
     switch (response.statusCode) {
       case 200:
         return RoomExistsModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+  search_user_for_inbox(String searchFilter, BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.search_user_for_inboxUrl}?searchFilter=$searchFilter', context);
+    var jsonString = json.decode(response.body);
+    print('jsonString-$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return SearchUserForInbox.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:

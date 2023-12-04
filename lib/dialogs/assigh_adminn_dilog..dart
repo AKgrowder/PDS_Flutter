@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
+import 'package:pds/API/Bloc/RoomExists_bloc/RoomExists_cubit.dart';
+import 'package:pds/API/Bloc/RoomExists_bloc/RoomExists_state.dart';
+import 'package:pds/core/utils/color_constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../API/Model/FatchAllMembers/fatchallmembers_model.dart';
@@ -7,10 +12,12 @@ import '../core/utils/sharedPreferences.dart';
 import '../widgets/custom_image_view.dart';
 
 class AssignAdminScreenn extends StatefulWidget {
+  String? roomID;
   FatchAllMembersModel? data;
   AssignAdminScreenn({
     Key? key,
     this.data,
+    this.roomID,
   }) : super(key: key);
 
   @override
@@ -87,151 +94,195 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
             ),
             child: Column(
               children: [
-                Center(
-                  child: Container(
-                    // height: 400,
-                    width: _width / 1.25,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0, left: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Assign Admin",
-                                style: TextStyle(
-                                  fontFamily: 'outfit',
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () => Navigator.pop(context),
-                                child: CustomImageView(
-                                  imagePath: ImageConstant.closeimage,
-                                  height: 40,
-                                ),
-                              ),
-                            ],
-                          ),
+                BlocConsumer<RoomExistsCubit, RoomExistsState>(
+                  listener: (context, state) {
+                    if (state is RoomExistsErrorState) {
+                      SnackBar snackBar = SnackBar(
+                        content: Text(state.error),
+                        backgroundColor: ColorConstant.primary_color,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
+                    if (state is RoomExistsLoadedState) {
+                      SnackBar snackBar = SnackBar(
+                        content: Text(state.roomExistsModel.object.toString()),
+                        backgroundColor: ColorConstant.primary_color,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      // BlocProvider.of<GetAllPrivateRoomCubit>(context)
+                      //     .DeleteRoomm(widget.roomID.toString(), context);
+                      Navigator.pop(context);
+                    }
+                  },
+                  builder: (context, state) {
+                    return Center(
+                      child: Container(
+                        // height: 400,
+                        width: _width / 1.25,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
-                        Divider(
-                          color: Colors.grey,
-                        ),
-                        ListView.builder(
-                          itemCount: widget.data?.object?.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            print(
-                                "userProfilePic == ${widget.data?.object?[index].userProfilePic}");
-                            return User_ID ==
-                                    widget.data?.object?[index].userUuid
-                                ? SizedBox()
-                                : Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      children: [
-                                        widget.data?.object?[index]
-                                                        .userProfilePic !=
-                                                    null &&
-                                                widget
-                                                        .data
-                                                        ?.object?[index]
-                                                        .userProfilePic
-                                                        ?.isNotEmpty ==
-                                                    true
-                                            ? CircleAvatar(
-                                                backgroundImage: NetworkImage(
-                                                    "${widget.data?.object?[index].userProfilePic}"),
-                                                backgroundColor: Colors.white,
-                                                radius: 25,
-                                              )
-                                            : CircleAvatar(
-                                                radius: 25,
-                                                backgroundColor: Colors.white,
-                                                backgroundImage: AssetImage(
-                                                    ImageConstant.tomcruse),
-                                              ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            widget.data?.object?[index].fullName
-                                                    .toString() ??
-                                                "",
-                                            style: TextStyle(
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        Container(
-                                          width: 80,
-                                          height: 20,
-                                          decoration: ShapeDecoration(
-                                            color: Color(0xFFED1C25),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(49.46),
-                                            ),
-                                          ),
-                                          child: Center(
-                                              child: Text(
-                                            "Assign",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.white,
-                                                fontFamily: "outfit",
-                                                fontSize: 10),
-                                          )),
-                                        ),
-                                      ],
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, left: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Assign Admin",
+                                    style: TextStyle(
+                                      fontFamily: 'outfit',
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                  );
-                          },
-                        ),
-                        Center(
-                          child: Container(
-                            width: 80,
-                            height: 23,
-                            padding: const EdgeInsets.only(
-                                top: 5, left: 9, right: 8, bottom: 5),
-                            decoration: ShapeDecoration(
-                              color: Color(0xFFE4E4E4),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5)),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Load More',
-                                  style: TextStyle(
-                                    color: Color(0xFFB9B9B9),
-                                    fontSize: 10,
-                                    fontFamily: 'Outfit',
-                                    fontWeight: FontWeight.w500,
                                   ),
-                                ),
-                              ],
+                                  GestureDetector(
+                                    onTap: () => Navigator.pop(context),
+                                    child: CustomImageView(
+                                      imagePath: ImageConstant.closeimage,
+                                      height: 40,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
+                            Divider(
+                              color: Colors.grey,
+                            ),
+                            ListView.builder(
+                              itemCount: widget.data?.object?.length,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return User_ID ==
+                                        widget.data?.object?[index].userUuid
+                                    ? SizedBox()
+                                    : Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          children: [
+                                            widget.data?.object?[index]
+                                                            .userProfilePic !=
+                                                        null &&
+                                                    widget
+                                                            .data
+                                                            ?.object?[index]
+                                                            .userProfilePic
+                                                            ?.isNotEmpty ==
+                                                        true
+                                                ? CircleAvatar(
+                                                    backgroundImage: NetworkImage(
+                                                        "${widget.data?.object?[index].userProfilePic}"),
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                    radius: 25,
+                                                  )
+                                                : CircleAvatar(
+                                                    radius: 25,
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                    backgroundImage: AssetImage(
+                                                        ImageConstant.tomcruse),
+                                                  ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                widget.data?.object?[index]
+                                                        .fullName
+                                                        .toString() ??
+                                                    "",
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ),
+                                            Spacer(),
+                                            GestureDetector(
+                                              onTap: () {
+                                                BlocProvider.of<
+                                                            RoomExistsCubit>(
+                                                        context)
+                                                    .RoomExistsAPI(
+                                                        widget
+                                                            .data
+                                                            ?.object?[index]
+                                                            .userUuid,
+                                                        widget.roomID
+                                                            .toString(),
+                                                        context);
+                                              },
+                                              child: Container(
+                                                width: 80,
+                                                height: 20,
+                                                decoration: ShapeDecoration(
+                                                  color: Color(0xFFED1C25),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            49.46),
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                    child: Text(
+                                                  "Assign",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: Colors.white,
+                                                      fontFamily: "outfit",
+                                                      fontSize: 10),
+                                                )),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                              },
+                            ),
+                            Center(
+                              child: Container(
+                                width: 80,
+                                height: 23,
+                                padding: const EdgeInsets.only(
+                                    top: 5, left: 9, right: 8, bottom: 5),
+                                decoration: ShapeDecoration(
+                                  color: Color(0xFFE4E4E4),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5)),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Load More',
+                                      style: TextStyle(
+                                        color: Color(0xFFB9B9B9),
+                                        fontSize: 10,
+                                        fontFamily: 'Outfit',
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            )
+                          ],
                         ),
-                        SizedBox(
-                          height: 20,
-                        )
-                      ],
-                    ),
-                  ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

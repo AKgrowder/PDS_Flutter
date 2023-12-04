@@ -86,7 +86,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
     }
 
     await BlocProvider.of<GetAllPrivateRoomCubit>(context)
-        . GetAllPrivateRoomAPI(context);
+        .GetAllPrivateRoomAPI(context);
   }
 
   String customFormat(DateTime date) {
@@ -474,7 +474,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                           decoration: BoxDecoration(color: Color(0xFFED1C25), borderRadius: BorderRadius.circular(10)),
                                                                                           child: Center(
                                                                                               child: Text(
-                                                                                            "Exit",
+                                                                                            "Delete",
                                                                                             style: TextStyle(
                                                                                               fontFamily: 'outfit',
                                                                                               fontSize: 15,
