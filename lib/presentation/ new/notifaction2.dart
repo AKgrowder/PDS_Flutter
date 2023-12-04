@@ -809,6 +809,7 @@ class _InviationClassState extends State<InviationClass> {
                                             MaterialPageRoute(
                                           builder: (context) {
                                             return RoomMembersScreen(
+                                              RoomOwnerCount: 0,
                                                 roomname:
                                                     "${widget.InvitationRoomData?.object?[index].roomQuestion}",
                                                 RoomOwner: false,

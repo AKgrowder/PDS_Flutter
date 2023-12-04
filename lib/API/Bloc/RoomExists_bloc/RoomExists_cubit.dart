@@ -24,4 +24,23 @@ class RoomExistsCubit extends Cubit<RoomExistsState> {
       emit(RoomExistsErrorState(roomExistsModel));
     }
   }
+
+   Future<void> DeleteRoommin(String roomuId, BuildContext context) async {
+    dynamic GetAllPrivateRoom;
+    try {
+      emit(RoomExistsLoadingState());
+      GetAllPrivateRoom = await Repository().DeleteRoomApi(roomuId, context);
+      if (GetAllPrivateRoom == "Something Went Wrong, Try After Some Time.") {
+        emit(RoomExistsErrorState("${GetAllPrivateRoom}"));
+      } else {
+        if (GetAllPrivateRoom.success == true) {
+          emit(DeleteRoomLoadedState(GetAllPrivateRoom));
+        } else {
+          emit(RoomExistsErrorState(GetAllPrivateRoom.message));
+        }
+      }
+    } catch (e) {
+      emit(RoomExistsErrorState(GetAllPrivateRoom));
+    }
+  }
 }
