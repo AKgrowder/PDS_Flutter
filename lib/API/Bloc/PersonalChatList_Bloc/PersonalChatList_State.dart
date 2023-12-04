@@ -1,6 +1,5 @@
-
-
 import 'package:pds/API/Model/PersonalChatListModel/PersonalChatList_Model.dart';
+import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 
 abstract class PersonalChatListState {}
 
@@ -18,5 +17,7 @@ class PersonalChatListErrorState extends PersonalChatListState {
   PersonalChatListErrorState(this.error);
 }
 
-
- 
+class SearchHistoryDataAddxtends extends PersonalChatListState {
+  final SearchUserForInbox searchUserForInbox;
+  SearchHistoryDataAddxtends(this.searchUserForInbox);
+}

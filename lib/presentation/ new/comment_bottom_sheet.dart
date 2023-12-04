@@ -439,48 +439,52 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                               child: Padding(
                             padding:
                                 const EdgeInsets.only(left: 10, bottom: 10),
-                            child: TextFormField(
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(300),
-                              ],
-                              maxLines: null,
-                              controller: addcomment,
-                              decoration: InputDecoration(
-                                prefixIcon: IconButton(
-                                  icon: Icon(
-                                    isEmojiVisible
-                                        ? Icons.keyboard_alt_outlined
-                                        : Icons.emoji_emotions_outlined,
-                                  ),
-                                  onPressed: () async {
-                                    if (isEmojiVisible) {
-                                      focusNode.requestFocus();
-                                    } else if (isKeyboardVisible) {
-                                      await SystemChannels.textInput
-                                          .invokeMethod('TextInput.hide');
-                                      await Future.delayed(
-                                          Duration(milliseconds: 100));
-                                    }
-                                    if (isKeyboardVisible) {
-                                      FocusScope.of(context).unfocus();
-                                    }
+                            child: Container(
+                              color: Colors.white,
+                              child: TextFormField(
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(300),
+                                ],
+                                maxLines: null,
+                                controller: addcomment,
+                                decoration: InputDecoration(
+                                  hintText: "Add Comment",
+                                  prefixIcon: IconButton(
+                                    icon: Icon(
+                                      isEmojiVisible
+                                          ? Icons.keyboard_alt_outlined
+                                          : Icons.emoji_emotions_outlined,
+                                    ),
+                                    onPressed: () async {
+                                      if (isEmojiVisible) {
+                                        focusNode.requestFocus();
+                                      } else if (isKeyboardVisible) {
+                                        await SystemChannels.textInput
+                                            .invokeMethod('TextInput.hide');
+                                        await Future.delayed(
+                                            Duration(milliseconds: 100));
+                                      }
+                                      if (isKeyboardVisible) {
+                                        FocusScope.of(context).unfocus();
+                                      }
 
-                                    setState(() {
-                                      isEmojiVisible = !isEmojiVisible;
-                                    });
-                                  },
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      width: 2,
-                                      color: Colors.red), //<-- SEE HERE
-                                  borderRadius: BorderRadius.circular(30.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      width: 2,
-                                      color: Colors.red), //<-- SEE HERE
-                                  borderRadius: BorderRadius.circular(30.0),
+                                      setState(() {
+                                        isEmojiVisible = !isEmojiVisible;
+                                      });
+                                    },
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 2,
+                                        color: Colors.red), //<-- SEE HERE
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 2,
+                                        color: Colors.red), //<-- SEE HERE
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
                                 ),
                               ),
                             ),
@@ -499,13 +503,24 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar);
                                 } else {
-                                  Map<String, dynamic> params = {
-                                    "comment": addcomment.text,
-                                    "postUid": '${widget.postUuID}',
-                                  };
+                                  if (addcomment.text.length >= 255) {
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text(
+                                          'One Time Message Lenght only for 255 Your Meassge -> ${addcomment.text.length}'),
+                                      backgroundColor:
+                                          ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } else {
+                                    Map<String, dynamic> params = {
+                                      "comment": addcomment.text,
+                                      "postUid": '${widget.postUuID}',
+                                    };
 
-                                  BlocProvider.of<AddcommentCubit>(context)
-                                      .AddPostApiCalling(context, params);
+                                    BlocProvider.of<AddcommentCubit>(context)
+                                        .AddPostApiCalling(context, params);
+                                  }
                                 }
                               },
                               child: CircleAvatar(

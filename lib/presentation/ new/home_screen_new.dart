@@ -3691,7 +3691,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                       if (index == 1) {
                                         return User_Module == 'EXPERT' ||
                                                 User_Module == null
-                                            ? SizedBox()
+                                            ? SizedBox(
+                                                height: 10,
+                                              )
                                             : User_ID == null
                                                 ? SizedBox(
                                                     height: 30,

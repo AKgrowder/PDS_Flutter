@@ -1,11 +1,14 @@
-class FatchAllMembersModel {
+import 'dart:developer';
+
+class SearchUserForInbox {
   String? message;
   List<Object>? object;
   bool? success;
 
-  FatchAllMembersModel({this.message, this.object, this.success});
+  SearchUserForInbox({this.message, this.object, this.success});
 
-  FatchAllMembersModel.fromJson(Map<String, dynamic> json) {
+  SearchUserForInbox.fromJson(Map<String, dynamic> json) {
+    log("SearchUserForInbox-$json");
     message = json['message'];
     if (json['object'] != null) {
       object = <Object>[];
@@ -28,42 +31,23 @@ class FatchAllMembersModel {
 }
 
 class Object {
-  String? userUuid;
-  String? email;
+  String? userUid;
   String? userName;
-  String? fullName;
   String? userProfilePic;
-  bool? isExpert;
-  bool? isActive;
 
-  Object(
-      {this.userUuid,
-      this.email,
-      this.userName,
-      this.fullName,
-      this.userProfilePic,
-      this.isExpert,
-      this.isActive});
+  Object({this.userUid, this.userName, this.userProfilePic});
 
   Object.fromJson(Map<String, dynamic> json) {
-    userUuid = json['userUuid'];
-    email = json['email'];
+    userUid = json['userUid'];
     userName = json['userName'];
-    fullName = json['fullName'];
     userProfilePic = json['userProfilePic'];
-    isExpert = json['isExpert'];
-    isActive = json['isActive'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['userUuid'] = this.userUuid;
-    data['email'] = this.email;
+    data['userUid'] = this.userUid;
     data['userName'] = this.userName;
-    data['fullName'] = this.fullName;
     data['userProfilePic'] = this.userProfilePic;
-    data['isExpert'] = this.isExpert;
-    data['isActive'] = this.isActive;
     return data;
   }
 }

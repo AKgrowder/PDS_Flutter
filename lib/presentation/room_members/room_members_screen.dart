@@ -314,9 +314,16 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                         context: context,
                                                         builder: (_) =>
                                                             AssignAdminScreenn(
+                                                              roomID: widget
+                                                                  .room_Id,
                                                               data: _data,
-                                                           
-                                                            ));
+                                                            )).then((value) =>
+                                                        BlocProvider.of<
+                                                                    FatchAllMembersCubit>(
+                                                                context)
+                                                            .FatchAllMembersAPI(
+                                                                "${widget.room_Id}",
+                                                                context));
                                                     // showDialog(
                                                     //     context: context,
                                                     //     builder: (context) {
@@ -471,7 +478,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                   child: Container(
                                                     height: 25,
                                                     alignment: Alignment.center,
-                                                    width: 100,
+                                                    width: 120,
                                                     margin: EdgeInsets.only(
                                                         bottom: 5),
                                                     decoration: BoxDecoration(
@@ -499,7 +506,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           width: 10,
                                                         ),
                                                         Text(
-                                                          'Exit Room',
+                                                          'Delete Room',
                                                           style: TextStyle(
                                                               fontFamily:
                                                                   "outfit",
