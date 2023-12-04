@@ -62,6 +62,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     _storyController!.addListener(_onTimelineEvent);
     imageLoads =
         List.generate(widget.buttonData.images.length, (index) => false);
+    print("storyUid-${widget.buttonData.images[_curSegmentIndex].storyUid}");
     BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
         context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
     super.initState();
@@ -277,10 +278,11 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     if (imageLoaded == true) {
       if (StoryView == true) {
         StoryView = false;
+
         print(
-            "View_User_Story View_User_Story View_User_Story View_User_Story View_User_Story View_User_Story View_User_Story View_User_Story ");
-        print(widget.buttonData.images[_curSegmentIndex].storyUid);
-        print(User_ID);
+            'storyUid-${widget.buttonData.images[_curSegmentIndex].storyUid}');
+        print('User_Id--$User_ID');
+
         if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
           BlocProvider.of<ViewStoryCubit>(context).ViewStory(
               context,
@@ -345,10 +347,12 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Listener(
-      onPointerDown: (PointerDownEvent event) {
+      onPointerDown: (PointerDownEvent event) async{
         _pointerDownMillis = _stopwatch.elapsedMilliseconds;
         _pointerDownPosition = event.position;
         _storyController?.pause();
+       await BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
+            context,"${widget.buttonData.images[_curSegmentIndex].storyUid}");
       },
       onPointerUp: (PointerUpEvent event) {
         event1 = event;
