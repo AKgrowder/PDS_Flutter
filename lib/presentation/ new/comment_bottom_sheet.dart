@@ -440,7 +440,9 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                             padding:
                                 const EdgeInsets.only(left: 10, bottom: 10),
                             child: Container(
-                              color: Colors.white,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(30)),
                               child: TextFormField(
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(300),
