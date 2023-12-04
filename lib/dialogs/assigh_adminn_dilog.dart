@@ -14,10 +14,14 @@ import '../widgets/custom_image_view.dart';
 class AssignAdminScreenn extends StatefulWidget {
   String? roomID;
   FatchAllMembersModel? data;
+  int RoomOwnerCount;
+  bool? DeleteFlag;
   AssignAdminScreenn({
     Key? key,
     this.data,
     this.roomID,
+    required this.DeleteFlag,
+    required this.RoomOwnerCount,
   }) : super(key: key);
 
   @override
@@ -30,13 +34,13 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
   late Animation<double> scaleAnimation;
-  List<String> users = [
-    "User 1",
-    "User 2",
-    "User 3",
-    "User 4",
-    "User 5",
-  ];
+  // List<String> users = [
+  //   "User 1",
+  //   "User 2",
+  //   "User 3",
+  //   "User 4",
+  //   "User 5",
+  // ];
   double? rateStar = 5.0;
   var IsGuestUserEnabled;
   var GetTimeSplash;
@@ -104,13 +108,25 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
                     if (state is RoomExistsLoadedState) {
+                      if (widget.DeleteFlag == true) {
+                        BlocProvider.of<RoomExistsCubit>(context)
+                            .DeleteRoommin(widget.roomID.toString(), context);
+                      } else {
+                        SnackBar snackBar = SnackBar(
+                          content:
+                              Text(state.roomExistsModel.object.toString()),
+                          backgroundColor: ColorConstant.primary_color,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        Navigator.pop(context);
+                      }
+                    }
+                    if (state is DeleteRoomLoadedState) {
                       SnackBar snackBar = SnackBar(
-                        content: Text(state.roomExistsModel.object.toString()),
+                        content: Text(state.DeleteRoom.object.toString()),
                         backgroundColor: ColorConstant.primary_color,
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      // BlocProvider.of<GetAllPrivateRoomCubit>(context)
-                      //     .DeleteRoomm(widget.roomID.toString(), context);
                       Navigator.pop(context);
                     }
                   },
