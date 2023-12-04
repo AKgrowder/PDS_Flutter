@@ -901,6 +901,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               print("i want check responce---${state.error}");
               if (state.error['errorCode'] == '701') {
               } else if (state.error['status'] == '') {
+                
               } else {
                 SnackBar snackBar = SnackBar(
                   content: Text(state.error),

@@ -29,6 +29,7 @@ import 'package:pds/API/Model/System_Config_model/Tokenvalid_Model.dart';
 import 'package:pds/API/Model/ViewStoryModel/ViewStory_Model.dart';
 import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
+import 'package:pds/API/Model/accountType/accountTypeModel.dart';
 import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
 import 'package:pds/API/Model/logoutModel/logoutModel.dart';
@@ -2216,9 +2217,10 @@ class Repository {
     }
   }
 
-  roomExists(String? otherMemberID,String roomID, BuildContext context) async {
-    final response =
-        await apiServices.getApiCallWithToken('${Config.roomExists}?otherMemberUid=$otherMemberID&roomUid=$roomID', context);
+  roomExists(String? otherMemberID, String roomID, BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.roomExists}?otherMemberUid=$otherMemberID&roomUid=$roomID',
+        context);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
     switch (response.statusCode) {
@@ -2236,14 +2238,38 @@ class Repository {
         return jsonString;
     }
   }
+
   search_user_for_inbox(String searchFilter, BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.search_user_for_inboxUrl}?searchFilter=$searchFilter', context);
+        '${Config.search_user_for_inboxUrl}?searchFilter=$searchFilter',
+        context);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
     switch (response.statusCode) {
       case 200:
         return SearchUserForInbox.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  accountTypeMethod(String accountType, BuildContext context) async {
+    print("accountType---$accountType");
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.accountType}?accountType=$accountType', context);
+    var jsonString = json.decode(response.body);
+    print('jsonString-$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return AccountType.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:

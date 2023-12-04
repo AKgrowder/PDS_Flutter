@@ -21,7 +21,7 @@ import '../../API/Model/HashTage_Model/HashTag_model.dart';
 
 class SearchBarScreen extends StatefulWidget {
   dynamic value2;
-   SearchBarScreen({required this.value2});
+  SearchBarScreen({required this.value2});
 
   @override
   State<SearchBarScreen> createState() => _SearchBarScreenState();
@@ -97,10 +97,12 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     return WillPopScope(
       onWillPop: () async {
         if (isSerch == true) {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> NewBottomBar(buttomIndex: 2)));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => NewBottomBar(buttomIndex: 2)));
           return true;
         } else {
-           Navigator.of(context).push(MaterialPageRoute(builder: (context)=> NewBottomBar(buttomIndex: 0)));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => NewBottomBar(buttomIndex: 0)));
           return true;
         }
       },
@@ -167,9 +169,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                   borderRadius: BorderRadius.circular(30)),
                               child: TextFormField(
                                 autofocus: true,
-                                onEditingComplete: () {
-                                  print("dsfhdsfsdsgfgsd");
-                                },
+                                onEditingComplete: () {},
                                 onTap: () {
                                   if (mounted) {
                                     setState(() {
