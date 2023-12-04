@@ -1052,7 +1052,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 },
                                 child: Container(
                                   width: _width / 3.3,
-                                  // color: Colors.amber,
+                                  color: Colors.transparent,
                                   child: Column(
                                     children: [
                                       SizedBox(
@@ -1142,6 +1142,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   } else {}
                                 },
                                 child: Container(
+                                  color: Colors.transparent,
                                   width: _width / 3.6,
                                   child: Column(
                                     children: [
@@ -1209,6 +1210,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   } else {}
                                 },
                                 child: Container(
+                                  color: Colors.transparent,
                                   width: _width / 4.3,
                                   child: Column(
                                     children: [
