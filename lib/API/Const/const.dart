@@ -110,6 +110,8 @@ class Config {
   static const String logOutUserSttionExperied = "auth/auth/isTokenExpired";
    static const String roomExists = "user/api/assignAdminToOtherRoomMember";
     static const String search_user_for_inboxUrl = "user/api/search_user_for_inbox";
+    static const String accountType = "user/api/change_account_type";
+
 
 
 }

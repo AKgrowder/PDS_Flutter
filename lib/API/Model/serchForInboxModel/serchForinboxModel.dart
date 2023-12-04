@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 class SearchUserForInbox {
   String? message;
@@ -8,7 +7,6 @@ class SearchUserForInbox {
   SearchUserForInbox({this.message, this.object, this.success});
 
   SearchUserForInbox.fromJson(Map<String, dynamic> json) {
-    log("SearchUserForInbox-$json");
     message = json['message'];
     if (json['object'] != null) {
       object = <Object>[];
