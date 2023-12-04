@@ -124,8 +124,8 @@ class _InboxScreenState extends State<InboxScreen> {
                                   if (value.isNotEmpty) {
                                     BlocProvider.of<PersonalChatListCubit>(
                                             context)
-                                        .search_user_for_inbox(
-                                            context, searchController.text);
+                                        .search_user_for_inbox(context,
+                                            searchController.text.trim());
                                   } else if (value.isEmpty) {
                                     isDataGet = false;
                                     setState(() {});
@@ -158,9 +158,6 @@ class _InboxScreenState extends State<InboxScreen> {
                           isDataGet == true
                               ? serInboxdata(width)
                               : intaldatashow(),
-                          SizedBox(
-                            height: 20,
-                          )
                         ],
                       ),
                     ),
