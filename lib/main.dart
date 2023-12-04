@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:pds/API/Bloc/RoomExists_bloc/RoomExists_cubit.dart';
 import 'package:pds/API/Bloc/SelectChat_bloc/SelectChat_cubit.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -197,6 +198,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<RePostCubit>(
           create: (context) => RePostCubit(),
+        ),
+        BlocProvider<RoomExistsCubit>(
+          create: (context) => RoomExistsCubit(),
         ),
       ],
       child: MaterialApp(

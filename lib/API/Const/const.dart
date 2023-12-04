@@ -108,7 +108,8 @@ class Config {
   static const String SelectChatMember = "user/api/search_user_for_inbox";
   static const String validateTokenCheck = "auth/auth/validateTokenCheck";
   static const String logOutUserSttionExperied = "auth/auth/isTokenExpired";
-   static const String roomExists = "user/api/updateUserProfile";
+   static const String roomExists = "user/api/assignAdminToOtherRoomMember";
+    static const String search_user_for_inboxUrl = "user/api/search_user_for_inbox";
 
 
 }

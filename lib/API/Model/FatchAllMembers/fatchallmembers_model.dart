@@ -28,29 +28,42 @@ class FatchAllMembersModel {
 }
 
 class Object {
+  String? userUuid;
+  String? email;
   String? userName;
   String? fullName;
   String? userProfilePic;
-  String? userUuid;
   bool? isExpert;
+  bool? isActive;
 
-  Object({this.userName, this.fullName, this.userProfilePic, this.isExpert});
+  Object(
+      {this.userUuid,
+      this.email,
+      this.userName,
+      this.fullName,
+      this.userProfilePic,
+      this.isExpert,
+      this.isActive});
 
   Object.fromJson(Map<String, dynamic> json) {
+    userUuid = json['userUuid'];
+    email = json['email'];
     userName = json['userName'];
     fullName = json['fullName'];
     userProfilePic = json['userProfilePic'];
-    userUuid = json['userUuid'];
     isExpert = json['isExpert'];
+    isActive = json['isActive'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['userUuid'] = this.userUuid;
+    data['email'] = this.email;
     data['userName'] = this.userName;
     data['fullName'] = this.fullName;
     data['userProfilePic'] = this.userProfilePic;
-    data['userUuid'] = this.userUuid;
     data['isExpert'] = this.isExpert;
+    data['isActive'] = this.isActive;
     return data;
   }
 }
