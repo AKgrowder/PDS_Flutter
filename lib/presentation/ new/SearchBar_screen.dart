@@ -21,7 +21,7 @@ import '../../API/Model/HashTage_Model/HashTag_model.dart';
 
 class SearchBarScreen extends StatefulWidget {
   dynamic value2;
-  SearchBarScreen({required this.value2});
+   SearchBarScreen({required this.value2});
 
   @override
   State<SearchBarScreen> createState() => _SearchBarScreenState();
@@ -186,6 +186,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 },
                                 onChanged: (value) {
                                   print("i want to check value-${value}");
+                                  
                                   if (value.contains('#')) {
                                     print("value.contains('#')");
                                     if (indexxx == 0) {

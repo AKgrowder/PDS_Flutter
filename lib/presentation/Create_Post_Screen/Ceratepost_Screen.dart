@@ -331,63 +331,29 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                 decoration: InputDecoration(
                                   hintText: 'What’s on your head?',
                                   border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
                                 ),
                                 inputFormatters: [
                                   // Custom formatter to trim leading spaces
-                                  TextInputFormatter.withFunction(
-                                    (oldValue, newValue) {
-                                      if (newValue.text.startsWith(' ')) {
-                                        return TextEditingValue(
-                                          text: newValue.text.trimLeft(),
-                                          selection: TextSelection.collapsed(
-                                              offset: newValue.text
-                                                  .trimLeft()
-                                                  .length),
-                                        );
-                                      }
-                                      return newValue;
-                                    },
-                                  ),
                                 ],
                                 onChanged: (value) async {
                                   print("values -$value");
                                   //this is the link
-                                  bool valueDataGet = _isLink(postText.text);
-                                  if (valueDataGet == true) {
-                                    colorVaralble = true;
-                                  } else {
-                                    colorVaralble = false;
-                                  }
-
-                                  setState(() {
-                                    primaryColor = value.isNotEmpty
-                                        ? ColorConstant.primary_color
-                                        : ColorConstant.primaryLight_color;
-                                    textColor = value.isNotEmpty
-                                        ? Colors.white
-                                        : ColorConstant.primary_color;
-                                  });
                                 },
                                 onTap: () async {
-                                  bool valueDataGet = _isLink(postText.text);
                                   //this is the link
-                                  if (valueDataGet == true) {
-                                    colorVaralble = true;
-                                    print("valueDataGet---$valueDataGet");
-                                    await launch(postText.text,
-                                        forceWebView: true,
-                                        enableJavaScript: true);
-                                  }
                                 },
                                 style: TextStyle(
+                                    decoration: TextDecoration.none,
+                                    decorationColor: Colors.white),
+                                /* style: TextStyle(
                                   color: colorVaralble == true
                                       ? Colors.blue
-                                      : Colors.black,
                                   decoration: TextDecoration.underline,
                                   decorationColor: colorVaralble == true
                                       ? Colors.blue
                                       : Colors.transparent,
-                                ),
+                                ), */
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
