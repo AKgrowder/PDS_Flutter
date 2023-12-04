@@ -73,6 +73,8 @@ class ImageConstant {
   static String closeimage = 'assets/images/Group 145.png';
   static String popupimage = 'assets/images/Group 1171274821.png';
   static String infoimage = 'assets/images/Vector (20).png';
+  static String AddRoomO = 'assets/images/AddRoomO.png';
+
   static String arrowleftimage =
       'assets/images/material-symbols_info-outline-rounded.png';
 

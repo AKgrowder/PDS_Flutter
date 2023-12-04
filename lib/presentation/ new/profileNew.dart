@@ -248,6 +248,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       }
       if (state is NewProfileSLoadedState) {
         NewProfileData = state.PublicRoomData;
+        print("i check accountTyp--${NewProfileData?.object?.accountType}");
         isDataGet = true;
         print(NewProfileData?.object?.module);
         BlocProvider.of<NewProfileSCubit>(context)
@@ -757,7 +758,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                SettingScreen()));
+                                                SettingScreen(accountType: NewProfileData?.object?.accountType ?? '',))).then((value) => BlocProvider.of<NewProfileSCubit>(
+                                                context)
+                                            .NewProfileSAPI(
+                                                context, widget.User_ID));
                                   },
                                   child: Container(
                                     margin: EdgeInsets.only(left: 10),
@@ -774,7 +778,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 ),
                               ],
                             )
-                          : widget.isFollowing == true
+                          : widget.isFollowing == true 
                               ? Container(
                                   alignment: Alignment.center,
                                   height: 45,
@@ -823,215 +827,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       SizedBox(
                         height: 12,
                       ),
-                      /*    Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 15, right: 15),
-                          child: Container(
-                            height: 80,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: Color(0xffD2D2D2),
-                                )),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        updateType();
-                                        arrNotiyTypeList[1].isSelected = true;
-                                      });
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 20),
-                                      child: Container(
-                                        child: Column(
-                                          children: [
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              '${NewProfileData?.object?.postCount}',
-                                              style: TextStyle(
-                                                  fontFamily: "outfit",
-                                                  fontSize: 25,
-                                                  color: Color(0xff000000),
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                              'Post',
-                                              style: TextStyle(
-                                                  fontFamily: "outfit",
-                                                  fontSize: 16,
-                                                  color: Color(0xff444444),
-                                                  fontWeight: FontWeight.w500),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 20, bottom: 20),
-                                    child: VerticalDivider(
-                                      thickness: 1.5,
-                                      color: Color(0xffC2C2C2),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (NewProfileData?.object?.isFollowing ==
-                                              'FOLLOWING' ||
-                                          User_ID ==
-                                              NewProfileData?.object?.userUid) {
-                                        if (followersClassModel1
-                                                ?.object?.isNotEmpty ==
-                                            true) {
-                                          //this is i want this
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                  builder: (context) {
-                                            return MultiBlocProvider(
-                                              providers: [
-                                                BlocProvider<FollowerBlock>(
-                                                  create: (context) =>
-                                                      FollowerBlock(),
-                                                ),
-                                              ],
-                                              child: Followers(
-                                                User_ID: widget.User_ID,
-                                                appBarName: 'Followers',
-                                                userId: widget.User_ID,
-                                              ),
-                                            );
-                                          })).then((value) =>
-                                              BlocProvider.of<NewProfileSCubit>(
-                                                      context)
-                                                  .NewProfileSAPI(
-                                                      context, widget.User_ID));
-                                          /*    Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Followers(
-                                                        // OLLOWERS
-                                                        appBarName: 'Followers',
-                                                        followersClassModel:
-                                                            followersClassModel1!,
-                                                        userId: widget.User_ID,
-                                                      ))).then((value) =>
-                                              BlocProvider.of<NewProfileSCubit>(
-                                                      context)
-                                                  .NewProfileSAPI(
-                                                      context, widget.User_ID)); */
-                                        }
-                                      } else {}
-                                    },
-                                    child: Container(
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            height: 11,
-                                          ),
-                                          Text(
-                                            '${NewProfileData?.object?.followersCount}',
-                                            style: TextStyle(
-                                                fontFamily: "outfit",
-                                                fontSize: 25,
-                                                color: Color(0xff000000),
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                            'Followers',
-                                            style: TextStyle(
-                                                fontFamily: "outfit",
-                                                fontSize: 16,
-                                                color: Color(0xff444444),
-                                                fontWeight: FontWeight.w500),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 20, bottom: 20),
-                                    child: VerticalDivider(
-                                      thickness: 1.5,
-                                      color: Color(0xffC2C2C2),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (NewProfileData?.object?.isFollowing ==
-                                              'FOLLOWING' ||
-                                          User_ID ==
-                                              NewProfileData?.object?.userUid) {
-                                        if (followersClassModel2
-                                                ?.object?.isNotEmpty ==
-                                            true) {
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                  builder: (context) {
-                                            return MultiBlocProvider(
-                                              providers: [
-                                                BlocProvider<FollowerBlock>(
-                                                  create: (context) =>
-                                                      FollowerBlock(),
-                                                ),
-                                              ],
-                                              child: Followers(
-                                                User_ID: widget.User_ID,
-                                                appBarName: 'Following',
-                                                userId: widget.User_ID,
-                                              ),
-                                            );
-                                          })).then((value) =>
-                                              BlocProvider.of<NewProfileSCubit>(
-                                                      context)
-                                                  .NewProfileSAPI(
-                                                      context, widget.User_ID));
-                                        }
-                                      } else {}
-                                    },
-                                    child: Container(
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            height: 11,
-                                          ),
-                                          Text(
-                                            '${NewProfileData?.object?.followingCount}',
-                                            style: TextStyle(
-                                                fontFamily: "outfit",
-                                                fontSize: 25,
-                                                color: Color(0xff000000),
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                            'Following',
-                                            style: TextStyle(
-                                                fontFamily: "outfit",
-                                                fontSize: 16,
-                                                color: Color(0xff444444),
-                                                fontWeight: FontWeight.w500),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ), */
+
                       Center(
                         child: Container(
                           margin: EdgeInsets.only(left: 15, right: 15),
@@ -1111,18 +907,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             userId: widget.User_ID,
                                           ),
                                         );
-                                      })).then((value){
-                                         BlocProvider.of<NewProfileSCubit>(
-                                                  context)
-                                              .NewProfileSAPI(
-                                                  context, widget.User_ID);
-                                                  BlocProvider.of<NewProfileSCubit>(
-                                                    context)
-                                                .getFollwerApi(
-                                                    context, widget.User_ID);
-
-                                      } 
-                                         );
+                                      })).then((value) {
+                                        BlocProvider.of<NewProfileSCubit>(
+                                                context)
+                                            .NewProfileSAPI(
+                                                context, widget.User_ID);
+                                        BlocProvider.of<NewProfileSCubit>(
+                                                context)
+                                            .getFollwerApi(
+                                                context, widget.User_ID);
+                                      });
                                       /*    Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -1263,8 +1057,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                       SizedBox(
                         height: 30,
                       ),
-                      if (NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
-                          User_ID == NewProfileData?.object?.userUid)
+                      /* NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
+                          User_ID == NewProfileData?.object?.userUid || NewProfileData?.object?.accountType == 'PUBLIC' */
+                      if (User_ID == NewProfileData?.object?.userUid||(NewProfileData?.object?.isFollowing == 'FOLLOWING' && NewProfileData?.object?.accountType == 'PRIVATE')|| NewProfileData?.object?.accountType == 'PUBLIC')
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -1480,8 +1275,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 : SizedBox.shrink(),
                           ],
                         ),
-                      if (NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
-                          User_ID == NewProfileData?.object?.userUid)
+                      if (User_ID == NewProfileData?.object?.userUid||(NewProfileData?.object?.isFollowing == 'FOLLOWING' && NewProfileData?.object?.accountType == 'PRIVATE')|| NewProfileData?.object?.accountType == 'PUBLIC') 
                         Container(
                           // color: Colors.red,
                           /*  height: _height, */
@@ -3169,7 +2963,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       builder: (context) => DocumentViewScreen(
                                             path: dopcument,
                                             title: 'Pdf',
-                                           )));
+                                          )));
                                 }
                               },
                               child: Center(
