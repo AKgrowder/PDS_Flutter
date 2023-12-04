@@ -7,11 +7,12 @@ import 'package:pds/API/Repo/repository.dart';
 class RoomExistsCubit extends Cubit<RoomExistsState> {
   RoomExistsCubit() : super(RoomExistsInitialState()) {}
   Future<void> RoomExistsAPI(
-      Map<String, dynamic> params, BuildContext context) async {
+      String? otherMemberID, String roomID, BuildContext context) async {
     dynamic roomExistsModel;
     try {
       emit(RoomExistsLoadingState());
-      roomExistsModel = await Repository().roomExists(params, context);
+      roomExistsModel =
+          await Repository().roomExists(otherMemberID, roomID, context);
       if (roomExistsModel == "Something Went Wrong, Try After Some Time.") {
         emit(RoomExistsErrorState("${roomExistsModel}"));
       } else {
