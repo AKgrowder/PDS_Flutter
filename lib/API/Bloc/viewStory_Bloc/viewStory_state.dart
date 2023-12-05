@@ -1,5 +1,6 @@
 import 'package:pds/API/Model/ViewStoryModel/StoryViewList_Model.dart';
 import 'package:pds/API/Model/ViewStoryModel/ViewStory_Model.dart';
+import 'package:pds/API/Model/storyDeleteModel/storyDeleteModel.dart';
 
 abstract class ViewStoryState {}
 
@@ -17,8 +18,12 @@ class ViewStoryErrorState extends ViewStoryState {
   ViewStoryErrorState(this.error);
 }
 
-
 class StoryViewListLoadedState extends ViewStoryState {
-  final StoryViewListModel  StoryViewListModelData;
+  final StoryViewListModel StoryViewListModelData;
   StoryViewListLoadedState(this.StoryViewListModelData);
+}
+
+class DeleteSotryLodedState extends ViewStoryState {
+  final DeleteStory deleteStory;
+  DeleteSotryLodedState(this.deleteStory);
 }

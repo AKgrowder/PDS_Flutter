@@ -111,6 +111,11 @@ class Config {
    static const String roomExists = "user/api/assignAdminToOtherRoomMember";
     static const String search_user_for_inboxUrl = "user/api/search_user_for_inbox";
     static const String accountType = "user/api/change_account_type";
+static const String addExperience = "user/api/add_update_work_experience";
+static const String getExperience = "user/api/get_all_work_experiences";
+static const String deleteExperience = "user/api/delete_work_experience";
+  static const String delete_story = "user/api/delete_story";
+
 
 
 

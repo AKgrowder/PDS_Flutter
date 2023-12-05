@@ -27,6 +27,8 @@ import 'package:pds/API/Model/PersonalChatListModel/PersonalChatList_Model.dart'
 import 'package:pds/API/Model/RoomExistsModel/RoomExistsModel.dart';
 import 'package:pds/API/Model/System_Config_model/Tokenvalid_Model.dart';
 import 'package:pds/API/Model/ViewStoryModel/ViewStory_Model.dart';
+import 'package:pds/API/Model/WorkExperience_Model/DeleteExperience_model.dart';
+import 'package:pds/API/Model/WorkExperience_Model/WorkExperience_model.dart';
 import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
 import 'package:pds/API/Model/accountType/accountTypeModel.dart';
@@ -79,6 +81,7 @@ import '../Model/SendMSG/SendMSG_Model.dart';
 import '../Model/System_Config_model/fetchUserModule_model.dart';
 import '../Model/System_Config_model/system_config_model.dart';
 import '../Model/ViewDetails_Model/RemoveMember_model.dart';
+import '../Model/WorkExperience_Model/ADDExperience_model.dart';
 import '../Model/acceptRejectInvitaionModel/acceptRejectInvitaion.dart';
 import '../Model/coment/coment_model.dart';
 import '../Model/creat_form/creat_form_Model.dart';
@@ -91,6 +94,7 @@ import 'package:pds/API/Model/HashTage_Model/HashTagBanner_model.dart';
 import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
 import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
 import 'package:pds/API/Model/ViewStoryModel/StoryViewList_Model.dart';
+import 'package:pds/API/Model/storyDeleteModel/storyDeleteModel.dart';
 
 class Repository {
   ApiServices apiServices = ApiServices();
@@ -2239,9 +2243,10 @@ class Repository {
     }
   }
 
-  search_user_for_inbox(String searchFilter, BuildContext context) async {
+  search_user_for_inbox(
+      String searchFilter, String pageNumber, BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.search_user_for_inboxUrl}?searchFilter=$searchFilter',
+        '${Config.search_user_for_inboxUrl}?searchFilter=$searchFilter&numberOfRecords=20&pageNumber=$pageNumber',
         context);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
@@ -2270,6 +2275,93 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return AccountType.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  AddWorkExperience(Map<String, dynamic> params, BuildContext context) async {
+    final response =
+        await apiServices.postApiCall(Config.addExperience, params, context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return ADDWorkExperienceModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  GetWorkExperience(BuildContext context, String userUId) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.getExperience}?userUid=$userUId', context);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return GetWorkExperienceModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  deleteWorkExperience(String workExperienceUid, BuildContext context) async {
+    final response = await apiServices.deleteApiCall(
+        "${Config.deleteExperience}?workExperienceUid=${workExperienceUid}",
+        {},
+        context);
+    print(response);
+    var jsonString = json.decode(response!.body);
+    switch (response.statusCode) {
+      case 200:
+        return DeleteWorkExperienceModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  delete_story(BuildContext context, String storyUid) async {
+    final response = await apiServices.deleteApiCallWithOutparams(
+        '${Config.delete_story}?storyUid=${storyUid}', context);
+
+    var jsonString = json.decode(response!.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return DeleteStory.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:

@@ -16,9 +16,10 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
         emit(NewProfileSErrorState("${PublicRModel}"));
       } else {
-      if (PublicRModel.success == true) {
-        emit(NewProfileSLoadedState(PublicRModel));
-      }}
+        if (PublicRModel.success == true) {
+          emit(NewProfileSLoadedState(PublicRModel));
+        }
+      }
     } catch (e) {
       print("error-${e.toString()}");
       emit(NewProfileSErrorState(PublicRModel));
@@ -33,9 +34,10 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
         emit(NewProfileSErrorState("${PublicRModel}"));
       } else {
-      if (PublicRModel.success == true) {
-        emit(GetAppPostByUserLoadedState(PublicRModel));
-      }}
+        if (PublicRModel.success == true) {
+          emit(GetAppPostByUserLoadedState(PublicRModel));
+        }
+      }
     } catch (e) {
       emit(NewProfileSErrorState(PublicRModel));
     }
@@ -48,12 +50,13 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       emit(NewProfileSLoadingState());
       PublicRModel =
           await Repository().GetPostCommetAPI(context, userUid, orderBy);
-          if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
+      if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
         emit(NewProfileSErrorState("${PublicRModel}"));
       } else {
-      if (PublicRModel.success == true) {
-        emit(GetUserPostCommetLoadedState(PublicRModel));
-      }}
+        if (PublicRModel.success == true) {
+          emit(GetUserPostCommetLoadedState(PublicRModel));
+        }
+      }
     } catch (e) {
       emit(NewProfileSErrorState(e.toString()));
     }
@@ -67,9 +70,10 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
         emit(NewProfileSErrorState("${PublicRModel}"));
       } else {
-      if (PublicRModel.success == true) {
-        emit(GetSavePostLoadedState(PublicRModel));
-      }}
+        if (PublicRModel.success == true) {
+          emit(GetSavePostLoadedState(PublicRModel));
+        }
+      }
     } catch (e) {
       emit(NewProfileSErrorState(PublicRModel));
     }
@@ -83,9 +87,10 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
         emit(NewProfileSErrorState("${PublicRModel}"));
       } else {
-      if (PublicRModel.success == true) {
-        emit(GetSavePostLoadedState(PublicRModel));
-      }}
+        if (PublicRModel.success == true) {
+          emit(GetSavePostLoadedState(PublicRModel));
+        }
+      }
     } catch (e) {
       emit(NewProfileSErrorState(PublicRModel));
     }
@@ -99,9 +104,10 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       if (aboutMedataSet == "Something Went Wrong, Try After Some Time.") {
         emit(NewProfileSErrorState("${aboutMedataSet}"));
       } else {
-      if (aboutMedataSet.success == true) {
-        emit(AboutMeLoadedState(aboutMedataSet));
-      }}
+        if (aboutMedataSet.success == true) {
+          emit(AboutMeLoadedState(aboutMedataSet));
+        }
+      }
     } catch (e) {
       emit(NewProfileSErrorState(e.toString()));
     }
@@ -115,9 +121,10 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       if (aboutMedataSet == "Something Went Wrong, Try After Some Time.") {
         emit(NewProfileSErrorState("${aboutMedataSet}"));
       } else {
-      if (aboutMedataSet.success == true) {
-        emit(AboutMeLoadedState1(aboutMedataSet));
-      }}
+        if (aboutMedataSet.success == true) {
+          emit(AboutMeLoadedState1(aboutMedataSet));
+        }
+      }
     } catch (e) {
       emit(NewProfileSErrorState(e.toString()));
     }
@@ -131,14 +138,16 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       if (aboutMedataSet == "Something Went Wrong, Try After Some Time.") {
         emit(NewProfileSErrorState("${aboutMedataSet}"));
       } else {
-      if (aboutMedataSet.success == true) {
-        emit(saveAllBlogModelLoadedState1(aboutMedataSet));
-      }}
+        if (aboutMedataSet.success == true) {
+          emit(saveAllBlogModelLoadedState1(aboutMedataSet));
+        }
+      }
     } catch (e) {
       emit(NewProfileSErrorState(e.toString()));
     }
   }
-   Future<void> followWIngMethod(String? followedToUid, BuildContext context,
+
+  Future<void> followWIngMethod(String? followedToUid, BuildContext context,
       {bool showAlert = false}) async {
     dynamic likepost;
     try {
@@ -147,14 +156,16 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       if (likepost == "Something Went Wrong, Try After Some Time.") {
         emit(NewProfileSErrorState("${likepost}"));
       } else {
-      if (likepost.success == true) {
-        emit(PostLikeLoadedState(likepost));
-      }}
+        if (likepost.success == true) {
+          emit(PostLikeLoadedState(likepost));
+        }
+      }
     } catch (e) {
       // print('errorstate-$e');
       emit(NewProfileSErrorState(e.toString()));
     }
   }
+
   Future<void> ProfileSaveBlog(
       BuildContext context, String userUid, String blogUid) async {
     dynamic getallBlogmodel;
@@ -164,9 +175,10 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       if (getallBlogmodel == "Something Went Wrong, Try After Some Time.") {
         emit(NewProfileSErrorState("${getallBlogmodel}"));
       } else {
-      if (getallBlogmodel.success == true) {
-        emit(ProfilesaveBlogLoadedState(getallBlogmodel));
-      }}
+        if (getallBlogmodel.success == true) {
+          emit(ProfilesaveBlogLoadedState(getallBlogmodel));
+        }
+      }
     } catch (e) {
       emit(NewProfileSErrorState(getallBlogmodel));
     }
@@ -181,9 +193,10 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       if (getallBlogmodel == "Something Went Wrong, Try After Some Time.") {
         emit(NewProfileSErrorState("${getallBlogmodel}"));
       } else {
-      if (getallBlogmodel.success == true) {
-        emit(ProfilelikeBlogLoadedState(getallBlogmodel));
-      }}
+        if (getallBlogmodel.success == true) {
+          emit(ProfilelikeBlogLoadedState(getallBlogmodel));
+        }
+      }
     } catch (e) {
       emit(NewProfileSErrorState(getallBlogmodel));
     }
@@ -203,13 +216,15 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       if (getAllFollwerData == "Something Went Wrong, Try After Some Time.") {
         emit(NewProfileSErrorState("${getAllFollwerData}"));
       } else {
-      if (getAllFollwerData.success == true) {
-        emit(FollowersClass(getAllFollwerData));
-      }}
+        if (getAllFollwerData.success == true) {
+          emit(FollowersClass(getAllFollwerData));
+        }
+      }
     } catch (e) {
       emit(NewProfileSErrorState(getAllFollwerData));
     }
   }
+
   Future<void> getAllFollwing(
     BuildContext context,
     String userUid,
@@ -224,11 +239,104 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       if (getAllFollwerData == "Something Went Wrong, Try After Some Time.") {
         emit(NewProfileSErrorState("${getAllFollwerData}"));
       } else {
-      if (getAllFollwerData.success == true) {
-        emit(FollowersClass1(getAllFollwerData));
-      }}
+        if (getAllFollwerData.success == true) {
+          emit(FollowersClass1(getAllFollwerData));
+        }
+      }
     } catch (e) {
       emit(NewProfileSErrorState(getAllFollwerData));
+    }
+  }
+
+  Future<void> fetchExprties(BuildContext context) async {
+    dynamic fetchExprtise;
+    try {
+      emit(NewProfileSLoadingState());
+      fetchExprtise = await Repository().fetchExprtise(context);
+      if (fetchExprtise == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${fetchExprtise}"));
+      } else {
+        if (fetchExprtise.success == true) {
+          emit(FetchexprtiseRoomLoadedState(fetchExprtise));
+        }
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(fetchExprtise));
+    }
+  }
+
+  Future<void> IndustryTypeAPI(BuildContext context) async {
+    dynamic industryType;
+    try {
+      emit(NewProfileSLoadingState());
+      industryType = await Repository().IndustryType(context);
+      if (industryType == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${industryType}"));
+      } else {
+        if (industryType.success == true) {
+          emit(IndustryTypeLoadedState(industryType));
+        }
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(industryType));
+    }
+  }
+
+  Future<void> AddWorkExperienceAPI(
+      Map<String, dynamic> params, BuildContext context) async {
+    dynamic addWorkExperienceModel;
+    try {
+      emit(NewProfileSLoadingState());
+      addWorkExperienceModel =
+          await Repository().AddWorkExperience(params, context);
+      if (addWorkExperienceModel ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${addWorkExperienceModel}"));
+      } else {
+        if (addWorkExperienceModel.success == true) {
+          emit(AddWorkExpereinceLoadedState(addWorkExperienceModel));
+          print(addWorkExperienceModel);
+        }
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(addWorkExperienceModel));
+    }
+  }
+
+  Future<void> GetWorkExperienceAPI(
+      BuildContext context, String userUId) async {
+    dynamic industryType;
+    try {
+      emit(NewProfileSLoadingState());
+      industryType = await Repository().GetWorkExperience(context, userUId);
+      if (industryType == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${industryType}"));
+      } else {
+        if (industryType.success == true) {
+          emit(GetWorkExpereinceLoadedState(industryType));
+        }
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(industryType));
+    }
+  }
+
+  Future<void> DeleteWorkExperienceAPI(
+      String workExperienceUid, BuildContext context) async {
+    dynamic industryType;
+    try {
+      emit(NewProfileSLoadingState());
+      industryType =
+          await Repository().deleteWorkExperience(workExperienceUid, context);
+      if (industryType == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${industryType}"));
+      } else {
+        if (industryType.success == true) {
+          emit(DeleteWorkExpereinceLoadedState(industryType));
+        }
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(industryType));
     }
   }
 }
