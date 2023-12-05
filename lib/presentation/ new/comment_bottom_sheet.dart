@@ -435,7 +435,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                     children: [
                       Row(
                         children: [
-                          Expanded(
+                          Flexible(
                               child: Padding(
                             padding:
                                 const EdgeInsets.only(left: 10, bottom: 10),
@@ -447,7 +447,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(300),
                                 ],
-                                maxLines: null,
+                                minLines: 1,
+                                maxLines: 5,
                                 controller: addcomment,
                                 decoration: InputDecoration(
                                   hintText: "Add Comment",
@@ -458,8 +459,11 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                           : Icons.emoji_emotions_outlined,
                                     ),
                                     onPressed: () async {
+                                      print("this is ontap");
+
                                       if (isEmojiVisible) {
-                                        focusNode.requestFocus();
+                                        FocusScope.of(context)
+                                            .requestFocus(FocusNode());
                                       } else if (isKeyboardVisible) {
                                         await SystemChannels.textInput
                                             .invokeMethod('TextInput.hide');
@@ -505,10 +509,12 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar);
                                 } else {
-                                  if (addcomment.text.length >= 255) {
+                                  print(
+                                      "i want to check-${addcomment.text.length}");
+                                  if (addcomment.text.length >= 300) {
                                     SnackBar snackBar = SnackBar(
                                       content: Text(
-                                          'One Time Message Lenght only for 255 Your Meassge -> ${addcomment.text.length}'),
+                                          'One Time Message Lenght only for 300 Your Meassge -> ${addcomment.text.length}'),
                                       backgroundColor:
                                           ColorConstant.primary_color,
                                     );
@@ -649,13 +655,16 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                         child: SizedBox(
                             height: 250,
                             child: EmojiPicker(
-                              textEditingController: addcomment,
                               onBackspacePressed: () {
                                 if (isEmojiVisible) {
                                   setState(() {
                                     isEmojiVisible = false;
                                   });
                                 }
+                              },
+                              onEmojiSelected: (category, emoji) {
+                                addcomment.text += emoji.emoji;
+                                setState(() {});
                               },
                               config: Config(
                                 columns: 7,
