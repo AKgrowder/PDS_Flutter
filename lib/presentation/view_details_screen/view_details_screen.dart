@@ -83,9 +83,9 @@ class _ViewDetailsScreenState extends State<ViewDetailsScreen> {
                       child: Container(
                           height: _height / 8,
                           width: _width / 3.7,
-                          child: viewDetailsModel?.object?.profilePic == null
+                          child: viewDetailsModel?.object?.profilePic == null || viewDetailsModel?.object?.profilePic == ""
                               ? CustomImageView(
-                                  imagePath: ImageConstant.pdslogo,
+                                  imagePath: ImageConstant.tomcruse,
                                   height: 50,
                                   radius: BorderRadius.circular(5),
                                   width: 50,

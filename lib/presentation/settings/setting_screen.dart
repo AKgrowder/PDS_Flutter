@@ -41,7 +41,7 @@ var Setting_Array = [
   "Invite Friends",
   "Rate Us",
   "Delete Account",
-  "Private & Public Profile",
+  "Public & Private Profile",
   "Log Out",
 ];
 

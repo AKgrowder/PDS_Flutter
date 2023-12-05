@@ -11,6 +11,7 @@ import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/%20new/SelectChatMember.dart';
 import 'package:pds/presentation/DMAll_Screen/DM_InboxScreen.dart';
+import 'package:pds/widgets/pagenation.dart';
 
 class InboxScreen extends StatefulWidget {
   const InboxScreen({Key? key}) : super(key: key);
@@ -24,6 +25,8 @@ class _InboxScreenState extends State<InboxScreen> {
   String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
   bool isDataGet = false;
   SearchUserForInbox? searchUserForInbox1;
+  ScrollController scrollController = ScrollController();
+
   bool apiData = false;
   @override
   void initState() {
@@ -125,7 +128,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                     BlocProvider.of<PersonalChatListCubit>(
                                             context)
                                         .search_user_for_inbox(context,
-                                            searchController.text.trim());
+                                            searchController.text.trim(), '1');
                                   } else if (value.isEmpty) {
                                     isDataGet = false;
                                     setState(() {});
@@ -178,230 +181,253 @@ class _InboxScreenState extends State<InboxScreen> {
 
   intaldatashow() {
     return Expanded(
-      child: ListView.builder(
-          shrinkWrap: true,
-          padding: EdgeInsets.zero,
-          itemCount: PersonalChatListModelData?.object?.length,
-          itemBuilder: (context, index) {
-            DateTime parsedDateTime = DateTime.parse(
-                '${PersonalChatListModelData?.object?[index].createdDate ?? ""}');
-            return Slidable(
-              enabled: true,
-              dragStartBehavior: DragStartBehavior.start,
-              endActionPane: ActionPane(
-                  extentRatio: 0.2,
-                  motion: ScrollMotion(),
-                  children: [
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        margin: EdgeInsets.only(left: 20, top: 5),
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: Color(0xffFBD8D9)),
-                        child: Center(
-                            child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Image.asset(
-                            ImageConstant.deleteIcon,
-                            color: ColorConstant.primary_color,
-                          ),
-                        )),
-                      ),
-                    )
-                  ]),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 15),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return DM_InboxScreen(
-                        UserName:
-                            "${PersonalChatListModelData?.object?[index].userName}",
-                        ChatInboxUid:
-                            "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
-                      );
-                    }));
-                  },
-                  child: Container(
-                    height: 80,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade400),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Stack(children: [
-                                Container(
-                                    height: 55,
-                                    width: 55,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: PersonalChatListModelData
-                                                    ?.object?[index]
-                                                    .userProfilePic !=
-                                                null &&
-                                            PersonalChatListModelData
-                                                    ?.object?[index]
-                                                    .userProfilePic !=
-                                                ""
-                                        ? CustomImageView(
-                                            url:
-                                                "${PersonalChatListModelData?.object?[index].userProfilePic}",
-                                            height: 60,
-                                            width: 60,
-                                            fit: BoxFit.cover,
-                                            radius: BorderRadius.circular(30),
-                                          )
-                                        : CustomImageView(
-                                            imagePath: ImageConstant.tomcruse)),
-                                Positioned(
-                                    bottom: 1,
-                                    right: 5,
-                                    child: Container(
-                                      height: 12,
-                                      width: 12,
-                                      decoration: BoxDecoration(
-                                          color: ColorConstant.primary_color,
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                              color: Colors.white, width: 2)),
-                                    ))
-                              ]),
-                              Padding(
-                                padding: const EdgeInsets.all(6),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${PersonalChatListModelData?.object?[index].userName}",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    PersonalChatListModelData
-                                                ?.object?[index].messageType ==
-                                            "IMAGE"
-                                        ? Row(
-                                            children: [
-                                              CustomImageView(
-                                                  height: 19,
-                                                  width: 19,
-                                                  imagePath: ImageConstant
-                                                      .ChatimageIcon),
-                                              SizedBox(
-                                                width: 7,
-                                              ),
-                                              Text(
-                                                "Photo",
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        : Text(
-                                            "${PersonalChatListModelData?.object?[index].message}",
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.grey,
-                                            ),
-                                          )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 6),
-                            child: Text(
-                              customFormat(parsedDateTime),
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey,
-                              ),
+      child: SingleChildScrollView(
+        child: ListView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: PersonalChatListModelData?.object?.length,
+            itemBuilder: (context, index) {
+              DateTime parsedDateTime = DateTime.parse(
+                  '${PersonalChatListModelData?.object?[index].createdDate ?? ""}');
+              return Slidable(
+                enabled: true,
+                dragStartBehavior: DragStartBehavior.start,
+                endActionPane: ActionPane(
+                    extentRatio: 0.2,
+                    motion: ScrollMotion(),
+                    children: [
+                      GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          margin: EdgeInsets.only(left: 20, top: 5),
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: Color(0xffFBD8D9)),
+                          child: Center(
+                              child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Image.asset(
+                              ImageConstant.deleteIcon,
+                              color: ColorConstant.primary_color,
                             ),
-                          )
-                        ],
+                          )),
+                        ),
+                      )
+                    ]),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 15),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return DM_InboxScreen(
+                          UserName:
+                              "${PersonalChatListModelData?.object?[index].userName}",
+                          ChatInboxUid:
+                              "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+                        );
+                      }));
+                    },
+                    child: Container(
+                      height: 80,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade400),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Stack(children: [
+                                  Container(
+                                      height: 55,
+                                      width: 55,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: PersonalChatListModelData
+                                                      ?.object?[index]
+                                                      .userProfilePic !=
+                                                  null &&
+                                              PersonalChatListModelData
+                                                      ?.object?[index]
+                                                      .userProfilePic !=
+                                                  ""
+                                          ? CustomImageView(
+                                              url:
+                                                  "${PersonalChatListModelData?.object?[index].userProfilePic}",
+                                              height: 60,
+                                              width: 60,
+                                              fit: BoxFit.cover,
+                                              radius: BorderRadius.circular(30),
+                                            )
+                                          : CustomImageView(
+                                              imagePath:
+                                                  ImageConstant.tomcruse)),
+                                  Positioned(
+                                      bottom: 1,
+                                      right: 5,
+                                      child: Container(
+                                        height: 12,
+                                        width: 12,
+                                        decoration: BoxDecoration(
+                                            color: ColorConstant.primary_color,
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                                color: Colors.white, width: 2)),
+                                      ))
+                                ]),
+                                Padding(
+                                  padding: const EdgeInsets.all(6),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${PersonalChatListModelData?.object?[index].userName}",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      PersonalChatListModelData?.object?[index]
+                                                  .messageType ==
+                                              "IMAGE"
+                                          ? Row(
+                                              children: [
+                                                CustomImageView(
+                                                    height: 19,
+                                                    width: 19,
+                                                    imagePath: ImageConstant
+                                                        .ChatimageIcon),
+                                                SizedBox(
+                                                  width: 7,
+                                                ),
+                                                Text(
+                                                  "Photo",
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : Text(
+                                              "${PersonalChatListModelData?.object?[index].message}",
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.grey,
+                                              ),
+                                            )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 6),
+                              child: Text(
+                                customFormat(parsedDateTime),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            );
-          }),
+              );
+            }),
+      ),
     );
   }
 
   serInboxdata(width) {
     return Expanded(
-        child: ListView.builder(
-      shrinkWrap: true,
-      itemCount: searchUserForInbox1?.object?.length,
-      padding: EdgeInsets.zero,
-      itemBuilder: (context, index) {
-        return Container(
-          margin: EdgeInsets.all(10),
-          height: 70,
-          width: 110,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Color(0xffE6E6E6))),
-          child: Row(
-            children: [
-              searchUserForInbox1?.object?[index].userProfilePic != null &&
-                      searchUserForInbox1
-                              ?.object?[index].userProfilePic?.isNotEmpty ==
-                          true
-                  ? Padding(
+        child: SingleChildScrollView(
+      controller: scrollController,
+      child: PaginationWidget(
+        scrollController: scrollController,
+        totalSize: searchUserForInbox1?.object?.totalElements,
+        offSet: searchUserForInbox1?.object?.pageable?.pageNumber,
+        onPagination: (p0) async {
+          BlocProvider.of<PersonalChatListCubit>(context).search_user_for_inboxPagantion(
+            context,
+            searchController.text.trim(),
+            '${(p0 + 1)}',
+          );
+        },
+        items: ListView.builder(
+          shrinkWrap: true,
+          itemCount: searchUserForInbox1?.object?.content?.length,
+          padding: EdgeInsets.zero,
+          physics: NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            return Container(
+              margin: EdgeInsets.all(10),
+              height: 70,
+              width: 110,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Color(0xffE6E6E6))),
+              child: Row(
+                children: [
+                  searchUserForInbox1?.object?.content?[index].userProfilePic !=
+                              null &&
+                          searchUserForInbox1?.object?.content?[index]
+                                  .userProfilePic?.isNotEmpty ==
+                              true
+                      ? Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: CircleAvatar(
+                            radius: 30.0,
+                            backgroundImage: NetworkImage(
+                                "${searchUserForInbox1?.object?.content?[index].userProfilePic}"),
+                            backgroundColor: Colors.transparent,
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: CircleAvatar(
+                            radius: 30.0,
+                            backgroundImage: AssetImage(ImageConstant.tomcruse),
+                            backgroundColor: Colors.transparent,
+                          ),
+                        ),
+                  Container(
+                    width: width / 1.6,
+                    child: Padding(
                       padding: const EdgeInsets.only(left: 10),
-                      child: CircleAvatar(
-                        radius: 30.0,
-                        backgroundImage: NetworkImage(
-                            "${searchUserForInbox1?.object?[index].userProfilePic}"),
-                        backgroundColor: Colors.transparent,
-                      ),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: CircleAvatar(
-                        radius: 30.0,
-                        backgroundImage: AssetImage(ImageConstant.tomcruse),
-                        backgroundColor: Colors.transparent,
+                      child: Text(
+                        searchUserForInbox1?.object?.content?[index].userName ??
+                            '',
+                        style: TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-              Container(
-                width: width / 1.6,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: Text(
-                    searchUserForInbox1?.object?[index].userName ?? '',
-                    style: TextStyle(
-                      overflow: TextOverflow.ellipsis,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        );
-      },
+                  )
+                ],
+              ),
+            );
+          },
+        ),
+      ),
     ));
   }
 
