@@ -45,4 +45,20 @@ class ViewStoryCubit extends Cubit<ViewStoryState> {
       emit(ViewStoryErrorState(ViewStoryModel));
     }
   }
+
+  Future<void> delete_story(
+    BuildContext context,
+    String storyUid,
+  ) async {
+    dynamic DeleteStory;
+    try {
+      emit(ViewStoryLoadingState());
+      DeleteStory = await Repository().delete_story(context, storyUid);
+      if (DeleteStory.success == true) {
+        emit(DeleteSotryLodedState(DeleteStory));
+      }
+    } catch (e) {
+      emit(ViewStoryErrorState(e.toString()));
+    }
+  }
 }

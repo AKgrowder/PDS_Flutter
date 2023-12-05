@@ -877,6 +877,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         return true;
       },
       child: Scaffold(
+          resizeToAvoidBottomInset: false,
           floatingActionButton: FloatingActionButton(
             backgroundColor: Color(0xffED1C25),
             onPressed: () {
@@ -901,7 +902,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               print("i want check responce---${state.error}");
               if (state.error['errorCode'] == '701') {
               } else if (state.error['status'] == '') {
-                
               } else {
                 SnackBar snackBar = SnackBar(
                   content: Text(state.error),
@@ -1455,25 +1455,28 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                               onPressed: (data) {
                                                 Navigator.of(storycontext!)
                                                     .push(
-                                                  StoryRoute(
-                                                    storyContainerSettings:
-                                                        StoryContainerSettings(
-                                                      buttonData: buttonData,
-                                                      tapPosition: buttonData
-                                                          .buttonCenterPosition!,
-                                                      curve: buttonData
-                                                          .pageAnimationCurve,
-                                                      allButtonDatas:
-                                                          buttonDatas,
-                                                      pageTransform:
-                                                          StoryPage3DTransform(),
-                                                      storyListScrollController:
-                                                          ScrollController(),
-                                                    ),
-                                                    duration: buttonData
-                                                        .pageAnimationDuration,
-                                                  ),
-                                                );
+                                                      StoryRoute(
+                                                        storyContainerSettings:
+                                                            StoryContainerSettings(
+                                                          buttonData:
+                                                              buttonData,
+                                                          tapPosition: buttonData
+                                                              .buttonCenterPosition!,
+                                                          curve: buttonData
+                                                              .pageAnimationCurve,
+                                                          allButtonDatas:
+                                                              buttonDatas,
+                                                          pageTransform:
+                                                              StoryPage3DTransform(),
+                                                          storyListScrollController:
+                                                              ScrollController(),
+                                                        ),
+                                                        duration: buttonData
+                                                            .pageAnimationDuration,
+                                                      ),
+                                                    )
+                                                    .then((value) =>
+                                                        Get_UserToken());
                                               },
                                               buttonData: buttonData,
                                               allButtonDatas: buttonDatas,
@@ -3411,23 +3414,28 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     0
                                                                 ? SizedBox()
                                                                 : GestureDetector(
-                                                                    onTap: () {
+                                                                     onTap: () {
                                                                       /* Navigator.push(  
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
     
                                                           ShowAllPostLike("${AllGuestPostRoomData?.object?[index].postUid}"))); */
-
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) {
-                                                                          return ShowAllPostLike(
-                                                                              "${AllGuestPostRoomData?.object?.content?[index].postUid}");
-                                                                        },
-                                                                      ));
+                                                                      if (uuid ==
+                                                                          null) {
+                                                                        Navigator.of(context).push(MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                RegisterCreateAccountScreen()));
+                                                                      } else {
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(
+                                                                          builder:
+                                                                              (context) {
+                                                                            return ShowAllPostLike("${AllGuestPostRoomData?.object?.content?[index].postUid}");
+                                                                          },
+                                                                        ));
+                                                                      }
                                                                     },
                                                                     child:
                                                                         Container(
