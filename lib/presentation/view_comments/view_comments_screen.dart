@@ -948,7 +948,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                       if (Add_Comment.text.length >= 255) {
                                         SnackBar snackBar = SnackBar(
                                           content: Text(
-                                              'One Time Message Lenght only for 255 Your Meassge -> ${Add_Comment.text.length}'),
+                                              'One time message length allowed is 300 your message length is -> ${Add_Comment.text.length}'),
                                           backgroundColor:
                                               ColorConstant.primary_color,
                                         );
