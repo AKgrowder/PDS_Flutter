@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/CreateRoom_Bloc/CreateRoom_state.dart';
+import 'package:pds/dialogs/assigh_adminn_dilog.dart';
 import 'package:pds/dialogs/edit_dilog.dart';
 import 'package:pds/dilogs/invite_dilog.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
@@ -495,17 +496,145 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                         );
                                                                       });
                                                                 } else {
-                                                                  // showDialog(
-                                                                  //     context:
-                                                                  //         context,
-                                                                  //     builder:
-                                                                  //         (_) =>
-                                                                  //             AssignAdminScreenn(
-                                                                  //               DeleteFlag: true,
-                                                                  //               roomID: PriveateRoomData?.object?[index].uid,
-                                                                  //               // data: _data,
-                                                                  //               RoomOwnerCount: PriveateRoomData?.object?[index].adminCount ?? 0,
-                                                                  //             ));
+                                                                  if ((PriveateRoomData
+                                                                              ?.object?[index]
+                                                                              .usersList
+                                                                              ?.length ??
+                                                                          0) <=
+                                                                      1) {
+                                                                        print("only for one User");
+                                                                         showDialog(
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (context) {
+                                                                        return Center(
+                                                                          child:
+                                                                              Container(
+                                                                            color:
+                                                                                Colors.white,
+                                                                            margin:
+                                                                                EdgeInsets.only(left: 20, right: 20),
+                                                                            height:
+                                                                                200,
+                                                                            width:
+                                                                                _width,
+                                                                            // color: Colors.amber,
+                                                                            child:
+                                                                                BlocConsumer<GetAllPrivateRoomCubit, GetAllPrivateRoomState>(
+                                                                              listener: (context, state) {
+                                                                                if (state is DeleteRoomLoadedState) {
+                                                                                  SnackBar snackBar = SnackBar(
+                                                                                    content: Text(state.DeleteRoom.object ?? ""),
+                                                                                    backgroundColor: ColorConstant.primary_color,
+                                                                                  );
+                                                                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                                                                                  method();
+                                                                                  Navigator.pop(context);
+                                                                                }
+                                                                              },
+                                                                              builder: (context, state) {
+                                                                                return Column(
+                                                                                  children: [
+                                                                                    SizedBox(
+                                                                                      height: 10,
+                                                                                    ),
+                                                                                    Text(
+                                                                                      "Delete Room",
+                                                                                      style: TextStyle(
+                                                                                        fontFamily: 'outfit',
+                                                                                        fontSize: 20,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                      ),
+                                                                                    ),
+                                                                                    Divider(
+                                                                                      color: Colors.grey,
+                                                                                    ),
+                                                                                    SizedBox(
+                                                                                      height: 5,
+                                                                                    ),
+                                                                                    Center(
+                                                                                        child: Text(
+                                                                                      "Are You Sure You Want To Delete This Room",
+                                                                                      style: TextStyle(
+                                                                                        fontFamily: 'outfit',
+                                                                                        fontSize: 15,
+                                                                                        color: Colors.black,
+                                                                                        fontWeight: FontWeight.w500,
+                                                                                      ),
+                                                                                    )),
+                                                                                    SizedBox(
+                                                                                      height: 50,
+                                                                                    ),
+                                                                                    Row(
+                                                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                                      children: [
+                                                                                        GestureDetector(
+                                                                                          onTap: () => Navigator.pop(context),
+                                                                                          child: Container(
+                                                                                            height: 43,
+                                                                                            width: _width / 3.5,
+                                                                                            decoration: BoxDecoration(color: Colors.transparent, border: Border.all(color: Colors.grey.shade400), borderRadius: BorderRadius.circular(10)),
+                                                                                            child: Center(
+                                                                                                child: Text(
+                                                                                              "Cancel",
+                                                                                              style: TextStyle(
+                                                                                                fontFamily: 'outfit',
+                                                                                                fontSize: 15,
+                                                                                                color: Color(0xFFED1C25),
+                                                                                                fontWeight: FontWeight.w400,
+                                                                                              ),
+                                                                                            )),
+                                                                                          ),
+                                                                                        ),
+                                                                                        GestureDetector(
+                                                                                          onTap: () {
+                                                                                            BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PriveateRoomData!.object![index].uid.toString(), context);
+                                                                                          },
+                                                                                          child: Container(
+                                                                                            height: 43,
+                                                                                            width: _width / 3.5,
+                                                                                            decoration: BoxDecoration(color: Color(0xFFED1C25), borderRadius: BorderRadius.circular(10)),
+                                                                                            child: Center(
+                                                                                                child: Text(
+                                                                                              "Delete",
+                                                                                              style: TextStyle(
+                                                                                                fontFamily: 'outfit',
+                                                                                                fontSize: 15,
+                                                                                                color: Colors.white,
+                                                                                                fontWeight: FontWeight.w400,
+                                                                                              ),
+                                                                                            )),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  ],
+                                                                                );
+                                                                              },
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      });
+                                                                  } else {
+                                                                    print(
+                                                                        "Assign Addmin");
+                                                                    showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        builder: (_) =>
+                                                                            AssignAdminScreenn(
+                                                                              DeleteFlag: true,
+                                                                              RoomScreenBool: true,
+                                                                              roomID: PriveateRoomData?.object?[index].uid,
+                                                                              UserList: PriveateRoomData?.object?[index].usersList,
+                                                                              RoomOwnerCount: PriveateRoomData?.object?[index].adminCount ?? 0,
+                                                                            )).then(
+                                                                        (value) =>
+                                                                            method());
+                                                                  }
                                                                 }
                                                               },
                                                               child:
