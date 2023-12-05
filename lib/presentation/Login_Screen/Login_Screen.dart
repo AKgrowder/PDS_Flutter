@@ -232,7 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ), (route) => false);
                   } else {
                     SnackBar snackBar = SnackBar(
-                      content: Text('Otp send successfully'),
+                      content: Text('OTP send successfully'),
                       backgroundColor: ColorConstant.primary_color,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -491,7 +491,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   }));
                                 },
                                 child: Text(
-                                  "Forget Password?",
+                                  "Forgot Password?",
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
                                   // style: theme.textTheme.titleSmall,

@@ -797,7 +797,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   .toString() ==
                               null) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please select Expertise in'),
+                              content: Text('Please Select Expertise in'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -806,7 +806,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   .toString() ==
                               null) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please select Expertise in'),
+                              content: Text('Please Select Expertise in'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -843,7 +843,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           } else if (_startTime?.format(context).toString() ==
                               null) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please select Working Hours'),
+                              content: Text('Please Select Working Hours'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -851,7 +851,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           } else if (_endTime?.format(context).toString() ==
                               null) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please select Working Hours'),
+                              content: Text('Please Select Working Hours'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)

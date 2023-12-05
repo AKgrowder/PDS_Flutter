@@ -880,7 +880,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
           }
         } else {
           SnackBar snackBar = SnackBar(
-            content: Text('Max 5 images upload allowed !'),
+            content: Text('Max 5 Images upload allowed !'),
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -1251,7 +1251,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                   .InvitationAPI(context, param);
             } else {
               SnackBar snackBar = SnackBar(
-                content: Text('Please select image either fill Text'),
+                content: Text('Please Select Image either fill Text'),
                 backgroundColor: ColorConstant.primary_color,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);

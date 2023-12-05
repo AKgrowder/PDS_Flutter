@@ -1611,7 +1611,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                     .toString() ==
                                 null) {
                               SnackBar snackBar = SnackBar(
-                                content: Text('Please select Expertise in'),
+                                content: Text('Please Select Expertise in'),
                                 backgroundColor: ColorConstant.primary_color,
                               );
                               ScaffoldMessenger.of(context)
@@ -1635,7 +1635,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 (end?.isEmpty ?? false) &&
                                 (endAm?.isEmpty ?? false)) {
                               SnackBar snackBar = SnackBar(
-                                content: Text('Please select Working Hours'),
+                                content: Text('Please Select Working Hours'),
                                 backgroundColor: ColorConstant.primary_color,
                               );
                               ScaffoldMessenger.of(context)
