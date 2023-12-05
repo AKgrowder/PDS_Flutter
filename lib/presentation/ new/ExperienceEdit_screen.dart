@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
@@ -76,13 +77,29 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                           borderRadius: BorderRadius.circular(10)),
                       child: ListTile(
                         titleAlignment: ListTileTitleAlignment.top,
-                        leading: CustomImageView(
-                          imagePath: ImageConstant.tomcruse,
-                          height: 32,
-                          width: 32,
-                          fit: BoxFit.fill,
-                          radius: BorderRadius.circular(25),
-                        ),
+                        leading: widget.addWorkExperienceModel?.object?[index]
+                                        .userProfilePic !=
+                                    null &&
+                                widget.addWorkExperienceModel?.object?[index]
+                                        .userProfilePic !=
+                                    ''
+                            ? InkWell(
+                                child: CircleAvatar(
+                                  backgroundImage: NetworkImage(widget
+                                          .addWorkExperienceModel
+                                          ?.object?[index]
+                                          .userProfilePic
+                                          .toString() ??
+                                      ''),
+                                ),
+                              )
+                            : CustomImageView(
+                                imagePath: ImageConstant.tomcruse,
+                                height: 32,
+                                width: 32,
+                                fit: BoxFit.fill,
+                                radius: BorderRadius.circular(25),
+                              ),
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -101,6 +118,11 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                     Navigator.push(context, MaterialPageRoute(
                                       builder: (context) {
                                         return AddWorkExperienceScreen(
+                                          workUserID: widget
+                                              .addWorkExperienceModel
+                                              ?.object?[index]
+                                              .workExperienceUid,
+                                          typeName: widget.typeName,
                                           companyName: widget
                                               .addWorkExperienceModel
                                               ?.object?[index]
