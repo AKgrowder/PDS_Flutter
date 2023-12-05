@@ -53,7 +53,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       onTapArrowleft1(context);
                     }),
                 centerTitle: true,
-                title: Text("Forget Password",
+                title: Text("Forgot Password",
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                     style: TextStyle(

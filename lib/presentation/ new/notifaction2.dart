@@ -252,13 +252,17 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                             fontWeight: FontWeight.bold,
                           ),
                         )),
-                        RequestOrderClass(
-                            apiDataGet: apiDataGet,
-                            requestListModelData: RequestListModelData),
-                        InviationClass(
-                          InvitationRoomData: invitationRoomData,
-                          dataGet: dataGet,
-                          Show_NoData_Image: Show_NoData_Image ?? false,
+                        SingleChildScrollView(
+                          child: RequestOrderClass(
+                              apiDataGet: apiDataGet,
+                              requestListModelData: RequestListModelData),
+                        ),
+                        SingleChildScrollView(
+                          child: InviationClass(
+                            InvitationRoomData: invitationRoomData,
+                            dataGet: dataGet,
+                            Show_NoData_Image: Show_NoData_Image ?? false,
+                          ),
                         )
                       ]),
                     ),
@@ -809,6 +813,7 @@ class _InviationClassState extends State<InviationClass> {
                                             MaterialPageRoute(
                                           builder: (context) {
                                             return RoomMembersScreen(
+                                              MoveNotification:true,
                                               RoomOwnerCount: 0,
                                                 roomname:
                                                     "${widget.InvitationRoomData?.object?[index].roomQuestion}",
