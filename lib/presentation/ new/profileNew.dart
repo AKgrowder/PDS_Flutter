@@ -366,7 +366,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       if (state is AboutMeLoadedState) {
         isAbourtMe = true;
         isUpDate = false;
-        print("dfgsfgdsfg-${isAbourtMe}"); 
+        print("dfgsfgdsfg-${isAbourtMe}");
         SnackBar snackBar = SnackBar(
           content: Text('Saved Successfully'),
           backgroundColor: ColorConstant.primary_color,
@@ -3089,7 +3089,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                             typeName: NewProfileData?.object?.module,
                           );
                         },
-                      ));
+                      )).then((value) =>
+                          BlocProvider.of<NewProfileSCubit>(context)
+                              .GetWorkExperienceAPI(context, widget.User_ID));
                     },
                     child: Icon(
                       Icons.add,
@@ -3108,13 +3110,25 @@ class _ProfileScreenState extends State<ProfileScreen>
               itemBuilder: (context, index) {
                 return ListTile(
                   titleAlignment: ListTileTitleAlignment.top,
-                  leading: CustomImageView(
-                    imagePath: ImageConstant.tomcruse,
-                    height: 32,
-                    width: 32,
-                    fit: BoxFit.fill,
-                    radius: BorderRadius.circular(25),
-                  ),
+                  leading: addWorkExperienceModel
+                                  ?.object?[index].userProfilePic !=
+                              null &&
+                          addWorkExperienceModel
+                                  ?.object?[index].userProfilePic !=
+                              ''
+                      ? CircleAvatar(
+                          backgroundColor: Colors.white,
+                          backgroundImage: NetworkImage(addWorkExperienceModel
+                                  ?.object?[index].userProfilePic ??
+                              ''),
+                        )
+                      : CustomImageView(
+                          imagePath: ImageConstant.tomcruse,
+                          height: 32,
+                          width: 32,
+                          fit: BoxFit.fill,
+                          radius: BorderRadius.circular(25),
+                        ),
                   title: Text(
                     '${addWorkExperienceModel?.object?[index].companyName}',
                     style: TextStyle(
