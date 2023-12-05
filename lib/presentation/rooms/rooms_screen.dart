@@ -1358,7 +1358,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                   ),
                                                                 )
                                                               : Container(
-                                                                  width: 99,
+                                                                  width: 120,
                                                                   height: 27.88,
                                                                   child: Stack(
                                                                     children: [
@@ -1438,11 +1438,12 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                             78,
                                                                         top: 7,
                                                                         child:
-                                                                            SizedBox(
+                                                                            Container(
                                                                           width:
-                                                                              21,
+                                                                              160,
                                                                           height:
-                                                                              16,
+                                                                              17,
+                                                                              // color: Colors.red,
                                                                           child:
                                                                               Text(
                                                                             "+${(PriveateRoomData?.object?[index].usersList?.length ?? 0) - 3}",
