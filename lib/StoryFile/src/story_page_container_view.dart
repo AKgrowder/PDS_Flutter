@@ -9,11 +9,13 @@ import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_cubit.dart';
 import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_state.dart';
 import 'package:pds/API/Model/ViewStoryModel/StoryViewList_Model.dart';
+import 'package:pds/API/Model/storyDeleteModel/storyDeleteModel.dart';
 import 'package:pds/StoryFile/src/first_build_mixin.dart';
 import 'package:pds/StoryFile/src/story_button.dart';
 import 'package:pds/StoryFile/src/story_page_scaffold.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -52,7 +54,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   String? User_ID = "";
   StoryViewListModel? StoryViewListModelData;
   late PointerUpEvent event1;
-
+  DeleteStory? deleteStory;
   @override
   void initState() {
     _storyController =
@@ -347,12 +349,12 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Listener(
-      onPointerDown: (PointerDownEvent event) async{
+      onPointerDown: (PointerDownEvent event) async {
         _pointerDownMillis = _stopwatch.elapsedMilliseconds;
         _pointerDownPosition = event.position;
         _storyController?.pause();
-       await BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
-            context,"${widget.buttonData.images[_curSegmentIndex].storyUid}");
+        await BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
+            context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
       },
       onPointerUp: (PointerUpEvent event) {
         event1 = event;
@@ -393,183 +395,248 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                             _pointerDownMillis = _stopwatch.elapsedMilliseconds;
                             _pointerDownPosition = details.localPosition;
                             _storyController?.pause();
+
                             showModalBottomSheet(
                                 isScrollControlled: true,
                                 useSafeArea: true,
                                 isDismissible: true,
-                                showDragHandle: true,
+                                showDragHandle: false,
                                 enableDrag: true,
                                 constraints:
                                     BoxConstraints.tight(Size.infinite),
                                 context: context,
                                 builder: (BuildContext bc) {
-                                  return ListView.separated(
-                                      itemCount: StoryViewListModelData
-                                              ?.object?.length ??
-                                          0,
-                                      separatorBuilder:
-                                          (BuildContext context, int index) =>
-                                              const Divider(),
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return Container(
-                                          // height: 40,
-                                          width: _width,
-                                          // color: Colors.green,
-                                          child: ListTile(
-                                            leading: GestureDetector(
+                                  return Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 30,
+                                      ),
+                                      Container(
+                                        width: _width,
+                                        child: Row(
+                                          children: [
+                                            Spacer(),
+                                            Container(
+                                              height: 2,
+                                              width: 50,
+                                              alignment: Alignment.center,
+                                              padding: EdgeInsets.all(8.0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                            Spacer(),
+                                            GestureDetector(
                                               onTap: () {
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                  return MultiBlocProvider(
-                                                      providers: [
-                                                        BlocProvider<
-                                                            NewProfileSCubit>(
-                                                          create: (context) =>
-                                                              NewProfileSCubit(),
-                                                        ),
-                                                      ],
-                                                      child: ProfileScreen(
-                                                        User_ID:
-                                                            "${StoryViewListModelData?.object?[index].userUid}",
-                                                        isFollowing:
-                                                            "${StoryViewListModelData?.object?[index].isFollowing}",
-                                                      ));
-                                                }));
-
-                                                // Navigator.push(
-                                                //     context,
-                                                //     MaterialPageRoute(
-                                                //         builder: (context) =>
-                                                //             ProfileScreen(
-                                                //               User_ID:
-                                                //                   "${StoryViewListModelData?.object?[index].userUid}",
-                                                //               isFollowing:
-                                                //                   "${StoryViewListModelData?.object?[index].isFollowing}",
-                                                //             )));
+                                                BlocProvider.of<ViewStoryCubit>(
+                                                        context)
+                                                    .delete_story(context,
+                                                        "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+                                                Navigator.of(context)
+                                                    .pushAndRemoveUntil(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                NewBottomBar(
+                                                                  buttomIndex:
+                                                                      0,
+                                                                )),
+                                                        (Route<dynamic>
+                                                                route) =>
+                                                            false);
                                               },
-                                              child: StoryViewListModelData
-                                                              ?.object?[index]
-                                                              .profilePic !=
-                                                          null &&
-                                                      StoryViewListModelData
-                                                              ?.object?[index]
-                                                              .profilePic !=
-                                                          ""
-                                                  ? CircleAvatar(
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      backgroundImage: NetworkImage(
-                                                          "${StoryViewListModelData?.object?[index].profilePic}"),
-                                                      radius: 25,
-                                                    )
-                                                  : CustomImageView(
-                                                      imagePath: (ImageConstant
-                                                          .tomcruse)),
+                                              child: Icon(
+                                                Icons.delete,
+                                                color: Colors.red,
+                                              ),
                                             ),
-                                            title: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                  height: 6,
-                                                ),
-                                                Text(
-                                                  "${StoryViewListModelData?.object?[index].userName}",
-                                                  style: TextStyle(
-                                                      fontSize: 20,
-                                                      fontFamily: "outfit",
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                // Text(
-                                                //   customFormat(
-                                                //       parsedDateTime),
-                                                //   style: TextStyle(
-                                                //     fontSize: 12,
-                                                //     fontFamily: "outfit",
-                                                //   ),
-                                                // ),
-                                              ],
-                                            ),
-                                            trailing: User_ID ==
-                                                    StoryViewListModelData
-                                                        ?.object?[index].userUid
-                                                ? SizedBox()
-                                                : GestureDetector(
+                                            SizedBox(
+                                              width: 30,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: ListView.separated(
+                                            shrinkWrap: true,
+                                            primary: true,
+                                            itemCount: StoryViewListModelData
+                                                    ?.object?.length ??
+                                                0,
+                                            separatorBuilder:
+                                                (BuildContext context,
+                                                        int index) =>
+                                                    const Divider(),
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return Container(
+                                                // height: 40,
+                                                width: _width,
+                                                // color: Colors.green,
+                                                child: ListTile(
+                                                  leading: GestureDetector(
                                                     onTap: () {
-                                                      // followFunction(
-                                                      //   apiName: 'Follow',
-                                                      //   index: index,
-                                                      // );
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                        return MultiBlocProvider(
+                                                            providers: [
+                                                              BlocProvider<
+                                                                  NewProfileSCubit>(
+                                                                create: (context) =>
+                                                                    NewProfileSCubit(),
+                                                              ),
+                                                            ],
+                                                            child:
+                                                                ProfileScreen(
+                                                              User_ID:
+                                                                  "${StoryViewListModelData?.object?[index].userUid}",
+                                                              isFollowing:
+                                                                  "${StoryViewListModelData?.object?[index].isFollowing}",
+                                                            ));
+                                                      }));
+
+                                                      // Navigator.push(
+                                                      //     context,
+                                                      //     MaterialPageRoute(
+                                                      //         builder: (context) =>
+                                                      //             ProfileScreen(
+                                                      //               User_ID:
+                                                      //                   "${StoryViewListModelData?.object?[index].userUid}",
+                                                      //               isFollowing:
+                                                      //                   "${StoryViewListModelData?.object?[index].isFollowing}",
+                                                      //             )));
                                                     },
-                                                    child: Container(
-                                                      height: 25,
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: 65,
-                                                      margin: EdgeInsets.only(
-                                                          bottom: 5),
-                                                      decoration: BoxDecoration(
-                                                          color: ColorConstant
-                                                              .primary_color,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(4)),
-                                                      child: StoryViewListModelData
-                                                                  ?.object?[
-                                                                      index]
-                                                                  .isFollowing ==
-                                                              'FOLLOW'
-                                                          ? Text(
-                                                              'Follow',
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      "outfit",
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .white),
-                                                            )
-                                                          : StoryViewListModelData
-                                                                      ?.object?[
-                                                                          index]
-                                                                      .isFollowing ==
-                                                                  'REQUESTED'
-                                                              ? Text(
-                                                                  'Requested',
-                                                                  style: TextStyle(
-                                                                      fontFamily:
-                                                                          "outfit",
-                                                                      fontSize:
-                                                                          12,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .white),
-                                                                )
-                                                              : Text(
-                                                                  'Following ',
-                                                                  style: TextStyle(
-                                                                      fontFamily:
-                                                                          "outfit",
-                                                                      fontSize:
-                                                                          12,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .white),
-                                                                ),
-                                                    ),
+                                                    child: StoryViewListModelData
+                                                                    ?.object?[
+                                                                        index]
+                                                                    .profilePic !=
+                                                                null &&
+                                                            StoryViewListModelData
+                                                                    ?.object?[
+                                                                        index]
+                                                                    .profilePic !=
+                                                                ""
+                                                        ? CircleAvatar(
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                            backgroundImage:
+                                                                NetworkImage(
+                                                                    "${StoryViewListModelData?.object?[index].profilePic}"),
+                                                            radius: 25,
+                                                          )
+                                                        : CustomImageView(
+                                                            imagePath:
+                                                                (ImageConstant
+                                                                    .tomcruse)),
                                                   ),
-                                          ),
-                                        );
-                                      });
+                                                  title: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 6,
+                                                      ),
+                                                      Text(
+                                                        "${StoryViewListModelData?.object?[index].userName}",
+                                                        style: TextStyle(
+                                                            fontSize: 20,
+                                                            fontFamily:
+                                                                "outfit",
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      // Text(
+                                                      //   customFormat(
+                                                      //       parsedDateTime),
+                                                      //   style: TextStyle(
+                                                      //     fontSize: 12,
+                                                      //     fontFamily: "outfit",
+                                                      //   ),
+                                                      // ),
+                                                    ],
+                                                  ),
+                                                  trailing: User_ID ==
+                                                          StoryViewListModelData
+                                                              ?.object?[index]
+                                                              .userUid
+                                                      ? SizedBox()
+                                                      : GestureDetector(
+                                                          onTap: () {
+                                                            // followFunction(
+                                                            //   apiName: 'Follow',
+                                                            //   index: index,
+                                                            // );
+                                                          },
+                                                          child: Container(
+                                                            height: 25,
+                                                            alignment: Alignment
+                                                                .center,
+                                                            width: 65,
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                    bottom: 5),
+                                                            decoration: BoxDecoration(
+                                                                color: ColorConstant
+                                                                    .primary_color,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            4)),
+                                                            child: StoryViewListModelData
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .isFollowing ==
+                                                                    'FOLLOW'
+                                                                ? Text(
+                                                                    'Follow',
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            "outfit",
+                                                                        fontSize:
+                                                                            12,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        color: Colors
+                                                                            .white),
+                                                                  )
+                                                                : StoryViewListModelData
+                                                                            ?.object?[index]
+                                                                            .isFollowing ==
+                                                                        'REQUESTED'
+                                                                    ? Text(
+                                                                        'Requested',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                "outfit",
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            color: Colors.white),
+                                                                      )
+                                                                    : Text(
+                                                                        'Following ',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                "outfit",
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            color: Colors.white),
+                                                                      ),
+                                                          ),
+                                                        ),
+                                                ),
+                                              );
+                                            }),
+                                      ),
+                                    ],
+                                  );
                                 }).then((value) {
                               final pointerUpMillis =
                                   _stopwatch.elapsedMilliseconds;
@@ -678,6 +745,15 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         }
         if (state is StoryViewListLoadedState) {
           StoryViewListModelData = state.StoryViewListModelData;
+        }
+        if (state is DeleteSotryLodedState) {
+          deleteStory = state.deleteStory;
+
+          SnackBar snackBar = SnackBar(
+            content: Text(state.deleteStory.object.toString()),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
       }, builder: (context, state) {
         return _buildPageStructure();
@@ -810,7 +886,9 @@ class _StoryTimelineState extends State<StoryTimeline> {
           _onSegmentComplete();
         }
       }
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 

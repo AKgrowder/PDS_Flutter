@@ -1043,7 +1043,7 @@ class _RePostScreenState extends State<RePostScreen> {
           }
         } else {
           SnackBar snackBar = SnackBar(
-            content: Text('Max 5 images upload allowed !'),
+            content: Text('Max 5 Images upload allowed !'),
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);

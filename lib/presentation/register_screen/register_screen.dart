@@ -303,7 +303,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         ForgetPasswordScreen()));
                               },
                               child: Text(
-                                "Forget Password?",
+                                "Forgot Password?",
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 style: theme.textTheme.titleSmall,

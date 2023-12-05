@@ -131,6 +131,24 @@ class ApiServices {
     }
   }
 
+  Future<Response?> deleteApiCallWithOutparams(
+      String APIurl, BuildContext context) async {
+    await UpdateBaseURL();
+
+    final headers1 = {'Authorization': 'Bearer ${Token}'};
+    print("API =>******${baseURL + APIurl}");
+    final response = await delete(
+      Uri.parse(baseURL + APIurl),
+      headers: headers1,
+    );
+
+    if (response.statusCode == 602) {
+      await setLOGOUT(context);
+    } else {
+      return response;
+    }
+  }
+
   postApiCalla(String APIurl, BuildContext context) async {
     await UpdateBaseURL();
     final headers1 = {
@@ -187,10 +205,9 @@ class ApiServices {
         response.fields["userBackgroundPic"] = params['userBackgroundPic'];
       } else if (params['userBackgroundPic'] != null) {
         response.fields["userBackgroundPic"] = params['userBackgroundPic'];
-      }else if(params['userProfilePic'] != null){
+      } else if (params['userProfilePic'] != null) {
         response.fields["userProfilePic"] = params['userProfilePic'];
-
-      } else{
+      } else {
         print("multipartFile2 else condions working on--");
       }
       response.fields["document"] = params['document'];
