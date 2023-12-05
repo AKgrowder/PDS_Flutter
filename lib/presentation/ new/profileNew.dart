@@ -21,6 +21,8 @@ import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/AddWorkExperience_Screen.dart';
+import 'package:pds/presentation/%20new/ExperienceEdit_screen.dart';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/editproilescreen.dart';
 import 'package:pds/presentation/%20new/followers.dart';
@@ -30,6 +32,8 @@ import 'package:pds/presentation/settings/setting_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../API/Model/WorkExperience_Model/WorkExperience_model.dart';
 
 class ProfileScreen extends StatefulWidget {
   String User_ID;
@@ -109,6 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool AbboutMeShow = true;
   var uploadimage = "";
   dynamic dataSetup;
+  GetWorkExperienceModel? addWorkExperienceModel;
 
   String? User_Module;
   FollowersClassModel? followersClassModel1;
@@ -179,6 +184,8 @@ class _ProfileScreenState extends State<ProfileScreen>
         .getFollwerApi(context, widget.User_ID);
     BlocProvider.of<NewProfileSCubit>(context)
         .getAllFollwing(context, widget.User_ID);
+    BlocProvider.of<NewProfileSCubit>(context)
+        .GetWorkExperienceAPI(context, widget.User_ID);
     getUserSavedData();
     dataSetup = null;
     value1 = 0;
@@ -359,9 +366,9 @@ class _ProfileScreenState extends State<ProfileScreen>
       if (state is AboutMeLoadedState) {
         isAbourtMe = true;
         isUpDate = false;
-        print("dfgsfgdsfg-${isAbourtMe}");
+        print("dfgsfgdsfg-${isAbourtMe}"); 
         SnackBar snackBar = SnackBar(
-          content: Text('Saved successfully'),
+          content: Text('Saved Successfully'),
           backgroundColor: ColorConstant.primary_color,
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -377,6 +384,9 @@ class _ProfileScreenState extends State<ProfileScreen>
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
+      }
+      if (state is GetWorkExpereinceLoadedState) {
+        addWorkExperienceModel = state.addWorkExperienceModel;
       }
     }, builder: (context, state) {
       return Scaffold(
@@ -757,8 +767,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                SettingScreen(accountType: NewProfileData?.object?.accountType ?? '',))).then((value) => BlocProvider.of<NewProfileSCubit>(
+                                            builder: (context) => SettingScreen(
+                                                  accountType: NewProfileData
+                                                          ?.object
+                                                          ?.accountType ??
+                                                      '',
+                                                ))).then((value) =>
+                                        BlocProvider.of<NewProfileSCubit>(
                                                 context)
                                             .NewProfileSAPI(
                                                 context, widget.User_ID));
@@ -778,7 +793,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 ),
                               ],
                             )
-                          : widget.isFollowing == true 
+                          : widget.isFollowing == true
                               ? Container(
                                   alignment: Alignment.center,
                                   height: 45,
@@ -1059,7 +1074,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ),
                       /* NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
                           User_ID == NewProfileData?.object?.userUid || NewProfileData?.object?.accountType == 'PUBLIC' */
-                      if (User_ID == NewProfileData?.object?.userUid||(NewProfileData?.object?.isFollowing == 'FOLLOWING' && NewProfileData?.object?.accountType == 'PRIVATE')|| NewProfileData?.object?.accountType == 'PUBLIC')
+                      if (User_ID == NewProfileData?.object?.userUid ||
+                          (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
+                              NewProfileData?.object?.accountType ==
+                                  'PRIVATE') ||
+                          NewProfileData?.object?.accountType == 'PUBLIC')
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -1275,7 +1294,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 : SizedBox.shrink(),
                           ],
                         ),
-                      if (User_ID == NewProfileData?.object?.userUid||(NewProfileData?.object?.isFollowing == 'FOLLOWING' && NewProfileData?.object?.accountType == 'PRIVATE')|| NewProfileData?.object?.accountType == 'PUBLIC') 
+                      if (User_ID == NewProfileData?.object?.userUid ||
+                          (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
+                              NewProfileData?.object?.accountType ==
+                                  'PRIVATE') ||
+                          NewProfileData?.object?.accountType == 'PUBLIC')
                         Container(
                           // color: Colors.red,
                           /*  height: _height, */
@@ -1283,10 +1306,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                               ? NewProfileData?.object?.module == "EMPLOYEE"
                                   ? _height / 3
                                   : NewProfileData?.object?.module == "EXPERT"
-                                      ? 830
+                                      ? 630 // 630 old height
                                       : NewProfileData?.object?.module ==
                                               "COMPANY"
-                                          ? 650
+                                          ? 1050 // 650 old height + 400
                                           : 0
                               : arrNotiyTypeList[1].isSelected == true
                                   ? FinalPostCount * 190
@@ -1580,6 +1603,30 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     /*  child: expertUser(_height, _width) */
                                                     child: compnayUser(
                                                         _height, _width),
+                                                  )
+                                                : SizedBox(),
+                                            NewProfileData?.object?.module ==
+                                                    "COMPANY"
+                                                ? Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 10),
+                                                    child: Container(
+                                                        height: 300,
+                                                        decoration: BoxDecoration(
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  blurRadius:
+                                                                      20),
+                                                            ],
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                        child: experience()),
                                                   )
                                                 : SizedBox()
                                           ],
@@ -2989,6 +3036,133 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
         ),
       ],
+    );
+  }
+
+  Widget experience() {
+    return Padding(
+      padding: const EdgeInsets.all(15),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Experience',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return ExperienceEditScreen(
+                            addWorkExperienceModel: addWorkExperienceModel,
+                            typeName: NewProfileData?.object?.module,
+                          );
+                        },
+                      )).then((value) =>
+                          BlocProvider.of<NewProfileSCubit>(context)
+                              .GetWorkExperienceAPI(context, widget.User_ID));
+                    },
+                    child: Icon(
+                      Icons.edit,
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      print(
+                          "modulemodule == ${NewProfileData?.object?.module}");
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return AddWorkExperienceScreen(
+                            typeName: NewProfileData?.object?.module,
+                          );
+                        },
+                      ));
+                    },
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.black,
+                      size: 25,
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+          Expanded(
+            child: ListView.builder(
+              padding: EdgeInsets.only(top: 10),
+              itemCount: addWorkExperienceModel?.object?.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  titleAlignment: ListTileTitleAlignment.top,
+                  leading: CustomImageView(
+                    imagePath: ImageConstant.tomcruse,
+                    height: 32,
+                    width: 32,
+                    fit: BoxFit.fill,
+                    radius: BorderRadius.circular(25),
+                  ),
+                  title: Text(
+                    '${addWorkExperienceModel?.object?[index].companyName}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        '${addWorkExperienceModel?.object?[index].jobProfile}',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                        ),
+                      ),
+                      Text(
+                        '${addWorkExperienceModel?.object?[index].industryType}',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                        ),
+                      ),
+                      addWorkExperienceModel?.object?[index].startDate !=
+                                  null &&
+                              addWorkExperienceModel?.object?[index].endDate !=
+                                  null
+                          ? Text(
+                              '${addWorkExperienceModel?.object?[index].startDate} - ${addWorkExperienceModel?.object?[index].endDate}',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                              ),
+                            )
+                          : SizedBox(),
+                    ],
+                  ),
+                );
+              },
+            ),
+          )
+        ],
+      ),
     );
   }
 
