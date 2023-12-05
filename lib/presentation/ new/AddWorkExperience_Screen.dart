@@ -13,6 +13,7 @@ import '../../API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import '../../API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_state.dart';
 
 class AddWorkExperienceScreen extends StatefulWidget {
+  String? workUserID;
   String? typeName;
   bool? edit;
   String? companyName;
@@ -23,19 +24,20 @@ class AddWorkExperienceScreen extends StatefulWidget {
   String? expertise;
   String? industryTypeID;
   String? expertiseID;
-  AddWorkExperienceScreen({
-    Key? key,
-    this.typeName,
-    this.edit,
-    this.companyName,
-    this.jobProfile,
-    this.startDate,
-    this.endDate,
-    this.industryType,
-    this.expertise,
-    this.industryTypeID,
-    this.expertiseID,
-  }) : super(key: key);
+  AddWorkExperienceScreen(
+      {Key? key,
+      this.typeName,
+      this.edit,
+      this.companyName,
+      this.jobProfile,
+      this.startDate,
+      this.endDate,
+      this.industryType,
+      this.expertise,
+      this.industryTypeID,
+      this.expertiseID,
+      this.workUserID})
+      : super(key: key);
 
   @override
   State<AddWorkExperienceScreen> createState() =>
@@ -73,12 +75,14 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
 
   void initState() {
     super.initState();
-    BlocProvider.of<NewProfileSCubit>(context).fetchExprties(context);
+    if (widget.typeName != "COMPANY") {
+      BlocProvider.of<NewProfileSCubit>(context).fetchExprties(context);
+    }
     BlocProvider.of<NewProfileSCubit>(context).IndustryTypeAPI(context);
     if (widget.edit == true) {
       companyNameController.text = widget.companyName.toString();
       JobProfileController.text = widget.jobProfile.toString();
-      IndustryTypeController.text = widget.industryType.toString();
+
       StartDateController.text = widget.startDate.toString();
       EndDateController.text = widget.endDate.toString();
       //  widget.typeName != "COMPANY" ? selectedExpertise.expertiseName = widget.expertise : "";
@@ -130,27 +134,25 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                         expertiseJson.expertiseName.toString(),
                       ))
                   .toList();
+              expertiseData.forEach((element) {
+                if (element.expertiseName == widget.expertise) {
+                  selectedExpertise = element;
+                }
+              });
             }
             if (state is IndustryTypeLoadedState) {
               print("this is the calling");
               industryTypeModel = state.industryTypeModel;
               _industryTypes =
                   state.industryTypeModel.object!.map((industryTypejson) {
-                print("this is the check--${widget.industryType}");
-                print(
-                    "this is the check widget--${industryTypejson.industryTypeName}");
-                print(
-                    "checl ALl condion-${widget.industryType}--- ${industryTypejson.industryTypeName}");
-                /* if (widget.industryType == industryTypejson.industryTypeName) {
-                  print("this condion is working");
-                  selectedIndustryTypes = IndustryType(
-                      industryTypejson.industryTypeUid ?? '',
-                      industryTypejson.industryTypeName ?? '');
-                } */ // working on droppdown setup
                 return IndustryType(industryTypejson.industryTypeUid.toString(),
                     industryTypejson.industryTypeName.toString());
               }).toList();
-
+              _industryTypes.forEach((element) {
+                if (element.industryTypeName == widget.industryType) {
+                  selectedIndustryTypes = element;
+                }
+              });
               //ankur
 
               // List<IndustryType> industryTypeData1 = state
@@ -163,6 +165,14 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
               //     .map((industryType) => MultiSelectItem(
               //         industryType, industryType.industryTypeName))
               //     .toList();
+            }
+            if (state is AddWorkExpereinceLoadedState) {
+              SnackBar snackBar = SnackBar(
+                content: Text(state.addWorkExperienceModel.object.toString()),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              Navigator.pop(context);
             }
           },
           builder: (context, state) {
@@ -439,42 +449,43 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                     ),
                     child: GestureDetector(
                       onTap: () {
-                        if (widget.typeName == "COMPANY") {
-                          if (companyNameController.text == null ||
-                              companyNameController.text == "") {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please Enter Company Name'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (JobProfileController.text == null ||
-                              JobProfileController.text == "") {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please Enter Job Profile'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (JobProfileController.text.isNotEmpty &&
-                              JobProfileController.text.length < 4) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text(
-                                  'Minimum length required in Job Profiie'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (selectedIndustryTypes?.industryTypeName
-                                  .toString() ==
-                              null) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please Selcted Industry Type'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } /*  else if (formattedDateStart.toString().isNotEmpty) {
+                        if (widget.edit == true) {
+                          if (widget.typeName == "COMPANY") {
+                            if (companyNameController.text == null ||
+                                companyNameController.text == "") {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please Enter Company Name'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (JobProfileController.text == null ||
+                                JobProfileController.text == "") {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please Enter Job Profile'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (JobProfileController.text.isNotEmpty &&
+                                JobProfileController.text.length < 4) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text(
+                                    'Minimum length required in Job Profiie'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (selectedIndustryTypes?.industryTypeName
+                                    .toString() ==
+                                null) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please Selcted Industry Type'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } /*  else if (formattedDateStart.toString().isNotEmpty) {
                             SnackBar snackBar = SnackBar(
                               content: Text('Please select Start Date'),
                               backgroundColor: ColorConstant.primary_color,
@@ -489,65 +500,66 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
                           }  */
-                          else {
-                            var params = {
-                              "companyName": companyNameController.text,
-                              "industryType":
-                                  selectedIndustryTypes?.industryTypeName,
-                              "jobProfile": JobProfileController.text,
-                              "endDate": formattedDateEnd,
-                              "startDate": formattedDateStart
-                            };
-                            print(
-                                "AddWorkExperienceAPIAddWorkExperienceAPI${params}");
-                            BlocProvider.of<NewProfileSCubit>(context)
-                                .AddWorkExperienceAPI(params, context);
-                          }
-                        } else {
-                          if (companyNameController.text == null ||
-                              companyNameController.text == "") {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please Enter Company Name'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (JobProfileController.text == null ||
-                              JobProfileController.text == "") {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please Enter Job Profile'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (JobProfileController.text.isNotEmpty &&
-                              JobProfileController.text.length < 4) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text(
-                                  'Minimum length required in Job Profiie'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (selectedExpertise?.expertiseName
-                                  .toString() ==
-                              null) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please select Expertise in'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (selectedIndustryTypes?.industryTypeName
-                                  .toString() ==
-                              null) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please Selcted Industry Type'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } /*  else if (formattedDateStart.toString().isNotEmpty) {
+                            else {
+                              var params = {
+                                "companyName": companyNameController.text,
+                                "industryType":
+                                    selectedIndustryTypes?.industryTypeName,
+                                "jobProfile": JobProfileController.text,
+                                "endDate": formattedDateEnd,
+                                "startDate": formattedDateStart,
+                                "userWorkExperienceUid": widget.workUserID
+                              };
+                              print(
+                                  "AddWorkExperienceAPIAddWorkExperienceAPI${params}");
+                              BlocProvider.of<NewProfileSCubit>(context)
+                                  .AddWorkExperienceAPI(params, context);
+                            }
+                          } else {
+                            if (companyNameController.text == null ||
+                                companyNameController.text == "") {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please Enter Company Name'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (JobProfileController.text == null ||
+                                JobProfileController.text == "") {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please Enter Job Profile'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (JobProfileController.text.isNotEmpty &&
+                                JobProfileController.text.length < 4) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text(
+                                    'Minimum length required in Job Profiie'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (selectedExpertise?.expertiseName
+                                    .toString() ==
+                                null) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please select Expertise in'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (selectedIndustryTypes?.industryTypeName
+                                    .toString() ==
+                                null) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please Selcted Industry Type'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } /*  else if (formattedDateStart.toString().isNotEmpty) {
                             SnackBar snackBar = SnackBar(
                               content: Text('Please select Start Date'),
                               backgroundColor: ColorConstant.primary_color,
@@ -562,20 +574,163 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
                           } */
-                          else {
-                            var params = {
-                              "companyName": companyNameController.text,
-                              "industryType":
-                                  selectedIndustryTypes?.industryTypeName,
-                              "expertiseIn": selectedExpertise?.expertiseName,
-                              "jobProfile": JobProfileController.text,
-                              "endDate": formattedDateEnd,
-                              "startDate": formattedDateStart
-                            };
-                            print(
-                                "AddWorkExperienceAPIAddWorkExperienceAPI${params}");
-                            BlocProvider.of<NewProfileSCubit>(context)
-                                .AddWorkExperienceAPI(params, context);
+                            else {
+                              var params1 = {
+                                "companyName": companyNameController.text,
+                                "industryType":
+                                    selectedIndustryTypes?.industryTypeName,
+                                "expertiseIn": selectedExpertise?.expertiseName,
+                                "jobProfile": JobProfileController.text,
+                                "endDate": formattedDateEnd,
+                                "startDate": formattedDateStart,
+                                "userWorkExperienceUid": widget.workUserID
+                              };
+                              print("NewProfileSCubit${params1}");
+                              print("widget.workUserID${widget.workUserID}");
+                              BlocProvider.of<NewProfileSCubit>(context)
+                                  .AddWorkExperienceAPI(params1, context);
+                            }
+                          }
+                        } else {
+                          if (widget.typeName == "COMPANY") {
+                            if (companyNameController.text == null ||
+                                companyNameController.text == "") {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please Enter Company Name'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (JobProfileController.text == null ||
+                                JobProfileController.text == "") {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please Enter Job Profile'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (JobProfileController.text.isNotEmpty &&
+                                JobProfileController.text.length < 4) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text(
+                                    'Minimum length required in Job Profiie'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (selectedIndustryTypes?.industryTypeName
+                                    .toString() ==
+                                null) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please Selcted Industry Type'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } /*  else if (formattedDateStart.toString().isNotEmpty) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please select Start Date'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (formattedDateEnd.toString().isNotEmpty) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please select End Date'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          }  */
+                            else {
+                              var params = {
+                                "companyName": companyNameController.text,
+                                "industryType":
+                                    selectedIndustryTypes?.industryTypeName,
+                                "jobProfile": JobProfileController.text,
+                                "endDate": formattedDateEnd,
+                                "startDate": formattedDateStart
+                              };
+                              print(
+                                  "AddWorkExperienceAPIAddWorkExperienceAPI${params}");
+                              BlocProvider.of<NewProfileSCubit>(context)
+                                  .AddWorkExperienceAPI(params, context);
+                            }
+                          } else {
+                            if (companyNameController.text == null ||
+                                companyNameController.text == "") {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please Enter Company Name'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (JobProfileController.text == null ||
+                                JobProfileController.text == "") {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please Enter Job Profile'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (JobProfileController.text.isNotEmpty &&
+                                JobProfileController.text.length < 4) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text(
+                                    'Minimum length required in Job Profiie'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (selectedExpertise?.expertiseName
+                                    .toString() ==
+                                null) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please select Expertise in'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (selectedIndustryTypes?.industryTypeName
+                                    .toString() ==
+                                null) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please Selcted Industry Type'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } /*  else if (formattedDateStart.toString().isNotEmpty) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please select Start Date'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (formattedDateEnd.toString().isNotEmpty) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please select End Date'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } */
+                            else {
+                              var params1 = {
+                                "companyName": companyNameController.text,
+                                "industryType":
+                                    selectedIndustryTypes?.industryTypeName,
+                                "expertiseIn": selectedExpertise?.expertiseName,
+                                "jobProfile": JobProfileController.text,
+                                "endDate": formattedDateEnd,
+                                "startDate": formattedDateStart,
+                                "userWorkExperienceUid": widget.workUserID
+                              };
+                              print("NewProfileSCubit${params1}");
+                              print("widget.workUserID${widget.workUserID}");
+                              BlocProvider.of<NewProfileSCubit>(context)
+                                  .AddWorkExperienceAPI(params1, context);
+                            }
                           }
                         }
                       },
@@ -587,7 +742,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                             borderRadius: BorderRadius.circular(10)),
                         child: Center(
                           child: Text(
-                            "Save",
+                            widget.edit == true ? "Edit" : "Save",
                             style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w500,
