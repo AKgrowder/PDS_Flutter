@@ -13,6 +13,7 @@ class ControlNotifier extends ChangeNotifier {
   }
 
   int _gradientIndex = 0;
+  bool isDataGet = false;
 
   /// current gradient index
   int get gradientIndex => _gradientIndex;
