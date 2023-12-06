@@ -427,11 +427,13 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                             ),
                                             Spacer(),
                                             GestureDetector(
-                                              onTap: () {
-                                                BlocProvider.of<ViewStoryCubit>(
-                                                        context)
+                                              onTap: () async {
+                                                await BlocProvider.of<
+                                                        ViewStoryCubit>(context)
                                                     .delete_story(context,
                                                         "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+                                                Future.delayed(
+                                                    Duration(seconds: 3));
                                                 Navigator.of(context)
                                                     .pushAndRemoveUntil(
                                                         MaterialPageRoute(

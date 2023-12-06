@@ -370,17 +370,21 @@ class _MainViewState extends State<MainView> {
                   gridViewController: scrollProvider.gridController,
                   thumbnailQuality: widget.galleryThumbnailQuality,
                   singlePick: true,
-                  onlyImages: true,
+                  onlyImages: false,
+                  onlyVideos: true,
                   appBarColor: widget.editorBackgroundColor ?? Colors.black,
                   gridViewPhysics: itemProvider.draggableWidget.isEmpty
                       ? const NeverScrollableScrollPhysics()
                       : const ScrollPhysics(),
                   pathList: (path) {
                     //  controlNotifier.mediaPath = path.first.path!.toString();
-                    if (path.first.path.toString().isNotEmpty) {
-                      getFileSize(path.first.path.toString(), 1, context,
-                          controlNotifier, itemProvider);
-                    }
+                    /* print(
+                        "this is the pathe check--${path.first.path!.toString()}");
+                        print("this is the --${path.first.}"); */
+                    // if (path.first.path.toString().isNotEmpty) {
+                    //   getFileSize(path.first.path.toString(), 1, context,
+                    //       controlNotifier, itemProvider);
+                    // }
                     scrollProvider.pageController.animateToPage(0,
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeIn);
