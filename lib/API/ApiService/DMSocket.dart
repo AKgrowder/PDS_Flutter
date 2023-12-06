@@ -13,7 +13,7 @@ var DMbaseURL = "";
 /// late StompClient stompClient;
 void onConnect(StompFrame frame) {
   DMstompClient.subscribe(
-    destination: "/topic/getMessage/${DMChatInboxUid}",
+    destination: "/topic/getInboxMessage/${DMChatInboxUid}",
     callback: (StompFrame frame) {
       print('Received message AA <->: ${frame.body}');
       // Process the received message
@@ -32,7 +32,7 @@ void onConnect(StompFrame frame) {
     print("Room Socket ++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
     DMstompClient.subscribe(
-      destination: "/topic/getMessage/${DMChatInboxUid}",
+      destination: "/topic/getInboxMessage/${DMChatInboxUid}",
       callback: (StompFrame frame) {
         print('Received message AA ---->: ${frame.body}');
       },
