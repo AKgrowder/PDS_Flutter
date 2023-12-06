@@ -10,16 +10,28 @@ import '../../API/Model/WorkExperience_Model/WorkExperience_model.dart';
 import '../../core/app_export.dart';
 
 class ExperienceEditScreen extends StatefulWidget {
+  String? userID;
   String? typeName;
-  GetWorkExperienceModel? addWorkExperienceModel;
-  ExperienceEditScreen({Key? key, this.typeName, this.addWorkExperienceModel})
-      : super(key: key);
+  ExperienceEditScreen({
+    Key? key,
+    this.userID,
+    this.typeName,
+  }) : super(key: key);
 
   @override
   State<ExperienceEditScreen> createState() => _ExperienceEditScreenState();
 }
 
 class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    BlocProvider.of<NewProfileSCubit>(context)
+        .GetWorkExperienceAPI(context, widget.userID.toString());
+  }
+
+  GetWorkExperienceModel? addWorkExperienceModel;
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
@@ -57,7 +69,9 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
           Navigator.pop(context);
-          Navigator.pop(context);
+        }
+        if (state is GetWorkExpereinceLoadedState) {
+          addWorkExperienceModel = state.addWorkExperienceModel;
         }
       }, builder: (context, state) {
         return Column(
@@ -66,7 +80,9 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
               height: _height / 1.2,
               child: ListView.builder(
                 padding: EdgeInsets.only(top: 10),
-                itemCount: widget.addWorkExperienceModel?.object?.length,
+                itemCount: addWorkExperienceModel?.object?.length != null
+                    ? addWorkExperienceModel?.object?.length
+                    : 1,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding:
@@ -77,21 +93,18 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                           borderRadius: BorderRadius.circular(10)),
                       child: ListTile(
                         titleAlignment: ListTileTitleAlignment.top,
-                        leading: widget.addWorkExperienceModel?.object?[index]
-                                        .userProfilePic !=
+                        leading: addWorkExperienceModel
+                                        ?.object?[index].userProfilePic !=
                                     null &&
-                                widget.addWorkExperienceModel?.object?[index]
-                                        .userProfilePic !=
+                                addWorkExperienceModel
+                                        ?.object?[index].userProfilePic !=
                                     ''
-                            ? InkWell(
-                                child: CircleAvatar(
-                                  backgroundImage: NetworkImage(widget
-                                          .addWorkExperienceModel
-                                          ?.object?[index]
-                                          .userProfilePic
-                                          .toString() ??
-                                      ''),
-                                ),
+                            ? CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                    addWorkExperienceModel
+                                            ?.object?[index].userProfilePic
+                                            .toString() ??
+                                        ''),
                               )
                             : CustomImageView(
                                 imagePath: ImageConstant.tomcruse,
@@ -104,7 +117,7 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              '${widget.addWorkExperienceModel?.object?[index].companyName}',
+                              '${addWorkExperienceModel?.object?[index].companyName}',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
@@ -118,34 +131,24 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                     Navigator.push(context, MaterialPageRoute(
                                       builder: (context) {
                                         return AddWorkExperienceScreen(
-                                          workUserID: widget
-                                              .addWorkExperienceModel
+                                          workUserID: addWorkExperienceModel
                                               ?.object?[index]
                                               .workExperienceUid,
                                           typeName: widget.typeName,
-                                          companyName: widget
-                                              .addWorkExperienceModel
-                                              ?.object?[index]
-                                              .companyName,
+                                          companyName: addWorkExperienceModel
+                                              ?.object?[index].companyName,
                                           edit: true,
-                                          endDate: widget.addWorkExperienceModel
+                                          endDate: addWorkExperienceModel
                                               ?.object?[index].endDate,
-                                          expertise: widget
-                                              .addWorkExperienceModel
-                                              ?.object?[index]
-                                              .expertiseIn,
-                                          industryType: widget
-                                              .addWorkExperienceModel
-                                              ?.object?[index]
-                                              .industryType,
-                                          jobProfile: widget
-                                              .addWorkExperienceModel
-                                              ?.object?[index]
-                                              .jobProfile,
-                                          startDate: widget
-                                              .addWorkExperienceModel
-                                              ?.object?[index]
-                                              .startDate,
+                                          expertise: addWorkExperienceModel
+                                              ?.object?[index].expertiseIn,
+                                          industryType: addWorkExperienceModel
+                                              ?.object?[index].industryType,
+                                          jobProfile: addWorkExperienceModel
+                                              ?.object?[index].jobProfile,
+                                          startDate: addWorkExperienceModel
+                                              ?.object?[index].startDate,
+                                          userID: widget.userID,
                                         );
                                       },
                                     ));
@@ -251,7 +254,7 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                                                         NewProfileSCubit>(
                                                                     context)
                                                                 .DeleteWorkExperienceAPI(
-                                                                    "${widget.addWorkExperienceModel?.object?[index].workExperienceUid}",
+                                                                    "${addWorkExperienceModel?.object?[index].workExperienceUid}",
                                                                     context);
                                                           },
                                                           child: Container(
@@ -285,7 +288,10 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                                   ],
                                                 )),
                                           );
-                                        });
+                                        }).then((value) => BlocProvider.of<
+                                            NewProfileSCubit>(context)
+                                        .GetWorkExperienceAPI(
+                                            context, widget.userID.toString()));
                                   },
                                   child: Image.asset(
                                     ImageConstant.deleteIcon,
@@ -306,27 +312,35 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                               height: 10,
                             ),
                             Text(
-                              '${widget.addWorkExperienceModel?.object?[index].jobProfile}',
+                              '${addWorkExperienceModel?.object?[index].jobProfile}',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 13,
                               ),
                             ),
+                            widget.typeName == "EXPERT"
+                                ? Text(
+                                    '${addWorkExperienceModel?.object?[index].expertiseIn}',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                    ),
+                                  )
+                                : SizedBox(),
                             Text(
-                              '${widget.addWorkExperienceModel?.object?[index].industryType}',
+                              '${addWorkExperienceModel?.object?[index].industryType}',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 13,
                               ),
                             ),
-                            widget.addWorkExperienceModel?.object?[index]
-                                            .startDate !=
+                            addWorkExperienceModel?.object?[index].startDate !=
                                         null &&
-                                    widget.addWorkExperienceModel
+                                    addWorkExperienceModel
                                             ?.object?[index].endDate !=
                                         null
                                 ? Text(
-                                    '${widget.addWorkExperienceModel?.object?[index].startDate} to ${widget.addWorkExperienceModel?.object?[index].endDate}',
+                                    '${addWorkExperienceModel?.object?[index].startDate} to ${addWorkExperienceModel?.object?[index].endDate}',
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 13,
@@ -351,6 +365,7 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
             builder: (context) {
               return AddWorkExperienceScreen(
                 typeName: widget.typeName,
+                userID: widget.userID,
               );
             },
           ));
