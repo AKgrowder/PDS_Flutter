@@ -31,7 +31,7 @@ class Config {
   static const String addDeviceDetail = "auth/auth/addDeviceDetail";
   static const String fetchAllExperts = "user/api/fetchAllExperts";
   static const String myaccountApi = "user/api/fetchUserProfile";
-  
+
   static const String systemconfig = "user/api/fetchSysConfig";
   static const String fetchUserModule = "user/api/fetchUserModule";
   static const String fetchRoomDetails = "user/api/fetchRoomDetails/";
@@ -108,15 +108,12 @@ class Config {
   static const String SelectChatMember = "user/api/search_user_for_inbox";
   static const String validateTokenCheck = "auth/auth/validateTokenCheck";
   static const String logOutUserSttionExperied = "auth/auth/isTokenExpired";
-   static const String roomExists = "user/api/assignAdminToOtherRoomMember";
-    static const String search_user_for_inboxUrl = "user/api/search_user_for_inbox";
-    static const String accountType = "user/api/change_account_type";
-static const String addExperience = "user/api/add_update_work_experience";
-static const String getExperience = "user/api/get_all_work_experiences";
-static const String deleteExperience = "user/api/delete_work_experience";
+  static const String roomExists = "user/api/assignAdminToOtherRoomMember";
+  static const String search_user_for_inboxUrl =
+      "user/api/search_user_for_inbox";
+  static const String accountType = "user/api/change_account_type";
+  static const String addExperience = "user/api/add_update_work_experience";
+  static const String getExperience = "user/api/get_all_work_experiences";
+  static const String deleteExperience = "user/api/delete_work_experience";
   static const String delete_story = "user/api/delete_story";
-
-
-
-
 }
