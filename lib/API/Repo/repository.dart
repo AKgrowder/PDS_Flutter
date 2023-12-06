@@ -440,7 +440,7 @@ class Repository {
 
   FetchAllExpertsAPI(BuildContext context) async {
     final response =
-        await apiServices.getApiCall(Config.fetchAllExperts, context);
+        await apiServices.getApiCallWithToken(Config.fetchAllExperts, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {

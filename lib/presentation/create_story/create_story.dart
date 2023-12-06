@@ -50,7 +50,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
           galleryThumbnailQuality: 300,
           //isCustomFontList: true,
           onDone: (uri) {
-            debugPrint(uri);
+            print("uri-$uri");
 
             BlocProvider.of<CreateStoryCubit>(context)
                 .UplodeImageAPI(context, 'Demo', uri);
