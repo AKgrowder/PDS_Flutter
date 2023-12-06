@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gallery_media_picker/gallery_media_picker.dart';
@@ -8,6 +9,7 @@ import 'package:stories_editor/src/domain/providers/notifiers/scroll_notifier.da
 import 'package:stories_editor/src/domain/sevices/save_as_image.dart';
 import 'package:stories_editor/src/presentation/widgets/animated_onTap_button.dart';
 
+ 
 class BottomTools extends StatelessWidget {
   final GlobalKey contentKey;
   final Function(String imageUri) onDone;
@@ -47,7 +49,7 @@ class BottomTools extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                                 child: GestureDetector(
                                   onTap: () {
-                                    /// scroll to gridView page
+                                      controlNotifier.isDataGet = true;
                                     if (controlNotifier.mediaPath.isEmpty) {
                                       scrollNotifier.pageController
                                           .animateToPage(1,
@@ -60,7 +62,7 @@ class BottomTools extends StatelessWidget {
                                     thumbnailQuality: 150,
                                   ),
                                 ))
-
+                        
                             /// return clear [imagePath] provider
                             : GestureDetector(
                                 onTap: () {
@@ -85,7 +87,7 @@ class BottomTools extends StatelessWidget {
                     ),
                   ),
                 ),
-
+        
                 /// center logo
                 if (controlNotifier.middleBottomWidget != null)
                   Expanded(
@@ -95,7 +97,7 @@ class BottomTools extends StatelessWidget {
                           child: controlNotifier.middleBottomWidget),
                     ),
                   ),
-
+        
                 /// save final image to gallery
                 Expanded(
                   child: Container(
