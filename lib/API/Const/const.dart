@@ -116,4 +116,6 @@ class Config {
   static const String getExperience = "user/api/get_all_work_experiences";
   static const String deleteExperience = "user/api/delete_work_experience";
   static const String delete_story = "user/api/delete_story";
+  static const String DMChatList = "user/api/get_inbox_messages";
+
 }
