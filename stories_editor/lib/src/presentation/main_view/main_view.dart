@@ -149,10 +149,11 @@ class _MainViewState extends State<MainView> {
             return SafeArea(
               //top: false,
               child: ScrollablePageView(
-                scrollPhysics: controlNotifier.mediaPath.isEmpty &&
+                /* scrollPhysics: controlNotifier.mediaPath.isEmpty &&
                     itemProvider.draggableWidget.isEmpty &&
                     !controlNotifier.isPainting &&
-                    !controlNotifier.isTextEditing,
+                    !controlNotifier.isTextEditing, */
+                scrollPhysics: false,
                 pageController: scrollProvider.pageController,
                 gridController: scrollProvider.gridController,
                 mainView: Column(
@@ -168,6 +169,7 @@ class _MainViewState extends State<MainView> {
                             onScaleStart: _onScaleStart,
                             onScaleUpdate: _onScaleUpdate,
                             onTap: () {
+                              print("thi is the will  be");
                               controlNotifier.isTextEditing =
                                   !controlNotifier.isTextEditing;
                             },
@@ -357,6 +359,7 @@ class _MainViewState extends State<MainView> {
                       BottomTools(
                         contentKey: contentKey,
                         onDone: (bytes) {
+                          print("this is the new data set");
                           setState(() {
                             widget.onDone!(bytes);
                           });
@@ -370,25 +373,18 @@ class _MainViewState extends State<MainView> {
                   gridViewController: scrollProvider.gridController,
                   thumbnailQuality: widget.galleryThumbnailQuality,
                   singlePick: true,
-                  onlyImages: false,
-                  onlyVideos: true,
                   appBarColor: widget.editorBackgroundColor ?? Colors.black,
                   gridViewPhysics: itemProvider.draggableWidget.isEmpty
                       ? const NeverScrollableScrollPhysics()
                       : const ScrollPhysics(),
-                  pathList: (path) {
-                    //  controlNotifier.mediaPath = path.first.path!.toString();
-                    /* print(
-                        "this is the pathe check--${path.first.path!.toString()}");
-                        print("this is the --${path.first.}"); */
-                    // if (path.first.path.toString().isNotEmpty) {
-                    //   getFileSize(path.first.path.toString(), 1, context,
-                    //       controlNotifier, itemProvider);
-                    // }
-                    scrollProvider.pageController.animateToPage(0,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeIn);
-                  },
+
+                pathList: (path) {
+                  
+                   if (path.first.path.toString().isNotEmpty) {
+                      getFileSize(path.first.path.toString(), 1, context,
+                          controlNotifier, itemProvider);
+                    }
+                },
                   appBarLeadingWidget: Padding(
                     padding: const EdgeInsets.only(bottom: 15, right: 15),
                     child: Align(

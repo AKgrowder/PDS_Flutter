@@ -254,6 +254,8 @@ class _ProfileScreenState extends State<ProfileScreen>
         followersClassModel2 = state.followersClassModel1;
       }
       if (state is NewProfileSLoadedState) {
+        industryTypesArray = "";
+        ExpertiseData = "";
         NewProfileData = state.PublicRoomData;
         print("i check accountTyp--${NewProfileData?.object?.accountType}");
         isDataGet = true;
@@ -2643,6 +2645,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       builder: (context) => EditProfileScreen(
                             newProfileData: NewProfileData,
                           ))).then((value) =>
+                          
                   BlocProvider.of<NewProfileSCubit>(context)
                       .NewProfileSAPI(context, widget.User_ID));
             },

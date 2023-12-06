@@ -237,7 +237,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               }
               Navigator.pop(context);
             }
-           if (state is AddExportLoadedState) {
+            if (state is AddExportLoadedState) {
               if (state.addExpertProfile.message.toString() ==
                   "Profile Created Successfully") {
                 SnackBar snackBar = SnackBar(
@@ -1030,6 +1030,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   expertUserData() async {
+    List<String> industryUUID11 = [];
+    selectedIndustryTypes3.forEach(
+      (element) {
+        industryUUID11.add("${element.industryTypeUid}");
+      },
+    );
+    setState(() {});
     print("this is the expertDetials");
     if (jobProfile.text == null || jobProfile.text == "") {
       SnackBar snackBar = SnackBar(
@@ -1088,7 +1095,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ? chooseDocumentuploded2?.object.toString()
               : "${widget.newProfileData?.object?.userDocument?.toString()}",
           "expertUId": ["${selectedExpertise?.uid}"],
-          "industryTypesUid": industryUUIDinApi,
+          "industryTypesUid": industryUUID11,
           "fees": fees.text,
           "jobProfile": jobProfile.text,
           "workingHours": time.toString(),
@@ -1110,7 +1117,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ? chooseDocumentuploded2?.object.toString()
               : "${widget.newProfileData?.object?.userDocument?.toString()}",
           "expertUId": ["${selectedExpertise?.uid}"],
-          "industryTypesUid": industryUUIDinApi,
+          "industryTypesUid": industryUUID11,
           "fees": fees.text,
           "jobProfile": jobProfile.text,
           "workingHours": time.toString(),
@@ -1145,7 +1152,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "workingHours": time.toString(),
           "jobProfile": jobProfile.text,
           "profileUid": widget.newProfileData?.object?.profileUid,
-          "industryTypesUid": industryUUIDinApi,
+          "industryTypesUid": industryUUID11,
           "name": nameController.text,
           "email": emailController.text,
           "uid": User_ID,
@@ -1172,14 +1179,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "workingHours": time.toString(),
           "jobProfile": jobProfile.text,
           "profileUid": widget.newProfileData?.object?.profileUid,
-          "industryTypesUid": industryUUIDinApi,
+          "industryTypesUid": industryUUID11,
           "name": nameController.text,
           "email": emailController.text,
           "uid": User_ID,
         };
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
-        print("else condison working--$params");
+        print("else condison working--$industryUUID11");
+        print("else condison workingsdfgdfg--${industryUUID11.length}");
       }
     }
   }
@@ -1236,7 +1244,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
         if (widget.newProfileData?.object?.industryTypes?.isNotEmpty == true)
-          Container(
+          /*  Container(
             decoration: BoxDecoration(color: Color(0xffEFEFEF)),
             child: DropdownButtonHideUnderline(
               child: Padding(
@@ -1251,14 +1259,45 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   items: _industryTypes!,
                   listType: MultiSelectListType.LIST,
-                  /* onConfirm: (values) {
+                  onConfirm: (values) {
                     selectedIndustryTypes2 = values;
                     selectedIndustryTypes2.forEach((element) {
-                      industryUUID.add("${element.industryTypeUid}");
+                      industryUUIDinApi.add("${element.industryTypeUid}");
                     });
                     setState(() {});
-                  }, */
-                  onConfirm: (p0) {},
+                  },
+                ),
+              ),
+            ),
+          ), */
+          Container(
+            width: _width,
+            decoration: BoxDecoration(color: Color(0xffEFEFEF)),
+            child: DropdownButtonHideUnderline(
+              child: Padding(
+                padding: EdgeInsets.only(left: 12),
+                child: MultiSelectDialogField<IndustryType>(
+                  initialValue: [...selectedIndustryTypes3],
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.transparent)),
+                  buttonIcon: Icon(
+                    Icons.expand_more,
+                    color: Colors.black,
+                  ),
+                  items: _industryTypes!,
+                  listType: MultiSelectListType.LIST,
+                  onConfirm: (values) {
+                    selectedIndustryTypes3.clear();
+                    selectedIndustryTypes = values;
+                    selectedIndustryTypes.forEach((element) {
+                      print("sxfgsdfghdfghdfgh${element.industryTypeUid}");
+                      industryUUID.add("${element.industryTypeUid}");
+                      // this is the working
+                      industryUUIDinApi.add(element.industryTypeUid);
+                      selectedIndustryTypes3.add(element);
+                    });
+                    setState(() {});
+                  },
                 ),
               ),
             ),
@@ -1831,10 +1870,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       gallerypicker1(),
                     },
                   ),
-
-                  
                 ),
-                 SizedBox(
+                SizedBox(
                   height: 20,
                 ),
                 Center(
