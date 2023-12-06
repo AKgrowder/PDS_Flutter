@@ -1306,7 +1306,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               ? NewProfileData?.object?.module == "EMPLOYEE"
                                   ? _height / 3
                                   : NewProfileData?.object?.module == "EXPERT"
-                                      ? 630 // 630 old height
+                                      ? 1150 // 630 old height
                                       : NewProfileData?.object?.module ==
                                               "COMPANY"
                                           ? 1050 // 650 old height + 400
@@ -1607,6 +1607,30 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 : SizedBox(),
                                             NewProfileData?.object?.module ==
                                                     "COMPANY"
+                                                ? Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 10),
+                                                    child: Container(
+                                                        height: 300,
+                                                        decoration: BoxDecoration(
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  blurRadius:
+                                                                      20),
+                                                            ],
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                        child: experience()),
+                                                  )
+                                                : SizedBox(),
+                                            NewProfileData?.object?.module ==
+                                                    "EXPERT"
                                                 ? Padding(
                                                     padding:
                                                         const EdgeInsets.only(
@@ -3063,7 +3087,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
                           return ExperienceEditScreen(
-                            addWorkExperienceModel: addWorkExperienceModel,
+                            userID: widget.User_ID,
                             typeName: NewProfileData?.object?.module,
                           );
                         },
@@ -3086,8 +3110,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
                           return AddWorkExperienceScreen(
-                            typeName: NewProfileData?.object?.module,
-                          );
+                              typeName: NewProfileData?.object?.module,
+                              userID: widget.User_ID);
                         },
                       )).then((value) =>
                           BlocProvider.of<NewProfileSCubit>(context)
@@ -3150,6 +3174,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                           fontSize: 12,
                         ),
                       ),
+                      NewProfileData?.object?.module == "EXPERT"
+                          ? Text(
+                              '${addWorkExperienceModel?.object?[index].expertiseIn}',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                              ),
+                            )
+                          : SizedBox(),
                       Text(
                         '${addWorkExperienceModel?.object?[index].industryType}',
                         style: TextStyle(
