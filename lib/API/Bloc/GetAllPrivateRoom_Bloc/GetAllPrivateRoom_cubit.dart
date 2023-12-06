@@ -15,15 +15,15 @@ class GetAllPrivateRoomCubit extends Cubit<GetAllPrivateRoomState> {
       dynamic settionExperied =
           await Repository().logOutSettionexperied(context);
       print('settionExperied--$settionExperied');
-      if (settionExperied == "Something Went Wrong, Try After Some Time.") {
-        emit(GetAllPrivateRoomErrorState("${settionExperied}"));
-      } else {
+      // if (settionExperied == "Something Went Wrong, Try After Some Time.") {
+      //   emit(GetAllPrivateRoomErrorState("${settionExperied}"));
+      // } else {
         if (settionExperied.success == true) {
           await setLOGOUT(context);
         } else {
           print("failed--check---${settionExperied}");
         }
-      }
+      // }
     } catch (e) {
       print('errorstate-$e');
     }

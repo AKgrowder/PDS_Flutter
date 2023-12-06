@@ -1932,6 +1932,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             (link) {
                                                                           /// do stuff with `link` like
                                                                           /// if(link.type == Link.url) launchUrl(link.value);
+
                                                                           var SelectedTest = link
                                                                               .value
                                                                               .toString();
@@ -1941,19 +1942,30 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               SelectedTest.startsWith('http');
                                                                           var Link2 =
                                                                               SelectedTest.startsWith('www');
-
+                                                                          var Link3 =
+                                                                              SelectedTest.startsWith('WWW');
+                                                                          var Link4 =
+                                                                              SelectedTest.startsWith('HTTPS');
+                                                                          var Link5 =
+                                                                              SelectedTest.startsWith('HTTP');
                                                                           print(
                                                                               SelectedTest.toString());
-                                                                          print(
-                                                                              Link);
+
                                                                           if (User_ID ==
                                                                               null) {
                                                                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                           } else {
-                                                                            if (Link == true &&
-                                                                                Link1 == true &&
-                                                                                Link2 == true) {
-                                                                              launch(link.value.toString(), forceWebView: true, enableJavaScript: true);
+                                                                            if (Link == true ||
+                                                                                Link1 == true ||
+                                                                                Link2 == true ||
+                                                                                Link3 == true ||
+                                                                                Link4 == true ||
+                                                                                Link5 == true) {
+                                                                              if (Link2 == true || Link3 == true) {
+                                                                                launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                              } else {
+                                                                                launchUrl(Uri.parse(link.value.toString()));
+                                                                              }
                                                                             } else {
                                                                               print("${link}");
                                                                               Navigator.push(
@@ -2292,6 +2304,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         ],
                                                                         onTap:
                                                                             (link) {
+                                                                          /// do stuff with `link` like
+                                                                          /// if(link.type == Link.url) launchUrl(link.value);
+
                                                                           var SelectedTest = link
                                                                               .value
                                                                               .toString();
@@ -2301,19 +2316,30 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               SelectedTest.startsWith('http');
                                                                           var Link2 =
                                                                               SelectedTest.startsWith('www');
-
+                                                                          var Link3 =
+                                                                              SelectedTest.startsWith('WWW');
+                                                                          var Link4 =
+                                                                              SelectedTest.startsWith('HTTPS');
+                                                                          var Link5 =
+                                                                              SelectedTest.startsWith('HTTP');
                                                                           print(
                                                                               SelectedTest.toString());
-                                                                          print(
-                                                                              Link);
+
                                                                           if (User_ID ==
                                                                               null) {
                                                                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                           } else {
-                                                                            if (Link == true &&
-                                                                                Link1 == true &&
-                                                                                Link2 == true) {
-                                                                              launch(link.value.toString(), forceWebView: true, enableJavaScript: true);
+                                                                            if (Link == true ||
+                                                                                Link1 == true ||
+                                                                                Link2 == true ||
+                                                                                Link3 == true ||
+                                                                                Link4 == true ||
+                                                                                Link5 == true) {
+                                                                              if (Link2 == true || Link3 == true) {
+                                                                                launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                              } else {
+                                                                                launchUrl(Uri.parse(link.value.toString()));
+                                                                              }
                                                                             } else {
                                                                               print("${link}");
                                                                               Navigator.push(
@@ -3113,18 +3139,30 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               SelectedTest.startsWith('http');
                                                                           var Link2 =
                                                                               SelectedTest.startsWith('www');
+                                                                          var Link3 =
+                                                                              SelectedTest.startsWith('WWW');
+                                                                          var Link4 =
+                                                                              SelectedTest.startsWith('HTTPS');
+                                                                          var Link5 =
+                                                                              SelectedTest.startsWith('HTTP');
                                                                           print(
                                                                               SelectedTest.toString());
-                                                                          print(
-                                                                              Link);
+
                                                                           if (User_ID ==
                                                                               null) {
                                                                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                           } else {
-                                                                            if (Link == true &&
-                                                                                Link1 == true &&
-                                                                                Link2 == true) {
-                                                                              launch(link.value.toString(), forceWebView: true, enableJavaScript: true);
+                                                                            if (Link == true ||
+                                                                                Link1 == true ||
+                                                                                Link2 == true ||
+                                                                                Link3 == true ||
+                                                                                Link4 == true ||
+                                                                                Link5 == true) {
+                                                                              if (Link2 == true || Link3 == true) {
+                                                                                launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                              } else {
+                                                                                launchUrl(Uri.parse(link.value.toString()));
+                                                                              }
                                                                             } else {
                                                                               print("${link}");
                                                                               Navigator.push(
@@ -3414,7 +3452,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     0
                                                                 ? SizedBox()
                                                                 : GestureDetector(
-                                                                     onTap: () {
+                                                                    onTap: () {
                                                                       /* Navigator.push(  
                                                   context,
                                                   MaterialPageRoute(
