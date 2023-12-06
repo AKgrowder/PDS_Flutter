@@ -414,7 +414,7 @@ public class SwiftPhotoGalleryPlugin: NSObject, FlutterPlugin {
             })
           }
         )
-      } else if(asset.mediaType == PHAssetMediaType.video || asset.mediaType == PHAssetMediaType.audio) {
+      } else if(asset.mediaType == PHAssetMediaType.video ) {
         let options = PHVideoRequestOptions()
         options.version = .current
         options.deliveryMode = .highQualityFormat
@@ -504,7 +504,7 @@ public class SwiftPhotoGalleryPlugin: NSObject, FlutterPlugin {
     switch value {
     case "image": return PHAssetMediaType.image
     case "video": return PHAssetMediaType.video
-    case "audio": return PHAssetMediaType.audio
+    // case "audio": return PHAssetMediaType.audio
     default: return nil
     }
   }
@@ -513,7 +513,7 @@ public class SwiftPhotoGalleryPlugin: NSObject, FlutterPlugin {
     switch value {
     case PHAssetMediaType.image: return "image"
     case PHAssetMediaType.video: return "video"
-    case PHAssetMediaType.audio: return "audio"
+    // case PHAssetMediaType.audio: return "audio"
     default: return nil
     }
   }
