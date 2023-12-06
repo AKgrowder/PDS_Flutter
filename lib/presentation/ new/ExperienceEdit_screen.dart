@@ -116,12 +116,14 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              '${addWorkExperienceModel?.object?[index].companyName}',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                            Expanded(
+                              child: Text(
+                                '${addWorkExperienceModel?.object?[index].companyName}',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
                             Row(

@@ -962,7 +962,7 @@ class _DM_InboxScreenState extends State<DM_InboxScreen> {
                                       // "${widget.Room_ID}";
                                       DMstompClient.subscribe(
                                           destination:
-                                              "/topic/getMessage/${widget.ChatInboxUid}",
+                                              "/topic/getInboxMessage/${widget.ChatInboxUid}",
                                           // "/topic/getMessage/${widget.Room_ID}",
                                           callback: (StompFrame frame) {
                                             Map<String, dynamic> jsonString =
