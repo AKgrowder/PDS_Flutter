@@ -420,24 +420,31 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                 // LinkType
                                 //     .email
                               ],
-                              onTap: (link) {
+                              onTap: 
+                                  (link) {
+                             
+
                                 var SelectedTest = link.value.toString();
                                 var Link = SelectedTest.startsWith('https');
                                 var Link1 = SelectedTest.startsWith('http');
                                 var Link2 = SelectedTest.startsWith('www');
-
+                                var Link3 = SelectedTest.startsWith('WWW');
+                                var Link4 = SelectedTest.startsWith('HTTPS');
+                                var Link5 = SelectedTest.startsWith('HTTP');
                                 print(SelectedTest.toString());
-                                print(Link);
-                                // if (User_ID ==
-                                //     null) {
-                                //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                // } else {
-                                if (Link == true &&
-                                    Link1 == true &&
-                                    Link2 == true) {
-                                  launch(link.value.toString(),
-                                      forceWebView: true,
-                                      enableJavaScript: true);
+
+                                if (Link == true ||
+                                    Link1 == true ||
+                                    Link2 == true ||
+                                    Link3 == true ||
+                                    Link4 == true ||
+                                    Link5 == true) {
+                                  if (Link2 == true || Link3 == true) {
+                                    launchUrl(Uri.parse(
+                                        "https://${link.value.toString()}"));
+                                  } else {
+                                    launchUrl(Uri.parse(link.value.toString()));
+                                  }
                                 } else {
                                   print("${link}");
                                   Navigator.push(
@@ -447,7 +454,6 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                             title: "${link.value}"),
                                       ));
                                 }
-                                // }
                               },
                             ), /* Text(
                               "${OpenSaveModelData?.object?.description ?? ""}",

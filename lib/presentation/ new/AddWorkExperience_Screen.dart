@@ -24,6 +24,7 @@ class AddWorkExperienceScreen extends StatefulWidget {
   String? expertise;
   String? industryTypeID;
   String? expertiseID;
+  String? userID;
   AddWorkExperienceScreen(
       {Key? key,
       this.typeName,
@@ -36,7 +37,8 @@ class AddWorkExperienceScreen extends StatefulWidget {
       this.expertise,
       this.industryTypeID,
       this.expertiseID,
-      this.workUserID})
+      this.workUserID,
+      this.userID})
       : super(key: key);
 
   @override
@@ -85,6 +87,9 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
 
       StartDateController.text = widget.startDate.toString();
       EndDateController.text = widget.endDate.toString();
+      print("startDate${widget.startDate.toString()}");
+      print("endDate${widget.endDate.toString()}");
+
       //  widget.typeName != "COMPANY" ? selectedExpertise.expertiseName = widget.expertise : "";
     }
   }
@@ -172,6 +177,8 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                 backgroundColor: ColorConstant.primary_color,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              BlocProvider.of<NewProfileSCubit>(context)
+                  .GetWorkExperienceAPI(context, widget.userID.toString());
               Navigator.pop(context);
             }
           },
@@ -238,7 +245,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                               padding: EdgeInsets.only(left: 12),
                               child: DropdownButton<IndustryType>(
                                 value: selectedIndustryTypes,
-                                // hint: Text('Please select an option'),
+                                hint: Text('Please select an option'),
                                 onChanged: (IndustryType? newValue) {
                                   // When the user selects an option from the dropdown.
                                   if (newValue != null) {
@@ -506,8 +513,8 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                 "industryType":
                                     selectedIndustryTypes?.industryTypeName,
                                 "jobProfile": JobProfileController.text,
-                                "endDate": formattedDateEnd,
-                                "startDate": formattedDateStart,
+                                "endDate": EndDateController.text,
+                                "startDate": StartDateController.text,
                                 "userWorkExperienceUid": widget.workUserID
                               };
                               print(
@@ -581,8 +588,8 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                     selectedIndustryTypes?.industryTypeName,
                                 "expertiseIn": selectedExpertise?.expertiseName,
                                 "jobProfile": JobProfileController.text,
-                                "endDate": formattedDateEnd,
-                                "startDate": formattedDateStart,
+                                "endDate": EndDateController.text,
+                                "startDate": StartDateController.text,
                                 "userWorkExperienceUid": widget.workUserID
                               };
                               print("NewProfileSCubit${params1}");
