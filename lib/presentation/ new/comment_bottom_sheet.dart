@@ -295,7 +295,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                           builder: (context) {
                                                     return ProfileScreen(
                                                         User_ID:
-                                                            "${widget.useruid}",
+                                                            "${addCommentModeldata?.object?[index].userUid}",
                                                         isFollowing:
                                                             widget.isFoollinng);
                                                   }));
