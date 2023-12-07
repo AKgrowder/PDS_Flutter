@@ -440,7 +440,7 @@ class Repository {
 
   FetchAllExpertsAPI(BuildContext context) async {
     final response =
-        await apiServices.getApiCall(Config.fetchAllExperts, context);
+        await apiServices.getApiCallWithToken(Config.fetchAllExperts, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
@@ -2362,6 +2362,29 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return DeleteStory.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  DMChatListApi(BuildContext context, String userChatInboxUid, int pageNumber,
+      int numberOfRecords) async {
+    final responce = await apiServices.getApiCall(
+        '${Config.DMChatList}?userChatInboxUid=${userChatInboxUid}&pageNumber=${pageNumber}&numberOfRecords=${numberOfRecords}',
+        context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    switch (responce.statusCode) {
+      case 200:
+        return SelectChatMemberModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:

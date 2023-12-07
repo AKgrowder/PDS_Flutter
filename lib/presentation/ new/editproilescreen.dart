@@ -1021,7 +1021,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       } else {
         print("else dataPassing condiosn");
       }
-
+      print(params);
       BlocProvider.of<MyAccountCubit>(context).cretaForumUpdate(
         params,
         context,

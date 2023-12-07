@@ -23,7 +23,7 @@ dependencies:
   image_gallery_saver: ^2.0.3
   #own packages
   gallery_media_picker: ^0.0.82
-
+  video_player:
 
   modal_gif_picker: ^0.0.2
   # painting
@@ -37,7 +37,7 @@ dependencies:
 
   flutter_screenutil: ^5.9.0
   path_provider: ^2.1.1
-  
+  http:
   
 
 dev_dependencies:
