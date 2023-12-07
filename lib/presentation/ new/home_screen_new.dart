@@ -3858,7 +3858,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                   imagePath: ImageConstant.brandlogo,
                                                                                 )
                                                                               : CustomImageView(
-                                                                                  height: 180,
+                                                                                  height: 100,
                                                                                   width: 128,
                                                                                   radius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                                                                                   url: "${AllExperData?.object?[index].profilePic}",
@@ -3868,32 +3868,51 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             alignment:
                                                                                 Alignment.topCenter,
                                                                             child:
-                                                                                Container(
-                                                                              height: 24,
-                                                                              alignment: Alignment.center,
-                                                                              width: 70,
-                                                                              decoration: BoxDecoration(
-                                                                                borderRadius: BorderRadius.only(
-                                                                                  bottomLeft: Radius.circular(8),
-                                                                                  bottomRight: Radius.circular(8),
-                                                                                ),
-                                                                                color: Color.fromRGBO(237, 28, 37, 0.5),
-                                                                              ),
-                                                                              child: Row(
-                                                                                children: [
-                                                                                  Padding(
-                                                                                    padding: EdgeInsets.only(left: 8, right: 4),
-                                                                                    child: Icon(
-                                                                                      Icons.person_add_alt,
-                                                                                      size: 16,
-                                                                                      color: Colors.white,
-                                                                                    ),
+                                                                                GestureDetector(
+                                                                              onTap: () async {
+                                                                                print("followStatusfollowStatus == >>${AllExperData?.object?[index].followStatus}");
+                                                                                await soicalFunation(
+                                                                                  apiName: 'Follow',
+                                                                                  index: index,
+                                                                                );
+                                                                              },
+                                                                              child: Container(
+                                                                                height: 24,
+                                                                                alignment: Alignment.center,
+                                                                                width: 70,
+                                                                                decoration: BoxDecoration(
+                                                                                  borderRadius: BorderRadius.only(
+                                                                                    bottomLeft: Radius.circular(8),
+                                                                                    bottomRight: Radius.circular(8),
                                                                                   ),
-                                                                                  Text(
-                                                                                    'Follow',
-                                                                                    style: TextStyle(fontFamily: "outfit", fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold),
-                                                                                  )
-                                                                                ],
+                                                                                  color: Color.fromRGBO(237, 28, 37, 0.5),
+                                                                                ),
+                                                                                child: Row(
+                                                                                  children: [
+                                                                                    Padding(
+                                                                                      padding: EdgeInsets.only(left: 8, right: 4),
+                                                                                      child: Icon(
+                                                                                        Icons.person_add_alt,
+                                                                                        size: 16,
+                                                                                        color: Colors.white,
+                                                                                      ),
+                                                                                    ),
+                                                                                    AllExperData?.object?[index].followStatus == 'FOLLOW'
+                                                                                        ? Text(
+                                                                                            'Follow',
+                                                                                            style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                          )
+                                                                                        : AllExperData?.object?[index].followStatus == 'REQUESTED'
+                                                                                            ? Text(
+                                                                                                'Requested',
+                                                                                                style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                              )
+                                                                                            : Text(
+                                                                                                'Following ',
+                                                                                                style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                              ),
+                                                                                  ],
+                                                                                ),
                                                                               ),
                                                                             ),
                                                                           ),
@@ -3901,7 +3920,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             padding:
                                                                                 EdgeInsets.only(bottom: 25),
                                                                             child:
-                                                                                Align(
+                                                                                Align( 
                                                                               alignment: Alignment.bottomCenter,
                                                                               child: Container(
                                                                                 height: 40,
@@ -4748,6 +4767,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         constraints: BoxConstraints.tight(Size.infinite),
         context: context,
         builder: (BuildContext bc) {
+          print(
+              "userUiduserUid == >>>>>>> ${AllGuestPostRoomData?.object?.content?[index].userUid}");
           return CommentBottomSheet(
               isFoollinng:
                   AllGuestPostRoomData?.object?.content?[index].isFollowing,

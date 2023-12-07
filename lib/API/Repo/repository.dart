@@ -440,7 +440,7 @@ class Repository {
 
   FetchAllExpertsAPI(BuildContext context) async {
     final response =
-        await apiServices.getApiCall(Config.fetchAllExperts, context);
+        await apiServices.getApiCallWithToken(Config.fetchAllExperts, context);
     var jsonString = json.decode(response.body);
     print(jsonString);
     switch (response.statusCode) {
@@ -1040,7 +1040,7 @@ class Repository {
   }
 
   fllowersApi(BuildContext context, String userUid) async {
-    final response = await apiServices.getApiCall(
+    final response = await apiServices.getApiCallWithToken(
         "${Config.get_all_followers}?userUid=${userUid}", context);
     var jsonString = json.decode(response.body);
     print(jsonString);
@@ -1082,7 +1082,7 @@ class Repository {
   }
 
   get_all_followering(BuildContext context, String userUid) async {
-    final response = await apiServices.getApiCall(
+    final response = await apiServices.getApiCallWithToken(
         "${Config.get_all_followings}?userUid=${userUid}", context);
     var jsonString = json.decode(response.body);
     print(jsonString);

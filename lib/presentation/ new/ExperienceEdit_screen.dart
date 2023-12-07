@@ -61,6 +61,25 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
       ),
       body: BlocConsumer<NewProfileSCubit, NewProfileSState>(
           listener: (context, state) {
+        if (state is NewProfileSErrorState) {
+          SnackBar snackBar = SnackBar(
+            content: Text(state.error),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+        if (state is NewProfileSLoadingState) {
+          Center(
+            child: Container(
+              margin: EdgeInsets.only(bottom: 100),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.asset(ImageConstant.loader,
+                    fit: BoxFit.cover, height: 100.0, width: 100),
+              ),
+            ),
+          );
+        }
         if (state is DeleteWorkExpereinceLoadedState) {
           SnackBar snackBar = SnackBar(
             content: Text(state.deleteWorkExperienceModel.object ?? ""),
