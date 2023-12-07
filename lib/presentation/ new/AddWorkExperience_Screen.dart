@@ -184,133 +184,61 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
         },
         builder: (context, state) {
           return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 36, right: 36),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15, bottom: 10),
-                      child: Text(
-                        "Company Name",
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    customTextFeild(
-                        controller: companyNameController,
-                        width: _width / 1.1,
-                        hintText: "Company Name",
-                        maxLength: 50,
-                        textInputAction: TextInputAction.next),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15, bottom: 10),
-                      child: Text(
-                        "Job Profile",
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    customTextFeild(
-                        controller: JobProfileController,
-                        width: _width / 1.1,
-                        hintText: "Job Profile",
-                        maxLength: 50,
-                        textInputAction: TextInputAction.next),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15, bottom: 10),
-                      child: Text(
-                        "Industry Type",
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: _width,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Color.fromARGB(255, 157, 157, 157),
-                          ),
-                          borderRadius: BorderRadius.circular(5)),
-                      child: DropdownButtonHideUnderline(
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 12),
-                          child: DropdownButton<IndustryType>(
-                            value: selectedIndustryTypes,
-                            hint: Text('Please select an option'),
-                            onChanged: (IndustryType? newValue) {
-                              // When the user selects an option from the dropdown.
-                              if (newValue != null) {
-                                setState(() {
-                                  selectedIndustryTypes = newValue;
-                                  print(
-                                      "SelectedIndustryType: ${newValue.industryTypeUid}");
-                                });
-                              }
-                            },
-                            items: _industryTypes
-                                .map<DropdownMenuItem<IndustryType>>(
-                                    (IndustryType industryType) {
-                              return DropdownMenuItem<IndustryType>(
-                                value: industryType,
-                                child: Text(industryType.industryTypeName),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ), /* DropdownButtonHideUnderline(
-                                    child: Padding(
-                                      padding: EdgeInsets.only(left: 12),
-                                      child: MultiSelectDialogField<IndustryType>(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: Colors.transparent)),
-                                        buttonIcon: Icon(
-                                          Icons.expand_more,
-                                          color: Colors.black,
-                                        ),
-                                        items: _industryTypes!,
-                                        listType: MultiSelectListType.LIST,
-                                        onConfirm: (values) {
-                                          selectedIndustryTypes = values;
-                                          selectedIndustryTypes
-                                              .forEach((element) {
-                                            print(
-                                                "sxfgsdfghdfghdfgh${element.industryTypeUid}");
-                                            industryUUID.add(
-                                                "${element.industryTypeUid}");
-                                          });
-                                          setState(() {});
-                                        },
-                                      ),
-                                    ),
-                                  ), */
-                    ),
-                    widget.typeName != "COMPANY"
-                        ? Padding(
+            child: Stack(
+              children: [
+                Container(
+                  height: _height / 1.2,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 36, right: 36),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
                             padding: const EdgeInsets.only(top: 15, bottom: 10),
                             child: Text(
-                              "Expertise In",
+                              "Company Name",
                               style: TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.black,
                               ),
                             ),
-                          )
-                        : SizedBox(),
-                    widget.typeName != "COMPANY"
-                        ? Container(
-                            height: 50,
+                          ),
+                          customTextFeild(
+                              controller: companyNameController,
+                              width: _width / 1.1,
+                              hintText: "Company Name",
+                              maxLength: 50,
+                              textInputAction: TextInputAction.next),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 15, bottom: 10),
+                            child: Text(
+                              "Job Profile",
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          customTextFeild(
+                              controller: JobProfileController,
+                              width: _width / 1.1,
+                              hintText: "Job Profile",
+                              maxLength: 50,
+                              textInputAction: TextInputAction.next),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 15, bottom: 10),
+                            child: Text(
+                              "Industry Type",
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          Container(
                             width: _width,
                             decoration: BoxDecoration(
                                 border: Border.all(
@@ -320,133 +248,223 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                             child: DropdownButtonHideUnderline(
                               child: Padding(
                                 padding: EdgeInsets.only(left: 12),
-                                child: DropdownButton<Expertise>(
-                                  value: selectedExpertise,
+                                child: DropdownButton<IndustryType>(
+                                  value: selectedIndustryTypes,
                                   hint: Text('Please select an option'),
-                                  onChanged: (Expertise? newValue) {
+                                  onChanged: (IndustryType? newValue) {
                                     // When the user selects an option from the dropdown.
                                     if (newValue != null) {
                                       setState(() {
-                                        selectedExpertise = newValue;
+                                        selectedIndustryTypes = newValue;
                                         print(
-                                            "Selectedexpertise: ${newValue.uid}");
+                                            "SelectedIndustryType: ${newValue.industryTypeUid}");
                                       });
                                     }
                                   },
-                                  items: expertiseData
-                                      .map<DropdownMenuItem<Expertise>>(
-                                          (Expertise expertise) {
-                                    return DropdownMenuItem<Expertise>(
-                                      value: expertise,
-                                      child: Text(expertise.expertiseName),
+                                  items: _industryTypes
+                                      .map<DropdownMenuItem<IndustryType>>(
+                                          (IndustryType industryType) {
+                                    return DropdownMenuItem<IndustryType>(
+                                      value: industryType,
+                                      child:
+                                          Text(industryType.industryTypeName),
                                     );
                                   }).toList(),
                                 ),
                               ),
-                            ),
-                          )
-                        : SizedBox(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 15, bottom: 10),
-                              child: Text(
-                                "Start Date",
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
+                            ), /* DropdownButtonHideUnderline(
+                                          child: Padding(
+                                            padding: EdgeInsets.only(left: 12),
+                                            child: MultiSelectDialogField<IndustryType>(
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: Colors.transparent)),
+                                              buttonIcon: Icon(
+                                                Icons.expand_more,
+                                                color: Colors.black,
+                                              ),
+                                              items: _industryTypes!,
+                                              listType: MultiSelectListType.LIST,
+                                              onConfirm: (values) {
+                                                selectedIndustryTypes = values;
+                                                selectedIndustryTypes
+                                                    .forEach((element) {
+                                                  print(
+                                                      "sxfgsdfghdfghdfgh${element.industryTypeUid}");
+                                                  industryUUID.add(
+                                                      "${element.industryTypeUid}");
+                                                });
+                                                setState(() {});
+                                              },
+                                            ),
+                                          ),
+                                        ), */
+                          ),
+                          widget.typeName != "COMPANY"
+                              ? Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 15, bottom: 10),
+                                  child: Text(
+                                    "Expertise In",
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                )
+                              : SizedBox(),
+                          widget.typeName != "COMPANY"
+                              ? Container(
+                                  height: 50,
+                                  width: _width,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color:
+                                            Color.fromARGB(255, 157, 157, 157),
+                                      ),
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: DropdownButtonHideUnderline(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left: 12),
+                                      child: DropdownButton<Expertise>(
+                                        value: selectedExpertise,
+                                        hint: Text('Please select an option'),
+                                        onChanged: (Expertise? newValue) {
+                                          // When the user selects an option from the dropdown.
+                                          if (newValue != null) {
+                                            setState(() {
+                                              selectedExpertise = newValue;
+                                              print(
+                                                  "Selectedexpertise: ${newValue.uid}");
+                                            });
+                                          }
+                                        },
+                                        items: expertiseData
+                                            .map<DropdownMenuItem<Expertise>>(
+                                                (Expertise expertise) {
+                                          return DropdownMenuItem<Expertise>(
+                                            value: expertise,
+                                            child:
+                                                Text(expertise.expertiseName),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : SizedBox(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 15, bottom: 10),
+                                    child: Text(
+                                      "Start Date",
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  customTextFeild(
+                                    controller: StartDateController,
+                                    width: _width / 2.8,
+                                    hintText: "ddmmyyyy",
+                                    isReadOnly: true,
+                                    textInputAction: TextInputAction.next,
+                                    onTap: () async {
+                                      DateTime? pickedDate =
+                                          await showDatePicker(
+                                              context: context,
+                                              initialDate: DateTime.now(),
+                                              firstDate: DateTime(2000),
+                                              lastDate: DateTime(2101));
+
+                                      if (pickedDate != null) {
+                                        print(pickedDate);
+                                        formattedDateStart =
+                                            DateFormat('dd-MM-yyyy')
+                                                .format(pickedDate);
+                                        print(
+                                            "formattedDate Start--${formattedDateStart}");
+
+                                        setState(() {
+                                          StartDateController.text =
+                                              formattedDateStart.toString();
+                                        });
+                                      } else {
+                                        print("Date is not selected");
+                                      }
+                                    },
+                                  ),
+                                ],
                               ),
-                            ),
-                            customTextFeild(
-                              controller: StartDateController,
-                              width: _width / 2.8,
-                              hintText: "ddmmyyyy",
-                              isReadOnly: true,
-                              textInputAction: TextInputAction.next,
-                              onTap: () async {
-                                DateTime? pickedDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(2000),
-                                    lastDate: DateTime(2101));
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 15, bottom: 10),
+                                    child: Text(
+                                      "End Date",
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  customTextFeild(
+                                    controller: EndDateController,
+                                    width: _width / 2.8,
+                                    hintText: "ddmmyyyy",
+                                    isReadOnly: true,
+                                    textInputAction: TextInputAction.next,
+                                    onTap: () async {
+                                      DateTime? pickedDate =
+                                          await showDatePicker(
+                                              context: context,
+                                              initialDate: DateTime.now(),
+                                              firstDate: DateTime(2000),
+                                              lastDate: DateTime(2101));
 
-                                if (pickedDate != null) {
-                                  print(pickedDate);
-                                  formattedDateStart = DateFormat('dd-MM-yyyy')
-                                      .format(pickedDate);
-                                  print(
-                                      "formattedDate Start--${formattedDateStart}");
+                                      if (pickedDate != null) {
+                                        print(pickedDate);
+                                        formattedDateEnd =
+                                            DateFormat('dd-MM-yyyy')
+                                                .format(pickedDate);
+                                        print(
+                                            "formattedDate end--${formattedDateEnd}");
 
-                                  setState(() {
-                                    StartDateController.text =
-                                        formattedDateStart.toString();
-                                  });
-                                } else {
-                                  print("Date is not selected");
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 15, bottom: 10),
-                              child: Text(
-                                "End Date",
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                            customTextFeild(
-                              controller: EndDateController,
-                              width: _width / 2.8,
-                              hintText: "ddmmyyyy",
-                              isReadOnly: true,
-                              textInputAction: TextInputAction.next,
-                              onTap: () async {
-                                DateTime? pickedDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(2000),
-                                    lastDate: DateTime(2101));
-
-                                if (pickedDate != null) {
-                                  print(pickedDate);
-                                  formattedDateEnd = DateFormat('dd-MM-yyyy')
-                                      .format(pickedDate);
-                                  print(
-                                      "formattedDate end--${formattedDateEnd}");
-
-                                  setState(() {
-                                    EndDateController.text =
-                                        formattedDateEnd.toString();
-                                  });
-                                } else {
-                                  print("Date is not selected");
-                                }
-                              },
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 150,
-                    ),
-                    GestureDetector(
+                                        setState(() {
+                                          EndDateController.text =
+                                              formattedDateEnd.toString();
+                                        });
+                                      } else {
+                                        print("Date is not selected");
+                                      }
+                                    },
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ]),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 36, right: 36),
+                    child: GestureDetector(
                       onTap: () {
                         if (widget.edit == true) {
                           if (widget.typeName == "COMPANY") {
@@ -494,20 +512,20 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                             } /*  else if (formattedDateStart.toString().isNotEmpty) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please select Start Date'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (formattedDateEnd.toString().isNotEmpty) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please select End Date'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          }  */
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text('Please select Start Date'),
+                                      backgroundColor: ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } else if (formattedDateEnd.toString().isNotEmpty) {
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text('Please select End Date'),
+                                      backgroundColor: ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }  */
                             else {
                               var params = {
                                 "companyName": companyNameController.text,
@@ -577,20 +595,20 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                             } /*  else if (formattedDateStart.toString().isNotEmpty) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please select Start Date'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (formattedDateEnd.toString().isNotEmpty) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please select End Date'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } */
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text('Please select Start Date'),
+                                      backgroundColor: ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } else if (formattedDateEnd.toString().isNotEmpty) {
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text('Please select End Date'),
+                                      backgroundColor: ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } */
                             else {
                               var params1 = {
                                 "companyName": companyNameController.text,
@@ -654,20 +672,20 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                             } /*  else if (formattedDateStart.toString().isNotEmpty) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please select Start Date'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (formattedDateEnd.toString().isNotEmpty) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please select End Date'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          }  */
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text('Please select Start Date'),
+                                      backgroundColor: ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } else if (formattedDateEnd.toString().isNotEmpty) {
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text('Please select End Date'),
+                                      backgroundColor: ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }  */
                             else {
                               var params = {
                                 "companyName": companyNameController.text,
@@ -736,20 +754,20 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                             } /*  else if (formattedDateStart.toString().isNotEmpty) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please select Start Date'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else if (formattedDateEnd.toString().isNotEmpty) {
-                            SnackBar snackBar = SnackBar(
-                              content: Text('Please select End Date'),
-                              backgroundColor: ColorConstant.primary_color,
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } */
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text('Please select Start Date'),
+                                      backgroundColor: ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } else if (formattedDateEnd.toString().isNotEmpty) {
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text('Please select End Date'),
+                                      backgroundColor: ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } */
                             else {
                               var params1 = {
                                 "companyName": companyNameController.text,
@@ -759,7 +777,6 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                 "jobProfile": JobProfileController.text,
                                 "endDate": formattedDateEnd,
                                 "startDate": formattedDateStart,
-                                "userWorkExperienceUid": widget.workUserID
                               };
                               print("NewProfileSCubit${params1}");
                               print("widget.workUserID${widget.workUserID}");
@@ -787,7 +804,9 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                         ),
                       ),
                     ),
-                  ]),
+                  ),
+                ),
+              ],
             ),
           );
         },
