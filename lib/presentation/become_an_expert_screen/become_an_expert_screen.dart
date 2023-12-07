@@ -1344,15 +1344,15 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             );
             if (croppedFile != null) {
               print('Image cropped and saved at: ${croppedFile.path}');
-            
+
               BlocProvider.of<FetchExprtiseRoomCubit>(context)
                   .chooseDocumentprofile(
-                      dopcument.toString(),croppedFile.path, context);
+                      dopcument.toString(), croppedFile.path, context);
 
               setState(() {
-              uplopdfile.text = file1.name;
-              dopcument = file1.name;
-            });
+                uplopdfile.text = file1.name;
+                dopcument = file1.name;
+              });
             } else {
               BlocProvider.of<FetchExprtiseRoomCubit>(context)
                   .chooseDocumentprofile(
