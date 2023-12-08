@@ -21,4 +21,23 @@ class FatchAllMembersCubit extends Cubit<FatchAllMembersState> {
       emit(FatchAllMembersErrorState(PublicRModel));
     }
   }
+
+   Future<void> RoomExistsAPI(
+      String? otherMemberID, String roomID, BuildContext context) async {
+    dynamic roomExistsModel;
+    try {
+      // emit(FatchAllMembersLoadingState());
+      roomExistsModel =
+          await Repository().roomExists(otherMemberID, roomID, context);
+      if (roomExistsModel == "Something Went Wrong, Try After Some Time.") {
+        emit(FatchAllMembersErrorState("${roomExistsModel}"));
+      } else {
+        if (roomExistsModel.success == true) {
+          emit(RoomExistsLoadedState(roomExistsModel));
+        }
+      }
+    } catch (e) {
+      emit(FatchAllMembersErrorState(roomExistsModel));
+    }
+  }
 }
