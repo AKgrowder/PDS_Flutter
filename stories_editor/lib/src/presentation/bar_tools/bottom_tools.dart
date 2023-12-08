@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gallery_media_picker/gallery_media_picker.dart';
@@ -16,7 +15,7 @@ class BottomTools extends StatelessWidget {
 
   /// editor background color
   final Color? editorBackgroundColor;
-  const BottomTools(
+  BottomTools(
       {Key? key,
       required this.contentKey,
       required this.onDone,
@@ -105,54 +104,64 @@ class BottomTools extends StatelessWidget {
                       scale: 0.9,
                       child: AnimatedOnTapButton(
                           onTap: () async {
-                            String pngUri;
-                            print("xhxhxdfg-${controlNotifier.mediaPath}");
-                            await takePicture(
-                              SelectPath :controlNotifier.mediaPath,
-                                    contentKey: contentKey,
-                                    context: context,
-                                    saveToGallery: false)
-                                .then((bytes) {
-                              if (bytes != null) {
-                                pngUri = bytes;
-                                print("asdfasdasdasdasdasdad");
-                            print(pngUri);
+                            if (controlNotifier.mediaPath == '' ||
+                                controlNotifier.isTextEditing) {
 
-                            print(pngUri);
+                            } else {
+                              String pngUri;
+                                await takePicture(
+                                      isTextEditing:
+                                          controlNotifier.isTextEditing,
+                                      SelectPath: controlNotifier.mediaPath,
+                                      contentKey: contentKey,
+                                      context: context,
+                                      saveToGallery: false)
+                                  .then((bytes) {
+                                if (bytes != null) {
+                                  pngUri = bytes;
+                                  print("asdfasdasdasdasdasdad-$pngUri");
+                                  print(pngUri);
 
-                                onDone(pngUri);
-                              } else {}
-                            });
+                                  print(pngUri);
+
+                                  onDone(pngUri);
+                                } else {}
+                              });
+                            }
                           },
-                          child: onDoneButtonStyle ??
-                              Container(
-                                padding: const EdgeInsets.only(
-                                    left: 12, right: 5, top: 4, bottom: 4),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(
-                                        color: Colors.white, width: 1.5)),
-                                child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: const [
-                                      Text(
-                                        'Share',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            letterSpacing: 1.5,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 5),
-                                        child: Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: Colors.white,
-                                          size: 15,
-                                        ),
-                                      ),
-                                    ]),
-                              )),
+                          child: Container(
+                            padding: const EdgeInsets.only(
+                                left: 12, right: 5, top: 4, bottom: 4),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                    color: Colors.white, width: 1.5)),
+                            child:
+                                Row(mainAxisSize: MainAxisSize.min, children: [
+                              Text(
+                                'Share',
+                                style: TextStyle(
+                                    color: controlNotifier.mediaPath == '' ||
+                                            controlNotifier.isTextEditing
+                                        ? Colors.grey
+                                        : Colors.white,
+                                    letterSpacing: 1.5,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 5),
+                                child: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: controlNotifier.mediaPath == '' ||
+                                          controlNotifier.isTextEditing
+                                      ? Colors.grey
+                                      : Colors.white,
+                                  size: 15,
+                                ),
+                              ),
+                            ]),
+                          )),
                     ),
                   ),
                 ),
