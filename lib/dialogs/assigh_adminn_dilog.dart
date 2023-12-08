@@ -96,7 +96,6 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
             width: _width / 1.17,
             decoration: ShapeDecoration(
               color: Colors.white,
-
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
               ),
@@ -114,8 +113,8 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                     }
                     if (state is RoomExistsLoadedState) {
                       if (widget.DeleteFlag == true) {
-                        BlocProvider.of<RoomExistsCubit>(context)
-                            .DeleteRoommin(widget.roomID.toString(), context);
+                        BlocProvider.of<RoomExistsCubit>(context).DeleteRoommin(
+                            widget.roomID.toString(), "Deleted", context);
                       } else {
                         SnackBar snackBar = SnackBar(
                           content:
@@ -142,9 +141,11 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                           Container(
                             // color: Colors.red,
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 8.0, left: 20),
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, left: 20),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     "Assign Admin",

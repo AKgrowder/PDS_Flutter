@@ -431,7 +431,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                             ),
                                                                             GestureDetector(
                                                                               onTap: () {
-                                                                                BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(widget.room_Id, context);
+                                                                                BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(widget.room_Id, 'Exit', context);
 
                                                                                 Navigator.pop(context);
                                                                               },
@@ -570,7 +570,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                               ),
                                                                               GestureDetector(
                                                                                 onTap: () {
-                                                                                  BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(widget.room_Id, context);
+                                                                                  BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(widget.room_Id, 'Exit', context);
 
                                                                                   Navigator.pop(context);
                                                                                 },
@@ -612,17 +612,14 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                   RoomOwnerCount:
                                                                       widget
                                                                           .RoomOwnerCount,
-                                                                )).then(
-                                                            (value) =>
-                                                                Navigator.pop(
-                                                                    context));
+                                                                ));
                                                       }
                                                     }
                                                   },
                                                   child: Container(
                                                     height: 25,
                                                     alignment: Alignment.center,
-                                                    width: 120,
+                                                    width: 90,
                                                     margin: EdgeInsets.only(
                                                         bottom: 5),
                                                     decoration: BoxDecoration(
@@ -647,7 +644,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           ),
                                                         ),
                                                         SizedBox(
-                                                          width: 15,
+                                                          width: 5,
                                                         ),
                                                         Text(
                                                           'Exit Room',
@@ -752,7 +749,8 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                         child: Text(
                                                           "Admin ",
                                                           style: TextStyle(
-                                                            fontWeight: FontWeight.bold,
+                                                            fontWeight:
+                                                                FontWeight.bold,
                                                             color: ColorConstant
                                                                 .primary_color,
                                                             // fontFamily: "outfit",
@@ -865,7 +863,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                                 ),
                                                                                 GestureDetector(
                                                                                   onTap: () {
-                                                                                    BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(widget.room_Id, context);
+                                                                                    BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(widget.room_Id, 'Exit', context);
 
                                                                                     Navigator.pop(context);
                                                                                   },
@@ -1389,6 +1387,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
     Offset offset,
     BuildContext context,
   ) async {
+    print("_showPopupMenu");
     double right = offset.dx;
     double top = offset.dy;
     double _width = MediaQuery.of(context).size.width;
@@ -1639,6 +1638,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
     Offset offset,
     BuildContext context,
   ) async {
+    print("sdfjdshfsdhh-${_data?.object?[MemberIndex].isAdmin}");
     double right = offset.dx;
     double top = offset.dy;
     double _width = MediaQuery.of(context).size.width;
@@ -1656,7 +1656,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
         50,
         10,
       ),
-      items: widget.RoomOwner == true
+      items: _data?.object?[MemberIndex].isAdmin == false
           ? [
               PopupMenuItem(
                   value: 0,
