@@ -46,4 +46,6 @@ class PreferencesKey {
   static String AutoSetRoomID = "AutoSetRoomID";
   static String tabSelction = "tabSelction";
   static String MaxPostUploadSizeInMB = "MaxPostUploadSizeInMB";
+  static String MaxStoryUploadSizeInMB = "MaxStoryUploadSizeInMB";
+
 }
