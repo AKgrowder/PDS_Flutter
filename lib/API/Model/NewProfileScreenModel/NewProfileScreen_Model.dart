@@ -53,6 +53,7 @@ class Object {
   int? followingCount;
   int? postCount;
   String? accountType;
+  String? documentName;
   Object(
       {this.isApproved,
       this.userDocument,
@@ -78,6 +79,7 @@ class Object {
       this.isFollowing,
       this.followersCount,
       this.followingCount,
+      this.documentName,
       this.postCount,this.accountType});
 
   Object.fromJson(Map<String, dynamic> json) {
@@ -86,6 +88,7 @@ class Object {
     userDocument = json['userDocument'];
     companyName = json['companyName'];
     jobProfile = json['jobProfile'];
+    documentName =json['documentName'];
     fees = json['fees'];
     workingHours = json['workingHours'];
     rejectionReason = json['rejectionReason'];

@@ -31,13 +31,17 @@ class _TextEditorState extends State<TextEditor> {
           Provider.of<TextEditingNotifier>(widget.context, listen: false);
       _editorNotifier
         ..textController.text = _editorNotifier.text
+        
         ..fontFamilyController = PageController(viewportFraction: .125);
+        
+
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    
     final ScreenUtil screenUtil = ScreenUtil();
     return Material(
         color: Colors.transparent,

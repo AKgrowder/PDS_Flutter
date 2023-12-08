@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class FetchRoomDetailModel {
   String? message;
   Object? object;
@@ -6,6 +8,7 @@ class FetchRoomDetailModel {
   FetchRoomDetailModel({this.message, this.object, this.success});
 
   FetchRoomDetailModel.fromJson(Map<String, dynamic> json) {
+    log("full jskon rpint-${message}");
     message = json['message'];
     object =
         json['object'] != null ? new Object.fromJson(json['object']) : null;
