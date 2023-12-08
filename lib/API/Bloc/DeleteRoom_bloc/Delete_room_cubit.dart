@@ -6,11 +6,11 @@ import 'Delete_room_state.dart';
 
 class DeleteRoomCubit extends Cubit<DeleteRoomState> {
   DeleteRoomCubit() : super(DeleteRoomInitialState()) {}
-  Future<void> DeleteRoomm(String roomuId, BuildContext context) async {
+  Future<void> DeleteRoomm(String roomuId,String name, BuildContext context) async {
     dynamic DeleteRoom;
     try {
       emit(DeleteRoomLoadingState());
-      DeleteRoom = await Repository().DeleteRoomApi(roomuId, context);
+      DeleteRoom = await Repository().DeleteRoomApi(roomuId,name, context);
       if (DeleteRoom == "Something Went Wrong, Try After Some Time.") {
         emit(DeleteRoomErrorState("${DeleteRoom}"));
       } else {
