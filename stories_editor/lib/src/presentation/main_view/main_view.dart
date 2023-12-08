@@ -61,6 +61,7 @@ class MainView extends StatefulWidget {
   /// gallery thumbnail quality
   final int? galleryThumbnailQuality;
   double? finalFileSize;
+  double? finalvideoSize;
 
   /// editor custom color palette list
   List<Color>? colorList;
@@ -78,7 +79,8 @@ class MainView extends StatefulWidget {
       this.onDoneButtonStyle,
       this.editorBackgroundColor,
       this.galleryThumbnailQuality,
-      this.finalFileSize})
+      this.finalFileSize,
+      this.finalvideoSize})
       : super(key: key);
 
   @override
@@ -171,6 +173,7 @@ class _MainViewState extends State<MainView> {
                             onTap: () {
                               controlNotifier.isTextEditing =
                                   !controlNotifier.isTextEditing;
+                                  
                             },
                             child: Align(
                               alignment: Alignment.topCenter,
@@ -368,7 +371,9 @@ class _MainViewState extends State<MainView> {
                       BottomTools(
                         contentKey: contentKey,
                         onDone: (bytes) {
-                          print("this is the new data set");
+                          print("this is the new data set-$bytes");
+                          print(
+                              "check the Data-${controlNotifier.isTextEditing}");
                           setState(() {
                             widget.onDone!(bytes);
                           });
@@ -459,6 +464,7 @@ class _MainViewState extends State<MainView> {
     var i = (log(bytes) / log(1024)).floor();
     var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
     value2 = double.parse(STR);
+    print("viedo check-${widget.finalvideoSize}");
     print(value2);
     switch (i) {
       case 0:
@@ -499,7 +505,7 @@ class _MainViewState extends State<MainView> {
 
         break;
       case 2:
-        if (value2 > 20) {
+        if (value2 > widget.finalvideoSize!) {
           print(
               "this file size ${value2} ${suffixes[i]} Selected Max size ${widget.finalFileSize!}MB");
 

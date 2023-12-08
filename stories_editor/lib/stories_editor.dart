@@ -49,6 +49,8 @@ class StoriesEditor extends StatefulWidget {
   /// gallery thumbnail quality
   final int? galleryThumbnailQuality;
   double? finalFileSize;
+  double? finalvideoSize;
+
 
     StoriesEditor(
       {Key? key,
@@ -63,7 +65,7 @@ class StoriesEditor extends StatefulWidget {
       this.onDoneButtonStyle,
       this.editorBackgroundColor,
       this.galleryThumbnailQuality,
-      this.finalFileSize})
+      this.finalFileSize,this.finalvideoSize,})
       : super(key: key);
 
   @override
@@ -110,6 +112,7 @@ class _StoriesEditorState extends State<StoriesEditor> {
           ],
           child: MainView(
             finalFileSize: widget.finalFileSize,
+            finalvideoSize: widget.finalvideoSize,
             giphyKey: widget.giphyKey,
             onDone: widget.onDone,
             fontFamilyList: widget.fontFamilyList,

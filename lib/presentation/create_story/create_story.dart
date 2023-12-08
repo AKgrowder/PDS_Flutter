@@ -12,7 +12,8 @@ import '../../core/utils/color_constant.dart';
 
 class CreateStoryPage extends StatefulWidget {
   double? finalFileSize;
-  CreateStoryPage({key, this.finalFileSize});
+  double? finalvideoSize;
+  CreateStoryPage({key, this.finalFileSize, this.finalvideoSize});
 
   @override
   State<CreateStoryPage> createState() => _CreateStoryPageState();
@@ -21,6 +22,8 @@ class CreateStoryPage extends StatefulWidget {
 class _CreateStoryPageState extends State<CreateStoryPage> {
   double value2 = 0.0;
   PlatformFile? file12;
+  double finalvideoSize = 0;
+
   double finalFileSize = 0;
   ImageDataPostOne? imageDataPost;
   CreateStoryModel? createForm;
@@ -45,16 +48,17 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
       builder: (context, state) {
         return StoriesEditor(
           finalFileSize: widget.finalFileSize,
+          finalvideoSize: widget.finalvideoSize,
           giphyKey: 'API KEY',
           //fontFamilyList: const ['Shizuru', 'Aladin'],
           galleryThumbnailQuality: 300,
           //isCustomFontList: true,
           onDone: (uri) {
-            print("uri-$uri");
-
+            print("finalUrlCheck-$uri");
+         
             BlocProvider.of<CreateStoryCubit>(context)
                 .UplodeImageAPI(context, 'Demo', uri);
-            //Share.shareFiles([uri]);
+            
           },
         );
       },
