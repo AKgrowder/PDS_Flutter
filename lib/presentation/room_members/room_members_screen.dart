@@ -84,6 +84,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
     getUserSavedData();
 
     super.initState();
+    print("RoomOwnerRoomOwner >>> ${widget.RoomOwner}");
   }
 
   getUserSavedData() async {
@@ -667,6 +668,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                           left: 75),
                                                   child: GestureDetector(
                                                     onTapDown: (details) {
+                                                      print("yes i am jinal ");
                                                       _showPopupMenu(
                                                           index,
                                                           details
@@ -705,13 +707,14 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                           _data?.object?[index].userUuid
                                       ? GestureDetector(
                                           onTapDown: (details) {
-                                            if (_data?.object?[index].isAdmin ==
-                                                false) {
+                                            if (widget.RoomOwner == true) {
+                                              print("yes i am ankur ");
                                               _showPopupMenuWithAddOwner(
                                                   index,
                                                   details.globalPosition,
                                                   context);
                                             } else {
+                                              print("yes i am meet ");
                                               _showPopupMenu(
                                                   index,
                                                   details.globalPosition,
@@ -1638,7 +1641,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
     Offset offset,
     BuildContext context,
   ) async {
-    print("sdfjdshfsdhh-${_data?.object?[MemberIndex].isAdmin}");
+    print("sdfjdshfsdhh-${widget.RoomOwner}");
     double right = offset.dx;
     double top = offset.dy;
     double _width = MediaQuery.of(context).size.width;
@@ -1656,7 +1659,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
         50,
         10,
       ),
-      items: _data?.object?[MemberIndex].isAdmin == false
+      items: widget.RoomOwner == true
           ? [
               PopupMenuItem(
                   value: 0,
