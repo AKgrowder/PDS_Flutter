@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:developer';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:video_player/video_player.dart';
 import '../../core/utils/image_constant.dart';
 import '../../widgets/custom_image_view.dart';
 
@@ -46,6 +48,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   final Stopwatch _stopwatch = Stopwatch();
   Offset _pointerDownPosition = Offset.zero;
   int _pointerDownMillis = 0;
+
+  VideoPlayerController? _controller;
   double _pageValue = 0.0;
   List<bool> imageLoads = [];
   bool? StoryView = false;
@@ -55,6 +59,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   StoryViewListModel? StoryViewListModelData;
   late PointerUpEvent event1;
   DeleteStory? deleteStory;
+  bool ifVideoPlayer = false;
+  String lastLoggedTime = "";
   @override
   void initState() {
     _storyController =
@@ -67,7 +73,21 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     print("storyUid-${widget.buttonData.images[_curSegmentIndex].storyUid}");
     BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
         context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+    dataSetUpAPi();
     super.initState();
+  }
+
+  dataSetUpAPi() async {
+    if (widget.buttonData.images[_curSegmentIndex].image!.endsWith('.mp4')) {
+      _controller = VideoPlayerController.networkUrl(
+          (Uri.parse('${widget.buttonData.images[_curSegmentIndex].image}')))
+        ..initialize().then((_) {
+          setState(() {
+            ifVideoPlayer = true;
+            _controller?.play();
+          });
+        });
+    }
   }
 
   @override
@@ -337,6 +357,73 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
           );
   }
 
+  _buildPageContent1() {
+    bool imageLoaded = false;
+    _controller?.addListener(() {
+      if (mounted) {
+        if (DummyStoryView == _curSegmentIndex) {
+          DummyStoryViewBool = false;
+        } else {
+          DummyStoryView = _curSegmentIndex;
+          DummyStoryViewBool = true;
+        }
+
+        // Image has been loaded
+        imageLoaded = true;
+        _storyController!.unpause();
+
+        if (DummyStoryViewBool == true) {
+          StoryView = true;
+          setState(() {});
+        }
+      }
+    });
+
+    print("check Data ANdGet-_buildPageContent1");
+
+    _storyController!.pause();
+
+    if (widget.buttonData.storyPages.isEmpty) {
+      return Container(
+        color: Colors.orange,
+        child: const Center(
+          child: Text('No pages'),
+        ),
+      );
+    }
+    if (imageLoaded == true) {
+      if (StoryView == true) {
+        StoryView = false;
+
+        print(
+            'storyUid-${widget.buttonData.images[_curSegmentIndex].storyUid}');
+        print('User_Id--$User_ID');
+
+        if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
+          BlocProvider.of<ViewStoryCubit>(context).ViewStory(
+              context,
+              "${User_ID}",
+              "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+        }
+      }
+    }
+    if (_controller?.value.isPlaying == true) {
+      return StoryPageScaffold(
+        body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            child: _controller?.value.isInitialized != null
+                ? AspectRatio(
+                    aspectRatio: _controller!.value.aspectRatio,
+                    child: VideoPlayer(_controller!),
+                  )
+                : Container()),
+      );
+    } else {
+      _storyController!.unpause();
+    }
+  }
+
   bool _isLeftPartOfStory(Offset position) {
     if (!mounted) {
       return false;
@@ -380,7 +467,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         height: double.infinity,
         child: Stack(
           children: [
-            _buildPageContent(),
+            ifVideoPlayer == true ? _buildPageContent1() : _buildPageContent(),
             SafeArea(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -692,6 +779,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                 ],
               ),
             ),
+            //this is the sortyViewSetup
             _storyController == null
                 ? Center(
                     child: CircularProgressIndicator(
@@ -711,6 +799,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     widget.pageController?.removeListener(_onPageControllerUpdate);
     _stopwatch.stop();
     _storyController!.removeListener(_onTimelineEvent);
+    _controller?.dispose();
     super.dispose();
   }
 
