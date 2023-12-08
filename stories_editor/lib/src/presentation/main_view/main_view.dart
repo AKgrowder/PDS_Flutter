@@ -91,7 +91,7 @@ class _MainViewState extends State<MainView> {
 
   ///Editable item
   EditableItem? _activeItem;
-  late VideoPlayerController _controller;
+  VideoPlayerController? _controller;
 
   /// Gesture Detector listen changes
   Offset _initPos = const Offset(0, 0);
@@ -128,7 +128,7 @@ class _MainViewState extends State<MainView> {
 
   @override
   void dispose() {
-    _controller.pause();
+    _controller?.pause();
     super.dispose();
   }
 
@@ -165,14 +165,10 @@ class _MainViewState extends State<MainView> {
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
-                          ///gradient container
-                          /// this container will contain all widgets(image/texts/draws/sticker)
-                          /// wrap this widget with coloredFilter
                           GestureDetector(
                             onScaleStart: _onScaleStart,
                             onScaleUpdate: _onScaleUpdate,
                             onTap: () {
-                              print("thi is the will  be");
                               controlNotifier.isTextEditing =
                                   !controlNotifier.isTextEditing;
                             },
@@ -216,13 +212,13 @@ class _MainViewState extends State<MainView> {
                                             /// the gestures of all movable items.
                                             controlNotifier.mediaPath
                                                         .endsWith('.mp4') &&
-                                                    _controller
+                                                    _controller!
                                                         .value.isInitialized
                                                 ? AspectRatio(
-                                                    aspectRatio: _controller
+                                                    aspectRatio: _controller!
                                                         .value.aspectRatio,
                                                     child: VideoPlayer(
-                                                        _controller),
+                                                        _controller!),
                                                   )
                                                 : PhotoView.customChild(
                                                     child: Container(),
@@ -406,6 +402,7 @@ class _MainViewState extends State<MainView> {
                       if (path.first.path.toString().isNotEmpty) {
                         getFileSize(path.first.path.toString(), 1, context,
                             controlNotifier, itemProvider);
+                        Navigator.of(context);
                       }
                     }
                   },
@@ -430,7 +427,7 @@ class _MainViewState extends State<MainView> {
                                 width: 1.2,
                               )),
                           child: const Text(
-                            'Cancel',
+                            'Selected',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
@@ -475,10 +472,10 @@ class _MainViewState extends State<MainView> {
         _controller =
             VideoPlayerController.file(File(controlNotifier.mediaPath));
 
-        _controller.initialize().then((value) => setState(() {}));
+        _controller?.initialize().then((value) => setState(() {}));
         setState(() {
-          _controller.play();
-          _controller.setLooping(true);
+          _controller?.play();
+          _controller?.setLooping(true);
         });
 
         break;
@@ -494,10 +491,10 @@ class _MainViewState extends State<MainView> {
         _controller =
             VideoPlayerController.file(File(controlNotifier.mediaPath));
 
-        _controller.initialize().then((value) => setState(() {}));
+        _controller?.initialize().then((value) => setState(() {}));
         setState(() {
-          _controller.play();
-          _controller.setLooping(true);
+          _controller?.play();
+          _controller?.setLooping(true);
         });
 
         break;
@@ -537,10 +534,10 @@ class _MainViewState extends State<MainView> {
           _controller =
               VideoPlayerController.file(File(controlNotifier.mediaPath));
 
-          _controller.initialize().then((value) => setState(() {}));
+          _controller?.initialize().then((value) => setState(() {}));
           setState(() {
-            _controller.play();
-            _controller.setLooping(true);
+            _controller?.play();
+            _controller?.setLooping(true);
           });
         }
 
@@ -577,6 +574,7 @@ class _MainViewState extends State<MainView> {
 
         print("value _controller-$_controller");
         setState(() {});
+
         break;
       case 1:
         print("Done file size KB");

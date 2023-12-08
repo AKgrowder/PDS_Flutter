@@ -23,7 +23,7 @@ dependencies:
   image_gallery_saver: ^2.0.3
   #own packages
   gallery_media_picker: ^0.0.82
-  video_player:
+  video_player: 
 
   modal_gif_picker: ^0.0.2
   # painting

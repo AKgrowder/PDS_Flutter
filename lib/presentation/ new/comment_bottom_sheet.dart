@@ -511,10 +511,10 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                 } else {
                                   print(
                                       "i want to check-${addcomment.text.length}");
-                                  if (addcomment.text.length >= 300) {
+                                  if (addcomment.text.length>= 300) {
                                     SnackBar snackBar = SnackBar(
                                       content: Text(
-                                          'One Time Message Lenght only for 300 Your Meassge -> ${addcomment.text.length}'),
+                                          'One time message length allowed is 300 your message length is <${addcomment.text.length}>'),
                                       backgroundColor:
                                           ColorConstant.primary_color,
                                     );
