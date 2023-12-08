@@ -514,7 +514,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                   if (addcomment.text.length>= 300) {
                                     SnackBar snackBar = SnackBar(
                                       content: Text(
-                                          'One time message length allowed is 300 your message length.'),
+                                          'One time message length allowed is 300'),
                                       backgroundColor:
                                           ColorConstant.primary_color,
                                     );

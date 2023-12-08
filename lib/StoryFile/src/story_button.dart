@@ -218,6 +218,7 @@ class StoryButtonData {
   final double timelineSpacing;
   final EdgeInsets? timlinePadding;
   final IsVisibleCallback isVisibleCallback;
+  Duration? durationOfVideo;
   List<StoryModel> images = [];
   bool? isWatch;
 
@@ -254,6 +255,7 @@ class StoryButtonData {
     this.timelineSpacing = 8.0,
     this.timlinePadding,
     this.inkFeatureFactory,
+    this.durationOfVideo,
     this.pageAnimationCurve,
     this.isVisibleCallback = defaultIsVisibleCallback,
     this.pageAnimationDuration,
