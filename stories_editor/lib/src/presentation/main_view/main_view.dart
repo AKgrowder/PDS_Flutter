@@ -379,7 +379,7 @@ class _MainViewState extends State<MainView> {
                           });
                         },
                         onDoneButtonStyle: widget.onDoneButtonStyle,
-                        editorBackgroundColor: widget.editorBackgroundColor,
+                        editorBackgroundColor: widget.editorBackgroundColor, context1: context,
                       ),
                   ],
                 ),
@@ -507,14 +507,14 @@ class _MainViewState extends State<MainView> {
       case 2:
         if (value2 > widget.finalvideoSize!) {
           print(
-              "this file size ${value2} ${suffixes[i]} Selected Max size ${widget.finalFileSize!}MB");
+              "this file size ${value2} ${suffixes[i]} Selected Max size ${widget.finalvideoSize!}MB");
 
           showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
-              title: Text("Max Size ${widget.finalFileSize!}MB"),
+              title: Text("Max Size ${widget.finalvideoSize!}MB"),
               content: Text(
-                  "This file size ${value2} ${suffixes[i]} Selected Max size ${widget.finalFileSize!}MB"),
+                  "This file size ${value2} ${suffixes[i]} Selected Max size ${widget.finalvideoSize!}MB allowed."),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
@@ -607,7 +607,7 @@ class _MainViewState extends State<MainView> {
             builder: (ctx) => AlertDialog(
               title: Text("Max Size ${widget.finalFileSize!}MB"),
               content: Text(
-                  "This file size ${value2} ${suffixes[i]} Selected Max size ${widget.finalFileSize!}MB"),
+                  "This file size ${value2} ${suffixes[i]} Selected Max size ${widget.finalFileSize!}MB allowed."),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {

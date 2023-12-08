@@ -297,7 +297,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         IndustryType.text = industryTypesArray;
 
         if (NewProfileData?.object?.userDocument != null) {
-          dopcument = NewProfileData?.object?.userDocument;
+          dopcument = NewProfileData?.object?.documentName;
         } else {
           dopcument = 'Upload Image';
         }
@@ -2991,7 +2991,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15, left: 20),
                           child: Text(
-                            '${dopcument.toString().split('/').last}',
+                          '${NewProfileData?.object?.documentName}',
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(fontSize: 16),
                           ),

@@ -53,7 +53,6 @@ import 'package:pds/widgets/pagenation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
 
@@ -529,6 +528,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         var MaxPublicRoomSave = element.value ?? "";
         print("SupportPhoneNumber  ${MaxPublicRoomSave}");
         prefs.setString(PreferencesKey.MaxPublicRoomSave, MaxPublicRoomSave);
+      } else if (element.name == "MaxStoryUploadSizeInMB") {
+        var maxStoryUploadSizeInMB = element.value ?? "";
+        prefs.setString(
+            PreferencesKey.MaxStoryUploadSizeInMB, maxStoryUploadSizeInMB);
       }
     });
     VersionControll();
