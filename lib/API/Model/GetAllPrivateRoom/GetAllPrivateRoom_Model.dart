@@ -200,6 +200,7 @@ class Object {
   bool? isExpertPresent;
   String? roomLink;
   int? adminCount;
+    bool? isLoginUserAdmin;
 
   Object(
       {this.uid,
@@ -213,7 +214,7 @@ class Object {
       this.totalPage,
       this.isExpertPresent,
       this.roomLink,
-      this.adminCount});
+      this.adminCount,this.isLoginUserAdmin});
 
   Object.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
@@ -235,6 +236,7 @@ class Object {
     isExpertPresent = json['isExpertPresent'];
     roomLink = json['roomLink'];
     adminCount = json['adminCount'];
+    isLoginUserAdmin = json['isLoginUserAdmin'];
   }
 
   Map<String, dynamic> toJson() {
@@ -255,6 +257,7 @@ class Object {
     data['isExpertPresent'] = this.isExpertPresent;
     data['roomLink'] = this.roomLink;
     data['adminCount'] = this.adminCount;
+    data['isLoginUserAdmin'] = this.isLoginUserAdmin;
     return data;
   }
 }
