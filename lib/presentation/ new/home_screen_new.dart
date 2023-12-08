@@ -86,6 +86,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   Uint8List? firstPageImage;
   double documentuploadsize = 0;
   double finalFileSize = 0;
+  double documentVideosize = 0;
+
+  double finalvideoSize = 0;
+
   LikePost? likePost;
   GetGuestAllPostModel? AllGuestPostRoomData;
   DeleteCommentModel? DeletecommentDataa;
@@ -128,6 +132,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
 
     finalFileSize = documentuploadsize;
+    documentVideosize = await double.parse(
+        prefs.getString(PreferencesKey.MaxStoryUploadSizeInMB) ?? "0");
+    finalvideoSize = documentVideosize;
     setState(() {});
   }
 
@@ -1330,6 +1337,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   return CreateStoryPage(
                                                     finalFileSize:
                                                         finalFileSize,
+                                                    finalvideoSize:
+                                                        finalvideoSize,
                                                   );
                                                 }));
                                                 print(
@@ -1353,6 +1362,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           builder: (context) {
                                                 return CreateStoryPage(
                                                   finalFileSize: finalFileSize,
+                                                   finalvideoSize:
+                                                        finalvideoSize,
                                                 );
                                               }));
                                               var parmes = {
@@ -3920,7 +3931,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             padding:
                                                                                 EdgeInsets.only(bottom: 25),
                                                                             child:
-                                                                                Align( 
+                                                                                Align(
                                                                               alignment: Alignment.bottomCenter,
                                                                               child: Container(
                                                                                 height: 40,
@@ -4525,6 +4536,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               MaterialPageRoute(builder: (context) {
             return CreateStoryPage(
               finalFileSize: finalFileSize,
+               finalvideoSize:
+                                                        finalvideoSize,
             );
           }));
           print("imageData--${imageDataPost?.object.toString()}");
@@ -4538,6 +4551,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             await Navigator.push(context, MaterialPageRoute(builder: (context) {
           return CreateStoryPage(
             finalFileSize: finalFileSize,
+             finalvideoSize:
+                                                        finalvideoSize,
           );
         }));
         var parmes = {"storyData": imageDataPost?.object.toString()};

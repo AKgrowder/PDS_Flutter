@@ -468,7 +468,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                         ),
                                                                                         GestureDetector(
                                                                                           onTap: () {
-                                                                                            BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PriveateRoomData!.object![index].uid.toString(),"Deleted",context);
+                                                                                            BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PriveateRoomData!.object![index].uid.toString(), "Deleted", context);
                                                                                           },
                                                                                           child: Container(
                                                                                             height: 43,
@@ -587,7 +587,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                           ),
                                                                                           GestureDetector(
                                                                                             onTap: () {
-                                                                                              BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PriveateRoomData!.object![index].uid.toString(),"Deleted", ontext);
+                                                                                              BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PriveateRoomData!.object![index].uid.toString(), "Deleted", context);
                                                                                             },
                                                                                             child: Container(
                                                                                               height: 43,
@@ -1125,19 +1125,18 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   MaterialPageRoute(
                                                 builder: (context) {
                                                   return RoomMembersScreen(
-                                                      RoomOwnerCount: PriveateRoomData
-                                                              ?.object?[index]
-                                                              .adminCount ??
-                                                          0,
+                                                      RoomOwnerCount:
+                                                          PriveateRoomData
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .adminCount ??
+                                                              0,
                                                       roomname:
                                                           "${PriveateRoomData?.object?[index].roomQuestion}",
                                                       RoomOwner: PriveateRoomData
-                                                                  ?.object?[
-                                                                      index]
-                                                                  .createdBy ==
-                                                              userId
-                                                          ? true
-                                                          : false,
+                                                              ?.object?[index]
+                                                              .isLoginUserAdmin ==
+                                                          true,
                                                       CreateUserID: userId,
                                                       roomdescription:
                                                           "${PriveateRoomData?.object?[index].description}",

@@ -514,14 +514,14 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                   if (addcomment.text.length>= 300) {
                                     SnackBar snackBar = SnackBar(
                                       content: Text(
-                                          'One time message length allowed is 300 your message length is <${addcomment.text.length}>'),
+                                          'One time message length allowed is 300 your message length.'),
                                       backgroundColor:
                                           ColorConstant.primary_color,
                                     );
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(snackBar);
                                   } else {
-                                    Map<String, dynamic> params = {
+                                    Map<String, dynamic> params = { 
                                       "comment": addcomment.text,
                                       "postUid": '${widget.postUuID}',
                                     };

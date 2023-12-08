@@ -78,6 +78,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   }
 
   dataSetUpAPi() async {
+    
     if (widget.buttonData.images[_curSegmentIndex].image!.endsWith('.mp4')) {
       _controller = VideoPlayerController.networkUrl(
           (Uri.parse('${widget.buttonData.images[_curSegmentIndex].image}')))
