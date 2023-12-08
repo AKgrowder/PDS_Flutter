@@ -116,11 +116,11 @@ class FetchAllPublicRoomCubit extends Cubit<FetchAllPublicRoomState> {
   //   }
   // }
 
-  Future<void> DeleteRoomm(String roomuId, BuildContext context) async {
+  Future<void> DeleteRoomm(String roomuId,String name, BuildContext context) async {
     dynamic GetAllPrivateRoom;
     try {
       emit(FetchAllPublicRoomLoadingState());
-      GetAllPrivateRoom = await Repository().DeleteRoomApi(roomuId, context);
+      GetAllPrivateRoom = await Repository().DeleteRoomApi(roomuId,name, context);
       if (GetAllPrivateRoom == "Something Went Wrong, Try After Some Time.") {
         emit(FetchAllPublicRoomErrorState("${GetAllPrivateRoom}"));
       } else {

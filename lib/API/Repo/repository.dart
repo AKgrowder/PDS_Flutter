@@ -568,9 +568,9 @@ class Repository {
     }
   }
 
-  DeleteRoomApi(String roomuId, BuildContext context) async {
+  DeleteRoomApi(String roomuId, String name, BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
-        "${Config.DeleteRoom}?roomUid=${roomuId}", context);
+        "${Config.DeleteRoom}?roomUid=${roomuId}&option=${name}", context);
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
