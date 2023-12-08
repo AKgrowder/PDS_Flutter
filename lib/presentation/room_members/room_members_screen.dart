@@ -148,7 +148,13 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
           if (state is FatchAllMembersLoadedState) {
             _data = state.FatchAllMembersData;
             print("@@@@@@@@@@@@@@@@@@${_data?.object?.length}");
-            // setState(() {});
+          }
+          if (state is RoomExistsLoadedState) {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.roomExistsModel.object.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
         }, builder: (context, state) {
           if (state is FatchAllMembersLoadedState) {
@@ -1703,7 +1709,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "Make Room Owder",
+                            "Make Room Owner",
                             style: TextStyle(color: Colors.black),
                             textScaleFactor: 1.0,
                           ),
@@ -1915,14 +1921,21 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
               "object object object object object object object object object ");
           print(_data?.object?[MemberIndex].userUuid);
 
-          showDialog(
-              context: context,
-              builder: (_) => AssignAdminScreenn(
-                    DeleteFlag: false,
-                    roomID: widget.room_Id,
-                    data: _data,
-                    RoomOwnerCount: widget.RoomOwnerCount,
-                  )).then((value) => getUserSavedData());
+          BlocProvider.of<FatchAllMembersCubit>(context)
+              .RoomExistsAPI(
+                  _data?.object?[MemberIndex].userUuid, widget.room_Id, context)
+              .then((value) async =>
+                  await BlocProvider.of<FatchAllMembersCubit>(context)
+                      .FatchAllMembersAPI("${widget.room_Id}", context));
+
+          // showDialog(
+          //     context: context,
+          //     builder: (_) => AssignAdminScreenn(
+          //           DeleteFlag: false,
+          //           roomID: widget.room_Id,
+          //           data: _data,
+          //           RoomOwnerCount: widget.RoomOwnerCount,
+          //         )).then((value) => getUserSavedData());
         }
       }
     });
