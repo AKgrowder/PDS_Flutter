@@ -50,11 +50,9 @@ class _SplashScreenState extends State<SplashScreen> {
       Duration(seconds: 1),
       () async {
         if (UserID != "") {
-            await BlocProvider.of<SystemConfigCubit>(context)
-                .UserModel(context);
-          }
-          await BlocProvider.of<SystemConfigCubit>(context)
-              .SystemConfig(context);
+          await BlocProvider.of<SystemConfigCubit>(context).UserModel(context);
+        }
+        await BlocProvider.of<SystemConfigCubit>(context).SystemConfig(context);
         // await BlocProvider.of<SystemConfigCubit>(context).Tokenvalid(context);
       },
     );
@@ -225,6 +223,10 @@ class _SplashScreenState extends State<SplashScreen> {
         var MaxPublicRoomSave = element.value ?? "";
         print("SupportPhoneNumber  ${MaxPublicRoomSave}");
         prefs.setString(PreferencesKey.MaxPublicRoomSave, MaxPublicRoomSave);
+      } else if (element.name == "MaxStoryUploadSizeInMB") {
+        var maxStoryUploadSizeInMB = element.value ?? "";
+        prefs.setString(
+            PreferencesKey.MaxStoryUploadSizeInMB, maxStoryUploadSizeInMB);
       }
     });
     VersionControll();
