@@ -342,49 +342,56 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                                                     ),
                                                   ),
                                                   Spacer(),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      BlocProvider.of<
-                                                                  RoomExistsCubit>(
-                                                              context)
-                                                          .RoomExistsAPI(
-                                                              widget
-                                                                  .data
-                                                                  ?.object?[
-                                                                      index]
-                                                                  .userUuid,
-                                                              widget.roomID
-                                                                  .toString(),
-                                                              context);
-                                                    },
-                                                    child: Container(
-                                                      width: 80,
-                                                      height: 20,
-                                                      decoration:
-                                                          ShapeDecoration(
-                                                        color:
-                                                            Color(0xFFED1C25),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      49.46),
+                                                  widget.data?.object?[index]
+                                                              .isAdmin ==
+                                                          true
+                                                      ? SizedBox()
+                                                      : GestureDetector(
+                                                          onTap: () {
+                                                            BlocProvider.of<
+                                                                        RoomExistsCubit>(
+                                                                    context)
+                                                                .RoomExistsAPI(
+                                                                    widget
+                                                                        .data
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .userUuid,
+                                                                    widget
+                                                                        .roomID
+                                                                        .toString(),
+                                                                    context);
+                                                          },
+                                                          child: Container(
+                                                            width: 80,
+                                                            height: 20,
+                                                            decoration:
+                                                                ShapeDecoration(
+                                                              color: Color(
+                                                                  0xFFED1C25),
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            49.46),
+                                                              ),
+                                                            ),
+                                                            child: Center(
+                                                                child: Text(
+                                                              "Assign",
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontFamily:
+                                                                      "outfit",
+                                                                  fontSize: 10),
+                                                            )),
+                                                          ),
                                                         ),
-                                                      ),
-                                                      child: Center(
-                                                          child: Text(
-                                                        "Assign",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: Colors.white,
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 10),
-                                                      )),
-                                                    ),
-                                                  ),
                                                 ],
                                               ),
                                             );

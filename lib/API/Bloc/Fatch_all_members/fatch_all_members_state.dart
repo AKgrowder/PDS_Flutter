@@ -1,5 +1,7 @@
  
  
+import 'package:pds/API/Model/RoomExistsModel/RoomExistsModel.dart';
+
 import '../../Model/FatchAllMembers/fatchallmembers_model.dart';
 
 abstract class FatchAllMembersState {}
@@ -16,4 +18,10 @@ class FatchAllMembersLoadedState extends FatchAllMembersState {
 class FatchAllMembersErrorState extends FatchAllMembersState {
   final dynamic error;
   FatchAllMembersErrorState(this.error);
+}
+
+
+class RoomExistsLoadedState extends FatchAllMembersState {
+  final RoomExistsModel roomExistsModel;
+  RoomExistsLoadedState(this.roomExistsModel);
 }
