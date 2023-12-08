@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:developer';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +17,6 @@ import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:video_player/video_player.dart';
 import '../../core/utils/image_constant.dart';
 import '../../widgets/custom_image_view.dart';
@@ -61,6 +58,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   DeleteStory? deleteStory;
   bool ifVideoPlayer = false;
   String lastLoggedTime = "";
+  Duration? durationOfVideo;
   @override
   void initState() {
     _storyController =
@@ -78,13 +76,14 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   }
 
   dataSetUpAPi() async {
-    
     if (widget.buttonData.images[_curSegmentIndex].image!.endsWith('.mp4')) {
       _controller = VideoPlayerController.networkUrl(
           (Uri.parse('${widget.buttonData.images[_curSegmentIndex].image}')))
         ..initialize().then((_) {
           setState(() {
             ifVideoPlayer = true;
+            durationOfVideo = _controller!.value.duration;
+
             _controller?.play();
           });
         });
@@ -253,6 +252,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
           ? StoryTimeline(
               controller: _storyController!,
               buttonData: widget.buttonData,
+              durationOfVideo: durationOfVideo,
             )
           : SizedBox(),
     );
@@ -358,7 +358,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
           );
   }
 
-  _buildPageContent1() {
+  Widget _buildPageContent1() {
     bool imageLoaded = false;
     _controller?.addListener(() {
       if (mounted) {
@@ -408,21 +408,18 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         }
       }
     }
-    if (_controller?.value.isPlaying == true) {
-      return StoryPageScaffold(
-        body: Container(
-            width: double.infinity,
-            height: double.infinity,
-            child: _controller?.value.isInitialized != null
-                ? AspectRatio(
-                    aspectRatio: _controller!.value.aspectRatio,
-                    child: VideoPlayer(_controller!),
-                  )
-                : Container()),
-      );
-    } else {
-      _storyController!.unpause();
-    }
+    _storyController!.unpause();
+    return StoryPageScaffold(
+      body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          child: _controller?.value.isInitialized != null
+              ? AspectRatio(
+                  aspectRatio: _controller!.value.aspectRatio,
+                  child: VideoPlayer(_controller!),
+                )
+              : Container()),
+    );
   }
 
   bool _isLeftPartOfStory(Offset position) {
@@ -924,12 +921,13 @@ class StoryTimelineController {
 class StoryTimeline extends StatefulWidget {
   final StoryTimelineController controller;
   final StoryButtonData buttonData;
-
-  const StoryTimeline({
-    Key? key,
-    required this.controller,
-    required this.buttonData,
-  }) : super(key: key);
+  Duration? durationOfVideo;
+  StoryTimeline(
+      {Key? key,
+      required this.controller,
+      required this.buttonData,
+      this.durationOfVideo})
+      : super(key: key);
 
   @override
   State<StoryTimeline> createState() => _StoryTimelineState();
@@ -946,8 +944,10 @@ class _StoryTimelineState extends State<StoryTimeline> {
   void initState() {
     _maxAccumulator = widget.buttonData.segmentDuration.inMilliseconds;
     _timer = Timer.periodic(
-      const Duration(
-        milliseconds: kStoryTimerTickMillis,
+      Duration(
+        milliseconds: widget.durationOfVideo != null
+            ? widget.durationOfVideo!.inMilliseconds
+            : kStoryTimerTickMillis,
       ),
       _onTimer,
     );
@@ -967,19 +967,38 @@ class _StoryTimelineState extends State<StoryTimeline> {
     if (_isPaused || !_isTimelineAvailable) {
       return;
     }
-    if (_accumulatedTime + kStoryTimerTickMillis <= _maxAccumulator) {
-      _accumulatedTime += kStoryTimerTickMillis;
-      if (_accumulatedTime >= _maxAccumulator) {
-        if (_isLastSegment) {
-          _onStoryComplete();
-        } else {
-          _accumulatedTime = 0;
-          _curSegmentIndex++;
-          _onSegmentComplete();
+    if (widget.durationOfVideo != null) {
+      if (_accumulatedTime + widget.durationOfVideo!.inMilliseconds <=
+          _maxAccumulator) {
+        _accumulatedTime += widget.durationOfVideo!.inMilliseconds;
+        if (_accumulatedTime >= _maxAccumulator) {
+          if (_isLastSegment) {
+            _onStoryComplete();
+          } else {
+            _accumulatedTime = 0;
+            _curSegmentIndex++;
+            _onSegmentComplete();
+          }
+        }
+        if (mounted) {
+          setState(() {});
         }
       }
-      if (mounted) {
-        setState(() {});
+    } else {
+      if (_accumulatedTime + kStoryTimerTickMillis <= _maxAccumulator) {
+        _accumulatedTime += kStoryTimerTickMillis;
+        if (_accumulatedTime >= _maxAccumulator) {
+          if (_isLastSegment) {
+            _onStoryComplete();
+          } else {
+            _accumulatedTime = 0;
+            _curSegmentIndex++;
+            _onSegmentComplete();
+          }
+        }
+        if (mounted) {
+          setState(() {});
+        }
       }
     }
   }
