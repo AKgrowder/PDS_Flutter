@@ -28,6 +28,7 @@ class Object {
   String? userDocument;
   dynamic companyName;
   String? jobProfile;
+  String? documentName;
   double? fees;
   String? workingHours;
   String? rejectionReason;
@@ -52,6 +53,7 @@ class Object {
       this.rejectionReason,
       this.userName,
       this.name,
+      this.documentName,
       this.email,
       this.module,
       this.approvalStatus,
@@ -68,6 +70,7 @@ class Object {
     userDocument = json['userDocument'];
     companyName = json['companyName'];
     jobProfile = json['jobProfile'];
+    documentName = json['documentName'];
     fees = json['fees'];
     workingHours = json['workingHours'];
     rejectionReason = json['rejectionReason'];
