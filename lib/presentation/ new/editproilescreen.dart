@@ -128,11 +128,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (widget.newProfileData?.object?.fees != null) {
       fees.text = widget.newProfileData?.object?.fees.toString() ?? '';
     }
-    print("dddhdhdh-${widget.newProfileData?.object?.userDocument}");
+    print("dddhdhdh-${widget.newProfileData?.object?.documentName}");
 
-    if (widget.newProfileData?.object?.userDocument != null) {
+    if (widget.newProfileData?.object?.documentName != null) {
       print("fdhfdhfhghf");
-      dopcument = widget.newProfileData?.object?.userDocument;
+      dopcument = widget.newProfileData?.object?.documentName;
       print("document --${dopcument}");
     } else {
       dopcument = 'Upload Image';
@@ -1503,7 +1503,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 15, left: 20),
                     child: Text(
-                      '${dopcument.toString().split('/').last}',
+                      '${dopcument}',
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: 16),
                     ),
