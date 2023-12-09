@@ -157,7 +157,6 @@ class UsersList {
 }
  */
 
-
 class GetAllPrivateRoomModel {
   String? message;
   List<Object>? object;
@@ -200,7 +199,7 @@ class Object {
   bool? isExpertPresent;
   String? roomLink;
   int? adminCount;
-    bool? isLoginUserAdmin;
+  bool? isLoginUserAdmin;
 
   Object(
       {this.uid,
@@ -214,7 +213,8 @@ class Object {
       this.totalPage,
       this.isExpertPresent,
       this.roomLink,
-      this.adminCount,this.isLoginUserAdmin});
+      this.adminCount,
+      this.isLoginUserAdmin});
 
   Object.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
@@ -268,13 +268,16 @@ class ExpertUserProfile {
   String? name;
   bool? isExpert;
   String? userProfilePic;
+  String? approvalStatus;
 
-  ExpertUserProfile(
-      {this.uuid,
-      this.userName,
-      this.name,
-      this.isExpert,
-      this.userProfilePic});
+  ExpertUserProfile({
+    this.uuid,
+    this.userName,
+    this.name,
+    this.isExpert,
+    this.userProfilePic,
+    this.approvalStatus,
+  });
 
   ExpertUserProfile.fromJson(Map<String, dynamic> json) {
     uuid = json['uuid'];
@@ -282,6 +285,7 @@ class ExpertUserProfile {
     name = json['name'];
     isExpert = json['isExpert'];
     userProfilePic = json['userProfilePic'];
+    approvalStatus = json['approvalStatus'];
   }
 
   Map<String, dynamic> toJson() {
@@ -291,6 +295,7 @@ class ExpertUserProfile {
     data['name'] = this.name;
     data['isExpert'] = this.isExpert;
     data['userProfilePic'] = this.userProfilePic;
+    data['approvalStatus'] = this.approvalStatus;
     return data;
   }
 }
