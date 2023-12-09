@@ -19,9 +19,10 @@ class AddPostCubit extends Cubit<AddPostState> {
       if (addPostData == "Something Went Wrong, Try After Some Time.") {
         emit(AddPostErrorState("${addPostData}"));
       } else {
-      if (addPostData.success == true) {
-        emit(AddPostLoadedState(addPostData));
-      }}
+        if (addPostData.success == true) {
+          emit(AddPostLoadedState(addPostData));
+        }
+      }
     } catch (e) {
       emit(AddPostErrorState(addPostData));
     }
@@ -37,18 +38,35 @@ class AddPostCubit extends Cubit<AddPostState> {
       emit(AddPostLoadingState());
       addPostImageUploded = await Repository()
           .AddPostImageUploded(context, fileName ?? '', file ?? '');
-          if (addPostImageUploded == "Something Went Wrong, Try After Some Time.") {
+      if (addPostImageUploded == "Something Went Wrong, Try After Some Time.") {
         emit(AddPostErrorState("${addPostImageUploded}"));
       } else {
-      if (addPostImageUploded.success == true) {
-        emit(AddPostImaegState(addPostImageUploded));
-      }}
+        if (addPostImageUploded.success == true) {
+          emit(AddPostImaegState(addPostImageUploded));
+        }
+      }
     } catch (e) {
       emit(AddPostErrorState(addPostImageUploded));
     }
   }
 
-  Future<void> UplodeImageAPIImane(BuildContext context, List<File> imageFile) async {
+  Future<void> GetAllHashtag(
+      BuildContext context, String pageNumber, String searchHashtag) async {
+    dynamic addPostImageUploded;
+    try {
+      addPostImageUploded = await Repository()
+          .get_all_hashtag(context, pageNumber, searchHashtag);
+
+      if (addPostImageUploded.success == true) {
+        emit(GetAllHashtagState(addPostImageUploded));
+      }
+    } catch (e) {
+      emit(AddPostErrorState(addPostImageUploded));
+    }
+  }
+
+  Future<void> UplodeImageAPIImane(
+      BuildContext context, List<File> imageFile) async {
     dynamic addPostImageUploded;
     try {
       emit(AddPostLoadingState());
@@ -56,9 +74,10 @@ class AddPostCubit extends Cubit<AddPostState> {
       if (addPostImageUploded == "Something Went Wrong, Try After Some Time.") {
         emit(AddPostErrorState("${addPostImageUploded}"));
       } else {
-      if (addPostImageUploded.success == true) {
-        emit(AddPostImaegState(addPostImageUploded));
-      }}
+        if (addPostImageUploded.success == true) {
+          emit(AddPostImaegState(addPostImageUploded));
+        }
+      }
     } catch (e) {
       emit(AddPostErrorState(addPostImageUploded));
     }
