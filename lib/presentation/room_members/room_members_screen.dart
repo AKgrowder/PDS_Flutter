@@ -8,14 +8,12 @@ import 'package:pds/API/Bloc/Fatch_all_members/fatch_all_members_cubit.dart';
 import 'package:pds/API/Bloc/Fatch_all_members/fatch_all_members_state.dart';
 import 'package:pds/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
 import 'package:pds/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_state.dart';
-import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
 import 'package:pds/API/Bloc/ViewDetails_Bloc/ViewDetails_cubit.dart';
 import 'package:pds/API/Bloc/ViewDetails_Bloc/ViewDetails_state.dart';
 import 'package:pds/API/Model/FatchAllMembers/fatchallmembers_model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/dialogs/assigh_adminn_dilog.dart';
-import 'package:pds/dilogs/assigh_adminn_dilog..dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -257,20 +255,52 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                 child: _data?.object?[index].userProfilePic
                                             ?.isNotEmpty ??
                                         false
-                                    ? CustomImageView(
-                                        url:
-                                            "${_data?.object?[index].userProfilePic}",
-                                        height: 50,
-                                        radius: BorderRadius.circular(25),
-                                        width: 50,
-                                        fit: BoxFit.fill,
+                                    ? Stack(
+                                        alignment: Alignment.bottomCenter,
+                                        children: [
+                                          CustomImageView(
+                                            url:
+                                                "${_data?.object?[index].userProfilePic}",
+                                            height: 50,
+                                            radius: BorderRadius.circular(25),
+                                            width: 50,
+                                            fit: BoxFit.fill,
+                                          ),
+                                          _data?.object?[index].isExpert == true
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 30.0),
+                                                  child: Image.asset(
+                                                    ImageConstant.Star,
+                                                    height: 18,
+                                                  ),
+                                                )
+                                              : SizedBox()
+                                        ],
                                       )
-                                    : CustomImageView(
-                                        imagePath: ImageConstant.tomcruse,
-                                        height: 50,
-                                        radius: BorderRadius.circular(25),
-                                        width: 50,
-                                        fit: BoxFit.fill,
+                                    : Stack(
+                                        alignment: Alignment.bottomCenter,
+                                        children: [
+                                          CustomImageView(
+                                            imagePath: ImageConstant.tomcruse,
+                                            height: 50,
+                                            radius: BorderRadius.circular(25),
+                                            width: 50,
+                                            fit: BoxFit.fill,
+                                          ),
+                                          _data?.object?[index].isExpert == true
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 30.0),
+                                                  child: Image.asset(
+                                                    ImageConstant.Star,
+                                                    height: 18,
+                                                  ),
+                                                )
+                                              : SizedBox()
+                                        ],
                                       ),
                               ),
                               SizedBox(
