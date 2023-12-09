@@ -2375,31 +2375,61 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
           itemCount: GetSavePostData?.object?.length,
           itemBuilder: (context, index) {
-            return Padding(
-              padding: EdgeInsets.only(bottom: 0, top: 0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => OpenSavePostImage(
-                              PostID: GetSavePostData?.object?[index].postUid,
+            return GetSavePostData?.object?[index].postData?.isEmpty ?? false
+                ? Padding(
+                    padding: EdgeInsets.only(bottom: 0, top: 0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OpenSavePostImage(
+                                    PostID:
+                                        GetSavePostData?.object?[index].postUid,
+                                  )),
+                        );
+                      },
+                      child: ClipRRect( 
+                        borderRadius: BorderRadius.circular(12.0),
+                        child: Container(
+                            margin: EdgeInsets.all(0.0),
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black),
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Center(
+                              child: Text(
+                                  "${GetSavePostData?.object?[index].description}"),
                             )),
+                      ),
+                    ),
+                  )
+                : Padding(
+                    padding: EdgeInsets.only(bottom: 0, top: 0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OpenSavePostImage(
+                                    PostID:
+                                        GetSavePostData?.object?[index].postUid,
+                                  )),
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12.0),
+                        child: Container(
+                            margin: EdgeInsets.all(0.0),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20)),
+                            child: CustomImageView(
+                              url:
+                                  "${GetSavePostData?.object?[index].postData?[0]}",
+                              fit: BoxFit.cover,
+                            )),
+                      ),
+                    ),
                   );
-                },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12.0),
-                  child: Container(
-                      margin: EdgeInsets.all(0.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20)),
-                      child: CustomImageView(
-                        url: "${GetSavePostData?.object?[index].postData?[0]}",
-                        fit: BoxFit.cover,
-                      )),
-                ),
-              ),
-            );
           },
         ),
       ));
@@ -2645,7 +2675,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                       builder: (context) => EditProfileScreen(
                             newProfileData: NewProfileData,
                           ))).then((value) =>
-                          
                   BlocProvider.of<NewProfileSCubit>(context)
                       .NewProfileSAPI(context, widget.User_ID));
             },
