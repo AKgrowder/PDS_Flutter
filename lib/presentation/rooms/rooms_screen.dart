@@ -7,7 +7,9 @@ import 'package:pds/API/Bloc/CreateRoom_Bloc/CreateRoom_state.dart';
 import 'package:pds/dialogs/assigh_adminn_dilog.dart';
 import 'package:pds/dialogs/edit_dilog.dart';
 import 'package:pds/dilogs/invite_dilog.dart';
+import 'package:pds/presentation/%20new/Experts_member_Screen.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
+import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:pds/presentation/room_members/room_members_screen.dart';
 import 'package:pds/presentation/rooms/room_details_screen.dart';
@@ -2036,47 +2038,94 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                       const EdgeInsets.all(8.0),
                                                   child: Row(
                                                     children: [
-                                                      CustomImageView(
-                                                        url:
-                                                            "${PriveateRoomData?.object?[index].expertUserProfile?.userProfilePic}",
-                                                        height: 30,
-                                                        radius: BorderRadius
-                                                            .circular(15),
-                                                        width: 30,
-                                                        fit: BoxFit.fill,
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                            builder: (context) {
+                                                              return ProfileScreen(
+                                                                  User_ID:
+                                                                      "${PriveateRoomData?.object?[index].expertUserProfile?.uuid}",
+                                                                  isFollowing:
+                                                                      "");
+                                                            },
+                                                          ));
+                                                        },
+                                                        child: CustomImageView(
+                                                          url:
+                                                              "${PriveateRoomData?.object?[index].expertUserProfile?.userProfilePic}",
+                                                          height: 30,
+                                                          radius: BorderRadius
+                                                              .circular(15),
+                                                          width: 30,
+                                                          fit: BoxFit.fill,
+                                                        ),
                                                       ),
                                                       Text(
                                                           " ${PriveateRoomData?.object?[index].expertUserProfile?.userName}"),
                                                       Spacer(),
-                                                      Container(
-                                                        width: 80,
-                                                        height: 20,
-                                                        decoration:
-                                                            ShapeDecoration(
-                                                          color:
-                                                              Color(0xFFED1C25),
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        49.46),
-                                                          ),
-                                                        ),
-                                                        child: Center(
-                                                            child: Text(
-                                                          "Expert",
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color:
-                                                                  Colors.white,
-                                                              fontFamily:
-                                                                  "outfit",
-                                                              fontSize: 10),
-                                                        )),
-                                                      )
+                                                      PriveateRoomData
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .expertUserProfile
+                                                                  ?.approvalStatus ==
+                                                              "APPROVED"
+                                                          ? GestureDetector(
+                                                              onTap: () {
+                                                                print(
+                                                                    "hey i am experts");
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) {
+                                                                    return ExpertMemberScreen(
+                                                                      roomname:
+                                                                          "${PriveateRoomData?.object?[index].roomQuestion}",
+                                                                      roomdescription:
+                                                                          "${PriveateRoomData?.object?[index].description}",
+                                                                      fullName:
+                                                                          "${PriveateRoomData?.object?[index].expertUserProfile?.userName}",
+                                                                      userProfile:
+                                                                          "${PriveateRoomData?.object?[index].expertUserProfile?.userProfilePic}",
+                                                                      userID:
+                                                                          "${PriveateRoomData?.object?[index].expertUserProfile?.uuid}",
+                                                                    );
+                                                                  },
+                                                                ));
+                                                              },
+                                                              child: Container(
+                                                                width: 80,
+                                                                height: 20,
+                                                                decoration:
+                                                                    ShapeDecoration(
+                                                                  color: Color(
+                                                                      0xFFED1C25),
+                                                                  shape:
+                                                                      RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            49.46),
+                                                                  ),
+                                                                ),
+                                                                child: Center(
+                                                                    child: Text(
+                                                                  "Expert",
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontFamily:
+                                                                          "outfit",
+                                                                      fontSize:
+                                                                          10),
+                                                                )),
+                                                              ),
+                                                            )
+                                                          : SizedBox()
                                                     ],
                                                   ),
                                                 )

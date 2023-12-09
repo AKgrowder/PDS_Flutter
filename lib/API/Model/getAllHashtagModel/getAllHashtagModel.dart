@@ -1,11 +1,11 @@
-class SearchUserForInbox {
+class GetAllHashtag {
   String? message;
   Object? object;
   bool? success;
 
-  SearchUserForInbox({this.message, this.object, this.success});
+  GetAllHashtag({this.message, this.object, this.success});
 
-  SearchUserForInbox.fromJson(Map<String, dynamic> json) {
+  GetAllHashtag.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     object =
         json['object'] != null ? new Object.fromJson(json['object']) : null;
@@ -24,11 +24,11 @@ class SearchUserForInbox {
 }
 
 class Object {
-  List<Content>? content;
+  List<String>? content;
   Pageable? pageable;
   bool? last;
-  int? totalPages;
   int? totalElements;
+  int? totalPages;
   int? size;
   int? number;
   Sort? sort;
@@ -40,8 +40,8 @@ class Object {
       {this.content,
       this.pageable,
       this.last,
-      this.totalPages,
       this.totalElements,
+      this.totalPages,
       this.size,
       this.number,
       this.sort,
@@ -50,18 +50,13 @@ class Object {
       this.empty});
 
   Object.fromJson(Map<String, dynamic> json) {
-    if (json['content'] != null) {
-      content = <Content>[];
-      json['content'].forEach((v) {
-        content!.add(new Content.fromJson(v));
-      });
-    }
+    content = json['content'].cast<String>();
     pageable = json['pageable'] != null
         ? new Pageable.fromJson(json['pageable'])
         : null;
     last = json['last'];
-    totalPages = json['totalPages'];
     totalElements = json['totalElements'];
+    totalPages = json['totalPages'];
     size = json['size'];
     number = json['number'];
     sort = json['sort'] != null ? new Sort.fromJson(json['sort']) : null;
@@ -72,15 +67,13 @@ class Object {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.content != null) {
-      data['content'] = this.content!.map((v) => v.toJson()).toList();
-    }
+    data['content'] = this.content;
     if (this.pageable != null) {
       data['pageable'] = this.pageable!.toJson();
     }
     data['last'] = this.last;
-    data['totalPages'] = this.totalPages;
     data['totalElements'] = this.totalElements;
+    data['totalPages'] = this.totalPages;
     data['size'] = this.size;
     data['number'] = this.number;
     if (this.sort != null) {
@@ -93,49 +86,27 @@ class Object {
   }
 }
 
-class Content {
-  String? userUid;
-  String? userName;
-  String? userProfilePic;
-
-  Content({this.userUid, this.userName, this.userProfilePic});
-
-  Content.fromJson(Map<String, dynamic> json) {
-    userUid = json['userUid'];
-    userName = json['userName'];
-    userProfilePic = json['userProfilePic'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['userUid'] = this.userUid;
-    data['userName'] = this.userName;
-    data['userProfilePic'] = this.userProfilePic;
-    return data;
-  }
-}
-
 class Pageable {
   Sort? sort;
+  int? offset;
   int? pageNumber;
   int? pageSize;
-  int? offset;
   bool? paged;
   bool? unpaged;
 
   Pageable(
       {this.sort,
+      this.offset,
       this.pageNumber,
       this.pageSize,
-      this.offset,
       this.paged,
       this.unpaged});
 
   Pageable.fromJson(Map<String, dynamic> json) {
     sort = json['sort'] != null ? new Sort.fromJson(json['sort']) : null;
+    offset = json['offset'];
     pageNumber = json['pageNumber'];
     pageSize = json['pageSize'];
-    offset = json['offset'];
     paged = json['paged'];
     unpaged = json['unpaged'];
   }
@@ -145,9 +116,9 @@ class Pageable {
     if (this.sort != null) {
       data['sort'] = this.sort!.toJson();
     }
+    data['offset'] = this.offset;
     data['pageNumber'] = this.pageNumber;
     data['pageSize'] = this.pageSize;
-    data['offset'] = this.offset;
     data['paged'] = this.paged;
     data['unpaged'] = this.unpaged;
     return data;

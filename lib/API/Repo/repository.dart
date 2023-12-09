@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
 import 'package:pds/API/Model/IsTokenExpired/IsTokenExpired.dart';
@@ -33,6 +34,7 @@ import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
 import 'package:pds/API/Model/accountType/accountTypeModel.dart';
 import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
+import 'package:pds/API/Model/getAllHashtagModel/getAllHashtagModel.dart';
 import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
 import 'package:pds/API/Model/logoutModel/logoutModel.dart';
 import 'package:pds/API/Model/removeFolloweModel/removeFollowerModel.dart';
@@ -771,6 +773,27 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return CreateForm.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  get_all_hashtag(BuildContext context,String pageNumber,String searchHashtag) async {
+    final response =
+        await apiServices.getApiCall('${Config.get_all_hashtag}?numberOfRecords=10&pageNumber=${pageNumber}&searchHashtag=${searchHashtag.replaceAll("#", "%23")}', context);
+    var jsonString = json.decode(response.body);
+    log("jsonString-$jsonString");
+    switch (response.statusCode) {
+      case 200:
+        return GetAllHashtag.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:

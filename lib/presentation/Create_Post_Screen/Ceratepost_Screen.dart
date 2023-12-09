@@ -68,6 +68,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   bool colorVaralble = false;
   String? UserProfileImage;
   List<TextSpan> _textSpans = [];
+  bool isHeshTegData = false;
   void _onTextChanged() {
     String text = postText.text;
 
@@ -169,6 +170,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
       builder: (context, state) {
         return SafeArea(
             child: Scaffold(
+          resizeToAvoidBottomInset: false,
           body: Container(
             color: Colors.white,
             child: Stack(
@@ -322,177 +324,205 @@ class _CreateNewPostState extends State<CreateNewPost> {
                         Padding(
                           padding:
                               EdgeInsets.only(left: 16, right: 16, top: 15),
-                          child: Column(
+                          child: Stack(
                             children: [
-                              TextFormField(
-                                controller: postText,
-                                maxLines: null,
-                                cursorColor: Colors.grey,
-                                decoration: InputDecoration(
-                                  hintText: 'What’s on your head?',
-                                  border: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                ),
-                                inputFormatters: [
-                                  // Custom formatter to trim leading spaces
-                                ],
-                                onChanged: (value) async {
-                                  print("values -$value");
-                                  //this is the link
-                                },
-                                onTap: () async {
-                                  //this is the link
-                                },
-                                style: TextStyle(
-                                    decoration: TextDecoration.none,
-                                    decorationColor: Colors.white),
-                                /* style: TextStyle(
-                                  color: colorVaralble == true
-                                      ? Colors.blue
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: colorVaralble == true
-                                      ? Colors.blue
-                                      : Colors.transparent,
-                                ), */
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: SizedBox(
-                                  child: file12?.path != null
-                                      ? Container(
-                                          height: 400,
-                                          width: _width,
-                                          child: DocumentViewScreen1(
-                                            path: imageDataPost
-                                                ?.object!.data!.first
-                                                .toString(),
-                                          ))
-                                      : pickedImage.isNotEmpty
-                                          ? _loading
-                                              ? Center(
-                                                  child: Container(
-                                                    margin: EdgeInsets.only(
-                                                        bottom: 100),
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
-                                                      child: Image.asset(
-                                                          ImageConstant.loader,
-                                                          fit: BoxFit.cover,
-                                                          height: 100,
-                                                          width: 100),
-                                                    ),
-                                                  ),
-                                                )
-                                              : isTrue == true
-                                                  ? imageDataPost
-                                                              ?.object?.data !=
-                                                          null
-                                                      ? SizedBox(
-                                                          height: _height / 2,
-                                                          width: _width,
-                                                          child:
-                                                              PageView.builder(
-                                                            onPageChanged:
-                                                                (value) {
-                                                              setState(() {
-                                                                _currentPages =
-                                                                    value;
-                                                              });
-                                                            },
-                                                            itemCount:
-                                                                imageDataPost
-                                                                    ?.object
-                                                                    ?.data
-                                                                    ?.length,
-                                                            controller:
-                                                                _pageControllers,
-                                                            itemBuilder:
-                                                                (context,
-                                                                    index) {
-                                                              return SizedBox(
-                                                                  height:
-                                                                      _height /
-                                                                          2,
-                                                                  width: _width,
-                                                                  child:
-                                                                      Padding(
-                                                                    padding:
-                                                                        const EdgeInsets.all(
-                                                                            8.0),
-                                                                    child:
-                                                                        CachedNetworkImage(
-                                                                      imageUrl:
-                                                                          '${imageDataPost?.object?.data?[index]}',
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    ),
-                                                                  ));
-                                                            },
-                                                          ),
-                                                        )
-                                                      : Container()
-                                                  : Center(
-                                                      child: GFLoader(
-                                                          type:
-                                                              GFLoaderType.ios),
-                                                    )
-                                          : selectImage == true
-                                              ? medium1?.mediumType ==
-                                                      MediumType.image
-                                                  ? GestureDetector(
-                                                      onTap: () async {
-                                                        print(
-                                                            "this is the Medium");
-                                                      },
-                                                      child: imageDataPost
-                                                                  ?.object
-                                                                  ?.data?[0] !=
-                                                              null
-                                                          ? CachedNetworkImage(
-                                                              imageUrl:
-                                                                  '${imageDataPost?.object?.data?[0]}',
+                              Column(
+                                children: [
+                                  TextFormField(
+                                    controller: postText,
+                                    maxLines: null,
+                                    cursorColor: Colors.grey,
+                                    decoration: InputDecoration(
+                                      hintText: 'What’s on your head?',
+                                      border: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                    ),
+                                    inputFormatters: [
+                                      // Custom formatter to trim leading spaces
+                                    ],
+                                    onChanged: (value) async {
+                                      print("values -$value");
+                                      if (value.contains('#')) {
+                                        setState(() {
+                                          isHeshTegData = true;
+                                        });
+                                        BlocProvider.of<AddPostCubit>(context).GetAllHashtag(context,'10',value.trim());
+                                      } else {
+                                        setState(() {
+                                          isHeshTegData = false;
+                                        });
+                                      }
+                                      //this is the link
+                                    },
+                                    onTap: () async {
+                                      //this is the link
+                                    },
+                                    style: TextStyle(
+                                        decoration: TextDecoration.none,
+                                        decorationColor: Colors.white),
+                                    /* style: TextStyle(
+                                      color: colorVaralble == true
+                                          ? Colors.blue
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: colorVaralble == true
+                                          ? Colors.blue
+                                          : Colors.transparent,
+                                    ), */
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        top: isHeshTegData == true ? 280 : 5),
+                                    child: SizedBox(
+                                      child: file12?.path != null
+                                          ? Container(
+                                              height: 400,
+                                              width: _width,
+                                              child: DocumentViewScreen1(
+                                                path: imageDataPost
+                                                    ?.object!.data!.first
+                                                    .toString(),
+                                              ))
+                                          : pickedImage.isNotEmpty
+                                              ? _loading
+                                                  ? Center(
+                                                      child: Container(
+                                                        margin: EdgeInsets.only(
+                                                            bottom: 100),
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                          child: Image.asset(
+                                                              ImageConstant
+                                                                  .loader,
                                                               fit: BoxFit.cover,
+                                                              height: 100,
+                                                              width: 100),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : isTrue == true
+                                                      ? imageDataPost?.object
+                                                                  ?.data !=
+                                                              null
+                                                          ? SizedBox(
+                                                              height:
+                                                                  _height / 2,
+                                                              width: _width,
+                                                              child: PageView
+                                                                  .builder(
+                                                                onPageChanged:
+                                                                    (value) {
+                                                                  setState(() {
+                                                                    _currentPages =
+                                                                        value;
+                                                                  });
+                                                                },
+                                                                itemCount:
+                                                                    imageDataPost
+                                                                        ?.object
+                                                                        ?.data
+                                                                        ?.length,
+                                                                controller:
+                                                                    _pageControllers,
+                                                                itemBuilder:
+                                                                    (context,
+                                                                        index) {
+                                                                  return SizedBox(
+                                                                      height:
+                                                                          _height /
+                                                                              2,
+                                                                      width:
+                                                                          _width,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.all(8.0),
+                                                                        child:
+                                                                            CachedNetworkImage(
+                                                                          imageUrl:
+                                                                              '${imageDataPost?.object?.data?[index]}',
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                        ),
+                                                                      ));
+                                                                },
+                                                              ),
                                                             )
-                                                          : SizedBox(),
-                                                      /*    child: FadeInImage(
-                                                        fit: BoxFit.cover,
-                                                        placeholder: MemoryImage(
-                                                            kTransparentImage),
-                                                        image: PhotoProvider(
-                                                            mediumId:
-                                                                medium1!.id),
-                                                      ), */
-                                                    )
-                                                  : VideoProvider(
-                                                      mediumId: medium1!.id,
-                                                    )
-                                              : Container(
-                                                  color: Colors.white,
-                                                ),
-                                ),
+                                                          : Container()
+                                                      : Center(
+                                                          child: GFLoader(
+                                                              type: GFLoaderType
+                                                                  .ios),
+                                                        )
+                                              : selectImage == true
+                                                  ? medium1?.mediumType ==
+                                                          MediumType.image
+                                                      ? GestureDetector(
+                                                          onTap: () async {
+                                                            print(
+                                                                "this is the Medium");
+                                                          },
+                                                          child: imageDataPost
+                                                                      ?.object
+                                                                      ?.data?[0] !=
+                                                                  null
+                                                              ? CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      '${imageDataPost?.object?.data?[0]}',
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                )
+                                                              : SizedBox(),
+                                                          /*    child: FadeInImage(
+                                                            fit: BoxFit.cover,
+                                                            placeholder: MemoryImage(
+                                                                kTransparentImage),
+                                                            image: PhotoProvider(
+                                                                mediumId:
+                                                                    medium1!.id),
+                                                          ), */
+                                                        )
+                                                      : VideoProvider(
+                                                          mediumId: medium1!.id,
+                                                        )
+                                                  : Container(
+                                                      color: Colors.white,
+                                                    ),
+                                    ),
+                                  ),
+                                  imageDataPost?.object?.data != null &&
+                                          imageDataPost?.object?.data?.length !=
+                                              1
+                                      ? Container(
+                                          height: 20,
+                                          child: DotsIndicator(
+                                            dotsCount: imageDataPost
+                                                    ?.object?.data?.length ??
+                                                0,
+                                            position: _currentPages.toDouble(),
+                                            decorator: DotsDecorator(
+                                              size: const Size(10.0, 7.0),
+                                              activeSize:
+                                                  const Size(10.0, 10.0),
+                                              spacing:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 2),
+                                              activeColor: Color(0xffED1C25),
+                                              color: Color(0xff6A6A6A),
+                                            ),
+                                          ),
+                                        )
+                                      : SizedBox(),
+                                ],
                               ),
-                              imageDataPost?.object?.data != null &&
-                                      imageDataPost?.object?.data?.length != 1
-                                  ? Container(
-                                      height: 20,
-                                      child: DotsIndicator(
-                                        dotsCount: imageDataPost
-                                                ?.object?.data?.length ??
-                                            0,
-                                        position: _currentPages.toDouble(),
-                                        decorator: DotsDecorator(
-                                          size: const Size(10.0, 7.0),
-                                          activeSize: const Size(10.0, 10.0),
-                                          spacing: const EdgeInsets.symmetric(
-                                              horizontal: 2),
-                                          activeColor: Color(0xffED1C25),
-                                          color: Color(0xff6A6A6A),
-                                        ),
-                                      ),
-                                    )
-                                  : SizedBox(),
+                              if (isHeshTegData)
+                                Container(
+                                  margin: EdgeInsets.only(top: 50),
+                                  height: 300,
+                                  width: _width,
+                                  // color: Colors.amber,
+                                )
                             ],
                           ),
                         ),
@@ -754,6 +784,16 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                   height: 20,
                                 ),
                               ),
+                              SizedBox(
+                                width: 30,
+                              ),
+                              /*   GestureDetector(
+                                  onTap: () {},
+                                  child: Icon(
+                                    Icons.videocam,
+                                    color: Colors.red,
+                                  )), */
+
                               /*  SizedBox(
                                 width: 30,
                               ),
