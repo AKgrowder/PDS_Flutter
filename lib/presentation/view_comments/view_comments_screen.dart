@@ -60,6 +60,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   var UserCode = "";
   var User_Name = "";
   String? userId;
+  bool isdataGet = true;
   DateTime? parsedDateTime;
   String? UserLogin_ID;
   ImagePicker picker = ImagePicker();
@@ -543,7 +544,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                   ),
                                                                 ),
                                                               )
-                                                            : Padding(
+                                                            :Padding(
                                                                 padding:
                                                                     const EdgeInsets
                                                                         .symmetric(),
@@ -673,9 +674,11 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                         print(AllChatmodelData?.object?.messageOutputList?.content?[index].uid);
                                                                                         print(UserLogin_ID);
                                                                                         Room_ID_stomp = "${widget.Room_ID}";
+                                                                                        print("ara == a few seconds ago || ara == null");
                                                                                         stompClient.subscribe(
                                                                                           destination: "/topic/getDeletedMessage/${widget.Room_ID}",
                                                                                           callback: (StompFrame frame) {
+                                                                                            print("check This DataGet-${frame.body}");
                                                                                             Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
 
                                                                                             Content content1 = Content.fromJson(jsonString['object']);
@@ -721,17 +724,20 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                             OneTimeDelete = false;
                                                                                             print(AllChatmodelData?.object?.messageOutputList?.content?[index].uid);
                                                                                             print(UserLogin_ID);
-
+                                                                                            print("wiget roomId Prinf-${widget.Room_ID}");
                                                                                             Room_ID_stomp = "${widget.Room_ID}";
+                                                                                            print("int.parse(ara.split(" ")[0]) <= 10");
                                                                                             stompClient.subscribe(
                                                                                               destination:
                                                                                                   // "ws://72c1-2405-201-200b-a0cf-210f-e5fe-f229-e899.ngrok.io",
                                                                                                   "/topic/getDeletedMessage/${widget.Room_ID}",
                                                                                               callback: (StompFrame frame) {
+                                                                                                print("fram check-${frame.body}");
                                                                                                 Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
 
                                                                                                 Content content1 = Content.fromJson(jsonString['object']);
-                                                                                                print("CCCCCCCC ->>>>>> ${content1}");
+                                                                                                print("comtatne check--${content1.isDeleted}");
+
                                                                                                 var msgUUID = content1.uid;
                                                                                                 if (content1.isDeleted == true) {
                                                                                                   if (OneTimeDelete == false) {
@@ -1017,6 +1023,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                 }
                                               }
                                             });
+
                                         stompClient.send(
                                           destination:
                                               "/sendMessage/${widget.Room_ID}",
