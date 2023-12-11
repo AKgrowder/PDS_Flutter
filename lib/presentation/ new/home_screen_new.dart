@@ -47,10 +47,12 @@ import 'package:pds/presentation/create_story/full_story_page.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:pds/presentation/recent_blog/recent_blog_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
+import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:pds/presentation/splash_screen/splash_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
@@ -780,6 +782,33 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     await BlocProvider.of<GetGuestAllPostCubit>(context).MyAccount(context);
   }
 
+  soicalFunationExperts({String? apiName, int? index}) async {
+    if (apiName == 'Follow') {
+      print("dfhsdfhsdfhsdgf");
+      await BlocProvider.of<GetGuestAllPostCubit>(context)
+          .followWIngMethod(AllExperData?.object?[index ?? 0].uuid, context);
+      if (AllExperData?.object?[index ?? 0].followStatus == 'FOLLOW') {
+        for (int i = 0;
+            i < (AllGuestPostRoomData?.object?.content?.length ?? 0);
+            i++) {
+          print("i-${i}");
+          if (AllExperData?.object?[index ?? 0].uuid ==
+              AllExperData?.object?[i].uuid) {
+            AllExperData?.object?[i].followStatus = 'REQUESTED';
+            print("check data-${AllExperData?.object?[i].followStatus}");
+          }
+        }
+      } else {
+        for (int i = 0; i < (AllExperData?.object?.length ?? 0); i++) {
+          if (AllExperData?.object?[index ?? 0].uuid ==
+              AllExperData?.object?[i].uuid) {
+            AllExperData?.object?[i].followStatus = 'FOLLOW';
+          }
+        }
+      }
+    }
+  }
+
   soicalFunation({String? apiName, int? index}) async {
     print("fghdfghdfgh");
     if (uuid == null) {
@@ -1365,8 +1394,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           builder: (context) {
                                                 return CreateStoryPage(
                                                   finalFileSize: finalFileSize,
-                                                   finalvideoSize:
-                                                        finalvideoSize,
+                                                  finalvideoSize:
+                                                      finalvideoSize,
                                                 );
                                               }));
                                               var parmes = {
@@ -2349,10 +2378,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 Link3 == true ||
                                                                                 Link4 == true ||
                                                                                 Link5 == true) {
-                                                                              if (Link2 == true || Link3 == true) {
+                                                                              if (link.value!.contains("https://pdslink.page.link/")) {
+                                                                                print("yes i am in room");
+                                                                                Navigator.push(context, MaterialPageRoute(
+                                                                                  builder: (context) {
+                                                                                    return NewBottomBar(
+                                                                                      buttomIndex: 1,
+                                                                                    );
+                                                                                  },
+                                                                                ));
+                                                                              } else if (Link2 == true || Link3 == true) {
                                                                                 launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                              } else {
-                                                                                launchUrl(Uri.parse(link.value.toString()));
+                                                                                print("qqqqqqqqhttps://${link.value}");
                                                                               }
                                                                             } else {
                                                                               print("${link}");
@@ -2792,6 +2829,36 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         fontSize:
                                                                             14),
                                                                   ),
+                                                            GestureDetector(
+                                                              onTap: () {
+                                                                if (uuid ==
+                                                                    null) {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .push(MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              RegisterCreateAccountScreen()));
+                                                                } else {
+                                                                  post_shere(
+                                                                    context,
+                                                                    androidLink:
+                                                                        "https://play.google.com/store/apps/details?id=com.pds.app",
+                                                                    /* iosLink:
+                                                    "https://apps.apple.com/in/app/growder-b2b-platform/id6451333863" */
+                                                                  );
+                                                                }
+                                                              },
+                                                              child: Container(
+                                                                height: 20,
+                                                                width: 30,
+                                                                color: Colors
+                                                                    .transparent,
+                                                                child: Icon(
+                                                                    Icons
+                                                                        .share_rounded,
+                                                                    size: 20),
+                                                              ),
+                                                            ),
                                                             /*  SizedBox(
                                                         width: 18,
                                                       ),
@@ -3160,7 +3227,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           var Link5 =
                                                                               SelectedTest.startsWith('HTTP');
                                                                           print(
-                                                                              SelectedTest.toString());
+                                                                              "final link == ${SelectedTest}");
 
                                                                           if (User_ID ==
                                                                               null) {
@@ -3172,13 +3239,24 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 Link3 == true ||
                                                                                 Link4 == true ||
                                                                                 Link5 == true) {
-                                                                              if (Link2 == true || Link3 == true) {
+                                                                              if (link.value!.contains("https://pdslink.page.link/")) {
+                                                                                print("yes i am in room");
+                                                                                Navigator.push(context, MaterialPageRoute(
+                                                                                  builder: (context) {
+                                                                                    return NewBottomBar(
+                                                                                      buttomIndex: 1,
+                                                                                    );
+                                                                                  },
+                                                                                ));
+                                                                              } else if (Link2 == true || Link3 == true) {
                                                                                 launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                              } else {
+                                                                                print("qqqqqqqqhttps://${link.value}");
+                                                                              } /* else {
                                                                                 launchUrl(Uri.parse(link.value.toString()));
-                                                                              }
+                                                                                print("link.valuelink.value -- ${link.value}");
+                                                                              } */
                                                                             } else {
-                                                                              print("${link}");
+                                                                              print("linklinklink -- ${link}");
                                                                               Navigator.push(
                                                                                   context,
                                                                                   MaterialPageRoute(
@@ -3667,6 +3745,36 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         fontSize:
                                                                             14),
                                                                   ),
+                                                            GestureDetector(
+                                                              onTap: () {
+                                                                if (uuid ==
+                                                                    null) {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .push(MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              RegisterCreateAccountScreen()));
+                                                                } else {
+                                                                  post_shere(
+                                                                    context,
+                                                                    androidLink:
+                                                                        "https://play.google.com/store/apps/details?id=com.pds.app",
+                                                                    /* iosLink:
+                                                    "https://apps.apple.com/in/app/growder-b2b-platform/id6451333863" */
+                                                                  );
+                                                                }
+                                                              },
+                                                              child: Container(
+                                                                height: 20,
+                                                                width: 30,
+                                                                color: Colors
+                                                                    .transparent,
+                                                                child: Icon(
+                                                                    Icons
+                                                                        .share_rounded,
+                                                                    size: 20),
+                                                              ),
+                                                            ),
                                                             /*  SizedBox(
                                                         width: 18,
                                                       ),
@@ -3885,7 +3993,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 GestureDetector(
                                                                               onTap: () async {
                                                                                 print("followStatusfollowStatus == >>${AllExperData?.object?[index].followStatus}");
-                                                                                await soicalFunation(
+                                                                                await soicalFunationExperts(
                                                                                   apiName: 'Follow',
                                                                                   index: index,
                                                                                 );
@@ -3893,7 +4001,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               child: Container(
                                                                                 height: 24,
                                                                                 alignment: Alignment.center,
-                                                                                width: 70,
+                                                                                width: AllExperData?.object?[index].followStatus == 'FOLLOW' ? 70 : 95,
                                                                                 decoration: BoxDecoration(
                                                                                   borderRadius: BorderRadius.only(
                                                                                     bottomLeft: Radius.circular(8),
@@ -4134,7 +4242,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               .toString() ??
                                                                           "",
                                                                       height:
-                                                                          155,
+                                                                          150,
                                                                       width:
                                                                           _width,
                                                                       fit: BoxFit
@@ -4539,8 +4647,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               MaterialPageRoute(builder: (context) {
             return CreateStoryPage(
               finalFileSize: finalFileSize,
-               finalvideoSize:
-                                                        finalvideoSize,
+              finalvideoSize: finalvideoSize,
             );
           }));
           print("imageData--${imageDataPost?.object.toString()}");
@@ -4554,8 +4661,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             await Navigator.push(context, MaterialPageRoute(builder: (context) {
           return CreateStoryPage(
             finalFileSize: finalFileSize,
-             finalvideoSize:
-                                                        finalvideoSize,
+            finalvideoSize: finalvideoSize,
           );
         }));
         var parmes = {"storyData": imageDataPost?.object.toString()};
@@ -4934,5 +5040,28 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             ),
           );
         });
+  }
+
+  void post_shere(BuildContext context,
+      {String? androidLink, String? iosLink}) async {
+    RenderBox? box = context.findAncestorRenderObjectOfType();
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final data = await rootBundle.load(
+      ImageConstant.tomcruse,
+    );
+    final buffer = data.buffer;
+    final shareResult = await Share.shareXFiles(
+      [
+        XFile.fromData(
+          buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
+          name: 'HomeLogo.png',
+          mimeType: 'image/png',
+        ),
+      ],
+      subject: "Share",
+      text:
+          "Try This Awesome App \n\n Android :- ${androidLink} \n \n iOS :- ${iosLink}",
+      sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+    );
   }
 }
