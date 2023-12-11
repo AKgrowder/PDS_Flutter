@@ -6,7 +6,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -24,8 +23,8 @@ import 'package:pds/widgets/commentPdf.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:url_launcher/url_launcher.dart';
 
+import '../../API/Model/serchForInboxModel/serchForinboxModel.dart';
 import '../../core/utils/image_constant.dart';
 
 class CreateNewPost extends StatefulWidget {
@@ -69,7 +68,10 @@ class _CreateNewPostState extends State<CreateNewPost> {
   String? UserProfileImage;
   List<TextSpan> _textSpans = [];
   bool isHeshTegData = false;
-  void _onTextChanged() {
+  bool isTagData = false;
+  SearchUserForInbox? searchUserForInbox1;
+
+/*   void _onTextChanged() {
     String text = postText.text;
 
     // Split the entered text by space
@@ -92,7 +94,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
     }
 
     setState(() {});
-  }
+  } */
 
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -166,11 +168,14 @@ class _CreateNewPostState extends State<CreateNewPost> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           //
         }
+        if (state is SearchHistoryDataAddxtends) {
+          searchUserForInbox1 = state.searchUserForInbox;
+        }
       },
       builder: (context, state) {
         return SafeArea(
             child: Scaffold(
-          resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset: true,
           body: Container(
             color: Colors.white,
             child: Stack(
@@ -346,10 +351,38 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                         setState(() {
                                           isHeshTegData = true;
                                         });
-                                        BlocProvider.of<AddPostCubit>(context).GetAllHashtag(context,'10',value.trim());
+                                        if (value.length >= 3) {
+                                          BlocProvider.of<AddPostCubit>(context)
+                                              .GetAllHashtag(
+                                                  context, '10', value.trim());
+                                        } else {
+                                          setState(() {
+                                            isHeshTegData = false;
+                                            isTagData = false;
+                                          });
+                                        }
+                                      } else if (value.contains('@')) {
+                                        if (value.length >= 3) {
+                                          String data =
+                                              value.replaceAll('@', '');
+                                          if (mounted) {
+                                            setState(() {
+                                              isTagData = true;
+                                            });
+                                          }
+
+                                          BlocProvider.of<AddPostCubit>(context)
+                                              .search_user_for_inbox(
+                                                  context, data.trim(), '1');
+                                        } else {
+                                          setState(() {
+                                            isTagData = false;
+                                          });
+                                        }
                                       } else {
                                         setState(() {
                                           isHeshTegData = false;
+                                          isTagData = false;
                                         });
                                       }
                                       //this is the link
@@ -371,7 +404,10 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(
-                                        top: isHeshTegData == true ? 280 : 5),
+                                        top: isHeshTegData == true ||
+                                                isTagData == true
+                                            ? 330
+                                            : 5),
                                     child: SizedBox(
                                       child: file12?.path != null
                                           ? Container(
@@ -522,7 +558,119 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                   height: 300,
                                   width: _width,
                                   // color: Colors.amber,
-                                )
+                                  child: ListView.builder(
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        margin: EdgeInsets.all(10),
+                                        height: 30,
+                                        color: Colors.red,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              if (isTagData)
+                                Container(
+                                  margin: EdgeInsets.only(top: 50),
+                                  height: imageDataPost?.object?.data != null
+                                      ? _height / 3
+                                      : _height,
+                                  width: _width,
+                                  // color: Colors.amber,
+                                  child: ListView.builder(
+                                    // physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: searchUserForInbox1
+                                        ?.object?.content?.length,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        margin: EdgeInsets.all(10),
+                                        height: 70,
+                                        width: _width,
+                                        // color: Colors.green,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            border: Border.all(
+                                                color: Color(0xffE6E6E6))),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                             /*  postText.text =
+                                                  '@${searchUserForInbox1?.object?.content?[index].userName}'; */
+                                                  TextEditingController(text: '@${searchUserForInbox1?.object?.content?[index].userName}');
+                                              isTagData = false;
+                                            });
+                                          },
+                                          child: Row(
+                                            children: [
+                                              searchUserForInbox1
+                                                              ?.object
+                                                              ?.content?[index]
+                                                              .userProfilePic !=
+                                                          null &&
+                                                      searchUserForInbox1
+                                                              ?.object
+                                                              ?.content?[index]
+                                                              .userProfilePic
+                                                              ?.isNotEmpty ==
+                                                          true
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 10),
+                                                      child: CircleAvatar(
+                                                        radius: 30.0,
+                                                        backgroundImage:
+                                                            NetworkImage(
+                                                                "${searchUserForInbox1?.object?.content?[index].userProfilePic}"),
+                                                        backgroundColor:
+                                                            Colors.transparent,
+                                                      ),
+                                                    )
+                                                  : Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 10),
+                                                      child: CircleAvatar(
+                                                        radius: 30.0,
+                                                        backgroundImage:
+                                                            AssetImage(
+                                                                ImageConstant
+                                                                    .tomcruse),
+                                                        backgroundColor:
+                                                            Colors.transparent,
+                                                      ),
+                                                    ),
+                                              Container(
+                                                width: _width / 1.6,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10),
+                                                  child: Text(
+                                                    searchUserForInbox1
+                                                            ?.object
+                                                            ?.content?[index]
+                                                            .userName ??
+                                                        '',
+                                                    style: TextStyle(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        // color: Colors.green,
+                                      );
+                                    },
+                                  ),
+                                ),
                             ],
                           ),
                         ),
