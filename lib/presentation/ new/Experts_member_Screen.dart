@@ -19,23 +19,20 @@ import 'package:pds/dilogs/assigh_adminn_dilog..dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../API/Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
 import '../../core/utils/image_constant.dart';
 import '../../theme/theme_helper.dart';
 import '../../widgets/custom_image_view.dart';
 import '../view_details_screen/view_details_screen.dart';
 
 class ExpertMemberScreen extends StatefulWidget {
-  String? userID;
-  String? userProfile;
-  String? fullName;
+  List<ExpertUserProfile>? list;
   String? roomname;
   String? roomdescription;
 
   ExpertMemberScreen({
     Key? key,
-    this.userID,
-    this.userProfile,
-    this.fullName,
+    this.list,
     this.roomname,
     this.roomdescription,
   }) : super(key: key);
@@ -139,87 +136,89 @@ class _ExpertMemberScreenState extends State<ExpertMemberScreen> {
             SizedBox(
               height: 10,
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 35, right: 35, top: 20),
-              child: Container(
-                height: _height / 12,
-                width: _width / 1.2,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return ProfileScreen(
-                                User_ID: "${widget.userID}", isFollowing: "");
-                          }));
-                        },
-                        child: widget.userProfile != null
-                            ? CustomImageView(
-                                url: "${widget.userProfile}",
-                                height: 50,
-                                radius: BorderRadius.circular(25),
-                                width: 50,
-                                fit: BoxFit.fill,
-                              )
-                            : CustomImageView(
-                                imagePath: ImageConstant.tomcruse,
-                                height: 50,
-                                radius: BorderRadius.circular(25),
-                                width: 50,
-                                fit: BoxFit.fill,
-                              ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "${widget.fullName ?? ""}",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            fontFamily: "outfit",
-                            fontSize: 15),
-                      ),
-                      // _data?.object?[index].isExpert == true
-                      //     ? Container(
-                      //         color:ColorConstant.primary_color,
-                      //         height: 20,
-                      //         width: 20,
-                      //       )
-                      //     : SizedBox(),
-                      Spacer(),
-                      GestureDetector(
-                        onTapDown: (details) {
-                          print("yes i am meet ");
-                          _showPopupMenu(0, details.globalPosition, context);
-                        },
-                        child: Container(
-                          height: 50,
-                          color: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: widget.list?.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 35, right: 35, top: 20),
+                  child: Container(
+                    height: _height / 12,
+                    width: _width / 1.2,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return ProfileScreen(
+                                    User_ID: "${widget.list?[index].uuid}",
+                                    isFollowing: "");
+                              }));
+                            },
+                            child: widget.list?[index].userProfilePic != null
+                                ? CustomImageView(
+                                    url:
+                                        "${widget.list?[index].userProfilePic}",
+                                    height: 50,
+                                    radius: BorderRadius.circular(25),
+                                    width: 50,
+                                    fit: BoxFit.fill,
+                                  )
+                                : CustomImageView(
+                                    imagePath: ImageConstant.tomcruse,
+                                    height: 50,
+                                    radius: BorderRadius.circular(25),
+                                    width: 50,
+                                    fit: BoxFit.fill,
+                                  ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "${widget.list?[index].userName}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontFamily: "outfit",
+                                fontSize: 15),
+                          ),
+                          Spacer(),
+                          GestureDetector(
+                            onTapDown: (details) {
+                              print("yes i am meet ");
+                              _showPopupMenu(
+                                  0, details.globalPosition, context);
+                            },
                             child: Container(
-                              child: CustomImageView(
-                                imagePath: ImageConstant.popupimage,
-                                height: 20,
-                                fit: BoxFit.fill,
+                              height: 50,
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Container(
+                                  child: CustomImageView(
+                                    imagePath: ImageConstant.popupimage,
+                                    height: 20,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      )
-                    ],
+                          )
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             )
           ],
         )));
@@ -288,7 +287,7 @@ class _ExpertMemberScreenState extends State<ExpertMemberScreen> {
               context,
               MaterialPageRoute(
                   builder: (context) => ViewDetailsScreen(
-                        uuID: widget.userID,
+                        uuID: widget.list?[MemberIndex].uuid,
                       )));
         }
       }
