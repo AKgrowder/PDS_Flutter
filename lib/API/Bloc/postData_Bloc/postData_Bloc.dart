@@ -7,11 +7,14 @@ import 'package:pds/API/Repo/repository.dart';
 
 class AddPostCubit extends Cubit<AddPostState> {
   AddPostCubit() : super(AddPostInitialState()) {}
+  dynamic PersonalChatListModel;
+  dynamic searchHistoryDataAdd;
   Future<void> InvitationAPI(
     BuildContext context,
     Map<String, dynamic> params,
   ) async {
     dynamic addPostData;
+
     try {
       emit(AddPostLoadingState());
       addPostData = await Repository().AddPostApiCalling(context, params);
@@ -80,6 +83,41 @@ class AddPostCubit extends Cubit<AddPostState> {
       }
     } catch (e) {
       emit(AddPostErrorState(addPostImageUploded));
+    }
+  }
+
+  Future<void> search_user_for_inbox(
+      BuildContext context, String typeWord, String pageNumber) async {
+    try {
+      searchHistoryDataAdd = await Repository()
+          .search_user_for_inbox(typeWord, pageNumber, context);
+      if (searchHistoryDataAdd.success == true) {
+        emit(SearchHistoryDataAddxtends(searchHistoryDataAdd));
+      }
+    } catch (e) {
+      print("eeerrror-${e.toString()}");
+      emit(AddPostErrorState(e.toString()));
+    }
+  }
+
+  Future<void> search_user_for_inboxPagantion(
+      BuildContext context, String typeWord, String pageNumber) async {
+    dynamic searchHistoryDataAddInPagantion;
+    try {
+      searchHistoryDataAddInPagantion = await Repository()
+          .search_user_for_inbox(typeWord, pageNumber, context);
+      if (searchHistoryDataAddInPagantion.success == true) {
+        searchHistoryDataAdd.object.content
+            .addAll(searchHistoryDataAddInPagantion.object.content);
+        searchHistoryDataAdd.object.pageable.pageNumber =
+            searchHistoryDataAddInPagantion.object.pageable.pageNumber;
+        searchHistoryDataAdd.object.totalElements =
+            searchHistoryDataAddInPagantion.object.totalElements;
+        emit(SearchHistoryDataAddxtends(searchHistoryDataAdd));
+      }
+    } catch (e) {
+      print("eeerrror-${e.toString()}");
+      emit(AddPostErrorState(e.toString()));
     }
   }
 }

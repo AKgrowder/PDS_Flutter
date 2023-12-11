@@ -193,7 +193,8 @@ class Object {
   String? roomType;
   String? createdDate;
   String? description;
-  ExpertUserProfile? expertUserProfile;
+
+  List<ExpertUserProfile>? expertUserProfile;
   List<UsersList>? usersList;
   int? totalPage;
   bool? isExpertPresent;
@@ -223,9 +224,12 @@ class Object {
     roomType = json['roomType'];
     createdDate = json['createdDate'];
     description = json['description'];
-    expertUserProfile = json['expertUserProfile'] != null
-        ? new ExpertUserProfile.fromJson(json['expertUserProfile'])
-        : null;
+    if (json['expertUserProfile'] != null) {
+      expertUserProfile = <ExpertUserProfile>[];
+      json['expertUserProfile'].forEach((v) {
+        expertUserProfile!.add(new ExpertUserProfile.fromJson(v));
+      });
+    }
     if (json['usersList'] != null) {
       usersList = <UsersList>[];
       json['usersList'].forEach((v) {
@@ -248,7 +252,8 @@ class Object {
     data['createdDate'] = this.createdDate;
     data['description'] = this.description;
     if (this.expertUserProfile != null) {
-      data['expertUserProfile'] = this.expertUserProfile!.toJson();
+      data['expertUserProfile'] =
+          this.expertUserProfile!.map((v) => v.toJson()).toList();
     }
     if (this.usersList != null) {
       data['usersList'] = this.usersList!.map((v) => v.toJson()).toList();
@@ -270,14 +275,13 @@ class ExpertUserProfile {
   String? userProfilePic;
   String? approvalStatus;
 
-  ExpertUserProfile({
-    this.uuid,
-    this.userName,
-    this.name,
-    this.isExpert,
-    this.userProfilePic,
-    this.approvalStatus,
-  });
+  ExpertUserProfile(
+      {this.uuid,
+      this.userName,
+      this.name,
+      this.isExpert,
+      this.userProfilePic,
+      this.approvalStatus});
 
   ExpertUserProfile.fromJson(Map<String, dynamic> json) {
     uuid = json['uuid'];

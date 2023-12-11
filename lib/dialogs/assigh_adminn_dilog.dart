@@ -114,7 +114,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                     if (state is RoomExistsLoadedState) {
                       if (widget.DeleteFlag == true) {
                         BlocProvider.of<RoomExistsCubit>(context).DeleteRoommin(
-                            widget.roomID.toString(), "Deleted", context);
+                            widget.roomID.toString(), "Exit", context);
                       } else {
                         SnackBar snackBar = SnackBar(
                           content:

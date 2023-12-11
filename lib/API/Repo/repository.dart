@@ -786,9 +786,14 @@ class Repository {
     }
   }
 
-  get_all_hashtag(BuildContext context,String pageNumber,String searchHashtag) async {
-    final response =
-        await apiServices.getApiCall('${Config.get_all_hashtag}?numberOfRecords=10&pageNumber=${pageNumber}&searchHashtag=${searchHashtag.replaceAll("#", "%23")}', context);
+  get_all_hashtag(
+      BuildContext context, String pageNumber, String searchHashtag) async {
+    print("searchHashtag-$searchHashtag");
+    // final response =
+    //     await apiServices.getApiCall('${Config.get_all_hashtag}?numberOfRecords=10&pageNumber=${pageNumber}&searchHashtag=${searchHashtag.replaceAll("#", "%23")}', context);
+    final response = await apiServices.getApiCall(
+        '${Config.get_all_hashtag}?numberOfRecords=10&pageNumber=${pageNumber}&searchHashtag=${searchHashtag.replaceAll("#", "%23")}',
+        context);
     var jsonString = json.decode(response.body);
     log("jsonString-$jsonString");
     switch (response.statusCode) {
@@ -2269,7 +2274,7 @@ class Repository {
   search_user_for_inbox(
       String searchFilter, String pageNumber, BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.search_user_for_inboxUrl}?searchFilter=$searchFilter&numberOfRecords=20&pageNumber=$pageNumber',
+        '${Config.search_user_for_inboxUrl}?searchFilter=$searchFilter&numberOfRecords=30&pageNumber=$pageNumber',
         context);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
