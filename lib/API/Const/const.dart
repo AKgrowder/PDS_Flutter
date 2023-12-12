@@ -49,7 +49,7 @@ class Config {
   static const String loginerror = "Please Login With UserName";
   static const String RateUs = "guest/addRating";
   static const String emailVerifaction = "user/api/send_email_verify";
-  static const String chatImage = "user/sendImageInChat";
+  static const String chatImage = "user/send_image_in_user_chat";
   static const String unPin = "user/saveRoom";
   static const String unSavePin = "user/unsaveRoom";
   static const String getCountOfSavedRoom = "user/getCountOfSavedRoom";
@@ -99,25 +99,22 @@ class Config {
       "user/api/add_hashtag_search_history";
   static const String get_hashtag_search_history =
       "user/api/get_hashtag_search_history";
-  static const String PersonalChatList = "user/api/get_all_inbox_details";
+  static const String PersonalChatList = "user/get_all_inbox_details";
   static const String StoryViewList = "user/api/story_view_details_of_user";
   static const String rePost = "user/api/add_repost";
   static const String get_all_followers = "user/api/get_all_followers";
   static const String get_all_followings = "user/api/get_all_followings";
   static const String remove_follower = "user/api/remove_follower";
-  static const String SelectChatMember = "user/api/search_user_for_inbox";
+  static const String SelectChatMember = "user/search_user_for_inbox";
   static const String validateTokenCheck = "auth/auth/validateTokenCheck";
   static const String logOutUserSttionExperied = "auth/auth/isTokenExpired";
   static const String roomExists = "user/api/assignAdminToOtherRoomMember";
-  static const String search_user_for_inboxUrl =
-      "user/api/search_user_for_inbox";
+  static const String search_user_for_inboxUrl = "user/search_user_for_inbox";
   static const String accountType = "user/api/change_account_type";
   static const String addExperience = "user/api/add_update_work_experience";
   static const String getExperience = "user/api/get_all_work_experiences";
   static const String deleteExperience = "user/api/delete_work_experience";
   static const String delete_story = "user/api/delete_story";
-  static const String DMChatList = "user/api/get_inbox_messages";
+  static const String DMChatList = "user/get_inbox_messages";
   static const String get_all_hashtag = "api/get_all_hashtag";
-
-
 }
