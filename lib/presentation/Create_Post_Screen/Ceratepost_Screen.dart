@@ -23,6 +23,7 @@ import 'package:pds/widgets/commentPdf.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../API/Model/serchForInboxModel/serchForinboxModel.dart';
 import '../../core/utils/image_constant.dart';
@@ -47,12 +48,14 @@ class _CreateNewPostState extends State<CreateNewPost> {
   XFile? pickedFile;
   ImagePicker _imagePicker = ImagePicker();
   List<File> pickedImage = [];
+
+  File? pickedVedio;
   List<File>? croppedFiles;
   bool isTrue = false;
   String? User_ID;
   Medium? medium1;
   bool selectImage = false;
-  List<TextEditingController> postText = [];
+  TextEditingController postText = TextEditingController();
   File? file;
   ImageDataPost? imageDataPost;
   FocusNode _focusNode = FocusNode();
@@ -70,7 +73,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
   bool isHeshTegData = false;
   bool isTagData = false;
   SearchUserForInbox? searchUserForInbox1;
-
+  List<File> galleryFile = [];
+  bool isVideodata = false;
+  VideoPlayerController? _controller;
 /*   void _onTextChanged() {
     String text = postText.text;
 
@@ -118,6 +123,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
       }
     });
     GetUserData();
+
     super.initState();
   }
 
@@ -143,7 +149,15 @@ class _CreateNewPostState extends State<CreateNewPost> {
     return BlocConsumer<AddPostCubit, AddPostState>(
       listener: (context, state) {
         if (state is AddPostImaegState) {
+          imageDataPost?.object?.data?.clear();
           imageDataPost = state.imageDataPost;
+          print(" check Data-${imageDataPost?.object?.data}");
+          if (imageDataPost?.object?.data?.isNotEmpty == true) {
+            if (imageDataPost!.object!.data!.first.endsWith('.mp4')) {
+              isVideodata = true;
+            }
+          }
+
           if (state.imageDataPost.object?.status == 'failed') {
             isTrue = true;
             imageDataPost?.object?.data = null;
@@ -151,6 +165,15 @@ class _CreateNewPostState extends State<CreateNewPost> {
             isTrue = true;
 
             print("imageDataPost-->${imageDataPost?.object?.data}");
+          }
+          if (isVideodata == true) {
+            print("this condison is working");
+            _controller = VideoPlayerController.networkUrl(
+                Uri.parse('${imageDataPost!.object!.data!.first}'));
+            _controller?.initialize().then((value) => setState(() {}));
+            setState(() {
+              _controller?.play();
+            });
           }
         }
         if (state is AddPostLoadedState) {
@@ -333,16 +356,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                             children: [
                               Column(
                                 children: [
-                                  Expanded(child: ListView.builder(
-                                    itemBuilder: (context, index) {
-                                      return TextField(
-                                        controller: postText[index],
-                                        decoration: InputDecoration(
-                                            labelText: 'Enter text'),
-                                      );
-                                    },
-                                  ))
-                                  /*    TextFormField(
+                                  TextFormField(
                                     controller: postText,
                                     maxLines: null,
                                     cursorColor: Colors.grey,
@@ -410,8 +424,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                           ? Colors.blue
                                           : Colors.transparent,
                                     ), */
-                                  ), */
-                                  ,
+                                  ),
                                   Padding(
                                     padding: EdgeInsets.only(
                                         top: isHeshTegData == true ||
@@ -419,108 +432,153 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                             ? 330
                                             : 5),
                                     child: SizedBox(
-                                      child: file12?.path != null
-                                          ? Container(
-                                              height: 400,
-                                              width: _width,
-                                              child: DocumentViewScreen1(
-                                                path: imageDataPost
-                                                    ?.object!.data!.first
-                                                    .toString(),
-                                              ))
-                                          : pickedImage.isNotEmpty
-                                              ? _loading
-                                                  ? Center(
-                                                      child: Container(
-                                                        margin: EdgeInsets.only(
-                                                            bottom: 100),
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(20),
-                                                          child: Image.asset(
-                                                              ImageConstant
-                                                                  .loader,
-                                                              fit: BoxFit.cover,
-                                                              height: 100,
-                                                              width: 100),
-                                                        ),
+                                      child: isVideodata == true
+                                          ? _controller!.value.isInitialized
+                                              ? Container(
+                                                  // color: Colors.amber,
+                                                  height: _height / 2,
+                                                  child: Column(
+                                                    children: [
+                                                      AspectRatio(
+                                                        aspectRatio:
+                                                            _controller!.value
+                                                                .aspectRatio,
+                                                        child: VideoPlayer(
+                                                            _controller!),
                                                       ),
-                                                    )
-                                                  : isTrue == true
-                                                      ? imageDataPost?.object
-                                                                  ?.data !=
-                                                              null
-                                                          ? SizedBox(
-                                                              height:
-                                                                  _height / 2,
-                                                              width: _width,
-                                                              child: PageView
-                                                                  .builder(
-                                                                onPageChanged:
-                                                                    (value) {
-                                                                  setState(() {
-                                                                    _currentPages =
-                                                                        value;
-                                                                  });
-                                                                },
-                                                                itemCount:
-                                                                    imageDataPost
+                                                      // GestureDetector(
+                                                      //   onTap: () {
+                                                      //     if (_controller!.value
+                                                      //         .isPlaying) {
+                                                      //       setState(() {
+                                                      //         _controller
+                                                      //             ?.pause();
+                                                      //       });
+                                                      //     } else {
+                                                      //       setState(() {
+                                                      //         _controller
+                                                      //             ?.play();
+                                                      //       });
+                                                      //     }
+                                                      //   },
+                                                      //   child: Icon(
+                                                      //     _controller!.value
+                                                      //             .isPlaying
+                                                      //         ? Icons.pause
+                                                      //         : Icons
+                                                      //             .play_arrow,
+                                                      //   ),
+                                                      // ),
+                                                    ],
+                                                  ),
+                                                )
+                                              : Container()
+                                          : file12?.path != null
+                                              ? Container(
+                                                  height: 400,
+                                                  width: _width,
+                                                  child: DocumentViewScreen1(
+                                                    path: imageDataPost
+                                                        ?.object!.data!.first
+                                                        .toString(),
+                                                  ))
+                                              : pickedImage.isNotEmpty
+                                                  ? _loading
+                                                      ? Center(
+                                                          child: Container(
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                    bottom:
+                                                                        100),
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20),
+                                                              child: Image.asset(
+                                                                  ImageConstant
+                                                                      .loader,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  height: 100,
+                                                                  width: 100),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : isTrue == true
+                                                          ? imageDataPost
+                                                                      ?.object
+                                                                      ?.data !=
+                                                                  null
+                                                              ? SizedBox(
+                                                                  height:
+                                                                      _height /
+                                                                          2,
+                                                                  width: _width,
+                                                                  child: PageView
+                                                                      .builder(
+                                                                    onPageChanged:
+                                                                        (value) {
+                                                                      setState(
+                                                                          () {
+                                                                        _currentPages =
+                                                                            value;
+                                                                      });
+                                                                    },
+                                                                    itemCount: imageDataPost
                                                                         ?.object
                                                                         ?.data
                                                                         ?.length,
-                                                                controller:
-                                                                    _pageControllers,
-                                                                itemBuilder:
-                                                                    (context,
-                                                                        index) {
-                                                                  return SizedBox(
-                                                                      height:
-                                                                          _height /
+                                                                    controller:
+                                                                        _pageControllers,
+                                                                    itemBuilder:
+                                                                        (context,
+                                                                            index) {
+                                                                      return SizedBox(
+                                                                          height: _height /
                                                                               2,
-                                                                      width:
-                                                                          _width,
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            const EdgeInsets.all(8.0),
-                                                                        child:
-                                                                            CachedNetworkImage(
-                                                                          imageUrl:
-                                                                              '${imageDataPost?.object?.data?[index]}',
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        ),
-                                                                      ));
-                                                                },
-                                                              ),
-                                                            )
-                                                          : Container()
-                                                      : Center(
-                                                          child: GFLoader(
-                                                              type: GFLoaderType
-                                                                  .ios),
-                                                        )
-                                              : selectImage == true
-                                                  ? medium1?.mediumType ==
-                                                          MediumType.image
-                                                      ? GestureDetector(
-                                                          onTap: () async {
-                                                            print(
-                                                                "this is the Medium");
-                                                          },
-                                                          child: imageDataPost
-                                                                      ?.object
-                                                                      ?.data?[0] !=
-                                                                  null
-                                                              ? CachedNetworkImage(
-                                                                  imageUrl:
-                                                                      '${imageDataPost?.object?.data?[0]}',
-                                                                  fit: BoxFit
-                                                                      .cover,
+                                                                          width:
+                                                                              _width,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.all(8.0),
+                                                                            child:
+                                                                                CachedNetworkImage(
+                                                                              imageUrl: '${imageDataPost?.object?.data?[index]}',
+                                                                              fit: BoxFit.cover,
+                                                                            ),
+                                                                          ));
+                                                                    },
+                                                                  ),
                                                                 )
-                                                              : SizedBox(),
-                                                          /*    child: FadeInImage(
+                                                              : Container()
+                                                          : Center(
+                                                              child: GFLoader(
+                                                                  type:
+                                                                      GFLoaderType
+                                                                          .ios),
+                                                            )
+                                                  : selectImage == true
+                                                      ? medium1?.mediumType ==
+                                                              MediumType.image
+                                                          ? GestureDetector(
+                                                              onTap: () async {
+                                                                print(
+                                                                    "this is the Medium");
+                                                              },
+                                                              child: imageDataPost
+                                                                          ?.object
+                                                                          ?.data?[0] !=
+                                                                      null
+                                                                  ? CachedNetworkImage(
+                                                                      imageUrl:
+                                                                          '${imageDataPost?.object?.data?[0]}',
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    )
+                                                                  : SizedBox(),
+                                                              /*    child: FadeInImage(
                                                             fit: BoxFit.cover,
                                                             placeholder: MemoryImage(
                                                                 kTransparentImage),
@@ -528,13 +586,14 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                                 mediumId:
                                                                     medium1!.id),
                                                           ), */
-                                                        )
-                                                      : VideoProvider(
-                                                          mediumId: medium1!.id,
-                                                        )
-                                                  : Container(
-                                                      color: Colors.white,
-                                                    ),
+                                                            )
+                                                          : VideoProvider(
+                                                              mediumId:
+                                                                  medium1!.id,
+                                                            )
+                                                      : Container(
+                                                          color: Colors.white,
+                                                        ),
                                     ),
                                   ),
                                   imageDataPost?.object?.data != null &&
@@ -945,6 +1004,15 @@ class _CreateNewPostState extends State<CreateNewPost> {
                               SizedBox(
                                 width: 30,
                               ),
+                              GestureDetector(
+                                onTap: () {
+                                  getVideo();
+                                },
+                                child: Icon(
+                                  Icons.play_circle_outline_sharp,
+                                  color: ColorConstant.primary_color,
+                                ),
+                              )
                               /*   GestureDetector(
                                   onTap: () {},
                                   child: Icon(
@@ -1085,6 +1153,29 @@ class _CreateNewPostState extends State<CreateNewPost> {
         }
       } else {}
     } catch (e) {}
+  }
+
+  Future getVideo() async {
+    final pickedFile = await _imagePicker.pickVideo(
+        source: ImageSource.gallery,
+        preferredCameraDevice: CameraDevice.front,
+        maxDuration: const Duration(minutes: 10));
+    XFile? xfilePick = pickedFile;
+    setState(
+      () {
+        galleryFile.clear();
+        if (xfilePick != null) {
+          galleryFile.add(File(pickedFile!.path));
+          BlocProvider.of<AddPostCubit>(context).UplodeImageAPIImane(
+            context,
+            galleryFile,
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
+              const SnackBar(content: Text('Nothing is selected')));
+        }
+      },
+    );
   }
 
   prepareTestPdf(
