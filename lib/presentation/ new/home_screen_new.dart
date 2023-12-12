@@ -4352,8 +4352,35 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         ),
                                                                         SizedBox(
                                                                           width:
-                                                                              15,
+                                                                              5,
                                                                         ),
+                                                                        // GestureDetector(
+                                                                        //   onTap:
+                                                                        //       () async {
+                                                                        //     print("opne comment sheet in blogs");
+                                                                        //     BlocProvider.of<AddcommentCubit>(context).Addcomment(context,
+                                                                        //         '${AllGuestPostRoomData?.object?.content?[index].postUid}');
+                                                                        //     if (uuid ==
+                                                                        //         null) {
+                                                                        //       Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                        //     } else {
+                                                                        //       _settingModalBottomSheet1(context, index, _width);
+                                                                        //     }
+                                                                        //   },
+                                                                        //   child:
+                                                                        //       Container(
+                                                                        //     color:
+                                                                        //         Colors.transparent,
+                                                                        //     child:
+                                                                        //         Padding(
+                                                                        //       padding: const EdgeInsets.all(5.0),
+                                                                        //       child: Image.asset(
+                                                                        //         ImageConstant.meesage,
+                                                                        //         height: 15,
+                                                                        //       ),
+                                                                        //     ),
+                                                                        //   ),
+                                                                        // ),
                                                                         /* SizedBox(
                                                                           height:
                                                                               15,
