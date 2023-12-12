@@ -3,21 +3,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pds/API/Bloc/Fatch_all_members/fatch_all_members_cubit.dart';
-import 'package:pds/API/Bloc/Fatch_all_members/fatch_all_members_state.dart';
-import 'package:pds/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
-import 'package:pds/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_state.dart';
-import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
-import 'package:pds/API/Bloc/ViewDetails_Bloc/ViewDetails_cubit.dart';
-import 'package:pds/API/Bloc/ViewDetails_Bloc/ViewDetails_state.dart';
-import 'package:pds/API/Model/FatchAllMembers/fatchallmembers_model.dart';
-import 'package:pds/core/utils/color_constant.dart';
-import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/dialogs/assigh_adminn_dilog.dart';
-import 'package:pds/dilogs/assigh_adminn_dilog..dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Model/GetAllPrivateRoom/GetAllPrivateRoom_Model.dart';
 import '../../core/utils/image_constant.dart';
@@ -80,7 +66,7 @@ class _ExpertMemberScreenState extends State<ExpertMemberScreen> {
           children: [
             Center(
               child: Container(
-                height: _height / 9,
+                height: _height / 8,
                 width: _width / 1.2,
                 decoration: BoxDecoration(
                   color: Color(0xFFFFE7E7),
