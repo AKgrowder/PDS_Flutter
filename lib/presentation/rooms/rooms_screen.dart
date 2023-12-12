@@ -2058,11 +2058,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             ),
                                           ),
 
-                                          (PriveateRoomData
-                                                      ?.object?[index]
-                                                      .expertUserProfile
-                                                      ?.isNotEmpty ??
-                                                  false)
+                                          statusList.isNotEmpty
                                               ? Padding(
                                                   padding:
                                                       const EdgeInsets.all(8.0),
@@ -2082,15 +2078,31 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                             },
                                                           ));
                                                         },
-                                                        child: CustomImageView(
-                                                          url:
-                                                              "${statusList.first.userProfilePic}",
-                                                          height: 30,
-                                                          radius: BorderRadius
-                                                              .circular(15),
-                                                          width: 30,
-                                                          fit: BoxFit.fill,
-                                                        ),
+                                                        child: statusList.first
+                                                                    .userProfilePic !=
+                                                                null
+                                                            ? CustomImageView(
+                                                                url:
+                                                                    "${statusList.first.userProfilePic}",
+                                                                height: 30,
+                                                                radius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15),
+                                                                width: 30,
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                              )
+                                                            : CircleAvatar(
+                                                                radius: 25,
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .white,
+                                                                backgroundImage:
+                                                                    AssetImage(
+                                                                        ImageConstant
+                                                                            .tomcruse),
+                                                              ),
                                                       ),
                                                       Text(
                                                           " ${statusList.first.userName}"),
