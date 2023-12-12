@@ -163,7 +163,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
               children: [
                 Center(
                   child: Container(
-                    height: _height / 9,
+                    height: _height / 8,
                     width: _width / 1.2,
                     decoration: BoxDecoration(
                       color: Color(0xFFFFE7E7),
