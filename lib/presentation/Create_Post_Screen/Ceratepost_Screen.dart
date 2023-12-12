@@ -52,7 +52,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   String? User_ID;
   Medium? medium1;
   bool selectImage = false;
-  TextEditingController postText = TextEditingController();
+  List<TextEditingController> postText = [];
   File? file;
   ImageDataPost? imageDataPost;
   FocusNode _focusNode = FocusNode();
@@ -206,7 +206,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                   onTap: () {
                                     HasetagList = [];
                                     CreatePostDone = true;
-                                    dataPostFucntion();
+                                    // dataPostFucntion();
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -333,7 +333,16 @@ class _CreateNewPostState extends State<CreateNewPost> {
                             children: [
                               Column(
                                 children: [
-                                  TextFormField(
+                                  Expanded(child: ListView.builder(
+                                    itemBuilder: (context, index) {
+                                      return TextField(
+                                        controller: postText[index],
+                                        decoration: InputDecoration(
+                                            labelText: 'Enter text'),
+                                      );
+                                    },
+                                  ))
+                                  /*    TextFormField(
                                     controller: postText,
                                     maxLines: null,
                                     cursorColor: Colors.grey,
@@ -401,7 +410,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                           ? Colors.blue
                                           : Colors.transparent,
                                     ), */
-                                  ),
+                                  ), */
+                                  ,
                                   Padding(
                                     padding: EdgeInsets.only(
                                         top: isHeshTegData == true ||
@@ -595,9 +605,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                         child: GestureDetector(
                                           onTap: () {
                                             setState(() {
-                                             /*  postText.text =
+                                              /*  postText.text =
                                                   '@${searchUserForInbox1?.object?.content?[index].userName}'; */
-                                                  TextEditingController(text: '@${searchUserForInbox1?.object?.content?[index].userName}');
+                                              // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
                                               isTagData = false;
                                             });
                                           },
@@ -1317,7 +1327,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   }
   ////
 
-  dataPostFucntion() {
+  /*  dataPostFucntion() {
     print("dfhghghfhgh-${pickedFile?.path}");
     print("FBSDFNFBDBFSBF--${postText.text.length}");
 
@@ -1456,7 +1466,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }
-  }
+  } */
 
   void _showPopupMenu(
     Offset position,
