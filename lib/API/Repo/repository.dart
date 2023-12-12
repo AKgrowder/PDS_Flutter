@@ -36,6 +36,7 @@ import 'package:pds/API/Model/accountType/accountTypeModel.dart';
 import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/API/Model/getAllHashtagModel/getAllHashtagModel.dart';
 import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
+import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
 import 'package:pds/API/Model/logoutModel/logoutModel.dart';
 import 'package:pds/API/Model/removeFolloweModel/removeFollowerModel.dart';
 import 'package:pds/API/Model/serchDataAddModel/serchDataAddModel.dart';
@@ -1277,10 +1278,10 @@ class Repository {
     }
   }
 
-  chatImage(BuildContext context, String room_Id, String userUid,
+  chatImage(BuildContext context, String inboxChatUserUid, String userUid,
       File imageFile) async {
     final response = await apiServices.multipartFileUserprofile(
-        "${Config.chatImage}/${room_Id}/${userUid}", imageFile, context,
+        "${Config.chatImage}/${inboxChatUserUid}/${userUid}", imageFile, context,
         imageDataType: "yes");
     var jsonString = json.decode(response.body);
     print('jasonnString$jsonString');
@@ -2405,14 +2406,14 @@ class Repository {
 
   DMChatListApi(BuildContext context, String userChatInboxUid, int pageNumber,
       int numberOfRecords) async {
-    final responce = await apiServices.getApiCall(
+    final responce = await apiServices.getApiCallWithToken(
         '${Config.DMChatList}?userChatInboxUid=${userChatInboxUid}&pageNumber=${pageNumber}&numberOfRecords=${numberOfRecords}',
         context);
     var jsonString = json.decode(responce.body);
-    print('jasonnString$jsonString');
+   
     switch (responce.statusCode) {
       case 200:
-        return SelectChatMemberModel.fromJson(jsonString);
+        return GetInboxMessagesModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:

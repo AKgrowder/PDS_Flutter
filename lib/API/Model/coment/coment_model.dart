@@ -379,7 +379,7 @@ class Content {
       this.isDeleted});
 
   Content.fromJson(Map<String, dynamic> json) {
-    log('Meesage Deleted-${json}');
+    log('json-${json}');
     uid = json['uid'];
     message = json['message'];
     messageType = json['messageType'];

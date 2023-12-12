@@ -34,6 +34,7 @@ import 'package:pds/API/Bloc/auth/otp_block.dart';
 import 'package:pds/API/Bloc/auth/register_Block.dart';
 import 'package:pds/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import 'package:pds/API/Bloc/device_info_Bloc/device_info_bloc.dart';
+import 'package:pds/API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import 'package:pds/API/Bloc/followerBlock/followBlock.dart';
 import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
@@ -205,6 +206,9 @@ class MyApp extends StatelessWidget {
         ),
           BlocProvider<AccountCubit>(
           create: (context) => AccountCubit(),
+        ),
+         BlocProvider<DmInboxCubit>(
+          create: (context) => DmInboxCubit(),
         ),
       ],
       child: MaterialApp(
