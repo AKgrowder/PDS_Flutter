@@ -11,6 +11,7 @@ import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/%20new/SelectChatMember.dart';
 import 'package:pds/presentation/DMAll_Screen/DM_InboxScreen.dart';
+import 'package:pds/presentation/DMAll_Screen/Dm_Screen.dart';
 import 'package:pds/widgets/pagenation.dart';
 
 class InboxScreen extends StatefulWidget {
@@ -220,9 +221,18 @@ class _InboxScreenState extends State<InboxScreen> {
                   padding: const EdgeInsets.only(top: 15),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.push(context,
+                      /* Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return DM_InboxScreen(
+                          UserName:
+                              "${PersonalChatListModelData?.object?[index].userName}",
+                          ChatInboxUid:
+                              "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+                        );
+                      })); */
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return DmScreen(
                           UserName:
                               "${PersonalChatListModelData?.object?[index].userName}",
                           ChatInboxUid:

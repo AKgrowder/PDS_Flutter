@@ -92,17 +92,17 @@ class senMSGCubit extends Cubit<senMSGState> {
   }
 
   Future<void> chatImageMethod(
-    String Room_ID,
+    String inboxChatUserUid,
     BuildContext context,
     String userUid,
     File imageFile,
   ) async {
-    print('roomId-$Room_ID');
+    print('roomId-$inboxChatUserUid');
     print("userUid-$userUid");
     dynamic responce;
     try {
-      responce =
-          await Repository().chatImage(context, Room_ID, userUid, imageFile);
+      responce = await Repository()
+          .chatImage(context, inboxChatUserUid, userUid, imageFile);
       print('dfbsdfhsdf-$responce');
       if (responce == "Something Went Wrong, Try After Some Time.") {
         emit(senMSGErrorState("${responce}"));
