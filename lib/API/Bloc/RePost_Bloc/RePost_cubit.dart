@@ -16,9 +16,10 @@ class RePostCubit extends Cubit<RePostState> {
       if (addPostImageUploded == "Something Went Wrong, Try After Some Time.") {
         emit(RePostErrorState("${addPostImageUploded}"));
       } else {
-      if (addPostImageUploded.success == true) {
-        emit(AddPostImaegState(addPostImageUploded));
-      }}
+        if (addPostImageUploded.success == true) {
+          emit(AddPostImaegState(addPostImageUploded));
+        }
+      }
     } catch (e) {
       emit(RePostErrorState(addPostImageUploded));
     }
@@ -34,12 +35,13 @@ class RePostCubit extends Cubit<RePostState> {
       emit(RePostLoadingState());
       addPostImageUploded = await Repository()
           .AddPostImageUploded(context, fileName ?? '', file ?? '');
-          if (addPostImageUploded == "Something Went Wrong, Try After Some Time.") {
+      if (addPostImageUploded == "Something Went Wrong, Try After Some Time.") {
         emit(RePostErrorState("${addPostImageUploded}"));
       } else {
-      if (addPostImageUploded.success == true) {
-        emit(AddPostImaegState(addPostImageUploded));
-      }}
+        if (addPostImageUploded.success == true) {
+          emit(AddPostImaegState(addPostImageUploded));
+        }
+      }
     } catch (e) {
       emit(RePostErrorState(addPostImageUploded));
     }
@@ -55,11 +57,42 @@ class RePostCubit extends Cubit<RePostState> {
       if (addPostData == "Something Went Wrong, Try After Some Time.") {
         emit(RePostErrorState("${addPostData}"));
       } else {
-      if (addPostData.success == true) {
-        emit(RePostLoadedState(addPostData));
-      }}
+        if (addPostData.success == true) {
+          emit(RePostLoadedState(addPostData));
+        }
+      }
     } catch (e) {
       emit(RePostErrorState(addPostData));
     }
   }
+
+    Future<void> GetAllHashtag(
+        BuildContext context, String pageNumber, String searchHashtag) async {
+      dynamic addPostImageUploded;
+      try {
+        addPostImageUploded = await Repository()
+            .get_all_hashtag(context, pageNumber, searchHashtag);
+
+        if (addPostImageUploded.success == true) {
+          emit(GetAllHashtagState(addPostImageUploded));
+        }
+      } catch (e) {
+        emit(RePostErrorState(addPostImageUploded));
+      }
+    }
+
+    Future<void> search_user_for_inbox(
+        BuildContext context, String typeWord, String pageNumber) async {
+      dynamic searchHistoryDataAdd;
+      try {
+        searchHistoryDataAdd = await Repository()
+            .search_user_for_inbox(typeWord, pageNumber, context);
+        if (searchHistoryDataAdd.success == true) {
+          emit(SearchHistoryDataAddxtends(searchHistoryDataAdd));
+        }
+      } catch (e) {
+        print("eeerrror-${e.toString()}");
+        emit(RePostErrorState(e.toString()));
+      }
+    }
 }

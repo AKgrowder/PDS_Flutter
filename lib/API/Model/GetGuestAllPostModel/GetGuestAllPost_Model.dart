@@ -110,6 +110,7 @@ class Content {
   int? commentCount;
   RepostOn? repostOn;
   int? repostCount;
+  String? userAccountType;
 
   Content({
     this.postUid,
@@ -128,6 +129,7 @@ class Content {
     this.commentCount,
     this.repostOn,
     this.repostCount,
+    this.userAccountType,
   });
 
   Content.fromJson(Map<String, dynamic> json) {
@@ -149,6 +151,7 @@ class Content {
         ? new RepostOn.fromJson(json['repostOn'])
         : null;
     repostCount = json['repostCount'];
+    userAccountType = json['userAccountType'];
   }
 
   Map<String, dynamic> toJson() {
@@ -171,6 +174,7 @@ class Content {
       data['repostOn'] = this.repostOn!.toJson();
     }
     data['repostCount'] = this.repostCount;
+    data['userAccountType'] = this.userAccountType;
     return data;
   }
 }
@@ -192,6 +196,7 @@ class RepostOn {
   int? commentCount;
   Null? repostOn;
   int? repostCount;
+  String? userAccountType;
 
   RepostOn({
     this.postUid,
@@ -210,6 +215,7 @@ class RepostOn {
     this.commentCount,
     this.repostOn,
     this.repostCount,
+    this.userAccountType,
   });
 
   RepostOn.fromJson(Map<String, dynamic> json) {
@@ -229,6 +235,7 @@ class RepostOn {
     commentCount = json['commentCount'];
     repostCount = json['repostCount'];
     repostOn = json['repostOn'];
+    userAccountType = json['userAccountType'];
   }
 
   Map<String, dynamic> toJson() {
@@ -249,6 +256,7 @@ class RepostOn {
     data['commentCount'] = this.commentCount;
     data['repostCount'] = this.repostCount;
     data['repostOn'] = this.repostOn;
+    data['userAccountType'] = this.userAccountType;
     return data;
   }
 }
