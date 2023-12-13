@@ -14,6 +14,7 @@ import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'package:pds/API/Bloc/postData_Bloc/postData_state.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
+import 'package:pds/API/Model/HasTagModel/hasTagModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
@@ -21,6 +22,7 @@ import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/phot
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:video_player/video_player.dart';
@@ -48,7 +50,6 @@ class _CreateNewPostState extends State<CreateNewPost> {
   XFile? pickedFile;
   ImagePicker _imagePicker = ImagePicker();
   List<File> pickedImage = [];
-
   File? pickedVedio;
   List<File>? croppedFiles;
   bool isTrue = false;
@@ -56,6 +57,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   Medium? medium1;
   bool selectImage = false;
   TextEditingController postText = TextEditingController();
+  List<String> postTexContrlloer = [];
   File? file;
   ImageDataPost? imageDataPost;
   FocusNode _focusNode = FocusNode();
@@ -76,6 +78,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   List<File> galleryFile = [];
   bool isVideodata = false;
   VideoPlayerController? _controller;
+  HasDataModel? getAllHashtag;
 /*   void _onTextChanged() {
     String text = postText.text;
 
@@ -176,6 +179,12 @@ class _CreateNewPostState extends State<CreateNewPost> {
             });
           }
         }
+        if (state is GetAllHashtagState) {
+          getAllHashtag = state.getAllHashtag;
+          isHeshTegData = true;
+          isTagData = false;
+
+        }
         if (state is AddPostLoadedState) {
           print(
               "lodedSate--> i want check respoce--${state.addPost.object.toString()}");
@@ -193,6 +202,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
         }
         if (state is SearchHistoryDataAddxtends) {
           searchUserForInbox1 = state.searchUserForInbox;
+          isTagData = true;
+          isHeshTegData = false;
         }
       },
       builder: (context, state) {
@@ -229,7 +240,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                   onTap: () {
                                     HasetagList = [];
                                     CreatePostDone = true;
-                                    // dataPostFucntion();
+                                    dataPostFucntion();
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -369,45 +380,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                       // Custom formatter to trim leading spaces
                                     ],
                                     onChanged: (value) async {
-                                      print("values -$value");
-                                      if (value.contains('#')) {
-                                        setState(() {
-                                          isHeshTegData = true;
-                                        });
-                                        if (value.length >= 3) {
-                                          BlocProvider.of<AddPostCubit>(context)
-                                              .GetAllHashtag(
-                                                  context, '10', value.trim());
-                                        } else {
-                                          setState(() {
-                                            isHeshTegData = false;
-                                            isTagData = false;
-                                          });
-                                        }
-                                      } else if (value.contains('@')) {
-                                        if (value.length >= 3) {
-                                          String data =
-                                              value.replaceAll('@', '');
-                                          if (mounted) {
-                                            setState(() {
-                                              isTagData = true;
-                                            });
-                                          }
-
-                                          BlocProvider.of<AddPostCubit>(context)
-                                              .search_user_for_inbox(
-                                                  context, data.trim(), '1');
-                                        } else {
-                                          setState(() {
-                                            isTagData = false;
-                                          });
-                                        }
-                                      } else {
-                                        setState(() {
-                                          isHeshTegData = false;
-                                          isTagData = false;
-                                        });
-                                      }
+                                      (value);
+                                      onChangeMethod(value);
                                       //this is the link
                                     },
                                     onTap: () async {
@@ -623,23 +597,77 @@ class _CreateNewPostState extends State<CreateNewPost> {
                               ),
                               if (isHeshTegData)
                                 Container(
-                                  margin: EdgeInsets.only(top: 50),
-                                  height: 300,
+                                  margin: EdgeInsets.only(
+                                       top:postText.length>=100?(postText.length +0) :100),
+                                  height: imageDataPost?.object?.data != null
+                                      ? _height / 3
+                                      : _height,
                                   width: _width,
                                   // color: Colors.amber,
                                   child: ListView.builder(
+                                    // physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount:
+                                        getAllHashtag?.object?.content?.length,
                                     itemBuilder: (context, index) {
                                       return Container(
                                         margin: EdgeInsets.all(10),
-                                        height: 30,
-                                        color: Colors.red,
+                                        height: 70,
+                                        width: _width,
+
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            border: Border.all(
+                                                color: Color(0xffE6E6E6))),
+                                        child: GestureDetector(
+                                          onTap: (){
+                                               setState(() {
+                                              if (postText.text.isNotEmpty) {
+                                                /*   postText.text =
+                                                  '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
+                                                postTexContrlloer.add(
+                                                    '${getAllHashtag?.object?.content?[index]}');
+                                              }
+                                              postText.text =
+                                                  postTexContrlloer.join(' ,');
+
+                                              // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
+                                             
+                                            });
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: _width / 1.6,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10),
+                                                  child: Text(
+                                                    '${getAllHashtag?.object?.content?[index]}',
+                                                    style: TextStyle(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        // color: Colors.green,
                                       );
                                     },
                                   ),
                                 ),
                               if (isTagData)
                                 Container(
-                                  margin: EdgeInsets.only(top: 50),
+                                  margin: EdgeInsets.only(
+                                      top:postText.length>=100?(postText.length +0) :100),
                                   height: imageDataPost?.object?.data != null
                                       ? _height / 3
                                       : _height,
@@ -664,10 +692,17 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                         child: GestureDetector(
                                           onTap: () {
                                             setState(() {
-                                              /*  postText.text =
-                                                  '@${searchUserForInbox1?.object?.content?[index].userName}'; */
+                                              if (postText.text.isNotEmpty) {
+                                                /*   postText.text =
+                                                  '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
+                                                postTexContrlloer.add(
+                                                    '@${searchUserForInbox1?.object?.content?[index].userName}');
+                                              }
+                                              postText.text =
+                                                  postTexContrlloer.join(' ,');
+
                                               // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
-                                              isTagData = false;
+                                             
                                             });
                                           },
                                           child: Row(
@@ -1041,6 +1076,181 @@ class _CreateNewPostState extends State<CreateNewPost> {
       },
     );
   }
+
+  onChangeMethod(String value) {
+    if (value.contains('@')) {
+      print("if this condison is working-${value}");
+      if (value.length >= 3 && value.contains('@')) {
+        print("value check --${value.endsWith(' #')}");
+        if (value.endsWith(' #')) {
+          String data1 = value.split(' #').last.replaceAll('#', '');
+          BlocProvider.of<AddPostCubit>(context)
+              .GetAllHashtag(context, '10', '#${data1.trim()}');
+        } else {
+          String data = value.split(' @').last.replaceAll('@', '');
+          BlocProvider.of<AddPostCubit>(context)
+              .search_user_for_inbox(context, '${data.trim()}', '1');
+        }
+      } else if (value.endsWith(' #')) {
+        print("ends with value-${value}");
+      } else {
+        print("check lenth else-${value.length}");
+      }
+    }
+    else if(value.contains('#')){
+      print("check length-${value}");
+       String data1 = value.split(' #').last.replaceAll('#', '');
+          BlocProvider.of<AddPostCubit>(context)
+              .GetAllHashtag(context, '10', '#${data1.trim()}');
+    }
+    else {
+      setState(() {
+        isTagData = false;
+        isHeshTegData = false;
+      });
+    }
+  }
+/* 
+  onChangeMethod(String value) {
+    if (value.contains('@')) {
+      print("value@ -$value");
+      setState(() {
+        isHeshTegData = false;
+        isTagData = true;
+      });
+      String data = value.split(' @').last.replaceAll('@', '');
+
+      if (mounted) {
+        print("Data check-${data.trim()}");
+        print("check endwith-${data.endsWith(' #')}");
+        print("DatAddin@-${data.length}");
+
+        if (data.endsWith(' #')) {
+          setState(() {
+            isHeshTegData = true;
+            isTagData = false;
+          });
+          String data1 = data.split(' #').last.replaceAll('#', '');
+          BlocProvider.of<AddPostCubit>(context)
+              .GetAllHashtag(context, '10', '#${data1.trim()}');
+        }
+        if (data.length <= 3 && value.contains('@')) {
+          setState(() {
+            isHeshTegData = false;
+            isTagData = true;
+          });
+          print("then if cnosin  is working");
+          BlocProvider.of<AddPostCubit>(context)
+              .search_user_for_inbox(context, '${data.trim()}', '1');
+        }
+      }
+    } else if (value.contains('#')) {
+      print("value#-${value}");
+      print("value#-${value.endsWith(',@')}");
+
+      String data = value.split(' #').last.replaceAll('#', '');
+      setState(() {
+        isHeshTegData = true;
+      });
+      print("Data Length-$data");
+      if (data.length <= 1) {
+        BlocProvider.of<AddPostCubit>(context)
+            .GetAllHashtag(context, '10', '#${data.trim()}');
+      }
+    } else {
+      setState(() {
+        isHeshTegData = false;
+        isTagData = false;
+      });
+    }
+    /*     if (value.contains('#')) {
+                                        setState(() {
+                                          isHeshTegData = true;
+                                        });
+                                        if (value.contains(' #')) {
+                                          print("check data Get in #-${value}");
+                                          if (value.length >= 1) {
+                                            BlocProvider.of<AddPostCubit>(
+                                                    context)
+                                                .GetAllHashtag(context, '10',
+                                                    value.split(' ').last);
+                                          }
+                                        } else {
+                                          print("checl Else condoins-${value}");
+                                          if (value.endsWith('@')) {
+                                            String data = value
+                                                .split(' @')
+                                                .last
+                                                .replaceAll('@', '');
+                                            if (mounted) {
+                                              setState(() {
+                                                isTagData = true;
+                                              });
+                                              BlocProvider.of<AddPostCubit>(
+                                                      context)
+                                                  .search_user_for_inbox(
+                                                      context,
+                                                      data.trim(),
+                                                      '1');
+                                            }
+                                          } else {
+                                            if (value.length >= 1) {
+                                              BlocProvider.of<AddPostCubit>(
+                                                      context)
+                                                  .GetAllHashtag(context, '10',
+                                                      value.trim());
+                                            } else {
+                                              setState(() {
+                                                isHeshTegData = false;
+                                                isTagData = false;
+                                              });
+                                            }
+                                          }
+                                        }
+                                      } else if (value.contains('@')) {
+                                        if (value.length >= 3) {
+                                          if (value.contains(' @')) {
+                                            String data = value
+                                                .split(' @')
+                                                .last
+                                                .replaceAll('@', '');
+                                            if (mounted) {
+                                              setState(() {
+                                                isTagData = true;
+                                              });
+                                              BlocProvider.of<AddPostCubit>(
+                                                      context)
+                                                  .search_user_for_inbox(
+                                                      context,
+                                                      data.trim(),
+                                                      '1');
+                                            }
+                                          } else {
+                                            String data =
+                                                value.replaceAll('@', '');
+                                            if (mounted) {
+                                              setState(() {
+                                                isTagData = true;
+                                              });
+                                            }
+
+                                            BlocProvider.of<AddPostCubit>(
+                                                    context)
+                                                .search_user_for_inbox(
+                                                    context, data.trim(), '1');
+                                          }
+                                        } else {
+                                          setState(() {
+                                            isTagData = false;
+                                          });
+                                        }
+                                      } else {
+                                        setState(() {
+                                          isHeshTegData = false;
+                                          isTagData = false;
+                                        });
+                                      } */
+  } */
 
   bool _isGifOrSvg(String imagePath) {
     // Check if the image file has a .gif or .svg extension
@@ -1418,7 +1628,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   }
   ////
 
-  /*  dataPostFucntion() {
+  dataPostFucntion() {
     print("dfhghghfhgh-${pickedFile?.path}");
     print("FBSDFNFBDBFSBF--${postText.text.length}");
 
@@ -1557,7 +1767,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }
-  } */
+  }
 
   void _showPopupMenu(
     Offset position,

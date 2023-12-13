@@ -1,6 +1,8 @@
 import 'package:pds/API/Model/Add_PostModel/Add_PostModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
+import 'package:pds/API/Model/HasTagModel/hasTagModel.dart';
 import 'package:pds/API/Model/RePost_Model/RePost_model.dart';
+import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 
 abstract class RePostState {}
 
@@ -20,4 +22,12 @@ class RePostErrorState extends RePostState {
 class AddPostImaegState extends RePostState {
  final ImageDataPost imageDataPost;
   AddPostImaegState(this.imageDataPost);
+}
+class GetAllHashtagState extends RePostState {
+  final HasDataModel getAllHashtag;
+  GetAllHashtagState(this.getAllHashtag);
+}
+class SearchHistoryDataAddxtends extends RePostState {
+  final SearchUserForInbox searchUserForInbox;
+  SearchHistoryDataAddxtends(this.searchUserForInbox);
 }
