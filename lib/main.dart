@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:pds/API/Bloc/BlogComment_BLoc/BlogComment_cubit.dart';
 import 'package:pds/API/Bloc/RoomExists_bloc/RoomExists_cubit.dart';
 import 'package:pds/API/Bloc/SelectChat_bloc/SelectChat_cubit.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -204,11 +205,14 @@ class MyApp extends StatelessWidget {
         BlocProvider<RoomExistsCubit>(
           create: (context) => RoomExistsCubit(),
         ),
-          BlocProvider<AccountCubit>(
+        BlocProvider<AccountCubit>(
           create: (context) => AccountCubit(),
         ),
-         BlocProvider<DmInboxCubit>(
+        BlocProvider<DmInboxCubit>(
           create: (context) => DmInboxCubit(),
+        ),
+        BlocProvider<BlogcommentCubit>(
+          create: (context) => BlogcommentCubit(),
         ),
       ],
       child: MaterialApp(

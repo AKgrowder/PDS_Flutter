@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -108,8 +107,7 @@ class _DmScreenState extends State<DmScreen> {
         Add_Comment.text = '';
         // });
       } else if (_image != null) {
-        
-        // BlocProvider.of<senMSGCubit>(context).chatImageMethod(
+        // BlocProvider.of<DmInboxCubit>(context).chatImageMethod(
         //    ss, context, userId.toString(), _image!);
         SubmitOneTime = true;
       } else {
@@ -959,7 +957,7 @@ class _DmScreenState extends State<DmScreen> {
                                               Map<String, dynamic> jsonString =
                                                   json.decode(frame.body ?? "");
 
-                                              var msgUUID = jsonString['uid'];
+                                              var msgUUID = jsonString['object']['uid'];
                                               if (AddNewData == false) {
                                                 print(getInboxMessagesModel
                                                     ?.object?.content?.length);

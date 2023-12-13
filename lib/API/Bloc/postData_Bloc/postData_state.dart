@@ -1,6 +1,6 @@
 import 'package:pds/API/Model/Add_PostModel/Add_PostModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
-import 'package:pds/API/Model/getAllHashtagModel/getAllHashtagModel.dart';
+import 'package:pds/API/Model/HasTagModel/hasTagModel.dart';
 import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 
 abstract class AddPostState {}
@@ -22,7 +22,7 @@ class AddPostImaegState extends AddPostState {
 }
 
 class GetAllHashtagState extends AddPostState {
-  final GetAllHashtag getAllHashtag;
+  final HasDataModel getAllHashtag;
   GetAllHashtagState(this.getAllHashtag);
 }
 class SearchHistoryDataAddxtends extends AddPostState {
