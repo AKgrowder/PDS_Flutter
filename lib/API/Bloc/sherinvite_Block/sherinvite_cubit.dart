@@ -12,13 +12,31 @@ class SherInviteCubit extends Cubit<SherInviteState> {
     try {
       emit(SherInviteLoadingState());
       sherInvite = await Repository().sherInvite(userRoomId, email, context);
+      if (sherInvite == "Something Went Wrong, Try After Some Time.") {
+        emit(SherInviteErrorState("${sherInvite}"));
+      } else {
       if (sherInvite.success == true) {
         emit(SherInviteLoadedState(sherInvite));
       }else{
          emit(SherInviteLoadedState(sherInvite));
-      }
+      }}
     } catch (e) {
       emit(SherInviteErrorState(sherInvite));
+    }
+  }
+    Future<void> FetchAllExpertsAPI(BuildContext context) async {
+    dynamic PublicRModel;
+    try {
+      emit(SherInviteLoadingState());
+      PublicRModel = await Repository().FetchAllExpertsAPI(context);
+      if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
+        emit(SherInviteErrorState("${PublicRModel}"));
+      } else {
+      if (PublicRModel.success == true) {
+        emit(FetchAllExpertsLoadedState(PublicRModel));
+      }}
+    } catch (e) {
+      emit(SherInviteErrorState(PublicRModel));
     }
   }
 }

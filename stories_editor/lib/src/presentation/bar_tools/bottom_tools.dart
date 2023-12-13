@@ -5,21 +5,26 @@ import 'package:provider/provider.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/control_provider.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/draggable_widget_notifier.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/scroll_notifier.dart';
+import 'package:stories_editor/src/domain/providers/notifiers/text_editing_notifier.dart';
 import 'package:stories_editor/src/domain/sevices/save_as_image.dart';
 import 'package:stories_editor/src/presentation/widgets/animated_onTap_button.dart';
+
+bool isDataGet = true;
 
 class BottomTools extends StatelessWidget {
   final GlobalKey contentKey;
   final Function(String imageUri) onDone;
+  final BuildContext context1;
   final Widget? onDoneButtonStyle;
 
   /// editor background color
   final Color? editorBackgroundColor;
-  const BottomTools(
+  BottomTools(
       {Key? key,
       required this.contentKey,
       required this.onDone,
       this.onDoneButtonStyle,
+      required this.context1,
       this.editorBackgroundColor})
       : super(key: key);
 
@@ -27,6 +32,9 @@ class BottomTools extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer3<ControlNotifier, ScrollNotifier, DraggableWidgetNotifier>(
       builder: (_, controlNotifier, scrollNotifier, itemNotifier, __) {
+        final editorNotifier =
+            Provider.of<TextEditingNotifier>(context1, listen: false);
+        editorNotifier..textController.text = editorNotifier.text;
         return Container(
           decoration: const BoxDecoration(color: Colors.transparent),
           child: Padding(
@@ -47,7 +55,7 @@ class BottomTools extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                                 child: GestureDetector(
                                   onTap: () {
-                                    /// scroll to gridView page
+                                    controlNotifier.isDataGet = true;
                                     if (controlNotifier.mediaPath.isEmpty) {
                                       scrollNotifier.pageController
                                           .animateToPage(1,
@@ -94,30 +102,6 @@ class BottomTools extends StatelessWidget {
                           alignment: Alignment.bottomCenter,
                           child: controlNotifier.middleBottomWidget),
                     ),
-                  )
-                else
-                  Expanded(
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Image.asset(
-                            'assets/images/instagram_logo.png',
-                            package: 'stories_editor',
-                            color: Colors.white,
-                            height: 42,
-                          ),
-                          const Text(
-                            'Stories Creator',
-                            style: TextStyle(
-                                color: Colors.white38,
-                                letterSpacing: 1.5,
-                                fontSize: 9.2,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
 
                 /// save final image to gallery
@@ -128,47 +112,68 @@ class BottomTools extends StatelessWidget {
                       scale: 0.9,
                       child: AnimatedOnTapButton(
                           onTap: () async {
-                            String pngUri;
-                            await takePicture(
-                                    contentKey: contentKey,
-                                    context: context,
-                                    saveToGallery: false)
-                                .then((bytes) {
-                              if (bytes != null) {
-                                pngUri = bytes;
-                                onDone(pngUri);
-                              } else {}
-                            });
+                            print("editorNotifier.text-${editorNotifier.text.isEmpty}");
+                            print("controlNotifier.mediaPath-${controlNotifier.mediaPath.isEmpty}");
+                            if (editorNotifier.text.isEmpty == true &&
+                                controlNotifier.mediaPath.isEmpty == true) {
+                              print("Now this condiosn is working");
+                            } else {
+                              String pngUri;
+
+                              await takePicture(
+                                      isTextEditing:
+                                          controlNotifier.isTextEditing,
+                                      SelectPath: controlNotifier.mediaPath,
+                                      contentKey: contentKey,
+                                      context: context,
+                                      saveToGallery: false)
+                                  .then((bytes) {
+                                if (bytes != null) {
+                                  pngUri = bytes;
+                                  print("asdfasdasdasdasdasdad-$pngUri");
+                                  print(pngUri);
+
+                                  print(pngUri);
+
+                                  onDone(pngUri);
+                                } else {}
+                              });
+                            }
                           },
-                          child: onDoneButtonStyle ??
-                              Container(
-                                padding: const EdgeInsets.only(
-                                    left: 12, right: 5, top: 4, bottom: 4),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(
-                                        color: Colors.white, width: 1.5)),
-                                child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: const [
-                                      Text(
-                                        'Share',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            letterSpacing: 1.5,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 5),
-                                        child: Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: Colors.white,
-                                          size: 15,
-                                        ),
-                                      ),
-                                    ]),
-                              )),
+                          child: Container(
+                            padding: const EdgeInsets.only(
+                                left: 12, right: 5, top: 4, bottom: 4),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                    color: editorNotifier.text.isEmpty == true &&
+                                controlNotifier.mediaPath.isEmpty == true
+                                        ? Colors.grey
+                                        : Colors.white,
+                                    width: 1.5)),
+                            child:
+                                Row(mainAxisSize: MainAxisSize.min, children: [
+                              Text(
+                                'Share',
+                                style: TextStyle(
+                                    color: editorNotifier.text.isEmpty == true &&
+                                controlNotifier.mediaPath.isEmpty == true
+                                        ? Colors.grey
+                                        : Colors.white,
+                                    letterSpacing: 1.5,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(left: 5),
+                                child: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.white,
+                                  size: 15,
+                                ),
+                              ),
+                            ]),
+                          )),
                     ),
                   ),
                 ),

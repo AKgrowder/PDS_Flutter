@@ -35,6 +35,7 @@ class Object {
   String? userEmail;
   List<Expertise>? expertise;
   String? profilePic;
+  String? followStatus;
 
   Object(
       {this.uuid,
@@ -43,7 +44,8 @@ class Object {
       this.workingHours,
       this.userEmail,
       this.expertise,
-      this.profilePic});
+      this.profilePic,
+      this.followStatus});
 
   Object.fromJson(Map<String, dynamic> json) {
     uuid = json['uuid'];
@@ -58,6 +60,7 @@ class Object {
       });
     }
     profilePic = json['profilePic'];
+    followStatus = json['followStatus'];
   }
 
   Map<String, dynamic> toJson() {
@@ -71,6 +74,7 @@ class Object {
       data['expertise'] = this.expertise!.map((v) => v.toJson()).toList();
     }
     data['profilePic'] = this.profilePic;
+    data['followStatus'] = this.followStatus;
     return data;
   }
 }

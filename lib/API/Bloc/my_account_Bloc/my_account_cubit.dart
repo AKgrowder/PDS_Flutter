@@ -11,9 +11,12 @@ class MyAccountCubit extends Cubit<MyAccountState> {
     try {
       emit(MyAccountLoadingState());
       myAccontDetails = await Repository().myAccount(context);
+      if (myAccontDetails == "Something Went Wrong, Try After Some Time.") {
+        emit(MyAccountErrorState("${myAccontDetails}"));
+      } else {
       if (myAccontDetails.success == true) {
         emit(MyAccountLoadedState(myAccontDetails));
-      }
+      }}
     } catch (e) {
       emit(MyAccountErrorState(myAccontDetails));
     }
@@ -25,9 +28,38 @@ class MyAccountCubit extends Cubit<MyAccountState> {
     try {
       emit(MyAccountLoadingState());
       chooseDocument = await Repository().userProfile(imageFile, context);
+      if (chooseDocument == "Something Went Wrong, Try After Some Time.") {
+        emit(MyAccountErrorState("${chooseDocument}"));
+      } else {
       if (chooseDocument.success == true) {
         emit(chooseDocumentLoadedState(chooseDocument));
       }
+      else{
+        emit(chooseDocumentLoadedState(chooseDocument));
+
+      }}
+    } catch (e) {
+      print('LoginScreen-${e.toString()}');
+      emit(MyAccountErrorState(chooseDocument));
+    }
+  }
+
+  Future<void> upoldeProfilePic1(File imageFile, BuildContext context) async {
+    print('thsi cover image');
+    dynamic chooseDocument;
+    try {
+      emit(MyAccountLoadingState());
+      chooseDocument =
+          await Repository().userProfileprofileCover(imageFile, context);
+          if (chooseDocument == "Something Went Wrong, Try After Some Time.") {
+        emit(MyAccountErrorState("${chooseDocument}"));
+      } else {
+      if (chooseDocument.success == true) {
+        emit(chooseDocumentLoadedState1(chooseDocument));
+      }
+      else{
+         emit(chooseDocumentLoadedState1(chooseDocument));
+      }}
     } catch (e) {
       print('LoginScreen-${e.toString()}');
       emit(MyAccountErrorState(chooseDocument));
@@ -39,9 +71,12 @@ class MyAccountCubit extends Cubit<MyAccountState> {
     try {
       emit(MyAccountLoadingState());
       fetchExprtise = await Repository().fetchExprtise(context);
+      if (fetchExprtise == "Something Went Wrong, Try After Some Time.") {
+        emit(MyAccountErrorState("${fetchExprtise}"));
+      } else {
       if (fetchExprtise.success == true) {
         emit(FetchExprtiseRoomLoadedState(fetchExprtise));
-      }
+      }}
     } catch (e) {
       emit(MyAccountErrorState(fetchExprtise));
     }
@@ -54,12 +89,15 @@ class MyAccountCubit extends Cubit<MyAccountState> {
     try {
       emit(MyAccountLoadingState());
       createForm =
-          await Repository().chooseProfileFile(file, fileName, context);
+          await Repository().chooseProfileFile2(file, fileName, context);
       print('createFormDataCheck-${createForm.message}');
+      if (createForm == "Something Went Wrong, Try After Some Time.") {
+        emit(MyAccountErrorState("${createForm}"));
+      } else {
       if (createForm.success == true) {
         print('createFormdataGet-----${createForm.object}');
         emit(chooseDocumentLoadedState2(createForm));
-      }
+      }}
     } catch (e) {
       print('error data-$e');
       emit(MyAccountErrorState(createForm));
@@ -67,29 +105,35 @@ class MyAccountCubit extends Cubit<MyAccountState> {
   }
 
   Future<void> addExpertProfile(params, BuildContext context) async {
-    print('this method working');
     dynamic fetchExprtise;
     try {
       emit(MyAccountLoadingState());
       fetchExprtise = await Repository().addEXpertAPiCaling(params, context);
+      if (fetchExprtise == "Something Went Wrong, Try After Some Time.") {
+        emit(MyAccountErrorState("${fetchExprtise}"));
+      } else {
       if (fetchExprtise.success == true) {
         emit(AddExportLoadedState(fetchExprtise));
-      }
+      }}
     } catch (e) {
       emit(MyAccountErrorState(fetchExprtise));
     }
   }
 
   Future<void> cretaForumUpdate(
-      Map<String, dynamic> params, BuildContext context) async {
+      Map<String, dynamic> params, BuildContext context,{String? apiname}) async {
     dynamic createForm;
     try {
       emit(MyAccountLoadingState());
       createForm = await Repository().cretaForumUpdate(params, context);
+      if (createForm == "Something Went Wrong, Try After Some Time.") {
+        emit(MyAccountErrorState("${createForm}"));
+      } else {
       if (createForm.success == true) {
         emit(CreatFourmLoadedState(createForm));
-      }
+      }}
     } catch (e) {
+      print("e --$e");
       emit(MyAccountErrorState(createForm));
     }
   }
@@ -100,9 +144,12 @@ class MyAccountCubit extends Cubit<MyAccountState> {
     try {
       emit(MyAccountLoadingState());
       updateProfile = await Repository().employeeApiUpdate(params, context);
+      if (updateProfile == "Something Went Wrong, Try After Some Time.") {
+        emit(MyAccountErrorState("${updateProfile}"));
+      } else {
       if (updateProfile.success == true) {
         emit(UpdateProfileLoadedState(updateProfile));
-      }
+      }}
     } catch (e) {
       emit(MyAccountErrorState(updateProfile));
     }
@@ -113,11 +160,30 @@ class MyAccountCubit extends Cubit<MyAccountState> {
     try {
       emit(MyAccountLoadingState());
       emailVerifaction = await Repository().emailVerifaction(context, email);
+      if (emailVerifaction == "Something Went Wrong, Try After Some Time.") {
+        emit(MyAccountErrorState("${emailVerifaction}"));
+      } else {
       if (emailVerifaction.success == true) {
         emit(EmailVerifactionLoadedState(emailVerifaction));
-      }
+      }}
     } catch (e) {
       emit(MyAccountErrorState(emailVerifaction));
+    }
+  }
+
+  Future<void> IndustryTypeAPI(BuildContext context) async {
+    dynamic industryType;
+    try {
+      emit(MyAccountLoadingState());
+      industryType = await Repository().IndustryType(context);
+      if (industryType == "Something Went Wrong, Try After Some Time.") {
+        emit(MyAccountErrorState("${industryType}"));
+      } else {
+      if (industryType.success == true) {
+        emit(IndustryTypeLoadedState(industryType));
+      }}
+    } catch (e) {
+      emit(MyAccountErrorState(industryType));
     }
   }
 }

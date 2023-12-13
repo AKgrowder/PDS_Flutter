@@ -10,9 +10,12 @@ class LogOutCubit extends Cubit<LogOutState> {
     try {
       emit(LogOutLoadingState());
       logOutModel = await Repository().LogOut(context);
+      if (logOutModel == "Something Went Wrong, Try After Some Time.") {
+        emit(LogOutErrorState("${logOutModel}"));
+      } else {
       if (logOutModel.success == true) {
         emit(LogOutLoadedState(logOutModel));
-      }
+      }}
     } catch (e) {
       emit(LogOutErrorState(logOutModel));
     }

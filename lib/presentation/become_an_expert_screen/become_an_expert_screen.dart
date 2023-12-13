@@ -5,12 +5,15 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_state.dart';
 import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/utils/image_constant.dart';
@@ -32,6 +35,12 @@ class Expertise {
   Expertise(this.uid, this.expertiseName);
 }
 
+class IndustryType {
+  final String industryTypeUid;
+  final String industryTypeName;
+  IndustryType(this.industryTypeUid, this.industryTypeName);
+}
+
 bool? SubmitOneTime = false;
 
 class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
@@ -44,7 +53,6 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   String? selctedIndex;
   List<Expertise> expertiseData = [];
   Expertise? selectedExpertise;
-  // String selctedexpertiseData = "";
 
   @override
   List<String> working_houres = [
@@ -59,6 +67,10 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
   ChooseDocument? chooseDocument;
+  List<MultiSelectItem<IndustryType>>? _industryTypes = [];
+  List<IndustryType> selectedIndustryTypes = [];
+  List<String> industryUUID = [];
+
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TimeOfDay initialTime = TimeOfDay(hour: 0, minute: 0);
   Future<void> _selectStartTime(BuildContext context) async {
@@ -105,7 +117,8 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
     super.initState();
     getDocumentSize();
     BlocProvider.of<FetchExprtiseRoomCubit>(context).fetchExprties(context);
-    dopcument = 'Upload Image';
+    BlocProvider.of<FetchExprtiseRoomCubit>(context).IndustryTypeAPI(context);
+    dopcument = 'Upload Document';
   }
 
   @override
@@ -138,7 +151,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         ),
       ),
       body: BlocConsumer<FetchExprtiseRoomCubit, FetchExprtiseRoomState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is FetchExprtiseRoomLoadingState) {
             Center(
               child: Container(
@@ -184,6 +197,18 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             // selectedExpertise =
             //     expertiseData.isNotEmpty ? expertiseData[0] : null;
           }
+          if (state is IndustryTypeLoadedState) {
+            List<IndustryType> industryTypeData1 = state
+                .industryTypeModel.object!
+                .map((industryType) => IndustryType(
+                    industryType.industryTypeUid ?? '',
+                    industryType.industryTypeName ?? ''))
+                .toList();
+            _industryTypes = industryTypeData1
+                .map((industryType) => MultiSelectItem(
+                    industryType, industryType.industryTypeName))
+                .toList();
+          }
 
           if (state is AddExportLoadedState) {
             SnackBar snackBar = SnackBar(
@@ -191,7 +216,24 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
               backgroundColor: ColorConstant.primary_color,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            Navigator.pop(context);
+            final SharedPreferences prefs =
+                await SharedPreferences.getInstance();
+            String? userid = await prefs.getString(PreferencesKey.loginUserID);
+            String time =
+                '${_startTime?.format(context).toString()} to ${_endTime?.format(context).toString()}';
+            Map<String, dynamic> params = {
+              "document": "${chooseDocument?.object.toString()}",
+              "expertUId": ["${selectedExpertise?.uid}"],
+              "fees": feesController.text,
+              "jobProfile": jobprofileController.text,
+              "uid": userid.toString(),
+              "workingHours": time.toString(),
+              "industryTypesUid": industryUUID
+            };
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return NewBottomBar(buttomIndex: 0);
+            })).then((value) => BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                .addExpertProfile(params, context));
           }
         },
         builder: (context, state) {
@@ -321,6 +363,51 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   child: Text(expertise.expertiseName),
                                 );
                               }).toList(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 18,
+                        ),
+                        child: Text(
+                          "Industry Type",
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontFamily: 'outfit',
+                            fontWeight: FontWeight.w500,
+                          ),
+                          // style: theme.textTheme.bodyLarge,
+                        ),
+                      ),
+                      Container(
+                        width: _width,
+                        decoration: BoxDecoration(color: Color(0xffEFEFEF)),
+                        child: DropdownButtonHideUnderline(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 12),
+                            child: MultiSelectDialogField<IndustryType>(
+                              decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.transparent)),
+                              buttonIcon: Icon(
+                                Icons.expand_more,
+                                color: Colors.black,
+                              ),
+                              items: _industryTypes!,
+                              listType: MultiSelectListType.LIST,
+                              onConfirm: (values) {
+                                selectedIndustryTypes = values;
+                                selectedIndustryTypes.forEach((element) {
+                                  print(
+                                      "sxfgsdfghdfghdfgh${element.industryTypeUid}");
+                                  industryUUID
+                                      .add("${element.industryTypeUid}");
+                                });
+                                setState(() {});
+                              },
                             ),
                           ),
                         ),
@@ -607,7 +694,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   style: TextStyle(fontSize: 16),
                                 ),
                               )),
-                          dopcument == "Upload Image"
+                          dopcument == "Upload Document"
                               ? GestureDetector(
                                   onTap: () async {
                                     filepath = await prepareTestPdf(0);
@@ -645,7 +732,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                           bottomRight: Radius.circular(5))),
                                   child: GestureDetector(
                                       onTap: () {
-                                        dopcument = "Upload Image";
+                                        dopcument = "Upload Document";
                                         chooseDocument?.object = null;
 
                                         setState(() {});
@@ -710,7 +797,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   .toString() ==
                               null) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please select Expertise in'),
+                              content: Text('Please Select Expertise in'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -719,15 +806,26 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   .toString() ==
                               null) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please select Expertise in'),
+                              content: Text('Please Select Expertise in'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
-                          } else if (feesController.text == null ||
+                          }
+
+                          /* else if (feesController.text == null ||
                               feesController.text == '') {
                             SnackBar snackBar = SnackBar(
                               content: Text('Please select Fees'),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          }  */
+
+                          else if (industryUUID.isEmpty) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text('Please Selcted Industry Type'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -745,7 +843,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           } else if (_startTime?.format(context).toString() ==
                               null) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please select Working Hours'),
+                              content: Text('Please Select Working Hours'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -753,14 +851,14 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           } else if (_endTime?.format(context).toString() ==
                               null) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please select Working Hours'),
+                              content: Text('Please Select Working Hours'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
-                          } else if (dopcument == 'Upload Image') {
+                          } else if (dopcument == 'Upload Document') {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please Upload Image'),
+                              content: Text('Please Upload Document'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -773,27 +871,47 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             print(
                                 'endtime-${_endTime?.format(context).toString()}');
                             print('Finaltime-$time');
-                            print(
-                                'sddfsdm,gndfgj${chooseDocument?.object.toString()}');
-                            var params = {
-                              "document":
-                                  "${chooseDocument?.object.toString()}",
-                              "expertUId": [
-                                "${selectedExpertise?.uid.toString()}"
-                              ],
-                              "fees": feesController.text,
-                              "jobProfile": jobprofileController.text,
-                              "uid": userid.toString(),
-                              "workingHours": time.toString(),
-                            };
-                            print('working time-$time');
-                            print('pwarems-$params');
-                            BlocProvider.of<FetchExprtiseRoomCubit>(context)
-                                .addExpertProfile(params, context);
-                            if (SubmitOneTime == false) {
-                              SubmitOneTime = true;
+                            print('dartatset${industryUUID}');
+                            if (feesController.text.isNotEmpty == true) {
+                              Map<String, dynamic> params = {
+                                "document":
+                                    "${chooseDocument?.object.toString()}",
+                                "expertUId": ["${selectedExpertise?.uid}"],
+                                "fees": feesController.text,
+                                "jobProfile": jobprofileController.text,
+                                "uid": userid.toString(),
+                                "workingHours": time.toString(),
+                                "industryTypesUid": industryUUID
+                              };
+                              print('working time-$time');
+                              print('pwarems-$params');
                               BlocProvider.of<FetchExprtiseRoomCubit>(context)
                                   .addExpertProfile(params, context);
+                              if (SubmitOneTime == false) {
+                                SubmitOneTime = true;
+                                BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                                    .addExpertProfile(params, context);
+                              }
+                            } else {
+                              print("esle is woring");
+                              Map<String, dynamic> params = {
+                                "document":
+                                    "${chooseDocument?.object.toString()}",
+                                "expertUId": ["${selectedExpertise?.uid}"],
+                                "jobProfile": jobprofileController.text,
+                                "uid": userid.toString(),
+                                "workingHours": time.toString(),
+                                "industryTypesUid": industryUUID
+                              };
+                              print('working time-$time');
+                              print('pwarems-$params');
+                              BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                                  .addExpertProfile(params, context);
+                              if (SubmitOneTime == false) {
+                                SubmitOneTime = true;
+                                BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                                    .addExpertProfile(params, context);
+                              }
                             }
                           }
                           /*     if (jobprofileController.text != null &&22
@@ -811,10 +929,10 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                               print('this conidison yes');
                               if (_endTime != null && _startTime != null) {
                                 print('i want to check data -$dopcument');
-                                if (dopcument == 'Upload Image') {
+                                if (dopcument == 'Upload Document') {
                                   print('upolded imah');
                                   SnackBar snackBar = SnackBar(
-                                    content: Text('Please Upload Image'),
+                                    content: Text('Please Upload Document'),
                                     backgroundColor:
                                         ColorConstant.primary_color,
                                   );
@@ -1069,10 +1187,10 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
     const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
     var i = (log(bytes) / log(1024)).floor();
     var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
-    print('getFileSizevariable-${file1.path}');
+    print('getFileSizevariable-${file1.path?.split('.').last}');
     value2 = double.parse(STR);
-
     print("value2-->$value2");
+    print("file1.name-->${file1.name}");
     switch (i) {
       case 0:
         print("Done file size B");
@@ -1095,21 +1213,62 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         print("Done file size KB");
         switch (Index) {
           case 0:
-            print("file1.name-->${file1.name}");
-            if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
-                uplopdfile.text = file1.name;
-                dopcument = file1.name;
-              });
-            }
+            if (file1.name.isNotEmpty || file1.name.toString() == null) {}
             print('filenamecheckdocmenut-${dopcument}');
 
             break;
           default:
         }
-        print('filenamecheckKB-${file1.path}');
-        BlocProvider.of<FetchExprtiseRoomCubit>(context)
-            .chooseDocumentprofile(dopcument.toString(), file1.path!, context);
+
+        if (file1.path?.split('.') != 'pdf') {
+          CroppedFile? croppedFile = await ImageCropper().cropImage(
+            sourcePath: file1.path.toString(),
+            aspectRatioPresets: [
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio3x2,
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.ratio4x3,
+              CropAspectRatioPreset.ratio16x9
+            ],
+            uiSettings: [
+              AndroidUiSettings(
+                  toolbarTitle: 'Cropper',
+                  toolbarColor: Color(0xffED1C25),
+                  toolbarWidgetColor: Colors.white,
+                  initAspectRatio: CropAspectRatioPreset.original,
+                  activeControlsWidgetColor: Color(0xffED1C25),
+                  lockAspectRatio: false),
+              IOSUiSettings(
+                title: 'Cropper',
+              ),
+              WebUiSettings(
+                context: context,
+              ),
+            ],
+          );
+          if (croppedFile != null) {
+            print('Image cropped and saved at: ${croppedFile.path}');
+            BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                .chooseDocumentprofile(
+                    dopcument.toString(), croppedFile.path, context);
+            print("cropendfileNamessss-${croppedFile.path}");
+            print("dsghdfhdfghdf-$dopcument");
+
+            setState(() {
+              uplopdfile.text = file1.name;
+              dopcument = file1.name;
+            });
+          } else {
+            BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                .chooseDocumentprofile(
+                    dopcument.toString(), file1.path!, context);
+            setState(() {
+              uplopdfile.text = file1.name;
+              dopcument = file1.name;
+            });
+          }
+        }
+
         setState(() {});
 
         break;
@@ -1155,13 +1314,55 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             default:
           }
           print('filecheckPath1-${file1.name}');
-          setState(() {
-            uplopdfile.text = file1.name;
-            dopcument = file1.name;
-          });
-          BlocProvider.of<FetchExprtiseRoomCubit>(context)
-              .chooseDocumentprofile(
-                  dopcument.toString(), file1.path!, context);
+
+          if (file1.path?.split('.') != 'pdf') {
+            print("this fucntion is caaling");
+
+            CroppedFile? croppedFile = await ImageCropper().cropImage(
+              sourcePath: file1.path.toString(),
+              aspectRatioPresets: [
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio16x9
+              ],
+              uiSettings: [
+                AndroidUiSettings(
+                    toolbarTitle: 'Cropper',
+                    toolbarColor: Colors.deepOrange,
+                    toolbarWidgetColor: Colors.white,
+                    initAspectRatio: CropAspectRatioPreset.original,
+                    lockAspectRatio: false),
+                IOSUiSettings(
+                  title: 'Cropper',
+                ),
+                WebUiSettings(
+                  context: context,
+                ),
+              ],
+            );
+            if (croppedFile != null) {
+              print('Image cropped and saved at: ${croppedFile.path}');
+
+              BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                  .chooseDocumentprofile(
+                      dopcument.toString(), croppedFile.path, context);
+
+              setState(() {
+                uplopdfile.text = file1.name;
+                dopcument = file1.name;
+              });
+            } else {
+              BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                  .chooseDocumentprofile(
+                      dopcument.toString(), file1.path!, context);
+              setState(() {
+                uplopdfile.text = file1.name;
+                dopcument = file1.name;
+              });
+            }
+          }
         }
 
         break;

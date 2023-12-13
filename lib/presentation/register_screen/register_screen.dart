@@ -107,17 +107,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   //     MaterialPageRoute(builder: (context) => HomeScreen()));
                 } else {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return MultiBlocProvider(
-                        providers: [
-                          BlocProvider<OtpCubit>(
-                            create: (context) => OtpCubit(),
-                          )
-                        ],
-                        child: OtpVerificationScreen(
-                          flowCheck: 'login',
-                          phonNumber: state.getUserDataModel.object?.mobileNo,
-                          userId: loginModelData?.object?.uuid.toString(),
-                        ));
+                    return OtpVerificationScreen(
+                      flowCheck: 'login',
+                      phonNumber: state.getUserDataModel.object?.mobileNo,
+                      userId: loginModelData?.object?.uuid.toString(),
+                    );
                   }));
                 }
               }
@@ -309,7 +303,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         ForgetPasswordScreen()));
                               },
                               child: Text(
-                                "Forget Password?",
+                                "Forgot Password?",
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.left,
                                 style: theme.textTheme.titleSmall,

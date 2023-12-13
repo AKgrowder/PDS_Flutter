@@ -5,31 +5,46 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
-import 'package:pds/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
-import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
-import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
-import 'package:pds/API/Bloc/auth/register_Block.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:pds/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import 'package:pds/API/Bloc/creatForum_Bloc/creat_Fourm_state.dart';
-import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/%20new/newbottembar.dart'; 
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../../theme/theme_helper.dart';
 import '../policy_of_company/policy_screen.dart';
 import '../policy_of_company/privecy_policy.dart';
+import 'package:image/image.dart' as img;
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 
 class CreateForamScreen extends StatefulWidget {
   const CreateForamScreen({Key? key}) : super(key: key);
 
   @override
   State<CreateForamScreen> createState() => _CreateForamScreenState();
+}
+
+class IndustryType {
+  String industryTypeUid;
+  String industryTypeName;
+  IndustryType(this.industryTypeUid, this.industryTypeName);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is IndustryType &&
+          runtimeType == other.runtimeType &&
+          industryTypeName == other.industryTypeName;
+
+  @override
+  int get hashCode => industryTypeName.hashCode;
 }
 
 class _CreateForamScreenState extends State<CreateForamScreen> {
@@ -45,6 +60,9 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
   String? filepath;
   bool? SubmitOneTime = false;
   ChooseDocument? chooseDocument;
+  List<MultiSelectItem<IndustryType>>? _industryTypes = [];
+  List<IndustryType> selectedIndustryTypes = [];
+  List<String> industryUUID = [];
 
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -58,10 +76,10 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getDocumentSize();
-    dopcument = 'Upload Image';
+    BlocProvider.of<CreatFourmCubit>(context).IndustryTypeAPI(context);
+    dopcument = 'Upload Document';
   }
 
   @override
@@ -124,37 +142,47 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             // );
             // ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
+          if (state is IndustryTypeLoadedState) {
+            List<IndustryType> industryTypeData1 = state
+                .industryTypeModel.object!
+                .map((industryType) => IndustryType(
+                    industryType.industryTypeUid ?? '',
+                    industryType.industryTypeName ?? ''))
+                .toList();
+            _industryTypes = industryTypeData1
+                .map((industryType) => MultiSelectItem(
+                    industryType, industryType.industryTypeName))
+                .toList();
+          }
           if (state is CreatFourmLoadedState) {
             SnackBar snackBar = SnackBar(
               content: Text(state.createForm.message ?? ""),
               backgroundColor: ColorConstant.primary_color,
             );
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return MultiBlocProvider(providers: [
-                BlocProvider<FetchAllPublicRoomCubit>(
-                  create: (context) => FetchAllPublicRoomCubit(),
-                ),
-                BlocProvider<CreatPublicRoomCubit>(
-                  create: (context) => CreatPublicRoomCubit(),
-                ),
-                BlocProvider<senMSGCubit>(
-                  create: (context) => senMSGCubit(),
-                ),
-                BlocProvider<RegisterCubit>(
-                  create: (context) => RegisterCubit(),
-                ),
-                BlocProvider<GetAllPrivateRoomCubit>(
-                  create: (context) => GetAllPrivateRoomCubit(),
-                ),
-                BlocProvider<InvitationCubit>(
-                  create: (context) => InvitationCubit(),
-                ),
-                /// ---------------------------------------------------------------------------
-                  BlocProvider<GetGuestAllPostCubit>(
-                    create: (context) => GetGuestAllPostCubit(),
-                  ),
-              ], child: NewBottomBar(buttomIndex: 0));
-            }));
+            String industryType = industryUUID.join(', ');
+            Map<String, dynamic> params = {
+              'document': chooseDocument?.object.toString(),
+              'companyName': name.text,
+              'jobProfile': profile.text,
+              'industryTypesUid': industryType
+            };
+
+            // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+            //   builder: (context) {
+            //     return NewBottomBar(buttomIndex: 0);
+            //   },
+            // ), (route) => false).then((value) =>
+            //     BlocProvider.of<CreatFourmCubit>(context).CreatFourm(
+            //         params, uplopdfile.text, filepath.toString(), context));
+            // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            // print('check Status--${state.createForm.success}');
+
+            Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) {
+              return NewBottomBar(buttomIndex: 0);
+            }), (route) => false).then((value) =>
+                BlocProvider.of<CreatFourmCubit>(context).CreatFourm(
+                    params, uplopdfile.text, filepath.toString(), context));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             print('check Status--${state.createForm.success}');
           }
@@ -308,6 +336,51 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                       ),
                     ),
                     Padding(
+                      padding: EdgeInsets.only(top: 18, left: 35, bottom: 5),
+                      child: Text(
+                        "Industry Type",
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontFamily: 'outfit',
+                          fontWeight: FontWeight.w500,
+                        ),
+                        // style: theme.textTheme.bodyLarge,
+                      ),
+                    ),
+                    Center(
+                      child: Container(
+                        width: _width / 1.2,
+                        decoration: BoxDecoration(color: Color(0xffEFEFEF)),
+                        child: DropdownButtonHideUnderline(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 12),
+                            child: MultiSelectDialogField<IndustryType>(
+                              decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.transparent)),
+                              buttonIcon: Icon(
+                                Icons.expand_more,
+                                color: Colors.black,
+                              ),
+                              items: _industryTypes!,
+                              listType: MultiSelectListType.LIST,
+                              onConfirm: (values) {
+                                selectedIndustryTypes = values;
+                                selectedIndustryTypes.forEach((element) {
+                                  print(
+                                      "sxfgsdfghdfghdfgh${element.industryTypeUid.runtimeType}");
+                                  industryUUID
+                                      .add("${element.industryTypeUid}");
+                                });
+                                setState(() {});
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
                       padding:
                           const EdgeInsets.only(top: 10.0, left: 35, bottom: 5),
                       child: Text(
@@ -342,7 +415,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                   style: TextStyle(fontSize: 16),
                                 ),
                               )),
-                          dopcument == "Upload Image"
+                          dopcument == "Upload Document"
                               ? GestureDetector(
                                   onTap: () async {
                                     filepath = await prepareTestPdf(0);
@@ -372,25 +445,27 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                     ),
                                   ),
                                 )
-                              : Container(
-                                  height: 50,
-                                  width: _width / 4.5,
-                                  decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 228, 228, 228),
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(5),
-                                          bottomRight: Radius.circular(5))),
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        dopcument = "Upload Image";
-                                        chooseDocument?.object = null;
+                              : GestureDetector(
+                                  onTap: () {
+                                    dopcument = "Upload Document";
+                                    chooseDocument?.object = null;
 
-                                        setState(() {});
-                                      },
-                                      child: Icon(
-                                        Icons.delete_forever,
-                                        color: ColorConstant.primary_color,
-                                      )),
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    width: _width / 4.5,
+                                    decoration: BoxDecoration(
+                                        color:
+                                            Color.fromARGB(255, 228, 228, 228),
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(5),
+                                            bottomRight: Radius.circular(5))),
+                                    child: Icon(
+                                      Icons.delete_forever,
+                                      color: ColorConstant.primary_color,
+                                    ),
+                                  ),
                                 ),
                         ],
                       ),
@@ -427,6 +502,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                     ),
                     GestureDetector(
                       onTap: () async {
+                        print("idfsdsdhfsdhsdfh-$industryUUID");
                         print(name.text.length);
                         if (name.text == null || name.text == '') {
                           SnackBar snackBar = SnackBar(
@@ -470,25 +546,31 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             backgroundColor: ColorConstant.primary_color,
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        } else if (dopcument == 'Upload Image') {
+                        } else if (industryUUID.isEmpty) {
+                          SnackBar snackBar = SnackBar(
+                            content: Text('Please Selcted Industry Type'),
+                            backgroundColor: ColorConstant.primary_color,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else if (dopcument == 'Upload Document') {
                           print('upolded imah');
                           SnackBar snackBar = SnackBar(
-                            content: Text('Please Upload Image'),
+                            content: Text('Please Upload Document'),
                             backgroundColor: ColorConstant.primary_color,
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         } else {
-                          final SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          String? jwtToken =
-                              await prefs.getString(PreferencesKey.loginJwt);
-                          print('jwttokenGet -$jwtToken');
+                          String industryType = industryUUID.join(', ');
+                          print("sdgfsdfghdfgsdfgsdgf-${industryType}");
                           Map<String, dynamic> params = {
                             'document': chooseDocument?.object.toString(),
                             'companyName': name.text,
                             'jobProfile': profile.text,
+                            'industryTypesUid': industryType
                           };
+
                           print('button-$params');
+
                           if (SubmitOneTime == false) {
                             SubmitOneTime = true;
                             BlocProvider.of<CreatFourmCubit>(context)
@@ -496,35 +578,6 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                     filepath.toString(), context);
                           }
                         }
-                        // if (name.text != null && name.text != "") {
-                        //   if (profile.text != null && profile.text != "") {
-                        //     if (uplopdfile.text != null &&
-                        //         uplopdfile.text != "") {
-                        //     } else {
-                        //       SnackBar snackBar = SnackBar(
-                        //         content: Text('Please upload Document'),
-                        //         backgroundColor: ColorConstant.primary_color,
-                        //       );
-                        //       ScaffoldMessenger.of(context)
-                        //           .showSnackBar(snackBar);
-                        //     }
-                        //   } else {
-                        //     SnackBar snackBar = SnackBar(
-                        //       content: Text('Please Profile Name'),
-                        //       backgroundColor: ColorConstant.primary_color,
-                        //     );
-                        //     ScaffoldMessenger.of(context)
-                        //         .showSnackBar(snackBar);
-                        //   }
-                        //   print('vaildate');
-
-                        // } else {
-                        //   SnackBar snackBar = SnackBar(
-                        //     content: Text('Please Enter Company Name'),
-                        //     backgroundColor: ColorConstant.primary_color,
-                        //   );
-                        //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        // }
                       },
                       child: Center(
                         child: Container(
@@ -706,7 +759,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
     const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
     var i = (log(bytes) / log(1024)).floor();
     var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
-    print('getFileSizevariable-${file1.path}');
+    print('getFileSizevariable-${file1.path.toString().split('.').last}');
+
     value2 = double.parse(STR);
 
     print(value2);
@@ -728,18 +782,62 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
         print("Done file size KB");
         switch (Index) {
           case 0:
+            print('filenamecheckdocmenut-${dopcument}');
             setState(() {
               uplopdfile.text = file1.name;
               dopcument = file1.name;
             });
-            print('filenamecheckdocmenut-${dopcument}');
-
             break;
           default:
         }
-        print('filenamecheckKB-${file1.path}');
-        BlocProvider.of<CreatFourmCubit>(context)
-            .chooseDocumentprofile(dopcument.toString(), file1.path!, context);
+        if (file1.path?.split('.') != 'pdf') {
+          print("this fucntion is caaling");
+
+          CroppedFile? croppedFile = await ImageCropper().cropImage(
+            sourcePath:
+                // "",
+                file1.path.toString(),
+            aspectRatioPresets: [
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio3x2,
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.ratio4x3,
+              CropAspectRatioPreset.ratio16x9
+            ],
+            uiSettings: [
+              AndroidUiSettings(
+                  toolbarTitle: 'Cropper',
+                  toolbarColor: Color(0xffED1C25),
+                  toolbarWidgetColor: Colors.white,
+                  initAspectRatio: CropAspectRatioPreset.original,
+                  activeControlsWidgetColor: Color(0xffED1C25),
+                  lockAspectRatio: false),
+              IOSUiSettings(
+                title: 'Cropper',
+              ),
+              WebUiSettings(
+                context: context,
+              ),
+            ],
+          );
+          if (croppedFile != null) {
+            /* setState(() {
+              uplopdfile.text = croppedFile.path.split('/').last;
+              dopcument = file1.name;
+            }); */
+            BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
+                dopcument.toString(), croppedFile.path, context);
+          } else {
+            BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
+                dopcument.toString(), file1.path!, context);
+            setState(() {
+              uplopdfile.text = file1.name;
+              dopcument = file1.name;
+            });
+            print("cheeck wihout cutting--${file1.name}");
+          }
+        }
+
         setState(() {});
         break;
       case 2:
@@ -780,10 +878,10 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             default:
           }
 
-          setState(() {
+          /*    setState(() {
             uplopdfile.text = file1.name;
             dopcument = file1.name;
-          });
+          }); */
           print('filecheckPath-${file1.path}');
           BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
               dopcument.toString(), file1.path!, context);

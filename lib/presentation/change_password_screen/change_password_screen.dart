@@ -3,8 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_cubit.dart';
 import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_state.dart';
+import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
 import 'package:pds/API/Bloc/auth/login_Block.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/Login_Screen/Login_Screen.dart';
+import 'package:pds/presentation/splash_screen/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/device_info_Bloc/device_info_bloc.dart';
@@ -43,6 +46,24 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  ChangePasswordDone() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.remove(PreferencesKey.loginUserID);
+    prefs.remove(PreferencesKey.loginJwt);
+    prefs.remove(PreferencesKey.module);
+    prefs.remove(PreferencesKey.UserProfile);
+
+    prefs.setBool(PreferencesKey.RoutURlChnage, true);
+    prefs.setBool(PreferencesKey.UpdateURLinSplash, true);
+
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+      builder: (context) {
+        return NewBottomBar(buttomIndex: 0);
+      },
+    ), (route) => false);
   }
 
   @override
@@ -109,17 +130,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
                 builder: (context) {
-                  return MultiBlocProvider(
-                    providers: [
-                      BlocProvider<LoginCubit>(
-                        create: (context) => LoginCubit(),
-                      ),
-                      BlocProvider<DevicesInfoCubit>(
-                        create: (context) => DevicesInfoCubit(),
-                      ),
-                    ],
-                    child: LoginScreen(),
-                  );
+                  return LoginScreen();
                 },
               ), (route) => false);
             }
@@ -130,7 +141,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               backgroundColor: ColorConstant.primary_color,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            Navigator.pop(context);
+            // Navigator.pop(context);
+            ChangePasswordDone();
           }
         }, builder: (context, state) {
           return Form(

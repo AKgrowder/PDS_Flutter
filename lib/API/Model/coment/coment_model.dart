@@ -217,6 +217,8 @@
 // }
 
 
+import 'dart:developer';
+
 class ComentApiModel {
   String? message;
   Object? object;
@@ -377,6 +379,7 @@ class Content {
       this.isDeleted});
 
   Content.fromJson(Map<String, dynamic> json) {
+    log('json-${json}');
     uid = json['uid'];
     message = json['message'];
     messageType = json['messageType'];

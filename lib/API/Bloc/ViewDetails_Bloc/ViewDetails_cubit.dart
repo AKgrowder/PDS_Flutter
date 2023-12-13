@@ -10,9 +10,12 @@ class ViewDetailsCubit extends Cubit<ViewDeatilsState> {
     try {
       emit(ViewDeatilsLoadingState());
       viewDetailsModel = await Repository().ViewDetails(UUid, context);
+      if (viewDetailsModel == "Something Went Wrong, Try After Some Time.") {
+        emit(ViewDeatilsErrorState("${viewDetailsModel}"));
+      } else {
       if (viewDetailsModel.success == true) {
         emit(ViewDeatilsLoadedState(viewDetailsModel));
-      }
+      }}
     } catch (e) {
       emit(ViewDeatilsErrorState(viewDetailsModel));
     }
@@ -20,18 +23,39 @@ class ViewDetailsCubit extends Cubit<ViewDeatilsState> {
 
   Future<void> ReamoveMemberAPI(
     String roomID,
-     
     String? memberUesrID,
     BuildContext context,
   ) async {
     dynamic removeMemberModel;
     try {
       emit(ViewDeatilsLoadingState());
-      removeMemberModel = await Repository()
-          .RemoveUser(roomID,  memberUesrID, context);
+      removeMemberModel =
+          await Repository().RemoveUser(roomID, memberUesrID, context);
+          if (removeMemberModel == "Something Went Wrong, Try After Some Time.") {
+        emit(ViewDeatilsErrorState("${removeMemberModel}"));
+      } else {
       if (removeMemberModel.success == true) {
         emit(RemoveUserLoadedState(removeMemberModel));
-      }
+      }}
+    } catch (e) {
+      emit(ViewDeatilsErrorState(removeMemberModel));
+    }
+  }
+
+  Future<void> ExituserAPI(
+    String roomID,
+    BuildContext context,
+  ) async {
+    dynamic removeMemberModel;
+    try {
+      emit(ViewDeatilsLoadingState());
+      removeMemberModel = await Repository().Exituser(roomID, context);
+      if (removeMemberModel == "Something Went Wrong, Try After Some Time.") {
+        emit(ViewDeatilsErrorState("${removeMemberModel}"));
+      } else {
+      if (removeMemberModel.success == true) {
+        emit(ExitUserLoadedState(removeMemberModel));
+      }}
     } catch (e) {
       emit(ViewDeatilsErrorState(removeMemberModel));
     }

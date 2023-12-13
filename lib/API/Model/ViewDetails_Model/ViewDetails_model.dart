@@ -29,13 +29,14 @@ class Object {
   String? userEmail;
   String? userMobile;
   String? profilePic;
-
+  String? userId;
   Object(
       {this.userUuid,
       this.userName,
       this.userEmail,
       this.userMobile,
-      this.profilePic});
+      this.profilePic,
+      this.userId});
 
   Object.fromJson(Map<String, dynamic> json) {
     userUuid = json['userUuid'];
@@ -43,6 +44,7 @@ class Object {
     userEmail = json['userEmail'];
     userMobile = json['userMobile'];
     profilePic = json['profilePic'];
+    userId = json['userId'];
   }
 
   Map<String, dynamic> toJson() {

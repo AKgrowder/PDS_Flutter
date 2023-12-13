@@ -53,7 +53,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       onTapArrowleft1(context);
                     }),
                 centerTitle: true,
-                title: Text("Forget Password",
+                title: Text("Forgot Password",
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                     style: TextStyle(
@@ -86,16 +86,10 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 }
                 if (state is ForgetpasswordLoadedState) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return MultiBlocProvider(
-                        providers: [
-                          BlocProvider<OtpCubit>(
-                            create: (context) => OtpCubit(),
-                          )
-                        ],
-                        child: OtpVerificationScreen(
-                          phonNumber: contectnumberrController.text,
-                          forgetpassword: true,
-                        ));
+                    return OtpVerificationScreen(
+                      phonNumber: contectnumberrController.text,
+                      forgetpassword: true,
+                    );
                   }));
                   SnackBar snackBar = SnackBar(
                     content: Text(state.Forgetpassword.message.toString()),

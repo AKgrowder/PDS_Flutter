@@ -14,7 +14,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 // import 'package:pds/widgets/commentPdf.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -31,8 +30,6 @@ class MyAccountScreen extends StatefulWidget {
   @override
   State<MyAccountScreen> createState() => _MyAccountScreenState();
 }
-
-
 
 class _MyAccountScreenState extends State<MyAccountScreen> {
   TextEditingController uplopdfile = TextEditingController();
@@ -70,6 +67,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   double value2 = 0.0;
   FetchExprtise? _fetchExprtise;
   List<Expertiseclass> expertiseData = [];
+  
   Expertiseclass? selectedExpertise;
 
   String? dopcument;
@@ -264,9 +262,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
 
           Navigator.pop(context);
         }
-        if (state is chooseDocumentLoadedState2) {
+        /* if (state is chooseDocumentLoadedState2) {
           chooseDocumentuploded2 = state.chooseDocumentuploded;
-        }
+        } */
         if (state is FetchExprtiseRoomLoadedState) {
           state.fetchExprtise.object?.forEach((element) {
             expertiseData.add(Expertiseclass(
@@ -677,10 +675,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                         myAccontDetails?.object?.isEmailVerified == false
                             ? GestureDetector(
                                 onTap: () {
-                                  /*   myAccontDetails?.object?.isEmailVerified =
-                                      true;
-                                  setState(() {}); */
-
                                   if (isupdate == false) {
                                     BlocProvider.of<MyAccountCubit>(context)
                                         .emailVerifaction(context,
@@ -1617,7 +1611,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                     .toString() ==
                                 null) {
                               SnackBar snackBar = SnackBar(
-                                content: Text('Please select Expertise in'),
+                                content: Text('Please Select Expertise in'),
                                 backgroundColor: ColorConstant.primary_color,
                               );
                               ScaffoldMessenger.of(context)
@@ -1641,7 +1635,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 (end?.isEmpty ?? false) &&
                                 (endAm?.isEmpty ?? false)) {
                               SnackBar snackBar = SnackBar(
-                                content: Text('Please select Working Hours'),
+                                content: Text('Please Select Working Hours'),
                                 backgroundColor: ColorConstant.primary_color,
                               );
                               ScaffoldMessenger.of(context)

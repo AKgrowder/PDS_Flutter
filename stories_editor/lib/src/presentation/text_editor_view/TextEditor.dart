@@ -5,7 +5,6 @@ import 'package:stories_editor/src/domain/models/editable_items.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/control_provider.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/draggable_widget_notifier.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/text_editing_notifier.dart';
-import 'package:stories_editor/src/presentation/text_editor_view/widgets/animation_selector.dart';
 import 'package:stories_editor/src/presentation/text_editor_view/widgets/font_selector.dart';
 import 'package:stories_editor/src/presentation/text_editor_view/widgets/text_field_widget.dart';
 import 'package:stories_editor/src/presentation/text_editor_view/widgets/top_text_tools.dart';
@@ -32,13 +31,17 @@ class _TextEditorState extends State<TextEditor> {
           Provider.of<TextEditingNotifier>(widget.context, listen: false);
       _editorNotifier
         ..textController.text = _editorNotifier.text
+        
         ..fontFamilyController = PageController(viewportFraction: .125);
+        
+
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    
     final ScreenUtil screenUtil = ScreenUtil();
     return Material(
         color: Colors.transparent,
@@ -50,8 +53,8 @@ class _TextEditorState extends State<TextEditor> {
                 /// onTap => Close view and create/modify item object
                 onTap: () => _onTap(context, controlNotifier, editorNotifier),
                 child: Container(
-                    decoration:
-                        BoxDecoration(color: Colors.black.withOpacity(0.5)),
+                    /* decoration:
+                        BoxDecoration(color: Colors.black.withOpacity(0.5)), */
                     height: screenUtil.screenHeight,
                     width: screenUtil.screenWidth,
                     child: Stack(
@@ -80,14 +83,14 @@ class _TextEditorState extends State<TextEditor> {
 
                         /// font family selector (bottom)
                         Positioned(
-                          bottom: screenUtil.screenHeight * 0.21,
+                          // bottom: screenUtil.screenHeight * 0.21,
                           child: Visibility(
                             visible: editorNotifier.isFontFamily &&
                                 !editorNotifier.isTextAnimation,
                             child: const Align(
                               alignment: Alignment.bottomCenter,
                               child: Padding(
-                                padding: EdgeInsets.only(bottom: 20),
+                                padding: EdgeInsets.only(bottom: 10),
                                 child: FontSelector(),
                               ),
                             ),
@@ -110,18 +113,18 @@ class _TextEditorState extends State<TextEditor> {
                         ),
 
                         /// font animation selector (bottom
-                        Positioned(
-                          bottom: screenUtil.screenHeight * 0.21,
-                          child: Visibility(
-                              visible: editorNotifier.isTextAnimation,
-                              child: const Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Padding(
-                                  padding: EdgeInsets.only(bottom: 20),
-                                  child: AnimationSelector(),
-                                ),
-                              )),
-                        ),
+                        // Positioned(
+                        //   // bottom: screenUtil.screenHeight * 0.21,
+                        //   child: Visibility(
+                        //       visible: editorNotifier.isTextAnimation,
+                        //       child: const Align(
+                        //         alignment: Alignment.bottomCenter,
+                        //         child: Padding(
+                        //           padding: EdgeInsets.only(bottom: 20),
+                        //           child: AnimationSelector(),
+                        //         ),
+                        //       )),
+                        // ),
                       ],
                     )),
               ),

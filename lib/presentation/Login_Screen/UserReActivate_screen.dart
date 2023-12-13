@@ -6,14 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
-import 'package:pds/API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
-import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
-import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
-import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:pds/API/Bloc/UserReActivate_Bloc/UserReActivate_state.dart';
-import 'package:pds/API/Bloc/auth/register_Block.dart';
-import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart'; 
 import 'package:pds/presentation/%20new/newbottembar.dart';
@@ -113,30 +106,7 @@ class UserReActivateDailogState extends State<UserReActivateDailog>
 
                         Navigator.pushAndRemoveUntil(context,
                             MaterialPageRoute(builder: (context) {
-                          return MultiBlocProvider(providers: [
-                            BlocProvider<FetchAllPublicRoomCubit>(
-                              create: (context) => FetchAllPublicRoomCubit(),
-                            ),
-                            BlocProvider<CreatPublicRoomCubit>(
-                              create: (context) => CreatPublicRoomCubit(),
-                            ),
-                            BlocProvider<senMSGCubit>(
-                              create: (context) => senMSGCubit(),
-                            ),
-                            BlocProvider<RegisterCubit>(
-                              create: (context) => RegisterCubit(),
-                            ),
-                            BlocProvider<GetAllPrivateRoomCubit>(
-                              create: (context) => GetAllPrivateRoomCubit(),
-                            ),
-                            BlocProvider<InvitationCubit>(
-                              create: (context) => InvitationCubit(),
-                            ),
-                            /// ---------------------------------------------------------------------------
-                  BlocProvider<GetGuestAllPostCubit>(
-                    create: (context) => GetGuestAllPostCubit(),
-                  ),
-                          ], child: NewBottomBar(buttomIndex: 0));
+                          return NewBottomBar(buttomIndex: 0);
                         }), (route) => false);
                       }
                     },

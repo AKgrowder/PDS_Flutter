@@ -188,7 +188,7 @@ class DeleteDilogScreenState extends State<DeleteDilogScreen> with SingleTickerP
                                   onTap: () {
                                     BlocProvider.of<DeleteRoomCubit>(context)
                                         .DeleteRoomm(
-                                            widget.userId.toString(), context);
+                                            widget.userId.toString(),"Deleted", context);
                                   },
                                   child: Container(
                                     height: 43,
