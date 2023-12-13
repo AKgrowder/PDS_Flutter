@@ -8,7 +8,9 @@ import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_state.dart';
 import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
+import 'package:pds/API/Model/HasTagModel/hasTagModel.dart';
 import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
+import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
@@ -48,6 +50,12 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
   GetGuestAllPostModel? AllGuestPostRoomData;
   bool isEmojiVisible = false;
   FocusNode focusNode = FocusNode();
+  List<String> postTexContrlloer = [];
+  HasDataModel? getAllHashtag;
+
+  bool isHeshTegData = false;
+  bool isTagData = false;
+  SearchUserForInbox? searchUserForInbox1;
   bool isKeyboardVisible = false;
   String? uuid;
   String? User_ID1;
@@ -104,7 +112,16 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
             if (state is AddCommentLoadedState) {
               addCommentModeldata = state.commentdata;
             }
-
+            if (state is GetAllHashtagState) {
+              getAllHashtag = state.getAllHashtag;
+              isHeshTegData = true;
+              isTagData = false;
+            }
+            if (state is SearchHistoryDataAddxtends) {
+              searchUserForInbox1 = state.searchUserForInbox;
+              isTagData = true;
+              isHeshTegData = false;
+            }
             if (state is AddCommentErrorState) {
               SnackBar snackBar = SnackBar(
                 content: Text(state.error),
@@ -172,6 +189,162 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                   physics: BouncingScrollPhysics(),
                   child: Column(
                     children: [
+                      if (isHeshTegData)
+                        Container(
+                          height: MediaQuery.of(context).size.height,
+                          width: _width,
+                          // color: Colors.amber,
+                          child: ListView.builder(
+                            // physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: getAllHashtag?.object?.content?.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin: EdgeInsets.all(10),
+                                height: 70,
+                                width: _width,
+
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    border:
+                                        Border.all(color: Color(0xffE6E6E6))),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (addcomment.text.isNotEmpty) {
+                                        /*   postText.text =
+                                                  '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
+                                        postTexContrlloer.add(
+                                            '${getAllHashtag?.object?.content?[index]}');
+                                      }
+                                      addcomment.text =
+                                          postTexContrlloer.join(' ,');
+
+                                      // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
+                                    });
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: _width / 1.6,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10),
+                                          child: Text(
+                                            '${getAllHashtag?.object?.content?[index]}',
+                                            style: TextStyle(
+                                              overflow: TextOverflow.ellipsis,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                // color: Colors.green,
+                              );
+                            },
+                          ),
+                        ),
+                      if (isTagData)
+                        Container(
+                          height: MediaQuery.of(context).size.height,
+                          width: _width,
+                          // color: Colors.amber,
+                          child: ListView.builder(
+                            // physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount:
+                                searchUserForInbox1?.object?.content?.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin: EdgeInsets.all(10),
+                                height: 70,
+                                width: _width,
+                                // color: Colors.green,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    border:
+                                        Border.all(color: Color(0xffE6E6E6))),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (addcomment.text.isNotEmpty) {
+                                        /*   postText.text =
+                                                  '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
+                                        postTexContrlloer.add(
+                                            '@${searchUserForInbox1?.object?.content?[index].userName}');
+                                      }
+                                      addcomment.text =
+                                          postTexContrlloer.join(' ,');
+
+                                      // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
+                                    });
+                                  },
+                                  child: Row(
+                                    children: [
+                                      searchUserForInbox1
+                                                      ?.object
+                                                      ?.content?[index]
+                                                      .userProfilePic !=
+                                                  null &&
+                                              searchUserForInbox1
+                                                      ?.object
+                                                      ?.content?[index]
+                                                      .userProfilePic
+                                                      ?.isNotEmpty ==
+                                                  true
+                                          ? Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10),
+                                              child: CircleAvatar(
+                                                radius: 30.0,
+                                                backgroundImage: NetworkImage(
+                                                    "${searchUserForInbox1?.object?.content?[index].userProfilePic}"),
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                              ),
+                                            )
+                                          : Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10),
+                                              child: CircleAvatar(
+                                                radius: 30.0,
+                                                backgroundImage: AssetImage(
+                                                    ImageConstant.tomcruse),
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                              ),
+                                            ),
+                                      Container(
+                                        width: _width / 1.6,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10),
+                                          child: Text(
+                                            searchUserForInbox1
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .userName ??
+                                                '',
+                                            style: TextStyle(
+                                              overflow: TextOverflow.ellipsis,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                // color: Colors.green,
+                              );
+                            },
+                          ),
+                        ),
                       /*    Container(
                         child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -444,6 +617,9 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(30)),
                               child: TextFormField(
+                                onChanged: (value) {
+                                  onChangeMethod(value);
+                                },
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(300),
                                 ],
@@ -511,7 +687,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                 } else {
                                   print(
                                       "i want to check-${addcomment.text.length}");
-                                  if (addcomment.text.length>= 300) {
+                                  if (addcomment.text.length >= 300) {
                                     SnackBar snackBar = SnackBar(
                                       content: Text(
                                           'One time message length allowed is 300'),
@@ -521,7 +697,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(snackBar);
                                   } else {
-                                    Map<String, dynamic> params = { 
+                                    Map<String, dynamic> params = {
                                       "comment": addcomment.text,
                                       "postUid": '${widget.postUuID}',
                                     };
@@ -713,6 +889,38 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
         ),
       ),
     );
+  }
+
+  onChangeMethod(String value) {
+    if (value.contains('@')) {
+      print("if this condison is working-${value}");
+      if (value.length >= 3 && value.contains('@')) {
+        print("value check --${value.endsWith(' #')}");
+        if (value.endsWith(' #')) {
+          String data1 = value.split(' #').last.replaceAll('#', '');
+          BlocProvider.of<AddcommentCubit>(context)
+              .GetAllHashtag(context, '10', '#${data1.trim()}');
+        } else {
+          String data = value.split(' @').last.replaceAll('@', '');
+          BlocProvider.of<AddcommentCubit>(context)
+              .search_user_for_inbox(context, '${data.trim()}', '1');
+        }
+      } else if (value.endsWith(' #')) {
+        print("ends with value-${value}");
+      } else {
+        print("check lenth else-${value.length}");
+      }
+    } else if (value.contains('#')) {
+      print("check length-${value}");
+      String data1 = value.split(' #').last.replaceAll('#', '');
+      BlocProvider.of<AddcommentCubit>(context)
+          .GetAllHashtag(context, '10', '#${data1.trim()}');
+    } else {
+      setState(() {
+        isTagData = false;
+        isHeshTegData = false;
+      });
+    }
   }
 
   Deletecommentdilog(String commentuuid, int index1) {

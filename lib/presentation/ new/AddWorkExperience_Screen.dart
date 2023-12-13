@@ -74,6 +74,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
   IndustryTypeModel? industryTypeModel;
   String? formattedDateStart;
   String? formattedDateEnd;
+  DateTime? pickedStartDate;
 
   void initState() {
     super.initState();
@@ -375,22 +376,22 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                   customTextFeild(
                                     controller: StartDateController,
                                     width: _width / 2.8,
-                                    hintText: "ddmmyyyy",
+                                    hintText: "dd-mm-yyyy",
                                     isReadOnly: true,
                                     textInputAction: TextInputAction.next,
                                     onTap: () async {
-                                      DateTime? pickedDate =
-                                          await showDatePicker(
-                                              context: context,
-                                              initialDate: DateTime.now(),
-                                              firstDate: DateTime(2000),
-                                              lastDate: DateTime(2101));
+                                      pickedStartDate = await showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(2000),
+                                          lastDate: DateTime(2101));
 
-                                      if (pickedDate != null) {
-                                        print(pickedDate);
+                                      if (pickedStartDate != null) {
+                                        print(pickedStartDate);
                                         formattedDateStart =
-                                            DateFormat('dd-MM-yyyy')
-                                                .format(pickedDate);
+                                            DateFormat('dd-MM-yyyy').format(
+                                                pickedStartDate ??
+                                                    DateTime.now());
                                         print(
                                             "formattedDate Start--${formattedDateStart}");
 
@@ -423,31 +424,45 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                   customTextFeild(
                                     controller: EndDateController,
                                     width: _width / 2.8,
-                                    hintText: "ddmmyyyy",
+                                    hintText: "dd-mm-yyyy",
                                     isReadOnly: true,
                                     textInputAction: TextInputAction.next,
                                     onTap: () async {
-                                      DateTime? pickedDate =
-                                          await showDatePicker(
-                                              context: context,
-                                              initialDate: DateTime.now(),
-                                              firstDate: DateTime(2000),
-                                              lastDate: DateTime(2101));
+                                      if (StartDateController.text.isNotEmpty) {
+                                        DateTime? pickedDate =
+                                            await showDatePicker(
+                                                context: context,
+                                                initialDate:
+                                                    pickedStartDate ??
+                                                        DateTime.now(),
+                                                firstDate: pickedStartDate ??
+                                                    DateTime.now(),
+                                                lastDate: DateTime(2101));
 
-                                      if (pickedDate != null) {
-                                        print(pickedDate);
-                                        formattedDateEnd =
-                                            DateFormat('dd-MM-yyyy')
-                                                .format(pickedDate);
-                                        print(
-                                            "formattedDate end--${formattedDateEnd}");
+                                        if (pickedDate != null) {
+                                          print(pickedDate);
+                                          formattedDateEnd =
+                                              DateFormat('dd-MM-yyyy')
+                                                  .format(pickedDate);
+                                          print(
+                                              "formattedDate end--${formattedDateEnd}");
 
-                                        setState(() {
-                                          EndDateController.text =
-                                              formattedDateEnd.toString();
-                                        });
+                                          setState(() {
+                                            EndDateController.text =
+                                                formattedDateEnd.toString();
+                                          });
+                                        } else {
+                                          print("Date is not selected");
+                                        }
                                       } else {
-                                        print("Date is not selected");
+                                        SnackBar snackBar = SnackBar(
+                                          content:
+                                              Text('Please Select Start Date'),
+                                          backgroundColor:
+                                              ColorConstant.primary_color,
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
                                       }
                                     },
                                   ),
@@ -480,7 +495,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                 companyNameController.text.length < 4) {
                               SnackBar snackBar = SnackBar(
                                 content: Text(
-                                    'Minimum length required in Job Profiie'),
+                                    'Minimum length required in Company Namne'),
                                 backgroundColor: ColorConstant.primary_color,
                               );
                               ScaffoldMessenger.of(context)
@@ -554,7 +569,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                 companyNameController.text.length < 4) {
                               SnackBar snackBar = SnackBar(
                                 content: Text(
-                                    'Minimum length required in Job Profiie'),
+                                    'Minimum length required in Company Name'),
                                 backgroundColor: ColorConstant.primary_color,
                               );
                               ScaffoldMessenger.of(context)
@@ -640,7 +655,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                 companyNameController.text.length < 4) {
                               SnackBar snackBar = SnackBar(
                                 content: Text(
-                                    'Minimum length required in Job Profiie'),
+                                    'Minimum length required in Company Name'),
                                 backgroundColor: ColorConstant.primary_color,
                               );
                               ScaffoldMessenger.of(context)
@@ -713,7 +728,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                 companyNameController.text.length < 4) {
                               SnackBar snackBar = SnackBar(
                                 content: Text(
-                                    'Minimum length required in Job Profiie'),
+                                    'Minimum length required in Company Name'),
                                 backgroundColor: ColorConstant.primary_color,
                               );
                               ScaffoldMessenger.of(context)
