@@ -7,8 +7,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:getwidget/components/loader/gf_loader.dart';
-import 'package:getwidget/types/gf_loader_type.dart';
 import 'package:hashtagable/widgets/hashtag_text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -17,7 +15,9 @@ import 'package:pds/API/Bloc/RePost_Bloc/RePost_cubit.dart';
 import 'package:pds/API/Bloc/RePost_Bloc/RePost_state.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
+import 'package:pds/API/Model/HasTagModel/hasTagModel.dart';
 import 'package:pds/API/Model/OpenSaveImagepostModel/OpenSaveImagepost_Model.dart';
+import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
@@ -27,6 +27,7 @@ import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/phot
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -90,6 +91,7 @@ class _RePostScreenState extends State<RePostScreen> {
     GetUserData();
     super.initState();
   }
+  List<String> postTexContrlloer = [];
 
   ImagePicker _imagePicker = ImagePicker();
   List<File> pickedImage = [];
@@ -108,7 +110,7 @@ class _RePostScreenState extends State<RePostScreen> {
   bool isTrue = false;
   Color primaryColor = ColorConstant.primaryLight_color;
   Color textColor = ColorConstant.primary_color;
-  TextEditingController postText = TextEditingController();
+  TextEditingController postText1 = TextEditingController();
   List<String> soicalData = ["Follower", "Public"];
   int indexx = 0;
   String? User_ID;
@@ -121,6 +123,11 @@ class _RePostScreenState extends State<RePostScreen> {
   double _opacity = 0.0;
   ImageDataPost? imageDataPost;
   String? UserProfileImage;
+  SearchUserForInbox? searchUserForInbox1;
+  HasDataModel? getAllHashtag;
+
+  bool isHeshTegData = false;
+  bool isTagData = false;
 
   GetUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -159,6 +166,17 @@ class _RePostScreenState extends State<RePostScreen> {
           print("imageDataPost-->${imageDataPost?.object?.data}");
         }
       }
+       if (state is SearchHistoryDataAddxtends) {
+          searchUserForInbox1 = state.searchUserForInbox;
+          isTagData = true;
+          isHeshTegData = false;
+        }
+         if (state is GetAllHashtagState) {
+          getAllHashtag = state.getAllHashtag;
+          isHeshTegData = true;
+          isTagData = false;
+
+        }
       if (state is RePostLoadedState) {
         print("lodedSate-->");
         SnackBar snackBar = SnackBar(
@@ -336,7 +354,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                 Padding(
                                   padding: EdgeInsets.only(top: 0.0, left: 10),
                                   child: TextFormField(
-                                    controller: postText,
+                                    controller: postText1,
                                     maxLines: null,
                                     cursorColor: Colors.grey,
                                     decoration: InputDecoration(
@@ -360,6 +378,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                       }),
                                     ],
                                     onChanged: (value) {
+                                      onChangeMethod(value);
                                       setState(() {
                                         primaryColor = value.isNotEmpty
                                             ? ColorConstant.primary_color
@@ -785,10 +804,187 @@ class _RePostScreenState extends State<RePostScreen> {
                           ),
                         ),
                       ),
-                      Container(
-                        color: Colors.white,
-                        height: 120,
-                      )
+                       if (isHeshTegData)
+                                Container(
+                                  margin: EdgeInsets.only(
+                                       top:20),
+                                  height: imageDataPost?.object?.data != null
+                                      ? _height / 3
+                                      : _height,
+                                  width: _width,
+                                  // color: Colors.amber,
+                                  child: ListView.builder(
+                                    // physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount:
+                                        getAllHashtag?.object?.content?.length,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        margin: EdgeInsets.all(10),
+                                        height: 70,
+                                        width: _width,
+
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            border: Border.all(
+                                                color: Color(0xffE6E6E6))),
+                                        child: GestureDetector(
+                                          onTap: (){
+                                               setState(() {
+                                              if (postText1.text.isNotEmpty) {
+                                                /*   postText1.text =
+                                                  '${postText1.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
+                                                postTexContrlloer.add(
+                                                    '${getAllHashtag?.object?.content?[index]}');
+                                              }
+                                              postText1.text =
+                                                  postTexContrlloer.join(' ,');
+
+                                              // postText1.text = '${postText1.text}@${searchUserForInbox1?.object?.content?[index].userName}';
+                                             
+                                            });
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: _width / 1.6,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10),
+                                                  child: Text(
+                                                    '${getAllHashtag?.object?.content?[index]}',
+                                                    style: TextStyle(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        // color: Colors.green,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              if (isTagData)
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      top:20),
+                                  height: imageDataPost?.object?.data != null
+                                      ? _height / 3
+                                      : _height,
+                                  width: _width,
+                                  // color: Colors.amber,
+                                  child: ListView.builder(
+                                    // physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: searchUserForInbox1
+                                        ?.object?.content?.length,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        margin: EdgeInsets.all(10),
+                                        height: 70,
+                                        width: _width,
+                                        // color: Colors.green,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            border: Border.all(
+                                                color: Color(0xffE6E6E6))),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              if (postText1.text.isNotEmpty) {
+                                                /*   postText1.text =
+                                                  '${postText1.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
+                                                postTexContrlloer.add(
+                                                    '@${searchUserForInbox1?.object?.content?[index].userName}');
+                                              }
+                                              postText1.text =
+                                                  postTexContrlloer.join(' ,');
+
+                                              // postText1.text = '${postText1.text}@${searchUserForInbox1?.object?.content?[index].userName}';
+                                             
+                                            });
+                                          },
+                                          child: Row(
+                                            children: [
+                                              searchUserForInbox1
+                                                              ?.object
+                                                              ?.content?[index]
+                                                              .userProfilePic !=
+                                                          null &&
+                                                      searchUserForInbox1
+                                                              ?.object
+                                                              ?.content?[index]
+                                                              .userProfilePic
+                                                              ?.isNotEmpty ==
+                                                          true
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 10),
+                                                      child: CircleAvatar(
+                                                        radius: 30.0,
+                                                        backgroundImage:
+                                                            NetworkImage(
+                                                                "${searchUserForInbox1?.object?.content?[index].userProfilePic}"),
+                                                        backgroundColor:
+                                                            Colors.transparent,
+                                                      ),
+                                                    )
+                                                  : Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 10),
+                                                      child: CircleAvatar(
+                                                        radius: 30.0,
+                                                        backgroundImage:
+                                                            AssetImage(
+                                                                ImageConstant
+                                                                    .tomcruse),
+                                                        backgroundColor:
+                                                            Colors.transparent,
+                                                      ),
+                                                    ),
+                                              Container(
+                                                width: _width / 1.6,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10),
+                                                  child: Text(
+                                                    searchUserForInbox1
+                                                            ?.object
+                                                            ?.content?[index]
+                                                            .userName ??
+                                                        '',
+                                                    style: TextStyle(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        // color: Colors.green,
+                                      );
+                                    },
+                                  ),
+                                ),
+                      
                     ],
                   ),
                 ),
@@ -1429,15 +1625,47 @@ class _RePostScreenState extends State<RePostScreen> {
       print("Selected option index: $selectedOption");
     }
   }
-
+ onChangeMethod(String value) {
+    if (value.contains('@')) {
+      print("if this condison is working-${value}");
+      if (value.length >= 3 && value.contains('@')) {
+        print("value check --${value.endsWith(' #')}");
+        if (value.endsWith(' #')) {
+          String data1 = value.split(' #').last.replaceAll('#', '');
+          BlocProvider.of<RePostCubit>(context)
+              .GetAllHashtag(context, '10', '#${data1.trim()}');
+        } else {
+          String data = value.split(' @').last.replaceAll('@', '');
+          BlocProvider.of<RePostCubit>(context)
+              .search_user_for_inbox(context, '${data.trim()}', '1');
+        }
+      } else if (value.endsWith(' #')) {
+        print("ends with value-${value}");
+      } else {
+        print("check lenth else-${value.length}");
+      }
+    }
+    else if(value.contains('#')){
+      print("check length-${value}");
+       String data1 = value.split(' #').last.replaceAll('#', '');
+          BlocProvider.of<RePostCubit>(context)
+              .GetAllHashtag(context, '10', '#${data1.trim()}');
+    }
+    else {
+      setState(() {
+        isTagData = false;
+        isHeshTegData = false;
+      });
+    }
+  }
   dataPostFucntion() {
     print("dfhghghfhgh-${pickedFile?.path}");
-    print("FBSDFNFBDBFSBF--${postText.text.length}");
+    print("FBSDFNFBDBFSBF--${postText1.text.length}");
 
-    // String text = postText.text;
+    // String text = postText1.text;
     RegExp exp = new RegExp(r"\B#\w+");
 
-    if (postText.text.length >= 1000) {
+    if (postText1.text.length >= 1000) {
       CreatePostDone = false;
       SnackBar snackBar = SnackBar(
         content: Text('Please enter less than 1000 letter!!'),
@@ -1445,7 +1673,7 @@ class _RePostScreenState extends State<RePostScreen> {
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
-      exp.allMatches(postText.text).forEach((match) {
+      exp.allMatches(postText1.text).forEach((match) {
         var aa = "${match.group(0)}";
         print(
             "aa.length aa.length aa.length aa.length aa.length aa.length aa.length aa.length aa.length aa.length ");
@@ -1466,7 +1694,7 @@ class _RePostScreenState extends State<RePostScreen> {
 
       print(HasetagList?.length);
       if ((HasetagList?.length)! <= 25) {
-        /* if (postText.text.length >= 1000) {
+        /* if (postText1.text.length >= 1000) {
           SnackBar snackBar = SnackBar(
             content: Text('Please enter less than 1000 letter!!'),
             backgroundColor: ColorConstant.primary_color,
@@ -1474,36 +1702,36 @@ class _RePostScreenState extends State<RePostScreen> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         } else { */
         if (CreatePostDone == true) {
-          if (postText.text.isNotEmpty && file?.path != null) {
+          if (postText1.text.isNotEmpty && file?.path != null) {
             Map<String, dynamic> param = {
-              "description": postText.text,
+              "description": postText1.text,
               "postData": imageDataPost?.object?.data,
               "postDataType": "IMAGE",
               "postType": soicalData[indexx].toString().toUpperCase()
             };
             BlocProvider.of<RePostCubit>(context)
                 .RePostAPI(context, param, widget.postUid);
-          } else if (postText.text.isNotEmpty && file12?.path != null) {
+          } else if (postText1.text.isNotEmpty && file12?.path != null) {
             Map<String, dynamic> param = {
-              "description": postText.text,
+              "description": postText1.text,
               "postData": imageDataPost?.object?.data,
               "postDataType": "ATTACHMENT",
               "postType": soicalData[indexx].toString().toUpperCase()
             };
             BlocProvider.of<RePostCubit>(context)
                 .RePostAPI(context, param, widget.postUid);
-          } else if (postText.text.isNotEmpty && pickedImage.isNotEmpty) {
+          } else if (postText1.text.isNotEmpty && pickedImage.isNotEmpty) {
             Map<String, dynamic> param = {
-              "description": postText.text,
+              "description": postText1.text,
               "postData": imageDataPost?.object?.data,
               "postDataType": "IMAGE",
               "postType": soicalData[indexx].toString().toUpperCase()
             };
             BlocProvider.of<RePostCubit>(context)
                 .RePostAPI(context, param, widget.postUid);
-          } else if (pickedFile?.path != null && postText.text.isNotEmpty) {
+          } else if (pickedFile?.path != null && postText1.text.isNotEmpty) {
             Map<String, dynamic> param = {
-              "description": postText.text,
+              "description": postText1.text,
               "postData": imageDataPost?.object?.data,
               "postDataType": "IMAGE",
               "postType": soicalData[indexx].toString().toUpperCase()
@@ -1511,9 +1739,9 @@ class _RePostScreenState extends State<RePostScreen> {
             BlocProvider.of<RePostCubit>(context)
                 .RePostAPI(context, param, widget.postUid);
           } else {
-            if (postText.text.isNotEmpty) {
+            if (postText1.text.isNotEmpty) {
               Map<String, dynamic> param = {
-                "description": postText.text,
+                "description": postText1.text,
                 "postType": soicalData[indexx].toString().toUpperCase()
               };
               BlocProvider.of<RePostCubit>(context)
