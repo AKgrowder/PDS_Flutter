@@ -20,4 +20,5 @@ class DmInboxCubit extends Cubit<getInboxState> {
       emit(getInboxErrorState(e.toString()));
     }
   }
+  
 }
