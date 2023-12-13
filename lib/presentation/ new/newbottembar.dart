@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:pds/connection_status/connection_status_singleton.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/%20new/Inbox_screen.dart';
 import 'package:pds/presentation/%20new/home_screen_new.dart';
 import 'package:pds/presentation/%20new/notifaction2.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'SearchBar_screen.dart';
 
 // import 'package:growder/presentation/Buy_Screen/Buy_screen.dart';
@@ -45,7 +45,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
     SearchBarScreen(value2: 1),
     // NotificationsScreen(),
 
-    InboxScreen(),
+    // InboxScreen(),
     NewNotifactionScreen(),
     // SettingScreen(),
 
@@ -261,62 +261,62 @@ class _NewBottomBarState extends State<NewBottomBar> {
                           ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            if (UserLogin_ID != null) {
-                              selectedIndex = 3;
-                            } else {
-                              NaviRegisterScreen();
-                            }
-                          });
-                        },
-                        child: Container(
-                          height: 50,
-                          width: 50,
-                          // color: Colors.amber,
-                          // color:
-                          //     Theme.of(context).brightness == Brightness.light
-                          //         ? const Color(0xFFFFFFFF)
-                          //         : const Color(0xFF0D0D0D),
-                          child: Container(
-                            child: selectedIndex != 3
-                                ? Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Image.asset(
-                                      ImageConstant.meesagePng,
-                                      // height: 26,
-                                      // width: 26,
-                                    ),
-                                  )
-                                : Container(
-                                    // height: 30,
-                                    // width: 30,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: Image.asset(
-                                        ImageConstant.meesagePng,
-                                        color: const Color(0XFFED1C25),
-                                        // height: 26,
-                                        // width: 26,
-                                      ),
-                                    ),
-                                    decoration: const BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(50)),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Color(0xFFFFE9E9),
-                                          spreadRadius: 0,
-                                          blurRadius: 0,
-                                          offset: Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                          ),
-                        ),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     setState(() {
+                      //       if (UserLogin_ID != null) {
+                      //         selectedIndex = 3;
+                      //       } else {
+                      //         NaviRegisterScreen();
+                      //       }
+                      //     });
+                      //   },
+                      //   child: Container(
+                      //     height: 50,
+                      //     width: 50,
+                      //     // color: Colors.amber,
+                      //     // color:
+                      //     //     Theme.of(context).brightness == Brightness.light
+                      //     //         ? const Color(0xFFFFFFFF)
+                      //     //         : const Color(0xFF0D0D0D),
+                      //     child: Container(
+                      //       child: selectedIndex != 3
+                      //           ? Padding(
+                      //               padding: const EdgeInsets.all(12.0),
+                      //               child: Image.asset(
+                      //                 ImageConstant.meesagePng,
+                      //                 // height: 26,
+                      //                 // width: 26,
+                      //               ),
+                      //             )
+                      //           : Container(
+                      //               // height: 30,
+                      //               // width: 30,
+                      //               child: Padding(
+                      //                 padding: const EdgeInsets.all(12.0),
+                      //                 child: Image.asset(
+                      //                   ImageConstant.meesagePng,
+                      //                   color: const Color(0XFFED1C25),
+                      //                   // height: 26,
+                      //                   // width: 26,
+                      //                 ),
+                      //               ),
+                      //               decoration: const BoxDecoration(
+                      //                 borderRadius:
+                      //                     BorderRadius.all(Radius.circular(50)),
+                      //                 boxShadow: [
+                      //                   BoxShadow(
+                      //                     color: Color(0xFFFFE9E9),
+                      //                     spreadRadius: 0,
+                      //                     blurRadius: 0,
+                      //                     offset: Offset(0, 2),
+                      //                   ),
+                      //                 ],
+                      //               ),
+                      //             ),
+                      //     ),
+                      //   ),
+                      // ),
                       // / ------------------------------------------------------------------
                       GestureDetector(
                         onTap: () {

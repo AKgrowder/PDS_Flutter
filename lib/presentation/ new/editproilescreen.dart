@@ -8,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
@@ -22,6 +23,7 @@ import 'package:pds/presentation/my%20account/my_account_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
 import '../create_foram/create_foram_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -51,8 +53,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   List<IndustryType> selectedIndustryTypes3 = [];
 
   String? dopcument;
+  var crop;
   File? _image;
   File? _image1;
+  File? file;
   double value2 = 0.0;
   String? filepath;
   String? User_Module;
@@ -965,6 +969,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: ColorConstant.primary_color,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (industryUUIDinApi.isEmpty) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please Enter IndustryType'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else if (companyName.text == null || companyName.text == '') {
       SnackBar snackBar = SnackBar(
         content: Text('Please Enter Company Name '),
@@ -1047,6 +1057,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     } else if (jobProfile.text.isNotEmpty && jobProfile.text.length < 4) {
       SnackBar snackBar = SnackBar(
         content: Text('Minimum length required in Job Profiie'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (industryUUIDinApi.isEmpty) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please Enter IndustryType'),
         backgroundColor: ColorConstant.primary_color,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -1288,6 +1304,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   listType: MultiSelectListType.LIST,
                   onConfirm: (values) {
                     selectedIndustryTypes3.clear();
+                    industryUUIDinApi.clear();
                     selectedIndustryTypes = values;
                     selectedIndustryTypes.forEach((element) {
                       print("sxfgsdfghdfghdfgh${element.industryTypeUid}");
@@ -1976,6 +1993,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     print('getFileSizevariable-${file1.path}');
     value2 = double.parse(STR);
 
+    CroppedFile? croppedFile = await ImageCropper().cropImage(
+      sourcePath: file.path.toString(),
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ],
+      uiSettings: [
+        AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            activeControlsWidgetColor: Color(0xffED1C25),
+            toolbarColor: Color(0xffED1C25),
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        IOSUiSettings(
+          title: 'Cropper',
+        ),
+        WebUiSettings(
+          context: context,
+        ),
+      ],
+    );
     print(value2);
     switch (i) {
       case 0:
@@ -1986,6 +2028,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
+                crop = file1.path;
               });
             }
 
@@ -2011,8 +2054,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           default:
         }
         print('filenamecheckKB-${file1.path}');
-        BlocProvider.of<MyAccountCubit>(context)
-            .chooseDocumentprofile(dopcument.toString(), file1.path!, context);
+        BlocProvider.of<MyAccountCubit>(context).chooseDocumentprofile(
+            dopcument.toString(),
+            croppedFile != null ? croppedFile.path : file1.path!,
+            context);
 
         setState(() {});
 
@@ -2062,7 +2107,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             dopcument = file1.name;
           });
           BlocProvider.of<MyAccountCubit>(context).chooseDocumentprofile(
-              dopcument.toString(), file1.path!, context);
+              dopcument.toString(),
+              croppedFile != null ? croppedFile.path : file1.path!,
+              context);
         }
 
         break;

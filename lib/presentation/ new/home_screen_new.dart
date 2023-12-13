@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pds/API/Bloc/BlogComment_BLoc/BlogComment_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
@@ -33,6 +34,7 @@ import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_utils.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/BlogComment_screen.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/RePost_Screen.dart';
@@ -111,6 +113,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   List<int> _currentPages = [];
   String? myUserId;
   String? UserProfileImage;
+  String? User_IDStroy;
   GetallBlogModel? getallBlogModel1;
   bool isDataget = false;
   DateTime? parsedDateTimeBlogs;
@@ -782,33 +785,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     await BlocProvider.of<GetGuestAllPostCubit>(context).MyAccount(context);
   }
 
-  soicalFunationExperts({String? apiName, int? index}) async {
-    if (apiName == 'Follow') {
-      print("dfhsdfhsdfhsdgf");
-      await BlocProvider.of<GetGuestAllPostCubit>(context)
-          .followWIngMethod(AllExperData?.object?[index ?? 0].uuid, context);
-      if (AllExperData?.object?[index ?? 0].followStatus == 'FOLLOW') {
-        for (int i = 0;
-            i < (AllGuestPostRoomData?.object?.content?.length ?? 0);
-            i++) {
-          print("i-${i}");
-          if (AllExperData?.object?[index ?? 0].uuid ==
-              AllExperData?.object?[i].uuid) {
-            AllExperData?.object?[i].followStatus = 'REQUESTED';
-            print("check data-${AllExperData?.object?[i].followStatus}");
-          }
-        }
-      } else {
-        for (int i = 0; i < (AllExperData?.object?.length ?? 0); i++) {
-          if (AllExperData?.object?[index ?? 0].uuid ==
-              AllExperData?.object?[i].uuid) {
-            AllExperData?.object?[i].followStatus = 'FOLLOW';
-          }
-        }
-      }
-    }
-  }
-
   soicalFunation({String? apiName, int? index}) async {
     print("fghdfghdfgh");
     if (uuid == null) {
@@ -986,6 +962,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               User_Name = state.myAccontDetails.object?.userName;
               User_Module = state.myAccontDetails.object?.module;
               UserProfileImage = state.myAccontDetails.object?.userProfilePic;
+
               Save_UserData();
             }
             if (state is saveBlogLoadedState) {
@@ -1029,11 +1006,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                   ((state.getAllStoryModel.object?.isNotEmpty == true) ??
                       false)) {
                 state.getAllStoryModel.object?.forEach((element) {
+
+                    int count = 0;
+                    element.storyData?.forEach((element) {
+                      if (element.storySeen!) {
+                        count++;
+                      }
+                    });
                   if (element.userUid == User_ID) {
                     userName.insert(0, element.userName.toString());
                     buttonDatas.insert(
                         0,
-                        StoryButtonData(
+                        StoryButtonData(isWatch: element.storyData?.length == count,
                           timelineBackgroundColor: Colors.grey,
                           buttonDecoration: BoxDecoration(
                             shape: BoxShape.circle,
@@ -1098,6 +1082,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                         onPressed: (data) {
                           Navigator.of(storycontext!).push(
                             StoryRoute(
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return ProfileScreen(
+                                      User_ID: "${element.userUid}",
+                                      isFollowing: "");
+                                }));
+                              },
                               storyContainerSettings: StoryContainerSettings(
                                 buttonData: buttonDatas[0],
                                 tapPosition:
@@ -1192,6 +1184,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                         onPressed: (data) {
                           Navigator.of(storycontext!).push(
                             StoryRoute(
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return ProfileScreen(
+                                      User_ID: "${element.userUid}",
+                                      isFollowing: "");
+                                }));
+                              },
                               storyContainerSettings: StoryContainerSettings(
                                 buttonData: buttonData1,
                                 tapPosition: buttonData1.buttonCenterPosition!,
@@ -1224,6 +1224,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
+              BlocProvider.of<GetGuestAllPostCubit>(context)
+                  .FetchAllExpertsAPI(context);
+              // await BlocProvider.of<GetGuestAllPostCubit>(context)
+              //     .GetUserAllPostAPI(context, '1', showAlert: true);
 
               likePost = state.likePost;
             }
@@ -1471,6 +1475,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   "",
                                                   "${User_ID}")
                                             ],
+                                            isWatch: false,
                                             borderDecoration: BoxDecoration(
                                               borderRadius:
                                                   const BorderRadius.all(
@@ -1499,6 +1504,19 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 Navigator.of(storycontext!)
                                                     .push(
                                                       StoryRoute(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) {
+                                                            return ProfileScreen(
+                                                                User_ID:
+                                                                    "${User_ID}",
+                                                                isFollowing:
+                                                                    "");
+                                                          }));
+                                                        },
                                                         storyContainerSettings:
                                                             StoryContainerSettings(
                                                           buttonData:
@@ -1903,26 +1921,33 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             0xffED1C25),
                                                                         borderRadius:
                                                                             BorderRadius.circular(4)),
-                                                                    child: AllGuestPostRoomData?.object?.content?[index].isFollowing ==
-                                                                            'FOLLOW'
-                                                                        ? Text(
-                                                                            'Follow',
-                                                                            style: TextStyle(
-                                                                                fontFamily: "outfit",
-                                                                                fontSize: 12,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: Colors.white),
-                                                                          )
-                                                                        : AllGuestPostRoomData?.object?.content?[index].isFollowing ==
-                                                                                'REQUESTED'
+                                                                    child: AllGuestPostRoomData?.object?.content?[index].userAccountType ==
+                                                                            "PUBLIC"
+                                                                        ? (AllGuestPostRoomData?.object?.content?[index].isFollowing ==
+                                                                                'FOLLOW'
                                                                             ? Text(
-                                                                                'Requested',
+                                                                                'Follow',
                                                                                 style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
                                                                               )
                                                                             : Text(
                                                                                 'Following ',
                                                                                 style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                              ),
+                                                                              ))
+                                                                        : AllGuestPostRoomData?.object?.content?[index].isFollowing ==
+                                                                                'FOLLOW'
+                                                                            ? Text(
+                                                                                'Follow',
+                                                                                style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                              )
+                                                                            : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'REQUESTED'
+                                                                                ? Text(
+                                                                                    'Requested',
+                                                                                    style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                  )
+                                                                                : Text(
+                                                                                    'Following ',
+                                                                                    style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                  ),
                                                                   ),
                                                                 ),
                                                         ),
@@ -1964,8 +1989,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         linkTypes: [
                                                                           LinkType
                                                                               .url,
-                                                                          // LinkType
-                                                                          //     .userTag,
+                                                                          LinkType
+                                                                              .userTag,
                                                                           LinkType
                                                                               .hashTag,
                                                                           // LinkType
@@ -2338,8 +2363,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         linkTypes: [
                                                                           LinkType
                                                                               .url,
-                                                                          // LinkType
-                                                                          //     .userTag,
+                                                                          LinkType
+                                                                              .userTag,
                                                                           LinkType
                                                                               .hashTag,
                                                                           // LinkType
@@ -3138,26 +3163,33 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             0xffED1C25),
                                                                         borderRadius:
                                                                             BorderRadius.circular(4)),
-                                                                    child: AllGuestPostRoomData?.object?.content?[index].isFollowing ==
-                                                                            'FOLLOW'
-                                                                        ? Text(
-                                                                            'Follow',
-                                                                            style: TextStyle(
-                                                                                fontFamily: "outfit",
-                                                                                fontSize: 12,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: Colors.white),
-                                                                          )
-                                                                        : AllGuestPostRoomData?.object?.content?[index].isFollowing ==
-                                                                                'REQUESTED'
+                                                                    child: AllGuestPostRoomData?.object?.content?[index].userAccountType ==
+                                                                            "PUBLIC"
+                                                                        ? (AllGuestPostRoomData?.object?.content?[index].isFollowing ==
+                                                                                'FOLLOW'
                                                                             ? Text(
-                                                                                'Requested',
+                                                                                'Follow',
                                                                                 style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
                                                                               )
                                                                             : Text(
                                                                                 'Following ',
                                                                                 style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                              ),
+                                                                              ))
+                                                                        : AllGuestPostRoomData?.object?.content?[index].isFollowing ==
+                                                                                'FOLLOW'
+                                                                            ? Text(
+                                                                                'Follow',
+                                                                                style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                              )
+                                                                            : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'REQUESTED'
+                                                                                ? Text(
+                                                                                    'Requested',
+                                                                                    style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                  )
+                                                                                : Text(
+                                                                                    'Following ',
+                                                                                    style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                  ),
                                                                   ),
                                                                 ),
                                                         ),
@@ -3199,8 +3231,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         linkTypes: [
                                                                           LinkType
                                                                               .url,
-                                                                          // LinkType
-                                                                          //     .userTag,
+                                                                          LinkType
+                                                                              .userTag,
                                                                           LinkType
                                                                               .hashTag,
                                                                           // LinkType
@@ -3993,10 +4025,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 GestureDetector(
                                                                               onTap: () async {
                                                                                 print("followStatusfollowStatus == >>${AllExperData?.object?[index].followStatus}");
-                                                                                await soicalFunationExperts(
-                                                                                  apiName: 'Follow',
-                                                                                  index: index,
-                                                                                );
+                                                                                BlocProvider.of<GetGuestAllPostCubit>(context).followWIngMethod(AllExperData?.object?[index].uuid, context);
                                                                               },
                                                                               child: Container(
                                                                                 height: 24,
@@ -4354,33 +4383,32 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           width:
                                                                               5,
                                                                         ),
-                                                                        // GestureDetector(
-                                                                        //   onTap:
-                                                                        //       () async {
-                                                                        //     print("opne comment sheet in blogs");
-                                                                        //     BlocProvider.of<AddcommentCubit>(context).Addcomment(context,
-                                                                        //         '${AllGuestPostRoomData?.object?.content?[index].postUid}');
-                                                                        //     if (uuid ==
-                                                                        //         null) {
-                                                                        //       Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                        //     } else {
-                                                                        //       _settingModalBottomSheet1(context, index, _width);
-                                                                        //     }
-                                                                        //   },
-                                                                        //   child:
-                                                                        //       Container(
-                                                                        //     color:
-                                                                        //         Colors.transparent,
-                                                                        //     child:
-                                                                        //         Padding(
-                                                                        //       padding: const EdgeInsets.all(5.0),
-                                                                        //       child: Image.asset(
-                                                                        //         ImageConstant.meesage,
-                                                                        //         height: 15,
-                                                                        //       ),
-                                                                        //     ),
-                                                                        //   ),
-                                                                        // ),
+                                                                        GestureDetector(
+                                                                          onTap:
+                                                                              () async {
+                                                                            print("opne comment sheet in blogs");
+                                                                            BlocProvider.of<BlogcommentCubit>(context).BlogcommentAPI(context,
+                                                                                getallBlogModel1?.object?[index1].uid ?? "");
+
+                                                                            _settingModalBottomSheetBlog(
+                                                                                context,
+                                                                                index,
+                                                                                _width);
+                                                                          },
+                                                                          child:
+                                                                              Container(
+                                                                            color:
+                                                                                Colors.transparent,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.all(5.0),
+                                                                              child: Image.asset(
+                                                                                ImageConstant.meesage,
+                                                                                height: 15,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
                                                                         /* SizedBox(
                                                                           height:
                                                                               15,
@@ -4935,6 +4963,28 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                   "",
               postUuID:
                   AllGuestPostRoomData?.object?.content?[index].postUid ?? "");
+        });
+  }
+
+  void _settingModalBottomSheetBlog(context, index, _width) {
+    void _goToElement() {
+      scroll.animateTo((1000 * 20),
+          duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+    }
+
+    showModalBottomSheet(
+        isScrollControlled: true,
+        useSafeArea: true,
+        isDismissible: true,
+        showDragHandle: true,
+        enableDrag: true,
+        constraints: BoxConstraints.tight(Size.infinite),
+        context: context,
+        builder: (BuildContext bc) {
+          return BlogCommentBottomSheet(
+            isFoollinng:
+                AllGuestPostRoomData?.object?.content?[index].isFollowing,
+          );
         });
   }
 

@@ -2389,7 +2389,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   )),
                         );
                       },
-                      child: ClipRRect( 
+                      child: ClipRRect(
                         borderRadius: BorderRadius.circular(12.0),
                         child: Container(
                             margin: EdgeInsets.all(0.0),
@@ -2687,7 +2687,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
         ),
         Container(
-          height: 550,
+          height: _height / 1.5,
           width: _width,
           //  color: Colors.amber,
           child: Padding(
@@ -2751,7 +2751,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 Container(
                   width: _width,
                   child: CustomTextFormField(
-                    readOnly: true,
+                    readOnly: true, maxLines: 4,
                     controller: IndustryType,
                     margin: EdgeInsets.only(
                       top: 10,
@@ -2775,8 +2775,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                     hintText: "Industry Type",
                     // hintStyle: theme.textTheme.titleMedium!,
                     textInputAction: TextInputAction.next,
-                    filled: true,
-                    maxLength: 100,
+                    filled: true, 
+                    maxLength: 100, 
                     fillColor: appTheme.gray100,
                   ),
                 ),
@@ -3020,7 +3020,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15, left: 20),
                           child: Text(
-                          '${NewProfileData?.object?.documentName}',
+                            '${NewProfileData?.object?.documentName}',
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(fontSize: 16),
                           ),
@@ -3064,7 +3064,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 if (dopcument != null) {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => DocumentViewScreen(
-                                            path: dopcument,
+                                            path:NewProfileData?.object?.userDocument,
+
+
+
+
+
+
                                             title: 'Pdf',
                                           )));
                                 }
@@ -3285,7 +3291,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
         ),
         Container(
-          height: 350,
+          height: _height / 2,
           width: _width,
           child: Padding(
             padding: const EdgeInsets.only(right: 16, left: 16),
@@ -3393,7 +3399,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 Container(
                   width: _width,
                   child: CustomTextFormField(
-                    readOnly: true,
+                    readOnly: true, maxLines: 4,
                     controller: IndustryType,
                     margin: EdgeInsets.only(
                       top: 10,
@@ -3488,7 +3494,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                               print("dfsdfgsdfgdfg-${dopcument}");
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => DocumentViewScreen(
-                                        path: dopcument,
+                                        path: NewProfileData?.object?.userDocument,
+
+
+
+
+
+
                                         title: 'Pdf',
                                       )));
                             },

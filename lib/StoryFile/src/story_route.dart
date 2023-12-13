@@ -33,11 +33,9 @@ class StoryContainerSettings {
 class StoryRoute extends ModalRoute {
   final Duration? duration;
   final StoryContainerSettings storyContainerSettings;
+  void Function()? onTap;
 
-  StoryRoute({
-    this.duration,
-    required this.storyContainerSettings,
-  });
+  StoryRoute({this.duration, required this.storyContainerSettings, this.onTap});
 
   @override
   Color? get barrierColor => Colors.transparent;
@@ -52,6 +50,7 @@ class StoryRoute extends ModalRoute {
     Animation<double> secondaryAnimation,
   ) {
     return StoryPageContainerBuilder(
+      onTap: onTap,
       animation: animation,
       settings: storyContainerSettings,
     );

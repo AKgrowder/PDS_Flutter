@@ -10,12 +10,11 @@ import 'story_page_container_view.dart';
 class StoryPageContainerBuilder extends StatefulWidget {
   final Animation<double> animation;
   final StoryContainerSettings settings;
+  void Function()? onTap;
 
-  const StoryPageContainerBuilder({
-    Key? key,
-    required this.settings,
-    required this.animation,
-  }) : super(key: key);
+  StoryPageContainerBuilder(
+      {Key? key, required this.settings, required this.animation, this.onTap})
+      : super(key: key);
 
   @override
   State<StoryPageContainerBuilder> createState() =>
@@ -230,6 +229,7 @@ class _StoryPageContainerBuilderState extends State<StoryPageContainerBuilder>
                       final buttonData =
                           widget.settings.allButtonDatas[childIndex];
                       final child = StoryPageContainerView(
+                        onTap: widget.onTap,
                         buttonData: buttonData,
                         onClosePressed: _close,
                         pageController: _pageController,
