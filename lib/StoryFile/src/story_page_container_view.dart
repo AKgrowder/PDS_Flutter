@@ -17,22 +17,25 @@ import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:video_player/video_player.dart';
 import '../../core/utils/image_constant.dart';
 import '../../widgets/custom_image_view.dart';
+bool isBottomSheetOpen = false;
 
 class StoryPageContainerView extends StatefulWidget {
   final StoryButtonData buttonData;
   final VoidCallback onStoryComplete;
   final PageController? pageController;
   final VoidCallback? onClosePressed;
-
+  final Function()? onTap;
   const StoryPageContainerView({
     Key? key,
     required this.buttonData,
     required this.onStoryComplete,
     this.pageController,
     this.onClosePressed,
+    this.onTap
   }) : super(key: key);
 
   @override
@@ -161,22 +164,26 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                   child: SizedBox(
                 child: Row(
                   children: [
-                    widget.buttonData.images[0].profileImage != null &&
-                            widget.buttonData.images[0].profileImage != ""
-                        ? CustomImageView(
-                            url: "${widget.buttonData.images[0].profileImage}",
-                            height: 32,
-                            width: 32,
-                            fit: BoxFit.fill,
-                            radius: BorderRadius.circular(25),
-                          )
-                        : CustomImageView(
-                            imagePath: ImageConstant.tomcruse,
-                            height: 32,
-                            width: 32,
-                            fit: BoxFit.fill,
-                            radius: BorderRadius.circular(25),
-                          ),
+                    GestureDetector(
+                      onTap: widget.onTap,
+                      child: widget.buttonData.images[0].profileImage != null &&
+                          widget.buttonData.images[0].profileImage != ""
+                          ? CustomImageView(
+                        url:
+                        "${widget.buttonData.images[0].profileImage}",
+                        height: 32,
+                        width: 32,
+                        fit: BoxFit.fill,
+                        radius: BorderRadius.circular(25),
+                      )
+                          : CustomImageView(
+                        imagePath: ImageConstant.tomcruse,
+                        height: 32,
+                        width: 32,
+                        fit: BoxFit.fill,
+                        radius: BorderRadius.circular(25),
+                      ),
+                    ),
                     SizedBox(
                       width: 12,
                     ),
@@ -281,6 +288,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
           // Image has been loaded
           imageLoaded = true;
+          print("image loaded : unpause");
           _storyController!.unpause();
 
           if (DummyStoryViewBool == true) {
@@ -306,12 +314,12 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             'storyUid-${widget.buttonData.images[_curSegmentIndex].storyUid}');
         print('User_Id--$User_ID');
 
-        if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
+        // if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
           BlocProvider.of<ViewStoryCubit>(context).ViewStory(
               context,
               "${User_ID}",
               "${widget.buttonData.images[_curSegmentIndex].storyUid}");
-        }
+        // }
       }
     }
     return imageLoaded == false
@@ -371,6 +379,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
         // Image has been loaded
         imageLoaded = true;
+        print("video loaded : unpause");
         _storyController!.unpause();
 
         if (DummyStoryViewBool == true) {
@@ -408,6 +417,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         }
       }
     }
+    print("video loaded : unpause");
     _storyController!.unpause();
     return StoryPageScaffold(
       body: Container(
@@ -458,6 +468,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             }
           }
         }
+        print("pointer up loaded : unpause");
         _storyController!.unpause();
       },
       child: SizedBox(
@@ -479,8 +490,11 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                           onTapDown: (details) {
                             _pointerDownMillis = _stopwatch.elapsedMilliseconds;
                             _pointerDownPosition = details.localPosition;
-                            _storyController?.pause();
+                            _storyController!.pause();
+                             setState(() {
+                               isBottomSheetOpen = true;
 
+                             });
                             showModalBottomSheet(
                                 isScrollControlled: true,
                                 useSafeArea: true,
@@ -744,6 +758,11 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                   }
                                 }
                               }
+                              print("bottom sheet closed : unpause");
+                              setState(() {
+                                isBottomSheetOpen = false;
+
+                              });
                               _storyController!.unpause();
                             });
                           },
@@ -910,7 +929,9 @@ class StoryTimelineController {
   }
 
   void unpause() {
-    _state?.unpause();
+    if(!isBottomSheetOpen) {
+      _state?.unpause();
+    }
   }
 
   void dispose() {
