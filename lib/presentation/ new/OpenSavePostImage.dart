@@ -114,11 +114,14 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
       }
       if (state is PostLikeLoadedState) {
         print("${state.likePost.object}");
-        SnackBar snackBar = SnackBar(
-          content: Text(state.likePost.object ?? ""),
-          backgroundColor: ColorConstant.primary_color,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        if (state.likePost.object != 'Post Liked Successfully' &&
+            state.likePost.object != 'Post Unliked Successfully') {
+          SnackBar snackBar = SnackBar(
+            content: Text(state.likePost.object ?? ""),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
       }
     }, builder: (context, state) {
       if (state is OpenSaveLoadingState) {
@@ -420,10 +423,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                 // LinkType
                                 //     .email
                               ],
-                              onTap: 
-                                  (link) {
-                             
-
+                              onTap: (link) {
                                 var SelectedTest = link.value.toString();
                                 var Link = SelectedTest.startsWith('https');
                                 var Link1 = SelectedTest.startsWith('http');
