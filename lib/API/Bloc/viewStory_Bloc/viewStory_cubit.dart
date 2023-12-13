@@ -14,8 +14,12 @@ class ViewStoryCubit extends Cubit<ViewStoryState> {
     try {
       emit(ViewStoryLoadingState());
       ViewStoryModel = await Repository().ViewStory(context, userUid, storyUid);
-      if (ViewStoryModel.success == true) {
-        emit(ViewStoryLoadedState(ViewStoryModel));
+      if (ViewStoryModel == "Something Went Wrong, Try After Some Time.") {
+        emit(ViewStoryErrorState("${ViewStoryModel}"));
+      } else {
+        if (ViewStoryModel.success == true) {
+          emit(ViewStoryLoadedState(ViewStoryModel));
+        }
       }
     } catch (e) {
       emit(ViewStoryErrorState(ViewStoryModel));
@@ -30,11 +34,31 @@ class ViewStoryCubit extends Cubit<ViewStoryState> {
     try {
       emit(ViewStoryLoadingState());
       ViewStoryModel = await Repository().StoryViewList(context, storyUid);
-      if (ViewStoryModel.success == true) {
-        emit(StoryViewListLoadedState(ViewStoryModel));
+      if (ViewStoryModel == "Something Went Wrong, Try After Some Time.") {
+        emit(ViewStoryErrorState("${ViewStoryModel}"));
+      } else {
+        if (ViewStoryModel.success == true) {
+          emit(StoryViewListLoadedState(ViewStoryModel));
+        }
       }
     } catch (e) {
       emit(ViewStoryErrorState(ViewStoryModel));
+    }
+  }
+
+  Future<void> delete_story(
+    BuildContext context,
+    String storyUid,
+  ) async {
+    dynamic DeleteStory;
+    try {
+      emit(ViewStoryLoadingState());
+      DeleteStory = await Repository().delete_story(context, storyUid);
+      if (DeleteStory.success == true) {
+        emit(DeleteSotryLodedState(DeleteStory));
+      }
+    } catch (e) {
+      emit(ViewStoryErrorState(e.toString()));
     }
   }
 }

@@ -29,7 +29,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     signingConfigs {
         release {
-            storeFile file('/home/anandpatel/Documents/PDS_Flutter/PDSApp.jks')
+            storeFile file('/home/ankurborad/live projectworking/PDS_Flutter/pds.jks')
             storePassword 'pds@123'
             keyAlias 'key0'
             keyPassword 'pds@123'
@@ -55,7 +55,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.pdsforum.app"
+        applicationId "com.pds.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 20

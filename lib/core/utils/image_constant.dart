@@ -73,6 +73,8 @@ class ImageConstant {
   static String closeimage = 'assets/images/Group 145.png';
   static String popupimage = 'assets/images/Group 1171274821.png';
   static String infoimage = 'assets/images/Vector (20).png';
+  static String AddRoomO = 'assets/images/AddRoomO.png';
+
   static String arrowleftimage =
       'assets/images/material-symbols_info-outline-rounded.png';
 
@@ -228,4 +230,8 @@ class ImageConstant {
   static String whiteClose = "assets/images/whiteClose.png";
   static String StoryViewListeye = "assets/images/StoryViewListeye.png";
   static String ChatimageIcon = "assets/images/ChatimageIcon.png";
+  static String shareBlack = "assets/images/share.png";
+  static String shareWhite = "assets/images/share_white.png";
+  static String profileLock ="assets/images/lock profile.png";
 }
+ 

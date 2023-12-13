@@ -11,8 +11,12 @@ class OpenSaveCubit extends Cubit<OpenSaveState> {
     try {
       emit(OpenSaveLoadingState());
       OpenSaveModel = await Repository().openSaveImagePost(context, PostUID);
-      if (OpenSaveModel.success == true) {
-        emit(OpenSaveLoadedState(OpenSaveModel));
+      if (OpenSaveModel == "Something Went Wrong, Try After Some Time.") {
+        emit(OpenSaveErrorState("${OpenSaveModel}"));
+      } else {
+        if (OpenSaveModel.success == true) {
+          emit(OpenSaveLoadedState(OpenSaveModel));
+        }
       }
     } catch (e) {
       emit(OpenSaveErrorState(OpenSaveModel));
@@ -25,8 +29,12 @@ class OpenSaveCubit extends Cubit<OpenSaveState> {
     try {
       // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       likepost = await Repository().likePostMethod(postUid, context);
-      if (likepost.success == true) {
-        emit(PostLikeLoadedState(likepost));
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(OpenSaveErrorState("${likepost}"));
+      } else {
+        if (likepost.success == true) {
+          emit(PostLikeLoadedState(likepost));
+        }
       }
     } catch (e) {
       // print('errorstate-$e');
@@ -40,12 +48,31 @@ class OpenSaveCubit extends Cubit<OpenSaveState> {
     try {
       // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       likepost = await Repository().savedPostMethod(postUid, context);
-      if (likepost.success == true) {
-        emit(PostLikeLoadedState(likepost));
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(OpenSaveErrorState("${likepost}"));
+      } else {
+        if (likepost.success == true) {
+          emit(PostLikeLoadedState(likepost));
+        }
       }
     } catch (e) {
       // print('errorstate-$e');
       emit(OpenSaveErrorState(likepost));
+    }
+  }
+
+  Future<void> RePostAPI(
+      BuildContext context, Map<String, dynamic> params, String? uuid) async {
+    dynamic addPostData;
+    try {
+      emit(OpenSaveLoadingState());
+      addPostData = await Repository().RePost(context, params, uuid);
+      print("addPostDataaaaaaaaaaaa-->${addPostData}");
+      if (addPostData.success == true) {
+        emit(RePostLoadedState(addPostData));
+      }
+    } catch (e) {
+      emit(OpenSaveErrorState(addPostData));
     }
   }
 }

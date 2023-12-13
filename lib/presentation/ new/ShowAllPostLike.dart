@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GetPostAllLike_Bloc/GetPostAllLike_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GetPostAllLike_Bloc/GetPostAllLike_state.dart';
+import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetPostLike_Model.dart';
+import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
-import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
-import 'package:pds/theme/theme_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ShowAllPostLike extends StatefulWidget {
@@ -91,6 +91,13 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
             print(state.GetPostAllLikeRoomData.message);
             GetPostAllLikeRoomData = state.GetPostAllLikeRoomData;
           }
+          if (state is PostLikeLoadedState) {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.likePost.object.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
         }, builder: (context, state) {
           return GetPostAllLikeRoomData?.object?.length == 0 ||
                   GetPostAllLikeRoomData?.object?.isEmpty == true
@@ -114,26 +121,55 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
                       child: ListTile(
                         leading: GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ProfileScreen(
-                                          User_ID:
-                                              "${GetPostAllLikeRoomData?.object?[index].userUid}",
-                                          isFollowing:
-                                              "${GetPostAllLikeRoomData?.object?[index].isFollowing}",
-                                        )));
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider<NewProfileSCubit>(
+                                      create: (context) => NewProfileSCubit(),
+                                    ),
+                                  ],
+                                  child: ProfileScreen(
+                                    User_ID:
+                                        "${GetPostAllLikeRoomData?.object?[index].userUid}",
+                                    isFollowing:
+                                        "${GetPostAllLikeRoomData?.object?[index].isFollowing}",
+                                  ));
+                            }));
                           },
-                          child: CircleAvatar(
+                          child: GetPostAllLikeRoomData
+                                          ?.object?[index].profilePic !=
+                                      null &&
+                                  GetPostAllLikeRoomData
+                                          ?.object?[index].profilePic !=
+                                      ""
+                              ? CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      "${GetPostAllLikeRoomData?.object?[index].profilePic}"),
+                                  backgroundColor: Colors.white,
+                                  radius: 25,
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.only(left: 5),
+                                  child: CustomImageView(
+                                    imagePath: ImageConstant.tomcruse,
+                                    height: 40,
+                                    width: 40,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+
+                          /* CircleAvatar(
                             backgroundImage: GetPostAllLikeRoomData
                                         ?.object?[index].profilePic !=
                                     null
+                                    
                                 ? NetworkImage(
                                     "${GetPostAllLikeRoomData?.object?[index].profilePic}")
                                 : NetworkImage(
                                     "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"),
                             radius: 25,
-                          ),
+                          ), */
                         ),
                         title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,15 +251,23 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
   }
 
   followFunction({String? apiName, int? index}) async {
-    print("fghdfghdfgh");
-    if (apiName == 'Follow') {
-      print("dfhsdfhsdfhsdgf");
-      await BlocProvider.of<GetPostAllLikeCubit>(context).followWIngMethod(
-          GetPostAllLikeRoomData?.object?[index ?? 0].userUid, context);
-      if (GetPostAllLikeRoomData?.object?[index ?? 0].isFollowing == 'FOLLOW') {
-        GetPostAllLikeRoomData?.object?[index ?? 0].isFollowing = 'REQUESTED';
-      } else {
-        GetPostAllLikeRoomData?.object?[index ?? 0].isFollowing = 'FOLLOW';
+    await BlocProvider.of<GetPostAllLikeCubit>(context).followWIngMethod(
+        GetPostAllLikeRoomData?.object?[index ?? 0].userUid, context);
+    if (GetPostAllLikeRoomData?.object?[index ?? 0].isFollowing == 'FOLLOW') {
+      for (int i = 0; i < (GetPostAllLikeRoomData?.object?.length ?? 0); i++) {
+        print("i-${i}");
+        if (GetPostAllLikeRoomData?.object?[index ?? 0].userUid ==
+            GetPostAllLikeRoomData?.object?[i].userUid) {
+          GetPostAllLikeRoomData?.object?[i].isFollowing = 'REQUESTED';
+          print("check data-${GetPostAllLikeRoomData?.object?[i].isFollowing}");
+        }
+      }
+    } else {
+      for (int i = 0; i < (GetPostAllLikeRoomData?.object?.length ?? 0); i++) {
+        if (GetPostAllLikeRoomData?.object?[index ?? 0].userUid ==
+            GetPostAllLikeRoomData?.object?[i].userUid) {
+          GetPostAllLikeRoomData?.object?[i].isFollowing = 'FOLLOW';
+        }
       }
     }
   }

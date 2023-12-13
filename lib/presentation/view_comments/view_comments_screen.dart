@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
@@ -13,9 +11,9 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Model/coment/coment_model.dart';
+import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stomp_dart_client/parser.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
 import '../../API/ApiService/socket.dart';
@@ -62,6 +60,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   var UserCode = "";
   var User_Name = "";
   String? userId;
+  bool isdataGet = true;
   DateTime? parsedDateTime;
   String? UserLogin_ID;
   ImagePicker picker = ImagePicker();
@@ -424,7 +423,20 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                     /* horizontal: 35, vertical: 5 */),
                                                                 child:
                                                                     GestureDetector(
-                                                                  onTap: () {},
+                                                                  onTap: () {
+                                                                    print(
+                                                                        "recieve user id -- ${AllChatmodelData?.object?.messageOutputList?.content?[index].uid}");
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(builder:
+                                                                            (context) {
+                                                                      return ProfileScreen(
+                                                                          User_ID:
+                                                                              "${AllChatmodelData?.object?.messageOutputList?.content?[index].userCode}",
+                                                                          isFollowing:
+                                                                              "");
+                                                                    }));
+                                                                  },
                                                                   child: Column(
                                                                     crossAxisAlignment:
                                                                         CrossAxisAlignment
@@ -532,7 +544,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                   ),
                                                                 ),
                                                               )
-                                                            : Padding(
+                                                            :Padding(
                                                                 padding:
                                                                     const EdgeInsets
                                                                         .symmetric(),
@@ -574,22 +586,28 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                               fontSize: 14),
                                                                         ),
                                                                         Padding(
-                                                                          padding: const EdgeInsets.only(
-                                                                              left: 3,
-                                                                              right: 10),
-                                                                          child: AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic?.isNotEmpty ?? false
-                                                                              ? CustomImageView(
-                                                                                  url: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic}",
-                                                                                  height: 20,
-                                                                                  radius: BorderRadius.circular(20),
-                                                                                  width: 20,
-                                                                                  fit: BoxFit.fill,
-                                                                                )
-                                                                              : CustomImageView(
-                                                                                  imagePath: ImageConstant.tomcruse,
-                                                                                  height: 20,
-                                                                                ),
-                                                                        ),
+                                                                            padding:
+                                                                                const EdgeInsets.only(left: 3, right: 10),
+                                                                            child: GestureDetector(
+                                                                              onTap: () {
+                                                                                print("send user id -- ${AllChatmodelData?.object?.messageOutputList?.content?[index].uid}");
+                                                                                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                  return ProfileScreen(User_ID: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userCode}", isFollowing: "");
+                                                                                }));
+                                                                              },
+                                                                              child: AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic != null && AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic != ""
+                                                                                  ? CustomImageView(
+                                                                                      url: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userProfilePic}",
+                                                                                      height: 20,
+                                                                                      radius: BorderRadius.circular(20),
+                                                                                      width: 20,
+                                                                                      fit: BoxFit.fill,
+                                                                                    )
+                                                                                  : CustomImageView(
+                                                                                      imagePath: ImageConstant.tomcruse,
+                                                                                      height: 20,
+                                                                                    ),
+                                                                            )),
                                                                       ],
                                                                     ),
                                                                     Padding(
@@ -656,9 +674,11 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                         print(AllChatmodelData?.object?.messageOutputList?.content?[index].uid);
                                                                                         print(UserLogin_ID);
                                                                                         Room_ID_stomp = "${widget.Room_ID}";
+                                                                                        print("ara == a few seconds ago || ara == null");
                                                                                         stompClient.subscribe(
                                                                                           destination: "/topic/getDeletedMessage/${widget.Room_ID}",
                                                                                           callback: (StompFrame frame) {
+                                                                                            print("check This DataGet-${frame.body}");
                                                                                             Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
 
                                                                                             Content content1 = Content.fromJson(jsonString['object']);
@@ -704,17 +724,20 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                             OneTimeDelete = false;
                                                                                             print(AllChatmodelData?.object?.messageOutputList?.content?[index].uid);
                                                                                             print(UserLogin_ID);
-
+                                                                                            print("wiget roomId Prinf-${widget.Room_ID}");
                                                                                             Room_ID_stomp = "${widget.Room_ID}";
+                                                                                            print("int.parse(ara.split(" ")[0]) <= 10");
                                                                                             stompClient.subscribe(
                                                                                               destination:
                                                                                                   // "ws://72c1-2405-201-200b-a0cf-210f-e5fe-f229-e899.ngrok.io",
                                                                                                   "/topic/getDeletedMessage/${widget.Room_ID}",
                                                                                               callback: (StompFrame frame) {
+                                                                                                print("fram check-${frame.body}");
                                                                                                 Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
 
                                                                                                 Content content1 = Content.fromJson(jsonString['object']);
-                                                                                                print("CCCCCCCC ->>>>>> ${content1}");
+                                                                                                print("comtatne check--${content1.isDeleted}");
+
                                                                                                 var msgUUID = content1.uid;
                                                                                                 if (content1.isDeleted == true) {
                                                                                                   if (OneTimeDelete == false) {
@@ -852,7 +875,195 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 ),
                               )
                             : SizedBox(),
-                        Row(
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  maxLines: null,
+                                  controller: Add_Comment,
+                                  cursorColor: Colors.grey,
+                                  decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Color(0x82EFEFEF),
+                                      prefixIcon: IconButton(
+                                        icon: Icon(
+                                          isEmojiVisible
+                                              ? Icons.keyboard_rounded
+                                              : Icons.emoji_emotions_outlined,
+                                        ),
+                                        onPressed: onClickedEmoji,
+                                      ),
+                                      hintText: "Add Comment",
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 1,
+                                            color: Color(
+                                                0xffE6E6E6)), //<-- SEE HERE
+                                        borderRadius:
+                                            BorderRadius.circular(30.0),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 1,
+                                            color: Color(
+                                                0xffE6E6E6)), //<-- SEE HERE
+                                        borderRadius:
+                                            BorderRadius.circular(30.0),
+                                      ),
+                                      suffixIcon: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              pickProfileImage();
+                                            },
+                                            child: Image.asset(
+                                              "assets/images/paperclip-2.png",
+                                              height: 23,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 13,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              camerapicker();
+                                            },
+                                            child: Image.asset(
+                                              "assets/images/Vector (12).png",
+                                              height: 20,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 15,
+                                          ),
+                                        ],
+                                      )),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () async {
+                                  if (_image != null) {
+                                    if (SubmitOneTime == false) {
+                                      await checkGuestUser();
+                                    }
+                                  } else {
+                                    if (Add_Comment.text.isNotEmpty) {
+                                      if (Add_Comment.text.length >= 255) {
+                                        SnackBar snackBar = SnackBar(
+                                          content: Text(
+                                              'One time message length allowed is 300.'),
+                                          backgroundColor:
+                                              ColorConstant.primary_color,
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                      } else {
+                                        checkGuestUser();
+                                        Room_ID_stomp = "${widget.Room_ID}";
+                                        stompClient.subscribe(
+                                            destination:
+                                                "/topic/getMessage/${widget.Room_ID}",
+                                            callback: (StompFrame frame) {
+                                              Map<String, dynamic> jsonString =
+                                                  json.decode(frame.body ?? "");
+
+                                              Content content1 =
+                                                  Content.fromJson(
+                                                      jsonString['object']);
+
+                                              var msgUUID = content1.uid;
+                                              if (AddNewData == false) {
+                                                print(
+                                                    "Array length count 0000000000000000000");
+                                                print(AllChatmodelData
+                                                    ?.object
+                                                    ?.messageOutputList
+                                                    ?.content
+                                                    ?.length);
+                                                if (AllChatmodelData
+                                                        ?.object
+                                                        ?.messageOutputList
+                                                        ?.content ==
+                                                    null) {
+                                                  BlocProvider.of<senMSGCubit>(
+                                                          context)
+                                                      .coomentPage(
+                                                          widget.Room_ID,
+                                                          context,
+                                                          "${0}",
+                                                          ShowLoader: true);
+                                                } else {
+                                                  if (addmsg != msgUUID) {
+                                                    Content content =
+                                                        Content.fromJson(
+                                                            jsonString[
+                                                                'object']);
+
+                                                    AllChatmodelData
+                                                        ?.object
+                                                        ?.messageOutputList
+                                                        ?.content
+                                                        ?.add(content);
+                                                    _goToElement(AllChatmodelData
+                                                            ?.object
+                                                            ?.messageOutputList
+                                                            ?.content
+                                                            ?.length ??
+                                                        0);
+
+                                                    setState(() {
+                                                      addDataSccesfully = true;
+                                                      addmsg =
+                                                          content.uid ?? "";
+                                                    });
+                                                  }
+                                                }
+                                              }
+                                            });
+
+                                        stompClient.send(
+                                          destination:
+                                              "/sendMessage/${widget.Room_ID}",
+                                          body: json.encode({
+                                            "message": "${Add_Comment.text}",
+                                            "messageType": "TEXT",
+                                            "roomUid": "${widget.Room_ID}",
+                                            "userCode": "${UserCode}"
+                                          }),
+                                        );
+                                      }
+                                    } else {
+                                      SnackBar snackBar = SnackBar(
+                                        content: Text('Please Enter Comment'),
+                                        backgroundColor:
+                                            ColorConstant.primary_color,
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    }
+                                  }
+                                },
+                                child: Container(
+                                  height: 50,
+                                  margin: EdgeInsets.only(right: 5),
+                                  decoration: BoxDecoration(
+                                      color: Color(0xFFED1C25),
+                                      borderRadius: BorderRadius.circular(25)),
+                                  child: Image.asset(
+                                    "assets/images/Vector (13).png",
+                                    color: Colors.white,
+                                  ),
+
+                                  // width: width - 95,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        /* Row(
                           children: [
                             Container(
                               height: 50,
@@ -1039,7 +1250,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                               ),
                             ),
                           ],
-                        ),
+                        ), */
                         // Offstage(
                         //   child:
                         //       EmojiPicker(/* onEmojiSelected: onEmojiSelected */),
@@ -1364,9 +1575,9 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
       FocusScope.of(context).unfocus();
     }
 
-    // setState(() {
-    isEmojiVisible = !isEmojiVisible;
-    // });
+    setState(() {
+      isEmojiVisible = !isEmojiVisible;
+    });
   }
 
   void onEmojiSelected(String emoji) => setState(() {

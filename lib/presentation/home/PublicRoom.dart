@@ -157,9 +157,10 @@ class _PublicRoomListState extends State<PublicRoomList> {
                                     padding: const EdgeInsets.only(left: 10),
                                     child: PublicRoomModelData
                                                 ?.object?[index]
-                                                .ownerUsreProfilePic
-                                                ?.isNotEmpty ??
-                                            false
+                                                .ownerUsreProfilePic != null && PublicRoomModelData
+                                                ?.object?[index]
+                                                .ownerUsreProfilePic != ""
+                                                
                                         ? CustomImageView(
                                             url:
                                                 "${PublicRoomModelData?.object?[index].ownerUsreProfilePic}",
@@ -317,8 +318,10 @@ class _PublicRoomListState extends State<PublicRoomList> {
                                                     ?.object?[index]
                                                     .message
                                                     ?.userProfilePic
-                                                    ?.isNotEmpty ??
-                                                false
+                                                   != null && PublicRoomModelData
+                                                    ?.object?[index]
+                                                    .message
+                                                    ?.userProfilePic != ""
                                             ? CustomImageView(
                                                 url:
                                                     "${PublicRoomModelData?.object?[index].message?.userProfilePic}",

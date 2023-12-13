@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
 import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_state.dart';
@@ -401,7 +402,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 selectedIndustryTypes = values;
                                 selectedIndustryTypes.forEach((element) {
                                   print(
-                                      "sxfgsdfghdfghdfgh${element.industryTypeUid.runtimeType}");
+                                      "sxfgsdfghdfghdfgh${element.industryTypeUid}");
                                   industryUUID
                                       .add("${element.industryTypeUid}");
                                 });
@@ -796,7 +797,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   .toString() ==
                               null) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please select Expertise in'),
+                              content: Text('Please Select Expertise in'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -805,12 +806,14 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   .toString() ==
                               null) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please select Expertise in'),
+                              content: Text('Please Select Expertise in'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
-                          } else if (feesController.text == null ||
+                          }
+
+                          /* else if (feesController.text == null ||
                               feesController.text == '') {
                             SnackBar snackBar = SnackBar(
                               content: Text('Please select Fees'),
@@ -818,7 +821,9 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
-                          } else if (industryUUID.isEmpty) {
+                          }  */
+
+                          else if (industryUUID.isEmpty) {
                             SnackBar snackBar = SnackBar(
                               content: Text('Please Selcted Industry Type'),
                               backgroundColor: ColorConstant.primary_color,
@@ -838,7 +843,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           } else if (_startTime?.format(context).toString() ==
                               null) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please select Working Hours'),
+                              content: Text('Please Select Working Hours'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -846,7 +851,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           } else if (_endTime?.format(context).toString() ==
                               null) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('Please select Working Hours'),
+                              content: Text('Please Select Working Hours'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -867,24 +872,46 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 'endtime-${_endTime?.format(context).toString()}');
                             print('Finaltime-$time');
                             print('dartatset${industryUUID}');
-                            Map<String, dynamic> params = {
-                              "document":
-                                  "${chooseDocument?.object.toString()}",
-                              "expertUId": ["${selectedExpertise?.uid}"],
-                              "fees": feesController.text,
-                              "jobProfile": jobprofileController.text,
-                              "uid": userid.toString(),
-                              "workingHours": time.toString(),
-                              "industryTypesUid": industryUUID
-                            };
-                            print('working time-$time');
-                            print('pwarems-$params');
-                            BlocProvider.of<FetchExprtiseRoomCubit>(context)
-                                .addExpertProfile(params, context);
-                            if (SubmitOneTime == false) {
-                              SubmitOneTime = true;
+                            if (feesController.text.isNotEmpty == true) {
+                              Map<String, dynamic> params = {
+                                "document":
+                                    "${chooseDocument?.object.toString()}",
+                                "expertUId": ["${selectedExpertise?.uid}"],
+                                "fees": feesController.text,
+                                "jobProfile": jobprofileController.text,
+                                "uid": userid.toString(),
+                                "workingHours": time.toString(),
+                                "industryTypesUid": industryUUID
+                              };
+                              print('working time-$time');
+                              print('pwarems-$params');
                               BlocProvider.of<FetchExprtiseRoomCubit>(context)
                                   .addExpertProfile(params, context);
+                              if (SubmitOneTime == false) {
+                                SubmitOneTime = true;
+                                BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                                    .addExpertProfile(params, context);
+                              }
+                            } else {
+                              print("esle is woring");
+                              Map<String, dynamic> params = {
+                                "document":
+                                    "${chooseDocument?.object.toString()}",
+                                "expertUId": ["${selectedExpertise?.uid}"],
+                                "jobProfile": jobprofileController.text,
+                                "uid": userid.toString(),
+                                "workingHours": time.toString(),
+                                "industryTypesUid": industryUUID
+                              };
+                              print('working time-$time');
+                              print('pwarems-$params');
+                              BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                                  .addExpertProfile(params, context);
+                              if (SubmitOneTime == false) {
+                                SubmitOneTime = true;
+                                BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                                    .addExpertProfile(params, context);
+                              }
                             }
                           }
                           /*     if (jobprofileController.text != null &&22
@@ -1160,10 +1187,10 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
     const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
     var i = (log(bytes) / log(1024)).floor();
     var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
-    print('getFileSizevariable-${file1.path}');
+    print('getFileSizevariable-${file1.path?.split('.').last}');
     value2 = double.parse(STR);
-
     print("value2-->$value2");
+    print("file1.name-->${file1.name}");
     switch (i) {
       case 0:
         print("Done file size B");
@@ -1186,21 +1213,62 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         print("Done file size KB");
         switch (Index) {
           case 0:
-            print("file1.name-->${file1.name}");
-            if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
-                uplopdfile.text = file1.name;
-                dopcument = file1.name;
-              });
-            }
+            if (file1.name.isNotEmpty || file1.name.toString() == null) {}
             print('filenamecheckdocmenut-${dopcument}');
 
             break;
           default:
         }
-        print('filenamecheckKB-${file1.path}');
-        BlocProvider.of<FetchExprtiseRoomCubit>(context)
-            .chooseDocumentprofile(dopcument.toString(), file1.path!, context);
+
+        if (file1.path?.split('.') != 'pdf') {
+          CroppedFile? croppedFile = await ImageCropper().cropImage(
+            sourcePath: file1.path.toString(),
+            aspectRatioPresets: [
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio3x2,
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.ratio4x3,
+              CropAspectRatioPreset.ratio16x9
+            ],
+            uiSettings: [
+              AndroidUiSettings(
+                  toolbarTitle: 'Cropper',
+                  toolbarColor: Color(0xffED1C25),
+                  toolbarWidgetColor: Colors.white,
+                  initAspectRatio: CropAspectRatioPreset.original,
+                  activeControlsWidgetColor: Color(0xffED1C25),
+                  lockAspectRatio: false),
+              IOSUiSettings(
+                title: 'Cropper',
+              ),
+              WebUiSettings(
+                context: context,
+              ),
+            ],
+          );
+          if (croppedFile != null) {
+            print('Image cropped and saved at: ${croppedFile.path}');
+            BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                .chooseDocumentprofile(
+                    dopcument.toString(), croppedFile.path, context);
+            print("cropendfileNamessss-${croppedFile.path}");
+            print("dsghdfhdfghdf-$dopcument");
+
+            setState(() {
+              uplopdfile.text = file1.name;
+              dopcument = file1.name;
+            });
+          } else {
+            BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                .chooseDocumentprofile(
+                    dopcument.toString(), file1.path!, context);
+            setState(() {
+              uplopdfile.text = file1.name;
+              dopcument = file1.name;
+            });
+          }
+        }
+
         setState(() {});
 
         break;
@@ -1246,13 +1314,55 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             default:
           }
           print('filecheckPath1-${file1.name}');
-          setState(() {
-            uplopdfile.text = file1.name;
-            dopcument = file1.name;
-          });
-          BlocProvider.of<FetchExprtiseRoomCubit>(context)
-              .chooseDocumentprofile(
-                  dopcument.toString(), file1.path!, context);
+
+          if (file1.path?.split('.') != 'pdf') {
+            print("this fucntion is caaling");
+
+            CroppedFile? croppedFile = await ImageCropper().cropImage(
+              sourcePath: file1.path.toString(),
+              aspectRatioPresets: [
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio16x9
+              ],
+              uiSettings: [
+                AndroidUiSettings(
+                    toolbarTitle: 'Cropper',
+                    toolbarColor: Colors.deepOrange,
+                    toolbarWidgetColor: Colors.white,
+                    initAspectRatio: CropAspectRatioPreset.original,
+                    lockAspectRatio: false),
+                IOSUiSettings(
+                  title: 'Cropper',
+                ),
+                WebUiSettings(
+                  context: context,
+                ),
+              ],
+            );
+            if (croppedFile != null) {
+              print('Image cropped and saved at: ${croppedFile.path}');
+
+              BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                  .chooseDocumentprofile(
+                      dopcument.toString(), croppedFile.path, context);
+
+              setState(() {
+                uplopdfile.text = file1.name;
+                dopcument = file1.name;
+              });
+            } else {
+              BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                  .chooseDocumentprofile(
+                      dopcument.toString(), file1.path!, context);
+              setState(() {
+                uplopdfile.text = file1.name;
+                dopcument = file1.name;
+              });
+            }
+          }
         }
 
         break;

@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:io';
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,6 +28,7 @@ import 'package:stories_editor/src/presentation/utils/constants/app_enums.dart';
 import 'package:stories_editor/src/presentation/utils/modal_sheets.dart';
 import 'package:stories_editor/src/presentation/widgets/animated_onTap_button.dart';
 import 'package:stories_editor/src/presentation/widgets/scrollable_pageView.dart';
+import 'package:video_player/video_player.dart';
 
 class MainView extends StatefulWidget {
   /// editor custom font families
@@ -57,9 +60,12 @@ class MainView extends StatefulWidget {
 
   /// gallery thumbnail quality
   final int? galleryThumbnailQuality;
+  double? finalFileSize;
+  double? finalvideoSize;
 
   /// editor custom color palette list
   List<Color>? colorList;
+
   MainView(
       {Key? key,
       required this.giphyKey,
@@ -72,7 +78,9 @@ class MainView extends StatefulWidget {
       this.onBackPress,
       this.onDoneButtonStyle,
       this.editorBackgroundColor,
-      this.galleryThumbnailQuality})
+      this.galleryThumbnailQuality,
+      this.finalFileSize,
+      this.finalvideoSize})
       : super(key: key);
 
   @override
@@ -85,12 +93,14 @@ class _MainViewState extends State<MainView> {
 
   ///Editable item
   EditableItem? _activeItem;
+  VideoPlayerController? _controller;
 
   /// Gesture Detector listen changes
   Offset _initPos = const Offset(0, 0);
   Offset _currentPos = const Offset(0, 0);
   double _currentScale = 1;
   double _currentRotation = 0;
+  double value2 = 0.0;
 
   /// delete position
   bool _isDeletePosition = false;
@@ -120,6 +130,7 @@ class _MainViewState extends State<MainView> {
 
   @override
   void dispose() {
+    _controller?.pause();
     super.dispose();
   }
 
@@ -156,15 +167,13 @@ class _MainViewState extends State<MainView> {
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
-                          ///gradient container
-                          /// this container will contain all widgets(image/texts/draws/sticker)
-                          /// wrap this widget with coloredFilter
                           GestureDetector(
                             onScaleStart: _onScaleStart,
                             onScaleUpdate: _onScaleUpdate,
                             onTap: () {
                               controlNotifier.isTextEditing =
                                   !controlNotifier.isTextEditing;
+                                  
                             },
                             child: Align(
                               alignment: Alignment.topCenter,
@@ -204,13 +213,23 @@ class _MainViewState extends State<MainView> {
                                           children: [
                                             /// in this case photo view works as a main background container to manage
                                             /// the gestures of all movable items.
-                                            PhotoView.customChild(
-                                              child: Container(),
-                                              backgroundDecoration:
-                                                  const BoxDecoration(
-                                                      color:
-                                                          Colors.transparent),
-                                            ),
+                                            controlNotifier.mediaPath
+                                                        .endsWith('.mp4') &&
+                                                    _controller!
+                                                        .value.isInitialized
+                                                ? AspectRatio(
+                                                    aspectRatio: _controller!
+                                                        .value.aspectRatio,
+                                                    child: VideoPlayer(
+                                                        _controller!),
+                                                  )
+                                                : PhotoView.customChild(
+                                                    child: Container(),
+                                                    backgroundDecoration:
+                                                        const BoxDecoration(
+                                                            color: Colors
+                                                                .transparent),
+                                                  ),
 
                                             ///list items
                                             ...itemProvider.draggableWidget
@@ -352,12 +371,15 @@ class _MainViewState extends State<MainView> {
                       BottomTools(
                         contentKey: contentKey,
                         onDone: (bytes) {
+                          print("this is the new data set-$bytes");
+                          print(
+                              "check the Data-${controlNotifier.isTextEditing}");
                           setState(() {
                             widget.onDone!(bytes);
                           });
                         },
                         onDoneButtonStyle: widget.onDoneButtonStyle,
-                        editorBackgroundColor: widget.editorBackgroundColor,
+                        editorBackgroundColor: widget.editorBackgroundColor, context1: context,
                       ),
                   ],
                 ),
@@ -365,24 +387,29 @@ class _MainViewState extends State<MainView> {
                   gridViewController: scrollProvider.gridController,
                   thumbnailQuality: widget.galleryThumbnailQuality,
                   singlePick: true,
-                  onlyImages: true,
                   appBarColor: widget.editorBackgroundColor ?? Colors.black,
-                  gridViewPhysics: itemProvider.draggableWidget.isEmpty
-                      ? const NeverScrollableScrollPhysics()
-                      : const ScrollPhysics(),
+                  // gridViewPhysics: itemProvider.draggableWidget.isEmpty
+                  //     ? const NeverScrollableScrollPhysics()
+                  //     : const ScrollPhysics(),
+
                   pathList: (path) {
-                    controlNotifier.mediaPath = path.first.path!.toString();
-                    if (controlNotifier.mediaPath.isNotEmpty) {
-                    
-                      itemProvider.draggableWidget.insert(
-                          0,
-                          EditableItem()
-                            ..type = ItemType.image
-                            ..position = const Offset(0.0, 0));
+                    if (path.first.path
+                            .toString()
+                            .split('/')
+                            .last
+                            .toString()
+                            .split('.')
+                            .last ==
+                        'mp4') {
+                      getVideo(path.first.path.toString(), 1, context,
+                          controlNotifier, itemProvider);
+                    } else {
+                      if (path.first.path.toString().isNotEmpty) {
+                        getFileSize(path.first.path.toString(), 1, context,
+                            controlNotifier, itemProvider);
+                        Navigator.of(context);
+                      }
                     }
-                    scrollProvider.pageController.animateToPage(0,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeIn);
                   },
                   appBarLeadingWidget: Padding(
                     padding: const EdgeInsets.only(bottom: 15, right: 15),
@@ -405,7 +432,7 @@ class _MainViewState extends State<MainView> {
                                 width: 1.2,
                               )),
                           child: const Text(
-                            'Cancel',
+                            'Selected',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
@@ -422,6 +449,198 @@ class _MainViewState extends State<MainView> {
         ),
       ),
     );
+  }
+
+  getVideo(
+      String filepath,
+      int decimals,
+      context,
+      ControlNotifier controlNotifier,
+      DraggableWidgetNotifier itemProvider) async {
+    var file = File(filepath);
+    int bytes = await file.length();
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    var i = (log(bytes) / log(1024)).floor();
+    var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
+    value2 = double.parse(STR);
+    print("viedo check-${widget.finalvideoSize}");
+    print(value2);
+    switch (i) {
+      case 0:
+        print("Done file size B");
+        controlNotifier.mediaPath = filepath;
+        itemProvider.draggableWidget.insert(
+            0,
+            EditableItem()
+              ..type = ItemType.video
+              ..position = const Offset(0.0, 0));
+        _controller =
+            VideoPlayerController.file(File(controlNotifier.mediaPath));
+
+        _controller?.initialize().then((value) => setState(() {}));
+        setState(() {
+          _controller?.play();
+          _controller?.setLooping(true);
+        });
+
+        break;
+      case 1:
+        print("Done file size KB");
+
+        controlNotifier.mediaPath = filepath;
+        itemProvider.draggableWidget.insert(
+            0,
+            EditableItem()
+              ..type = ItemType.video
+              ..position = const Offset(0.0, 0));
+        _controller =
+            VideoPlayerController.file(File(controlNotifier.mediaPath));
+
+        _controller?.initialize().then((value) => setState(() {}));
+        setState(() {
+          _controller?.play();
+          _controller?.setLooping(true);
+        });
+
+        break;
+      case 2:
+        if (value2 > widget.finalvideoSize!) {
+          print(
+              "this file size ${value2} ${suffixes[i]} Selected Max size ${widget.finalvideoSize!}MB");
+
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text("Max Size ${widget.finalvideoSize!}MB"),
+              content: Text(
+                  "This file size ${value2} ${suffixes[i]} Selected Max size ${widget.finalvideoSize!}MB allowed."),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: Container(
+                    // color: Colors.green,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("Okay"),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          print("Done file Size 10 MB");
+          controlNotifier.mediaPath = filepath;
+          itemProvider.draggableWidget.insert(
+              0,
+              EditableItem()
+                ..type = ItemType.video
+                ..position = const Offset(0.0, 0));
+          _controller =
+              VideoPlayerController.file(File(controlNotifier.mediaPath));
+
+          _controller?.initialize().then((value) => setState(() {}));
+          setState(() {
+            _controller?.play();
+            _controller?.setLooping(true);
+          });
+        }
+
+        break;
+      default:
+    }
+  }
+
+  getFileSize(
+      String filepath,
+      int decimals,
+      context,
+      ControlNotifier controlNotifier,
+      DraggableWidgetNotifier itemProvider) async {
+    var file = File(filepath);
+    int bytes = await file.length();
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    var i = (log(bytes) / log(1024)).floor();
+    var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
+    value2 = double.parse(STR);
+
+    print(value2);
+    switch (i) {
+      case 0:
+        print("Done file size B");
+        controlNotifier.mediaPath = filepath;
+
+        itemProvider.draggableWidget.insert(
+            0,
+            EditableItem()
+              ..type = ItemType.image
+              ..position = const Offset(0.0, 0));
+
+        print("value _controller-$_controller");
+        setState(() {});
+
+        break;
+      case 1:
+        print("Done file size KB");
+
+        controlNotifier.mediaPath = filepath;
+        itemProvider.draggableWidget.insert(
+            0,
+            EditableItem()
+              ..type = ItemType.image
+              ..position = const Offset(0.0, 0));
+
+        print("value _controller-$_controller");
+
+        setState(() {});
+
+        break;
+      case 2:
+        if (value2 > widget.finalFileSize!) {
+          print(
+              "this file size ${value2} ${suffixes[i]} Selected Max size ${widget.finalFileSize!}MB");
+
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text("Max Size ${widget.finalFileSize!}MB"),
+              content: Text(
+                  "This file size ${value2} ${suffixes[i]} Selected Max size ${widget.finalFileSize!}MB allowed."),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: Container(
+                    // color: Colors.green,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("Okay"),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          print("Done file Size 10 MB");
+          controlNotifier.mediaPath = filepath;
+          itemProvider.draggableWidget.insert(
+              0,
+              EditableItem()
+                ..type = ItemType.image
+                ..position = const Offset(0.0, 0));
+
+          print("value _controller-$_controller");
+
+          setState(() {});
+        }
+
+        break;
+      default:
+    }
+
+    return STR;
   }
 
   /// validate pop scope gesture

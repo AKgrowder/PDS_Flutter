@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/ApiService/ApiService.dart';
 import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_state.dart';
 import 'package:pds/API/Repo/repository.dart';
 
@@ -7,18 +8,38 @@ class HashTagCubit extends Cubit<HashTagState> {
   HashTagCubit() : super(HashTagInitialState()) {}
   dynamic getalluserlistModel;
   dynamic HashTagForYouModel;
+  Future<void> seetinonExpried(BuildContext context,
+      {bool showAlert = false}) async {
+    try {
+      emit(HashTagLoadingState());
+      dynamic settionExperied =
+          await Repository().logOutSettionexperied(context);
+      if (settionExperied.success == true) {
+        await setLOGOUT(context);
+      } else {
+        print("failed--check---${settionExperied}");
+      }
+    } catch (e) {
+      print('errorstate-$e');
+    }
+  }
+
   Future<void> HashTagForYouAPI(
       BuildContext context, String hashtagViewType, String pageNumber) async {
     try {
       emit(HashTagLoadingState());
       HashTagForYouModel = await Repository()
           .HashTagForYouAPI(context, hashtagViewType, pageNumber);
-      if (HashTagForYouModel.success == true) {
-        emit(HashTagLoadedState(HashTagForYouModel));
+      if (HashTagForYouModel == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${HashTagForYouModel}"));
+      } else {
+        if (HashTagForYouModel.success == true) {
+          emit(HashTagLoadedState(HashTagForYouModel));
+        }
       }
     } catch (e) {
       // print('errorstate-$e');
-      emit(HashTagErrorState(HashTagForYouModel));
+      emit(HashTagErrorState(e.toString()));
     }
   }
 
@@ -29,14 +50,19 @@ class HashTagCubit extends Cubit<HashTagState> {
       emit(HashTagLoadingState());
       HasthagpagantionDataGet = await Repository()
           .HashTagForYouAPI(context, hashtagViewType, pageNumber);
-      if (HasthagpagantionDataGet.success == true) {
-        HashTagForYouModel.object.content
-            .addAll(HasthagpagantionDataGet.object.content);
-        HashTagForYouModel.object.pageable.pageNumber =
-            HasthagpagantionDataGet.object.pageable.pageNumber;
-        HashTagForYouModel.object.totalElements =
-            HasthagpagantionDataGet.object.totalElements;
-        emit(HashTagLoadedState(HashTagForYouModel));
+      if (HasthagpagantionDataGet ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${HasthagpagantionDataGet}"));
+      } else {
+        if (HasthagpagantionDataGet.success == true) {
+          HashTagForYouModel.object.content
+              .addAll(HasthagpagantionDataGet.object.content);
+          HashTagForYouModel.object.pageable.pageNumber =
+              HasthagpagantionDataGet.object.pageable.pageNumber;
+          HashTagForYouModel.object.totalElements =
+              HasthagpagantionDataGet.object.totalElements;
+          emit(HashTagLoadedState(HashTagForYouModel));
+        }
       }
     } catch (e) {
       // print('errorstate-$e');
@@ -55,9 +81,13 @@ class HashTagCubit extends Cubit<HashTagState> {
         context,
         hashTag,
       );
-      if (hashTagViewModel.success == true) {
-        emit(HashTagViewDataLoadedState(hashTagViewModel));
-        print(hashTagViewModel.object.posts);
+      if (hashTagViewModel == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${hashTagViewModel}"));
+      } else {
+        if (hashTagViewModel.success == true) {
+          emit(HashTagViewDataLoadedState(hashTagViewModel));
+          print(hashTagViewModel.object.posts);
+        }
       }
     } catch (e) {
       // print('errorstate-$e');
@@ -71,8 +101,12 @@ class HashTagCubit extends Cubit<HashTagState> {
     try {
       // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       likepost = await Repository().folliwingMethod(followedToUid, context);
-      if (likepost.success == true) {
-        emit(PostLikeLoadedState(likepost));
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${likepost}"));
+      } else {
+        if (likepost.success == true) {
+          emit(PostLikeLoadedState(likepost));
+        }
       }
     } catch (e) {
       // print('errorstate-$e');
@@ -86,8 +120,12 @@ class HashTagCubit extends Cubit<HashTagState> {
     try {
       // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       likepost = await Repository().likePostMethod(postUid, context);
-      if (likepost.success == true) {
-        emit(PostLikeLoadedState(likepost));
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${likepost}"));
+      } else {
+        if (likepost.success == true) {
+          emit(PostLikeLoadedState(likepost));
+        }
       }
     } catch (e) {
       // print('errorstate-$e');
@@ -101,8 +139,12 @@ class HashTagCubit extends Cubit<HashTagState> {
     try {
       // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
       likepost = await Repository().savedPostMethod(postUid, context);
-      if (likepost.success == true) {
-        emit(PostLikeLoadedState(likepost));
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${likepost}"));
+      } else {
+        if (likepost.success == true) {
+          emit(PostLikeLoadedState(likepost));
+        }
       }
     } catch (e) {
       // print('errorstate-$e');
@@ -115,11 +157,15 @@ class HashTagCubit extends Cubit<HashTagState> {
     try {
       emit(HashTagLoadingState());
       Deletepost = await Repository().Deletepost(postUid, context);
-      if (Deletepost.success == true) {
-        emit(DeletePostLoadedState(Deletepost));
-        Navigator.pop(context);
+      if (Deletepost == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${Deletepost}"));
       } else {
-        emit(HashTagErrorState(Deletepost.message));
+        if (Deletepost.success == true) {
+          emit(DeletePostLoadedState(Deletepost));
+          Navigator.pop(context);
+        } else {
+          emit(HashTagErrorState(Deletepost.message));
+        }
       }
     } catch (e) {
       emit(HashTagErrorState(Deletepost));
@@ -137,8 +183,12 @@ class HashTagCubit extends Cubit<HashTagState> {
       getalluserlistModel = await Repository().getalluser(
           pageNumber, searchName, context,
           filterModule: filterModule);
-      if (getalluserlistModel.success == true) {
-        emit(GetAllUserLoadedState(getalluserlistModel));
+      if (getalluserlistModel == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${getalluserlistModel}"));
+      } else {
+        if (getalluserlistModel.success == true) {
+          emit(GetAllUserLoadedState(getalluserlistModel));
+        }
       }
     } catch (e) {
       print('errorstateshwowData-$e');
@@ -158,14 +208,19 @@ class HashTagCubit extends Cubit<HashTagState> {
       getalluserlistModelDataSetup = await Repository().getalluser(
           pageNumber, searchName, context,
           filterModule: filterModule);
-      if (getalluserlistModelDataSetup.success == true) {
-        getalluserlistModel.object.content
-            .addAll(getalluserlistModelDataSetup.object.content);
-        getalluserlistModel.object.pageable.pageNumber =
-            getalluserlistModelDataSetup.object.pageable.pageNumber;
-        getalluserlistModel.object.totalElements =
-            getalluserlistModelDataSetup.object.totalElements;
-        emit(GetAllUserLoadedState(getalluserlistModel));
+      if (getalluserlistModelDataSetup ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${getalluserlistModelDataSetup}"));
+      } else {
+        if (getalluserlistModelDataSetup.success == true) {
+          getalluserlistModel.object.content
+              .addAll(getalluserlistModelDataSetup.object.content);
+          getalluserlistModel.object.pageable.pageNumber =
+              getalluserlistModelDataSetup.object.pageable.pageNumber;
+          getalluserlistModel.object.totalElements =
+              getalluserlistModelDataSetup.object.totalElements;
+          emit(GetAllUserLoadedState(getalluserlistModel));
+        }
       }
     } catch (e) {
       emit(HashTagErrorState(e.toString()));
@@ -177,9 +232,13 @@ class HashTagCubit extends Cubit<HashTagState> {
     try {
       emit(HashTagLoadingState());
       hashTagBannerModel = await Repository().HashTagBanner(context);
-      if (hashTagBannerModel.success == true) {
-        emit(HashTagBannerLoadedState(hashTagBannerModel));
-        print(hashTagBannerModel.message);
+      if (hashTagBannerModel == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${hashTagBannerModel}"));
+      } else {
+        if (hashTagBannerModel.success == true) {
+          emit(HashTagBannerLoadedState(hashTagBannerModel));
+          print(hashTagBannerModel.message);
+        }
       }
     } catch (e) {
       emit(HashTagErrorState(e.toString()));
@@ -192,9 +251,13 @@ class HashTagCubit extends Cubit<HashTagState> {
       emit(HashTagLoadingState());
       serchDataAdd =
           await Repository().search_historyDataAdd(context, typeWord);
-      if (serchDataAdd.success == true) {
-        emit(SerchDataAddClass(serchDataAdd));
-        print(serchDataAdd.message);
+      if (serchDataAdd == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${serchDataAdd}"));
+      } else {
+        if (serchDataAdd.success == true) {
+          emit(SerchDataAddClass(serchDataAdd));
+          print(serchDataAdd.message);
+        }
       }
     } catch (e) {
       emit(HashTagErrorState(e.toString()));
@@ -206,9 +269,13 @@ class HashTagCubit extends Cubit<HashTagState> {
     try {
       emit(HashTagLoadingState());
       getSerchData = await Repository().getSerchData(context);
-      if (getSerchData.success == true) {
-        emit(GetSerchData(getSerchData));
-        print(getSerchData.message);
+      if (getSerchData == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${getSerchData}"));
+      } else {
+        if (getSerchData.success == true) {
+          emit(GetSerchData(getSerchData));
+          print(getSerchData.message);
+        }
       }
     } catch (e) {
       emit(HashTagErrorState(e.toString()));

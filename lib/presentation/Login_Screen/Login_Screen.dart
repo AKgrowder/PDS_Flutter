@@ -92,11 +92,12 @@ class _LoginScreenState extends State<LoginScreen> {
               listener: (context, state) async {
                 if (state is LoginErrorState) {
                   print("vxcvxcv-${state.error.message}");
+                  SubmitOneTime = false;
                   SnackBar snackBar = SnackBar(
                     content: Text(state.error.message),
                     backgroundColor: ColorConstant.primary_color,
                   );
-                  SubmitOneTime = false;
+                  
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
                 if (state is LoginLoadingState) {
@@ -113,6 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 }
                 if (state is LoginLoadedState) {
+                   SubmitOneTime = false;
                   if (state.loginModel.message == "User Deleted") {
                     showDialog(
                         context: context,
@@ -160,7 +162,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           buttomIndex: 0,
                         );
                       })); */
-                      Navigator.push(context,
+
+                      /* Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return MultiBlocProvider(
                             providers: [
@@ -171,7 +174,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: NewBottomBar(
                               buttomIndex: 0,
                             ));
-                      }));
+                      })); */
+
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                        builder: (context) {
+                          return NewBottomBar(buttomIndex: 0);
+                        },
+                      ), (route) => false);
                     }
 
                     SnackBar snackBar = SnackBar(
@@ -202,21 +211,28 @@ class _LoginScreenState extends State<LoginScreen> {
                         buttomIndex: 0,
                       );
                     })); */
-                     Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return MultiBlocProvider(
-                            providers: [
-                              BlocProvider<GetGuestAllPostCubit>(
-                                create: (context) => GetGuestAllPostCubit(),
-                              ),
-                            ],
-                            child: NewBottomBar(
-                              buttomIndex: 0,
-                            ));
-                      }));
+
+                    /* Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return MultiBlocProvider(
+                          providers: [
+                            BlocProvider<GetGuestAllPostCubit>(
+                              create: (context) => GetGuestAllPostCubit(),
+                            ),
+                          ],
+                          child: NewBottomBar(
+                            buttomIndex: 0,
+                          ));
+                    })); */
+
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+        builder: (context) {
+          return NewBottomBar(buttomIndex: 0);
+        },
+      ), (route) => false);
                   } else {
                     SnackBar snackBar = SnackBar(
-                      content: Text('Otp send successfully'),
+                      content: Text('OTP send successfully'),
                       backgroundColor: ColorConstant.primary_color,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -315,7 +331,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             validator: (value) {
                               RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                               if (value!.isEmpty) {
-                                return 'Please Enter Name';
+                                return ' Please Enter User ID / Mobile Number';
                               } else if (value.trim().isEmpty) {
                                 return 'Name can\'t be just blank spaces';
                               } else if (!nameRegExp.hasMatch(value)) {
@@ -475,7 +491,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   }));
                                 },
                                 child: Text(
-                                  "Forget Password?",
+                                  "Forgot Password?",
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
                                   // style: theme.textTheme.titleSmall,
@@ -502,11 +518,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                   print('dataPassing-$dataPassing');
 
-                                  if (SubmitOneTime == false) {
-                                    SubmitOneTime = true;
+                                  // if (SubmitOneTime == false) {
+                                  //   SubmitOneTime = true;
                                     BlocProvider.of<LoginCubit>(context)
                                         .loginApidata(dataPassing, context);
-                                  }
+                                  // }
                                 }
                               },
                               text: "Log In",

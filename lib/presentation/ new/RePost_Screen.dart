@@ -12,13 +12,16 @@ import 'package:getwidget/types/gf_loader_type.dart';
 import 'package:hashtagable/widgets/hashtag_text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/RePost_Bloc/RePost_cubit.dart';
 import 'package:pds/API/Bloc/RePost_Bloc/RePost_state.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
+import 'package:pds/API/Model/OpenSaveImagepostModel/OpenSaveImagepost_Model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/example/lib/main.dart';
 import 'package:pds/widgets/commentPdf.dart';
@@ -27,6 +30,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
 
+import '../../API/Model/HashTage_Model/HashTagView_model.dart';
 import '../Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
 
 class RePostScreen extends StatefulWidget {
@@ -39,6 +43,8 @@ class RePostScreen extends StatefulWidget {
   int? index;
   String? postUid;
   GetGuestAllPostModel? AllGuestPostRoomData;
+  HashtagViewDataModel? hashTagViewData;
+  OpenSaveImagepostModel? OpenSaveModelData;
   RePostScreen({
     Key? key,
     this.username,
@@ -50,6 +56,8 @@ class RePostScreen extends StatefulWidget {
     this.index,
     this.AllGuestPostRoomData,
     this.postUid,
+    this.hashTagViewData,
+    this.OpenSaveModelData,
   }) : super(key: key);
 
   @override
@@ -101,7 +109,7 @@ class _RePostScreenState extends State<RePostScreen> {
   Color primaryColor = ColorConstant.primaryLight_color;
   Color textColor = ColorConstant.primary_color;
   TextEditingController postText = TextEditingController();
-  List<String> soicalData = ["Following", "Public"];
+  List<String> soicalData = ["Follower", "Public"];
   int indexx = 0;
   String? User_ID;
   bool CreatePostDone = true;
@@ -131,6 +139,10 @@ class _RePostScreenState extends State<RePostScreen> {
         pageControllers.add(PageController());
         currentPages.add(0);
       });
+      widget.hashTagViewData?.object?.posts?.forEach((element) {
+        pageControllers.add(PageController());
+        currentPages.add(0);
+      });
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) => setState(() {
             added = true;
           }));
@@ -154,7 +166,13 @@ class _RePostScreenState extends State<RePostScreen> {
           backgroundColor: ColorConstant.primary_color,
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        Navigator.pop(context);
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+          builder: (context) {
+            return NewBottomBar(
+              buttomIndex: 0,
+            );
+          },
+        ), (Route<dynamic> route) => false);
       }
     }, builder: (context, state) {
       return SafeArea(
@@ -219,19 +237,27 @@ class _RePostScreenState extends State<RePostScreen> {
                             Container(
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ProfileScreen(
-                                                User_ID: "${User_ID}",
-                                                isFollowing: 'FOLLOW',
-                                              )));
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider<NewProfileSCubit>(
+                                            create: (context) =>
+                                                NewProfileSCubit(),
+                                          ),
+                                        ],
+                                        child: ProfileScreen(
+                                          User_ID: "${User_ID}",
+                                          isFollowing: 'FOLLOW',
+                                        ));
+                                  }));
                                 },
                                 child: UserProfileImage?.isEmpty == true
                                     ? SizedBox(
                                         height: 50,
                                         width: 50,
                                         child: CircleAvatar(
+                                          backgroundColor: Colors.white,
                                           backgroundImage: AssetImage(
                                               ImageConstant.tomcruse),
                                         ),
@@ -240,6 +266,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                         height: 50,
                                         width: 50,
                                         child: CircleAvatar(
+                                          backgroundColor: Colors.white,
                                           backgroundImage: NetworkImage(
                                               UserProfileImage.toString()),
                                         ),
@@ -306,57 +333,42 @@ class _RePostScreenState extends State<RePostScreen> {
                             width: _width,
                             child: Column(
                               children: [
-                                Center(
-                                  child: Container(
-                                    height: 80,
-                                    width: _width,
-                                    decoration: BoxDecoration(
-                                        color: Colors.transparent,
-                                        border: Border.all(
-                                            color: Colors.grey.shade300),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Padding(
-                                      padding:
-                                          EdgeInsets.only(top: 0.0, left: 10),
-                                      child: TextFormField(
-                                        controller: postText,
-                                        maxLines: 5,
-                                        cursorColor: Colors.grey,
-                                        decoration: InputDecoration(
-                                          hintText: 'What’s on your head?',
-                                          border: InputBorder.none,
-                                        ),
-                                        inputFormatters: [
-                                          // Custom formatter to trim leading spaces
-                                          TextInputFormatter.withFunction(
-                                              (oldValue, newValue) {
-                                            if (newValue.text.startsWith(' ')) {
-                                              return TextEditingValue(
-                                                text: newValue.text.trimLeft(),
-                                                selection:
-                                                    TextSelection.collapsed(
-                                                        offset: newValue.text
-                                                            .trimLeft()
-                                                            .length),
-                                              );
-                                            }
-                                            return newValue;
-                                          }),
-                                        ],
-                                        onChanged: (value) {
-                                          setState(() {
-                                            primaryColor = value.isNotEmpty
-                                                ? ColorConstant.primary_color
-                                                : ColorConstant
-                                                    .primaryLight_color;
-                                            textColor = value.isNotEmpty
-                                                ? Colors.white
-                                                : ColorConstant.primary_color;
-                                          });
-                                        },
-                                      ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 0.0, left: 10),
+                                  child: TextFormField(
+                                    controller: postText,
+                                    maxLines: null,
+                                    cursorColor: Colors.grey,
+                                    decoration: InputDecoration(
+                                      hintText: "What's on your head?",
+                                      border: InputBorder.none,
                                     ),
+                                    inputFormatters: [
+                                      // Custom formatter to trim leading spaces
+                                      TextInputFormatter.withFunction(
+                                          (oldValue, newValue) {
+                                        if (newValue.text.startsWith(' ')) {
+                                          return TextEditingValue(
+                                            text: newValue.text.trimLeft(),
+                                            selection: TextSelection.collapsed(
+                                                offset: newValue.text
+                                                    .trimLeft()
+                                                    .length),
+                                          );
+                                        }
+                                        return newValue;
+                                      }),
+                                    ],
+                                    onChanged: (value) {
+                                      setState(() {
+                                        primaryColor = value.isNotEmpty
+                                            ? ColorConstant.primary_color
+                                            : ColorConstant.primaryLight_color;
+                                        textColor = value.isNotEmpty
+                                            ? Colors.white
+                                            : ColorConstant.primary_color;
+                                      });
+                                    },
                                   ),
                                 ),
                                 Padding(
@@ -367,7 +379,8 @@ class _RePostScreenState extends State<RePostScreen> {
                                             height: 400,
                                             width: _width,
                                             child: DocumentViewScreen1(
-                                              path: imageDataPost?.object
+                                              path: imageDataPost
+                                                  ?.object?.data?.first
                                                   .toString(),
                                             ))
                                         : pickedImage.isNotEmpty
@@ -437,11 +450,11 @@ class _RePostScreenState extends State<RePostScreen> {
                                                             ),
                                                           )
                                                         : Container()
-                                                    : Center(
+                                                    : SizedBox() /* Center(
                                                         child: GFLoader(
                                                             type: GFLoaderType
                                                                 .ios),
-                                                      )
+                                                      ) */
                                             : selectImage == true
                                                 ? medium1?.mediumType ==
                                                         MediumType.image
@@ -536,6 +549,8 @@ class _RePostScreenState extends State<RePostScreen> {
                                               },
                                               child: widget.userProfile != null
                                                   ? CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.white,
                                                       backgroundImage: NetworkImage(
                                                           "${widget.userProfile}"),
                                                       radius: 25,
@@ -595,8 +610,8 @@ class _RePostScreenState extends State<RePostScreen> {
                                                   basicStyle: TextStyle(
                                                       fontFamily: "outfit",
                                                       fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      // fontWeight:
+                                                      //     FontWeight.bold,
                                                       color: Colors.black),
                                                   onTap: (text) {},
                                                 ),
@@ -647,7 +662,8 @@ class _RePostScreenState extends State<RePostScreen> {
                                                                 width: _width,
                                                                 child:
                                                                     DocumentViewScreen1(
-                                                                  path: "",
+                                                                  path: widget
+                                                                      .postData?[0],
                                                                 ))
                                                             : SizedBox()
                                                     : Column(
@@ -962,10 +978,10 @@ class _RePostScreenState extends State<RePostScreen> {
                             SizedBox(
                               width: 30,
                             ),
-                            Image.asset(
-                              ImageConstant.Gif_icon,
-                              height: 20,
-                            ),
+                            // Image.asset(
+                            //   ImageConstant.Gif_icon,
+                            //   height: 20,
+                            // ),
                           ],
                         ),
                       ),
@@ -986,49 +1002,53 @@ class _RePostScreenState extends State<RePostScreen> {
       List<XFile> xFilePicker = pickedFile;
 
       if (xFilePicker.isNotEmpty) {
-        for (var i = 0; i < xFilePicker.length; i++) {
-          if (!_isGifOrSvg(xFilePicker[i].path)) {
-            pickedImage.add(File(xFilePicker[i].path));
-            setState(() {});
-            getFileSize1(pickedImage[i].path, 1, pickedImage[i], 0);
+        if (xFilePicker.length <= 5) {
+          for (var i = 0; i < xFilePicker.length; i++) {
+            if (!_isGifOrSvg(xFilePicker[i].path)) {
+              pickedImage.add(File(xFilePicker[i].path));
+              setState(() {});
+              getFileSize1(pickedImage[i].path, 1, pickedImage[i], 0);
+              if ((xFilePicker[i].path.contains(".mp4")) ||
+                  (xFilePicker[i].path.contains(".mov")) ||
+                  (xFilePicker[i].path.contains(".mp3")) ||
+                  (xFilePicker[i].path.contains(".m4a"))) {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: Text(
+                      "Selected File Error",
+                      textScaleFactor: 1.0,
+                    ),
+                    content: Text(
+                      "Only PNG, JPG Supported.",
+                      textScaleFactor: 1.0,
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(ctx).pop();
+                        },
+                        child: Container(
+                          // color: Colors.green,
+                          padding: const EdgeInsets.all(10),
+                          child: const Text("Okay"),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            }
+            print("xFilePickerxFilePicker - ${xFilePicker[i].path}");
           }
-          print("xFilePickerxFilePicker - ${xFilePicker[i].path}");
+        } else {
+          SnackBar snackBar = SnackBar(
+            content: Text('Max 5 Images upload allowed !'),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
-      }
-      /*   if (!_isGifOrSvg(pickedFile!.path)) {
-          pickedImage = File(pickedFile!.path);
-          setState(() {});
-          getFileSize1(pickedImage!.path, 1, pickedImage!, 0);
-        } */
-      else {
-        Navigator.pop(context);
-
-        showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: Text(
-              "Selected File Error",
-              textScaleFactor: 1.0,
-            ),
-            content: Text(
-              "Only PNG, JPG Supported.",
-              textScaleFactor: 1.0,
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                },
-                child: Container(
-                  // color: Colors.green,
-                  padding: const EdgeInsets.all(10),
-                  child: const Text("Okay"),
-                ),
-              ),
-            ],
-          ),
-        );
-      }
+      } else {}
     } catch (e) {}
   }
 
@@ -1164,6 +1184,8 @@ class _RePostScreenState extends State<RePostScreen> {
   prepareTestPdf(
     int Index,
   ) async {
+    this.file = null;
+    pickedImage = [];
     PlatformFile file;
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -1179,7 +1201,8 @@ class _RePostScreenState extends State<RePostScreen> {
             (file.path?.contains(".png") ?? false) ||
             (file.path?.contains(".doc") ?? false) ||
             (file.path?.contains(".jpg") ?? false) ||
-            (file.path?.contains(".m4a") ?? false)) {
+            (file.path?.contains(".m4a") ?? false) ||
+            (file.path?.contains(".gif") ?? false)) {
           showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
@@ -1188,7 +1211,7 @@ class _RePostScreenState extends State<RePostScreen> {
                 textScaleFactor: 1.0,
               ),
               content: Text(
-                "Only PDF Allowed",
+                "Only PDF Allowed.",
                 textScaleFactor: 1.0,
               ),
               actions: <Widget>[

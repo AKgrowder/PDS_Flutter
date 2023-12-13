@@ -88,7 +88,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   void initState() {
     dataGet();
     getDocumentSize();
-    _requestPermissions();
+    /* _requestPermissions(); */
   }
 
   @override

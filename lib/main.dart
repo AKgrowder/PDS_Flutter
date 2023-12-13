@@ -1,4 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:pds/API/Bloc/RoomExists_bloc/RoomExists_cubit.dart';
 import 'package:pds/API/Bloc/SelectChat_bloc/SelectChat_cubit.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -25,12 +27,14 @@ import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:pds/API/Bloc/SelectRoom_Bloc/SelectRoom_cubit.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
 import 'package:pds/API/Bloc/ViewDetails_Bloc/ViewDetails_cubit.dart';
+import 'package:pds/API/Bloc/accounttype_bloc/account_cubit.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
 import 'package:pds/API/Bloc/auth/login_Block.dart';
 import 'package:pds/API/Bloc/auth/otp_block.dart';
 import 'package:pds/API/Bloc/auth/register_Block.dart';
 import 'package:pds/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import 'package:pds/API/Bloc/device_info_Bloc/device_info_bloc.dart';
+import 'package:pds/API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import 'package:pds/API/Bloc/followerBlock/followBlock.dart';
 import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
@@ -47,6 +51,8 @@ Future<void> _messageHandler(RemoteMessage message) async {
 }
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FlutterDownloader.initialize();
   await WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations([
@@ -108,7 +114,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<CreateStoryCubit>(
           create: (context) => CreateStoryCubit(),
         ),
-         BlocProvider<SelectChatMemberListCubit>(
+        BlocProvider<SelectChatMemberListCubit>(
           create: (context) => SelectChatMemberListCubit(),
         ),
         BlocProvider<GetPostAllLikeCubit>(
@@ -195,7 +201,15 @@ class MyApp extends StatelessWidget {
         BlocProvider<RePostCubit>(
           create: (context) => RePostCubit(),
         ),
-        
+        BlocProvider<RoomExistsCubit>(
+          create: (context) => RoomExistsCubit(),
+        ),
+          BlocProvider<AccountCubit>(
+          create: (context) => AccountCubit(),
+        ),
+         BlocProvider<DmInboxCubit>(
+          create: (context) => DmInboxCubit(),
+        ),
       ],
       child: MaterialApp(
           theme: ThemeData(

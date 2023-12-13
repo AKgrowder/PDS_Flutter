@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'dart:math';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_state.dart';
+import 'package:pds/API/Bloc/followerBlock/followBlock.dart';
 import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
@@ -19,14 +21,19 @@ import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/AddWorkExperience_Screen.dart';
+import 'package:pds/presentation/%20new/ExperienceEdit_screen.dart';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/editproilescreen.dart';
 import 'package:pds/presentation/%20new/followers.dart';
+import 'package:pds/presentation/%20new/view_profile_background.dart';
 import 'package:pds/presentation/recent_blog/recent_blog_screen.dart';
 import 'package:pds/presentation/settings/setting_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../API/Model/WorkExperience_Model/WorkExperience_model.dart';
 
 class ProfileScreen extends StatefulWidget {
   String User_ID;
@@ -45,7 +52,6 @@ class NotificationModel {
   int id;
   String title;
   bool isSelected;
-
   NotificationModel(this.id, this.title, {this.isSelected = false});
 }
 
@@ -84,7 +90,6 @@ class _ProfileScreenState extends State<ProfileScreen>
   TextEditingController jobprofileController = TextEditingController();
   TextEditingController IndustryType = TextEditingController();
   TextEditingController priceContrller = TextEditingController();
-  TextEditingController FeesContrller = TextEditingController();
   TextEditingController uplopdfile = TextEditingController();
   TextEditingController CompanyName = TextEditingController();
   TextEditingController Expertise = TextEditingController();
@@ -106,7 +111,10 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool isDataGet = false;
   bool isAbourtMe = true;
   bool AbboutMeShow = true;
+  var uploadimage = "";
   dynamic dataSetup;
+  GetWorkExperienceModel? addWorkExperienceModel;
+
   String? User_Module;
   FollowersClassModel? followersClassModel1;
   FollowersClassModel? followersClassModel2;
@@ -176,6 +184,8 @@ class _ProfileScreenState extends State<ProfileScreen>
         .getFollwerApi(context, widget.User_ID);
     BlocProvider.of<NewProfileSCubit>(context)
         .getAllFollwing(context, widget.User_ID);
+    BlocProvider.of<NewProfileSCubit>(context)
+        .GetWorkExperienceAPI(context, widget.User_ID);
     getUserSavedData();
     dataSetup = null;
     value1 = 0;
@@ -186,6 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   getUserSavedData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
+    User_Module = prefs.getString(PreferencesKey.module);
   }
 
   @override
@@ -243,7 +254,10 @@ class _ProfileScreenState extends State<ProfileScreen>
         followersClassModel2 = state.followersClassModel1;
       }
       if (state is NewProfileSLoadedState) {
+        industryTypesArray = "";
+        ExpertiseData = "";
         NewProfileData = state.PublicRoomData;
+        print("i check accountTyp--${NewProfileData?.object?.accountType}");
         isDataGet = true;
         print(NewProfileData?.object?.module);
         BlocProvider.of<NewProfileSCubit>(context)
@@ -255,9 +269,10 @@ class _ProfileScreenState extends State<ProfileScreen>
         BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
             context, "${NewProfileData?.object?.userUid}", "desc");
         savedataFuntion(NewProfileData?.object?.userUid ?? '');
+
         NewProfileData?.object?.industryTypes?.forEach((element) {
-          print(element.industryTypeName);
           // industryTypesArray.add("${element.industryTypeName}");
+
           if (industryTypesArray == "") {
             industryTypesArray =
                 "${industryTypesArray}${element.industryTypeName}";
@@ -269,9 +284,9 @@ class _ProfileScreenState extends State<ProfileScreen>
 
         NewProfileData?.object?.expertise?.forEach((element) {
           if (ExpertiseData == "") {
-            ExpertiseData = "${ExpertiseData}${element.expertiseName}";
+            ExpertiseData = "${element.expertiseName}";
           } else {
-            ExpertiseData = "${ExpertiseData}, ${element.expertiseName}";
+            ExpertiseData = "${element.expertiseName}";
           }
         });
 
@@ -280,7 +295,13 @@ class _ProfileScreenState extends State<ProfileScreen>
         CompanyName.text = "${NewProfileData?.object?.companyName}";
         jobprofileController.text = "${NewProfileData?.object?.jobProfile}";
         IndustryType.text = industryTypesArray;
-        dopcument = NewProfileData?.object?.userDocument;
+
+        if (NewProfileData?.object?.userDocument != null) {
+          dopcument = NewProfileData?.object?.documentName;
+        } else {
+          dopcument = 'Upload Image';
+        }
+
         priceContrller.text = "${NewProfileData?.object?.fees}";
         Expertise.text = ExpertiseData;
         if (state.PublicRoomData.object?.workingHours != null) {
@@ -349,7 +370,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         isUpDate = false;
         print("dfgsfgdsfg-${isAbourtMe}");
         SnackBar snackBar = SnackBar(
-          content: Text('Saved successfully'),
+          content: Text('Saved Successfully'),
           backgroundColor: ColorConstant.primary_color,
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -365,6 +386,9 @@ class _ProfileScreenState extends State<ProfileScreen>
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
+      }
+      if (state is GetWorkExpereinceLoadedState) {
+        addWorkExperienceModel = state.addWorkExperienceModel;
       }
     }, builder: (context, state) {
       return Scaffold(
@@ -388,31 +412,53 @@ class _ProfileScreenState extends State<ProfileScreen>
                         height: _height / 2.6,
                         child: Stack(
                           children: [
-                            Container(
-                              // color: Colors.red,
-                              height: _height / 3.4,
-                              width: _width,
-                              child: NewProfileData
-                                          ?.object?.userBackgroundPic ==
-                                      null
-                                  ? Image.asset(ImageConstant.pdslogo)
-                                  : InkWell(
-                                      onTap: () {
-                                        print(
-                                            "check Data userBackgroundPic--${NewProfileData?.object?.userBackgroundPic}");
-                                        print(
-                                            "check Data userProfilePic--${NewProfileData?.object?.userProfilePic}");
-                                      },
-                                      child: CustomImageView(
-                                          url:
-                                              "${NewProfileData?.object?.userBackgroundPic}",
-                                          fit: BoxFit.cover,
-                                          radius: BorderRadius.only(
-                                              bottomRight: Radius.circular(20),
-                                              bottomLeft: Radius.circular(20))
-                                          // BorderRadius.circular(25),
-                                          ),
-                                    ),
+                            GestureDetector(
+                              onTap: () {
+                                if (NewProfileData?.object?.userBackgroundPic
+                                            ?.isNotEmpty ==
+                                        true &&
+                                    NewProfileData?.object?.userBackgroundPic !=
+                                        '') {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProfileandDocumentScreen(
+                                          path: NewProfileData
+                                              ?.object?.userBackgroundPic,
+                                          title: "",
+                                        ),
+                                      ));
+                                } else {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => DocumentViewScreen1(
+                                            path:
+                                                'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
+                                            title: 'Pdf',
+                                          )));
+                                }
+                              },
+                              child: Container(
+                                // color: Colors.red,
+                                height: _height / 3.4,
+                                width: _width,
+                                child: NewProfileData
+                                                ?.object?.userBackgroundPic ==
+                                            null ||
+                                        NewProfileData
+                                                ?.object?.userBackgroundPic ==
+                                            ''
+                                    ? Image.asset(ImageConstant.splashImage)
+                                    : CustomImageView(
+                                        url:
+                                            "${NewProfileData?.object?.userBackgroundPic}",
+                                        fit: BoxFit.cover,
+                                        radius: BorderRadius.only(
+                                            bottomRight: Radius.circular(20),
+                                            bottomLeft: Radius.circular(20))
+                                        // BorderRadius.circular(25),
+                                        ),
+                              ),
                             ),
                             Padding(
                               padding: EdgeInsets.only(top: 55, left: 16),
@@ -437,31 +483,65 @@ class _ProfileScreenState extends State<ProfileScreen>
                             ),
                             Align(
                               alignment: Alignment.bottomCenter,
-                              child: Container(
-                                height: 150,
-                                width: 150,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child:
-                                      NewProfileData?.object?.userProfilePic ==
-                                              null
-                                          ? Image.asset(ImageConstant.pdslogo)
-                                          : CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                  "${NewProfileData?.object?.userProfilePic}"),
-                                              radius: 25,
-                                            ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  if (NewProfileData?.object?.userProfilePic
+                                              ?.isNotEmpty ==
+                                          true &&
+                                      NewProfileData?.object?.userProfilePic !=
+                                          '') {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProfileandDocumentScreen(
+                                            path: NewProfileData
+                                                ?.object?.userProfilePic,
+                                            title: "",
+                                          ),
+                                        ));
+                                  } else {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DocumentViewScreen1(
+                                                  path:
+                                                      'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
+                                                  title: 'Pdf',
+                                                )));
+                                  }
+                                },
+                                child: Container(
+                                  height: 150,
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: NewProfileData
+                                                    ?.object?.userProfilePic ==
+                                                null ||
+                                            NewProfileData
+                                                    ?.object?.userProfilePic ==
+                                                ''
+                                        ? Image.asset(ImageConstant.splashImage)
+                                        : CircleAvatar(
+                                            backgroundColor: Colors.white,
+                                            backgroundImage: NetworkImage(
+                                                "${NewProfileData?.object?.userProfilePic}"),
+                                            radius: 25,
+                                          ),
+                                  ),
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-
-                      User_ID == NewProfileData?.object?.userUid
+                      User_Module == "EMPLOYEE" &&
+                              NewProfileData?.object?.approvalStatus ==
+                                  "PARTIALLY_REGISTERED"
                           ? Padding(
                               padding: const EdgeInsets.only(top: 15),
                               child: Row(
@@ -472,19 +552,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       height: 30,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
-                                        color: NewProfileData
-                                                    ?.object?.approvalStatus ==
-                                                "PARTIALLY_REGISTERED"
-                                            ? Color(0xffB6D9EC)
-                                            : NewProfileData?.object
-                                                        ?.approvalStatus ==
-                                                    "PENDING"
-                                                ? Color(0xffFFDBA8)
-                                                : NewProfileData?.object
-                                                            ?.approvalStatus ==
-                                                        "APPROVED"
-                                                    ? Color(0xffD5EED5)
-                                                    : Color(0xffFFE0E1),
+                                        color: Color(0xffD5EED5),
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.only(
@@ -493,49 +561,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Container(
-                                              height: 10,
-                                              width: 10,
-                                              decoration: BoxDecoration(
+                                                height: 10,
+                                                width: 10,
+                                                decoration: BoxDecoration(
                                                   shape: BoxShape.circle,
-                                                  color: NewProfileData?.object
-                                                              ?.approvalStatus ==
-                                                          "PARTIALLY_REGISTERED"
-                                                      ? Color(0xff1A94D7)
-                                                      : NewProfileData?.object
-                                                                  ?.approvalStatus ==
-                                                              "PENDING"
-                                                          ? Color(0xffC28432)
-                                                          : NewProfileData
-                                                                      ?.object
-                                                                      ?.approvalStatus ==
-                                                                  "APPROVED"
-                                                              ? Color(
-                                                                  0xff019801)
-                                                              : Color(
-                                                                  0xffFF000B)),
-                                            ),
+                                                  color: Color(0xff019801),
+                                                )),
                                             SizedBox(
                                               width: 10,
                                             ),
                                             Text(
-                                              "Profile ${NewProfileData?.object?.approvalStatus}",
+                                              "Profile APPROVED",
                                               style: TextStyle(
-                                                  color: NewProfileData?.object
-                                                              ?.approvalStatus ==
-                                                          "PARTIALLY_REGISTERED"
-                                                      ? Color(0xff1A94D7)
-                                                      : NewProfileData?.object
-                                                                  ?.approvalStatus ==
-                                                              "PENDING"
-                                                          ? Color(0xffC28432)
-                                                          : NewProfileData
-                                                                      ?.object
-                                                                      ?.approvalStatus ==
-                                                                  "APPROVED"
-                                                              ? Color(
-                                                                  0xff019801)
-                                                              : Color(
-                                                                  0xffFF000B),
+                                                  color: Color(0xff019801),
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.w600),
                                             )
@@ -547,7 +585,101 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 ],
                               ),
                             )
-                          : SizedBox(),
+                          : User_ID == NewProfileData?.object?.userUid
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 15),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Flexible(
+                                        child: Container(
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            color: NewProfileData?.object
+                                                        ?.approvalStatus ==
+                                                    "PARTIALLY_REGISTERED"
+                                                ? Color(0xffB6D9EC)
+                                                : NewProfileData?.object
+                                                            ?.approvalStatus ==
+                                                        "PENDING"
+                                                    ? Color(0xffFFDBA8)
+                                                    : NewProfileData?.object
+                                                                ?.approvalStatus ==
+                                                            "APPROVED"
+                                                        ? Color(0xffD5EED5)
+                                                        : Color(0xffFFE0E1),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 15, right: 15),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Container(
+                                                  height: 10,
+                                                  width: 10,
+                                                  decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: NewProfileData
+                                                                  ?.object
+                                                                  ?.approvalStatus ==
+                                                              "PARTIALLY_REGISTERED"
+                                                          ? Color(0xff1A94D7)
+                                                          : NewProfileData
+                                                                      ?.object
+                                                                      ?.approvalStatus ==
+                                                                  "PENDING"
+                                                              ? Color(
+                                                                  0xffC28432)
+                                                              : NewProfileData
+                                                                          ?.object
+                                                                          ?.approvalStatus ==
+                                                                      "APPROVED"
+                                                                  ? Color(
+                                                                      0xff019801)
+                                                                  : Color(
+                                                                      0xffFF000B)),
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  "Profile ${NewProfileData?.object?.approvalStatus}",
+                                                  style: TextStyle(
+                                                      color: NewProfileData
+                                                                  ?.object
+                                                                  ?.approvalStatus ==
+                                                              "PARTIALLY_REGISTERED"
+                                                          ? Color(0xff1A94D7)
+                                                          : NewProfileData
+                                                                      ?.object
+                                                                      ?.approvalStatus ==
+                                                                  "PENDING"
+                                                              ? Color(
+                                                                  0xffC28432)
+                                                              : NewProfileData
+                                                                          ?.object
+                                                                          ?.approvalStatus ==
+                                                                      "APPROVED"
+                                                                  ? Color(
+                                                                      0xff019801)
+                                                                  : Color(
+                                                                      0xffFF000B),
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : SizedBox(),
                       Padding(
                         padding: EdgeInsets.only(top: 20),
                         child: Center(
@@ -615,14 +747,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   child: Container(
                                     alignment: Alignment.center,
                                     height: 45,
-                                    width: _width / 3,
+                                    width: _width / 2.6,
                                     decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(10),
                                         border: Border.all(
                                             color: Color(0xffED1C25))),
                                     child: Text(
-                                      'Edit Profile',
+                                      'View Profile',
+                                      maxLines: 1,
                                       style: TextStyle(
                                           fontFamily: "outfit",
                                           fontSize: 18,
@@ -636,8 +769,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                SettingScreen()));
+                                            builder: (context) => SettingScreen(
+                                                  accountType: NewProfileData
+                                                          ?.object
+                                                          ?.accountType ??
+                                                      '',
+                                                ))).then((value) =>
+                                        BlocProvider.of<NewProfileSCubit>(
+                                                context)
+                                            .NewProfileSAPI(
+                                                context, widget.User_ID));
                                   },
                                   child: Container(
                                     margin: EdgeInsets.only(left: 10),
@@ -703,77 +844,97 @@ class _ProfileScreenState extends State<ProfileScreen>
                       SizedBox(
                         height: 12,
                       ),
+
                       Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 15, right: 15),
-                          child: Container(
-                            height: 80,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: Color(0xffD2D2D2),
-                                )),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        updateType();
-                                        arrNotiyTypeList[1].isSelected = true;
-                                      });
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 20),
-                                      child: Container(
-                                        child: Column(
-                                          children: [
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              '${NewProfileData?.object?.postCount}',
-                                              style: TextStyle(
-                                                  fontFamily: "outfit",
-                                                  fontSize: 25,
-                                                  color: Color(0xff000000),
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                              'Post',
-                                              style: TextStyle(
-                                                  fontFamily: "outfit",
-                                                  fontSize: 16,
-                                                  color: Color(0xff444444),
-                                                  fontWeight: FontWeight.w500),
-                                            )
-                                          ],
-                                        ),
+                        child: Container(
+                          margin: EdgeInsets.only(left: 15, right: 15),
+                          height: 80,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Color(0xffD2D2D2),
+                              )),
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    updateType();
+                                    arrNotiyTypeList[1].isSelected = true;
+                                  });
+                                },
+                                child: Container(
+                                  width: _width / 3.3,
+                                  color: Colors.transparent,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 10,
                                       ),
-                                    ),
+                                      Text(
+                                        '${NewProfileData?.object?.postCount}',
+                                        style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 25,
+                                            color: Color(0xff000000),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        'Post',
+                                        style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 16,
+                                            color: Color(0xff444444),
+                                            fontWeight: FontWeight.w500),
+                                      )
+                                    ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 20, bottom: 20),
-                                    child: VerticalDivider(
-                                      thickness: 1.5,
-                                      color: Color(0xffC2C2C2),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (NewProfileData?.object?.isFollowing ==
-                                              'FOLLOWING' ||
-                                          User_ID ==
-                                              NewProfileData?.object?.userUid) {
-                                        if (followersClassModel1
-                                                ?.object?.isNotEmpty ==
-                                            true) {
-                                          Navigator.push(
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 20, bottom: 20),
+                                child: VerticalDivider(
+                                  thickness: 1.5,
+                                  color: Color(0xffC2C2C2),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  if (NewProfileData?.object?.isFollowing ==
+                                          'FOLLOWING' ||
+                                      User_ID ==
+                                          NewProfileData?.object?.userUid) {
+                                    if (followersClassModel1
+                                            ?.object?.isNotEmpty ==
+                                        true) {
+                                      //this is i want this
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return MultiBlocProvider(
+                                          providers: [
+                                            BlocProvider<FollowerBlock>(
+                                              create: (context) =>
+                                                  FollowerBlock(),
+                                            ),
+                                          ],
+                                          child: Followers(
+                                            User_ID: widget.User_ID,
+                                            appBarName: 'Followers',
+                                            userId: widget.User_ID,
+                                          ),
+                                        );
+                                      })).then((value) {
+                                        BlocProvider.of<NewProfileSCubit>(
+                                                context)
+                                            .NewProfileSAPI(
+                                                context, widget.User_ID);
+                                        BlocProvider.of<NewProfileSCubit>(
+                                                context)
+                                            .getFollwerApi(
+                                                context, widget.User_ID);
+                                      });
+                                      /*    Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
@@ -782,101 +943,112 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         appBarName: 'Followers',
                                                         followersClassModel:
                                                             followersClassModel1!,
-                                                        userId: User_ID,
+                                                        userId: widget.User_ID,
                                                       ))).then((value) =>
                                               BlocProvider.of<NewProfileSCubit>(
                                                       context)
                                                   .NewProfileSAPI(
-                                                      context, widget.User_ID));
-                                        }
-                                      } else {}
-                                    },
-                                    child: Container(
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            height: 11,
-                                          ),
-                                          Text(
-                                            '${NewProfileData?.object?.followersCount}',
-                                            style: TextStyle(
-                                                fontFamily: "outfit",
-                                                fontSize: 25,
-                                                color: Color(0xff000000),
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                            'Followers',
-                                            style: TextStyle(
-                                                fontFamily: "outfit",
-                                                fontSize: 16,
-                                                color: Color(0xff444444),
-                                                fontWeight: FontWeight.w500),
-                                          )
-                                        ],
+                                                      context, widget.User_ID)); */
+                                    }
+                                  } else {}
+                                },
+                                child: Container(
+                                  color: Colors.transparent,
+                                  width: _width / 3.6,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 11,
                                       ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 20, bottom: 20),
-                                    child: VerticalDivider(
-                                      thickness: 1.5,
-                                      color: Color(0xffC2C2C2),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (NewProfileData?.object?.isFollowing ==
-                                              'FOLLOWING' ||
-                                          User_ID ==
-                                              NewProfileData?.object?.userUid) {
-                                        if (followersClassModel2
-                                                ?.object?.isNotEmpty ==
-                                            true) {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Followers(
-                                                        // FOLLOWING
-                                                        appBarName: 'Following',
-                                                        followersClassModel:
-                                                            followersClassModel2!,
-                                                        userId: User_ID,
-                                                      ))).then((value) => null);
-                                        }
-                                      } else {}
-                                    },
-                                    child: Container(
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            height: 11,
-                                          ),
-                                          Text(
-                                            '${NewProfileData?.object?.followingCount}',
-                                            style: TextStyle(
-                                                fontFamily: "outfit",
-                                                fontSize: 25,
-                                                color: Color(0xff000000),
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                            'Following',
-                                            style: TextStyle(
-                                                fontFamily: "outfit",
-                                                fontSize: 16,
-                                                color: Color(0xff444444),
-                                                fontWeight: FontWeight.w500),
-                                          )
-                                        ],
+                                      Text(
+                                        '${NewProfileData?.object?.followersCount}',
+                                        style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 25,
+                                            color: Color(0xff000000),
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                    ),
+                                      Text(
+                                        'Followers',
+                                        style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 16,
+                                            color: Color(0xff444444),
+                                            fontWeight: FontWeight.w500),
+                                      )
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 20, bottom: 20),
+                                child: VerticalDivider(
+                                  thickness: 1.5,
+                                  color: Color(0xffC2C2C2),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  if (NewProfileData?.object?.isFollowing ==
+                                          'FOLLOWING' ||
+                                      User_ID ==
+                                          NewProfileData?.object?.userUid) {
+                                    if (followersClassModel2
+                                            ?.object?.isNotEmpty ==
+                                        true) {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return MultiBlocProvider(
+                                          providers: [
+                                            BlocProvider<FollowerBlock>(
+                                              create: (context) =>
+                                                  FollowerBlock(),
+                                            ),
+                                          ],
+                                          child: Followers(
+                                            User_ID: widget.User_ID,
+                                            appBarName: 'Following',
+                                            userId: widget.User_ID,
+                                          ),
+                                        );
+                                      })).then((value) =>
+                                          BlocProvider.of<NewProfileSCubit>(
+                                                  context)
+                                              .NewProfileSAPI(
+                                                  context, widget.User_ID));
+                                    }
+                                  } else {}
+                                },
+                                child: Container(
+                                  color: Colors.transparent,
+                                  width: _width / 4.3,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 11,
+                                      ),
+                                      Text(
+                                        '${NewProfileData?.object?.followingCount}',
+                                        style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 25,
+                                            color: Color(0xff000000),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        'Following',
+                                        style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 16,
+                                            color: Color(0xff444444),
+                                            fontWeight: FontWeight.w500),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -902,8 +1074,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                       SizedBox(
                         height: 30,
                       ),
-                      if (NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
-                          User_ID == NewProfileData?.object?.userUid)
+                      /* NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
+                          User_ID == NewProfileData?.object?.userUid || NewProfileData?.object?.accountType == 'PUBLIC' */
+                      if (User_ID == NewProfileData?.object?.userUid ||
+                          (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
+                              NewProfileData?.object?.accountType ==
+                                  'PRIVATE') ||
+                          NewProfileData?.object?.accountType == 'PUBLIC')
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -1119,31 +1296,36 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 : SizedBox.shrink(),
                           ],
                         ),
-                      if (NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
-                          User_ID == NewProfileData?.object?.userUid)
+                      if (User_ID == NewProfileData?.object?.userUid ||
+                          (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
+                              NewProfileData?.object?.accountType ==
+                                  'PRIVATE') ||
+                          NewProfileData?.object?.accountType == 'PUBLIC')
                         Container(
                           // color: Colors.red,
-                          height: _height,
-                          /* arrNotiyTypeList[0].isSelected == true
+                          /*  height: _height, */
+                          height: arrNotiyTypeList[0].isSelected == true
                               ? NewProfileData?.object?.module == "EMPLOYEE"
                                   ? _height / 3
                                   : NewProfileData?.object?.module == "EXPERT"
-                                      ? 630
+                                      ? 1150 // 630 old height
                                       : NewProfileData?.object?.module ==
                                               "COMPANY"
-                                          ? 450
+                                          ? 1050 // 650 old height + 400
                                           : 0
                               : arrNotiyTypeList[1].isSelected == true
                                   ? FinalPostCount * 190
                                   : arrNotiyTypeList[2].isSelected == true
                                       ? CommentsPostCount * 310 + 100
                                       : arrNotiyTypeList[3].isSelected == true
-                                          ? /* value1 == 0
-                                    ? FinalSavePostCount * 230
-                                    : */
-                                          SaveBlogCount * 145 + 100
-                                          : 10, */
+                                          ? value1 == 0
+                                              ? FinalSavePostCount == 0
+                                                  ? 40
+                                                  : FinalSavePostCount * 230
+                                              : SaveBlogCount * 155 + 100
+                                          : 10,
                           child: SingleChildScrollView(
+                            physics: NeverScrollableScrollPhysics(),
                             child: Column(
                               children: <Widget>[
                                 /// Content of Tab 1
@@ -1178,7 +1360,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         child: Column(
                                                           children: [
                                                             ListTile(
-                                                              leading:
+                                                              /*     leading:
                                                                   Container(
                                                                 width: 35,
                                                                 height: 35,
@@ -1189,7 +1371,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                   shape:
                                                                       OvalBorder(),
                                                                 ),
-                                                              ),
+                                                              ), */
                                                               title: Text(
                                                                 'About Me',
                                                                 style:
@@ -1225,151 +1407,172 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           BorderRadius.circular(
                                                               15.0),
                                                     ),
-                                                    child: ListTile(
-                                                        leading: Container(
-                                                          width: 35,
-                                                          height: 35,
-                                                          decoration:
-                                                              ShapeDecoration(
-                                                            color: Color(
-                                                                0xFFED1C25),
-                                                            shape: OvalBorder(),
+                                                    child: Column(
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  top: 10,
+                                                                  right: 20,
+                                                                  left: 20),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                'About Me',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
+                                                              User_ID !=
+                                                                      NewProfileData
+                                                                          ?.object
+                                                                          ?.userUid
+                                                                  ? SizedBox
+                                                                      .shrink()
+                                                                  : GestureDetector(
+                                                                      onTap:
+                                                                          () {
+                                                                        setState(
+                                                                            () {
+                                                                          isUpDate =
+                                                                              true;
+                                                                          isAbourtMe =
+                                                                              false;
+                                                                          AbboutMeShow =
+                                                                              false;
+                                                                        });
+                                                                      },
+                                                                      child: isUpDate ==
+                                                                              true
+                                                                          ? GestureDetector(
+                                                                              onTap: () {
+                                                                                if (aboutMe.text.isNotEmpty) {
+                                                                                  BlocProvider.of<NewProfileSCubit>(context).abboutMeApi(context, aboutMe.text);
+                                                                                } else {
+                                                                                  SnackBar snackBar = SnackBar(
+                                                                                    content: Text('Please Enter About Me'),
+                                                                                    backgroundColor: ColorConstant.primary_color,
+                                                                                  );
+                                                                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                                }
+                                                                              },
+                                                                              child: Container(
+                                                                                alignment: Alignment.center,
+                                                                                height: 24,
+                                                                                width: 50,
+                                                                                decoration: BoxDecoration(
+                                                                                  borderRadius: BorderRadius.circular(5),
+                                                                                  color: Color(0xFFED1C25),
+                                                                                ),
+                                                                                child: Text(
+                                                                                  'SAVE',
+                                                                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                                                                ),
+                                                                              ),
+                                                                            )
+                                                                          : Icon(
+                                                                              Icons.edit,
+                                                                              color: Colors.black,
+                                                                            ),
+                                                                    )
+                                                            ],
                                                           ),
                                                         ),
-                                                        title: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            SizedBox(
-                                                              height: 15,
-                                                            ),
-                                                            Text(
-                                                              'About Me',
-                                                              style: TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize: 18,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 0),
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 15,
                                                               ),
-                                                            ),
-                                                            SizedBox(
-                                                              height: 5,
-                                                            ),
-                                                            AbboutMeShow == true
-                                                                ? Container(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    height: 50,
-                                                                    width:
-                                                                        _width /
-                                                                            2,
-                                                                    decoration: BoxDecoration(
-                                                                        // color: Colors.amber
-                                                                        borderRadius: BorderRadius.circular(10),
-                                                                        border: Border.all(color: Color(0xffEFEFEF))),
-                                                                    child: Text(
-                                                                      'Enter About Me',
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              14,
-                                                                          fontWeight: FontWeight
-                                                                              .w300,
-                                                                          color:
-                                                                              Colors.black),
-                                                                    ),
-                                                                  )
-                                                                : TextFormField(
-                                                                    inputFormatters: [
-                                                                      LengthLimitingTextInputFormatter(
-                                                                          500),
-                                                                    ],
-                                                                    readOnly:
-                                                                        isAbourtMe,
-                                                                    controller:
-                                                                        aboutMe,
-                                                                    maxLines: 5,
-                                                                    decoration:
-                                                                        InputDecoration(
-                                                                      border:
-                                                                          OutlineInputBorder(),
-                                                                    ),
-                                                                  ),
-                                                            //wiil DataGet
-                                                            /*   : */
-                                                            SizedBox(
-                                                              height: 12,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        trailing: User_ID !=
-                                                                NewProfileData
-                                                                    ?.object
-                                                                    ?.userUid
-                                                            ? SizedBox.shrink()
-                                                            : GestureDetector(
-                                                                onTap: () {
-                                                                  setState(() {
-                                                                    isUpDate =
-                                                                        true;
-                                                                    isAbourtMe =
-                                                                        false;
-                                                                        AbboutMeShow = false;
-                                                                  });
-                                                                },
-                                                                child: isUpDate ==
-                                                                        true
-                                                                    ? GestureDetector(
-                                                                        onTap:
-                                                                            () {
-                                                                          if (aboutMe
-                                                                              .text
-                                                                              .isNotEmpty) {
-                                                                            BlocProvider.of<NewProfileSCubit>(context).abboutMeApi(context,
-                                                                                aboutMe.text);
-                                                                          } else {
-                                                                            SnackBar
-                                                                                snackBar =
-                                                                                SnackBar(
-                                                                              content: Text('Please Enter About Me'),
-                                                                              backgroundColor: ColorConstant.primary_color,
-                                                                            );
-                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                                          }
-                                                                        },
+
+                                                              SizedBox(
+                                                                height: 5,
+                                                              ),
+                                                              AbboutMeShow ==
+                                                                      true
+                                                                  ? Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .only(
+                                                                          left:
+                                                                              20,
+                                                                          right:
+                                                                              20),
+                                                                      child:
+                                                                          Container(
+                                                                        alignment:
+                                                                            Alignment.center,
+                                                                        height:
+                                                                            50,
+                                                                        // width:
+                                                                        //     _width /
+                                                                        //         1.5,
+                                                                        decoration: BoxDecoration(
+                                                                            // color: Colors.amber
+                                                                            borderRadius: BorderRadius.circular(10),
+                                                                            border: Border.all(color: Color(0xffEFEFEF))),
                                                                         child:
-                                                                            Container(
-                                                                          alignment:
-                                                                              Alignment.center,
-                                                                          height:
-                                                                              30,
-                                                                          width:
-                                                                              70,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(10),
-                                                                            color:
-                                                                                Color(0xFFED1C25),
-                                                                          ),
-                                                                          child:
-                                                                              Text(
-                                                                            'SAVE',
-                                                                            style:
-                                                                                TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                                                          ),
+                                                                            Text(
+                                                                          'Enter About Me',
+                                                                          style: TextStyle(
+                                                                              fontSize: 14,
+                                                                              fontWeight: FontWeight.w300,
+                                                                              color: Colors.black),
                                                                         ),
-                                                                      )
-                                                                    : Icon(
-                                                                        Icons
-                                                                            .edit,
-                                                                        color: Colors
-                                                                            .black,
                                                                       ),
-                                                              ))),
+                                                                    )
+                                                                  : Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .only(
+                                                                          left:
+                                                                              20,
+                                                                          right:
+                                                                              20),
+                                                                      child:
+                                                                          TextFormField(
+                                                                        inputFormatters: [
+                                                                          LengthLimitingTextInputFormatter(
+                                                                              500),
+                                                                        ],
+                                                                        readOnly:
+                                                                            isAbourtMe,
+                                                                        controller:
+                                                                            aboutMe,
+                                                                        maxLines:
+                                                                            5,
+                                                                        decoration:
+                                                                            InputDecoration(
+                                                                          border:
+                                                                              OutlineInputBorder(),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                              //wiil DataGet
+                                                              /*   : */
+                                                              SizedBox(
+                                                                height: 12,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )),
                                             NewProfileData?.object?.module ==
                                                     "EXPERT"
                                                 ? Card(
@@ -1403,6 +1606,54 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     child: compnayUser(
                                                         _height, _width),
                                                   )
+                                                : SizedBox(),
+                                            NewProfileData?.object?.module ==
+                                                    "COMPANY"
+                                                ? Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 10),
+                                                    child: Container(
+                                                        height: 300,
+                                                        decoration: BoxDecoration(
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  blurRadius:
+                                                                      20),
+                                                            ],
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                        child: experience()),
+                                                  )
+                                                : SizedBox(),
+                                            NewProfileData?.object?.module ==
+                                                    "EXPERT"
+                                                ? Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 10),
+                                                    child: Container(
+                                                        height: 300,
+                                                        decoration: BoxDecoration(
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  blurRadius:
+                                                                      20),
+                                                            ],
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                        child: experience()),
+                                                  )
                                                 : SizedBox()
                                           ],
                                         ),
@@ -1412,9 +1663,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 /// Content of Tab 2
                                 arrNotiyTypeList[1].isSelected
                                     ? Container(
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                1,
+                                        height: FinalPostCount * 190,
                                         // color: Colors.yellow,
                                         child: Padding(
                                           padding: EdgeInsets.only(
@@ -1461,20 +1710,70 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       );
                                                     },
                                                     //Ankur will code
-                                                    child: Container(
-                                                        margin:
-                                                            EdgeInsets.all(0.0),
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20)), // Remove margin
+                                                    child:
 
-                                                        child: CustomImageView(
-                                                          fit: BoxFit.cover,
-                                                          url:
-                                                              "${GetAllPostData?.object?[index].postData?[0]}",
-                                                        )),
+                                                        ///   TEST IMAGE
+
+                                                        GetAllPostData
+                                                                    ?.object?[
+                                                                        index]
+                                                                    .postDataType ==
+                                                                "IMAGE"
+                                                            ? Container(
+                                                                margin: EdgeInsets.all(
+                                                                    0.0),
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            20)), // Remove margin
+
+                                                                child:
+                                                                    CustomImageView(
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  url:
+                                                                      "${GetAllPostData?.object?[index].postData?[0]}",
+                                                                ))
+                                                            : GetAllPostData
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .postDataType ==
+                                                                    "ATTACHMENT"
+                                                                ? Container(
+                                                                    margin:
+                                                                        EdgeInsets.all(
+                                                                            0.0),
+                                                                    decoration: BoxDecoration(
+                                                                        borderRadius: BorderRadius.circular(
+                                                                            20)), // Remove margin
+
+                                                                    child:
+                                                                        DocumentViewScreen1(
+                                                                      path: GetAllPostData
+                                                                          ?.object?[
+                                                                              index]
+                                                                          .postData?[0],
+                                                                    ))
+                                                                : GetAllPostData
+                                                                            ?.object?[index]
+                                                                            .postDataType ==
+                                                                        null
+                                                                    ? Container(
+                                                                        margin: EdgeInsets.all(0.0),
+                                                                        decoration: BoxDecoration(border: Border.all(color: Color(0xffF0F0F0)), borderRadius: BorderRadius.circular(20)),
+                                                                        child: Padding(
+                                                                          padding: const EdgeInsets.only(
+                                                                              top: 15,
+                                                                              left: 8,
+                                                                              right: 10),
+                                                                          child:
+                                                                              Text(
+                                                                            '${GetAllPostData?.object?[index].description}',
+                                                                            style:
+                                                                                TextStyle(color: Colors.black, fontSize: 16),
+                                                                          ),
+                                                                        ))
+                                                                    : SizedBox(),
                                                   ),
                                                 ),
                                               );
@@ -1774,6 +2073,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               top: 10),
                                                                           child:
                                                                               CircleAvatar(
+                                                                            backgroundColor:
+                                                                                Colors.white,
                                                                             backgroundImage:
                                                                                 NetworkImage("${GetUserPostCommetData?.object?[index].userProfilePic}"),
                                                                             radius:
@@ -1853,6 +2154,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                                   height: 45,
                                                                                                   margin: EdgeInsets.only(top: 15),
                                                                                                   child: CircleAvatar(
+                                                                                                    backgroundColor: Colors.white,
                                                                                                     backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].comments?[index2].profilePic}"),
                                                                                                     radius: 25,
                                                                                                   ),
@@ -1953,16 +2255,14 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                 arrNotiyTypeList[3].isSelected
                                     ? Container(
-                                        height: _height,
-                                        // color: Colors.amber,
-
-                                        /*  value1 == 0
-                                  ? FinalSavePostCount * 230
-                                  :  */
-                                        // SaveBlogCount * 145 + 100,
+                                        height: value1 == 0
+                                            ? FinalSavePostCount == 0
+                                                ? 40
+                                                : FinalSavePostCount * 230
+                                            : SaveBlogCount * 155 + 100,
                                         // color: Colors.green,
                                         child: Padding(
-                                          padding: EdgeInsets.only(top: 10),
+                                          padding: EdgeInsets.only(top: 0),
                                           child: Column(
                                             children: [
                                               Row(
@@ -2075,31 +2375,61 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
           itemCount: GetSavePostData?.object?.length,
           itemBuilder: (context, index) {
-            return Padding(
-              padding: EdgeInsets.only(bottom: 0, top: 0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => OpenSavePostImage(
-                              PostID: GetSavePostData?.object?[index].postUid,
+            return GetSavePostData?.object?[index].postData?.isEmpty ?? false
+                ? Padding(
+                    padding: EdgeInsets.only(bottom: 0, top: 0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OpenSavePostImage(
+                                    PostID:
+                                        GetSavePostData?.object?[index].postUid,
+                                  )),
+                        );
+                      },
+                      child: ClipRRect( 
+                        borderRadius: BorderRadius.circular(12.0),
+                        child: Container(
+                            margin: EdgeInsets.all(0.0),
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black),
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Center(
+                              child: Text(
+                                  "${GetSavePostData?.object?[index].description}"),
                             )),
+                      ),
+                    ),
+                  )
+                : Padding(
+                    padding: EdgeInsets.only(bottom: 0, top: 0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OpenSavePostImage(
+                                    PostID:
+                                        GetSavePostData?.object?[index].postUid,
+                                  )),
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12.0),
+                        child: Container(
+                            margin: EdgeInsets.all(0.0),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20)),
+                            child: CustomImageView(
+                              url:
+                                  "${GetSavePostData?.object?[index].postData?[0]}",
+                              fit: BoxFit.cover,
+                            )),
+                      ),
+                    ),
                   );
-                },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12.0),
-                  child: Container(
-                      margin: EdgeInsets.all(0.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20)),
-                      child: CustomImageView(
-                        url: "${GetSavePostData?.object?[index].postData?[0]}",
-                        fit: BoxFit.cover,
-                      )),
-                ),
-              ),
-            );
           },
         ),
       ));
@@ -2115,9 +2445,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                   '${saveAllBlogModelData?.object?[index].createdAt ?? ""}');
               return Container(
                 margin: EdgeInsets.only(bottom: 10),
-                height: 150,
-                // color: Colors.amber,
+                height: 155,
                 decoration: BoxDecoration(
+                    // color: Colors.amber,
+
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: Color(0xffF1F1F1))),
                 child: GestureDetector(
@@ -2159,8 +2490,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                           ),
                         ),
                         Container(
-                          width: MediaQuery.of(context).size.width / 1.73,
-                          // color: Colors.amber,
+                          width: MediaQuery.of(context).size.width - 187,
+                          // color: Colors.blue,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -2170,7 +2501,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               Padding(
                                 padding: const EdgeInsets.only(left: 20),
                                 child: Text(
-                                  "G${saveAllBlogModelData?.object?[index].title}",
+                                  "${saveAllBlogModelData?.object?[index].title}",
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       fontSize: 15,
@@ -2193,12 +2524,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       color: Colors.grey),
                                 ),
                               ),
-                              SizedBox(
-                                height: 30,
-                              ),
+                              Spacer(),
                               Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 10),
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 10, bottom: 10),
                                 child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -2319,18 +2648,17 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget expertUser(_height, _width) {
-    print("i waant to check-${User_ID} ----${NewProfileData?.object?.userUid}");
     return Column(
       children: [
         ListTile(
-          leading: Container(
+          /*  leading: Container(
             width: 35,
             height: 35,
             decoration: ShapeDecoration(
               color: Color(0xFFED1C25),
               shape: OvalBorder(),
             ),
-          ),
+          ), */
           title: Text(
             'Work/ Business Details',
             style: TextStyle(
@@ -2358,12 +2686,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                 : SizedBox(),
           ),
         ),
-        Transform.translate(
-          offset: Offset(72, 0),
-          child: Container(
-            height: 550,
-            width: _width,
-            //  color: Colors.amber,
+        Container(
+          height: 550,
+          width: _width,
+          //  color: Colors.amber,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -2377,7 +2705,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                 ),
                 Container(
-                  width: _width / 1.46,
+                  width: _width,
                   child: CustomTextFormField(
                     readOnly: true,
                     controller: jobprofileController,
@@ -2421,7 +2749,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                 ),
                 Container(
-                  width: _width / 1.46,
+                  width: _width,
                   child: CustomTextFormField(
                     readOnly: true,
                     controller: IndustryType,
@@ -2465,7 +2793,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                 ),
                 Container(
-                  width: _width / 1.46,
+                  width: _width,
                   child: CustomTextFormField(
                     readOnly: true,
                     controller: Expertise,
@@ -2499,47 +2827,71 @@ class _ProfileScreenState extends State<ProfileScreen>
                 SizedBox(
                   height: 10,
                 ),
-                Text(
-                  "Fees",
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: 'outfit',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Container(
-                  width: _width / 1.46,
-                  child: CustomTextFormField(
-                    readOnly: true,
-                    controller: priceContrller,
-                    margin: EdgeInsets.only(
-                      top: 10,
+                if (NewProfileData?.object?.module == "EXPERT")
+                  //ss
+                  Text(
+                    "Fees",
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: 'outfit',
+                      fontWeight: FontWeight.w500,
                     ),
-
-                    validator: (value) {
-                      RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
-                      if (value!.isEmpty) {
-                        return 'Please Enter Name';
-                      } else if (!nameRegExp.hasMatch(value)) {
-                        return 'Input cannot contains prohibited special characters';
-                      } else if (value.length <= 0 || value.length > 50) {
-                        return 'Minimum length required';
-                      } else if (value.contains('..')) {
-                        return 'username does not contain is correct';
-                      }
-
-                      return null;
-                    },
-                    // textStyle: theme.textTheme.titleMedium!,
-                    hintText: "Price / hr",
-                    // hintStyle: theme.textTheme.titleMedium!,
-                    textInputAction: TextInputAction.next,
-                    filled: true,
-                    maxLength: 100,
-                    fillColor: appTheme.gray100,
                   ),
-                ),
+                NewProfileData?.object?.module == "EXPERT"
+                    ? NewProfileData?.object?.fees == null
+                        ? Container(
+                            width: _width,
+                            child: CustomTextFormField(
+                              readOnly: true,
+                              margin: EdgeInsets.only(
+                                top: 10,
+                              ),
+
+                              // textStyle: theme.textTheme.titleMedium!,
+                              hintText: "Price / hr",
+                              // hintStyle: theme.textTheme.titleMedium!,
+                              textInputAction: TextInputAction.next,
+                              filled: true,
+                              maxLength: 100,
+                              fillColor: appTheme.gray100,
+                            ),
+                          )
+                        : Container(
+                            width: _width,
+                            child: CustomTextFormField(
+                              readOnly: true,
+                              controller: priceContrller,
+                              margin: EdgeInsets.only(
+                                top: 10,
+                              ),
+
+                              validator: (value) {
+                                RegExp nameRegExp =
+                                    RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                                if (value!.isEmpty) {
+                                  return 'Please Enter Name';
+                                } else if (!nameRegExp.hasMatch(value)) {
+                                  return 'Input cannot contains prohibited special characters';
+                                } else if (value.length <= 0 ||
+                                    value.length > 50) {
+                                  return 'Minimum length required';
+                                } else if (value.contains('..')) {
+                                  return 'username does not contain is correct';
+                                }
+
+                                return null;
+                              },
+                              // textStyle: theme.textTheme.titleMedium!,
+                              hintText: "Price / hr",
+                              // hintStyle: theme.textTheme.titleMedium!,
+                              textInputAction: TextInputAction.next,
+                              filled: true,
+                              maxLength: 100,
+                              fillColor: appTheme.gray100,
+                            ),
+                          )
+                    : SizedBox(),
                 SizedBox(
                   height: 10,
                 ),
@@ -2556,6 +2908,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       GestureDetector(
                         onTap: () {
@@ -2563,7 +2916,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         },
                         child: Container(
                           height: 40,
-                          width: 120,
+                          width: 130,
                           decoration: BoxDecoration(
                               color: Color(0xffF6F6F6),
                               borderRadius: BorderRadius.circular(10)),
@@ -2572,9 +2925,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                               Padding(
                                   padding: EdgeInsets.only(left: 20),
                                   child: Text(
-                                    start.toString(),
+                                    start != null ? start.toString() : '00:00',
                                     style: TextStyle(
-                                        fontSize: 16, color: Color(0xff989898)),
+                                        fontSize: 15, color: Color(0xff989898)),
                                   )),
                               SizedBox(
                                 width: 7,
@@ -2583,9 +2936,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 thickness: 2,
                                 color: Color(0xff989898),
                               ),
-                              Text(startAm.toString(),
+                              Text(startAm != null ? startAm.toString() : 'AM',
                                   style: TextStyle(
-                                      fontSize: 16, color: Color(0xff989898))),
+                                      fontSize: 15, color: Color(0xff989898))),
                             ],
                           ),
                         ),
@@ -2612,7 +2965,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         },
                         child: Container(
                           height: 40,
-                          width: 120,
+                          width: 130,
                           decoration: BoxDecoration(
                               color: Color(0xffF6F6F6),
                               borderRadius: BorderRadius.circular(10)),
@@ -2621,9 +2974,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                               Padding(
                                   padding: EdgeInsets.only(left: 20),
                                   child: Text(
-                                    end.toString(),
+                                    end != null ? end.toString() : "00:00",
                                     style: TextStyle(
-                                        fontSize: 16, color: Color(0xff989898)),
+                                        fontSize: 15, color: Color(0xff989898)),
                                   )),
                               SizedBox(
                                 width: 7,
@@ -2632,9 +2985,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 thickness: 2,
                                 color: Color(0xff989898),
                               ),
-                              Text(endAm.toString(),
+                              Text(endAm != null ? endAm.toString() : "PM",
                                   style: TextStyle(
-                                      fontSize: 16, color: Color(0xff989898))),
+                                      fontSize: 15, color: Color(0xff989898))),
                             ],
                           ),
                         ),
@@ -2658,7 +3011,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   children: [
                     Container(
                         height: 50,
-                        width: _width / 2.2,
+                        width: _width - 175,
                         decoration: BoxDecoration(
                             color: Color(0XFFF6F6F6),
                             borderRadius: BorderRadius.only(
@@ -2667,7 +3020,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15, left: 20),
                           child: Text(
-                            '${dopcument.toString()}',
+                          '${NewProfileData?.object?.documentName}',
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(fontSize: 16),
                           ),
@@ -2675,8 +3028,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                     dopcument == "Upload Image"
                         ? GestureDetector(
                             onTap: () async {
-                              print(
-                                  'dopcument.toString()--${dopcument.toString()}');
                               filepath = await prepareTestPdf(0);
                             },
                             child: Container(
@@ -2710,15 +3061,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     bottomRight: Radius.circular(5))),
                             child: GestureDetector(
                               onTap: () async {
-                                // dopcument = "Upload Image";
-
-                                // setState(() {});
-
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => DocumentViewScreen(
-                                          path: dopcument,
-                                          title: 'Pdf',
-                                        )));
+                                if (dopcument != null) {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => DocumentViewScreen(
+                                            path: dopcument,
+                                            title: 'Pdf',
+                                          )));
+                                }
                               },
                               child: Center(
                                 child: Text(
@@ -2746,18 +3095,168 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
+  Widget experience() {
+    return Padding(
+      padding: const EdgeInsets.all(15),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Experience',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return ExperienceEditScreen(
+                            userID: widget.User_ID,
+                            typeName: NewProfileData?.object?.module,
+                          );
+                        },
+                      )).then((value) =>
+                          BlocProvider.of<NewProfileSCubit>(context)
+                              .GetWorkExperienceAPI(context, widget.User_ID));
+                    },
+                    child: Icon(
+                      Icons.edit,
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      print(
+                          "modulemodule == ${NewProfileData?.object?.module}");
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return AddWorkExperienceScreen(
+                              typeName: NewProfileData?.object?.module,
+                              userID: widget.User_ID);
+                        },
+                      )).then((value) =>
+                          BlocProvider.of<NewProfileSCubit>(context)
+                              .GetWorkExperienceAPI(context, widget.User_ID));
+                    },
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.black,
+                      size: 25,
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+          Expanded(
+            child: ListView.builder(
+              padding: EdgeInsets.only(top: 10),
+              itemCount: addWorkExperienceModel?.object?.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  titleAlignment: ListTileTitleAlignment.top,
+                  leading: addWorkExperienceModel
+                                  ?.object?[index].userProfilePic !=
+                              null &&
+                          addWorkExperienceModel
+                                  ?.object?[index].userProfilePic !=
+                              ''
+                      ? CircleAvatar(
+                          backgroundColor: Colors.white,
+                          backgroundImage: NetworkImage(addWorkExperienceModel
+                                  ?.object?[index].userProfilePic ??
+                              ''),
+                        )
+                      : CustomImageView(
+                          imagePath: ImageConstant.tomcruse,
+                          height: 32,
+                          width: 32,
+                          fit: BoxFit.fill,
+                          radius: BorderRadius.circular(25),
+                        ),
+                  title: Text(
+                    '${addWorkExperienceModel?.object?[index].companyName}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        '${addWorkExperienceModel?.object?[index].jobProfile}',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                        ),
+                      ),
+                      NewProfileData?.object?.module == "EXPERT"
+                          ? Text(
+                              '${addWorkExperienceModel?.object?[index].expertiseIn}',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                              ),
+                            )
+                          : SizedBox(),
+                      Text(
+                        '${addWorkExperienceModel?.object?[index].industryType}',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                        ),
+                      ),
+                      addWorkExperienceModel?.object?[index].startDate !=
+                                  null &&
+                              addWorkExperienceModel?.object?[index].endDate !=
+                                  null
+                          ? Text(
+                              '${addWorkExperienceModel?.object?[index].startDate} - ${addWorkExperienceModel?.object?[index].endDate}',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                              ),
+                            )
+                          : SizedBox(),
+                    ],
+                  ),
+                );
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   Widget compnayUser(_height, _width) {
     return Column(
       children: [
         ListTile(
-          leading: Container(
+          /* leading: Container(
             width: 35,
             height: 35,
             decoration: ShapeDecoration(
               color: Color(0xFFED1C25),
               shape: OvalBorder(),
             ),
-          ),
+          ), */
           title: Text(
             'Work/ Business Details',
             style: TextStyle(
@@ -2785,12 +3284,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                 : SizedBox(),
           ),
         ),
-        Transform.translate(
-          offset: Offset(72, 0),
-          child: Container(
-            height: 350,
-            width: _width,
-            //  color: Colors.amber,
+        Container(
+          height: 350,
+          width: _width,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 16, left: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -2804,7 +3302,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                 ),
                 Container(
-                  width: _width / 1.46,
+                  width: _width,
                   child: CustomTextFormField(
                     controller: CompanyName,
                     readOnly: true,
@@ -2849,7 +3347,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                 ),
                 Container(
-                  width: _width / 1.46,
+                  width: _width,
                   child: CustomTextFormField(
                     readOnly: true,
                     controller: jobprofileController,
@@ -2893,7 +3391,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                 ),
                 Container(
-                  width: _width / 1.46,
+                  width: _width,
                   child: CustomTextFormField(
                     readOnly: true,
                     controller: IndustryType,
@@ -2940,7 +3438,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   children: [
                     Container(
                         height: 50,
-                        width: _width / 2.2,
+                        width: _width - 175,
                         decoration: BoxDecoration(
                             color: Color(0XFFF6F6F6),
                             borderRadius: BorderRadius.only(
@@ -2949,7 +3447,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15, left: 10),
                           child: Text(
-                            '${dopcument.toString()}',
+                            '${dopcument.toString().split('/').last}',
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(fontSize: 16),
                           ),
@@ -2982,26 +3480,26 @@ class _ProfileScreenState extends State<ProfileScreen>
                               ),
                             ),
                           )
-                        : Container(
-                            height: 50,
-                            width: _width / 4.5,
-                            decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 228, 228, 228),
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(5),
-                                    bottomRight: Radius.circular(5))),
-                            child: GestureDetector(
-                              onTap: () async {
-                                // dopcument = "Upload Image";
+                        : GestureDetector(
+                            onTap: () async {
+                              // dopcument = "Upload Image";
 
-                                // setState(() {});
-
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => DocumentViewScreen(
-                                          path: dopcument,
-                                          title: 'Pdf',
-                                        )));
-                              },
+                              // setState(() {});
+                              print("dfsdfgsdfgdfg-${dopcument}");
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => DocumentViewScreen(
+                                        path: dopcument,
+                                        title: 'Pdf',
+                                      )));
+                            },
+                            child: Container(
+                              height: 50,
+                              width: _width / 4.5,
+                              decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 228, 228, 228),
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(5),
+                                      bottomRight: Radius.circular(5))),
                               child: Center(
                                 child: Text(
                                   "Open",
@@ -3012,10 +3510,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                              ), /* Icon(
-                                  Icons.delete_forever,
-                                  color: ColorConstant.primary_color,
-                                ) */
+                              ),
                             ),
                           ),
                   ],

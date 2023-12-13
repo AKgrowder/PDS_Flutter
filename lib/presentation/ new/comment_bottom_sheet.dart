@@ -12,6 +12,7 @@ import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -114,23 +115,23 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
 
             if (state is AddnewCommentLoadedState) {
               print("dgdfhgdfhdfghhdfgh-${state.addnewCommentsModeldata}");
-              if(state.addnewCommentsModeldata['message'] =='Comment contains a restricted word'){
-                 SnackBar snackBar = SnackBar(
-                content: Text(state.addnewCommentsModeldata['message']),
-                backgroundColor: ColorConstant.primary_color,
-              );
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }else{
+              if (state.addnewCommentsModeldata['message'] ==
+                  'Comment contains a restricted word') {
+                SnackBar snackBar = SnackBar(
+                  content: Text(state.addnewCommentsModeldata['message']),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              } else {
                 addcomment.clear();
 
-              Object1 object =
-                  Object1.fromJson(state.addnewCommentsModeldata['object']);
+                Object1 object =
+                    Object1.fromJson(state.addnewCommentsModeldata['object']);
 
-              addCommentModeldata?.object?.add(object);
+                addCommentModeldata?.object?.add(object);
 
-              _goToElement();
+                _goToElement();
               }
-              
             }
             if (state is DeletecommentLoadedState) {
               DeletecommentDataa = state.Deletecomment;
@@ -171,7 +172,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                   physics: BouncingScrollPhysics(),
                   child: Column(
                     children: [
-                   /*    Container(
+                      /*    Container(
                         child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -284,27 +285,49 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          addCommentModeldata?.object?[index]
-                                                      .profilePic ==
-                                                  null
-                                              ? CustomImageView(
-                                                  radius:
-                                                      BorderRadius.circular(50),
-                                                  imagePath:
-                                                      ImageConstant.pdslogo,
-                                                  fit: BoxFit.fill,
-                                                  height: 35,
-                                                  width: 35,
-                                                )
-                                              : CustomImageView(
-                                                  radius:
-                                                      BorderRadius.circular(50),
-                                                  url:
-                                                      "${addCommentModeldata?.object?[index].profilePic}",
-                                                  fit: BoxFit.fill,
-                                                  height: 35,
-                                                  width: 35,
-                                                ),
+                                          Padding(
+                                              padding:
+                                                  const EdgeInsets.all(0.0),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) {
+                                                    return ProfileScreen(
+                                                        User_ID:
+                                                            "${addCommentModeldata?.object?[index].userUid}",
+                                                        isFollowing:
+                                                            widget.isFoollinng);
+                                                  }));
+                                                },
+                                                child: addCommentModeldata
+                                                                ?.object?[index]
+                                                                .profilePic
+                                                                ?.isEmpty ==
+                                                            true ||
+                                                        addCommentModeldata
+                                                                ?.object?[index]
+                                                                .profilePic ==
+                                                            null
+                                                    ? CustomImageView(
+                                                        radius: BorderRadius
+                                                            .circular(50),
+                                                        imagePath: ImageConstant
+                                                            .pdslogo,
+                                                        fit: BoxFit.fill,
+                                                        height: 35,
+                                                        width: 35,
+                                                      )
+                                                    : CustomImageView(
+                                                        radius: BorderRadius
+                                                            .circular(50),
+                                                        url:
+                                                            "${addCommentModeldata?.object?[index].profilePic}",
+                                                        fit: BoxFit.fill,
+                                                        height: 35,
+                                                        width: 35,
+                                                      ),
+                                              )),
                                           SizedBox(
                                             width: 10,
                                           ),
@@ -334,8 +357,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                         // "1w",
                                                         customadateFormat(
                                                             parsedDateTime),
-                                                      overflow: TextOverflow.ellipsis,
-
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'outfit',
@@ -343,9 +366,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                             fontWeight:
                                                                 FontWeight
                                                                     .w500)),
-                                                   
                                                     Container(
-                                                     width: 30,
+                                                      width: 30,
                                                       child: GestureDetector(
                                                         onTap: () {
                                                           Deletecommentdilog(
@@ -411,7 +433,119 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
+                      Row(
+                        children: [
+                          Flexible(
+                              child: Padding(
+                            padding:
+                                const EdgeInsets.only(left: 10, bottom: 10),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(30)),
+                              child: TextFormField(
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(300),
+                                ],
+                                minLines: 1,
+                                maxLines: 5,
+                                controller: addcomment,
+                                decoration: InputDecoration(
+                                  hintText: "Add Comment",
+                                  prefixIcon: IconButton(
+                                    icon: Icon(
+                                      isEmojiVisible
+                                          ? Icons.keyboard_alt_outlined
+                                          : Icons.emoji_emotions_outlined,
+                                    ),
+                                    onPressed: () async {
+                                      print("this is ontap");
+
+                                      if (isEmojiVisible) {
+                                        FocusScope.of(context)
+                                            .requestFocus(FocusNode());
+                                      } else if (isKeyboardVisible) {
+                                        await SystemChannels.textInput
+                                            .invokeMethod('TextInput.hide');
+                                        await Future.delayed(
+                                            Duration(milliseconds: 100));
+                                      }
+                                      if (isKeyboardVisible) {
+                                        FocusScope.of(context).unfocus();
+                                      }
+
+                                      setState(() {
+                                        isEmojiVisible = !isEmojiVisible;
+                                      });
+                                    },
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 2,
+                                        color: Colors.red), //<-- SEE HERE
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 2,
+                                        color: Colors.red), //<-- SEE HERE
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                right: 10, left: 10, bottom: 10),
+                            child: GestureDetector(
+                              onTap: () {
+                                if (addcomment.text.isEmpty) {
+                                  SnackBar snackBar = SnackBar(
+                                    content: Text('Please Add Comment'),
+                                    backgroundColor:
+                                        ColorConstant.primary_color,
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                } else {
+                                  print(
+                                      "i want to check-${addcomment.text.length}");
+                                  if (addcomment.text.length>= 300) {
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text(
+                                          'One time message length allowed is 300'),
+                                      backgroundColor:
+                                          ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } else {
+                                    Map<String, dynamic> params = { 
+                                      "comment": addcomment.text,
+                                      "postUid": '${widget.postUuID}',
+                                    };
+
+                                    BlocProvider.of<AddcommentCubit>(context)
+                                        .AddPostApiCalling(context, params);
+                                  }
+                                }
+                              },
+                              child: CircleAvatar(
+                                maxRadius: 25,
+                                backgroundColor: ColorConstant.primary_color,
+                                child: Center(
+                                  child: Image.asset(
+                                    ImageConstant.commentarrow,
+                                    height: 18,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      /*   Container(
                         height: 70,
                         color: Colors.white,
                         child: Row(
@@ -430,6 +564,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                               child: Padding(
                                 padding: const EdgeInsets.only(right: 10),
                                 child: TextField(
+                                  expands: true,
+                                    maxLines: null,
                                   onTap: () {
                                     if (isEmojiVisible) {
                                       setState(() {
@@ -444,6 +580,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                   cursorColor: ColorConstant.primary_color,
                                   decoration: InputDecoration(
                                     counterText: "",
+                                    
                                     border: InputBorder.none,
                                     hintText: "Add Comment",
                                     icon: Container(
@@ -512,19 +649,22 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                             )
                           ],
                         ),
-                      ),
+                      ), */
                       Offstage(
                         offstage: !isEmojiVisible,
                         child: SizedBox(
                             height: 250,
                             child: EmojiPicker(
-                              textEditingController: addcomment,
                               onBackspacePressed: () {
                                 if (isEmojiVisible) {
                                   setState(() {
                                     isEmojiVisible = false;
                                   });
                                 }
+                              },
+                              onEmojiSelected: (category, emoji) {
+                                addcomment.text += emoji.emoji;
+                                setState(() {});
                               },
                               config: Config(
                                 columns: 7,

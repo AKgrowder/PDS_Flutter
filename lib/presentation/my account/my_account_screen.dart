@@ -14,7 +14,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 // import 'package:pds/widgets/commentPdf.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -1612,7 +1611,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                     .toString() ==
                                 null) {
                               SnackBar snackBar = SnackBar(
-                                content: Text('Please select Expertise in'),
+                                content: Text('Please Select Expertise in'),
                                 backgroundColor: ColorConstant.primary_color,
                               );
                               ScaffoldMessenger.of(context)
@@ -1636,7 +1635,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 (end?.isEmpty ?? false) &&
                                 (endAm?.isEmpty ?? false)) {
                               SnackBar snackBar = SnackBar(
-                                content: Text('Please select Working Hours'),
+                                content: Text('Please Select Working Hours'),
                                 backgroundColor: ColorConstant.primary_color,
                               );
                               ScaffoldMessenger.of(context)

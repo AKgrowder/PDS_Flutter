@@ -5,16 +5,59 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PersonalChatListCubit extends Cubit<PersonalChatListState> {
   PersonalChatListCubit() : super(PersonalChatListInitialState()) {}
+  dynamic PersonalChatListModel;
+  dynamic searchHistoryDataAdd;
   Future<void> PersonalChatList(BuildContext context) async {
-    dynamic PersonalChatListModel;
     try {
       emit(PersonalChatListLoadingState());
       PersonalChatListModel = await Repository().PersonalChatList(context);
-      if (PersonalChatListModel.success == true) {
-        emit(PersonalChatListLoadedState(PersonalChatListModel));
+      if (PersonalChatListModel ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(PersonalChatListErrorState("${PersonalChatListModel}"));
+      } else {
+        if (PersonalChatListModel.success == true) {
+          emit(PersonalChatListLoadedState(PersonalChatListModel));
+        }
       }
     } catch (e) {
       emit(PersonalChatListErrorState(PersonalChatListModel));
+    }
+  }
+
+  Future<void> search_user_for_inbox(
+      BuildContext context, String typeWord, String pageNumber) async {
+    try {
+      emit(PersonalChatListLoadingState());
+      searchHistoryDataAdd = await Repository()
+          .search_user_for_inbox(typeWord, pageNumber, context);
+      if (searchHistoryDataAdd.success == true) {
+        emit(SearchHistoryDataAddxtends(searchHistoryDataAdd));
+      }
+    } catch (e) {
+      print("eeerrror-${e.toString()}");
+      emit(PersonalChatListErrorState(e.toString()));
+    }
+  }
+
+  Future<void> search_user_for_inboxPagantion(
+      BuildContext context, String typeWord, String pageNumber) async {
+    dynamic searchHistoryDataAddInPagantion;
+    try {
+      emit(PersonalChatListLoadingState());
+      searchHistoryDataAddInPagantion = await Repository()
+          .search_user_for_inbox(typeWord, pageNumber, context);
+      if (searchHistoryDataAddInPagantion.success == true) {
+        searchHistoryDataAdd.object.content
+            .addAll(searchHistoryDataAddInPagantion.object.content);
+        searchHistoryDataAdd.object.pageable.pageNumber =
+            searchHistoryDataAddInPagantion.object.pageable.pageNumber;
+        searchHistoryDataAdd.object.totalElements =
+            searchHistoryDataAddInPagantion.object.totalElements;
+        emit(SearchHistoryDataAddxtends(searchHistoryDataAdd));
+      }
+    } catch (e) {
+      print("eeerrror-${e.toString()}");
+      emit(PersonalChatListErrorState(e.toString()));
     }
   }
 }

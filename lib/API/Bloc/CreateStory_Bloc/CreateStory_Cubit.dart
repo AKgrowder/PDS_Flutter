@@ -16,10 +16,13 @@ class CreateStoryCubit extends Cubit<CreateStoryState> {
       emit(CreateStoryLoadingState());
       addPostImageUploded = await Repository()
           .AddPostImageUploded1(context, fileName ?? '', file ?? '');
-  
-      if (addPostImageUploded.success == true) {
-              print("dvfsdvfdfg-$addPostImageUploded");  
-        emit(AddPostImaegState(addPostImageUploded));
+      if (addPostImageUploded == "Something Went Wrong, Try After Some Time.") {
+        emit(CreateStoryErrorState("${addPostImageUploded}"));
+      } else {
+        if (addPostImageUploded.success == true) {
+          print("dvfsdvfdfg-$addPostImageUploded");
+          emit(AddPostImaegState(addPostImageUploded));
+        }
       }
     } catch (e) {
       print("erorro-$e");

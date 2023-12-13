@@ -11,10 +11,14 @@ class OtpCubit extends Cubit<OtpState> {
     try {
       emit(OtpLoadingState());
       otpModel = await Repository().otpModel(OTP, userNumber, context);
-      if (otpModel.success == true) {
-        emit(OtpLoadedState(otpModel));
+      if (otpModel == "Something Went Wrong, Try After Some Time.") {
+        emit(OtpErrorState("${otpModel}"));
       } else {
-        emit(OtpErrorState(otpModel.message));
+        if (otpModel.success == true) {
+          emit(OtpLoadedState(otpModel));
+        } else {
+          emit(OtpErrorState(otpModel.message));
+        }
       }
     } catch (e) {
       print('LoginScreen-${e.toString()}');
@@ -27,10 +31,14 @@ class OtpCubit extends Cubit<OtpState> {
     try {
       emit(OtpLoadingState());
       forgetpassword = await Repository().forgetpassword(userNumber, context);
-      if (forgetpassword.success == true) {
-        emit(resendOtpLoadedState(forgetpassword));
+      if (forgetpassword == "Something Went Wrong, Try After Some Time.") {
+        emit(OtpErrorState("${forgetpassword}"));
       } else {
-        emit(OtpErrorState(forgetpassword.message));
+        if (forgetpassword.success == true) {
+          emit(resendOtpLoadedState(forgetpassword));
+        } else {
+          emit(OtpErrorState(forgetpassword.message));
+        }
       }
     } catch (e) {
       emit(OtpErrorState(forgetpassword));

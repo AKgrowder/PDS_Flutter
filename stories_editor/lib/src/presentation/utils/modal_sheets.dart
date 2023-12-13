@@ -7,7 +7,6 @@ import 'package:stories_editor/src/domain/providers/notifiers/control_provider.d
 import 'package:stories_editor/src/domain/providers/notifiers/draggable_widget_notifier.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/painting_notifier.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/text_editing_notifier.dart';
-import 'package:stories_editor/src/domain/sevices/save_as_image.dart';
 import 'package:stories_editor/src/presentation/utils/Extensions/hexColor.dart';
 import 'package:stories_editor/src/presentation/utils/constants/app_enums.dart';
 import 'package:stories_editor/src/presentation/widgets/animated_onTap_button.dart';
@@ -116,7 +115,7 @@ Future<bool> exitDialog({required context, required contentKey}) async {
                   ),
 
                   /// save and exit
-                  AnimatedOnTapButton(
+              /*     AnimatedOnTapButton(
                     onTap: () async {
                       final _paintingProvider =
                           Provider.of<PaintingNotifier>(context, listen: false);
@@ -149,13 +148,13 @@ Future<bool> exitDialog({required context, required contentKey}) async {
                           letterSpacing: 0.5),
                       textAlign: TextAlign.center,
                     ),
-                  ),
-                  const SizedBox(
+                  ), */
+                /*   const SizedBox(
                     height: 22,
                     child: Divider(
                       color: Colors.white10,
                     ),
-                  ),
+                  ), */
 
                   ///cancel
                   AnimatedOnTapButton(

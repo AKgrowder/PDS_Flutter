@@ -3,11 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_state.dart';
+import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Model/InvitationModel/Invitation_Model.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/room_members/room_members_screen.dart';
 import 'package:pds/widgets/custom_image_view.dart';
@@ -24,141 +26,262 @@ class NewNotifactionScreen extends StatefulWidget {
 class _NewNotifactionScreenState extends State<NewNotifactionScreen>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
+  RequestListModel? RequestListModelData;
+  InvitationModel? invitationRoomData;
+
+  bool apiDataGet = false;
+  bool dataGet = false;
+  bool? Show_NoData_Image;
+
+  void initState() {
+    BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
+    BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
+    BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-    return DefaultTabController(
-      length: 3,
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              Center(
-                child: Text(
-                  'Notifications',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22,
-                    fontFamily: "outfit",
-                    fontWeight: FontWeight.w600,
-                  ),
+    accept_rejectModel? accept_rejectData;
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => NewBottomBar(buttomIndex: 0)),
+            (Route<dynamic> route) => false);
+
+        return true;
+      },
+      child: BlocConsumer<InvitationCubit, InvitationState>(
+        listener: (context, state) {
+          if (state is RequestListLoadedState) {
+            apiDataGet = true;
+            RequestListModelData = state.RequestListModelData;
+          }
+          if (state is InvitationErrorState) {
+            if (state.error == "not found") {
+              Show_NoData_Image = true;
+            } else {
+              SnackBar snackBar = SnackBar(
+                content: Text(state.error),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+          }
+          if (state is InvitationLoadedState) {
+            dataGet = true;
+            invitationRoomData = state.InvitationRoomData;
+            print(invitationRoomData?.message);
+
+            if (invitationRoomData?.object?.length == null ||
+                invitationRoomData?.object?.length == 0) {
+              Show_NoData_Image = false;
+            } else {
+              Show_NoData_Image = true;
+            }
+          }
+
+          if (state is InvitationLoadingState) {
+            Center(
+              child: Container(
+                margin: EdgeInsets.only(bottom: 100),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(ImageConstant.loader,
+                      fit: BoxFit.cover, height: 100.0, width: 100),
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                decoration:
-                    BoxDecoration(border: Border.all(color: Colors.grey)),
-                child: TabBar(
-                  onTap: (value) {},
-                  controller: _tabController,
-                  unselectedLabelStyle: TextStyle(
-                    color: Colors.black,
-                  ),
-                  unselectedLabelColor: Colors.black,
-                  indicator: BoxDecoration(
-                      // borderRadius: BorderRadius.circular(8.0),
-                      color: Color(0xFFED1C25)),
-                  tabs: [
-                    Container(
-                      width: 150,
-                      height: 50,
-                      // color: Color(0xFFED1C25),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Spacer(),
-                            Text(
-                              "All",
-                              textScaleFactor: 1.0,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontFamily: 'Outfit',
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Spacer(),
-                          ],
+            );
+          }
+        },
+        builder: (context, state) {
+          return DefaultTabController(
+            length: 3,
+            child: SafeArea(
+              child: Scaffold(
+                backgroundColor: Colors.white,
+                body: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Center(
+                      child: Text(
+                        'Notifications',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 22,
+                          fontFamily: "outfit",
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
-                    Container(
-                      height: 50,
-                      // color: Color(0xFFED1C25),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Requests",
-                              textScaleFactor: 1.0,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontFamily: 'Outfit',
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                     Container(
-                      height: 50,
-                      // color: Color(0xFFED1C25),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Invitations",
-                              textScaleFactor: 1.0,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontFamily: 'Outfit',
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                      decoration:
+                          BoxDecoration(border: Border.all(color: Colors.grey)),
+                      child: TabBar(
+                        onTap: (value) {},
+                        controller: _tabController,
+                        unselectedLabelStyle: TextStyle(
+                          color: Colors.black,
                         ),
+                        unselectedLabelColor: Colors.black,
+                        indicator: BoxDecoration(
+                            // borderRadius: BorderRadius.circular(8.0),
+                            color: Color(0xFFED1C25)),
+                        tabs: [
+                          Container(
+                            width: 150,
+                            height: 50,
+                            // color: Color(0xFFED1C25),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Spacer(),
+                                  Text(
+                                    "All",
+                                    textScaleFactor: 1.0,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: 'Outfit',
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Spacer(),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 50,
+                            // color: Color(0xFFED1C25),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Requests",
+                                    textScaleFactor: 1.0,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: 'Outfit',
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    width: 4,
+                                  ),
+                                  RequestListModelData?.object?.length == 0 || RequestListModelData?.object?.length ==
+                                              null
+                                      ? SizedBox()
+                                      : Container(
+                                          child: Text(
+                                            '${RequestListModelData?.object?.length ?? ""}',
+                                            style: TextStyle(
+                                                overflow: TextOverflow.ellipsis,
+                                                fontFamily: "outfit",
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13),
+                                          ),
+                                        ),
+                                  SizedBox(
+                                    width: 1,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 50,
+                            // color: Color(0xFFED1C25),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Invitations",
+                                    textScaleFactor: 1.0,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: 'Outfit',
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    width: 4,
+                                  ),
+                                  invitationRoomData?.object?.length == 0 ||
+                                          invitationRoomData?.object?.length ==
+                                              null
+                                      ? SizedBox()
+                                      : Text(
+                                        '${invitationRoomData?.object?.length}',
+                                        style: TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            fontFamily: "outfit",
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13),
+                                      ),
+                                  SizedBox(
+                                    width: 1,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                    ),
+                    Expanded(
+                      child: TabBarView(children: [
+                        Center(
+                            child: Text(
+                          'No Record Available',
+                          style: TextStyle(
+                            fontFamily: 'outfit',
+                            fontSize: 20,
+                            color: Color(0XFFED1C25),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )),
+                        SingleChildScrollView(
+                          child: RequestOrderClass(
+                              apiDataGet: apiDataGet,
+                              requestListModelData: RequestListModelData),
+                        ),
+                        SingleChildScrollView(
+                          child: InviationClass(
+                            InvitationRoomData: invitationRoomData,
+                            dataGet: dataGet,
+                            Show_NoData_Image: Show_NoData_Image ?? false,
+                          ),
+                        )
+                      ]),
                     ),
                   ],
                 ),
               ),
-              Expanded(
-                child: TabBarView(children: [
-                  Center(
-                      child: Text(
-                    'No Record Available',
-                    style: TextStyle(
-                      fontFamily: 'outfit',
-                      fontSize: 20,
-                      color: Color(0XFFED1C25),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )),
-                  RequestOrderClass(),
-                  InviationClass()
-                ]),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 }
 
 class RequestOrderClass extends StatefulWidget {
+  RequestListModel? requestListModelData;
+  bool apiDataGet;
+  RequestOrderClass(
+      {required this.requestListModelData, required this.apiDataGet});
   @override
   State<RequestOrderClass> createState() => _RequestOrderClassState();
 }
@@ -166,18 +289,18 @@ class RequestOrderClass extends StatefulWidget {
 class _RequestOrderClassState extends State<RequestOrderClass> {
   @override
   void initState() {
-    BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
+    BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
+    // BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
     super.initState();
   }
 
-  bool apiDataGet = false;
+  accept_rejectModel? accept_rejectData;
 
   @override
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-    RequestListModel? RequestListModelData;
-    accept_rejectModel? accept_rejectData;
+
     return BlocConsumer<InvitationCubit, InvitationState>(
         listener: (context, state) {
       if (state is InvitationErrorState) {
@@ -203,10 +326,7 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
           ),
         );
       }
-      if (state is RequestListLoadedState) {
-        apiDataGet = true;
-        RequestListModelData = state.RequestListModelData;
-      }
+
       if (state is accept_rejectLoadedState) {
         SnackBar snackBar = SnackBar(
           content: Text("${state.accept_rejectData.message}"),
@@ -221,25 +341,23 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
         print(accept_rejectData?.message);
       }
     }, builder: (context, state) {
-      if (state is RequestListLoadedState ||
-          state is accept_rejectLoadedState) {
-        return apiDataGet != true
-            ? Center(
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 100),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.asset(ImageConstant.loader,
-                        fit: BoxFit.cover, height: 100.0, width: 100),
-                  ),
+      return widget.apiDataGet != true
+          ? Center(
+              child: Container(
+                margin: EdgeInsets.only(bottom: 100),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(ImageConstant.loader,
+                      fit: BoxFit.cover, height: 100.0, width: 100),
                 ),
-              )
-            : RequestListModelData?.object?.isNotEmpty == true
-                ? SingleChildScrollView(
-                    child: Column(
-                    children: [
-                      // requestsection_previous_request(context),
-                      /*  Padding(
+              ),
+            )
+          : widget.requestListModelData?.object?.isNotEmpty == true
+              ? SingleChildScrollView(
+                  child: Column(
+                  children: [
+                    // requestsection_previous_request(context),
+                    /*  Padding(
                 padding: const EdgeInsets.only(left: 35),
                 child: Row(
                   children: [
@@ -253,82 +371,101 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                   ],
                 ),
               ), */
-                      ListView.builder(
-                          shrinkWrap: true,
-                          physics: BouncingScrollPhysics(),
-                          itemCount: RequestListModelData?.object?.length,
-                          // itemCount: 5,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          height: 80,
-                                          width: _width / 1.2,
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: Colors.grey, width: 1),
-                                              color:
-                                                  Colors.white.withOpacity(1),
-                                              borderRadius:
-                                                  BorderRadius.circular(15)),
-                                          child: Row(children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                  return ProfileScreen(
-                                                      User_ID:
-                                                          "${RequestListModelData?.object?[index].followedByUserUid}",
-                                                      isFollowing: "REQUESTED");
-                                                }));
-                                              },
-                                              child: RequestListModelData
-                                                          ?.object?[index]
-                                                          .followedByUserProfilePic !=
-                                                      null
-                                                  ? CustomImageView(
-                                                      url:
-                                                          "${RequestListModelData?.object?[index].followedByUserProfilePic}",
-                                                      height: 70,
-                                                      width: 70,
-                                                      fit: BoxFit.fill,
-                                                      radius:
-                                                          BorderRadius.circular(
-                                                              35),
-                                                    )
-                                                  : CustomImageView(
-                                                      imagePath: ImageConstant
-                                                          .tomcruse,
-                                                      height: 70,
-                                                      width: 70,
-                                                      fit: BoxFit.fill,
-                                                      radius:
-                                                          BorderRadius.circular(
-                                                              35),
-                                                    ),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Column(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      "${RequestListModelData?.object?[index].followedByUserName}",
-                                                      style: TextStyle(
-                                                          fontFamily: "outfit",
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 13),
-                                                    ),
-                                                    SizedBox(
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: BouncingScrollPhysics(),
+                        itemCount: widget.requestListModelData?.object?.length,
+                        // itemCount: 5,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container(
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: 80,
+                                        width: _width / 1.2,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.grey, width: 1),
+                                            color: Colors.white.withOpacity(1),
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
+                                        child: Row(children: [
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return MultiBlocProvider(
+                                                    providers: [
+                                                      BlocProvider<
+                                                          NewProfileSCubit>(
+                                                        create: (context) =>
+                                                            NewProfileSCubit(),
+                                                      ),
+                                                    ],
+                                                    child: ProfileScreen(
+                                                        User_ID:
+                                                            "${widget.requestListModelData?.object?[index].followedByUserUid}",
+                                                        isFollowing:
+                                                            "REQUESTED"));
+                                              }));
+                                            },
+                                            child: widget
+                                                            .requestListModelData
+                                                            ?.object?[index]
+                                                            .followedByUserProfilePic !=
+                                                        null &&
+                                                    widget
+                                                            .requestListModelData
+                                                            ?.object?[index]
+                                                            .followedByUserProfilePic !=
+                                                        ""
+                                                ? CustomImageView(
+                                                    url:
+                                                        "${widget.requestListModelData?.object?[index].followedByUserProfilePic}",
+                                                    height: 70,
+                                                    width: 70,
+                                                    fit: BoxFit.fill,
+                                                    radius:
+                                                        BorderRadius.circular(
+                                                            35),
+                                                  )
+                                                : CustomImageView(
+                                                    imagePath:
+                                                        ImageConstant.tomcruse,
+                                                    height: 70,
+                                                    width: 70,
+                                                    fit: BoxFit.fill,
+                                                    radius:
+                                                        BorderRadius.circular(
+                                                            35),
+                                                  ),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "${widget.requestListModelData?.object?[index].followedByUserName}",
+                                                    style: TextStyle(
+                                                        fontFamily: "outfit",
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 13),
+                                                  ),
+                                                  /* SizedBox(
                                                       width: 4,
                                                     ),
                                                     Text(
@@ -338,164 +475,153 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                           fontWeight:
                                                               FontWeight.w200,
                                                           fontSize: 13),
+                                                    ), */
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      BlocProvider.of<
+                                                                  InvitationCubit>(
+                                                              context)
+                                                          .accept_rejectAPI(
+                                                              context,
+                                                              true,
+                                                              "${widget.requestListModelData?.object?[index].followUuid}");
+                                                    },
+                                                    child: Container(
+                                                      height: 28,
+                                                      width: 100,
+                                                      decoration: BoxDecoration(
+                                                          color:
+                                                              Color(0xFFED1C25),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(6)),
+                                                      child: Center(
+                                                          child: Text(
+                                                        "Accept",
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'outfit',
+                                                            color:
+                                                                Colors.white),
+                                                      )),
                                                     ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        BlocProvider.of<
-                                                                    InvitationCubit>(
-                                                                context)
-                                                            .accept_rejectAPI(
-                                                                context,
-                                                                true,
-                                                                "${RequestListModelData?.object?[index].followUuid}");
-                                                      },
-                                                      child: Container(
-                                                        height: 30,
-                                                        width: 100,
-                                                        decoration: BoxDecoration(
-                                                            color: Color(
-                                                                0xFFED1C25),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10)),
-                                                        child: Center(
-                                                            child: Text(
-                                                          "Accept",
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'outfit',
-                                                              color:
-                                                                  Colors.white),
-                                                        )),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        BlocProvider.of<
-                                                                    InvitationCubit>(
-                                                                context)
-                                                            .accept_rejectAPI(
-                                                                context,
-                                                                false,
-                                                                "${RequestListModelData?.object?[index].followUuid}");
-                                                      },
-                                                      child: Container(
-                                                        height: 30,
-                                                        width: 100,
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                            border: Border.all(
-                                                                color: Color(
-                                                                    0xFFED1C25))),
-                                                        child: Center(
-                                                            child: Text(
-                                                          "Reject",
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'outfit',
-                                                              color: Color(
-                                                                  0xFFED1C25)),
-                                                        )),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 70.0,
-                                                          right: 10),
-                                                  child: Text(
-                                                    customFormat(
-                                                        DateTime.now()),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 2,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color: Colors.grey,
-                                                        fontFamily: "outfit",
-                                                        fontSize: 13),
                                                   ),
+                                                  SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      BlocProvider.of<
+                                                                  InvitationCubit>(
+                                                              context)
+                                                          .accept_rejectAPI(
+                                                              context,
+                                                              false,
+                                                              "${widget.requestListModelData?.object?[index].followUuid}");
+                                                    },
+                                                    child: Container(
+                                                      height: 28,
+                                                      width: 100,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(6),
+                                                          border: Border.all(
+                                                              color: Color(
+                                                                  0xFFED1C25))),
+                                                      child: Center(
+                                                          child: Text(
+                                                        "Reject",
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'outfit',
+                                                            color: Color(
+                                                                0xFFED1C25)),
+                                                      )),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 3,
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 100),
+                                                child: Text(
+                                                  customFormat(DateTime.now()),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 2,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Colors.grey,
+                                                      fontFamily: "outfit",
+                                                      fontSize: 13),
                                                 ),
-                                              ],
-                                            ),
-                                          ]),
-                                        ),
-                                      ],
-                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ]),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            );
-                          }),
-                      // requestsection_previous_request(context),
-                      SizedBox(
-                        height: 30,
-                      ),
-                    ],
-                  ))
-                : Center(
-                    child: Text(
-                      "No Requests For Now",
-                      style: TextStyle(
-                        fontFamily: 'outfit',
-                        fontSize: 20,
-                        color: Color(0XFFED1C25),
-                        fontWeight: FontWeight.bold,
-                      ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                    // requestsection_previous_request(context),
+                    SizedBox(
+                      height: 30,
                     ),
-                  );
-      }
-      return Center(
-        child: Container(
-          margin: EdgeInsets.only(bottom: 100),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.asset(ImageConstant.loader,
-                fit: BoxFit.cover, height: 100.0, width: 100),
-          ),
-        ),
-      );
+                  ],
+                ))
+              : Center(
+                  child: Text(
+                    "No Requests For Now",
+                    style: TextStyle(
+                      fontFamily: 'outfit',
+                      fontSize: 20,
+                      color: Color(0XFFED1C25),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                );
     });
   }
 }
 
 class InviationClass extends StatefulWidget {
-  const InviationClass({Key? key}) : super(key: key);
-
+  InvitationModel? InvitationRoomData;
+  bool dataGet;
+  bool Show_NoData_Image;
+  InviationClass(
+      {required this.InvitationRoomData,
+      required this.dataGet,
+      required this.Show_NoData_Image});
   @override
   State<InviationClass> createState() => _InviationClassState();
 }
 
 class _InviationClassState extends State<InviationClass> {
   @override
-  InvitationModel? InvitationRoomData;
-
   String? User_Mood;
   @override
   void initState() {
+    BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
+
     BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
     super.initState();
   }
-
-  bool dataGet = false;
-  bool? Show_NoData_Image;
 
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
@@ -505,7 +631,6 @@ class _InviationClassState extends State<InviationClass> {
       listener: (context, state) {
         if (state is InvitationErrorState) {
           if (state.error == "not found") {
-            Show_NoData_Image = true;
           } else {
             SnackBar snackBar = SnackBar(
               content: Text(state.error),
@@ -527,18 +652,7 @@ class _InviationClassState extends State<InviationClass> {
             ),
           );
         }
-        if (state is InvitationLoadedState) {
-          dataGet = true;
-          InvitationRoomData = state.InvitationRoomData;
-          print(InvitationRoomData?.message);
 
-          if (InvitationRoomData?.object?.length == null ||
-              InvitationRoomData?.object?.length == 0) {
-            Show_NoData_Image = false;
-          } else {
-            Show_NoData_Image = true;
-          }
-        }
         if (state is AcceptRejectInvitationModelLoadedState) {
           SnackBar snackBar = SnackBar(
             content: Text(state.acceptRejectInvitationModel.message.toString()),
@@ -549,10 +663,8 @@ class _InviationClassState extends State<InviationClass> {
         }
       },
       builder: (context, state) {
-        print("dataGet == $dataGet");
-
-        return dataGet == true
-            ? Show_NoData_Image == false
+        return widget.dataGet == true
+            ? widget.Show_NoData_Image == false
                 ? Center(
                     child: Text(
                       "No Invitations For Now",
@@ -567,14 +679,14 @@ class _InviationClassState extends State<InviationClass> {
                 : Column(
                     children: [
                       ListView.builder(
-                        itemCount: InvitationRoomData?.object?.length,
+                        itemCount: widget.InvitationRoomData?.object?.length,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           print(
-                              "InvitationRoomData-->${InvitationRoomData?.object?[index].createdAt}");
+                              "InvitationRoomData-->${widget.InvitationRoomData?.object?[index].createdAt}");
                           DateTime parsedDateTime = DateTime.parse(
-                              '${InvitationRoomData?.object?[index].createdAt}');
+                              '${widget.InvitationRoomData?.object?[index].createdAt}');
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 35, vertical: 5),
@@ -618,8 +730,10 @@ class _InviationClassState extends State<InviationClass> {
                                                   MaterialPageRoute(
                                                 builder: (context) {
                                                   return RoomDetailScreen(
-                                                    uuid: InvitationRoomData
-                                                        ?.object?[index].roomUid
+                                                    uuid: widget
+                                                        .InvitationRoomData
+                                                        ?.object?[index]
+                                                        .roomUid
                                                         .toString(),
                                                   );
                                                 },
@@ -641,7 +755,7 @@ class _InviationClassState extends State<InviationClass> {
                                           padding:
                                               const EdgeInsets.only(left: 10),
                                           child: Text(
-                                            "${InvitationRoomData?.object?[index].companyName}",
+                                            "${widget.InvitationRoomData?.object?[index].companyName}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black,
@@ -667,7 +781,7 @@ class _InviationClassState extends State<InviationClass> {
                                             // color: Colors.amber,
                                             width: _width / 1.3,
                                             child: Text(
-                                              "${InvitationRoomData?.object?[index].roomQuestion}",
+                                              "${widget.InvitationRoomData?.object?[index].roomQuestion}",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black,
@@ -681,7 +795,7 @@ class _InviationClassState extends State<InviationClass> {
                                     Padding(
                                       padding: const EdgeInsets.only(left: 8.0),
                                       child: Text(
-                                        "${InvitationRoomData?.object?[index].description}",
+                                        "${widget.InvitationRoomData?.object?[index].description}",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             color:
@@ -699,13 +813,15 @@ class _InviationClassState extends State<InviationClass> {
                                             MaterialPageRoute(
                                           builder: (context) {
                                             return RoomMembersScreen(
+                                              MoveNotification:true,
+                                              RoomOwnerCount: 0,
                                                 roomname:
-                                                    "${InvitationRoomData?.object?[index].roomQuestion}",
+                                                    "${widget.InvitationRoomData?.object?[index].roomQuestion}",
                                                 RoomOwner: false,
                                                 roomdescription:
-                                                    "${InvitationRoomData?.object?[index].description}",
+                                                    "${widget.InvitationRoomData?.object?[index].description}",
                                                 room_Id:
-                                                    '${InvitationRoomData?.object?[index].roomUid.toString()}');
+                                                    '${widget.InvitationRoomData?.object?[index].roomUid.toString()}');
                                           },
                                         ));
                                       },
@@ -716,18 +832,21 @@ class _InviationClassState extends State<InviationClass> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            InvitationRoomData
+                                            widget
+                                                            .InvitationRoomData
                                                             ?.object?[index]
                                                             .roomMembers
                                                             ?.length ==
                                                         0 ||
-                                                    InvitationRoomData
+                                                    widget
+                                                            .InvitationRoomData
                                                             ?.object?[index]
                                                             .roomMembers
                                                             ?.isEmpty ==
                                                         true
                                                 ? SizedBox()
-                                                : InvitationRoomData
+                                                : widget
+                                                            .InvitationRoomData
                                                             ?.object?[index]
                                                             .roomMembers
                                                             ?.length ==
@@ -748,25 +867,39 @@ class _InviationClassState extends State<InviationClass> {
                                                                           .primary_color,
                                                                       shape: BoxShape
                                                                           .circle),
-                                                                  child:
-                                                                      CustomImageView(
-                                                                    url: InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ??
-                                                                            false
-                                                                        ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
-                                                                        : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                    height: 20,
-                                                                    radius: BorderRadius
-                                                                        .circular(
-                                                                            20),
-                                                                    width: 20,
-                                                                    fit: BoxFit
-                                                                        .fill,
-                                                                  )),
+                                                                  child: widget
+                                                                              .InvitationRoomData
+                                                                              ?.object?[index]
+                                                                              .roomMembers?[0]
+                                                                              .userProfilePic
+                                                                              ?.isNotEmpty ??
+                                                                          false
+                                                                      ? CustomImageView(
+                                                                          url:
+                                                                              "${widget.InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}",
+                                                                          radius:
+                                                                              BorderRadius.circular(20),
+                                                                          width:
+                                                                              20,
+                                                                          fit: BoxFit
+                                                                              .fill,
+                                                                        )
+                                                                      : CustomImageView(
+                                                                          imagePath:
+                                                                              ImageConstant.tomcruse,
+                                                                          radius:
+                                                                              BorderRadius.circular(20),
+                                                                          width:
+                                                                              20,
+                                                                          fit: BoxFit
+                                                                              .fill,
+                                                                        )),
                                                             ),
                                                           ],
                                                         ),
                                                       )
-                                                    : InvitationRoomData
+                                                    : widget
+                                                                .InvitationRoomData
                                                                 ?.object?[index]
                                                                 .roomMembers
                                                                 ?.length ==
@@ -783,20 +916,21 @@ class _InviationClassState extends State<InviationClass> {
                                                                       width: 26.88,
                                                                       height: 26.87,
                                                                       decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                      child: CustomImageView(
-                                                                        url: InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ??
-                                                                                false
-                                                                            ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
-                                                                            : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                        height:
-                                                                            20,
-                                                                        radius:
-                                                                            BorderRadius.circular(20),
-                                                                        width:
-                                                                            20,
-                                                                        fit: BoxFit
-                                                                            .fill,
-                                                                      )),
+                                                                      child: widget.InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ?? false
+                                                                          ? CustomImageView(
+                                                                              url: "${widget.InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}",
+                                                                              height: 20,
+                                                                              radius: BorderRadius.circular(20),
+                                                                              width: 20,
+                                                                              fit: BoxFit.fill,
+                                                                            )
+                                                                          : CustomImageView(
+                                                                              imagePath: ImageConstant.tomcruse,
+                                                                              height: 20,
+                                                                              radius: BorderRadius.circular(20),
+                                                                              width: 20,
+                                                                              fit: BoxFit.fill,
+                                                                            )),
                                                                 ),
                                                                 Positioned(
                                                                   left: 22.56,
@@ -805,25 +939,27 @@ class _InviationClassState extends State<InviationClass> {
                                                                       width: 26.88,
                                                                       height: 26.87,
                                                                       decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                      child: CustomImageView(
-                                                                        url: InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic?.isNotEmpty ??
-                                                                                false
-                                                                            ? "${InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}"
-                                                                            : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                        height:
-                                                                            20,
-                                                                        radius:
-                                                                            BorderRadius.circular(20),
-                                                                        width:
-                                                                            20,
-                                                                        fit: BoxFit
-                                                                            .fill,
-                                                                      )),
+                                                                      child: widget.InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic?.isNotEmpty ?? false
+                                                                          ? CustomImageView(
+                                                                              url: "${widget.InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}",
+                                                                              height: 20,
+                                                                              radius: BorderRadius.circular(20),
+                                                                              width: 20,
+                                                                              fit: BoxFit.fill,
+                                                                            )
+                                                                          : CustomImageView(
+                                                                              imagePath: ImageConstant.tomcruse,
+                                                                              height: 20,
+                                                                              radius: BorderRadius.circular(20),
+                                                                              width: 20,
+                                                                              fit: BoxFit.fill,
+                                                                            )),
                                                                 ),
                                                               ],
                                                             ),
                                                           )
-                                                        : InvitationRoomData
+                                                        : widget
+                                                                    .InvitationRoomData
                                                                     ?.object?[
                                                                         index]
                                                                     .roomMembers
@@ -841,19 +977,21 @@ class _InviationClassState extends State<InviationClass> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                          child: widget.InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ?? false
+                                                                              ? CustomImageView(
+                                                                                  url: "${widget.InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}",
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )
+                                                                              : CustomImageView(
+                                                                                  imagePath: ImageConstant.tomcruse,
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )),
                                                                     ),
                                                                     Positioned(
                                                                       left:
@@ -863,19 +1001,21 @@ class _InviationClassState extends State<InviationClass> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                          child: widget.InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic?.isNotEmpty ?? false
+                                                                              ? CustomImageView(
+                                                                                  url: "${widget.InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}",
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )
+                                                                              : CustomImageView(
+                                                                                  imagePath: ImageConstant.tomcruse,
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )),
                                                                     ),
                                                                     // error get
                                                                     Positioned(
@@ -886,19 +1026,21 @@ class _InviationClassState extends State<InviationClass> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                          child: widget.InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic?.isNotEmpty ?? false
+                                                                              ? CustomImageView(
+                                                                                  url: "${widget.InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic}",
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )
+                                                                              : CustomImageView(
+                                                                                  imagePath: ImageConstant.tomcruse,
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )),
                                                                     ),
                                                                   ],
                                                                 ),
@@ -915,19 +1057,21 @@ class _InviationClassState extends State<InviationClass> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                          child: widget.InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic?.isNotEmpty ?? false
+                                                                              ? CustomImageView(
+                                                                                  url: "${widget.InvitationRoomData?.object?[index].roomMembers?[0].userProfilePic}",
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )
+                                                                              : CustomImageView(
+                                                                                  imagePath: ImageConstant.tomcruse,
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )),
                                                                     ),
                                                                     Positioned(
                                                                       left:
@@ -937,19 +1081,21 @@ class _InviationClassState extends State<InviationClass> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                          child: widget.InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic?.isNotEmpty ?? false
+                                                                              ? CustomImageView(
+                                                                                  url: "${widget.InvitationRoomData?.object?[index].roomMembers?[1].userProfilePic}",
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )
+                                                                              : CustomImageView(
+                                                                                  imagePath: ImageConstant.tomcruse,
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )),
                                                                     ),
                                                                     Positioned(
                                                                       left:
@@ -959,19 +1105,21 @@ class _InviationClassState extends State<InviationClass> {
                                                                           width: 26.88,
                                                                           height: 26.87,
                                                                           decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                          child: CustomImageView(
-                                                                            url: InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic?.isNotEmpty ?? false
-                                                                                ? "${InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic}"
-                                                                                : "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )),
+                                                                          child: widget.InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic?.isNotEmpty ?? false
+                                                                              ? CustomImageView(
+                                                                                  url: "${widget.InvitationRoomData?.object?[index].roomMembers?[2].userProfilePic}",
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )
+                                                                              : CustomImageView(
+                                                                                  imagePath: ImageConstant.tomcruse,
+                                                                                  height: 20,
+                                                                                  radius: BorderRadius.circular(20),
+                                                                                  width: 20,
+                                                                                  fit: BoxFit.fill,
+                                                                                )),
                                                                     ),
                                                                     Positioned(
                                                                       left: 78,
@@ -984,7 +1132,7 @@ class _InviationClassState extends State<InviationClass> {
                                                                             16,
                                                                         child:
                                                                             Text(
-                                                                          "+${(InvitationRoomData?.object?[index].roomMembers?.length ?? 0) - 3}",
+                                                                          "+${(widget.InvitationRoomData?.object?[index].roomMembers?.length ?? 0) - 3}",
                                                                           style:
                                                                               TextStyle(
                                                                             color:
@@ -1017,13 +1165,12 @@ class _InviationClassState extends State<InviationClass> {
                                           flex: 2,
                                           child: GestureDetector(
                                             onTap: () {
-                                              print(
-                                                  'chek data get-${InvitationRoomData?.object?[index].invitationLink.toString()}');
                                               BlocProvider.of<InvitationCubit>(
                                                       context)
                                                   .GetRoomInvitations(
                                                       false,
-                                                      InvitationRoomData
+                                                      widget
+                                                              .InvitationRoomData
                                                               ?.object?[index]
                                                               .invitationLink
                                                               .toString() ??
@@ -1066,7 +1213,8 @@ class _InviationClassState extends State<InviationClass> {
                                                       context)
                                                   .GetRoomInvitations(
                                                       true,
-                                                      InvitationRoomData
+                                                      widget
+                                                              .InvitationRoomData
                                                               ?.object?[index]
                                                               .invitationLink
                                                               .toString() ??
@@ -1120,20 +1268,20 @@ String customFormat(DateTime date) {
   String year = date.year.toString();
   String time = DateFormat('h:mm a').format(date);
 
-  String formattedDate = '$day$month $year $time';
+  String formattedDate = '$day $month $year $time';
   return formattedDate;
 }
 
 String _getMonthName(int month) {
   switch (month) {
     case 1:
-      return 'January';
+      return 'Jan';
     case 2:
-      return 'February';
+      return 'Feb';
     case 3:
-      return 'March';
+      return 'Mar';
     case 4:
-      return 'April';
+      return 'Apr';
     case 5:
       return 'May';
     case 6:
@@ -1141,15 +1289,15 @@ String _getMonthName(int month) {
     case 7:
       return 'July';
     case 8:
-      return 'August';
+      return 'Aug';
     case 9:
-      return 'September';
+      return 'Sept';
     case 10:
-      return 'October';
+      return 'Oct';
     case 11:
-      return 'November';
+      return 'Nov';
     case 12:
-      return 'December';
+      return 'Dec';
     default:
       return '';
   }

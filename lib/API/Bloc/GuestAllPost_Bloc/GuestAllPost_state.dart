@@ -2,12 +2,15 @@ import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
 import 'package:pds/API/Model/Delete_Api_model/delete_api_model.dart';
 import 'package:pds/API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
+import 'package:pds/API/Model/IsTokenExpired/IsTokenExpired.dart';
+import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
 import 'package:pds/API/Model/createStroyModel/createStroyModel.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/myaccountModel/myaccountModel.dart';
 import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
 
 import '../../Model/Get_all_blog_Model/get_all_blog_model.dart';
+import '../../Model/RePost_Model/RePost_model.dart';
 
 abstract class GetGuestAllPostState {}
 
@@ -69,4 +72,14 @@ class saveBlogLoadedState extends GetGuestAllPostState {
 class likeBlogLoadedState extends GetGuestAllPostState {
   final saveBlogModel LikeBlogModeData;
   likeBlogLoadedState(this.LikeBlogModeData);
+}
+
+class RePostLoadedState extends GetGuestAllPostState {
+  final RePostModel RePost;
+  RePostLoadedState(this.RePost);
+}
+
+class SystemConfigLoadedState extends GetGuestAllPostState {
+  final SystemConfigModel SystemConfigModelData;
+  SystemConfigLoadedState(this.SystemConfigModelData);
 }

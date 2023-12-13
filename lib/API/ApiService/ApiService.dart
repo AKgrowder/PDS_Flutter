@@ -2,14 +2,15 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/internet_utils.dart';
 import 'package:pds/presentation/noInterneterror/noInterNetScreen.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../../presentation/splash_screen/splash_screen.dart';
@@ -20,7 +21,7 @@ class ApiServices {
   bool? checkURL = false;
   UpdateBaseURL() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    checkURL = prefs.getBool(PreferencesKey.RoutURl);
+    checkURL = prefs.getBool(PreferencesKey.RoutURlChnage);
     Token = prefs.getString(PreferencesKey.loginJwt) ?? "";
     if (checkURL == true) {
       /// UAT
@@ -29,8 +30,8 @@ class ApiServices {
       baseURL =
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.packagingdepot.store/";
-      "https://api.packagingdepot.store/";
-      // "http://192.168.29.17:8081/";
+          // "https://api.packagingdepot.store/";
+          "http://192.168.29.100:8081/";
     }
 
     print(baseURL);
@@ -66,8 +67,8 @@ class ApiServices {
       baseURL =
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.packagingdepot.store/";
-      "https://api.packagingdepot.store/";
-      // "http://192.168.29.17:8081/";
+          // "https://api.packagingdepot.store/";
+          "http://192.168.29.100:8081/";
     }
     print("API => ******** ${baseURL + APIurl}");
 
@@ -130,6 +131,24 @@ class ApiServices {
     }
   }
 
+  Future<Response?> deleteApiCallWithOutparams(
+      String APIurl, BuildContext context) async {
+    await UpdateBaseURL();
+
+    final headers1 = {'Authorization': 'Bearer ${Token}'};
+    print("API =>******${baseURL + APIurl}");
+    final response = await delete(
+      Uri.parse(baseURL + APIurl),
+      headers: headers1,
+    );
+
+    if (response.statusCode == 602) {
+      await setLOGOUT(context);
+    } else {
+      return response;
+    }
+  }
+
   postApiCalla(String APIurl, BuildContext context) async {
     await UpdateBaseURL();
     final headers1 = {
@@ -160,31 +179,49 @@ class ApiServices {
     };
     final response =
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
+    print("API =>******${baseURL + APIurl}");
 
     response.headers.addAll(headers1);
-
     if (params != null) {
-      if (params['userProfilePic'].toString().isNotEmpty &&
+      /* if (params['userProfilePic'].toString().isNotEmpty &&
           params['userBackgroundPic'].toString().isNotEmpty) {
-        response.fields["userProfilePic"] = params['userProfilePic'] ?? "";
-        response.fields["userBackgroundPic"] =
-            params['userBackgroundPic'] ?? "";
-      } else if (params['userProfilePic'].toString().isNotEmpty) {
-        response.fields["userProfilePic"] = params['userProfilePic'] ?? "";
+        print("multipartIfcondison");
+        response.fields["userProfilePic"] = params['userProfilePic'];
+        response.fields["userBackgroundPic"] = params['userBackgroundPic'];
+      } else if (params['userProfilePic'].toString().isNotEmpty ) {
+        print("multipart else if");
+        response.fields["userProfilePic"] = params['userProfilePic'];
       } else {
-        response.fields["userBackgroundPic"] =
-            params['userBackgroundPic'] ?? "";
+        if (params['userBackgroundPic'].toString().isNotEmpty ) {
+          print("multipart else ");
+          response.fields["userBackgroundPic"] = params['userBackgroundPic'];
+        }
+      } */
+      print("userProfiePictureResponce---${params['userProfilePic']}");
+      print("userBackgroundPicResponce---${params['userBackgroundPic']}");
+      if (params['userProfilePic'] != null &&
+          params['userBackgroundPic'] != null) {
+        response.fields["userProfilePic"] = params['userProfilePic'];
+        response.fields["userBackgroundPic"] = params['userBackgroundPic'];
+      } else if (params['userBackgroundPic'] != null) {
+        response.fields["userBackgroundPic"] = params['userBackgroundPic'];
+      } else if (params['userProfilePic'] != null) {
+        response.fields["userProfilePic"] = params['userProfilePic'];
+      } else {
+        print("multipartFile2 else condions working on--");
       }
-      response.fields["document"] = params['document'] ?? "";
-      response.fields["companyName"] = params['companyName'] ?? "";
-      response.fields["jobProfile"] = params['jobProfile'] ?? "";
-      response.fields["profileUid"] = params['profileUid'] ?? "";
-      response.fields["name"] = params['name'] ?? "";
-      response.fields["email"] = params['email'] ?? "";
+      response.fields["document"] = params['document'];
+      response.fields["companyName"] = params['companyName'];
+      response.fields["jobProfile"] = params['jobProfile'];
+      response.fields["profileUid"] = params['profileUid'];
+      response.fields["name"] = params['name'];
+      response.fields["email"] = params['email'];
       response.fields["industryTypesUid"] = params['industryTypesUid'];
     }
-    print("check responce fields--${params}");
-    log("message${params}");
+    log('companyUserAllData-${response.fields}');
+    print("check userProfilePic--${params?['userProfilePic']}");
+    print("check userBackgroundPic--${params?['userBackgroundPic']}");
+
     var res = await response.send();
     print('responce stauscode-${res.statusCode.toString()}');
     if (res.statusCode == 602) {
@@ -200,6 +237,7 @@ class ApiServices {
       String APIurl, String fileName, String file, BuildContext context,
       {String? apiName, Map<String, dynamic>? params, bool? AadPost}) async {
     await UpdateBaseURL();
+
     print('fileApi-$file');
     print('fileName-$fileName');
 
@@ -339,10 +377,11 @@ setLOGOUT(BuildContext context) async {
   var height = MediaQuery.of(context).size.height;
   var width = MediaQuery.of(context).size.width;
 
-  Future.delayed(const Duration(seconds: 1), () async {
+  Future.delayed(const Duration(seconds: 2), () async {
     // Navigator.pop(context);
     print("please again login");
     await setLogOut(context);
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
   });
   await showDialog(
       context: context,

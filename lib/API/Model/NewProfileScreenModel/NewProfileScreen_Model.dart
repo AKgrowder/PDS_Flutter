@@ -8,6 +8,7 @@ class NewProfileScreen_Model {
   NewProfileScreen_Model({this.message, this.object, this.success});
 
   NewProfileScreen_Model.fromJson(Map<String, dynamic> json) {
+    log("jaond--${json}");
     message = json['message'];
     object =
         json['object'] != null ? new Object.fromJson(json['object']) : null;
@@ -26,7 +27,7 @@ class NewProfileScreen_Model {
 }
 
 class Object {
-  String? isApproved;
+  bool? isApproved;
   String? userDocument;
   String? companyName;
   String? jobProfile;
@@ -51,7 +52,8 @@ class Object {
   int? followersCount;
   int? followingCount;
   int? postCount;
-
+  String? accountType;
+  String? documentName;
   Object(
       {this.isApproved,
       this.userDocument,
@@ -77,14 +79,16 @@ class Object {
       this.isFollowing,
       this.followersCount,
       this.followingCount,
-      this.postCount});
+      this.documentName,
+      this.postCount,this.accountType});
 
   Object.fromJson(Map<String, dynamic> json) {
-    log("gdfhgfhgdfbh-$json");
+    log("gdfhgfhgdfbh-${json['accountType']}");
     isApproved = json['isApproved'];
     userDocument = json['userDocument'];
     companyName = json['companyName'];
     jobProfile = json['jobProfile'];
+    documentName =json['documentName'];
     fees = json['fees'];
     workingHours = json['workingHours'];
     rejectionReason = json['rejectionReason'];
@@ -98,6 +102,7 @@ class Object {
     profileUid = json['profileUid'];
     userProfilePic = json['userProfilePic'];
     userBackgroundPic = json['userBackgroundPic'];
+    accountType = json['accountType'];
     if (json['industryTypes'] != null) {
       industryTypes = <IndustryTypes>[];
       json['industryTypes'].forEach((v) {

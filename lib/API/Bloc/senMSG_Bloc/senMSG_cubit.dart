@@ -20,7 +20,7 @@ class senMSGCubit extends Cubit<senMSGState> {
   //       print('staus Get');
   //       emit(senMSGLoadedState(PublicRModel));
   //       coomentPage(Room_ID, context);
-  //     } 
+  //     }
   //   } catch (e) {
   //     print('senMSGApi-$e');
   //     emit(senMSGErrorState(PublicRModel));
@@ -36,12 +36,15 @@ class senMSGCubit extends Cubit<senMSGState> {
       ShowLoader == true ? SizedBox() : emit(senMSGLoadingState());
       comentApiClass =
           await Repository().commentApi(Room_ID, currentPage, context);
-
-      if (comentApiClass.success == true) {
-        print("comentApiClass.sucuess-");
-        emit(ComentApiState(comentApiClass));
+      if (comentApiClass == "Something Went Wrong, Try After Some Time.") {
+        emit(senMSGErrorState("${comentApiClass}"));
       } else {
-        emit(senMSGErrorState('No Data Found!'));
+        if (comentApiClass.success == true) {
+          print("comentApiClass.sucuess-");
+          emit(ComentApiState(comentApiClass));
+        } else {
+          emit(senMSGErrorState('No Data Found!'));
+        }
       }
     } catch (e) {
       print('Catthceroor-${e.toString()}');
@@ -58,21 +61,27 @@ class senMSGCubit extends Cubit<senMSGState> {
       ShowLoader == true ? SizedBox() : emit(senMSGLoadingState());
       comentApiClassPagenation =
           await Repository().commentApi(Room_ID, currentPage, context);
-      if (comentApiClassPagenation.object.messageOutputList != null) {
-        print("comentApiClass.sucuess-");
+      if (comentApiClassPagenation ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(senMSGErrorState("${comentApiClassPagenation}"));
+      } else {
+        if (comentApiClassPagenation.object.messageOutputList != null) {
+          print("comentApiClass.sucuess-");
 
-        comentApiClass.object.messageOutputList.content
-            .insertAll(0,comentApiClassPagenation.object.messageOutputList.content.reversed
-                        .toList());
+          comentApiClass.object.messageOutputList.content.insertAll(
+              0,
+              comentApiClassPagenation.object.messageOutputList.content.reversed
+                  .toList());
 
-        comentApiClass.object.messageOutputList.pageable.pageNumber =
-            comentApiClassPagenation
-                .object.messageOutputList.pageable.pageNumber;
-        comentApiClass.object.messageOutputList.totalElements =
-            comentApiClassPagenation.object.messageOutputList.totalElements;
+          comentApiClass.object.messageOutputList.pageable.pageNumber =
+              comentApiClassPagenation
+                  .object.messageOutputList.pageable.pageNumber;
+          comentApiClass.object.messageOutputList.totalElements =
+              comentApiClassPagenation.object.messageOutputList.totalElements;
 
-        emit(ComentApiState(comentApiClass));
-        // emit(ComentApiClassPagenation(comentApiClassPagenation));
+          emit(ComentApiState(comentApiClass));
+          // emit(ComentApiClassPagenation(comentApiClassPagenation));
+        }
       } /* else {
         emit(senMSGErrorState('No Data Found!'));
       } */
@@ -83,23 +92,27 @@ class senMSGCubit extends Cubit<senMSGState> {
   }
 
   Future<void> chatImageMethod(
-    String Room_ID,
+    String inboxChatUserUid,
     BuildContext context,
     String userUid,
     File imageFile,
   ) async {
-    print('roomId-$Room_ID');
+    print('roomId-$inboxChatUserUid');
     print("userUid-$userUid");
     dynamic responce;
     try {
-      responce =
-          await Repository().chatImage(context, Room_ID, userUid, imageFile);
+      responce = await Repository()
+          .chatImage(context, inboxChatUserUid, userUid, imageFile);
       print('dfbsdfhsdf-$responce');
-      if (responce['success'] == true) {
-        print("comentApiClass.sucuess-");
-        emit(ComentApiIntragtionWithChatState(responce));
+      if (responce == "Something Went Wrong, Try After Some Time.") {
+        emit(senMSGErrorState("${responce}"));
       } else {
-        emit(senMSGErrorState('No Data Found!'));
+        if (responce['success'] == true) {
+          print("comentApiClass.sucuess-");
+          emit(ComentApiIntragtionWithChatState(responce));
+        } else {
+          emit(senMSGErrorState('No Data Found!'));
+        }
       }
     } catch (e) {
       print('Catthceroor-${e.toString()}');

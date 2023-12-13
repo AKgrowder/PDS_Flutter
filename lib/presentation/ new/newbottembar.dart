@@ -45,7 +45,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
     SearchBarScreen(value2: 1),
     // NotificationsScreen(),
 
-    InboxScreen1(),
+    InboxScreen(),
     NewNotifactionScreen(),
     // SettingScreen(),
 
@@ -81,7 +81,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
     return (isOffline)
         ? const Text("NOt Connected")
         : WillPopScope(
-            onWillPop: () async => false,
+            onWillPop: () async => true,
             child: Scaffold(
               resizeToAvoidBottomInset: false,
               floatingActionButton: const Stack(

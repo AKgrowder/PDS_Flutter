@@ -69,7 +69,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
             backgroundColor: ColorConstant.primary_color,
           );
           SubmitOneTime = false;
-           Future.delayed(const Duration(seconds: 1), () {
+          Future.delayed(const Duration(seconds: 4), () {
             Navigator.pop(context);
           });
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -325,6 +325,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                               ),
                               GestureDetector(
                                 onTap: () {
+                                  print("link formate -- ${widget.Room_Link}");
                                   Clipboard.setData(ClipboardData(
                                       text: "${widget.Room_Link}"));
                                   SnackBar snackBar = SnackBar(
