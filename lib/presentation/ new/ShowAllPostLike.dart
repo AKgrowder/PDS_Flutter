@@ -97,6 +97,8 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
               backgroundColor: ColorConstant.primary_color,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            BlocProvider.of<GetPostAllLikeCubit>(context)
+                .GetPostAllLikeAPI(context, "${widget.PostID}");
           }
         }, builder: (context, state) {
           return GetPostAllLikeRoomData?.object?.length == 0 ||
@@ -199,10 +201,11 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
                             ? SizedBox()
                             : GestureDetector(
                                 onTap: () {
-                                  followFunction(
-                                    apiName: 'Follow',
-                                    index: index,
-                                  );
+                                  BlocProvider.of<GetPostAllLikeCubit>(context)
+                                      .followWIngMethod(
+                                          GetPostAllLikeRoomData
+                                              ?.object?[index].userUid,
+                                          context);
                                 },
                                 child: Container(
                                   height: 25,
