@@ -1710,7 +1710,7 @@ class _RePostScreenState extends State<RePostScreen> {
               "postType": soicalData[indexx].toString().toUpperCase()
             };
             BlocProvider.of<RePostCubit>(context)
-                .RePostAPI(context, param, widget.postUid);
+                .RePostAPI(context, param, widget.postUid,"");
           } else if (postText1.text.isNotEmpty && file12?.path != null) {
             Map<String, dynamic> param = {
               "description": postText1.text,
@@ -1719,7 +1719,7 @@ class _RePostScreenState extends State<RePostScreen> {
               "postType": soicalData[indexx].toString().toUpperCase()
             };
             BlocProvider.of<RePostCubit>(context)
-                .RePostAPI(context, param, widget.postUid);
+                .RePostAPI(context, param, widget.postUid,"");
           } else if (postText1.text.isNotEmpty && pickedImage.isNotEmpty) {
             Map<String, dynamic> param = {
               "description": postText1.text,
@@ -1728,7 +1728,7 @@ class _RePostScreenState extends State<RePostScreen> {
               "postType": soicalData[indexx].toString().toUpperCase()
             };
             BlocProvider.of<RePostCubit>(context)
-                .RePostAPI(context, param, widget.postUid);
+                .RePostAPI(context, param, widget.postUid,"");
           } else if (pickedFile?.path != null && postText1.text.isNotEmpty) {
             Map<String, dynamic> param = {
               "description": postText1.text,
@@ -1737,7 +1737,7 @@ class _RePostScreenState extends State<RePostScreen> {
               "postType": soicalData[indexx].toString().toUpperCase()
             };
             BlocProvider.of<RePostCubit>(context)
-                .RePostAPI(context, param, widget.postUid);
+                .RePostAPI(context, param, widget.postUid,"");
           } else {
             if (postText1.text.isNotEmpty) {
               Map<String, dynamic> param = {
@@ -1745,7 +1745,7 @@ class _RePostScreenState extends State<RePostScreen> {
                 "postType": soicalData[indexx].toString().toUpperCase()
               };
               BlocProvider.of<RePostCubit>(context)
-                  .RePostAPI(context, param, widget.postUid);
+                  .RePostAPI(context, param, widget.postUid,"");
             } else if (file?.path != null) {
               Map<String, dynamic> param = {
                 "postData": imageDataPost?.object?.data,
@@ -1753,7 +1753,7 @@ class _RePostScreenState extends State<RePostScreen> {
                 "postType": soicalData[indexx].toString().toUpperCase(),
               };
               BlocProvider.of<RePostCubit>(context)
-                  .RePostAPI(context, param, widget.postUid);
+                  .RePostAPI(context, param, widget.postUid,"");
             } else if (pickedFile?.path != null) {
               Map<String, dynamic> param = {
                 "postData": imageDataPost?.object?.data,
@@ -1761,7 +1761,7 @@ class _RePostScreenState extends State<RePostScreen> {
                 "postType": soicalData[indexx].toString().toUpperCase(),
               };
               BlocProvider.of<RePostCubit>(context)
-                  .RePostAPI(context, param, widget.postUid);
+                  .RePostAPI(context, param, widget.postUid,"");
             } else if (file12?.path != null) {
               Map<String, dynamic> param = {
                 "postData": imageDataPost?.object?.data,
@@ -1769,7 +1769,7 @@ class _RePostScreenState extends State<RePostScreen> {
                 "postType": soicalData[indexx].toString().toUpperCase(),
               };
               BlocProvider.of<RePostCubit>(context)
-                  .RePostAPI(context, param, widget.postUid);
+                  .RePostAPI(context, param, widget.postUid,"");
             } else if (pickedImage.isNotEmpty) {
               Map<String, dynamic> param = {
                 "postData": imageDataPost?.object?.data,
@@ -1777,7 +1777,7 @@ class _RePostScreenState extends State<RePostScreen> {
                 "postType": soicalData[indexx].toString().toUpperCase(),
               };
               BlocProvider.of<RePostCubit>(context)
-                  .RePostAPI(context, param, widget.postUid);
+                  .RePostAPI(context, param, widget.postUid,"");
             } else {
               SnackBar snackBar = SnackBar(
                 content: Text('Please selcte image either fill Text'),
