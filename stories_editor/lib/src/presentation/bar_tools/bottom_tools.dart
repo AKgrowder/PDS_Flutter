@@ -112,33 +112,41 @@ class BottomTools extends StatelessWidget {
                       scale: 0.9,
                       child: AnimatedOnTapButton(
                           onTap: () async {
-                            print("editorNotifier.text-${editorNotifier.text.isEmpty}");
-                            print("controlNotifier.mediaPath-${controlNotifier.mediaPath.isEmpty}");
+                            /*    print(
+                                "editprofile Screen check-${editorNotifier.text}");
+                            print(
+                                "editorNotifier.text-${editorNotifier.text.isEmpty}");
+                            print(
+                                "controlNotifier.mediaPath-${controlNotifier.mediaPath}");
                             if (editorNotifier.text.isEmpty == true &&
                                 controlNotifier.mediaPath.isEmpty == true) {
                               print("Now this condiosn is working");
-                            } else {
-                              String pngUri;
+                            } else { */
+                            print("else consion is working");
+                            print(
+                                "else condiosn is -${controlNotifier.mediaPath}");
+                            String pngUri;
+                            print("xhxhxdfg-${controlNotifier.mediaPath}");
 
-                              await takePicture(
-                                      isTextEditing:
-                                          controlNotifier.isTextEditing,
-                                      SelectPath: controlNotifier.mediaPath,
-                                      contentKey: contentKey,
-                                      context: context,
-                                      saveToGallery: false)
-                                  .then((bytes) {
-                                if (bytes != null) {
-                                  pngUri = bytes;
-                                  print("asdfasdasdasdasdasdad-$pngUri");
-                                  print(pngUri);
+                            await takePicture(
+                                    isTextEditing:
+                                        controlNotifier.isTextEditing,
+                                    SelectPath: controlNotifier.mediaPath,
+                                    contentKey: contentKey,
+                                    context: context,
+                                    saveToGallery: false)
+                                .then((bytes) {
+                              if (bytes != null) {
+                                pngUri = bytes;
+                                print("asdfasdasdasdasdasdad-$pngUri");
+                                print(pngUri);
 
-                                  print(pngUri);
+                                print(pngUri);
 
-                                  onDone(pngUri);
-                                } else {}
-                              });
-                            }
+                                onDone(pngUri);
+                              } else {}
+                            });
+                            // }
                           },
                           child: Container(
                             padding: const EdgeInsets.only(
@@ -146,8 +154,10 @@ class BottomTools extends StatelessWidget {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
                                 border: Border.all(
-                                    color: editorNotifier.text.isEmpty == true &&
-                                controlNotifier.mediaPath.isEmpty == true
+                                    color: editorNotifier.text.isEmpty ==
+                                                true &&
+                                            controlNotifier.mediaPath.isEmpty ==
+                                                true
                                         ? Colors.grey
                                         : Colors.white,
                                     width: 1.5)),
@@ -156,8 +166,10 @@ class BottomTools extends StatelessWidget {
                               Text(
                                 'Share',
                                 style: TextStyle(
-                                    color: editorNotifier.text.isEmpty == true &&
-                                controlNotifier.mediaPath.isEmpty == true
+                                    color: editorNotifier.text.isEmpty ==
+                                                true &&
+                                            controlNotifier.mediaPath.isEmpty ==
+                                                true
                                         ? Colors.grey
                                         : Colors.white,
                                     letterSpacing: 1.5,

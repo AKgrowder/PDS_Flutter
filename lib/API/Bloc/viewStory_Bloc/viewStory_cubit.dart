@@ -32,6 +32,7 @@ class ViewStoryCubit extends Cubit<ViewStoryState> {
   ) async {
     dynamic ViewStoryModel;
     try {
+      print("Storyuid-${storyUid}");
       emit(ViewStoryLoadingState());
       ViewStoryModel = await Repository().StoryViewList(context, storyUid);
       if (ViewStoryModel == "Something Went Wrong, Try After Some Time.") {
