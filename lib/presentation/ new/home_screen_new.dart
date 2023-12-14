@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pds/API/Bloc/BlogComment_BLoc/BlogComment_cubit.dart';
+import 'package:pds/API/Bloc/BlogComment_BLoc/BlogComment_state.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
@@ -17,6 +18,7 @@ import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
+import 'package:pds/API/Model/BlogComment_Model/BlogComment_model.dart';
 import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
 import 'package:pds/API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
@@ -92,7 +94,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   double documentVideosize = 0;
 
   double finalvideoSize = 0;
-
+  BlogCommentModel? blogCommentModel;
   LikePost? likePost;
   GetGuestAllPostModel? AllGuestPostRoomData;
   DeleteCommentModel? DeletecommentDataa;
@@ -130,6 +132,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   String? IosLatestVersion;
   String? IosRoutVersion;
   String? IosMainversion;
+   bool AutoOpenPostBool = false;
+ String? AutoOpenPostID;
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     documentuploadsize = await double.parse(
@@ -749,6 +753,22 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     print("---------------------->> : ${FCMToken}");
     print("User Token :--- " + "${Token}");
     User_ID == null ? api() : NewApi();
+       AutoOpenPostBool = prefs.getBool(PreferencesKey.AutoOpenPostBool) ?? false;
+    if (AutoOpenPostBool == true) {
+      AutoOpenPostID = prefs.getString(PreferencesKey.AutoOpenPostID);
+      prefs.setBool(PreferencesKey.AutoOpenPostBool, false);
+      prefs.setString(PreferencesKey.AutoOpenPostID, "");
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => OpenSavePostImage(
+                  PostopenLink: AutoOpenPostID,
+                  PostID: "0",
+                  index: 0,
+                )),
+      );
+    }
   }
 
   Save_UserData() async {
@@ -996,6 +1016,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 },
               ), (Route<dynamic> route) => false);
             }
+
             if (state is GetAllStoryLoadedState) {
               getAllStoryModel = state.getAllStoryModel;
               buttonDatas.clear();
@@ -1006,18 +1027,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                   ((state.getAllStoryModel.object?.isNotEmpty == true) ??
                       false)) {
                 state.getAllStoryModel.object?.forEach((element) {
-
-                    int count = 0;
-                    element.storyData?.forEach((element) {
-                      if (element.storySeen!) {
-                        count++;
-                      }
-                    });
+                  int count = 0;
+                  element.storyData?.forEach((element) {
+                    if (element.storySeen!) {
+                      count++;
+                    }
+                  });
                   if (element.userUid == User_ID) {
                     userName.insert(0, element.userName.toString());
                     buttonDatas.insert(
                         0,
-                        StoryButtonData(isWatch: element.storyData?.length == count,
+                        StoryButtonData(
+                          isWatch: element.storyData?.length == count,
                           timelineBackgroundColor: Colors.grey,
                           buttonDecoration: BoxDecoration(
                             shape: BoxShape.circle,
@@ -2867,7 +2888,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   post_shere(
                                                                     context,
                                                                     androidLink:
-                                                                        "https://play.google.com/store/apps/details?id=com.pds.app",
+                                                                        // "https://play.google.com/store/apps/details?id=com.pds.app",
+                                                                         '${AllGuestPostRoomData?.object?.content?[index].postLink}'
                                                                     /* iosLink:
                                                     "https://apps.apple.com/in/app/growder-b2b-platform/id6451333863" */
                                                                   );
@@ -3790,7 +3812,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   post_shere(
                                                                     context,
                                                                     androidLink:
-                                                                        "https://play.google.com/store/apps/details?id=com.pds.app",
+                                                                        // "https://play.google.com/store/apps/details?id=com.pds.app",
+                                                                          '${AllGuestPostRoomData?.object?.content?[index].postLink}',
                                                                     /* iosLink:
                                                     "https://apps.apple.com/in/app/growder-b2b-platform/id6451333863" */
                                                                   );
@@ -4170,6 +4193,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                               true &&
                                           index == 0) {
                                         // print("index check$index");
+
                                         return User_ID == null
                                             ? SizedBox(
                                                 height: 30,
@@ -4361,11 +4385,27 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 "${getallBlogModel1?.object?[index1].uid}");
 
                                                                             if (getallBlogModel1?.object?[index1].isLiked ==
-                                                                                false) {
-                                                                              getallBlogModel1?.object?[index1].isLiked = true;
-                                                                            } else {
+                                                                                true) {
                                                                               getallBlogModel1?.object?[index1].isLiked = false;
+                                                                              int a = getallBlogModel1?.object?[index1].likeCount ?? 0;
+                                                                              int b = 1;
+                                                                              getallBlogModel1?.object?[index1].likeCount = a - b;
+                                                                            } else {
+                                                                              getallBlogModel1?.object?[index1].isLiked = true;
+                                                                              getallBlogModel1?.object?[index1].likeCount;
+                                                                              int a = getallBlogModel1?.object?[index1].likeCount ?? 0;
+                                                                              int b = 1;
+                                                                              getallBlogModel1?.object?[index1].likeCount = a + b;
                                                                             }
+
+                                                                            // if (getallBlogModel1?.object?[index1].isLiked ==
+                                                                            //     false) {
+                                                                            //   getallBlogModel1?.object?[index1].isLiked = true;
+
+                                                                            // } else {
+                                                                            //   getallBlogModel1?.object?[index1].isLiked = false;
+
+                                                                            // }
                                                                           },
                                                                           child:
                                                                               Padding(
@@ -4379,6 +4419,17 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                   ),
                                                                           ),
                                                                         ),
+                                                                        SizedBox(
+                                                                          width:
+                                                                              5,
+                                                                        ),
+                                                                        getallBlogModel1?.object?[index1].likeCount ==
+                                                                                0
+                                                                            ? SizedBox()
+                                                                            : Text(
+                                                                                "${getallBlogModel1?.object?[index1].likeCount}",
+                                                                                style: TextStyle(fontFamily: "outfit", fontSize: 14, color: Colors.black),
+                                                                              ),
                                                                         SizedBox(
                                                                           width:
                                                                               5,
@@ -4409,6 +4460,26 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             ),
                                                                           ),
                                                                         ),
+                                                                        // BlocConsumer<
+                                                                        //     BlogcommentCubit,
+                                                                        //     BlogCommentState>(listener: (context, state) {
+                                                                        //   if (state
+                                                                        //       is BlogCommentLoadedState) {
+                                                                        //     blogCommentModel =
+                                                                        //         state.commentdata;
+                                                                        //     print("blog comment length ==  ${blogCommentModel?.object?.length}");
+                                                                        //   }
+                                                                        // }, builder:
+                                                                        //     (context,
+                                                                        //         state) {
+                                                                        //   return Text(
+                                                                        //     "${blogCommentModel?.object?.length}",
+                                                                        //     style: TextStyle(
+                                                                        //         fontFamily: "outfit",
+                                                                        //         fontSize: 14,
+                                                                        //         color: Colors.black),
+                                                                        //   );
+                                                                        // })
                                                                         /* SizedBox(
                                                                           height:
                                                                               15,
@@ -4420,6 +4491,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 Image.asset(ImageConstant.arrowright),
                                                                           ),
                                                                         ), */
+
                                                                         Spacer(),
                                                                         GestureDetector(
                                                                           onTap:
@@ -4982,6 +5054,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         context: context,
         builder: (BuildContext bc) {
           return BlogCommentBottomSheet(
+            blogUid: getallBlogModel1?.object?[index].uid,
             isFoollinng:
                 AllGuestPostRoomData?.object?.content?[index].isFollowing,
           );
@@ -5065,7 +5138,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                 context,
                                 param,
                                 AllGuestPostRoomData
-                                    ?.object?.content?[index].postUid);
+                                    ?.object?.content?[index].postUid,
+                                "Repost");
                         Navigator.pop(context);
                       }),
                 ),

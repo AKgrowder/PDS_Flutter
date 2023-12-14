@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_state.dart';
 import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
@@ -14,10 +15,12 @@ import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CommentBottomSheet extends StatefulWidget {
   String userProfile;
@@ -219,6 +222,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                       }
                                       addcomment.text =
                                           postTexContrlloer.join(' ,');
+                                      isHeshTegData = false;
 
                                       // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
                                     });
@@ -279,6 +283,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                       }
                                       addcomment.text =
                                           postTexContrlloer.join(' ,');
+                                      isTagData = false;
 
                                       // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
                                     });
@@ -573,7 +578,76 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 width: _width / 1.4,
                                                 // height: 50,
                                                 // color: Colors.amber,
-                                                child: Text(
+                                                child: LinkifyText(
+                                                  "${addCommentModeldata?.object?[index].comment}",
+                                                  linkStyle: TextStyle(
+                                                      color: Colors.blue),
+                                                  textStyle: TextStyle(
+                                                      color: Colors.black),
+                                                  linkTypes: [
+                                                    LinkType.url,
+                                                    LinkType.userTag,
+                                                    LinkType.hashTag,
+                                                    // LinkType
+                                                    //     .email
+                                                  ],
+                                                  onTap: (link) {
+                                                    /// do stuff with `link` like
+                                                    /// if(link.type == Link.url) launchUrl(link.value);
+
+                                                    var SelectedTest =
+                                                        link.value.toString();
+                                                    var Link =
+                                                        SelectedTest.startsWith(
+                                                            'https');
+                                                    var Link1 =
+                                                        SelectedTest.startsWith(
+                                                            'http');
+                                                    var Link2 =
+                                                        SelectedTest.startsWith(
+                                                            'www');
+                                                    var Link3 =
+                                                        SelectedTest.startsWith(
+                                                            'WWW');
+                                                    var Link4 =
+                                                        SelectedTest.startsWith(
+                                                            'HTTPS');
+                                                    var Link5 =
+                                                        SelectedTest.startsWith(
+                                                            'HTTP');
+                                                    print(SelectedTest
+                                                        .toString());
+
+                                                    if (Link == true ||
+                                                        Link1 == true ||
+                                                        Link2 == true ||
+                                                        Link3 == true ||
+                                                        Link4 == true ||
+                                                        Link5 == true) {
+                                                      if (Link2 == true ||
+                                                          Link3 == true) {
+                                                        launchUrl(Uri.parse(
+                                                            "https://${link.value.toString()}"));
+                                                      } else {
+                                                        launchUrl(Uri.parse(link
+                                                            .value
+                                                            .toString()));
+                                                      }
+                                                    } else {
+                                                      print("${link}");
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                HashTagViewScreen(
+                                                                    title:
+                                                                        "${link.value}"),
+                                                          ));
+                                                    }
+                                                  },
+                                                )
+
+                                                /*  Text(
                                                     "${addCommentModeldata?.object?[index].comment}",
                                                     // maxLines: 2,
 
@@ -583,7 +657,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                             .visible,
                                                         fontSize: 16,
                                                         fontWeight:
-                                                            FontWeight.w400)),
+                                                            FontWeight.w400)) */
+                                                ,
                                               ),
                                             ],
                                           ),

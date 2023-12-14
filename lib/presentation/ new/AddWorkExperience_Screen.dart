@@ -73,6 +73,8 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
   IndustryType? selectedIndustryTypes;
   IndustryTypeModel? industryTypeModel;
   String? formattedDateStart;
+  String? apiDateStart;
+  String? apiDateEnd;
   String? formattedDateEnd;
   DateTime? pickedStartDate;
 
@@ -387,11 +389,16 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                           lastDate: DateTime(2101));
 
                                       if (pickedStartDate != null) {
-                                        print(pickedStartDate);
+                                        print(
+                                            "pickedStartDate${pickedStartDate}");
                                         formattedDateStart =
                                             DateFormat('dd-MM-yyyy').format(
                                                 pickedStartDate ??
                                                     DateTime.now());
+                                        apiDateStart = DateFormat('yyyy-MM-dd')
+                                            .format(pickedStartDate ??
+                                                DateTime.now());
+
                                         print(
                                             "formattedDate Start--${formattedDateStart}");
 
@@ -444,6 +451,8 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                           formattedDateEnd =
                                               DateFormat('dd-MM-yyyy')
                                                   .format(pickedDate);
+                                          apiDateEnd = DateFormat('yyyy-MM-dd')
+                                              .format(pickedDate);
                                           print(
                                               "formattedDate end--${formattedDateEnd}");
 
@@ -547,8 +556,8 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                 "industryType":
                                     selectedIndustryTypes?.industryTypeName,
                                 "jobProfile": JobProfileController.text,
-                                "endDate": EndDateController.text,
-                                "startDate": StartDateController.text,
+                                "endDate": apiDateEnd,
+                                "startDate": apiDateStart,
                                 "userWorkExperienceUid": widget.workUserID
                               };
                               print(
@@ -631,8 +640,8 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                     selectedIndustryTypes?.industryTypeName,
                                 "expertiseIn": selectedExpertise?.expertiseName,
                                 "jobProfile": JobProfileController.text,
-                                "endDate": EndDateController.text,
-                                "startDate": StartDateController.text,
+                                "endDate": apiDateEnd,
+                                "startDate": apiDateStart,
                                 "userWorkExperienceUid": widget.workUserID
                               };
                               print("NewProfileSCubit${params1}");
@@ -707,8 +716,8 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                 "industryType":
                                     selectedIndustryTypes?.industryTypeName,
                                 "jobProfile": JobProfileController.text,
-                                "endDate": formattedDateEnd,
-                                "startDate": formattedDateStart
+                                "endDate": apiDateEnd,
+                                "startDate": apiDateStart
                               };
                               print(
                                   "AddWorkExperienceAPIAddWorkExperienceAPI${params}");
@@ -790,8 +799,8 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                     selectedIndustryTypes?.industryTypeName,
                                 "expertiseIn": selectedExpertise?.expertiseName,
                                 "jobProfile": JobProfileController.text,
-                                "endDate": formattedDateEnd,
-                                "startDate": formattedDateStart,
+                                "endDate": apiDateEnd,
+                                "startDate": apiDateStart,
                               };
                               print("NewProfileSCubit${params1}");
                               print("widget.workUserID${widget.workUserID}");

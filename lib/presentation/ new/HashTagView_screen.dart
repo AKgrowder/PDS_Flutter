@@ -106,6 +106,15 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
             hashTagViewData = state.HashTagViewData;
             print("HashTagViewDataLoadedState${hashTagViewData}");
           }
+          if (state is PostLikeLoadedState) {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.likePost.object.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            BlocProvider.of<HashTagCubit>(context)
+                .HashTagViewDataAPI(context, widget.title.toString());
+          }
         },
         builder: (context, state) {
           if (state is HashTagLoadingState) {
@@ -1085,7 +1094,8 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                 context,
                                 param,
                                 AllGuestPostRoomData
-                                    ?.object?.content?[index].postUid);
+                                    ?.object?.content?[index].postUid,
+                                "Repost");
                         Navigator.pop(context);
                       }),
                 ),
