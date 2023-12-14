@@ -48,9 +48,15 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
   int imageCount = 1;
 
   @override
-  void initState() {
-    BlocProvider.of<OpenSaveCubit>(context)
-        .openSaveImagePostAPI(context, "${widget.PostID}");
+   void initState() {
+    if (widget.PostID == "0") {
+      BlocProvider.of<OpenSaveCubit>(context)
+          .openSaveImagePostAPI(context,"${widget.PostopenLink}","");
+    } else {
+      BlocProvider.of<OpenSaveCubit>(context)
+          .openSaveImagePostAPI(context,"","${widget.PostID}");
+    }
+
     super.initState();
   }
 
