@@ -110,8 +110,6 @@ class _MainViewState extends State<MainView> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var _control = Provider.of<ControlNotifier>(context, listen: false);
-
-      /// initialize control variable provider
       _control.giphyKey = widget.giphyKey;
       _control.middleBottomWidget = widget.middleBottomWidget;
       _control.isCustomFontList = widget.isCustomFontList ?? false;
@@ -173,7 +171,6 @@ class _MainViewState extends State<MainView> {
                             onTap: () {
                               controlNotifier.isTextEditing =
                                   !controlNotifier.isTextEditing;
-                                  
                             },
                             child: Align(
                               alignment: Alignment.topCenter,
@@ -379,7 +376,8 @@ class _MainViewState extends State<MainView> {
                           });
                         },
                         onDoneButtonStyle: widget.onDoneButtonStyle,
-                        editorBackgroundColor: widget.editorBackgroundColor, context1: context,
+                        editorBackgroundColor: widget.editorBackgroundColor,
+                        context1: context,
                       ),
                   ],
                 ),
