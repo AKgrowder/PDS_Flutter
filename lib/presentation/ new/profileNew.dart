@@ -114,8 +114,6 @@ class _ProfileScreenState extends State<ProfileScreen>
   var uploadimage = "";
   dynamic dataSetup;
   GetWorkExperienceModel? addWorkExperienceModel;
-  String? formattedDateStart;
-  String? formattedDateEnd;
 
   String? User_Module;
   FollowersClassModel? followersClassModel1;
@@ -2735,11 +2733,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                     textInputAction: TextInputAction.next,
                     filled: true,
                     maxLength: 100,
-                    textStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        wordSpacing: 1,
-                        letterSpacing: 1,
-                        fontFamily: 'outfit',
                     fillColor: appTheme.gray100,
                   ),
                 ),
@@ -2780,6 +2773,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                     },
                     // textStyle: theme.textTheme.titleMedium!,
                     hintText: "Industry Type",
+                    textStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        wordSpacing: 1,
+                        letterSpacing: 1,
+                        fontFamily: 'outfit'),
                     // hintStyle: theme.textTheme.titleMedium!,
                     textInputAction: TextInputAction.next,
                     filled: true,
@@ -3172,14 +3170,6 @@ class _ProfileScreenState extends State<ProfileScreen>
               padding: EdgeInsets.only(top: 10),
               itemCount: addWorkExperienceModel?.object?.length,
               itemBuilder: (context, index) {
-                formattedDateStart = DateFormat('dd-MM-yyyy').format(
-                    DateFormat('yyyy-MM-dd').parse(
-                        addWorkExperienceModel?.object?[index].startDate ??
-                            DateTime.now().toIso8601String()));
-                formattedDateEnd = DateFormat('dd-MM-yyyy').format(
-                    DateFormat('yyyy-MM-dd').parse(
-                        addWorkExperienceModel?.object?[index].endDate ??
-                            DateTime.now().toIso8601String()));
                 return ListTile(
                   titleAlignment: ListTileTitleAlignment.top,
                   leading: addWorkExperienceModel
@@ -3238,9 +3228,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                           fontSize: 12,
                         ),
                       ),
-                      formattedDateStart != null && formattedDateEnd != null
+                      addWorkExperienceModel?.object?[index].startDate !=
+                                  null &&
+                              addWorkExperienceModel?.object?[index].endDate !=
+                                  null
                           ? Text(
-                              '${formattedDateStart} to ${formattedDateEnd}',
+                              '${addWorkExperienceModel?.object?[index].startDate} - ${addWorkExperienceModel?.object?[index].endDate}',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 12,
@@ -3388,11 +3381,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                     textInputAction: TextInputAction.next,
                     filled: true,
                     maxLength: 100,
-                    textStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        wordSpacing: 1,
-                        letterSpacing: 1,
-                        fontFamily: 'outfit',
                     fillColor: appTheme.gray100,
                   ),
                 ),
@@ -3413,6 +3401,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                   child: CustomTextFormField(
                     readOnly: true, maxLines: 4,
                     controller: IndustryType,
+                    textStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        wordSpacing: 1,
+                        letterSpacing: 1,
+                        fontFamily: 'outfit'),
                     margin: EdgeInsets.only(
                       top: 10,
                     ),
