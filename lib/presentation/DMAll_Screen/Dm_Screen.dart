@@ -29,7 +29,9 @@ import '../register_create_account_screen/register_create_account_screen.dart';
 class DmScreen extends StatefulWidget {
   String UserName;
   String ChatInboxUid;
-  DmScreen({required this.ChatInboxUid, required this.UserName});
+  String? UserWithUID;
+  DmScreen(
+      {required this.ChatInboxUid, required this.UserName, this.UserWithUID});
 
   @override
   State<DmScreen> createState() => _DmScreenState();
@@ -943,108 +945,120 @@ class _DmScreenState extends State<DmScreen> {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackBar);
                                       } else {
-                                        checkGuestUser();
-                                        print("this Data Get-");
-                                        DMChatInboxUid =
-                                            "${widget.ChatInboxUid}";
+                                        if (widget.ChatInboxUid == "") {
+                                          print("New chat ");
+                                        } else {
+                                          checkGuestUser();
+                                          print("this Data Get-");
+                                          DMChatInboxUid =
+                                              "${widget.ChatInboxUid}";
 
-                                        // "${widget.Room_ID}";
-                                        DMstompClient.subscribe(
-                                            destination:
-                                                "/topic/getInboxMessage/${widget.ChatInboxUid}",
-                                            // "/topic/getMessage/${widget.Room_ID}",
-                                            callback: (StompFrame frame) {
-                                              Map<String, dynamic> jsonString =
-                                                  json.decode(frame.body ?? "");
+                                          // "${widget.Room_ID}";
+                                          DMstompClient.subscribe(
+                                              destination:
+                                                  "/topic/getInboxMessage/${widget.ChatInboxUid}",
+                                              // "/topic/getMessage/${widget.Room_ID}",
+                                              callback: (StompFrame frame) {
+                                                Map<String, dynamic>
+                                                    jsonString = json.decode(
+                                                        frame.body ?? "");
 
-                                              var msgUUID = jsonString['object']['uid'];
-                                              if (AddNewData == false) {
-                                                print(getInboxMessagesModel
-                                                    ?.object?.content?.length);
-                                                if (getInboxMessagesModel
-                                                        ?.object?.content ==
-                                                    null) {
-                                                  // BlocProvider.of<senMSGCubit>(
-                                                  //         context)
-                                                  //     .coomentPage(widget.Room_ID,
-                                                  //         context, "${0}",
-                                                  //         ShowLoader: true);
-                                                } else {
-                                                  if (addmsg != msgUUID) {
-                                                    mapDataAdd?.clear();
-                                                    print(
-                                                        "jsonStringDaatGet-${jsonString}");
+                                                var msgUUID =
+                                                    jsonString['object']['uid'];
+                                                if (AddNewData == false) {
+                                                  print(getInboxMessagesModel
+                                                      ?.object
+                                                      ?.content
+                                                      ?.length);
+                                                  if (getInboxMessagesModel
+                                                          ?.object?.content ==
+                                                      null) {
+                                                    // BlocProvider.of<senMSGCubit>(
+                                                    //         context)
+                                                    //     .coomentPage(widget.Room_ID,
+                                                    //         context, "${0}",
+                                                    //         ShowLoader: true);
+                                                  } else {
+                                                    if (addmsg != msgUUID) {
+                                                      mapDataAdd?.clear();
+                                                      print(
+                                                          "jsonStringDaatGet-${jsonString}");
 
-                                                    mapDataAdd = {
-                                                      "userUid":
-                                                          jsonString['object']
-                                                              ['uid'],
-                                                      "userChatMessageUid":
-                                                          jsonString['object'][
-                                                              'userChatInboxUid'],
-                                                      "userName":
-                                                          jsonString['object']
-                                                              ['userName'],
-                                                      "userProfilePic":
-                                                          jsonString['object'][
-                                                              'userProfilePic'],
-                                                      "message":
-                                                          jsonString['object']
-                                                              ['message'],
-                                                      "createdDate":
-                                                          jsonString['object']
-                                                              ['createdAt'],
-                                                      "messageType":
-                                                          jsonString['object']
-                                                              ['messageType'],
-                                                      "isDeleted":
-                                                          jsonString['object']
-                                                              ['isDeleted']
-                                                    };
+                                                      mapDataAdd = {
+                                                        "userUid":
+                                                            jsonString['object']
+                                                                ['uid'],
+                                                        "userChatMessageUid":
+                                                            jsonString['object']
+                                                                [
+                                                                'userChatInboxUid'],
+                                                        "userName":
+                                                            jsonString['object']
+                                                                ['userName'],
+                                                        "userProfilePic":
+                                                            jsonString['object']
+                                                                [
+                                                                'userProfilePic'],
+                                                        "message":
+                                                            jsonString['object']
+                                                                ['message'],
+                                                        "createdDate":
+                                                            jsonString['object']
+                                                                ['createdAt'],
+                                                        "messageType":
+                                                            jsonString['object']
+                                                                ['messageType'],
+                                                        "isDeleted":
+                                                            jsonString['object']
+                                                                ['isDeleted']
+                                                      };
 
-                                                    print(
-                                                        "Alljasonsdssdsdss-$mapDataAdd");
-                                                    print(
-                                                        "jsonString data-${jsonString['createdAt']}");
-                                                    Content content =
-                                                        Content.fromJson(
-                                                            mapDataAdd!);
-                                                    print(
-                                                        "Content${content.createdDate}");
-                                                    getInboxMessagesModel
-                                                        ?.object?.content
-                                                        ?.add(content);
+                                                      print(
+                                                          "Alljasonsdssdsdss-$mapDataAdd");
+                                                      print(
+                                                          "jsonString data-${jsonString['createdAt']}");
+                                                      Content content =
+                                                          Content.fromJson(
+                                                              mapDataAdd!);
+                                                      print(
+                                                          "Content${content.createdDate}");
+                                                      getInboxMessagesModel
+                                                          ?.object?.content
+                                                          ?.add(content);
 
-                                                    /*  _goToElement(AllChatmodelData
+                                                      /*  _goToElement(AllChatmodelData
                                                             ?.object
                                                             ?.messageOutputList
                                                             ?.content
                                                             ?.length ??
                                                         0); */
 
-                                                    setState(() {
-                                                      addDataSccesfully = true;
-                                                      addmsg =
-                                                          content.userUid ?? "";
-                                                    });
+                                                      setState(() {
+                                                        addDataSccesfully =
+                                                            true;
+                                                        addmsg =
+                                                            content.userUid ??
+                                                                "";
+                                                      });
+                                                    }
                                                   }
                                                 }
-                                              }
-                                            });
+                                              });
 
-                                        DMstompClient.send(
-                                          destination:
-                                              "/send_message_in_user_chat/${widget.ChatInboxUid}",
-                                          // "/sendMessage/${widget.Room_ID}",
-                                          body: json.encode({
-                                            "message": "${Add_Comment.text}",
-                                            "messageType": "TEXT",
-                                            "userChatInboxUid":
-                                                "${widget.ChatInboxUid}",
-                                            //  "${widget.Room_ID}",
-                                            "userCode": "${UserCode}"
-                                          }),
-                                        );
+                                          DMstompClient.send(
+                                            destination:
+                                                "/send_message_in_user_chat/${widget.ChatInboxUid}",
+                                            // "/sendMessage/${widget.Room_ID}",
+                                            body: json.encode({
+                                              "message": "${Add_Comment.text}",
+                                              "messageType": "TEXT",
+                                              "userChatInboxUid":
+                                                  "${widget.ChatInboxUid}",
+                                              //  "${widget.Room_ID}",
+                                              "userCode": "${UserCode}"
+                                            }),
+                                          );
+                                        }
                                       }
                                     } else {
                                       SnackBar snackBar = SnackBar(

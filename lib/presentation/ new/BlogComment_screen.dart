@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_state.dart';
 import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
@@ -14,18 +15,22 @@ import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
+import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../API/Bloc/BlogComment_BLoc/BlogComment_cubit.dart';
 import '../../API/Bloc/BlogComment_BLoc/BlogComment_state.dart';
 
 class BlogCommentBottomSheet extends StatefulWidget {
   String? isFoollinng;
+  String? blogUid;
 
-  BlogCommentBottomSheet({this.isFoollinng, key});
+  BlogCommentBottomSheet({this.isFoollinng, this.blogUid, key});
 
   @override
   State<BlogCommentBottomSheet> createState() => _BlogCommentBottomSheetState();
@@ -42,7 +47,6 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
   bool isKeyboardVisible = false;
   String? uuid;
   String? User_ID1;
-  String? blogUid;
   bool isDataGet = false;
   void _goToElement() {
     scroll.animateTo((1000 * 20),
@@ -181,9 +185,6 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                   DateTime? parsedDateTime = DateTime.parse(
                                       '${blogCommentModel?.object?[index].createdAt ?? ""}');
 
-                                  blogUid =
-                                      blogCommentModel?.object?[index].blogUid;
-
                                   return Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
@@ -221,13 +222,13 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                       child: blogCommentModel
                                                                       ?.object?[
                                                                           index]
-                                                                      .image
+                                                                      .userProfilePic
                                                                       ?.isEmpty ==
                                                                   true ||
                                                               blogCommentModel
                                                                       ?.object?[
                                                                           index]
-                                                                      .image ==
+                                                                      .userProfilePic ==
                                                                   null
                                                           ? CustomImageView(
                                                               radius:
@@ -247,7 +248,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                       .circular(
                                                                           50),
                                                               url:
-                                                                  "${blogCommentModel?.object?[index].image}",
+                                                                  "${blogCommentModel?.object?[index].userProfilePic}",
                                                               fit: BoxFit.fill,
                                                               height: 35,
                                                               width: 35,
@@ -297,29 +298,114 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                           Container(
                                                             width: 30,
                                                             child:
-                                                                GestureDetector(
-                                                                    onTap: () {
-                                                                      Deletecommentdilog(
-                                                                          blogCommentModel?.object?[index].commentUid ??
-                                                                              "",
-                                                                          index);
-                                                                    },
-                                                                    child: Icon(
-                                                                      Icons
-                                                                          .delete_outline_rounded,
-                                                                      size: 20,
-                                                                      color: Colors
-                                                                          .grey,
-                                                                    )),
+                                                               GestureDetector(
+                                                                onTap: () {
+                                                                  Deletecommentdilog(
+                                                                      blogCommentModel
+                                                                              ?.object?[index]
+                                                                              .commentUid ??
+                                                                          "",
+                                                                      index);
+                                                                },
+                                                                child: blogCommentModel?.object?[index].userUid == User_ID1
+                                                                    ? Icon(
+                                                                        Icons
+                                                                            .delete_outline_rounded,
+                                                                        size:
+                                                                            20,
+                                                                        color: Colors
+                                                                            .grey,
+                                                                      )
+                                                                    : SizedBox()),
                                                           ),
                                                         ],
                                                       ),
                                                     ),
                                                     Container(
-                                                      width: _width / 1.4,
-                                                      // height: 50,
-                                                      // color: Colors.amber,
-                                                      child: Text(
+                                                        width: _width / 1.4,
+                                                        // height: 50,
+                                                        // color: Colors.amber,
+                                                        child: LinkifyText(
+                                                          "${blogCommentModel?.object?[index].comment}",
+                                                          linkStyle: TextStyle(
+                                                              color:
+                                                                  Colors.blue),
+                                                          textStyle: TextStyle(
+                                                              color:
+                                                                  Colors.black),
+                                                          linkTypes: [
+                                                            LinkType.url,
+                                                            LinkType.userTag,
+                                                            LinkType.hashTag,
+                                                            // LinkType
+                                                            //     .email
+                                                          ],
+                                                          onTap: (link) {
+                                                            /// do stuff with `link` like
+                                                            /// if(link.type == Link.url) launchUrl(link.value);
+
+                                                            var SelectedTest =
+                                                                link.value
+                                                                    .toString();
+                                                            var Link =
+                                                                SelectedTest
+                                                                    .startsWith(
+                                                                        'https');
+                                                            var Link1 =
+                                                                SelectedTest
+                                                                    .startsWith(
+                                                                        'http');
+                                                            var Link2 =
+                                                                SelectedTest
+                                                                    .startsWith(
+                                                                        'www');
+                                                            var Link3 =
+                                                                SelectedTest
+                                                                    .startsWith(
+                                                                        'WWW');
+                                                            var Link4 =
+                                                                SelectedTest
+                                                                    .startsWith(
+                                                                        'HTTPS');
+                                                            var Link5 =
+                                                                SelectedTest
+                                                                    .startsWith(
+                                                                        'HTTP');
+                                                            print(SelectedTest
+                                                                .toString());
+
+                                                            if (Link == true ||
+                                                                Link1 == true ||
+                                                                Link2 == true ||
+                                                                Link3 == true ||
+                                                                Link4 == true ||
+                                                                Link5 == true) {
+                                                              if (Link2 ==
+                                                                      true ||
+                                                                  Link3 ==
+                                                                      true) {
+                                                                launchUrl(Uri.parse(
+                                                                    "https://${link.value.toString()}"));
+                                                              } else {
+                                                                launchUrl(Uri
+                                                                    .parse(link
+                                                                        .value
+                                                                        .toString()));
+                                                              }
+                                                            } else {
+                                                              print("${link}");
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder: (context) =>
+                                                                        HashTagViewScreen(
+                                                                            title:
+                                                                                "${link.value}"),
+                                                                  ));
+                                                            }
+                                                          },
+                                                        )
+                                                        /* Text(
                                                           "${blogCommentModel?.object?[index].comment}",
                                                           // maxLines: 2,
 
@@ -332,8 +418,8 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                               fontSize: 16,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .w400)),
-                                                    ),
+                                                                      .w400)), */
+                                                        ),
                                                   ],
                                                 ),
                                                 SizedBox(
@@ -449,7 +535,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                         } else {
                                           Map<String, dynamic> params = {
                                             "comment": addcomment.text,
-                                            "blogUid": blogUid,
+                                            "blogUid": widget.blogUid,
                                             "userUid": User_ID1
                                           };
 

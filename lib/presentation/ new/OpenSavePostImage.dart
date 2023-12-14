@@ -24,18 +24,19 @@ import '../../API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_state.dart';
 // ignore: must_be_immutable
 class OpenSavePostImage extends StatefulWidget {
   String? PostID;
+  String? PostopenLink;
   bool? profileTure;
   int? index;
   OpenSavePostImage({
     Key? key,
     required this.PostID,
     this.profileTure,
+    this.PostopenLink,
     this.index,
   }) : super(key: key);
   @override
   State<OpenSavePostImage> createState() => _OpenSavePostImageState();
 }
-
 class _OpenSavePostImageState extends State<OpenSavePostImage> {
   OpenSaveImagepostModel? OpenSaveModelData;
   String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
@@ -837,7 +838,10 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                       onTap: () async {
                         Map<String, dynamic> param = {"postType": "PUBLIC"};
                         BlocProvider.of<OpenSaveCubit>(context).RePostAPI(
-                            context, param, OpenSaveModelData?.object?.postUid);
+                            context,
+                            param,
+                            OpenSaveModelData?.object?.postUid,
+                            "Repost");
                       }),
                 ),
                 SizedBox(

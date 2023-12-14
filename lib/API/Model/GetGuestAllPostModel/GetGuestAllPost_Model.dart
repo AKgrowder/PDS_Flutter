@@ -99,6 +99,7 @@ class Content {
   String? userUid;
   String? postUserName;
   String? userProfilePic;
+  String? postLink;
   String? description;
   List<String>? postData;
   String? postDataType;
@@ -118,6 +119,7 @@ class Content {
     this.userUid,
     this.postUserName,
     this.userProfilePic,
+    this.postLink,
     this.description,
     this.postData,
     this.postDataType,
@@ -138,6 +140,7 @@ class Content {
     userUid = json['userUid'];
     postUserName = json['postUserName'];
     userProfilePic = json['userProfilePic'];
+    postLink = json['postLink'];
     description = json['description'];
     postData = json['postData'].cast<String>();
     postDataType = json['postDataType'];
@@ -161,6 +164,7 @@ class Content {
     data['userUid'] = this.userUid;
     data['postUserName'] = this.postUserName;
     data['userProfilePic'] = this.userProfilePic;
+    data['postLink'] = this.postLink;
     data['description'] = this.description;
     data['postData'] = this.postData;
     data['postDataType'] = this.postDataType;
@@ -185,6 +189,7 @@ class RepostOn {
   String? userUid;
   String? postUserName;
   String? userProfilePic;
+  String? postLink;
   String? description;
   List<String>? postData;
   String? postDataType;
@@ -204,6 +209,7 @@ class RepostOn {
     this.userUid,
     this.postUserName,
     this.userProfilePic,
+    this.postLink,
     this.description,
     this.postData,
     this.postDataType,
@@ -224,6 +230,7 @@ class RepostOn {
     userUid = json['userUid'];
     postUserName = json['postUserName'];
     userProfilePic = json['userProfilePic'];
+    postLink = json['postLink'];
     description = json['description'];
     postData = json['postData'].cast<String>();
     postDataType = json['postDataType'];
@@ -245,6 +252,7 @@ class RepostOn {
     data['userUid'] = this.userUid;
     data['postUserName'] = this.postUserName;
     data['userProfilePic'] = this.userProfilePic;
+    data['postLink'] = this.postLink;
     data['description'] = this.description;
     data['postData'] = this.postData;
     data['postDataType'] = this.postDataType;

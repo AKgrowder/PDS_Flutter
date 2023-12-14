@@ -79,6 +79,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   bool isVideodata = false;
   VideoPlayerController? _controller;
   HasDataModel? getAllHashtag;
+  String enteredText = '';
 /*   void _onTextChanged() {
     String text = postText.text;
 
@@ -183,7 +184,6 @@ class _CreateNewPostState extends State<CreateNewPost> {
           getAllHashtag = state.getAllHashtag;
           isHeshTegData = true;
           isTagData = false;
-
         }
         if (state is AddPostLoadedState) {
           print(
@@ -382,7 +382,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                     onChanged: (value) async {
                                       (value);
                                       onChangeMethod(value);
+
                                       //this is the link
+                                      print("controller text ${postText}");
                                     },
                                     onTap: () async {
                                       //this is the link
@@ -598,7 +600,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
                               if (isHeshTegData)
                                 Container(
                                   margin: EdgeInsets.only(
-                                       top:postText.length>=100?(postText.length +0) :100),
+                                      top: postText.length >= 100
+                                          ? (postText.length + 0)
+                                          : 100),
                                   height: imageDataPost?.object?.data != null
                                       ? _height / 3
                                       : _height,
@@ -621,8 +625,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                             border: Border.all(
                                                 color: Color(0xffE6E6E6))),
                                         child: GestureDetector(
-                                          onTap: (){
-                                               setState(() {
+                                          onTap: () {
+                                            setState(() {
                                               if (postText.text.isNotEmpty) {
                                                 /*   postText.text =
                                                   '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
@@ -631,9 +635,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                               }
                                               postText.text =
                                                   postTexContrlloer.join(' ,');
+                                              isHeshTegData = false;
 
                                               // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
-                                             
                                             });
                                           },
                                           child: Row(
@@ -667,7 +671,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
                               if (isTagData)
                                 Container(
                                   margin: EdgeInsets.only(
-                                      top:postText.length>=100?(postText.length +0) :100),
+                                      top: postText.length >= 100
+                                          ? (postText.length + 0)
+                                          : 100),
                                   height: imageDataPost?.object?.data != null
                                       ? _height / 3
                                       : _height,
@@ -690,19 +696,21 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                             border: Border.all(
                                                 color: Color(0xffE6E6E6))),
                                         child: GestureDetector(
-                                          onTap: () {
+                                          onTap: () async {
                                             setState(() {
                                               if (postText.text.isNotEmpty) {
-                                                /*   postText.text =
-                                                  '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
+                                                // postText.text =
+                                                //     '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}';
+
                                                 postTexContrlloer.add(
                                                     '@${searchUserForInbox1?.object?.content?[index].userName}');
                                               }
                                               postText.text =
                                                   postTexContrlloer.join(' ,');
 
+                                              isTagData = false;
+
                                               // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
-                                             
                                             });
                                           },
                                           child: Row(
@@ -1096,15 +1104,14 @@ class _CreateNewPostState extends State<CreateNewPost> {
       } else {
         print("check lenth else-${value.length}");
       }
-    }
-    else if(value.contains('#')){
+    } else if (value.contains('#')) {
       print("check length-${value}");
-       String data1 = value.split(' #').last.replaceAll('#', '');
-          BlocProvider.of<AddPostCubit>(context)
-              .GetAllHashtag(context, '10', '#${data1.trim()}');
-    }
-    else {
+      String data1 = value.split(' #').last.replaceAll('#', '');
+      BlocProvider.of<AddPostCubit>(context)
+          .GetAllHashtag(context, '10', '#${data1.trim()}');
+    } else {
       setState(() {
+        postText.text = postText.text + ' ' + postTexContrlloer.join(' ,');
         isTagData = false;
         isHeshTegData = false;
       });

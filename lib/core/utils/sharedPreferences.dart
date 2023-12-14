@@ -44,6 +44,10 @@ class PreferencesKey {
   static String MaxPublicRoomSave = "MaxPublicRoomSave";
   static String RoomPageCount = "RoomPageCount";
   static String AutoSetRoomID = "AutoSetRoomID";
+  static String AutoOpenPostID = "AutoOpenPostID";
+
+  static String AutoOpenPostBool = "AutoOpenPostBool";
+
   static String tabSelction = "tabSelction";
   static String MaxPostUploadSizeInMB = "MaxPostUploadSizeInMB";
   static String MaxStoryUploadSizeInMB = "MaxStoryUploadSizeInMB";
