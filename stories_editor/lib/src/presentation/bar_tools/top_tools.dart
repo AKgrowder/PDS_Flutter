@@ -79,6 +79,7 @@ class _TopToolsState extends State<TopTools> {
                     onTap: () async {
                       if (paintingNotifier.lines.isNotEmpty ||
                           itemNotifier.draggableWidget.isNotEmpty) {
+                            print("paintingNotifier.lines${controlNotifier.mediaPath}");
                         var response = await takePicture(
                           isTextEditing: controlNotifier.isTextEditing,
                            SelectPath :controlNotifier.mediaPath,

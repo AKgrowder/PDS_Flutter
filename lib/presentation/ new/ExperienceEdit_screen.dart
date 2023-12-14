@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_state.dart';
 import 'package:pds/core/utils/color_constant.dart';
@@ -21,6 +22,9 @@ class ExperienceEditScreen extends StatefulWidget {
   @override
   State<ExperienceEditScreen> createState() => _ExperienceEditScreenState();
 }
+
+String? formattedDateStart;
+String? formattedDateEnd;
 
 class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
   @override
@@ -103,6 +107,14 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                     ? addWorkExperienceModel?.object?.length
                     : 1,
                 itemBuilder: (context, index) {
+                  formattedDateStart = DateFormat('dd-MM-yyyy').format(
+                      DateFormat('yyyy-MM-dd').parse(
+                          addWorkExperienceModel?.object?[index].startDate ??
+                              DateTime.now().toIso8601String()));
+                  formattedDateEnd = DateFormat('dd-MM-yyyy').format(
+                      DateFormat('yyyy-MM-dd').parse(
+                          addWorkExperienceModel?.object?[index].endDate ??
+                              DateTime.now().toIso8601String()));
                   return Padding(
                     padding:
                         const EdgeInsets.only(top: 20, left: 20, right: 20),
@@ -159,16 +171,14 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                           companyName: addWorkExperienceModel
                                               ?.object?[index].companyName,
                                           edit: true,
-                                          endDate: addWorkExperienceModel
-                                              ?.object?[index].endDate,
+                                          endDate: formattedDateEnd,
                                           expertise: addWorkExperienceModel
                                               ?.object?[index].expertiseIn,
                                           industryType: addWorkExperienceModel
                                               ?.object?[index].industryType,
                                           jobProfile: addWorkExperienceModel
                                               ?.object?[index].jobProfile,
-                                          startDate: addWorkExperienceModel
-                                              ?.object?[index].startDate,
+                                          startDate: formattedDateStart,
                                           userID: widget.userID,
                                         );
                                       },
@@ -361,7 +371,7 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                             ?.object?[index].endDate !=
                                         null
                                 ? Text(
-                                    '${addWorkExperienceModel?.object?[index].startDate} to ${addWorkExperienceModel?.object?[index].endDate}',
+                                    '${formattedDateStart} to ${formattedDateEnd}',
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 13,

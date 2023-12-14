@@ -114,6 +114,8 @@ class _ProfileScreenState extends State<ProfileScreen>
   var uploadimage = "";
   dynamic dataSetup;
   GetWorkExperienceModel? addWorkExperienceModel;
+  String? formattedDateStart;
+  String? formattedDateEnd;
 
   String? User_Module;
   FollowersClassModel? followersClassModel1;
@@ -1614,7 +1616,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         const EdgeInsets.only(
                                                             top: 10),
                                                     child: Container(
-                                                        height: 300,
+                                                        height: 350,
                                                         decoration: BoxDecoration(
                                                             boxShadow: [
                                                               BoxShadow(
@@ -1638,7 +1640,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         const EdgeInsets.only(
                                                             top: 10),
                                                     child: Container(
-                                                        height: 300,
+                                                        height: 350,
                                                         decoration: BoxDecoration(
                                                             boxShadow: [
                                                               BoxShadow(
@@ -2733,6 +2735,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                     textInputAction: TextInputAction.next,
                     filled: true,
                     maxLength: 100,
+                    textStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        wordSpacing: 1,
+                        letterSpacing: 1,
+                        fontFamily: 'outfit',
                     fillColor: appTheme.gray100,
                   ),
                 ),
@@ -2775,8 +2782,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                     hintText: "Industry Type",
                     // hintStyle: theme.textTheme.titleMedium!,
                     textInputAction: TextInputAction.next,
-                    filled: true, 
-                    maxLength: 100, 
+                    filled: true,
+                    maxLength: 100,
                     fillColor: appTheme.gray100,
                   ),
                 ),
@@ -3064,13 +3071,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 if (dopcument != null) {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => DocumentViewScreen(
-                                            path:NewProfileData?.object?.userDocument,
-
-
-
-
-
-
+                                            path: NewProfileData
+                                                ?.object?.userDocument,
                                             title: 'Pdf',
                                           )));
                                 }
@@ -3170,6 +3172,14 @@ class _ProfileScreenState extends State<ProfileScreen>
               padding: EdgeInsets.only(top: 10),
               itemCount: addWorkExperienceModel?.object?.length,
               itemBuilder: (context, index) {
+                formattedDateStart = DateFormat('dd-MM-yyyy').format(
+                    DateFormat('yyyy-MM-dd').parse(
+                        addWorkExperienceModel?.object?[index].startDate ??
+                            DateTime.now().toIso8601String()));
+                formattedDateEnd = DateFormat('dd-MM-yyyy').format(
+                    DateFormat('yyyy-MM-dd').parse(
+                        addWorkExperienceModel?.object?[index].endDate ??
+                            DateTime.now().toIso8601String()));
                 return ListTile(
                   titleAlignment: ListTileTitleAlignment.top,
                   leading: addWorkExperienceModel
@@ -3228,12 +3238,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                           fontSize: 12,
                         ),
                       ),
-                      addWorkExperienceModel?.object?[index].startDate !=
-                                  null &&
-                              addWorkExperienceModel?.object?[index].endDate !=
-                                  null
+                      formattedDateStart != null && formattedDateEnd != null
                           ? Text(
-                              '${addWorkExperienceModel?.object?[index].startDate} - ${addWorkExperienceModel?.object?[index].endDate}',
+                              '${formattedDateStart} to ${formattedDateEnd}',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 12,
@@ -3381,6 +3388,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                     textInputAction: TextInputAction.next,
                     filled: true,
                     maxLength: 100,
+                    textStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        wordSpacing: 1,
+                        letterSpacing: 1,
+                        fontFamily: 'outfit',
                     fillColor: appTheme.gray100,
                   ),
                 ),
@@ -3494,13 +3506,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                               print("dfsdfgsdfgdfg-${dopcument}");
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => DocumentViewScreen(
-                                        path: NewProfileData?.object?.userDocument,
-
-
-
-
-
-
+                                        path: NewProfileData
+                                            ?.object?.userDocument,
                                         title: 'Pdf',
                                       )));
                             },
