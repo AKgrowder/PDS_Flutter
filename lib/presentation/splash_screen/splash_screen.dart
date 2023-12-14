@@ -261,7 +261,16 @@ class _SplashScreenState extends State<SplashScreen> {
         await FirebaseDynamicLinks.instance.getInitialLink();
     if (initialLink != null) {
       final Uri deepLink = initialLink.link;
-      deepLink1 = deepLink.toString().split("=")[1];
+      if (deepLink.toString().contains("room_link=")) {
+        deepLink1 = deepLink.toString().split("room_link=")[1];
+        prefs.setString(PreferencesKey.AutoSetRoomID, deepLink1);
+        prefs.setBool(PreferencesKey.AutoOpenPostBool, false);
+      } else if (deepLink.toString().contains("post_link=")) {
+        deepLink1 = deepLink.toString().split("post_link=")[1];
+        prefs.setString(PreferencesKey.AutoOpenPostID, deepLink1);
+        prefs.setBool(PreferencesKey.AutoOpenPostBool, true);
+      }
+
       // deepLink2 = deepLink1.toString().split("&")[0];
 
       print('Deeplinks uri:${deepLink.path}');

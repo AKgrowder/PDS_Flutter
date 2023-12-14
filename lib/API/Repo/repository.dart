@@ -2038,9 +2038,15 @@ class Repository {
     }
   }
 
-  openSaveImagePost(BuildContext context, String PostUID) async {
-    final response = await apiServices.getApiCallWithToken(
-        '${Config.OpenSaveImagePost}?postUid=$PostUID', context);
+  openSaveImagePost(
+      BuildContext context, String PostLink, String PostUID) async {
+    final response = PostUID == ""
+        ? await apiServices.getApiCallWithToken(
+            '${Config.OpenSaveImagePost}?postLink=${PostLink}',
+            context)
+        : await apiServices.getApiCallWithToken(
+            '${Config.OpenSaveImagePost}?postLink=${PostLink}&postUid=$PostUID',
+            context);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
@@ -2190,9 +2196,9 @@ class Repository {
   }
 
   RePost(
-      BuildContext context, Map<String, dynamic> params, String? uuId) async {
+      BuildContext context, Map<String, dynamic> params, String? uuId, String? name) async {
     final response = await apiServices.postApiCall(
-        Config.rePost + "?postUid=" + "${uuId}", params, context);
+        Config.rePost + "?postUid=" + "${uuId}"+ "&rePostType=" + "${name}", params, context);
     print('AddPost$response');
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -2430,7 +2436,8 @@ class Repository {
         return jsonString;
     }
   }
-   Blogcomment(BuildContext context, String blogID) async {
+
+  Blogcomment(BuildContext context, String blogID) async {
     final responce = await apiServices.getApiCall(
         '${Config.blogComment}?blogUid=${blogID}', context);
     var jsonString = json.decode(responce.body);
@@ -2476,6 +2483,7 @@ class Repository {
         return jsonString;
     }
   }
+
   DeleteBlogcomment(String commentuid, BuildContext context) async {
     final response = await apiServices.deleteApiCall(
         "${Config.deleteBlogcomment}?commentUid=${commentuid}", {}, context);

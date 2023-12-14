@@ -51,6 +51,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   int _secondsRemaining = 0;
   int otpTimer = 0;
   bool tm = false;
+  bool noMoveNext = false;
 
   timer() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -134,6 +135,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               listener: (context, state) async {
                 if (state is OtpErrorState) {
                   print("error");
+                  if (state.error.contains("Maximum try over,")) {
+                    noMoveNext = true;
+                  } else {
+                    noMoveNext = false;
+                  }
                   SnackBar snackBar = SnackBar(
                     content: Text(state.error),
                     backgroundColor: ColorConstant.primary_color,
@@ -361,9 +367,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                       ? GestureDetector(
                                           onTap: () {
                                             setState(() {
-                                              OTPController.clear();
-                                              tm = false;
-                                              _startTimer();
+                                              if (noMoveNext == false) {
+                                                OTPController.clear();
+                                                tm = false;
+                                                _startTimer();
+                                              }
+
                                               BlocProvider.of<OtpCubit>(context)
                                                   .resendOtpApi(
                                                       widget.phonNumber
