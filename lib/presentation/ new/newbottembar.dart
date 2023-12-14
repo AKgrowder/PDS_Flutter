@@ -322,7 +322,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                         onTap: () {
                           setState(() {
                             if (UserLogin_ID != null) {
-                              selectedIndex = 4;
+                              selectedIndex = 3;
                             } else {
                               NaviRegisterScreen();
                             }
@@ -338,7 +338,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                           //         : const Color(0xFF0D0D0D),
                           child: Container(
                             // height: 35,
-                            child: selectedIndex != 4
+                            child: selectedIndex != 3
                                 ? Padding(
                                     padding: const EdgeInsets.all(10.0),
                                     child: Image.asset(
