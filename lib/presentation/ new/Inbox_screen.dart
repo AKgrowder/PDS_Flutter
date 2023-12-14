@@ -199,7 +199,9 @@ class _InboxScreenState extends State<InboxScreen> {
                     motion: ScrollMotion(),
                     children: [
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          print("tap on search Profile");
+                        },
                         child: Container(
                           margin: EdgeInsets.only(left: 20, top: 5),
                           height: 50,
@@ -238,7 +240,9 @@ class _InboxScreenState extends State<InboxScreen> {
                           ChatInboxUid:
                               "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
                         );
-                      }));
+                      })).then((value) =>
+                          BlocProvider.of<PersonalChatListCubit>(context)
+                              .PersonalChatList(context));
                     },
                     child: Container(
                       height: 80,
@@ -374,7 +378,8 @@ class _InboxScreenState extends State<InboxScreen> {
         totalSize: searchUserForInbox1?.object?.totalElements,
         offSet: searchUserForInbox1?.object?.pageable?.pageNumber,
         onPagination: (p0) async {
-          BlocProvider.of<PersonalChatListCubit>(context).search_user_for_inboxPagantion(
+          BlocProvider.of<PersonalChatListCubit>(context)
+              .search_user_for_inboxPagantion(
             context,
             searchController.text.trim(),
             '${(p0 + 1)}',
@@ -386,53 +391,70 @@ class _InboxScreenState extends State<InboxScreen> {
           padding: EdgeInsets.zero,
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            return Container(
-              margin: EdgeInsets.all(10),
-              height: 70,
-              width: 110,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Color(0xffE6E6E6))),
-              child: Row(
-                children: [
-                  searchUserForInbox1?.object?.content?[index].userProfilePic !=
-                              null &&
-                          searchUserForInbox1?.object?.content?[index]
-                                  .userProfilePic?.isNotEmpty ==
-                              true
-                      ? Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: CircleAvatar(
-                            radius: 30.0,
-                            backgroundImage: NetworkImage(
-                                "${searchUserForInbox1?.object?.content?[index].userProfilePic}"),
-                            backgroundColor: Colors.transparent,
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return DmScreen(
+                      UserName:
+                          "${searchUserForInbox1?.object?.content?[index].userName}",
+                      ChatInboxUid: "",
+                      UserWithUID:
+                          "${searchUserForInbox1?.object?.content?[index].userUid}");
+                })).then((value) =>
+                    BlocProvider.of<PersonalChatListCubit>(context)
+                        .PersonalChatList(context));
+              },
+              child: Container(
+                margin: EdgeInsets.all(10),
+                height: 70,
+                width: 110,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Color(0xffE6E6E6))),
+                child: Row(
+                  children: [
+                    searchUserForInbox1
+                                    ?.object?.content?[index].userProfilePic !=
+                                null &&
+                            searchUserForInbox1?.object?.content?[index]
+                                    .userProfilePic?.isNotEmpty ==
+                                true
+                        ? Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: CircleAvatar(
+                              radius: 30.0,
+                              backgroundImage: NetworkImage(
+                                  "${searchUserForInbox1?.object?.content?[index].userProfilePic}"),
+                              backgroundColor: Colors.transparent,
+                            ),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: CircleAvatar(
+                              radius: 30.0,
+                              backgroundImage:
+                                  AssetImage(ImageConstant.tomcruse),
+                              backgroundColor: Colors.transparent,
+                            ),
                           ),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: CircleAvatar(
-                            radius: 30.0,
-                            backgroundImage: AssetImage(ImageConstant.tomcruse),
-                            backgroundColor: Colors.transparent,
+                    Container(
+                      width: width / 1.6,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Text(
+                          searchUserForInbox1
+                                  ?.object?.content?[index].userName ??
+                              '',
+                          style: TextStyle(
+                            overflow: TextOverflow.ellipsis,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ),
-                  Container(
-                    width: width / 1.6,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Text(
-                        searchUserForInbox1?.object?.content?[index].userName ??
-                            '',
-                        style: TextStyle(
-                          overflow: TextOverflow.ellipsis,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             );
           },

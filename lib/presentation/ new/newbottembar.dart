@@ -318,7 +318,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                           ),
                         ),
                       ),
-                    
+
                       GestureDetector(
                         onTap: () {
                           setState(() {
