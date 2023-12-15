@@ -114,6 +114,8 @@ class _ProfileScreenState extends State<ProfileScreen>
   var uploadimage = "";
   dynamic dataSetup;
   GetWorkExperienceModel? addWorkExperienceModel;
+  String? formattedDateStart;
+String? formattedDateEnd;
 
   String? User_Module;
   FollowersClassModel? followersClassModel1;
@@ -3170,6 +3172,14 @@ class _ProfileScreenState extends State<ProfileScreen>
               padding: EdgeInsets.only(top: 10),
               itemCount: addWorkExperienceModel?.object?.length,
               itemBuilder: (context, index) {
+                 formattedDateStart = DateFormat('dd-MM-yyyy').format(
+                      DateFormat('yyyy-MM-dd').parse(
+                          addWorkExperienceModel?.object?[index].startDate ??
+                              DateTime.now().toIso8601String()));
+                  formattedDateEnd = DateFormat('dd-MM-yyyy').format(
+                      DateFormat('yyyy-MM-dd').parse(
+                          addWorkExperienceModel?.object?[index].endDate ??
+                              DateTime.now().toIso8601String()));
                 return ListTile(
                   titleAlignment: ListTileTitleAlignment.top,
                   leading: addWorkExperienceModel
@@ -3233,7 +3243,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               addWorkExperienceModel?.object?[index].endDate !=
                                   null
                           ? Text(
-                              '${addWorkExperienceModel?.object?[index].startDate} - ${addWorkExperienceModel?.object?[index].endDate}',
+                              '${formattedDateStart} to ${formattedDateEnd}',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 12,
