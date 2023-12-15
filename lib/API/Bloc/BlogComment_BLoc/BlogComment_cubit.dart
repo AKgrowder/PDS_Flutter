@@ -11,13 +11,16 @@ class BlogcommentCubit extends Cubit<BlogCommentState> {
     try {
       emit(BlogCommentLoadingState());
       commentdata = await Repository().Blogcomment(context, blogID);
-      BlogCommentModel commentModel1 = BlogCommentModel.fromJson(commentdata);
-      print("commetData-${commentModel1.success}");
-      if (commentModel1.success == true) {
-        emit(BlogCommentLoadedState(commentModel1));
+
+      if (commentdata == "Something Went Wrong, Try After Some Time.") {
+        emit(BlogCommentErrorState("${commentdata}"));
       } else {
-        print("else working-$commentdata");
-        emit(BlogCommentLoadedState1(commentdata));
+        if (commentdata.success == true) {
+          emit(BlogCommentLoadedState(commentdata));
+        } else {
+          print("else working-$commentdata");
+          emit(BlogCommentLoadedState(commentdata));
+        }
       }
     } catch (e) {
       emit(BlogCommentErrorState(commentdata));
@@ -61,6 +64,44 @@ class BlogcommentCubit extends Cubit<BlogCommentState> {
       }
     } catch (e) {
       emit(BlogCommentErrorState(e.toString()));
+    }
+  }
+
+  Future<void> BlogLikeList(
+      BuildContext context, String blogID, String uuId) async {
+    dynamic likeListData;
+    try {
+      emit(BlogCommentLoadingState());
+      likeListData = await Repository().BlogLikeList(context, blogID, uuId);
+
+      if (likeListData == "Something Went Wrong, Try After Some Time.") {
+        emit(BlogCommentErrorState("${likeListData}"));
+      } else {
+        if (likeListData.success == true) {
+          emit(BlogLikelistLoadedState(likeListData));
+        }
+      }
+    } catch (e) {
+      emit(BlogCommentErrorState(likeListData));
+    }
+  }
+
+  Future<void> followWIngMethod(String? followedToUid, BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic likepost;
+    try {
+      // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
+      likepost = await Repository().folliwingMethod(followedToUid, context);
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(BlogCommentErrorState("${likepost}"));
+      } else {
+        if (likepost.success == true) {
+          emit(PostLikeBlogLoadedState(likepost));
+        }
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(BlogCommentErrorState(likepost));
     }
   }
 }
