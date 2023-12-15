@@ -4435,7 +4435,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 0
                                                                             ? SizedBox()
                                                                             : Text(
-                                                                                "${getallBlogModel1?.object?[index1].likeCount}",
+                                                                                "${getallBlogModel1?.object?[index1].likeCount== null?0 :getallBlogModel1?.object?[index1].likeCount}",
                                                                                 style: TextStyle(fontFamily: "outfit", fontSize: 14, color: Colors.black),
                                                                               ),
                                                                         SizedBox(
