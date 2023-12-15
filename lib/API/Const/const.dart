@@ -117,8 +117,8 @@ class Config {
   static const String delete_story = "user/api/delete_story";
   static const String DMChatList = "user/get_inbox_messages";
   static const String get_all_hashtag = "user/api/get_all_hashtag";
-   static const String blogComment = "admin/blog/get_all_comments_on_blog";
+  static const String blogComment = "admin/blog/get_all_comments_on_blog";
   static const String addBlogcomments = "admin/blog/add_comment";
-   static const String deleteBlogcomment = "admin/blog/delete_comment_by_uid";
+  static const String deleteBlogcomment = "admin/blog/delete_comment_by_uid";
+  static const String blogLikeList = "guest/api/get_all_blog_likes";
 }
-

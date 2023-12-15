@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:pds/API/Model/BlogComment_Model/BlogLikeList_model.dart';
 import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
 import 'package:pds/API/Model/HasTagModel/hasTagModel.dart';
 import 'package:pds/API/Model/IsTokenExpired/IsTokenExpired.dart';
@@ -2042,8 +2043,7 @@ class Repository {
       BuildContext context, String PostLink, String PostUID) async {
     final response = PostUID == ""
         ? await apiServices.getApiCallWithToken(
-            '${Config.OpenSaveImagePost}?postLink=${PostLink}',
-            context)
+            '${Config.OpenSaveImagePost}?postLink=${PostLink}', context)
         : await apiServices.getApiCallWithToken(
             '${Config.OpenSaveImagePost}?postLink=${PostLink}&postUid=$PostUID',
             context);
@@ -2195,10 +2195,12 @@ class Repository {
     }
   }
 
-  RePost(
-      BuildContext context, Map<String, dynamic> params, String? uuId, String? name) async {
+  RePost(BuildContext context, Map<String, dynamic> params, String? uuId,
+      String? name) async {
     final response = await apiServices.postApiCall(
-        Config.rePost + "?postUid=" + "${uuId}"+ "&rePostType=" + "${name}", params, context);
+        Config.rePost + "?postUid=" + "${uuId}" + "&rePostType=" + "${name}",
+        params,
+        context);
     print('AddPost$response');
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -2492,6 +2494,29 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return DeleteBlogCommentModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  BlogLikeList(BuildContext context, String blogID, String? uuID) async {
+    final responce = await apiServices.getApiCall(
+        '${Config.blogLikeList}?blogUid=${blogID}&loginUserUid=${uuID}',
+        context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return BlogLikeListModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
