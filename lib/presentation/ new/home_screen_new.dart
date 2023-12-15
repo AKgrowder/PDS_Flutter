@@ -10,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pds/API/Bloc/BlogComment_BLoc/BlogComment_cubit.dart';
-import 'package:pds/API/Bloc/BlogComment_BLoc/BlogComment_state.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
@@ -59,9 +58,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:video_player/video_player.dart';
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
-
+import 'package:pds/presentation/%20new/BlogLikeList_screen.dart';
 class HomeScreenNew extends StatefulWidget {
   const HomeScreenNew({Key? key}) : super(key: key);
 
@@ -134,6 +134,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   String? IosMainversion;
   bool AutoOpenPostBool = false;
   String? AutoOpenPostID;
+  List<VideoPlayerController> _controllers = [];
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     documentuploadsize = await double.parse(
@@ -218,27 +219,73 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       Offset.zero & overlay.size,
     );
 
-    showMenu(
+     showMenu(
       context: context,
       position: position,
-      items: <PopupMenuItem<String>>[
-        PopupMenuItem<String>(
-          value: 'delete',
-          child: Container(
-            width: 130,
-            height: 40,
-            child: Center(
-              child: Text(
-                'Delete',
-                style: TextStyle(color: Colors.white),
+      items: AllGuestPostRoomData?.object?.content?[index].postDataType == null
+          ? <PopupMenuItem<String>>[
+              PopupMenuItem<String>(
+                value: 'edit',
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateNewPost(
+                              edittextdata: AllGuestPostRoomData
+                                  ?.object?.content?[index].description),
+                        ));
+                  },
+                  child: Container(
+                    width: 130,
+                    height: 40,
+                    child: Center(
+                      child: Text(
+                        'Edit',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                        color: Color(0xffED1C25),
+                        borderRadius: BorderRadius.circular(5)),
+                  ),
+                ),
               ),
-            ),
-            decoration: BoxDecoration(
-                color: Color(0xffED1C25),
-                borderRadius: BorderRadius.circular(5)),
-          ),
-        ),
-      ],
+              PopupMenuItem<String>(
+                value: 'delete',
+                child: Container(
+                  width: 130,
+                  height: 40,
+                  child: Center(
+                    child: Text(
+                      'Delete',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                      color: Color(0xffED1C25),
+                      borderRadius: BorderRadius.circular(5)),
+                ),
+              ),
+            ]
+          : <PopupMenuItem<String>>[
+              PopupMenuItem<String>(
+                value: 'delete',
+                child: Container(
+                  width: 130,
+                  height: 40,
+                  child: Center(
+                    child: Text(
+                      'Delete',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                      color: Color(0xffED1C25),
+                      borderRadius: BorderRadius.circular(5)),
+                ),
+              ),
+            ],
     ).then((value) {
       if (value == 'delete') {
         showDeleteConfirmationDialog(context,
@@ -1034,9 +1081,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                       count++;
                     }
                     }
-                    // if (element.storySeen!) {
-                    //   count++;
-                    // }
+
                   });
                   if (element.userUid == User_ID) {
                     userName.insert(0, element.userName.toString());
@@ -1195,6 +1240,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                         border: Border.fromBorderSide(
                           BorderSide(
                             color: Colors.red,
+
                             width: 1.5,
                           ),
                         ),
@@ -1208,6 +1254,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                       segmentDuration: const Duration(seconds: 3),
                     );
                     buttonDatas.add(buttonData1);
+                    
                     storyButtons.add(StoryButton(
                         onPressed: (data) {
                           Navigator.of(storycontext!).push(
@@ -1242,6 +1289,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             if (state is GetGuestAllPostLoadedState) {
               apiCalingdone = true;
               AllGuestPostRoomData = state.GetGuestAllPostRoomData;
+              AllGuestPostRoomData?.object?.content?.forEach((element) {
+                if (element.postDataType == 'VIDEO') {
+                  _controllers.add(VideoPlayerController.networkUrl(
+                      Uri.parse('${element.postData?.first}')));
+                }
+
+
+
+              });
             }
             if (state is PostLikeLoadedState) {
               if (state.likePost.object != 'Post Liked Successfully' &&
@@ -4439,10 +4495,32 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         getallBlogModel1?.object?[index1].likeCount ==
                                                                                 0
                                                                             ? SizedBox()
-                                                                            : Text(
-                                                                                "${getallBlogModel1?.object?[index1].likeCount== null?0 :getallBlogModel1?.object?[index1].likeCount}",
-                                                                                style: TextStyle(fontFamily: "outfit", fontSize: 14, color: Colors.black),
+                                                                            : GestureDetector(
+                                                                                onTap: () {
+                                                                                  print("User_id -- ${User_ID}");
+                                                                                  print("blog UUid -- ${getallBlogModel1?.object?[index1].uid}");
+                                                                                  Navigator.push(context, MaterialPageRoute(
+                                                                                    builder: (context) {
+                                                                                      return BlogLikeListScreen(
+                                                                                        BlogUid: "${getallBlogModel1?.object?[index1].uid}",
+                                                                                        user_id: User_ID,
+                                                                                      );
+                                                                                    },
+                                                                                  ));
+                                                                                },
+                                                                                child: Container(
+                                                                                  color: Colors.transparent,
+                                                                                  child: Padding(
+                                                                                    padding: const EdgeInsets.all(5.0),
+                                                                                    child: Text(
+                                                                                      "${getallBlogModel1?.object?[index1].likeCount == null ? 0 : getallBlogModel1?.object?[index1].likeCount}",
+                                                                                      style: TextStyle(fontFamily: "outfit", fontSize: 14, color: Colors.black),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
                                                                               ),
+                                                                            
+                                                                           
                                                                         SizedBox(
                                                                           width:
                                                                               5,

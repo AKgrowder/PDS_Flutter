@@ -31,12 +31,12 @@ import '../../API/Model/serchForInboxModel/serchForinboxModel.dart';
 import '../../core/utils/image_constant.dart';
 
 class CreateNewPost extends StatefulWidget {
-  const CreateNewPost({key});
+  String? edittextdata; 
+   CreateNewPost({key,this.edittextdata});
 
   @override
   State<CreateNewPost> createState() => _CreateNewPostState();
 }
-
 class _CreateNewPostState extends State<CreateNewPost> {
   int indexx = 0;
   double value2 = 0.0;
@@ -80,6 +80,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   VideoPlayerController? _controller;
   HasDataModel? getAllHashtag;
   String enteredText = '';
+   List<String> postTexHashContrlloer = [];
 /*   void _onTextChanged() {
     String text = postText.text;
 
@@ -117,6 +118,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   @override
   void initState() {
     _loading = true;
+    postText.text = widget.edittextdata ?? "";
     getDocumentSize();
     initAsync();
     Future.delayed(Duration(milliseconds: 150), () {
@@ -178,6 +180,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
             _controller?.initialize().then((value) => setState(() {}));
             setState(() {
               _controller?.play();
+              _controller?.setLooping(true);
             });
           }
         }
@@ -626,7 +629,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                             border: Border.all(
                                                 color: Color(0xffE6E6E6))),
                                         child: GestureDetector(
-                                          onTap: () {
+                                  onTap: () {
                                             setState(() {
                                               if (postText.text.isNotEmpty) {
                                                 postTexHashContrlloer.add(
@@ -704,7 +707,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                             border: Border.all(
                                                 color: Color(0xffE6E6E6))),
                                         child: GestureDetector(
-                                          onTap: ()  {
+
+                                     onTap: ()  {
+
                                             setState(() {
                                               if (postText.text.isNotEmpty) {
                                                 // postText.text =
@@ -1732,6 +1737,16 @@ class _CreateNewPostState extends State<CreateNewPost> {
             };
             BlocProvider.of<AddPostCubit>(context)
                 .InvitationAPI(context, param);
+          } else if (postText.text.isNotEmpty &&
+              _controller?.value.isPlaying == true) {
+            Map<String, dynamic> param = {
+              "description": postText.text,
+              "postData": imageDataPost?.object?.data,
+              "postDataType": "VIDEO",
+              "postType": soicalData[indexx].toString().toUpperCase()
+            };
+            BlocProvider.of<AddPostCubit>(context)
+                .InvitationAPI(context, param);
           } else {
             if (postText.text.isNotEmpty) {
               Map<String, dynamic> param = {
@@ -1768,6 +1783,14 @@ class _CreateNewPostState extends State<CreateNewPost> {
               Map<String, dynamic> param = {
                 "postData": imageDataPost?.object?.data,
                 "postDataType": "IMAGE",
+                "postType": soicalData[indexx].toString().toUpperCase(),
+              };
+              BlocProvider.of<AddPostCubit>(context)
+                  .InvitationAPI(context, param);
+            } else if (_controller?.value.isPlaying == true) {
+              Map<String, dynamic> param = {
+                "postData": imageDataPost?.object?.data,
+                "postDataType": "VIDEO",
                 "postType": soicalData[indexx].toString().toUpperCase(),
               };
               BlocProvider.of<AddPostCubit>(context)
