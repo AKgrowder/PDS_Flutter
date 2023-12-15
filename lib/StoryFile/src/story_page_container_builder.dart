@@ -230,7 +230,7 @@ class _StoryPageContainerBuilderState extends State<StoryPageContainerBuilder>
                       final childIndex = index % itemCount;
                       final buttonData =
                           widget.settings.allButtonDatas[childIndex];
-                          
+
                       final child = StoryPageContainerView(
                         onTap: widget.onTap,
                         buttonData: buttonData,

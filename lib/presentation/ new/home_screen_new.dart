@@ -132,8 +132,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   String? IosLatestVersion;
   String? IosRoutVersion;
   String? IosMainversion;
-   bool AutoOpenPostBool = false;
- String? AutoOpenPostID;
+  bool AutoOpenPostBool = false;
+  String? AutoOpenPostID;
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     documentuploadsize = await double.parse(
@@ -753,7 +753,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     print("---------------------->> : ${FCMToken}");
     print("User Token :--- " + "${Token}");
     User_ID == null ? api() : NewApi();
-       AutoOpenPostBool = prefs.getBool(PreferencesKey.AutoOpenPostBool) ?? false;
+    AutoOpenPostBool = prefs.getBool(PreferencesKey.AutoOpenPostBool) ?? false;
     if (AutoOpenPostBool == true) {
       AutoOpenPostID = prefs.getString(PreferencesKey.AutoOpenPostID);
       prefs.setBool(PreferencesKey.AutoOpenPostBool, false);
@@ -1077,7 +1077,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                   element.storyData![index].profilePic,
                                   element.storyData![index].userName,
                                   element.storyData![index].storyUid,
-                                  element.storyData![index].userUid)),
+                                  element.storyData![index].userUid,
+                                  element.storyData![index].storyViewCount)),
                           borderDecoration: BoxDecoration(
                             borderRadius: const BorderRadius.all(
                               Radius.circular(60.0),
@@ -1180,7 +1181,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                               element.storyData![index].profilePic,
                               element.storyData![index].userName,
                               element.storyData![index].storyUid,
-                              element.storyData![index].userUid)),
+                              element.storyData![index].userUid,
+                              element.storyData![index].storyViewCount)),
                       borderDecoration: BoxDecoration(
                         borderRadius: const BorderRadius.all(
                           Radius.circular(60.0),
@@ -1441,6 +1443,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                         }
 
                                         if (imageDataPost?.object != null) {
+                                          await BlocProvider.of<
+                                                  GetGuestAllPostCubit>(context)
+                                              .get_all_story(
+                                            context,
+                                          );
                                           StoryButtonData buttonData =
                                               StoryButtonData(
                                             timelineBackgroundColor:
@@ -1494,7 +1501,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   UserProfileImage,
                                                   User_Name,
                                                   "",
-                                                  "${User_ID}")
+                                                  "${User_ID}",
+                                                  0)
                                             ],
                                             isWatch: false,
                                             borderDecoration: BoxDecoration(
@@ -2886,13 +2894,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               RegisterCreateAccountScreen()));
                                                                 } else {
                                                                   post_shere(
-                                                                    context,
-                                                                    androidLink:
-                                                                        // "https://play.google.com/store/apps/details?id=com.pds.app",
-                                                                         '${AllGuestPostRoomData?.object?.content?[index].postLink}'
-                                                                    /* iosLink:
+                                                                      context,
+                                                                      androidLink:
+                                                                          // "https://play.google.com/store/apps/details?id=com.pds.app",
+                                                                          '${AllGuestPostRoomData?.object?.content?[index].postLink}'
+                                                                      /* iosLink:
                                                     "https://apps.apple.com/in/app/growder-b2b-platform/id6451333863" */
-                                                                  );
+                                                                      );
                                                                 }
                                                               },
                                                               child: Container(
@@ -3813,7 +3821,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     context,
                                                                     androidLink:
                                                                         // "https://play.google.com/store/apps/details?id=com.pds.app",
-                                                                          '${AllGuestPostRoomData?.object?.content?[index].postLink}',
+                                                                        '${AllGuestPostRoomData?.object?.content?[index].postLink}',
                                                                     /* iosLink:
                                                     "https://apps.apple.com/in/app/growder-b2b-platform/id6451333863" */
                                                                   );
@@ -4801,7 +4809,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         UserProfileImage,
         User_Name,
         "",
-        "${User_ID}"));
+        "${User_ID}",
+        0));
     if (imageDataPost.object != null) {
       buttonDatas[0].storyPages.add(FullStoryPage(
             imageName: '${imageDataPost.object}',
