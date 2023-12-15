@@ -5,7 +5,8 @@ import 'package:stories_editor/src/presentation/widgets/tool_button.dart';
 
 class TopTextTools extends StatelessWidget {
   final void Function() onDone;
-  const TopTextTools({Key? key, required this.onDone}) : super(key: key);
+  
+   TopTextTools({Key? key,context, required this.onDone}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +23,7 @@ class TopTextTools extends StatelessWidget {
                   /// font family / font color
                   ToolButton(
                     onTap: () {
+                       
                       editorNotifier.isFontFamily =
                           !editorNotifier.isFontFamily;
                       editorNotifier.isTextAnimation = false;

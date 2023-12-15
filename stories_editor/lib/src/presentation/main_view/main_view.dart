@@ -105,6 +105,8 @@ class _MainViewState extends State<MainView> {
   /// delete position
   bool _isDeletePosition = false;
   bool _inAction = false;
+  bool nodatainTextfiled = false;
+
 
   @override
   void initState() {
@@ -311,6 +313,7 @@ class _MainViewState extends State<MainView> {
                                 alignment: const Alignment(0, -0.1),
                                 child: Text('Tap to type',
                                     style: TextStyle(
+                                      
                                         fontFamily: 'Alegreya',
                                         package: 'stories_editor',
                                         fontWeight: FontWeight.w500,
@@ -366,6 +369,7 @@ class _MainViewState extends State<MainView> {
                     /// bottom tools
                     if (!kIsWeb)
                       BottomTools(
+                        
                         contentKey: contentKey,
                         onDone: (bytes) {
                           print("this is the new data set-$bytes");

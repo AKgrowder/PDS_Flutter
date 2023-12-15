@@ -73,12 +73,12 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
   @override
   void initState() {
-    blockFunction();
+    // blockFunction();
     dataFunctionSetup();
     _storyController =
         widget.buttonData.storyController ?? StoryTimelineController();
     _stopwatch.start();
-    GetUserID();
+    // GetUserID();
     _storyController!.addListener(_onTimelineEvent);
     imageLoads =
         List.generate(widget.buttonData.images.length, (index) => false);
@@ -89,7 +89,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
   blockFunction() async {
     print("this is the DataGet-${_curSegmentIndex}");
-
     await BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
         context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
   }
@@ -286,12 +285,13 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   }
 
   Widget _buildPageContent() {
+    dataFunctionSetup();
     bool imageLoaded = false;
     _storyController!.pause();
     NetworkImage networkImage =
         NetworkImage(widget.buttonData.images[_curSegmentIndex].image ?? "");
-    print(_curSegmentIndex);
-
+  //  BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
+  //       context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
     networkImage.resolve(ImageConfiguration()).addListener(
       ImageStreamListener((info, call) {
         if (mounted) {
@@ -304,12 +304,13 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
           // Image has been loaded
           imageLoaded = true;
-          
-          print("image loaded : unpause");
+
           _storyController!.unpause();
 
           if (DummyStoryViewBool == true) {
             StoryView = true;
+             BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
+        context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
             setState(() {});
           }
         }
@@ -381,7 +382,11 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   }
 
   Widget _buildPageContent1() {
+    dataFunctionSetup();
+
     bool imageLoaded = false;
+    // BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
+    //     context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
     _controller?.addListener(() {
       if (mounted) {
         if (DummyStoryView == _curSegmentIndex) {
@@ -398,6 +403,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
         if (DummyStoryViewBool == true) {
           StoryView = true;
+           BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
+        context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
           setState(() {});
         }
       }
@@ -430,7 +437,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         }
       }
     }
-    print("video loaded : unpause");
     _storyController!.unpause();
     return StoryPageScaffold(
       body: Container(
@@ -479,7 +485,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             }
           }
         }
-        print("pointer up loaded : unpause");
+    
         _storyController!.unpause();
       },
       child: SizedBox(
@@ -791,7 +797,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                   width: 5,
                                 ),
                                 Text(
-                                  "${StoryViewListModelData?.object?.length ?? "0"}",
+                                  "${widget.buttonData.images[_curSegmentIndex].storyViewCount}",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontFamily: "outfit",
