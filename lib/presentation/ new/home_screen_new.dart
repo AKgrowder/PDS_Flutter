@@ -1029,9 +1029,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 state.getAllStoryModel.object?.forEach((element) {
                   int count = 0;
                   element.storyData?.forEach((element) {
-                    if (element.storySeen!) {
+                    if(element.storySeen != null){
+                      if (element.storySeen == true) {
                       count++;
                     }
+                    }
+                    // if (element.storySeen!) {
+                    //   count++;
+                    // }
                   });
                   if (element.userUid == User_ID) {
                     userName.insert(0, element.userName.toString());
