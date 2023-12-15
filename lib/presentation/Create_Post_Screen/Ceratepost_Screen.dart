@@ -141,6 +141,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
 
 //Public
 // Following
+ List<String> postTexHashContrlloer = [];
   List<String> soicalData = ["Public", "Follower"];
   bool _isLink(String input) {
     RegExp linkRegex = RegExp(
@@ -706,7 +707,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                             border: Border.all(
                                                 color: Color(0xffE6E6E6))),
                                         child: GestureDetector(
+
                                      onTap: ()  {
+
                                             setState(() {
                                               if (postText.text.isNotEmpty) {
                                                 // postText.text =
