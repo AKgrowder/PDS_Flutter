@@ -18,9 +18,9 @@ Future takePicture(
     print("check Data Get isTextEditing -${isTextEditing}");
     print("check Data Get SelectPath -${SelectPath}");
 
-    if (isTextEditing == true || SelectPath == '') {
+  /*   if (/* isTextEditing == true ||  */SelectPath == '' || SelectPath == null) {
       print("check this cnodion is working");
-    } else {
+    } else { */
       if (SelectPath.toString().split('/').last.toString().split('.').last ==
           'mp4') {
         print("this condison is working");
@@ -67,7 +67,7 @@ Future takePicture(
           return imagePath;
         }
       }
-    }
+    // }
   } catch (e) {
     debugPrint('exception => $e');
     return false;
