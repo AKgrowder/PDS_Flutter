@@ -37,6 +37,7 @@ class OpenSavePostImage extends StatefulWidget {
   @override
   State<OpenSavePostImage> createState() => _OpenSavePostImageState();
 }
+
 class _OpenSavePostImageState extends State<OpenSavePostImage> {
   OpenSaveImagepostModel? OpenSaveModelData;
   String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
@@ -48,13 +49,13 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
   int imageCount = 1;
 
   @override
-   void initState() {
+  void initState() {
     if (widget.PostID == "0") {
       BlocProvider.of<OpenSaveCubit>(context)
-          .openSaveImagePostAPI(context,"${widget.PostopenLink}","");
+          .openSaveImagePostAPI(context, "${widget.PostopenLink}", "");
     } else {
       BlocProvider.of<OpenSaveCubit>(context)
-          .openSaveImagePostAPI(context,"","${widget.PostID}");
+          .openSaveImagePostAPI(context, "", "${widget.PostID}");
     }
 
     super.initState();
@@ -438,6 +439,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                 var Link3 = SelectedTest.startsWith('WWW');
                                 var Link4 = SelectedTest.startsWith('HTTPS');
                                 var Link5 = SelectedTest.startsWith('HTTP');
+                                var Link6 = SelectedTest.startsWith(
+                                    'https://pdslink.page.link/');
                                 print(SelectedTest.toString());
 
                                 if (Link == true ||
@@ -445,12 +448,27 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                     Link2 == true ||
                                     Link3 == true ||
                                     Link4 == true ||
-                                    Link5 == true) {
+                                    Link5 == true ||
+                                    Link6 == true) {
                                   if (Link2 == true || Link3 == true) {
                                     launchUrl(Uri.parse(
                                         "https://${link.value.toString()}"));
                                   } else {
-                                    launchUrl(Uri.parse(link.value.toString()));
+                                    if (Link6 == true) {
+                                      print("yes i am in room");
+                                      Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) {
+                                          return NewBottomBar(
+                                            buttomIndex: 1,
+                                          );
+                                        },
+                                      ));
+                                    } else {
+                                      launchUrl(
+                                          Uri.parse(link.value.toString()));
+                                      print(
+                                          "link.valuelink.value -- ${link.value}");
+                                    }
                                   }
                                 } else {
                                   print("${link}");
