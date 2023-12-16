@@ -29,9 +29,7 @@ import '../register_create_account_screen/register_create_account_screen.dart';
 class DmScreen extends StatefulWidget {
   String UserName;
   String ChatInboxUid;
-  String? UserWithUID;
-  DmScreen(
-      {required this.ChatInboxUid, required this.UserName, this.UserWithUID});
+  DmScreen({required this.ChatInboxUid, required this.UserName});
 
   @override
   State<DmScreen> createState() => _DmScreenState();
