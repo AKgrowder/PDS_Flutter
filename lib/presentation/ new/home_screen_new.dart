@@ -36,6 +36,7 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_utils.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/BlogComment_screen.dart';
+import 'package:pds/presentation/%20new/BlogLikeList_screen.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/RePost_Screen.dart';
@@ -50,7 +51,6 @@ import 'package:pds/presentation/create_story/full_story_page.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:pds/presentation/recent_blog/recent_blog_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
-import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:pds/presentation/splash_screen/splash_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/pagenation.dart';
@@ -59,9 +59,10 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
+
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
-import 'package:pds/presentation/%20new/BlogLikeList_screen.dart';
+
 class HomeScreenNew extends StatefulWidget {
   const HomeScreenNew({Key? key}) : super(key: key);
 
@@ -219,7 +220,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       Offset.zero & overlay.size,
     );
 
-     showMenu(
+    showMenu(
       context: context,
       position: position,
       items: AllGuestPostRoomData?.object?.content?[index].postDataType == null
@@ -1076,12 +1077,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 state.getAllStoryModel.object?.forEach((element) {
                   int count = 0;
                   element.storyData?.forEach((element) {
-                    if(element.storySeen != null){
+                    if (element.storySeen != null) {
                       if (element.storySeen == true) {
-                      count++;
+                        count++;
+                      }
                     }
-                    }
-
                   });
                   if (element.userUid == User_ID) {
                     userName.insert(0, element.userName.toString());
@@ -1095,7 +1095,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                             image: element.profilePic != null &&
                                     element.profilePic != ""
                                 ? DecorationImage(
-                                    image: NetworkImage(element.profilePic))
+                                    image: NetworkImage(element.profilePic),
+                                    fit: BoxFit.fill)
                                 : DecorationImage(
                                     image: AssetImage(
                                       ImageConstant.brandlogo,
@@ -1199,7 +1200,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                 element.profilePic != ''
                             ? DecorationImage(
                                 image:
-                                    NetworkImage(element.profilePic.toString()))
+                                    NetworkImage(element.profilePic.toString()),
+                                fit: BoxFit.fill)
                             : DecorationImage(
                                 image: AssetImage(
                                   ImageConstant.brandlogo,
@@ -1240,7 +1242,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                         border: Border.fromBorderSide(
                           BorderSide(
                             color: Colors.red,
-
                             width: 1.5,
                           ),
                         ),
@@ -1254,7 +1255,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                       segmentDuration: const Duration(seconds: 3),
                     );
                     buttonDatas.add(buttonData1);
-                    
+
                     storyButtons.add(StoryButton(
                         onPressed: (data) {
                           Navigator.of(storycontext!).push(
@@ -1294,9 +1295,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                   _controllers.add(VideoPlayerController.networkUrl(
                       Uri.parse('${element.postData?.first}')));
                 }
-
-
-
               });
             }
             if (state is PostLikeLoadedState) {
@@ -1521,7 +1519,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         image: DecorationImage(
                                                           image: NetworkImage(
                                                               "${UserProfileImage}"),
-                                                          fit: BoxFit.cover,
+                                                          fit: BoxFit.fill,
                                                         ),
                                                       )
                                                     : BoxDecoration(
@@ -4519,8 +4517,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                   ),
                                                                                 ),
                                                                               ),
-                                                                            
-                                                                           
+
                                                                         SizedBox(
                                                                           width:
                                                                               5,
@@ -4551,6 +4548,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             ),
                                                                           ),
                                                                         ),
+
+
+                                                                        
+                                                                        Text(
+                                                                            "${getallBlogModel1?.object?[index1]. likeCount == null ? 0 : getallBlogModel1?.object?[index1].likeCount}"),
+
+
+
                                                                         // BlocConsumer<
                                                                         //     BlogcommentCubit,
                                                                         //     BlogCommentState>(listener: (context, state) {
