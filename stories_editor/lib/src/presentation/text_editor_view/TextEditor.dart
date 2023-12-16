@@ -49,10 +49,10 @@ class _TextEditorState extends State<TextEditor> {
           builder: (_, controlNotifier, editorNotifier, __) {
               final _editorNotifier =
           Provider.of<TextEditingNotifier>(widget.context, listen: false);
-      editorNotifier
-        ..textController.text = _editorNotifier.text
+      // editorNotifier
+      //   ..textController.text = _editorNotifier.text
         
-        ..fontFamilyController = PageController(viewportFraction: .125);
+      //   ..fontFamilyController = PageController(viewportFraction: .125);
             return Scaffold(
               backgroundColor: Colors.transparent,
               body: GestureDetector(
