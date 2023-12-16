@@ -2448,7 +2448,7 @@ class Repository {
     print('respnse ${responce.statusCode}');
     switch (responce.statusCode) {
       case 200:
-        return jsonString;
+        return BlogCommentModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -2511,9 +2511,9 @@ class Repository {
     }
   }
 
-  DeleteBlogcomment(String commentuid, BuildContext context) async {
-    final response = await apiServices.deleteApiCall(
-        "${Config.deleteBlogcomment}?commentUid=${commentuid}", {}, context);
+  DeleteBlogcomment(String commentuid,String loginuser, BuildContext context) async {
+    final response = await apiServices.deleteApiCall1(
+        "${Config.deleteBlogcomment}?commentUid=${commentuid}&loginUserUid=$loginuser", context);
     print(response);
     var jsonString = json.decode(response!.body);
     switch (response.statusCode) {
