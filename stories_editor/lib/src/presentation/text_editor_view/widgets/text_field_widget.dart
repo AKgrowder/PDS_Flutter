@@ -62,14 +62,14 @@ class TextFieldWidget extends StatelessWidget {
       style: TextStyle(
           fontFamily: controlNotifier.fontList![editorNotifier.fontFamilyIndex],
           package: controlNotifier.isCustomFontList ? null : 'stories_editor',
-          shadows: <Shadow>[
+          /* shadows: <Shadow>[
             Shadow(
                 offset: const Offset(1.0, 1.0),
                 blurRadius: 3.0,
                 color: editorNotifier.textColor == Colors.black
                     ? Colors.white54
                     : Colors.black)
-          ]).copyWith(
+          ] */).copyWith(
           color: controlNotifier.colorList![editorNotifier.textColor],
           fontSize: editorNotifier.textSize,
           background: emojis.contains(editorNotifier.textController.text) ?null:(Paint()
@@ -100,14 +100,14 @@ class TextFieldWidget extends StatelessWidget {
                   controlNotifier.fontList![editorNotifier.fontFamilyIndex],
               package:
                   controlNotifier.isCustomFontList ? null : 'stories_editor',
-              shadows: <Shadow>[
+             /*  shadows: <Shadow>[
                 Shadow(
                     offset: const Offset(1.0, 1.0),
                     blurRadius: 3.0,
                     color: editorNotifier.textColor == Colors.black
                         ? Colors.white54
                         : Colors.black)
-              ],
+              ], */
               backgroundColor: Colors.redAccent)
           .copyWith(
         color: controlNotifier.colorList![editorNotifier.textColor],
@@ -120,14 +120,14 @@ class TextFieldWidget extends StatelessWidget {
           ..filterQuality = FilterQuality.high
           ..strokeCap = StrokeCap.round
           ..maskFilter = const MaskFilter.blur(BlurStyle.solid, 1),
-        shadows: <Shadow>[
+        /* shadows: <Shadow>[
           Shadow(
               offset: const Offset(1.0, 1.0),
               blurRadius: 3.0,
               color: editorNotifier.textColor == Colors.black
                   ? Colors.white54
                   : Colors.black)
-        ],
+        ], */
       ),
       cursorColor: controlNotifier.colorList![editorNotifier.textColor],
       minLines: 1,
