@@ -66,7 +66,6 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
     }
   }
 
-
   Future<void> DMChatListm(String userWithUid, BuildContext context) async {
     dynamic DMChatList;
     try {
