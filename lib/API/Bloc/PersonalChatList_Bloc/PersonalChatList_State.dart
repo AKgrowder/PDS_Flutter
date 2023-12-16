@@ -1,3 +1,4 @@
+import 'package:pds/API/Model/OnTimeDMModel/OnTimeDMModel.dart';
 import 'package:pds/API/Model/PersonalChatListModel/PersonalChatList_Model.dart';
 import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 
@@ -20,4 +21,9 @@ class PersonalChatListErrorState extends PersonalChatListState {
 class SearchHistoryDataAddxtends extends PersonalChatListState {
   final SearchUserForInbox searchUserForInbox;
   SearchHistoryDataAddxtends(this.searchUserForInbox);
+}
+
+class DMChatListLoadedState extends PersonalChatListState {
+  final OnTimeDMModel DMChatList;
+  DMChatListLoadedState(this.DMChatList);
 }

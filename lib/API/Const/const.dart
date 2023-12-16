@@ -121,4 +121,8 @@ class Config {
   static const String addBlogcomments = "admin/blog/add_comment";
   static const String deleteBlogcomment = "admin/blog/delete_comment_by_uid";
   static const String blogLikeList = "guest/api/get_all_blog_likes";
+  static const String create_user_chat = "user/create_user_chat";
+
+  
+  
 }

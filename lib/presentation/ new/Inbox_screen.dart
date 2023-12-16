@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,7 +29,7 @@ class _InboxScreenState extends State<InboxScreen> {
   bool isDataGet = false;
   SearchUserForInbox? searchUserForInbox1;
   ScrollController scrollController = ScrollController();
-
+  String? UserIndexUUID = "";
   bool apiData = false;
   @override
   void initState() {
@@ -78,8 +80,12 @@ class _InboxScreenState extends State<InboxScreen> {
           }
           if (state is PersonalChatListLoadedState) {
             apiData = true;
-
             PersonalChatListModelData = state.PersonalChatListModelData;
+          }
+          if (state is DMChatListLoadedState) {
+            print(state.DMChatList.object);
+            UserIndexUUID = state.DMChatList.object;
+            setState(() {});
           }
           if (state is PersonalChatListLoadingState) {
             Center(
@@ -393,16 +399,24 @@ class _InboxScreenState extends State<InboxScreen> {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return DmScreen(
+                // DMChatListm
+                BlocProvider.of<PersonalChatListCubit>(context).DMChatListm(
+                    "${searchUserForInbox1?.object?.content?[index].userUid}",
+                    context);
+                if (UserIndexUUID != "" || UserIndexUUID != null) {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return DmScreen(
                       UserName:
                           "${searchUserForInbox1?.object?.content?[index].userName}",
-                      ChatInboxUid: "",
-                      UserWithUID:
-                          "${searchUserForInbox1?.object?.content?[index].userUid}");
-                })).then((value) =>
-                    BlocProvider.of<PersonalChatListCubit>(context)
-                        .PersonalChatList(context));
+                      ChatInboxUid: UserIndexUUID ?? "",
+                    );
+                  })).then((value) => CallBackFunc()
+                      /* BlocProvider.of<PersonalChatListCubit>(context)
+                          .PersonalChatList(context) */
+
+                      );
+                  // UserIndexUUID = "";
+                }
               },
               child: Container(
                 margin: EdgeInsets.all(10),
@@ -461,6 +475,11 @@ class _InboxScreenState extends State<InboxScreen> {
         ),
       ),
     ));
+  }
+
+  CallBackFunc() {
+    // UserIndexUUID = "";
+    BlocProvider.of<PersonalChatListCubit>(context).PersonalChatList(context);
   }
 
   String customFormat(DateTime date) {

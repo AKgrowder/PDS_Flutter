@@ -46,7 +46,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
     SearchBarScreen(value2: 1),
     // NotificationsScreen(),
 
-    // InboxScreen(),
+    InboxScreen(),
     NewNotifactionScreen(),
     // SettingScreen(),
 
@@ -262,7 +262,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                           ),
                         ),
                       ),
-                      /*GestureDetector( 
+                      GestureDetector( 
                         onTap: () {
                           setState(() {
                             if (UserLogin_ID != null) {
@@ -317,13 +317,13 @@ class _NewBottomBarState extends State<NewBottomBar> {
                                   ),
                           ),
                         ),
-                      ), */
+                      ),
 
                       GestureDetector(
                         onTap: () {
                           setState(() {
                             if (UserLogin_ID != null) {
-                              selectedIndex = 3;
+                              selectedIndex = 4;
                             } else {
                               NaviRegisterScreen();
                             }
@@ -339,7 +339,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                           //         : const Color(0xFF0D0D0D),
                           child: Container(
                             // height: 35,
-                            child: selectedIndex != 3
+                            child: selectedIndex != 4
                                 ? Padding(
                                     padding: const EdgeInsets.all(10.0),
                                     child: Image.asset(
