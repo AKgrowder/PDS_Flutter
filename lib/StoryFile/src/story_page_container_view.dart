@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,8 +18,8 @@ import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:video_player/video_player.dart';
+
 import '../../core/utils/image_constant.dart';
 import '../../widgets/custom_image_view.dart';
 
@@ -529,8 +530,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                       Container(
                                         width: _width,
                                         child: Row(
-                                          children: [
-                                            Spacer(),
+                                          children: [SizedBox(width: _width/2.3,),
+                                            // Spacer(),
                                             Container(
                                               height: 2,
                                               width: 50,
