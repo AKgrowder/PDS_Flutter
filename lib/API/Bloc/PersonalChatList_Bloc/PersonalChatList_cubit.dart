@@ -30,8 +30,13 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
       emit(PersonalChatListLoadingState());
       searchHistoryDataAdd = await Repository()
           .search_user_for_inbox(typeWord, pageNumber, context);
-      if (searchHistoryDataAdd.success == true) {
-        emit(SearchHistoryDataAddxtends(searchHistoryDataAdd));
+      if (searchHistoryDataAdd ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(PersonalChatListErrorState("${searchHistoryDataAdd}"));
+      } else {
+        if (searchHistoryDataAdd.success == true) {
+          emit(SearchHistoryDataAddxtends(searchHistoryDataAdd));
+        }
       }
     } catch (e) {
       print("eeerrror-${e.toString()}");
@@ -58,6 +63,26 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
     } catch (e) {
       print("eeerrror-${e.toString()}");
       emit(PersonalChatListErrorState(e.toString()));
+    }
+  }
+
+
+  Future<void> DMChatListm(String userWithUid, BuildContext context) async {
+    dynamic DMChatList;
+    try {
+      emit(PersonalChatListLoadingState());
+      DMChatList = await Repository().FirstTimeChat(context, userWithUid);
+      if (DMChatList == "Something Went Wrong, Try After Some Time.") {
+        emit(PersonalChatListErrorState("${DMChatList}"));
+      } else {
+        if (DMChatList.success == true) {
+          emit(DMChatListLoadedState(DMChatList));
+        } else {
+          emit(PersonalChatListErrorState(DMChatList.message));
+        }
+      }
+    } catch (e) {
+      emit(PersonalChatListErrorState(DMChatList));
     }
   }
 }

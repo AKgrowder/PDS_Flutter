@@ -31,12 +31,14 @@ import '../../API/Model/serchForInboxModel/serchForinboxModel.dart';
 import '../../core/utils/image_constant.dart';
 
 class CreateNewPost extends StatefulWidget {
-  String? edittextdata; 
-   CreateNewPost({key,this.edittextdata});
+  String? edittextdata;
+  String? PostID;
+  CreateNewPost({key, this.edittextdata, this.PostID});
 
   @override
   State<CreateNewPost> createState() => _CreateNewPostState();
 }
+
 class _CreateNewPostState extends State<CreateNewPost> {
   int indexx = 0;
   double value2 = 0.0;
@@ -80,7 +82,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   VideoPlayerController? _controller;
   HasDataModel? getAllHashtag;
   String enteredText = '';
-   List<String> postTexHashContrlloer = [];
+  List<String> postTexHashContrlloer = [];
 /*   void _onTextChanged() {
     String text = postText.text;
 
@@ -141,7 +143,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
 
 //Public
 // Following
- List<String> postTexHashContrlloer = [];
+//  List<String> postTexHashContrlloer = [];
   List<String> soicalData = ["Public", "Follower"];
   bool _isLink(String input) {
     RegExp linkRegex = RegExp(
@@ -629,7 +631,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                             border: Border.all(
                                                 color: Color(0xffE6E6E6))),
                                         child: GestureDetector(
-                                  onTap: () {
+                                          onTap: () {
                                             setState(() {
                                               if (postText.text.isNotEmpty) {
                                                 postTexHashContrlloer.add(
@@ -643,7 +645,6 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                       offset:
                                                           postText.text.length),
                                                 );
-                                              
                                               }
 
                                               isHeshTegData = false;
@@ -707,9 +708,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                             border: Border.all(
                                                 color: Color(0xffE6E6E6))),
                                         child: GestureDetector(
-
-                                     onTap: ()  {
-
+                                          onTap: () {
                                             setState(() {
                                               if (postText.text.isNotEmpty) {
                                                 // postText.text =
@@ -725,7 +724,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                       offset:
                                                           postText.text.length),
                                                 );
-                                             
+
                                                 print(
                                                     "postText${postText.text.split("@").first}");
                                               }
@@ -1749,10 +1748,20 @@ class _CreateNewPostState extends State<CreateNewPost> {
                 .InvitationAPI(context, param);
           } else {
             if (postText.text.isNotEmpty) {
-              Map<String, dynamic> param = {
-                "description": postText.text,
-                "postType": soicalData[indexx].toString().toUpperCase()
-              };
+              Map<String, dynamic> param = {};
+              if (widget.edittextdata != "" || widget.edittextdata != null) {
+                param = {
+                  "description": postText.text,
+                  "postType": soicalData[indexx].toString().toUpperCase(),
+                  "postUid": widget.PostID
+                };
+              } else {
+                param = {
+                  "description": postText.text,
+                  "postType": soicalData[indexx].toString().toUpperCase()
+                };
+              }
+
               BlocProvider.of<AddPostCubit>(context)
                   .InvitationAPI(context, param);
             } else if (file?.path != null) {

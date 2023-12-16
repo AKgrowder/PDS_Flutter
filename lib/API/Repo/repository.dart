@@ -5,6 +5,7 @@ import 'package:pds/API/Model/BlogComment_Model/BlogLikeList_model.dart';
 import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
 import 'package:pds/API/Model/HasTagModel/hasTagModel.dart';
 import 'package:pds/API/Model/IsTokenExpired/IsTokenExpired.dart';
+import 'package:pds/API/Model/OnTimeDMModel/OnTimeDMModel.dart';
 import 'package:pds/API/Model/RePost_Model/RePost_model.dart';
 import 'package:pds/API/Model/BlogComment_Model/BlogCommentDelete_model.dart';
 import 'package:pds/API/Model/BlogComment_Model/BlogComment_model.dart';
@@ -2448,6 +2449,30 @@ class Repository {
     switch (responce.statusCode) {
       case 200:
         return jsonString;
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  FirstTimeChat(
+    BuildContext context,
+    String? userWithUid,
+  ) async {
+    final response = await apiServices.postApiCalla(
+        "${Config.create_user_chat}?userWithUid=${userWithUid}", context);
+    print('AddPost$response');
+    var jsonString = json.decode(response.body);
+   switch (response.statusCode) {
+      case 200:
+        return OnTimeDMModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
