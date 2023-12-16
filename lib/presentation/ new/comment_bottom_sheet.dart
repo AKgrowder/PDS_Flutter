@@ -16,6 +16,7 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/widgets/custom_image_view.dart';
@@ -305,8 +306,6 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                         RegExp exp = RegExp(r'@\w+\s ');
                                         String modifiedText =
                                             addcomment.text.replaceAll(exp, '');
-
-
 
                                         addcomment.text = addcomment.text +
                                             '' +
@@ -696,6 +695,9 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                     var Link5 =
                                                         SelectedTest.startsWith(
                                                             'HTTP');
+                                                    var Link6 =
+                                                        SelectedTest.startsWith(
+                                                            'https://pdslink.page.link/');
                                                     print(SelectedTest
                                                         .toString());
 
@@ -704,15 +706,32 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                         Link2 == true ||
                                                         Link3 == true ||
                                                         Link4 == true ||
-                                                        Link5 == true) {
+                                                        Link5 == true ||
+                                                        Link6 == true) {
                                                       if (Link2 == true ||
                                                           Link3 == true) {
                                                         launchUrl(Uri.parse(
                                                             "https://${link.value.toString()}"));
                                                       } else {
-                                                        launchUrl(Uri.parse(link
-                                                            .value
-                                                            .toString()));
+                                                        if (Link6 == true) {
+                                                          print(
+                                                              "yes i am in room");
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                            builder: (context) {
+                                                              return NewBottomBar(
+                                                                buttomIndex: 1,
+                                                              );
+                                                            },
+                                                          ));
+                                                        } else {
+                                                          launchUrl(Uri.parse(
+                                                              link.value
+                                                                  .toString()));
+                                                          print(
+                                                              "link.valuelink.value -- ${link.value}");
+                                                        }
                                                       }
                                                     } else {
                                                       print("${link}");

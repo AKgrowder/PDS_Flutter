@@ -235,7 +235,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                           builder: (context) => CreateNewPost(
                               edittextdata: AllGuestPostRoomData
                                   ?.object?.content?[index].description),
-                        ));
+                        )).then((value) => Get_UserToken());
                   },
                   child: Container(
                     width: 130,
@@ -2104,6 +2104,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               SelectedTest.startsWith('HTTPS');
                                                                           var Link5 =
                                                                               SelectedTest.startsWith('HTTP');
+                                                                          var Link6 =
+                                                                              SelectedTest.startsWith('https://pdslink.page.link/');
                                                                           print(
                                                                               SelectedTest.toString());
 
@@ -2116,11 +2118,25 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 Link2 == true ||
                                                                                 Link3 == true ||
                                                                                 Link4 == true ||
-                                                                                Link5 == true) {
+                                                                                Link5 == true ||
+                                                                                Link6 == true) {
                                                                               if (Link2 == true || Link3 == true) {
                                                                                 launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                print("qqqqqqqqhttps://${link.value}");
                                                                               } else {
-                                                                                launchUrl(Uri.parse(link.value.toString()));
+                                                                                if (Link6 == true) {
+                                                                                  print("yes i am in room");
+                                                                                  Navigator.push(context, MaterialPageRoute(
+                                                                                    builder: (context) {
+                                                                                      return NewBottomBar(
+                                                                                        buttomIndex: 1,
+                                                                                      );
+                                                                                    },
+                                                                                  ));
+                                                                                } else {
+                                                                                  launchUrl(Uri.parse(link.value.toString()));
+                                                                                  print("link.valuelink.value -- ${link.value}");
+                                                                                }
                                                                               }
                                                                             } else {
                                                                               print("${link}");
@@ -2478,6 +2494,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               SelectedTest.startsWith('HTTPS');
                                                                           var Link5 =
                                                                               SelectedTest.startsWith('HTTP');
+                                                                          var Link6 =
+                                                                              SelectedTest.startsWith('https://pdslink.page.link/');
                                                                           print(
                                                                               SelectedTest.toString());
 
@@ -2490,19 +2508,25 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 Link2 == true ||
                                                                                 Link3 == true ||
                                                                                 Link4 == true ||
-                                                                                Link5 == true) {
-                                                                              if (link.value!.contains("https://pdslink.page.link/")) {
-                                                                                print("yes i am in room");
-                                                                                Navigator.push(context, MaterialPageRoute(
-                                                                                  builder: (context) {
-                                                                                    return NewBottomBar(
-                                                                                      buttomIndex: 1,
-                                                                                    );
-                                                                                  },
-                                                                                ));
-                                                                              } else if (Link2 == true || Link3 == true) {
+                                                                                Link5 == true ||
+                                                                                Link6 == true) {
+                                                                              if (Link2 == true || Link3 == true) {
                                                                                 launchUrl(Uri.parse("https://${link.value.toString()}"));
                                                                                 print("qqqqqqqqhttps://${link.value}");
+                                                                              } else {
+                                                                                if (Link6 == true) {
+                                                                                  print("yes i am in room");
+                                                                                  Navigator.push(context, MaterialPageRoute(
+                                                                                    builder: (context) {
+                                                                                      return NewBottomBar(
+                                                                                        buttomIndex: 1,
+                                                                                      );
+                                                                                    },
+                                                                                  ));
+                                                                                } else {
+                                                                                  launchUrl(Uri.parse(link.value.toString()));
+                                                                                  print("link.valuelink.value -- ${link.value}");
+                                                                                }
                                                                               }
                                                                             } else {
                                                                               print("${link}");
@@ -3347,8 +3371,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               SelectedTest.startsWith('HTTPS');
                                                                           var Link5 =
                                                                               SelectedTest.startsWith('HTTP');
+                                                                          var Link6 =
+                                                                              SelectedTest.startsWith('https://pdslink.page.link/');
                                                                           print(
-                                                                              "final link == ${SelectedTest}");
+                                                                              SelectedTest.toString());
 
                                                                           if (User_ID ==
                                                                               null) {
@@ -3359,25 +3385,28 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 Link2 == true ||
                                                                                 Link3 == true ||
                                                                                 Link4 == true ||
-                                                                                Link5 == true) {
-                                                                              if (link.value!.contains("https://pdslink.page.link/")) {
-                                                                                print("yes i am in room");
-                                                                                Navigator.push(context, MaterialPageRoute(
-                                                                                  builder: (context) {
-                                                                                    return NewBottomBar(
-                                                                                      buttomIndex: 1,
-                                                                                    );
-                                                                                  },
-                                                                                ));
-                                                                              } else if (Link2 == true || Link3 == true) {
+                                                                                Link5 == true ||
+                                                                                Link6 == true) {
+                                                                              if (Link2 == true || Link3 == true) {
                                                                                 launchUrl(Uri.parse("https://${link.value.toString()}"));
                                                                                 print("qqqqqqqqhttps://${link.value}");
-                                                                              } /* else {
-                                                                                launchUrl(Uri.parse(link.value.toString()));
-                                                                                print("link.valuelink.value -- ${link.value}");
-                                                                              } */
+                                                                              } else {
+                                                                                if (Link6 == true) {
+                                                                                  print("yes i am in room");
+                                                                                  Navigator.push(context, MaterialPageRoute(
+                                                                                    builder: (context) {
+                                                                                      return NewBottomBar(
+                                                                                        buttomIndex: 1,
+                                                                                      );
+                                                                                    },
+                                                                                  ));
+                                                                                } else {
+                                                                                  launchUrl(Uri.parse(link.value.toString()));
+                                                                                  print("link.valuelink.value -- ${link.value}");
+                                                                                }
+                                                                              }
                                                                             } else {
-                                                                              print("linklinklink -- ${link}");
+                                                                              print("${link}");
                                                                               Navigator.push(
                                                                                   context,
                                                                                   MaterialPageRoute(
@@ -4549,12 +4578,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           ),
                                                                         ),
 
-
-                                                                        
-                                                                        Text(
-                                                                            "${getallBlogModel1?.object?[index1]. likeCount == null ? 0 : getallBlogModel1?.object?[index1].likeCount}"),
-
-
+                                                                        Text( 
+                                                                            "${getallBlogModel1?.object?[index1].  commentCount == null ? 0 : getallBlogModel1?.object?[index1]. commentCount}"),
 
                                                                         // BlocConsumer<
                                                                         //     BlogcommentCubit,
@@ -5132,7 +5157,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                   "",
               postUuID:
                   AllGuestPostRoomData?.object?.content?[index].postUid ?? "");
-        });
+        }).then((value) =>   BlocProvider.of<GetGuestAllPostCubit>(context)
+        .GetallBlog(context, User_ID ?? ""));;
   }
 
   void _settingModalBottomSheetBlog(context, index, _width) {
@@ -5308,7 +5334,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       ],
       subject: "Share",
       text:
-          "Try This Awesome App \n\n Android :- ${androidLink} \n \n iOS :- ${iosLink}",
+          "Try This Awesome App \n\n Android :- ${androidLink}",
+          //  \n \n iOS :- ${iosLink}",
       sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
     );
   }
