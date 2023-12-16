@@ -12,6 +12,7 @@ import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/%20new/SelectChatMember.dart';
+import 'package:pds/presentation/%20new/inboxScreenInviteScreen.dart';
 import 'package:pds/presentation/DMAll_Screen/DM_InboxScreen.dart';
 import 'package:pds/presentation/DMAll_Screen/Dm_Screen.dart';
 import 'package:pds/widgets/pagenation.dart';
@@ -47,11 +48,33 @@ class _InboxScreenState extends State<InboxScreen> {
         resizeToAvoidBottomInset: false,
         floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.push(
+              /*           Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return MultiBlocProvider(
+                                          providers: [
+                                            BlocProvider<MyAccountCubit>(
+                                              create: (context) =>
+                                                  MyAccountCubit(),
+                                            ),
+                                          ],
+                                          child: EditProfileScreen(
+                                            newProfileData: NewProfileData,
+                                          )); */
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return MultiBlocProvider(
+                  providers: [
+                    BlocProvider<PersonalChatListCubit>(
+                      create: (context) => PersonalChatListCubit(),
+                    ),
+                  ],
+                  child: InviteMeesage(),
+                );
+              }));
+              /*      Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const SelectChatMember()),
-              );
+                    builder: (context) => const InviteMeesage()),
+              ); */
             },
             child: Container(
               decoration: BoxDecoration(
