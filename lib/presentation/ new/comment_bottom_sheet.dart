@@ -55,13 +55,13 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
   FocusNode focusNode = FocusNode();
   List<String> postTexContrlloer = [];
   HasDataModel? getAllHashtag;
-
   bool isHeshTegData = false;
   bool isTagData = false;
   SearchUserForInbox? searchUserForInbox1;
   bool isKeyboardVisible = false;
   String? uuid;
   String? User_ID1;
+  String? TeampData;
 
   void _goToElement() {
     scroll.animateTo((1000 * 20),
@@ -215,6 +215,26 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                   onTap: () {
                                     setState(() {
                                       if (addcomment.text.isNotEmpty) {
+                                        postTexContrlloer.add(
+                                            '${getAllHashtag?.object?.content?[index]}');
+                                        addcomment.text = addcomment.text +
+                                            '' +
+                                            '${getAllHashtag?.object?.content?[index].replaceAll("#", "")}';
+                                        addcomment.selection =
+                                            TextSelection.fromPosition(
+                                          TextPosition(
+                                              offset: addcomment.text.length),
+                                        );
+                                      }
+
+                                      isHeshTegData = false;
+
+                                      // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
+                                    });
+                                  },
+                                  /* onTap: () {
+                                    setState(() {
+                                      if (addcomment.text.isNotEmpty) {
                                         /*   postText.text =
                                                   '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
                                         postTexContrlloer.add(
@@ -226,7 +246,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
 
                                       // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
                                     });
-                                  },
+                                  }, */
                                   child: Row(
                                     children: [
                                       Container(
@@ -276,18 +296,79 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                   onTap: () {
                                     setState(() {
                                       if (addcomment.text.isNotEmpty) {
+                                        // postText.text =
+                                        //     '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}';
+                                        postTexContrlloer.add(
+                                            '@${searchUserForInbox1?.object?.content?[index].userName}');
+                                        TeampData = addcomment.text;
+
+                                        RegExp exp = RegExp(r'@\w+\s ');
+                                        String modifiedText =
+                                            addcomment.text.replaceAll(exp, '');
+
+
+
+                                        addcomment.text = addcomment.text +
+                                            '' +
+                                            '${searchUserForInbox1?.object?.content?[index].userName}';
+                                        addcomment.selection =
+                                            TextSelection.fromPosition(
+                                          TextPosition(
+                                              offset: addcomment.text.length),
+                                        );
+
+                                        print(
+                                            "postText${addcomment.text.split("@").first}");
+                                      }
+
+                                      isTagData = false;
+
+                                      // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
+                                    });
+                                  },
+                                  /*  onTap: () {
+                                    
+                                    
+                                    setState(() {
+                                        if (addcomment.text.isNotEmpty) {
                                         /*   postText.text =
                                                   '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
                                         postTexContrlloer.add(
-                                            '@${searchUserForInbox1?.object?.content?[index].userName}');
+                                            '${getAllHashtag?.object?.content?[index]}');
                                       }
+                                      addcomment.text =
+                                          postTexContrlloer.join(' ,');
+                                      isHeshTegData = false;
+
+                                      // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
+                              
+                                      /*  if (addcomment.text.isNotEmpty) {
+                                                // postText.text =
+                                                //     '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}';
+                                                postTexContrlloer.add(
+                                                    '@${searchUserForInbox1?.object?.content?[index].userName}');
+                                                addcomment.text = addcomment.text +
+                                                    '' +
+                                                    '${searchUserForInbox1?.object?.content?[index].userName}';
+                                                addcomment.selection =
+                                                    TextSelection.fromPosition(
+                                                  TextPosition(
+                                                      offset:
+                                                          addcomment.text.length),
+                                                );
+                                             
+                                                print(
+                                                    "postText${addcomment.text.split("@").first}");
+                                              }
+ */
+                                  
                                       addcomment.text =
                                           postTexContrlloer.join(' ,');
                                       isTagData = false;
 
                                       // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
                                     });
-                                  },
+                                  }, */
                                   child: Row(
                                     children: [
                                       searchUserForInbox1
