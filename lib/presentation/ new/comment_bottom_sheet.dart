@@ -793,7 +793,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                   borderRadius: BorderRadius.circular(30)),
                               child: TextFormField(
                                 onChanged: (value) {
-                                  onChangeMethod(value);
+                                  // onChangeMethod(value);
                                 },
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(300),
