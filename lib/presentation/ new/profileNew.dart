@@ -3135,10 +3135,10 @@ String? formattedDateEnd;
                           BlocProvider.of<NewProfileSCubit>(context)
                               .GetWorkExperienceAPI(context, widget.User_ID));
                     },
-                    child: Icon(
-                      Icons.edit,
+                    child: User_ID == NewProfileData?.object?.userUid ? Icon( 
+                      Icons.edit, 
                       color: Colors.black,
-                    ),
+                    ):SizedBox(),
                   ),
                   SizedBox(
                     width: 10,
@@ -3157,11 +3157,11 @@ String? formattedDateEnd;
                           BlocProvider.of<NewProfileSCubit>(context)
                               .GetWorkExperienceAPI(context, widget.User_ID));
                     },
-                    child: Icon(
+                    child:User_ID == NewProfileData?.object?.userUid ? Icon(
                       Icons.add,
                       color: Colors.black,
                       size: 25,
-                    ),
+                    ):SizedBox(),
                   )
                 ],
               )
@@ -3293,7 +3293,7 @@ String? formattedDateEnd;
                       .NewProfileSAPI(context, widget.User_ID));
             },
             child: User_ID == NewProfileData?.object?.userUid
-                ? Icon(
+                ?   Icon(
                     Icons.edit,
                     color: Colors.black,
                   )
