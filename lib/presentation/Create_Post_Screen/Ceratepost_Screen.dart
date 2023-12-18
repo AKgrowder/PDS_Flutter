@@ -22,6 +22,7 @@ import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/example/lib/main.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
 import 'package:pds/widgets/commentPdf.dart';
+import 'package:pds/widgets/pagenation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -76,7 +77,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   String? UserProfileImage;
   List<TextSpan> _textSpans = [];
   bool isHeshTegData = false;
-  bool isTagData = false;
+
   SearchUserForInbox? searchUserForInbox1;
   List<File> galleryFile = [];
   bool isVideodata = false;
@@ -85,7 +86,13 @@ class _CreateNewPostState extends State<CreateNewPost> {
   String enteredText = '';
   List<String> postTexHashContrlloer = [];
   GlobalKey<FlutterMentionsState> key = GlobalKey<FlutterMentionsState>();
-  List<Map<String,dynamic>> hastageData = [];
+  List<Map<String, dynamic>> tageData = [];
+  List<Map<String, dynamic>> heshTageData = [];
+
+  bool istageData = false;
+
+  ScrollController scrollController = ScrollController();
+  String? data;
 /*   void _onTextChanged() {
     String text = postText.text;
 
@@ -191,8 +198,22 @@ class _CreateNewPostState extends State<CreateNewPost> {
         }
         if (state is GetAllHashtagState) {
           getAllHashtag = state.getAllHashtag;
-          isHeshTegData = true;
-          isTagData = false;
+
+          for (int i = 0;
+              i < (getAllHashtag?.object?.content?.length ?? 0);
+              i++) {
+            // getAllHashtag?.object?.content?[i].split('#').last;
+            Map<String, dynamic> dataSetup = {
+              'id': '${i}',
+              'display':
+                  '${getAllHashtag?.object?.content?[i].split('#').last}',
+            };
+            heshTageData.add(dataSetup);
+            if (tageData.isNotEmpty == true) {
+              isHeshTegData = true;
+            }
+            print("check heshTageData -$heshTageData");
+          }
         }
         if (state is AddPostLoadedState) {
           if (state.addPost.object.toString() ==
@@ -209,8 +230,20 @@ class _CreateNewPostState extends State<CreateNewPost> {
         }
         if (state is SearchHistoryDataAddxtends) {
           searchUserForInbox1 = state.searchUserForInbox;
-          isTagData = true;
-          isHeshTegData = false;
+
+          /*  isTagData = true;
+          isHeshTegData = false; */
+          searchUserForInbox1?.object?.content?.forEach((element) {
+            Map<String, dynamic> dataSetup = {
+              'id': element.userUid ?? '',
+              'display': element.userName ?? '',
+              'photo': element.userProfilePic ?? ''
+            };
+            tageData.add(dataSetup);
+            if (tageData.isNotEmpty == true) {
+              istageData = true;
+            }
+          });
         }
       },
       builder: (context, state) {
@@ -383,59 +416,113 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                 children: [
                                   Column(
                                     children: [
-                                      FlutterMentions(
-                                        key: key,
-                                        suggestionPosition:
-                                            SuggestionPosition.Top,
-                                        maxLines: 5,
-                                        minLines: 1,
-                                        mentions: [
-                                          Mention(
-                                              trigger: "@",
-                                              style: TextStyle(
-                                                  color: Colors.purple),
-                                              data: [
-                                                {
-                                                  "id": "61as61fsa",
-                                                  "display": "fayeedP",
-                                                  "photo":
-                                                      "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg"
-                                                },
-                                                {
-                                                  "id": "61asasgasgsag6a",
-                                                  "display": "khaled",
-                                                  "photo":
-                                                      "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
-                                                },
-                                              ],
-                                              matchAll: false,
-                                              suggestionBuilder: (data) {
-                                                return Container(
-                                                  padding: EdgeInsets.all(10.0),
-                                                  child: Row(
-                                                    children: <Widget>[
-                                                      CircleAvatar(
-                                                        backgroundImage:
-                                                            NetworkImage(
-                                                          data['photo'],
-                                                        ),
+                                      SizedBox(
+                                        height: 80,
+                                        child: FlutterMentions(
+                                          onChanged: (value) {
+                                            onChangeMethod(value);
+                                          },
+                                          suggestionPosition:
+                                              SuggestionPosition.values.last,
+                                          maxLines: 10,
+                                          decoration: InputDecoration(
+                                            hintText: 'What’s on your head?',
+                                            border: InputBorder.none,
+                                            focusedBorder: InputBorder.none,
+                                          ),
+                                          mentions: [
+                                            Mention(
+                                                trigger: "@",
+                                                style: TextStyle(
+                                                    color: Colors.blue),
+                                                data: tageData,
+                                                matchAll: true,
+                                                suggestionBuilder: (tageData) {
+                                                  if (istageData) {
+                                                    return Container(
+                                                      padding:
+                                                          EdgeInsets.all(10.0),
+                                                      child: Row(
+                                                        children: <Widget>[
+                                                          tageData['photo']
+                                                                          .toString()
+                                                                          .isNotEmpty ==
+                                                                      true &&
+                                                                  tageData['photo']
+                                                                          .toString() !=
+                                                                      Null
+                                                              ? CircleAvatar(
+                                                                  backgroundImage:
+                                                                      AssetImage(
+                                                                          ImageConstant
+                                                                              .tomcruse),
+                                                                )
+                                                              : CircleAvatar(
+                                                                  backgroundImage:
+                                                                      NetworkImage(
+                                                                    tageData[
+                                                                        'photo'],
+                                                                  ),
+                                                                ),
+                                                          SizedBox(
+                                                            width: 20.0,
+                                                          ),
+                                                          Column(
+                                                            children: <Widget>[
+                                                              Text(
+                                                                  '@${tageData['display']}'),
+                                                            ],
+                                                          )
+                                                        ],
                                                       ),
-                                                      SizedBox(
-                                                        width: 20.0,
-                                                      ),
-                                                      Column(
+                                                    );
+                                                  }
+
+                                                  return Container(
+                                                    color: Colors.amber,
+                                                  );
+                                                }),
+                                            Mention(
+                                                trigger: "#",
+                                                style: TextStyle(
+                                                    color: Colors.blue),
+                                                disableMarkup: true,
+                                                data: heshTageData,
+                                                matchAll: true,
+                                                suggestionBuilder: (tageData) {
+                                                  if (isHeshTegData) {
+                                                    return Container(
+                                                        padding: EdgeInsets.all(
+                                                            10.0),
+                                                        child: ListTile(
+                                                          leading: CircleAvatar(
+                                                            child: Text('#'),
+                                                          ),
+                                                          title: Text(
+                                                              '${tageData['display']}'),
+                                                        )
+                                                        /* Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: <Widget>[
                                                           Text(
-                                                              '@${data['display']}'),
+                                                              '${tageData['display']}'),
                                                         ],
-                                                      )
-                                                    ],
-                                                  ),
-                                                );
-                                              })
-                                        ],
+                                                      ), */
+                                                        );
+                                                  }
+                                                  print(
+                                                      "suggestionBuilder-$tageData");
+                                                  return Container(
+                                                    color: Colors.amber,
+                                                  );
+                                                }),
+                                          ],
+                                        ),
                                       ),
-                                      /*  TextFormField(
+
+                                      /* TextFormField(
                                         controller: postText,
                                         maxLines: null,
                                         cursorColor: Colors.grey,
@@ -470,11 +557,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                         ), */
                                       ), */
                                       Padding(
-                                        padding: EdgeInsets.only(
-                                            top: isHeshTegData == true ||
-                                                    isTagData == true
-                                                ? 330
-                                                : 5),
+                                        padding: EdgeInsets.only(top: 5),
                                         child: SizedBox(
                                           child: isVideodata == true
                                               ? _controller!.value.isInitialized
@@ -673,219 +756,6 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                           : SizedBox(),
                                     ],
                                   ),
-                                  if (isHeshTegData)
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                          top: postText.length >= 100
-                                              ? (postText.length + 0)
-                                              : 100),
-                                      height:
-                                          imageDataPost?.object?.data != null
-                                              ? _height / 3
-                                              : _height,
-                                      width: _width,
-                                      // color: Colors.amber,
-                                      child: ListView.builder(
-                                        // physics: NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemCount: getAllHashtag
-                                            ?.object?.content?.length,
-                                        itemBuilder: (context, index) {
-                                          return Container(
-                                            margin: EdgeInsets.all(10),
-                                            height: 70,
-                                            width: _width,
-
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                border: Border.all(
-                                                    color: Color(0xffE6E6E6))),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  if (postText
-                                                      .text.isNotEmpty) {
-                                                    postTexHashContrlloer.add(
-                                                        '${getAllHashtag?.object?.content?[index]}');
-                                                    postText.text = postText
-                                                            .text +
-                                                        '' +
-                                                        '${getAllHashtag?.object?.content?[index].replaceAll("#", "")}';
-                                                    postText.selection =
-                                                        TextSelection
-                                                            .fromPosition(
-                                                      TextPosition(
-                                                          offset: postText
-                                                              .text.length),
-                                                    );
-                                                  }
-
-                                                  isHeshTegData = false;
-
-                                                  // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
-                                                });
-                                              },
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    width: _width / 1.6,
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 10),
-                                                      child: Text(
-                                                        '${getAllHashtag?.object?.content?[index]}',
-                                                        style: TextStyle(
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                            // color: Colors.green,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  if (isTagData)
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                          top: postText.length >= 100
-                                              ? (postText.length + 0)
-                                              : 100),
-                                      height:
-                                          imageDataPost?.object?.data != null
-                                              ? _height / 3
-                                              : _height,
-                                      width: _width,
-                                      // color: Colors.amber,
-                                      child: ListView.builder(
-                                        // physics: NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemCount: searchUserForInbox1
-                                            ?.object?.content?.length,
-                                        itemBuilder: (context, index) {
-                                          return Container(
-                                            margin: EdgeInsets.all(10),
-                                            height: 70,
-                                            width: _width,
-                                            // color: Colors.green,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                border: Border.all(
-                                                    color: Color(0xffE6E6E6))),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                /* setState(() {
-                                                  if (postText.text.isNotEmpty) {
-                                                    // postText.text =
-                                                    //     '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}';
-                                                    postTexContrlloer.add(
-                                                        '@${searchUserForInbox1?.object?.content?[index].userName}');
-                                                    postText.text = postText.text +
-                                                        '' +
-                                                        '${searchUserForInbox1?.object?.content?[index].userName}';
-                                                    postText.selection =
-                                                        TextSelection.fromPosition(
-                                                      TextPosition(
-                                                          offset:
-                                                              postText.text.length),
-                                                    );
-          
-                                                    print(
-                                                        "postText${postText.text.split("@").first}");
-                                                  }
-          
-                                                  isTagData = false;
-          
-                                                  // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
-                                                }); */
-                                              },
-                                              child: Row(
-                                                children: [
-                                                  searchUserForInbox1
-                                                                  ?.object
-                                                                  ?.content?[
-                                                                      index]
-                                                                  .userProfilePic !=
-                                                              null &&
-                                                          searchUserForInbox1
-                                                                  ?.object
-                                                                  ?.content?[
-                                                                      index]
-                                                                  .userProfilePic
-                                                                  ?.isNotEmpty ==
-                                                              true
-                                                      ? Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 10),
-                                                          child: CircleAvatar(
-                                                            radius: 30.0,
-                                                            backgroundImage:
-                                                                NetworkImage(
-                                                                    "${searchUserForInbox1?.object?.content?[index].userProfilePic}"),
-                                                            backgroundColor:
-                                                                Colors
-                                                                    .transparent,
-                                                          ),
-                                                        )
-                                                      : Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 10),
-                                                          child: CircleAvatar(
-                                                            radius: 30.0,
-                                                            backgroundImage:
-                                                                AssetImage(
-                                                                    ImageConstant
-                                                                        .tomcruse),
-                                                            backgroundColor:
-                                                                Colors
-                                                                    .transparent,
-                                                          ),
-                                                        ),
-                                                  Container(
-                                                    width: _width / 1.6,
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 10),
-                                                      child: Text(
-                                                        searchUserForInbox1
-                                                                ?.object
-                                                                ?.content?[
-                                                                    index]
-                                                                .userName ??
-                                                            '',
-                                                        style: TextStyle(
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                            // color: Colors.green,
-                                          );
-                                        },
-                                      ),
-                                    ),
                                 ],
                               ),
                             ),
@@ -1203,9 +1073,13 @@ class _CreateNewPostState extends State<CreateNewPost> {
   }
 
   onChangeMethod(String value) {
+    setState(() {
+      postText.text = value;
+    });
+
     if (value.contains('@')) {
       print("if this condison is working-${value}");
-      if (value.length >= 3 && value.contains('@')) {
+      if (value.length >= 1 && value.contains('@')) {
         print("value check --${value.endsWith(' #')}");
         if (value.endsWith(' #')) {
           String data1 = value.split(' #').last.replaceAll('#', '');
@@ -1229,7 +1103,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
     } else {
       setState(() {
         // postText.text = postText.text + ' ' + postTexContrlloer.join(' ,');
-        isTagData = false;
+        istageData = false;
         isHeshTegData = false;
       });
     }

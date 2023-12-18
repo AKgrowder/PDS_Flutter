@@ -5142,21 +5142,26 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         builder: (BuildContext bc) {
           print(
               "userUiduserUid == >>>>>>> ${AllGuestPostRoomData?.object?.content?[index].userUid}");
-          return CommentBottomSheet(
-              isFoollinng:
-                  AllGuestPostRoomData?.object?.content?[index].isFollowing,
-              useruid:
-                  AllGuestPostRoomData?.object?.content?[index].userUid ?? "",
-              userProfile: AllGuestPostRoomData
-                      ?.object?.content?[index].userProfilePic ??
-                  "",
-              UserName:
-                  AllGuestPostRoomData?.object?.content?[index].postUserName ??
+          return StatefulBuilder(
+           
+            builder: (BuildContext context, StateSetter setState) {
+              return CommentBottomSheet(
+                  isFoollinng:
+                      AllGuestPostRoomData?.object?.content?[index].isFollowing,
+                  useruid:
+                      AllGuestPostRoomData?.object?.content?[index].userUid ?? "",
+                  userProfile: AllGuestPostRoomData
+                          ?.object?.content?[index].userProfilePic ??
                       "",
-              desc: AllGuestPostRoomData?.object?.content?[index].description ??
-                  "",
-              postUuID:
-                  AllGuestPostRoomData?.object?.content?[index].postUid ?? "");
+                  UserName:
+                      AllGuestPostRoomData?.object?.content?[index].postUserName ??
+                          "",
+                  desc: AllGuestPostRoomData?.object?.content?[index].description ??
+                      "",
+                  postUuID:
+                      AllGuestPostRoomData?.object?.content?[index].postUid ?? "");
+            }
+          );
         }).then((value) =>   BlocProvider.of<GetGuestAllPostCubit>(context)
         .GetallBlog(context, User_ID ?? ""));;
   }
