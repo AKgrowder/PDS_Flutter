@@ -66,6 +66,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
     User_ID1 = prefs.getString(PreferencesKey.loginUserID);
   }
 
+
   @override
   Widget build(BuildContext context) {
     var _width = MediaQuery.of(context).size.width;
@@ -679,6 +680,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                       BlocProvider.of<BlogcommentCubit>(context)
                           .DeletecommentAPI(
                               "${blogCommentModel?.object?[index1].commentUid}",
+                              "${blogCommentModel?.object?[index1].userUid}",
                               context);
                       blogCommentModel?.object?.removeAt(index1);
                       Navigator.pop(context);
