@@ -58,6 +58,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
   ];
 
   late StreamSubscription _connectionChangeStream;
+  ScrollController scrollController = ScrollController();
 
   bool isOffline = false;
   @override

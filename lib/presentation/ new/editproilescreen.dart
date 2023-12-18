@@ -76,6 +76,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   List<String> industryUUID = [];
   ImagePicker picker = ImagePicker();
   List<String> industryUUIDinApi = [];
+  bool removeProfilePic = false;
+  bool removeCoverPic = false;
   dataSetUpMethod() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_Module = prefs.getString(PreferencesKey.module);
@@ -789,12 +791,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 var params = {
                                   "userProfilePic":
                                       chooseDocumentuploded?.object.toString(),
-                                  "userBackgroundPic": widget.newProfileData
+                                  "userBackgroundPic": /* widget.newProfileData
                                               ?.object?.userBackgroundPic !=
-                                          null
-                                      ? widget.newProfileData?.object
-                                          ?.userBackgroundPic
-                                      : null,
+                                          null */
+                                      removeCoverPic == false
+                                          ? widget.newProfileData?.object
+                                              ?.userBackgroundPic
+                                          : null,
                                   "email": emailController.text,
                                   "name": nameController.text,
                                   // "userName": userNameController.text,
@@ -810,12 +813,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   "userBackgroundPic":
                                       chooseDocumentuploded1?.object.toString(),
                                   "email": emailController.text,
-                                  "userProfilePic": widget.newProfileData
+                                  "userProfilePic": /* widget.newProfileData
                                               ?.object?.userProfilePic !=
-                                          null
-                                      ? widget.newProfileData?.object
-                                          ?.userProfilePic
-                                      : null,
+                                          null */
+                                      removeProfilePic == false
+                                          ? widget.newProfileData?.object
+                                              ?.userProfilePic
+                                          : null,
                                   "name": nameController.text,
                                   // "userName": userNameController.text,
                                   "uuid": User_ID
@@ -825,12 +829,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     .UpdateProfileEmployee(params, context);
                               } else {
                                 var params = {
-                                  "userBackgroundPic": widget.newProfileData
+                                  "userBackgroundPic": /* widget.newProfileData
                                               ?.object?.userBackgroundPic !=
-                                          null
-                                      ? widget.newProfileData?.object
-                                          ?.userBackgroundPic
-                                      : null,
+                                          null */
+                                      removeCoverPic == false
+                                          ? widget.newProfileData?.object
+                                              ?.userBackgroundPic
+                                          : null,
                                   "userProfilePic": widget.newProfileData
                                               ?.object?.userProfilePic !=
                                           null
@@ -1021,6 +1026,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           chooseDocumentuploded?.object.toString() != null) {
         params['userProfilePic'] = chooseDocumentuploded?.object.toString();
         params['userBackgroundPic'] = chooseDocumentuploded1?.object.toString();
+      } else if (removeProfilePic == true) {
+        params['userProfilePic'] = "";
+      } else if (removeCoverPic == true) {
+        params['userBackgroundPic'] = "";
+      } else if (removeProfilePic == true && removeCoverPic == true) {
+        params['userProfilePic'] = "";
+        params['userBackgroundPic'] = "";
       } else if (chooseDocumentuploded?.object.toString() != null) {
         params['userProfilePic'] = chooseDocumentuploded?.object.toString();
       } else if (chooseDocumentuploded1?.object.toString() != null) {
@@ -1120,6 +1132,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "name": nameController.text
         };
 
+        if (removeProfilePic == true) {
+          params['userProfilePic'] = "";
+        } else if (removeCoverPic == true) {
+          params['userBackgroundPic'] = "";
+        } else if (removeCoverPic == true || removeProfilePic == true) {
+          params['userProfilePic'] = "";
+          params['userBackgroundPic'] = "";
+        }
+
         print("parmas-$params");
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
@@ -1137,13 +1158,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "email": emailController.text,
           "userProfilePic": chooseDocumentuploded?.object.toString(),
           "userBackgroundPic":
-              widget.newProfileData?.object?.userBackgroundPic != null
+              // widget.newProfileData?.object?.userBackgroundPic != null
+              removeCoverPic == false
                   ? widget.newProfileData?.object?.userBackgroundPic
                   : null,
           //  "userName":"AnkurTestTest17",
           "uid": User_ID,
           "name": nameController.text
         };
+         if (removeProfilePic == true) {
+          params['userProfilePic'] = "";
+        } else if (removeCoverPic == true) {
+          params['userBackgroundPic'] = "";
+        } else if (removeCoverPic == true || removeProfilePic == true) {
+          params['userProfilePic'] = "";
+          params['userBackgroundPic'] = "";
+        }
         print("parmas-$params");
         //asssss
         BlocProvider.of<MyAccountCubit>(context)
@@ -1158,7 +1188,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "expertUId": ["${selectedExpertise?.uid}"],
           "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
           "userProfilePic":
-              widget.newProfileData?.object?.userProfilePic != null
+              // widget.newProfileData?.object?.userProfilePic != null
+              removeProfilePic == false
                   ? widget.newProfileData?.object?.userProfilePic
                   : null,
           "fees": fees.text,
@@ -1170,6 +1201,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "email": emailController.text,
           "uid": User_ID,
         };
+         if (removeProfilePic == true) {
+          params['userProfilePic'] = "";
+        } else if (removeCoverPic == true) {
+          params['userBackgroundPic'] = "";
+        } else if (removeCoverPic == true || removeProfilePic == true) {
+          params['userProfilePic'] = "";
+          params['userBackgroundPic'] = "";
+        }
         print("parmas-$params");
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
@@ -1177,11 +1216,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print("else working on");
         var params = {
           "userProfilePic":
-              widget.newProfileData?.object?.userProfilePic != null
+              // widget.newProfileData?.object?.userProfilePic != null
+              removeProfilePic == false
                   ? widget.newProfileData?.object?.userProfilePic
                   : null,
           "userBackgroundPic":
-              widget.newProfileData?.object?.userBackgroundPic != null
+              // widget.newProfileData?.object?.userBackgroundPic != null
+              removeCoverPic == false
                   ? widget.newProfileData?.object?.userBackgroundPic
                   : null,
           "document": chooseDocumentuploded2?.object != null
@@ -1197,6 +1238,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "email": emailController.text,
           "uid": User_ID,
         };
+         if (removeProfilePic == true) {
+          params['userProfilePic'] = "";
+        } else if (removeCoverPic == true) {
+          params['userBackgroundPic'] = "";
+        } else if (removeCoverPic == true || removeProfilePic == true) {
+          params['userProfilePic'] = "";
+          params['userBackgroundPic'] = "";
+        }
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
         print("else condison working--$industryUUID11");
@@ -1792,12 +1841,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   removeuserProfilePic() async {
+    removeProfilePic = true;
     widget.newProfileData?.object?.userProfilePic = null;
     setState(() {});
     Navigator.pop(context);
   }
 
   removeUserCover() async {
+    removeCoverPic = true;
     widget.newProfileData?.object?.userBackgroundPic = null;
     setState(() {});
     Navigator.pop(context);

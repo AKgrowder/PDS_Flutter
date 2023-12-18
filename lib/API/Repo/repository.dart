@@ -2470,7 +2470,7 @@ class Repository {
         "${Config.create_user_chat}?userWithUid=${userWithUid}", context);
     print('AddPost$response');
     var jsonString = json.decode(response.body);
-   switch (response.statusCode) {
+    switch (response.statusCode) {
       case 200:
         return OnTimeDMModel.fromJson(jsonString);
       case 404:
@@ -2511,9 +2511,11 @@ class Repository {
     }
   }
 
-  DeleteBlogcomment(String commentuid,String loginuser, BuildContext context) async {
+  DeleteBlogcomment(
+      String commentuid, String loginuser, BuildContext context) async {
     final response = await apiServices.deleteApiCall1(
-        "${Config.deleteBlogcomment}?commentUid=${commentuid}&loginUserUid=$loginuser", context);
+        "${Config.deleteBlogcomment}?commentUid=${commentuid}&loginUserUid=$loginuser",
+        context);
     print(response);
     var jsonString = json.decode(response!.body);
     switch (response.statusCode) {
