@@ -13,7 +13,6 @@ import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/%20new/SelectChatMember.dart';
 import 'package:pds/presentation/%20new/inboxScreenInviteScreen.dart';
-import 'package:pds/presentation/DMAll_Screen/DM_InboxScreen.dart';
 import 'package:pds/presentation/DMAll_Screen/Dm_Screen.dart';
 import 'package:pds/widgets/pagenation.dart';
 
@@ -32,10 +31,19 @@ class _InboxScreenState extends State<InboxScreen> {
   ScrollController scrollController = ScrollController();
   String? UserIndexUUID = "";
   bool apiData = false;
+  FocusNode _focusNode = FocusNode();
+
   @override
   void initState() {
     BlocProvider.of<PersonalChatListCubit>(context).PersonalChatList(context);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    _focusNode.dispose();
+    super.dispose();
   }
 
   TextEditingController searchController = TextEditingController();
@@ -69,12 +77,9 @@ class _InboxScreenState extends State<InboxScreen> {
                   ],
                   child: InviteMeesage(),
                 );
-              }));
-              /*      Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const InviteMeesage()),
-              ); */
+              })).then((value) =>
+                  BlocProvider.of<PersonalChatListCubit>(context)
+                      .PersonalChatList(context));
             },
             child: Container(
               decoration: BoxDecoration(
@@ -154,7 +159,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                   borderRadius: BorderRadius.circular(10)),
                               child: TextFormField(
                                 onChanged: (value) {
-                                  if (value.isNotEmpty) {
+                                  /*   if (value.isNotEmpty) {
                                     BlocProvider.of<PersonalChatListCubit>(
                                             context)
                                         .search_user_for_inbox(context,
@@ -162,8 +167,9 @@ class _InboxScreenState extends State<InboxScreen> {
                                   } else if (value.isEmpty) {
                                     isDataGet = false;
                                     setState(() {});
-                                  }
+                                  } */
                                 },
+                                focusNode: _focusNode,
                                 controller: searchController,
                                 cursorColor: ColorConstant.primary_color,
                                 decoration: InputDecoration(
@@ -171,6 +177,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                         onPressed: () {
                                           searchController.clear();
                                           isDataGet = false;
+                                          _focusNode.unfocus();
                                           setState(() {});
                                         },
                                         icon: Icon(

@@ -5,6 +5,7 @@ import 'package:pds/API/Bloc/PersonalChatList_Bloc/PersonalChatList_cubit.dart';
 import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/presentation/DMAll_Screen/Dm_Screen.dart';
 import 'package:pds/widgets/pagenation.dart';
 
 class InviteMeesage extends StatefulWidget {
@@ -17,9 +18,18 @@ class InviteMeesage extends StatefulWidget {
 class _InviteMeesageState extends State<InviteMeesage> {
   TextEditingController searchController = TextEditingController();
   bool isDataGet = false;
+  String? UserIndexUUID = "";
   ScrollController scrollController = ScrollController();
-
   SearchUserForInbox? searchUserForInbox1;
+
+  FocusNode _focusNode = FocusNode();
+   @override
+  void dispose() {
+    searchController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -45,12 +55,18 @@ class _InviteMeesageState extends State<InviteMeesage> {
           style: TextStyle(color: Colors.black),
         ),
       ),
-      body: BlocBuilder<PersonalChatListCubit, PersonalChatListState>(
-        builder: (context, state) {
+      body: BlocConsumer<PersonalChatListCubit, PersonalChatListState>(
+        listener: (context, state) {
           if (state is SearchHistoryDataAddxtends) {
             isDataGet = true;
             searchUserForInbox1 = state.searchUserForInbox;
           }
+          if (state is DMChatListLoadedState) {
+            print(state.DMChatList.object);
+            UserIndexUUID = state.DMChatList.object;
+          }
+        },
+        builder: (context, state) {
           return Column(
             children: [
               Padding(
@@ -64,7 +80,9 @@ class _InviteMeesageState extends State<InviteMeesage> {
                       ),
                       borderRadius: BorderRadius.circular(10)),
                   child: TextFormField(
+                       focusNode: _focusNode,
                     onChanged: (value) {
+                      print("value check if their-$value");
                       if (value.isNotEmpty) {
                         BlocProvider.of<PersonalChatListCubit>(context)
                             .search_user_for_inbox(
@@ -84,8 +102,8 @@ class _InviteMeesageState extends State<InviteMeesage> {
                             onPressed: () {
                               print("vgfdghdfgh");
                               searchController.clear();
-
                               setState(() {
+                                _focusNode.unfocus();
                                 isDataGet = false;
                               });
                               print("dhfdsfbdf-$isDataGet");
@@ -138,9 +156,10 @@ class _InviteMeesageState extends State<InviteMeesage> {
             return GestureDetector(
               onTap: () {
                 // DMChatListm
-                /*   BlocProvider.of<PersonalChatListCubit>(context).DMChatListm(
+                BlocProvider.of<PersonalChatListCubit>(context).DMChatListm(
                     "${searchUserForInbox1?.object?.content?[index].userUid}",
                     context);
+
                 if (UserIndexUUID != "" || UserIndexUUID != null) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return DmScreen(
@@ -148,13 +167,9 @@ class _InviteMeesageState extends State<InviteMeesage> {
                           "${searchUserForInbox1?.object?.content?[index].userName}",
                       ChatInboxUid: UserIndexUUID ?? "",
                     );
-                  })).then((value) => CallBackFunc()
-                      /* BlocProvider.of<PersonalChatListCubit>(context)
-                          .PersonalChatList(context) */
-
-                      );
+                  }));
                   // UserIndexUUID = "";
-                } */
+                }
               },
               child: Container(
                 margin: EdgeInsets.all(10),
