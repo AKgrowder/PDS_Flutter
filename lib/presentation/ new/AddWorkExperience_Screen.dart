@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
-import 'package:multi_select_flutter/util/multi_select_item.dart';
-import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
 import 'package:pds/API/Model/IndustrytypeModel/Industrytype_Model.dart';
 import 'package:pds/core/utils/color_constant.dart';
@@ -386,7 +383,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                           context: context,
                                           initialDate: DateTime.now(),
                                           firstDate: DateTime(2000),
-                                          lastDate: DateTime(2101));
+                                          lastDate:DateTime.now());
 
                                       if (pickedStartDate != null) {
                                         print(
