@@ -229,7 +229,7 @@ class _DmScreenState extends State<DmScreen> {
                 ),
               ),
               title: Text(
-                "View Comments",
+                "DM",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
