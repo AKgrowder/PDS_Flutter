@@ -227,6 +227,8 @@ class _InboxScreenState extends State<InboxScreen> {
   }
 
   intaldatashow() {
+       var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return Expanded(
       child: SingleChildScrollView(
         child: ListView.builder(
@@ -356,37 +358,43 @@ class _InboxScreenState extends State<InboxScreen> {
                                             fontSize: 15,
                                             fontWeight: FontWeight.w600),
                                       ),
-                                      PersonalChatListModelData?.object?[index]
-                                                  .messageType ==
-                                              "IMAGE"
-                                          ? Row(
-                                              children: [
-                                                CustomImageView(
-                                                    height: 19,
-                                                    width: 19,
-                                                    imagePath: ImageConstant
-                                                        .ChatimageIcon),
-                                                SizedBox(
-                                                  width: 7,
-                                                ),
-                                                Text(
-                                                  "Photo",
-                                                  style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.grey,
+                                      Container(
+                                        width: _width / 1.7,
+                                        height: 20,
+                                        // color: Colors.red,
+                                        child: PersonalChatListModelData?.object?[index]
+                                                    .messageType ==
+                                                "IMAGE"
+                                            ? Row(
+                                                children: [
+                                                  CustomImageView(
+                                                      height: 19,
+                                                      width: 19,
+                                                      imagePath: ImageConstant
+                                                          .ChatimageIcon),
+                                                  SizedBox(
+                                                    width: 7,
                                                   ),
+                                                  Text(
+                                                    "Photo",
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : Text(
+                                                "${PersonalChatListModelData?.object?[index].message}",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.grey,
                                                 ),
-                                              ],
-                                            )
-                                          : Text(
-                                              "${PersonalChatListModelData?.object?[index].message}",
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.grey,
                                               ),
-                                            )
+                                      )
                                     ],
                                   ),
                                 )
