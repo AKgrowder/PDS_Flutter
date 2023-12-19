@@ -291,8 +291,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     _storyController!.pause();
     NetworkImage networkImage =
         NetworkImage(widget.buttonData.images[_curSegmentIndex].image ?? "");
-  //  BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
-  //       context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+    //  BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
+    //       context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
     networkImage.resolve(ImageConfiguration()).addListener(
       ImageStreamListener((info, call) {
         if (mounted) {
@@ -310,8 +310,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
           if (DummyStoryViewBool == true) {
             StoryView = true;
-             BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
-        context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+            BlocProvider.of<ViewStoryCubit>(context).StoryViewList(context,
+                "${widget.buttonData.images[_curSegmentIndex].storyUid}");
             setState(() {});
           }
         }
@@ -404,8 +404,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
         if (DummyStoryViewBool == true) {
           StoryView = true;
-           BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
-        context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+          BlocProvider.of<ViewStoryCubit>(context).StoryViewList(context,
+              "${widget.buttonData.images[_curSegmentIndex].storyUid}");
           setState(() {});
         }
       }
@@ -486,7 +486,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             }
           }
         }
-    
+
         _storyController!.unpause();
       },
       child: SizedBox(
@@ -530,7 +530,10 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                       Container(
                                         width: _width,
                                         child: Row(
-                                          children: [SizedBox(width: _width/2.3,),
+                                          children: [
+                                            SizedBox(
+                                              width: _width / 2.3,
+                                            ),
                                             // Spacer(),
                                             Container(
                                               height: 2,

@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +10,8 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pds/API/Bloc/PersonalChatList_Bloc/PersonalChatList_State.dart';
 import 'package:pds/API/Bloc/PersonalChatList_Bloc/PersonalChatList_cubit.dart';
+import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
+import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
@@ -38,14 +42,29 @@ class _InviteMeesageState extends State<InviteMeesage> {
   XFile? pickedImageFile;
   File? _image;
   double documentuploadsize = 0;
+  double finalFileSize = 0;
+
   ImagePicker picker = ImagePicker();
   FocusNode _focusNode = FocusNode();
   TextEditingController Add_Comment = TextEditingController();
   KeyboardVisibilityController keyboardVisibilityController =
       KeyboardVisibilityController();
+  double value2 = 0.0;
+  PlatformFile? file12;
+  ChooseDocument1? imageDataPost;
+
+  getDocumentSize() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    documentuploadsize = await double.parse(
+        prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
+
+    finalFileSize = documentuploadsize;
+    setState(() {});
+  }
 
   @override
   void initState() {
+    getDocumentSize();
     keyboardVisibilityController.onChange.listen((bool isKeyboardVisible) {
       this.isKeyboardVisible = isKeyboardVisible;
 
@@ -107,13 +126,6 @@ class _InviteMeesageState extends State<InviteMeesage> {
         lowerCaseImagePath.endsWith('.m4a');
   }
 
-  getDocumentSize() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? a = prefs.getInt(PreferencesKey.mediaSize);
-    documentuploadsize = double.parse("${a}");
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
@@ -150,6 +162,17 @@ class _InviteMeesageState extends State<InviteMeesage> {
             if (state is DMChatListLoadedState) {
               print(state.DMChatList.object);
               UserIndexUUID = state.DMChatList.object;
+            }
+            if (state is SelectMultipleUsers_ChatLoadestate) {
+              SnackBar snackBar = SnackBar(
+                content:
+                    Text(state.selectMultipleUsersChatModel.object.toString()),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+            if (state is AddPostImaegState) {
+              imageDataPost = state.imageDataPost;
             }
           },
           builder: (context, state) {
@@ -220,8 +243,8 @@ class _InviteMeesageState extends State<InviteMeesage> {
                     : _image != null
                         ? Container(
                             height: 90,
-                            color: Colors.red,
-                            // color: const Color.fromARGB(255, 255, 241, 240),
+                            // color: Colors.red,
+                            color: const Color.fromARGB(255, 255, 241, 240),
                             width: _width,
                             child: Row(
                               children: [
@@ -320,7 +343,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                       ),
                                       GestureDetector(
                                         onTap: () {
-                                          pickProfileImage();
+                                          prepareTestPdf(0);
                                         },
                                         child: Image.asset(
                                           "assets/images/paperclip-2.png",
@@ -363,8 +386,30 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(snackBar);
                                   } else {
-                                    print("Multipale API CAll");
+                                    if (MultiUser.isNotEmpty) {
+                                      print("check Multi User-$MultiUser");
+                                      var parmes = {
+                                        "message": Add_Comment.text,
+                                        "messageType": "TEXT",
+                                        "usersIds": MultiUser
+                                      };
+                                      BlocProvider.of<PersonalChatListCubit>(
+                                              context)
+                                          .selectMultipleUsers_ChatMethod(
+                                              parmes, context);
+                                    }
                                   }
+                                } else if (MultiUser.isNotEmpty &&
+                                    _image != null) {
+                                  var parmes = {
+                                    "message": imageDataPost?.object,
+                                    "messageType": "IMAGE",
+                                    "usersIds": MultiUser
+                                  };
+                                  BlocProvider.of<PersonalChatListCubit>(
+                                          context)
+                                      .selectMultipleUsers_ChatMethod(
+                                          parmes, context);
                                 } else {
                                   SnackBar snackBar = SnackBar(
                                     content: Text('Please Enter Comment'),
@@ -516,7 +561,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                             MultiUser.add(searchUserForInbox1
                                 ?.object?.content?[index].userUid);
                           }
-                          print(MultiUser);
+                          print('MultiUser-$MultiUser');
                           setState(() {});
                         },
                         child: Container(
@@ -579,7 +624,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
     ));
   }
 
-  Future<void> pickProfileImage() async {
+  /*  Future<void> pickProfileImage() async {
     pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedImageFile != null) {
       if (!_isGifOrSvg(pickedImageFile!.path)) {
@@ -640,17 +685,96 @@ class _InviteMeesageState extends State<InviteMeesage> {
         );
       }
     }
+  } */
+
+  prepareTestPdf(
+    int Index,
+  ) async {
+    PlatformFile file;
+
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'png', 'doc', 'jpg'],
+    );
+    {
+      if (result != null) {
+        file = result.files.first;
+
+        if ((file.path?.contains(".mp4") ?? false) ||
+            (file.path?.contains(".mov") ?? false) ||
+            (file.path?.contains(".mp3") ?? false) ||
+            (file.path?.contains(".m4a") ?? false)) {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text(
+                "Selected File Error",
+                textScaleFactor: 1.0,
+              ),
+              content: Text(
+                "Only PDF, PNG, JPG Supported.",
+                textScaleFactor: 1.0,
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: Container(
+                    // color: Colors.green,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("Okay"),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          getFileSize(file.path!, 1, result.files.first, Index);
+        }
+
+        /*     setState(() {
+          // fileparth = file.path!;
+
+          switch (Index) {
+            case 1:
+              GSTName = "";
+              // file.name;
+
+              break;
+            case 2:
+              PanName = file.name;
+
+              break;
+            case 3:
+              UdhyanName = file.name;
+
+              break;
+            default:
+          }
+
+          BlocProvider.of<DocumentUploadCubit>(context)
+              .documentUpload(file.path!);
+        });  */
+      } else {}
+    }
+    return "";
+    // "${fileparth}";
   }
 
   Future<void> camerapicker() async {
     pickedImageFile = await picker.pickImage(source: ImageSource.camera);
-    if (pickedImageFile != null) {
+    
+
+ /*    if (pickedImageFile != null) {
       if (!_isGifOrSvg(pickedImageFile!.path)) {
         setState(() {
           _image = File(pickedImageFile!.path);
         });
+          
         final sizeInBytes = await _image!.length();
         final sizeInMB = sizeInBytes / (1024 * 1024);
+
         if (sizeInMB > documentuploadsize) {
           // print('documentuploadsize-$documentuploadsize');
           showDialog(
@@ -698,6 +822,113 @@ class _InviteMeesageState extends State<InviteMeesage> {
           ),
         );
       }
+    } */
+  }
+
+  getFileSize(
+      String filepath, int decimals, PlatformFile file1, int Index) async {
+    var file = File(filepath);
+    int bytes = await file.length();
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    var i = (log(bytes) / log(1024)).floor();
+    var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
+    print('getFileSizevariable-${file1.path}');
+    value2 = double.parse(STR);
+
+    print("value2-->$value2");
+    switch (i) {
+      case 0:
+        print("Done file size B");
+        switch (Index) {
+          case 1:
+            if (file1.name.isNotEmpty || file1.name.toString() == null) {
+              setState(() {
+                file12 = file1;
+                _image = File(file1.path.toString());
+              });
+            }
+
+            break;
+          default:
+        }
+        print('xfjsdjfjfilenamecheckKB-${file1.path}');
+
+        break;
+      case 1:
+        print("Done file size KB");
+        switch (Index) {
+          case 0:
+            print("file1.name-->${file1.name}");
+            if (file1.name.isNotEmpty || file1.name.toString() == null) {
+              setState(() {
+                file12 = file1;
+                _image = File(file1.path.toString());
+              });
+            }
+
+            break;
+          default:
+        }
+        print('filenamecheckKB-${file1.path}');
+        print("file111.name-->${file1.name}");
+        BlocProvider.of<PersonalChatListCubit>(context)
+            .UplodeImageAPI(context, File(_image!.path));
+
+        setState(() {});
+
+        break;
+      case 2:
+        print("value2check-->$value2");
+        print("finalFileSize-->${finalFileSize}");
+
+        if (value2 > finalFileSize) {
+          print(
+              "this file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB");
+
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text("Max Size ${finalFileSize}MB"),
+              content: Text(
+                  "This file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB"),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: Container(
+                    // color: Colors.green,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("Okay"),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          print("Done file Size 12MB");
+          print("file1.namedata-->${file1.name}");
+          switch (Index) {
+            case 1:
+              break;
+            default:
+          }
+          print('filecheckPath1111-${file1.name}');
+          print("file222.name-->${file1.name}");
+          setState(() {
+            file12 = file1;
+            _image = File(file1.path.toString());
+          });
+
+          BlocProvider.of<PersonalChatListCubit>(context)
+              .UplodeImageAPI(context, File(_image!.path));
+        }
+
+        break;
+      default:
     }
+
+    return STR;
   }
 }

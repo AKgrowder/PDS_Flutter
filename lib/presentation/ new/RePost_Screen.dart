@@ -197,7 +197,6 @@ class _RePostScreenState extends State<RePostScreen> {
           if (tageData.isNotEmpty == true) {
             isHeshTegData = true;
           }
-          
         }
       }
       if (state is RePostLoadedState) {
@@ -380,9 +379,11 @@ class _RePostScreenState extends State<RePostScreen> {
                                 width: _width,
                                 child: Column(
                                   children: [
+                                    TextField(),
                                     SizedBox(
                                       height: 80,
                                       child: FlutterMentions(
+                                        
                                         onChanged: (value) {
                                           onChangeMethod(value);
                                         },
