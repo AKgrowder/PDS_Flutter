@@ -117,12 +117,12 @@ class Config {
   static const String delete_story = "user/api/delete_story";
   static const String DMChatList = "user/get_inbox_messages";
   static const String get_all_hashtag = "user/api/get_all_hashtag";
-  static const String blogComment = "admin/blog/get_all_comments_on_blog";
-  static const String addBlogcomments = "admin/blog/add_comment";
-  static const String deleteBlogcomment = "admin/blog/delete_comment_by_uid";
+  static const String blogComment = "user/api/get_all_comment_on_blog";
+  static const String addBlogcomments = "user/api/add_comment_on_blog";
+  static const String deleteBlogcomment = "user/api/delete_blog_comment_by_uid";
   static const String blogLikeList = "guest/api/get_all_blog_likes";
   static const String create_user_chat = "user/create_user_chat";
-
+  static const String get_UsersChatByUsername = "user/get_UsersChatByUsername";
   
   
 }
