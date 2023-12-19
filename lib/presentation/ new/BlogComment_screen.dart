@@ -11,6 +11,7 @@ import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
 import 'package:pds/API/Model/BlogComment_Model/BlogCommentDelete_model.dart';
 import 'package:pds/API/Model/BlogComment_Model/BlogComment_model.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
+import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
 import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
@@ -49,6 +50,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
   String? uuid;
   String? User_ID1;
   bool isDataGet = false;
+  UserTagModel? userTagModel;
   void _goToElement() {
     scroll.animateTo((1000 * 20),
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
@@ -65,7 +67,6 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
 
     User_ID1 = prefs.getString(PreferencesKey.loginUserID);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +142,9 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                 backgroundColor: ColorConstant.primary_color,
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+            if (state is UserTagBlogLoadedState) {
+              userTagModel = await state.userTagModel;
             }
           },
           builder: (
@@ -341,7 +345,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                             // LinkType
                                                             //     .email
                                                           ],
-                                                          onTap: (link) {
+                                                          onTap: (link) async {
                                                             /// do stuff with `link` like
                                                             /// if(link.type == Link.url) launchUrl(link.value);
 
@@ -418,15 +422,51 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                 }
                                                               }
                                                             } else {
-                                                              print("${link}");
-                                                              Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder: (context) =>
-                                                                        HashTagViewScreen(
-                                                                            title:
-                                                                                "${link.value}"),
-                                                                  ));
+                                                              if (link.value!
+                                                                  .startsWith(
+                                                                      '#')) {
+                                                                print(
+                                                                    "${link}");
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                      builder: (context) =>
+                                                                          HashTagViewScreen(
+                                                                              title: "${link.value}"),
+                                                                    ));
+                                                              } else {
+                                                                var name;
+                                                                var tagName;
+                                                                name =
+                                                                    SelectedTest;
+                                                                tagName = name
+                                                                    .replaceAll(
+                                                                        "@",
+                                                                        "");
+                                                                await BlocProvider.of<
+                                                                            BlogcommentCubit>(
+                                                                        context)
+                                                                    .UserTagAPI(
+                                                                        context,
+                                                                        tagName);
+
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) {
+                                                                  return ProfileScreen(
+                                                                      User_ID:
+                                                                          "${userTagModel?.object}",
+                                                                      isFollowing:
+                                                                          "");
+                                                                }));
+
+                                                                print(
+                                                                    "tagName -- ${tagName}");
+                                                                print(
+                                                                    "user id -- ${userTagModel?.object}");
+                                                              }
                                                             }
                                                           },
                                                         )

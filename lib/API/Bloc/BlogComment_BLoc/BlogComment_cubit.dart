@@ -16,12 +16,12 @@ class BlogcommentCubit extends Cubit<BlogCommentState> {
       } else {
         if (commentdata.success == true) {
           emit(BlogCommentLoadedState(commentdata));
-        } 
+        }
       }
     } catch (e) {
       emit(BlogCommentErrorState(commentdata));
     }
-  }  
+  }
 
   Future<void> AddBloCommentApi(
     BuildContext context,
@@ -46,11 +46,13 @@ class BlogcommentCubit extends Cubit<BlogCommentState> {
     }
   }
 
-  Future<void> DeletecommentAPI(String commentuid,String loginuser, BuildContext context) async {
+  Future<void> DeletecommentAPI(
+      String commentuid, String loginuser, BuildContext context) async {
     dynamic Deletecomment;
     try {
       emit(BlogCommentLoadingState());
-      Deletecomment = await Repository().DeleteBlogcomment(commentuid,loginuser,context);
+      Deletecomment =
+          await Repository().DeleteBlogcomment(commentuid, loginuser, context);
       if (Deletecomment == "Something Went Wrong, Try After Some Time.") {
         emit(BlogCommentErrorState("${Deletecomment}"));
       } else {
@@ -98,6 +100,24 @@ class BlogcommentCubit extends Cubit<BlogCommentState> {
     } catch (e) {
       // print('errorstate-$e');
       emit(BlogCommentErrorState(likepost));
+    }
+  }
+
+  Future<void> UserTagAPI(BuildContext context, String? name) async {
+    dynamic userTagData;
+    try {
+      emit(BlogCommentLoadingState());
+      userTagData = await Repository().UserTag(context, name);
+      print("userTagDataaaaaaaaaaaa-->${userTagData}");
+      if (userTagData == "Something Went Wrong, Try After Some Time.") {
+        emit(BlogCommentErrorState("${userTagData}"));
+      } else {
+        if (userTagData.success == true) {
+          emit(UserTagBlogLoadedState(userTagData));
+        }
+      }
+    } catch (e) {
+      emit(BlogCommentErrorState(userTagData));
     }
   }
 }

@@ -23,6 +23,8 @@ import 'package:pds/widgets/custom_image_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../API/Model/UserTagModel/UserTag_model.dart';
+
 class CommentBottomSheet extends StatefulWidget {
   String userProfile;
   String UserName;
@@ -63,7 +65,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
   String? uuid;
   String? User_ID1;
   String? TeampData;
-
+  UserTagModel? userTagModel;
   void _goToElement() {
     scroll.animateTo((1000 * 20),
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
@@ -154,6 +156,13 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                 _goToElement();
               }
             }
+            if (state is UserTagCommentLoadedState) {
+              userTagModel = await state.userTagModel;
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return ProfileScreen(
+                    User_ID: "${userTagModel?.object}", isFollowing: "");
+              }));
+            }
             if (state is DeletecommentLoadedState) {
               DeletecommentDataa = state.Deletecomment;
               SnackBar snackBar = SnackBar(
@@ -171,10 +180,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
               }
             }
           },
-          builder: (
-            context,
-            state,
-          ) {
+          builder: (context, state) {
             if (state is AddCommentLoadingState) {
               return Center(
                 child: Container(
@@ -326,8 +332,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                     });
                                   },
                                   /*  onTap: () {
-                                    
-                                    
+
                                     setState(() {
                                         if (addcomment.text.isNotEmpty) {
                                         /*   postText.text =
@@ -340,7 +345,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                       isHeshTegData = false;
 
                                       // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
-                              
+
                                       /*  if (addcomment.text.isNotEmpty) {
                                                 // postText.text =
                                                 //     '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}';
@@ -355,12 +360,12 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                       offset:
                                                           addcomment.text.length),
                                                 );
-                                             
+
                                                 print(
                                                     "postText${addcomment.text.split("@").first}");
                                               }
  */
-                                  
+
                                       addcomment.text =
                                           postTexContrlloer.join(' ,');
                                       isTagData = false;
@@ -671,7 +676,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                     // LinkType
                                                     //     .email
                                                   ],
-                                                  onTap: (link) {
+                                                  onTap: (link) async {
                                                     /// do stuff with `link` like
                                                     /// if(link.type == Link.url) launchUrl(link.value);
 
@@ -734,15 +739,35 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                         }
                                                       }
                                                     } else {
-                                                      print("${link}");
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                HashTagViewScreen(
-                                                                    title:
-                                                                        "${link.value}"),
-                                                          ));
+                                                      if (link.value!
+                                                          .startsWith('#')) {
+                                                        print("${link}");
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  HashTagViewScreen(
+                                                                      title:
+                                                                          "${link.value}"),
+                                                            ));
+                                                      } else {
+                                                        var name;
+                                                        var tagName;
+                                                        name = SelectedTest;
+                                                        tagName =
+                                                            name.replaceAll(
+                                                                "@", "");
+                                                        await BlocProvider.of<
+                                                                    AddcommentCubit>(
+                                                                context)
+                                                            .UserTagAPI(context,
+                                                                tagName);
+
+                                                        print(
+                                                            "tagName -- ${tagName}");
+                                                        print(
+                                                            "user id -- ${userTagModel?.object}");
+                                                      }
                                                     }
                                                   },
                                                 )

@@ -369,4 +369,22 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostErrorState(addPostData));
     }
   }
+
+  Future<void> UserTagAPI(BuildContext context, String? name) async {
+    dynamic userTagData;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      userTagData = await Repository().UserTag(context, name);
+      print("userTagDataaaaaaaaaaaa-->${userTagData}");
+      if (userTagData == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${userTagData}"));
+      } else {
+        if (userTagData.success == true) {
+          emit(UserTagLoadedState(userTagData));
+        }
+      }
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(userTagData));
+    }
+  }
 }
