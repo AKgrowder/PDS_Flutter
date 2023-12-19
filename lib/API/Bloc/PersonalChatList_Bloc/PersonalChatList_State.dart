@@ -1,3 +1,4 @@
+import 'package:pds/API/Model/GetUsersChatByUsernameModel/GetUsersChatByUsernameModel.dart';
 import 'package:pds/API/Model/OnTimeDMModel/OnTimeDMModel.dart';
 import 'package:pds/API/Model/PersonalChatListModel/PersonalChatList_Model.dart';
 import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
@@ -26,4 +27,9 @@ class SearchHistoryDataAddxtends extends PersonalChatListState {
 class DMChatListLoadedState extends PersonalChatListState {
   final OnTimeDMModel DMChatList;
   DMChatListLoadedState(this.DMChatList);
+}
+
+class GetUsersChatByUsernameLoaded extends PersonalChatListState {
+  final GetUsersChatByUsername getUsersChatByUsername;
+  GetUsersChatByUsernameLoaded(this.getUsersChatByUsername);
 }

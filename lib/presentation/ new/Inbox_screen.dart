@@ -7,6 +7,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/PersonalChatList_Bloc/PersonalChatList_State.dart';
 import 'package:pds/API/Bloc/PersonalChatList_Bloc/PersonalChatList_cubit.dart';
+import 'package:pds/API/Model/GetUsersChatByUsernameModel/GetUsersChatByUsernameModel.dart';
 import 'package:pds/API/Model/PersonalChatListModel/PersonalChatList_Model.dart';
 import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 import 'package:pds/core/app_export.dart';
@@ -32,6 +33,7 @@ class _InboxScreenState extends State<InboxScreen> {
   String? UserIndexUUID = "";
   bool apiData = false;
   FocusNode _focusNode = FocusNode();
+  GetUsersChatByUsername? getUsersChatByUsername;
 
   @override
   void initState() {
@@ -127,6 +129,11 @@ class _InboxScreenState extends State<InboxScreen> {
               ),
             );
           }
+
+          if (state is GetUsersChatByUsernameLoaded) {
+            isDataGet = true;
+            getUsersChatByUsername = state.getUsersChatByUsername;
+          }
         }, builder: (context, state) {
           return apiData == true
               ? Container(
@@ -159,15 +166,18 @@ class _InboxScreenState extends State<InboxScreen> {
                                   borderRadius: BorderRadius.circular(10)),
                               child: TextFormField(
                                 onChanged: (value) {
-                                  /*   if (value.isNotEmpty) {
+                                  if (value.isNotEmpty) {
                                     BlocProvider.of<PersonalChatListCubit>(
                                             context)
-                                        .search_user_for_inbox(context,
-                                            searchController.text.trim(), '1');
+                                        .get_UsersChatByUsernameMethod(
+                                      searchController.text.trim(),
+                                      '1',
+                                      context,
+                                    );
                                   } else if (value.isEmpty) {
                                     isDataGet = false;
                                     setState(() {});
-                                  } */
+                                  }
                                 },
                                 focusNode: _focusNode,
                                 controller: searchController,
@@ -411,26 +421,26 @@ class _InboxScreenState extends State<InboxScreen> {
       controller: scrollController,
       child: PaginationWidget(
         scrollController: scrollController,
-        totalSize: searchUserForInbox1?.object?.totalElements,
-        offSet: searchUserForInbox1?.object?.pageable?.pageNumber,
+        totalSize: getUsersChatByUsername?.object?.totalElements,
+        offSet: getUsersChatByUsername?.object?.pageable?.pageNumber,
         onPagination: (p0) async {
           BlocProvider.of<PersonalChatListCubit>(context)
-              .search_user_for_inboxPagantion(
-            context,
+              .get_UsersChatByUsernamePagantion(
             searchController.text.trim(),
             '${(p0 + 1)}',
+            context,
           );
         },
         items: ListView.builder(
           shrinkWrap: true,
-          itemCount: searchUserForInbox1?.object?.content?.length,
+          itemCount: getUsersChatByUsername?.object?.content?.length,
           padding: EdgeInsets.zero,
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
                 // DMChatListm
-                BlocProvider.of<PersonalChatListCubit>(context).DMChatListm(
+                /*   BlocProvider.of<PersonalChatListCubit>(context).DMChatListm(
                     "${searchUserForInbox1?.object?.content?[index].userUid}",
                     context);
                 if (UserIndexUUID != "" || UserIndexUUID != null) {
@@ -446,7 +456,7 @@ class _InboxScreenState extends State<InboxScreen> {
 
                       );
                   // UserIndexUUID = "";
-                }
+                } */
               },
               child: Container(
                 margin: EdgeInsets.all(10),
@@ -457,10 +467,10 @@ class _InboxScreenState extends State<InboxScreen> {
                     border: Border.all(color: Color(0xffE6E6E6))),
                 child: Row(
                   children: [
-                    searchUserForInbox1
+                    getUsersChatByUsername
                                     ?.object?.content?[index].userProfilePic !=
                                 null &&
-                            searchUserForInbox1?.object?.content?[index]
+                            getUsersChatByUsername?.object?.content?[index]
                                     .userProfilePic?.isNotEmpty ==
                                 true
                         ? Padding(
@@ -468,7 +478,7 @@ class _InboxScreenState extends State<InboxScreen> {
                             child: CircleAvatar(
                               radius: 30.0,
                               backgroundImage: NetworkImage(
-                                  "${searchUserForInbox1?.object?.content?[index].userProfilePic}"),
+                                  "${getUsersChatByUsername?.object?.content?[index].userProfilePic}"),
                               backgroundColor: Colors.transparent,
                             ),
                           )
@@ -486,8 +496,8 @@ class _InboxScreenState extends State<InboxScreen> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 10),
                         child: Text(
-                          searchUserForInbox1
-                                  ?.object?.content?[index].userName ??
+                          getUsersChatByUsername
+                                  ?.object?.content?[index].username ??
                               '',
                           style: TextStyle(
                             overflow: TextOverflow.ellipsis,
