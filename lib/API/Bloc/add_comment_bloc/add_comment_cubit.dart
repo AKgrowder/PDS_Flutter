@@ -92,4 +92,22 @@ class AddcommentCubit extends Cubit<AddCommentState> {
       emit(AddCommentErrorState(e.toString()));
     }
   }
+
+  Future<void> UserTagAPI(BuildContext context, String? name) async {
+    dynamic userTagData;
+    try {
+      emit(AddCommentLoadingState());
+      userTagData = await Repository().UserTag(context, name);
+      print("userTagDataaaaaaaaaaaa-->${userTagData}");
+      if (userTagData == "Something Went Wrong, Try After Some Time.") {
+        emit(AddCommentErrorState("${userTagData}"));
+      } else {
+        if (userTagData.success == true) {
+          emit(UserTagCommentLoadedState(userTagData));
+        }
+      }
+    } catch (e) {
+      emit(AddCommentErrorState(userTagData));
+    }
+  }
 }

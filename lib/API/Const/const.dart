@@ -120,9 +120,10 @@ class Config {
   static const String blogComment = "user/api/get_all_comment_on_blog";
   static const String addBlogcomments = "user/api/add_comment_on_blog";
   static const String deleteBlogcomment = "user/api/delete_blog_comment_by_uid";
-  static const String blogLikeList = "guest/api/get_all_blog_likes";
+  static const String blogLikeList = "user/api/get_all_blog_likes";
   static const String create_user_chat = "user/create_user_chat";
   static const String get_UsersChatByUsername = "user/get_UsersChatByUsername";
-  
-  
+  static const String userTag = "user/api/get_uuid_by_username";
+  static const String selectMultipleUsers_Chat =
+      "user/selectMultipleUsers_Chat";
 }

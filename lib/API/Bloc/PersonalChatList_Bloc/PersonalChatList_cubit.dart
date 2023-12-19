@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:pds/API/Bloc/PersonalChatList_Bloc/PersonalChatList_State.dart';
 import 'package:pds/API/Repo/repository.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,39 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
       }
     } catch (e) {
       emit(PersonalChatListErrorState(PersonalChatListModel));
+    }
+  }
+
+  Future<void> selectMultipleUsers_ChatMethod(
+      Map<String, dynamic> params, BuildContext context) async {
+    try {
+      emit(PersonalChatListLoadingState());
+      dynamic selcatedData =
+          await Repository().selectMultipleUsers_Chat(params, context);
+
+      if (selcatedData.success == true) {
+        emit(SelectMultipleUsers_ChatLoadestate(selcatedData));
+      }
+    } catch (e) {
+      emit(PersonalChatListErrorState(e));
+    }
+  }
+
+  Future<void> UplodeImageAPI(
+    BuildContext context,
+    File imageFile
+  ) async {
+    dynamic addPostImageUploded;
+    try {
+      emit(PersonalChatListLoadingState());
+      addPostImageUploded = await Repository()
+          .userProfileprofileCover(imageFile,context);
+
+      if (addPostImageUploded.success == true) {
+        emit(AddPostImaegState(addPostImageUploded));
+      }
+    } catch (e) {
+      emit(PersonalChatListErrorState(e.toString()));
     }
   }
 
@@ -111,17 +146,17 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
           .get_UsersChatByUsername(searchUsername, pageNumber, context);
 
       if (pagantiondata.success == true) {
-         /* searchHistoryDataAdd.object.content
+        /* searchHistoryDataAdd.object.content
             .addAll(searchHistoryDataAddInPagantion.object.content);
         searchHistoryDataAdd.object.pageable.pageNumber =
             searchHistoryDataAddInPagantion.object.pageable.pageNumber;
         searchHistoryDataAdd.object.totalElements =
             searchHistoryDataAddInPagantion.object.totalElements; */
-            getUsersChatByUsernameData.object.content
+        getUsersChatByUsernameData.object.content
             .addAll(pagantiondata.object.content);
-            getUsersChatByUsernameData.object.pageable.pageNumber =
+        getUsersChatByUsernameData.object.pageable.pageNumber =
             pagantiondata.object.pageable.pageNumber;
-               getUsersChatByUsernameData.object.totalElements =
+        getUsersChatByUsernameData.object.totalElements =
             pagantiondata.object.totalElements;
         emit(GetUsersChatByUsernameLoaded(getUsersChatByUsernameData));
       } else {

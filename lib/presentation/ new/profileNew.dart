@@ -27,6 +27,7 @@ import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/editproilescreen.dart';
 import 'package:pds/presentation/%20new/followers.dart';
 import 'package:pds/presentation/%20new/view_profile_background.dart';
+import 'package:pds/presentation/DMAll_Screen/Dm_Screen.dart';
 import 'package:pds/presentation/recent_blog/recent_blog_screen.dart';
 import 'package:pds/presentation/settings/setting_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
@@ -115,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   dynamic dataSetup;
   GetWorkExperienceModel? addWorkExperienceModel;
   String? formattedDateStart;
-String? formattedDateEnd;
+  String? formattedDateEnd;
 
   String? User_Module;
   FollowersClassModel? followersClassModel1;
@@ -254,6 +255,14 @@ String? formattedDateEnd;
       }
       if (state is FollowersClass1) {
         followersClassModel2 = state.followersClassModel1;
+      }
+      if (state is DMChatListLoadedState) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return DmScreen(
+            UserName: "${NewProfileData?.object?.userName}",
+            ChatInboxUid: state.DMChatList.object ?? "",
+          );
+        }));
       }
       if (state is NewProfileSLoadedState) {
         industryTypesArray = "";
@@ -797,51 +806,96 @@ String? formattedDateEnd;
                                 ),
                               ],
                             )
-                          : widget.isFollowing == true
-                              ? Container(
-                                  alignment: Alignment.center,
-                                  height: 45,
-                                  width: _width / 3,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xffED1C25),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Text(
-                                    'Following',
-                                    style: TextStyle(
-                                        fontFamily: "outfit",
-                                        fontSize: 18,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                )
-                              : GestureDetector(
-                                  onTap: () {
-                                    BlocProvider.of<NewProfileSCubit>(context)
-                                        .followWIngMethod(
-                                            NewProfileData?.object?.userUid
-                                                .toString(),
-                                            context);
-                                    // print(${name[0].toUpperCase()}${name.substring(1).toLowerCase()});
-                                  },
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    height: 45,
-                                    width: _width / 3,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xffED1C25),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Text(
-                                      '${NewProfileData?.object?.isFollowing?.toString()[0].toUpperCase()}${NewProfileData?.object?.isFollowing?.toString().substring(1).toLowerCase()}',
-                                      style: TextStyle(
-                                          fontFamily: "outfit",
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ),
+                          : Row(
+                              children: [
+                                Spacer(),
+                                widget.isFollowing == true
+                                    ? Container(
+                                        alignment: Alignment.center,
+                                        height: 45,
+                                        width: _width / 3,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xffED1C25),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Text(
+                                          'Following',
+                                          style: TextStyle(
+                                              fontFamily: "outfit",
+                                              fontSize: 18,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      )
+                                    : GestureDetector(
+                                        onTap: () {
+                                          BlocProvider.of<NewProfileSCubit>(
+                                                  context)
+                                              .followWIngMethod(
+                                                  NewProfileData
+                                                      ?.object?.userUid
+                                                      .toString(),
+                                                  context);
+                                          // print(${name[0].toUpperCase()}${name.substring(1).toLowerCase()});
+                                        },
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          height: 45,
+                                          width: _width / 3,
+                                          decoration: BoxDecoration(
+                                            color: ColorConstant.primary_color,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Text(
+                                            '${NewProfileData?.object?.isFollowing?.toString()[0].toUpperCase()}${NewProfileData?.object?.isFollowing?.toString().substring(1).toLowerCase()}',
+                                            style: TextStyle(
+                                                fontFamily: "outfit",
+                                                fontSize: 18,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ),
+                                      ),
+                                NewProfileData?.object?.isFollowing ==
+                                            "FOLLOWING" ||
+                                        NewProfileData?.object?.accountType ==
+                                            "PUBLIC"
+                                    ? Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            BlocProvider.of<NewProfileSCubit>(
+                                                    context)
+                                                .DMChatListm(
+                                                    "${NewProfileData?.object?.userUid}",
+                                                    context);
+                                          },
+                                          child: Container(
+                                            height: 40,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  ColorConstant.primary_color,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Center(
+                                              child: CustomImageView(
+                                                  height: 20,
+                                                  width: 20,
+                                                  imagePath:
+                                                      ImageConstant.chat),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox(),
+                                Spacer(),
+                              ],
+                            ),
 
                       SizedBox(
                         height: 12,
@@ -1310,10 +1364,11 @@ String? formattedDateEnd;
                               ? NewProfileData?.object?.module == "EMPLOYEE"
                                   ? _height / 3
                                   : NewProfileData?.object?.module == "EXPERT"
-                                      ? _height/0.8 // 630 old height
+                                      ? _height / 0.8 // 630 old height
                                       : NewProfileData?.object?.module ==
                                               "COMPANY"
-                                          ? _height/0.8 // 650 old height + 400
+                                          ? _height /
+                                              0.8 // 650 old height + 400
                                           : 0
                               : arrNotiyTypeList[1].isSelected == true
                                   ? FinalPostCount * 190
@@ -1616,7 +1671,7 @@ String? formattedDateEnd;
                                                         const EdgeInsets.only(
                                                             top: 10),
                                                     child: Container(
-                                                        height: _height/2.2,
+                                                        height: _height / 2.2,
                                                         decoration: BoxDecoration(
                                                             boxShadow: [
                                                               BoxShadow(
@@ -1640,7 +1695,7 @@ String? formattedDateEnd;
                                                         const EdgeInsets.only(
                                                             top: 10),
                                                     child: Container(
-                                                        height: _height/2.2,
+                                                        height: _height / 2.2,
                                                         decoration: BoxDecoration(
                                                             boxShadow: [
                                                               BoxShadow(
@@ -2689,7 +2744,7 @@ String? formattedDateEnd;
           ),
         ),
         Container(
-          height: _height / 1.45,
+          height: _height / 1.4,
           width: _width,
           //  color: Colors.amber,
           child: Padding(
@@ -3135,10 +3190,12 @@ String? formattedDateEnd;
                           BlocProvider.of<NewProfileSCubit>(context)
                               .GetWorkExperienceAPI(context, widget.User_ID));
                     },
-                    child: User_ID == NewProfileData?.object?.userUid ? Icon( 
-                      Icons.edit, 
-                      color: Colors.black,
-                    ):SizedBox(),
+                    child: User_ID == NewProfileData?.object?.userUid
+                        ? Icon(
+                            Icons.edit,
+                            color: Colors.black,
+                          )
+                        : SizedBox(),
                   ),
                   SizedBox(
                     width: 10,
@@ -3157,11 +3214,13 @@ String? formattedDateEnd;
                           BlocProvider.of<NewProfileSCubit>(context)
                               .GetWorkExperienceAPI(context, widget.User_ID));
                     },
-                    child:User_ID == NewProfileData?.object?.userUid ? Icon(
-                      Icons.add,
-                      color: Colors.black,
-                      size: 25,
-                    ):SizedBox(),
+                    child: User_ID == NewProfileData?.object?.userUid
+                        ? Icon(
+                            Icons.add,
+                            color: Colors.black,
+                            size: 25,
+                          )
+                        : SizedBox(),
                   )
                 ],
               )
@@ -3172,14 +3231,14 @@ String? formattedDateEnd;
               padding: EdgeInsets.only(top: 10),
               itemCount: addWorkExperienceModel?.object?.length,
               itemBuilder: (context, index) {
-                 formattedDateStart = DateFormat('dd-MM-yyyy').format(
-                      DateFormat('yyyy-MM-dd').parse(
-                          addWorkExperienceModel?.object?[index].startDate ??
-                              DateTime.now().toIso8601String()));
-                  formattedDateEnd = DateFormat('dd-MM-yyyy').format(
-                      DateFormat('yyyy-MM-dd').parse(
-                          addWorkExperienceModel?.object?[index].endDate ??
-                              DateTime.now().toIso8601String()));
+                formattedDateStart = DateFormat('dd-MM-yyyy').format(
+                    DateFormat('yyyy-MM-dd').parse(
+                        addWorkExperienceModel?.object?[index].startDate ??
+                            DateTime.now().toIso8601String()));
+                formattedDateEnd = DateFormat('dd-MM-yyyy').format(
+                    DateFormat('yyyy-MM-dd').parse(
+                        addWorkExperienceModel?.object?[index].endDate ??
+                            DateTime.now().toIso8601String()));
                 return ListTile(
                   titleAlignment: ListTileTitleAlignment.top,
                   leading: addWorkExperienceModel
@@ -3293,7 +3352,7 @@ String? formattedDateEnd;
                       .NewProfileSAPI(context, widget.User_ID));
             },
             child: User_ID == NewProfileData?.object?.userUid
-                ?   Icon(
+                ? Icon(
                     Icons.edit,
                     color: Colors.black,
                   )
@@ -3302,7 +3361,7 @@ String? formattedDateEnd;
         ),
         Container(
           // color: Colors.amber,
-          height: _height / 2,
+          height: _height / 1.9,
           width: _width,
           child: Padding(
             padding: const EdgeInsets.only(right: 16, left: 16),

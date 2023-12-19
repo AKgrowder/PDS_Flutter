@@ -339,4 +339,23 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       emit(NewProfileSErrorState(industryType));
     }
   }
+
+  Future<void> DMChatListm(String userWithUid, BuildContext context) async {
+    dynamic DMChatList;
+    try {
+      emit(NewProfileSLoadingState());
+      DMChatList = await Repository().FirstTimeChat(context, userWithUid);
+      if (DMChatList == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${DMChatList}"));
+      } else {
+        if (DMChatList.success == true) {
+          emit(DMChatListLoadedState(DMChatList));
+        } else {
+          emit(NewProfileSErrorState(DMChatList.message));
+        }
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(DMChatList));
+    }
+  }
 }

@@ -62,18 +62,36 @@ class OpenSaveCubit extends Cubit<OpenSaveState> {
     }
   }
 
-  Future<void> RePostAPI(
-      BuildContext context, Map<String, dynamic> params, String? uuid,String? name) async {
+  Future<void> RePostAPI(BuildContext context, Map<String, dynamic> params,
+      String? uuid, String? name) async {
     dynamic addPostData;
     try {
       emit(OpenSaveLoadingState());
-      addPostData = await Repository().RePost(context, params, uuid,name);
+      addPostData = await Repository().RePost(context, params, uuid, name);
       print("addPostDataaaaaaaaaaaa-->${addPostData}");
       if (addPostData.success == true) {
         emit(RePostLoadedState(addPostData));
       }
     } catch (e) {
       emit(OpenSaveErrorState(addPostData));
+    }
+  }
+
+  Future<void> UserTagAPI(BuildContext context, String? name) async {
+    dynamic userTagData;
+    try {
+      emit(OpenSaveLoadingState());
+      userTagData = await Repository().UserTag(context, name);
+      print("userTagDataaaaaaaaaaaa-->${userTagData}");
+      if (userTagData == "Something Went Wrong, Try After Some Time.") {
+        emit(OpenSaveErrorState("${userTagData}"));
+      } else {
+        if (userTagData.success == true) {
+          emit(UserTagSaveLoadedState(userTagData));
+        }
+      }
+    } catch (e) {
+      emit(OpenSaveErrorState(userTagData));
     }
   }
 }

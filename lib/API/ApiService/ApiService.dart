@@ -146,10 +146,11 @@ class ApiServices {
     }
   }
 
-    Future<Response?> deleteApiCallWithToken(String APIurl, BuildContext context) async {
+  Future<Response?> deleteApiCallWithToken(
+      String APIurl, BuildContext context) async {
     await UpdateBaseURL();
 
-     await UpdateBaseURL();
+    await UpdateBaseURL();
 
     final headers1 = {
       'Content-Type': 'application/json',

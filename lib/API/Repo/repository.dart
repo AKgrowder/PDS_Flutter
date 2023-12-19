@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:pds/API/Model/selectMultipleUsers_ChatModel/selectMultipleUsers_ChatModel.dart';
+import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
 import 'package:pds/API/Model/GetUsersChatByUsernameModel/GetUsersChatByUsernameModel.dart';
 import 'package:pds/API/Model/BlogComment_Model/BlogLikeList_model.dart';
 import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
@@ -2536,7 +2538,7 @@ class Repository {
   }
 
   BlogLikeList(BuildContext context, String blogID, String? uuID) async {
-    final responce = await apiServices.getApiCall(
+    final responce = await apiServices.getApiCallWithToken(
         '${Config.blogLikeList}?blogUid=${blogID}&loginUserUid=${uuID}',
         context);
     var jsonString = json.decode(responce.body);
@@ -2567,6 +2569,52 @@ class Repository {
     switch (respone.statusCode) {
       case 200:
         return GetUsersChatByUsername.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  selectMultipleUsers_Chat(
+      Map<String, dynamic> params, BuildContext context) async {
+    final respone = await apiServices.postApiCall(
+        Config.selectMultipleUsers_Chat, params, context);
+    var jsonString = json.decode(respone.body);
+    print("dfhdsfhd-$jsonString");
+    switch (respone.statusCode) {
+      case 200:
+        return SelectMultipleUsersChatModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+  
+
+    UserTag(BuildContext context, String? name) async {
+    final responce = await apiServices.getApiCall(
+        '${Config.userTag}?username=${name}',
+        context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return UserTagModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
