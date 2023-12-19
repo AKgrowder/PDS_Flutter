@@ -20,6 +20,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_state.dart';
+import '../../API/Model/UserTagModel/UserTag_model.dart';
 
 // ignore: must_be_immutable
 class OpenSavePostImage extends StatefulWidget {
@@ -47,7 +48,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
   List<PageController> pageControllers = [];
   bool added = false;
   int imageCount = 1;
-
+  UserTagModel? userTagModel;
   @override
   void initState() {
     if (widget.PostID == "0") {
@@ -130,6 +131,9 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
+      }
+      if (state is UserTagSaveLoadedState) {
+        userTagModel = await state.userTagModel;
       }
     }, builder: (context, state) {
       if (state is OpenSaveLoadingState) {
@@ -425,13 +429,12 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                               textStyle: TextStyle(color: Colors.white),
                               linkTypes: [
                                 LinkType.url,
-                                // LinkType
-                                //     .userTag,
+                                LinkType.userTag,
                                 LinkType.hashTag,
                                 // LinkType
                                 //     .email
                               ],
-                              onTap: (link) {
+                              onTap: (link) async {
                                 var SelectedTest = link.value.toString();
                                 var Link = SelectedTest.startsWith('https');
                                 var Link1 = SelectedTest.startsWith('http');
@@ -471,13 +474,34 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                     }
                                   }
                                 } else {
-                                  print("${link}");
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => HashTagViewScreen(
-                                            title: "${link.value}"),
-                                      ));
+                                  if (link.value!.startsWith('#')) {
+                                    print("${link}");
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              HashTagViewScreen(
+                                                  title: "${link.value}"),
+                                        ));
+                                  } else {
+                                    var name;
+                                    var tagName;
+                                    name = SelectedTest;
+                                    tagName = name.replaceAll("@", "");
+                                    await BlocProvider.of<OpenSaveCubit>(
+                                            context)
+                                        .UserTagAPI(context, tagName);
+
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return ProfileScreen(
+                                          User_ID: "${userTagModel?.object}",
+                                          isFollowing: "");
+                                    }));
+
+                                    print("tagName -- ${tagName}");
+                                    print("user id -- ${userTagModel?.object}");
+                                  }
                                 }
                               },
                             ), /* Text(

@@ -1,5 +1,6 @@
 import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
 import 'package:pds/API/Model/HasTagModel/hasTagModel.dart';
+import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
 import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 
@@ -39,4 +40,9 @@ class GetAllHashtagState extends AddCommentState {
 class SearchHistoryDataAddxtends extends AddCommentState {
   final SearchUserForInbox searchUserForInbox;
   SearchHistoryDataAddxtends(this.searchUserForInbox);
+}
+
+class UserTagCommentLoadedState extends AddCommentState {
+  final UserTagModel userTagModel;
+  UserTagCommentLoadedState(this.userTagModel);
 }

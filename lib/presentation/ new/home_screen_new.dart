@@ -61,6 +61,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
+import '../../API/Model/UserTagModel/UserTag_model.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
 
 class HomeScreenNew extends StatefulWidget {
@@ -136,6 +137,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   bool AutoOpenPostBool = false;
   String? AutoOpenPostID;
   List<VideoPlayerController> _controllers = [];
+  UserTagModel? userTagModel;
+
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     documentuploadsize = await double.parse(
@@ -1314,6 +1317,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
               likePost = state.likePost;
             }
+            if (state is UserTagLoadedState) {
+              userTagModel = await state.userTagModel;
+            }
           }, builder: (context, state) {
             return apiCalingdone == true
                 ? RefreshIndicator(
@@ -2086,7 +2092,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           //     .email
                                                                         ],
                                                                         onTap:
-                                                                            (link) {
+                                                                            (link) async {
                                                                           /// do stuff with `link` like
                                                                           /// if(link.type == Link.url) launchUrl(link.value);
 
@@ -2140,11 +2146,26 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 }
                                                                               }
                                                                             } else {
-                                                                              Navigator.push(
-                                                                                  context,
-                                                                                  MaterialPageRoute(
-                                                                                    builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                  ));
+                                                                              if (link.value!.startsWith('#')) {
+                                                                                Navigator.push(
+                                                                                    context,
+                                                                                    MaterialPageRoute(
+                                                                                      builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                    ));
+                                                                              } else {
+                                                                                var name;
+                                                                                var tagName;
+                                                                                name = SelectedTest;
+                                                                                tagName = name.replaceAll("@", "");
+                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+
+                                                                                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                  return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                }));
+
+                                                                                print("tagName -- ${tagName}");
+                                                                                print("user id -- ${userTagModel?.object}");
+                                                                              }
                                                                             }
                                                                           }
                                                                         },
@@ -2475,7 +2496,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           //     .email
                                                                         ],
                                                                         onTap:
-                                                                            (link) {
+                                                                            (link) async {
                                                                           /// do stuff with `link` like
                                                                           /// if(link.type == Link.url) launchUrl(link.value);
 
@@ -2529,12 +2550,27 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 }
                                                                               }
                                                                             } else {
-                                                                              print("${link}");
-                                                                              Navigator.push(
-                                                                                  context,
-                                                                                  MaterialPageRoute(
-                                                                                    builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                  ));
+                                                                              if (link.value!.startsWith('#')) {
+                                                                                print("aaaaaaaaaa == ${link}");
+                                                                                Navigator.push(
+                                                                                    context,
+                                                                                    MaterialPageRoute(
+                                                                                      builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                    ));
+                                                                              } else {
+                                                                                var name;
+                                                                                var tagName;
+                                                                                name = SelectedTest;
+                                                                                tagName = name.replaceAll("@", "");
+                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+
+                                                                                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                  return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                }));
+
+                                                                                print("tagName -- ${tagName}");
+                                                                                print("user id -- ${userTagModel?.object}");
+                                                                              }
                                                                             }
                                                                           }
                                                                         },
@@ -3352,7 +3388,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           //     .email
                                                                         ],
                                                                         onTap:
-                                                                            (link) {
+                                                                            (link) async {
                                                                           /// do stuff with `link` like
                                                                           /// if(link.type == Link.url) launchUrl(link.value);
 
@@ -3373,7 +3409,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               SelectedTest.startsWith('HTTP');
                                                                           var Link6 =
                                                                               SelectedTest.startsWith('https://pdslink.page.link/');
-                                                                          print(
+                                                                          print("tag -- " +
                                                                               SelectedTest.toString());
 
                                                                           if (User_ID ==
@@ -3413,13 +3449,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                       builder: (context) => HashTagViewScreen(title: "${link.value}"),
                                                                                     ));
                                                                               } else {
-                                                                                /* Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                  return MultiBlocProvider(providers: [
-                                                                                    BlocProvider<NewProfileSCubit>(
-                                                                                      create: (context) => NewProfileSCubit(),
-                                                                                    ),
-                                                                                  ], child: ProfileScreen(User_ID: "${AllGuestPostRoomData?.object?.content?[index].userUid}", isFollowing: AllGuestPostRoomData?.object?.content?[index].isFollowing));
-                                                                                })); */
+                                                                                var name;
+                                                                                var tagName;
+                                                                                name = SelectedTest;
+                                                                                tagName = name.replaceAll("@", "");
+                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+
+                                                                                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                  return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                }));
+
+                                                                                print("tagName -- ${tagName}");
+                                                                                print("user id -- ${userTagModel?.object}");
                                                                               }
                                                                             }
                                                                           }
