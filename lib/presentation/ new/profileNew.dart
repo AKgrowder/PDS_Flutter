@@ -1310,10 +1310,10 @@ String? formattedDateEnd;
                               ? NewProfileData?.object?.module == "EMPLOYEE"
                                   ? _height / 3
                                   : NewProfileData?.object?.module == "EXPERT"
-                                      ? 1150 // 630 old height
+                                      ? _height/0.8 // 630 old height
                                       : NewProfileData?.object?.module ==
                                               "COMPANY"
-                                          ? 1050 // 650 old height + 400
+                                          ? _height/0.8 // 650 old height + 400
                                           : 0
                               : arrNotiyTypeList[1].isSelected == true
                                   ? FinalPostCount * 190
@@ -1616,7 +1616,7 @@ String? formattedDateEnd;
                                                         const EdgeInsets.only(
                                                             top: 10),
                                                     child: Container(
-                                                        height: 350,
+                                                        height: _height/2.2,
                                                         decoration: BoxDecoration(
                                                             boxShadow: [
                                                               BoxShadow(
@@ -1640,7 +1640,7 @@ String? formattedDateEnd;
                                                         const EdgeInsets.only(
                                                             top: 10),
                                                     child: Container(
-                                                        height: 350,
+                                                        height: _height/2.2,
                                                         decoration: BoxDecoration(
                                                             boxShadow: [
                                                               BoxShadow(
@@ -2689,7 +2689,7 @@ String? formattedDateEnd;
           ),
         ),
         Container(
-          height: _height / 1.5,
+          height: _height / 1.45,
           width: _width,
           //  color: Colors.amber,
           child: Padding(
@@ -3135,10 +3135,10 @@ String? formattedDateEnd;
                           BlocProvider.of<NewProfileSCubit>(context)
                               .GetWorkExperienceAPI(context, widget.User_ID));
                     },
-                    child: Icon(
-                      Icons.edit,
+                    child: User_ID == NewProfileData?.object?.userUid ? Icon( 
+                      Icons.edit, 
                       color: Colors.black,
-                    ),
+                    ):SizedBox(),
                   ),
                   SizedBox(
                     width: 10,
@@ -3157,11 +3157,11 @@ String? formattedDateEnd;
                           BlocProvider.of<NewProfileSCubit>(context)
                               .GetWorkExperienceAPI(context, widget.User_ID));
                     },
-                    child: Icon(
+                    child:User_ID == NewProfileData?.object?.userUid ? Icon(
                       Icons.add,
                       color: Colors.black,
                       size: 25,
-                    ),
+                    ):SizedBox(),
                   )
                 ],
               )
@@ -3293,7 +3293,7 @@ String? formattedDateEnd;
                       .NewProfileSAPI(context, widget.User_ID));
             },
             child: User_ID == NewProfileData?.object?.userUid
-                ? Icon(
+                ?   Icon(
                     Icons.edit,
                     color: Colors.black,
                   )
@@ -3301,6 +3301,7 @@ String? formattedDateEnd;
           ),
         ),
         Container(
+          // color: Colors.amber,
           height: _height / 2,
           width: _width,
           child: Padding(

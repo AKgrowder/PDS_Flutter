@@ -7,6 +7,7 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
   PersonalChatListCubit() : super(PersonalChatListInitialState()) {}
   dynamic PersonalChatListModel;
   dynamic searchHistoryDataAdd;
+  dynamic getUsersChatByUsernameData;
   Future<void> PersonalChatList(BuildContext context) async {
     try {
       emit(PersonalChatListLoadingState());
@@ -66,7 +67,6 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
     }
   }
 
-
   Future<void> DMChatListm(String userWithUid, BuildContext context) async {
     dynamic DMChatList;
     try {
@@ -83,6 +83,52 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
       }
     } catch (e) {
       emit(PersonalChatListErrorState(DMChatList));
+    }
+  }
+
+  Future<void> get_UsersChatByUsernameMethod(
+      String searchUsername, String pageNumber, BuildContext context) async {
+    try {
+      emit(PersonalChatListLoadingState());
+      getUsersChatByUsernameData = await Repository()
+          .get_UsersChatByUsername(searchUsername, pageNumber, context);
+
+      if (getUsersChatByUsernameData.success == true) {
+        emit(GetUsersChatByUsernameLoaded(getUsersChatByUsernameData));
+      } else {
+        emit(PersonalChatListErrorState(getUsersChatByUsernameData.message));
+      }
+    } catch (e) {
+      emit(PersonalChatListErrorState(e.toString()));
+    }
+  }
+
+  Future<void> get_UsersChatByUsernamePagantion(
+      String searchUsername, String pageNumber, BuildContext context) async {
+    try {
+      emit(PersonalChatListLoadingState());
+      dynamic pagantiondata = await Repository()
+          .get_UsersChatByUsername(searchUsername, pageNumber, context);
+
+      if (pagantiondata.success == true) {
+         /* searchHistoryDataAdd.object.content
+            .addAll(searchHistoryDataAddInPagantion.object.content);
+        searchHistoryDataAdd.object.pageable.pageNumber =
+            searchHistoryDataAddInPagantion.object.pageable.pageNumber;
+        searchHistoryDataAdd.object.totalElements =
+            searchHistoryDataAddInPagantion.object.totalElements; */
+            getUsersChatByUsernameData.object.content
+            .addAll(pagantiondata.object.content);
+            getUsersChatByUsernameData.object.pageable.pageNumber =
+            pagantiondata.object.pageable.pageNumber;
+               getUsersChatByUsernameData.object.totalElements =
+            pagantiondata.object.totalElements;
+        emit(GetUsersChatByUsernameLoaded(getUsersChatByUsernameData));
+      } else {
+        emit(PersonalChatListErrorState(getUsersChatByUsernameData.message));
+      }
+    } catch (e) {
+      emit(PersonalChatListErrorState(e.toString()));
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:pds/API/Model/GetUsersChatByUsernameModel/GetUsersChatByUsernameModel.dart';
 import 'package:pds/API/Model/BlogComment_Model/BlogLikeList_model.dart';
 import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
 import 'package:pds/API/Model/HasTagModel/hasTagModel.dart';
@@ -2441,14 +2442,14 @@ class Repository {
   }
 
   Blogcomment(BuildContext context, String blogID) async {
-    final responce = await apiServices.getApiCall(
+    final responce = await apiServices.getApiCallWithToken(
         '${Config.blogComment}?blogUid=${blogID}', context);
     var jsonString = json.decode(responce.body);
     print('jasonnString$jsonString');
     print('respnse ${responce.statusCode}');
     switch (responce.statusCode) {
       case 200:
-        return jsonString;
+        return BlogCommentModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -2470,7 +2471,7 @@ class Repository {
         "${Config.create_user_chat}?userWithUid=${userWithUid}", context);
     print('AddPost$response');
     var jsonString = json.decode(response.body);
-   switch (response.statusCode) {
+    switch (response.statusCode) {
       case 200:
         return OnTimeDMModel.fromJson(jsonString);
       case 404:
@@ -2511,9 +2512,11 @@ class Repository {
     }
   }
 
-  DeleteBlogcomment(String commentuid, BuildContext context) async {
-    final response = await apiServices.deleteApiCall(
-        "${Config.deleteBlogcomment}?commentUid=${commentuid}", {}, context);
+  DeleteBlogcomment(
+      String commentuid, String loginuser, BuildContext context) async {
+    final response = await apiServices.deleteApiCallWithToken(
+        "${Config.deleteBlogcomment}?commentUid=${commentuid}&loginUserUid=$loginuser",
+        context);
     print(response);
     var jsonString = json.decode(response!.body);
     switch (response.statusCode) {
@@ -2542,6 +2545,28 @@ class Repository {
     switch (responce.statusCode) {
       case 200:
         return BlogLikeListModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+   get_UsersChatByUsername(
+      String searchUsername, String pageNumber, BuildContext context) async {
+    final respone = await apiServices.getApiCallWithToken(
+        '${Config.get_UsersChatByUsername}?searchUsername=$searchUsername&pageNumber=$pageNumber&numberOfRecords=20',
+        context);
+    var jsonString = json.decode(respone.body);
+    switch (respone.statusCode) {
+      case 200:
+        return GetUsersChatByUsername.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:

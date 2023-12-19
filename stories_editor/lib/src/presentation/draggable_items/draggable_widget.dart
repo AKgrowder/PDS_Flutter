@@ -57,28 +57,28 @@ class DraggableWidget extends StatelessWidget {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    Center(
+                    /* Center(
                       child: _text(
-                          background: true,
-                          paintingStyle: PaintingStyle.fill,
+                          background: false,
+                          // paintingStyle: PaintingStyle.fill,
                           controlNotifier: _controlProvider),
-                    ),
-                    IgnorePointer(
+                    ), */
+                    /* IgnorePointer(
                       ignoring: true,
                       child: Center(
                         child: _text(
-                            background: true,
-                            paintingStyle: PaintingStyle.stroke,
+                            background: false,
+                            // paintingStyle: PaintingStyle.stroke,
                             controlNotifier: _controlProvider),
                       ),
-                    ),
+                    ), */
                     Padding(
                       padding: const EdgeInsets.only(right: 2.5, top: 2),
                       child: Stack(
                         children: [
                           Center(
                             child: _text(
-                                paintingStyle: PaintingStyle.fill,
+                                // paintingStyle: PaintingStyle.fill,
                                 controlNotifier: _controlProvider),
                           ),
                         ],
@@ -170,20 +170,20 @@ class DraggableWidget extends StatelessWidget {
   /// text widget
   Widget _text(
       {required ControlNotifier controlNotifier,
-      required PaintingStyle paintingStyle,
+      // required PaintingStyle paintingStyle,
       bool background = false}) {
     if (draggableWidget.animationType == TextAnimationType.none) {
       return Text(draggableWidget.text,
           textAlign: draggableWidget.textAlign,
           style: _textStyle(
               controlNotifier: controlNotifier,
-              paintingStyle: paintingStyle,
+              // paintingStyle: paintingStyle,
               background: background));
     } else {
       return DefaultTextStyle(
         style: _textStyle(
             controlNotifier: controlNotifier,
-            paintingStyle: paintingStyle,
+            // paintingStyle: paintingStyle,
             background: background),
         child: AnimatedTextKit(
           repeatForever: true,
@@ -221,7 +221,7 @@ class DraggableWidget extends StatelessWidget {
 
   _textStyle(
       {required ControlNotifier controlNotifier,
-      required PaintingStyle paintingStyle,
+      // required PaintingStyle paintingStyle,
       bool background = false}) {
     return TextStyle(
       fontFamily: controlNotifier.fontList![draggableWidget.fontFamily],
@@ -241,7 +241,7 @@ class DraggableWidget extends StatelessWidget {
         background: Paint()
           ..strokeWidth = 20.0
           ..color = draggableWidget.backGroundColor
-          ..style = paintingStyle
+          // ..style = paintingStyle
           ..strokeJoin = StrokeJoin.round
           ..filterQuality = FilterQuality.high
           ..strokeCap = StrokeCap.round

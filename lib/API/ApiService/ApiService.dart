@@ -131,6 +131,43 @@ class ApiServices {
     }
   }
 
+  Future<Response?> deleteApiCall1(String APIurl, BuildContext context) async {
+    await UpdateBaseURL();
+
+    print("API =>******${baseURL + APIurl}");
+    final response = await delete(
+      Uri.parse(baseURL + APIurl),
+    );
+
+    if (response.statusCode == 602) {
+      await setLOGOUT(context);
+    } else {
+      return response;
+    }
+  }
+
+    Future<Response?> deleteApiCallWithToken(String APIurl, BuildContext context) async {
+    await UpdateBaseURL();
+
+     await UpdateBaseURL();
+
+    final headers1 = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${Token}'
+    };
+    print("API =>******${baseURL + APIurl}");
+    final response = await delete(
+      Uri.parse(baseURL + APIurl),
+      headers: headers1,
+    );
+
+    if (response.statusCode == 602) {
+      await setLOGOUT(context);
+    } else {
+      return response;
+    }
+  }
+
   Future<Response?> deleteApiCallWithOutparams(
       String APIurl, BuildContext context) async {
     await UpdateBaseURL();

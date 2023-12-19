@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/BlogComment_BLoc/BlogComment_state.dart';
-import 'package:pds/API/Model/BlogComment_Model/BlogComment_model.dart';
 import 'package:pds/API/Repo/repository.dart';
 
 class BlogcommentCubit extends Cubit<BlogCommentState> {
@@ -17,15 +16,12 @@ class BlogcommentCubit extends Cubit<BlogCommentState> {
       } else {
         if (commentdata.success == true) {
           emit(BlogCommentLoadedState(commentdata));
-        } else {
-          print("else working-$commentdata");
-          emit(BlogCommentLoadedState(commentdata));
-        }
+        } 
       }
     } catch (e) {
       emit(BlogCommentErrorState(commentdata));
     }
-  }
+  }  
 
   Future<void> AddBloCommentApi(
     BuildContext context,
@@ -50,11 +46,11 @@ class BlogcommentCubit extends Cubit<BlogCommentState> {
     }
   }
 
-  Future<void> DeletecommentAPI(String commentuid, BuildContext context) async {
+  Future<void> DeletecommentAPI(String commentuid,String loginuser, BuildContext context) async {
     dynamic Deletecomment;
     try {
       emit(BlogCommentLoadingState());
-      Deletecomment = await Repository().DeleteBlogcomment(commentuid, context);
+      Deletecomment = await Repository().DeleteBlogcomment(commentuid,loginuser,context);
       if (Deletecomment == "Something Went Wrong, Try After Some Time.") {
         emit(BlogCommentErrorState("${Deletecomment}"));
       } else {

@@ -16,6 +16,7 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/theme/theme_helper.dart';
@@ -64,6 +65,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
 
     User_ID1 = prefs.getString(PreferencesKey.loginUserID);
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -297,8 +299,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                           .w500)),
                                                           Container(
                                                             width: 30,
-                                                            child:
-                                                               GestureDetector(
+                                                            child: GestureDetector(
                                                                 onTap: () {
                                                                   Deletecommentdilog(
                                                                       blogCommentModel
@@ -371,6 +372,10 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                 SelectedTest
                                                                     .startsWith(
                                                                         'HTTP');
+                                                            var Link6 = SelectedTest
+                                                                .startsWith(
+                                                                    'https://pdslink.page.link/');
+
                                                             print(SelectedTest
                                                                 .toString());
 
@@ -379,7 +384,8 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                 Link2 == true ||
                                                                 Link3 == true ||
                                                                 Link4 == true ||
-                                                                Link5 == true) {
+                                                                Link5 == true ||
+                                                                Link6 == true) {
                                                               if (Link2 ==
                                                                       true ||
                                                                   Link3 ==
@@ -387,10 +393,29 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                 launchUrl(Uri.parse(
                                                                     "https://${link.value.toString()}"));
                                                               } else {
-                                                                launchUrl(Uri
-                                                                    .parse(link
-                                                                        .value
-                                                                        .toString()));
+                                                                if (Link6 ==
+                                                                    true) {
+                                                                  print(
+                                                                      "yes i am in room");
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) {
+                                                                      return NewBottomBar(
+                                                                        buttomIndex:
+                                                                            1,
+                                                                      );
+                                                                    },
+                                                                  ));
+                                                                } else {
+                                                                  launchUrl(Uri
+                                                                      .parse(link
+                                                                          .value
+                                                                          .toString()));
+                                                                  print(
+                                                                      "link.valuelink.value -- ${link.value}");
+                                                                }
                                                               }
                                                             } else {
                                                               print("${link}");
@@ -655,6 +680,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                       BlocProvider.of<BlogcommentCubit>(context)
                           .DeletecommentAPI(
                               "${blogCommentModel?.object?[index1].commentUid}",
+                              "${blogCommentModel?.object?[index1].userUid}",
                               context);
                       blogCommentModel?.object?.removeAt(index1);
                       Navigator.pop(context);
