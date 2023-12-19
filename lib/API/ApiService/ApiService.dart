@@ -31,7 +31,7 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.packagingdepot.store/";
           // "https://api.packagingdepot.store/";
-          "http://192.168.29.17:8081/";
+          "http://192.168.29.100:8081/";
     }
 
     print(baseURL);
@@ -68,7 +68,7 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.packagingdepot.store/";
           // "https://api.packagingdepot.store/";
-          "http://192.168.29.17:8081/";
+          "http://192.168.29.100:8081/";
     }
     print("API => ******** ${baseURL + APIurl}");
 
@@ -137,6 +137,28 @@ class ApiServices {
     print("API =>******${baseURL + APIurl}");
     final response = await delete(
       Uri.parse(baseURL + APIurl),
+    );
+
+    if (response.statusCode == 602) {
+      await setLOGOUT(context);
+    } else {
+      return response;
+    }
+  }
+
+    Future<Response?> deleteApiCallWithToken(String APIurl, BuildContext context) async {
+    await UpdateBaseURL();
+
+     await UpdateBaseURL();
+
+    final headers1 = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${Token}'
+    };
+    print("API =>******${baseURL + APIurl}");
+    final response = await delete(
+      Uri.parse(baseURL + APIurl),
+      headers: headers1,
     );
 
     if (response.statusCode == 602) {
