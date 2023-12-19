@@ -11,6 +11,7 @@ import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
 
 import '../../Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../Model/RePost_Model/RePost_model.dart';
+import '../../Model/UserTagModel/UserTag_model.dart';
 
 abstract class GetGuestAllPostState {}
 
@@ -82,4 +83,9 @@ class RePostLoadedState extends GetGuestAllPostState {
 class SystemConfigLoadedState extends GetGuestAllPostState {
   final SystemConfigModel SystemConfigModelData;
   SystemConfigLoadedState(this.SystemConfigModelData);
+}
+
+class UserTagLoadedState extends GetGuestAllPostState {
+  final UserTagModel userTagModel;
+  UserTagLoadedState(this.userTagModel);
 }

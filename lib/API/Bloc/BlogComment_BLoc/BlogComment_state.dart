@@ -1,3 +1,5 @@
+import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
+
 import '../../Model/BlogComment_Model/BlogCommentDelete_model.dart';
 import '../../Model/BlogComment_Model/BlogComment_model.dart';
 import '../../Model/BlogComment_Model/BlogLikeList_model.dart';
@@ -37,4 +39,8 @@ class BlogLikelistLoadedState extends BlogCommentState {
 class PostLikeBlogLoadedState extends BlogCommentState {
   final LikePost likePost;
   PostLikeBlogLoadedState(this.likePost);
+}
+class UserTagBlogLoadedState extends BlogCommentState {
+  final UserTagModel userTagModel;
+  UserTagBlogLoadedState(this.userTagModel);
 }
