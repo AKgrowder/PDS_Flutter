@@ -281,4 +281,22 @@ class HashTagCubit extends Cubit<HashTagState> {
       emit(HashTagErrorState(e.toString()));
     }
   }
+
+  Future<void> UserTagAPI(BuildContext context, String? name) async {
+    dynamic userTagData;
+    try {
+      emit(HashTagLoadingState());
+      userTagData = await Repository().UserTag(context, name);
+      print("userTagDataaaaaaaaaaaa-->${userTagData}");
+      if (userTagData == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${userTagData}"));
+      } else {
+        if (userTagData.success == true) {
+          emit(UserTagHashTagLoadedState(userTagData));
+        }
+      }
+    } catch (e) {
+      emit(HashTagErrorState(userTagData));
+    }
+  }
 }
