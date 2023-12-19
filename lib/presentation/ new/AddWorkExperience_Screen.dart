@@ -62,7 +62,8 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
   TextEditingController StartDateController = TextEditingController();
   TextEditingController EndDateController = TextEditingController();
   TextEditingController ExpertiseInController = TextEditingController();
-
+  bool value = false;
+  bool valuesecond = false;
   List<Expertise> expertiseData = [];
   Expertise? selectedExpertise;
   FetchExprtise? _fetchExprtise;
@@ -354,6 +355,27 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                   ),
                                 )
                               : SizedBox(),
+                          
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: this.valuesecond,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    this.valuesecond = value!;
+
+                                    if (valuesecond == true) {
+                                      EndDateController.text = "present";
+                                    } else {
+                                      EndDateController.text = "";
+                                    }
+                                  });
+                                },
+                              ),
+                              Text("Current Working in this Role"),
+                            ],
+                          ),
+
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -383,7 +405,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                           context: context,
                                           initialDate: DateTime.now(),
                                           firstDate: DateTime(2000),
-                                          lastDate:DateTime.now());
+                                          lastDate: DateTime.now());
 
                                       if (pickedStartDate != null) {
                                         print(
@@ -416,7 +438,15 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         top: 15, bottom: 10),
-                                    child: Text(
+                                    child: /* valuesecond==true? Text(
+                                      "Current Date",
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ): */
+                                        Text(
                                       "End Date",
                                       style: TextStyle(
                                         fontSize: 17,
@@ -432,43 +462,47 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                     isReadOnly: true,
                                     textInputAction: TextInputAction.next,
                                     onTap: () async {
-                                      if (StartDateController.text.isNotEmpty) {
-                                        DateTime? pickedDate =
-                                            await showDatePicker(
-                                                context: context,
-                                                initialDate:
-                                                    pickedStartDate ??
-                                                        DateTime.now(),
-                                                firstDate: pickedStartDate ??
-                                                    DateTime.now(),
-                                                lastDate: DateTime(2101));
+                                      if (valuesecond != true) {
+                                        if (StartDateController
+                                            .text.isNotEmpty) {
+                                          DateTime? pickedDate =
+                                              await showDatePicker(
+                                                  context: context,
+                                                  initialDate:
+                                                      pickedStartDate ??
+                                                          DateTime.now(),
+                                                  firstDate: pickedStartDate ??
+                                                      DateTime.now(),
+                                                  lastDate: DateTime(2101));
 
-                                        if (pickedDate != null) {
-                                          print(pickedDate);
-                                          formattedDateEnd =
-                                              DateFormat('dd-MM-yyyy')
-                                                  .format(pickedDate);
-                                          apiDateEnd = DateFormat('yyyy-MM-dd')
-                                              .format(pickedDate);
-                                          print(
-                                              "formattedDate end--${formattedDateEnd}");
+                                          if (pickedDate != null) {
+                                            print(pickedDate);
+                                            formattedDateEnd =
+                                                DateFormat('dd-MM-yyyy')
+                                                    .format(pickedDate);
+                                            apiDateEnd =
+                                                DateFormat('yyyy-MM-dd')
+                                                    .format(pickedDate);
+                                            print(
+                                                "formattedDate end--${formattedDateEnd}");
 
-                                          setState(() {
-                                            EndDateController.text =
-                                                formattedDateEnd.toString();
-                                          });
+                                            setState(() {
+                                              EndDateController.text =
+                                                  formattedDateEnd.toString();
+                                            });
+                                          } else {
+                                            print("Date is not selected");
+                                          }
                                         } else {
-                                          print("Date is not selected");
+                                          SnackBar snackBar = SnackBar(
+                                            content: Text(
+                                                'Please Select Start Date'),
+                                            backgroundColor:
+                                                ColorConstant.primary_color,
+                                          );
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(snackBar);
                                         }
-                                      } else {
-                                        SnackBar snackBar = SnackBar(
-                                          content:
-                                              Text('Please Select Start Date'),
-                                          backgroundColor:
-                                              ColorConstant.primary_color,
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
                                       }
                                     },
                                   ),
