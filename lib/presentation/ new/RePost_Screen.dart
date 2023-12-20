@@ -215,9 +215,7 @@ class _RePostScreenState extends State<RePostScreen> {
         ), (Route<dynamic> route) => false);
       }
     }, builder: (context, state) {
-      return Portal(
-        child: MaterialApp(
-          home: SafeArea(
+      return  SafeArea(
               child: Scaffold(
             body: Container(
               color: Colors.white,
@@ -1158,9 +1156,8 @@ class _RePostScreenState extends State<RePostScreen> {
                 ],
               ),
             ),
-          )),
-        ),
-      );
+          ));
+      
     });
   }
 
