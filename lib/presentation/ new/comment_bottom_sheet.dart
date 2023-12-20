@@ -1,8 +1,8 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
@@ -58,14 +58,20 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
   FocusNode focusNode = FocusNode();
   List<String> postTexContrlloer = [];
   HasDataModel? getAllHashtag;
-  bool isHeshTegData = false;
-  bool isTagData = false;
+  GlobalKey<FlutterMentionsState> key = GlobalKey<FlutterMentionsState>();
+
   SearchUserForInbox? searchUserForInbox1;
   bool isKeyboardVisible = false;
   String? uuid;
   String? User_ID1;
   String? TeampData;
   UserTagModel? userTagModel;
+
+  bool istageData = false;
+  bool isHeshTegData = false;
+
+  List<Map<String, dynamic>> tageData = [];
+  List<Map<String, dynamic>> heshTageData = [];
   void _goToElement() {
     scroll.animateTo((1000 * 20),
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
@@ -99,7 +105,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: theme.colorScheme.onPrimary,
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
@@ -120,13 +126,35 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
             }
             if (state is GetAllHashtagState) {
               getAllHashtag = state.getAllHashtag;
-              isHeshTegData = true;
-              isTagData = false;
+              for (int i = 0;
+                  i < (getAllHashtag?.object?.content?.length ?? 0);
+                  i++) {
+                // getAllHashtag?.object?.content?[i].split('#').last;
+                Map<String, dynamic> dataSetup = {
+                  'id': '${i}',
+                  'display':
+                      '${getAllHashtag?.object?.content?[i].split('#').last}',
+                };
+                heshTageData.add(dataSetup);
+                if (heshTageData.isNotEmpty == true) {
+                  isHeshTegData = true;
+                }
+              }
             }
             if (state is SearchHistoryDataAddxtends) {
               searchUserForInbox1 = state.searchUserForInbox;
-              isTagData = true;
-              isHeshTegData = false;
+              searchUserForInbox1?.object?.content?.forEach((element) {
+                Map<String, dynamic> dataSetup = {
+                  'id': element.userUid ?? '',
+                  'display': element.userName ?? '',
+                  'photo': element.userProfilePic ?? ''
+                };
+                tageData.add(dataSetup);
+                if (tageData.isNotEmpty == true) {
+                  istageData = true;
+                }
+                print("check All Tag Datat-$tageData");
+              });
             }
             if (state is AddCommentErrorState) {
               SnackBar snackBar = SnackBar(
@@ -138,6 +166,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
 
             if (state is AddnewCommentLoadedState) {
               print("dgdfhgdfhdfghhdfgh-${state.addnewCommentsModeldata}");
+
               if (state.addnewCommentsModeldata['message'] ==
                   'Comment contains a restricted word') {
                 SnackBar snackBar = SnackBar(
@@ -146,11 +175,9 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               } else {
-                addcomment.clear();
-
                 Object1 object =
                     Object1.fromJson(state.addnewCommentsModeldata['object']);
-
+                key.currentState!.controller!.clear();
                 addCommentModeldata?.object?.add(object);
 
                 _goToElement();
@@ -199,327 +226,91 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                   physics: BouncingScrollPhysics(),
                   child: Column(
                     children: [
-                      if (isHeshTegData)
-                        Container(
-                          height: MediaQuery.of(context).size.height,
-                          width: _width,
-                          // color: Colors.amber,
-                          child: ListView.builder(
-                            // physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: getAllHashtag?.object?.content?.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                margin: EdgeInsets.all(10),
-                                height: 70,
-                                width: _width,
-
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    border:
-                                        Border.all(color: Color(0xffE6E6E6))),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (addcomment.text.isNotEmpty) {
-                                        postTexContrlloer.add(
-                                            '${getAllHashtag?.object?.content?[index]}');
-                                        addcomment.text = addcomment.text +
-                                            '' +
-                                            '${getAllHashtag?.object?.content?[index].replaceAll("#", "")}';
-                                        addcomment.selection =
-                                            TextSelection.fromPosition(
-                                          TextPosition(
-                                              offset: addcomment.text.length),
-                                        );
-                                      }
-
-                                      isHeshTegData = false;
-
-                                      // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
-                                    });
-                                  },
-                                  /* onTap: () {
-                                    setState(() {
-                                      if (addcomment.text.isNotEmpty) {
-                                        /*   postText.text =
-                                                  '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
-                                        postTexContrlloer.add(
-                                            '${getAllHashtag?.object?.content?[index]}');
-                                      }
-                                      addcomment.text =
-                                          postTexContrlloer.join(' ,');
-                                      isHeshTegData = false;
-
-                                      // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
-                                    });
-                                  }, */
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: _width / 1.6,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
-                                          child: Text(
-                                            '${getAllHashtag?.object?.content?[index]}',
-                                            style: TextStyle(
-                                              overflow: TextOverflow.ellipsis,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                // color: Colors.green,
-                              );
-                            },
-                          ),
-                        ),
-                      if (isTagData)
-                        Container(
-                          height: MediaQuery.of(context).size.height,
-                          width: _width,
-                          // color: Colors.amber,
-                          child: ListView.builder(
-                            // physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount:
-                                searchUserForInbox1?.object?.content?.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                margin: EdgeInsets.all(10),
-                                height: 70,
-                                width: _width,
-                                // color: Colors.green,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    border:
-                                        Border.all(color: Color(0xffE6E6E6))),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (addcomment.text.isNotEmpty) {
-                                        // postText.text =
-                                        //     '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}';
-                                        postTexContrlloer.add(
-                                            '@${searchUserForInbox1?.object?.content?[index].userName}');
-                                        TeampData = addcomment.text;
-
-                                        RegExp exp = RegExp(r'@\w+\s ');
-                                        String modifiedText =
-                                            addcomment.text.replaceAll(exp, '');
-
-                                        addcomment.text = addcomment.text +
-                                            '' +
-                                            '${searchUserForInbox1?.object?.content?[index].userName}';
-                                        addcomment.selection =
-                                            TextSelection.fromPosition(
-                                          TextPosition(
-                                              offset: addcomment.text.length),
-                                        );
-
-                                        print(
-                                            "postText${addcomment.text.split("@").first}");
-                                      }
-
-                                      isTagData = false;
-
-                                      // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
-                                    });
-                                  },
-                                  /*  onTap: () {
-
-                                    setState(() {
-                                        if (addcomment.text.isNotEmpty) {
-                                        /*   postText.text =
-                                                  '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
-                                        postTexContrlloer.add(
-                                            '${getAllHashtag?.object?.content?[index]}');
-                                      }
-                                      addcomment.text =
-                                          postTexContrlloer.join(' ,');
-                                      isHeshTegData = false;
-
-                                      // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
-
-                                      /*  if (addcomment.text.isNotEmpty) {
-                                                // postText.text =
-                                                //     '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}';
-                                                postTexContrlloer.add(
-                                                    '@${searchUserForInbox1?.object?.content?[index].userName}');
-                                                addcomment.text = addcomment.text +
-                                                    '' +
-                                                    '${searchUserForInbox1?.object?.content?[index].userName}';
-                                                addcomment.selection =
-                                                    TextSelection.fromPosition(
-                                                  TextPosition(
-                                                      offset:
-                                                          addcomment.text.length),
-                                                );
-
-                                                print(
-                                                    "postText${addcomment.text.split("@").first}");
-                                              }
- */
-
-                                      addcomment.text =
-                                          postTexContrlloer.join(' ,');
-                                      isTagData = false;
-
-                                      // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
-                                    });
-                                  }, */
-                                  child: Row(
-                                    children: [
-                                      searchUserForInbox1
-                                                      ?.object
-                                                      ?.content?[index]
-                                                      .userProfilePic !=
-                                                  null &&
-                                              searchUserForInbox1
-                                                      ?.object
-                                                      ?.content?[index]
-                                                      .userProfilePic
-                                                      ?.isNotEmpty ==
-                                                  true
-                                          ? Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10),
-                                              child: CircleAvatar(
-                                                radius: 30.0,
-                                                backgroundImage: NetworkImage(
-                                                    "${searchUserForInbox1?.object?.content?[index].userProfilePic}"),
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                              ),
-                                            )
-                                          : Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10),
-                                              child: CircleAvatar(
-                                                radius: 30.0,
-                                                backgroundImage: AssetImage(
-                                                    ImageConstant.tomcruse),
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                              ),
-                                            ),
-                                      Container(
-                                        width: _width / 1.6,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
-                                          child: Text(
-                                            searchUserForInbox1
-                                                    ?.object
-                                                    ?.content?[index]
-                                                    .userName ??
-                                                '',
-                                            style: TextStyle(
-                                              overflow: TextOverflow.ellipsis,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                // color: Colors.green,
-                              );
-                            },
-                          ),
-                        ),
                       /*    Container(
-                        child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  if (User_ID1 == null) {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                RegisterCreateAccountScreen()));
-                                  } else {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (
-                                      context,
-                                    ) {
-                                      return ProfileScreen(
-                                          User_ID: widget.useruid ?? "",
-                                          isFollowing: widget.isFoollinng);
-                                    }));
-                                  }
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 16),
-                                  child: widget.userProfile != null
-                                      ? CircleAvatar(
-                                          backgroundImage: NetworkImage(
-                                              "${widget.userProfile}"),
-                                          radius: 25,
-                                        )
-                                      : CustomImageView(
-                                          imagePath: ImageConstant.tomcruse,
-                                          height: 50,
-                                          width: 50,
-                                          fit: BoxFit.fill,
-                                          radius: BorderRadius.circular(25),
-                                        ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: Column(
-                                  // crossAxisAlignment: CrossAxisAlignment.start,
-                                  // mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Row(
+                            child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (User_ID1 == null) {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RegisterCreateAccountScreen()));
+                                      } else {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(builder: (
+                                          context,
+                                        ) {
+                                          return ProfileScreen(
+                                              User_ID: widget.useruid ?? "",
+                                              isFollowing: widget.isFoollinng);
+                                        }));
+                                      }
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left: 16),
+                                      child: widget.userProfile != null
+                                          ? CircleAvatar(
+                                              backgroundImage: NetworkImage(
+                                                  "${widget.userProfile}"),
+                                              radius: 25,
+                                            )
+                                          : CustomImageView(
+                                              imagePath: ImageConstant.tomcruse,
+                                              height: 50,
+                                              width: 50,
+                                              fit: BoxFit.fill,
+                                              radius: BorderRadius.circular(25),
+                                            ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      // crossAxisAlignment: CrossAxisAlignment.start,
+                                      // mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          '${widget.UserName}',
-                                          style: TextStyle(
-                                              fontFamily: 'outfit',
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              '${widget.UserName}',
+                                              style: TextStyle(
+                                                  fontFamily: 'outfit',
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text("1w",
+                                                // customFormat(parsedDateTime),
+                                                style: TextStyle(
+                                                    fontFamily: 'outfit',
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.w500)),
+                                          ],
                                         ),
-                                        SizedBox(
-                                          width: 5,
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 5),
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(' ${widget.desc ?? ""}',
+                                                // maxLines: 2,
+                                                style: TextStyle(
+                                                    fontFamily: 'outfit',
+                                                    // overflow: TextOverflow.ellipsis,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w400)),
+                                          ),
                                         ),
-                                        Text("1w",
-                                            // customFormat(parsedDateTime),
-                                            style: TextStyle(
-                                                fontFamily: 'outfit',
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w500)),
                                       ],
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 5),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(' ${widget.desc ?? ""}',
-                                            // maxLines: 2,
-                                            style: TextStyle(
-                                                fontFamily: 'outfit',
-                                                // overflow: TextOverflow.ellipsis,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w400)),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ]),
-                      ), */
+                                  ),
+                                ]),
+                          ), */
                       Padding(
                         padding: const EdgeInsets.only(bottom: 70),
                         child: ListView.builder(
@@ -773,16 +564,16 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 )
 
                                                 /*  Text(
-                                                    "${addCommentModeldata?.object?[index].comment}",
-                                                    // maxLines: 2,
-
-                                                    style: TextStyle(
-                                                        fontFamily: 'outfit',
-                                                        overflow: TextOverflow
-                                                            .visible,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w400)) */
+                                                        "${addCommentModeldata?.object?[index].comment}",
+                                                        // maxLines: 2,
+        
+                                                        style: TextStyle(
+                                                            fontFamily: 'outfit',
+                                                            overflow: TextOverflow
+                                                                .visible,
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w400)) */
                                                 ,
                                               ),
                                             ],
@@ -809,68 +600,184 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                       Row(
                         children: [
                           Flexible(
-                              child: Padding(
-                            padding:
-                                const EdgeInsets.only(left: 10, bottom: 10),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(30)),
-                              child: TextFormField(
-                                onChanged: (value) {
-                                  // onChangeMethod(value);
-                                },
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(300),
-                                ],
-                                minLines: 1,
-                                maxLines: 5,
-                                controller: addcomment,
-                                decoration: InputDecoration(
-                                  hintText: "Add Comment",
-                                  prefixIcon: IconButton(
-                                    icon: Icon(
-                                      isEmojiVisible
-                                          ? Icons.keyboard_alt_outlined
-                                          : Icons.emoji_emotions_outlined,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 10, bottom: 10),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(30)),
+                                child: FlutterMentions(
+                                  key: key,
+                                  minLines: 1,
+                                  maxLines: 5,
+                                  onChanged: (value) {
+                                    onChangeMethod(value);
+                                  },
+                                  suggestionPosition: SuggestionPosition.Top,
+                                  decoration: InputDecoration(
+                                    hintText: 'Add Comment',
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          width: 2,
+                                          color: Colors.red), //<-- SEE HERE
+                                      borderRadius: BorderRadius.circular(30.0),
                                     ),
-                                    onPressed: () async {
-                                      print("this is ontap");
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          width: 2,
+                                          color: Colors.red), //<-- SEE HERE
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                  ),
+                                  mentions: [
+                                    Mention(
+                                        trigger: "@",
+                                        style: TextStyle(color: Colors.blue),
+                                        data: tageData,
+                                        matchAll: false,
+                                        disableMarkup: true,
+                                        suggestionBuilder: (tageData) {
+                                          if (istageData) {
+                                            return Container(
+                                              margin: EdgeInsets.only(
+                                                  left: 50, bottom: 10),
+                                              child: Row(
+                                                children: <Widget>[
+                                                  tageData['photo']
+                                                                  .toString()
+                                                                  .isNotEmpty ==
+                                                              true &&
+                                                          tageData['photo']
+                                                                  .toString() !=
+                                                              Null
+                                                      ? CircleAvatar(
+                                                          backgroundImage:
+                                                              AssetImage(
+                                                                  ImageConstant
+                                                                      .tomcruse),
+                                                        )
+                                                      : CircleAvatar(
+                                                          backgroundImage:
+                                                              NetworkImage(
+                                                            tageData['photo'],
+                                                          ),
+                                                        ),
+                                                  SizedBox(
+                                                    width: 20.0,
+                                                  ),
+                                                  Column(
+                                                    children: <Widget>[
+                                                      Text(
+                                                          '@${tageData['display']}'),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          }
 
-                                      if (isEmojiVisible) {
-                                        FocusScope.of(context)
-                                            .requestFocus(FocusNode());
-                                      } else if (isKeyboardVisible) {
-                                        await SystemChannels.textInput
-                                            .invokeMethod('TextInput.hide');
-                                        await Future.delayed(
-                                            Duration(milliseconds: 100));
-                                      }
-                                      if (isKeyboardVisible) {
-                                        FocusScope.of(context).unfocus();
-                                      }
-
-                                      setState(() {
-                                        isEmojiVisible = !isEmojiVisible;
-                                      });
-                                    },
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 2,
-                                        color: Colors.red), //<-- SEE HERE
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 2,
-                                        color: Colors.red), //<-- SEE HERE
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
+                                          return Container(
+                                            color: Colors.amber,
+                                          );
+                                        }),
+                                    Mention(
+                                        trigger: "#",
+                                        style: TextStyle(color: Colors.blue),
+                                        data: heshTageData,
+                                        suggestionBuilder: (heshTageData) {
+                                          print("sdfgfgdgh-$heshTageData");
+                                          if (isHeshTegData) {
+                                            return Container(
+                                              height: 50,
+                                              width: 110,
+                                              margin: EdgeInsets.only(
+                                                  left: 40, bottom: 10),
+                                              child: ListTile(
+                                                  leading: CircleAvatar(
+                                                    child: Text('#'),
+                                                  ),
+                                                  title: Text(
+                                                    '${heshTageData['display']}',
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  )),
+                                            );
+                                          }
+                                          return Container(
+                                            height: 30,
+                                            width: 110,
+                                            color: Colors.green,
+                                          );
+                                        }),
+                                  ],
                                 ),
                               ),
                             ),
-                          )),
+                          ),
+                          /* Flexible(
+                                  child: Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, bottom: 10),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(30)),
+                                  child: TextFormField(
+                                    onChanged: (value) {
+                                      // onChangeMethod(value);
+                                    },
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(300),
+                                    ],
+                                    minLines: 1,
+                                    maxLines: 5,
+                                    controller: addcomment,
+                                    decoration: InputDecoration(
+                                      hintText: "Add Comment",
+                                      prefixIcon: IconButton(
+                                        icon: Icon(
+                                          isEmojiVisible
+                                              ? Icons.keyboard_alt_outlined
+                                              : Icons.emoji_emotions_outlined,
+                                        ),
+                                        onPressed: () async {
+                                          print("this is ontap");
+        
+                                          if (isEmojiVisible) {
+                                            FocusScope.of(context)
+                                                .requestFocus(FocusNode());
+                                          } else if (isKeyboardVisible) {
+                                            await SystemChannels.textInput
+                                                .invokeMethod('TextInput.hide');
+                                            await Future.delayed(
+                                                Duration(milliseconds: 100));
+                                          }
+                                          if (isKeyboardVisible) {
+                                            FocusScope.of(context).unfocus();
+                                          }
+        
+                                          setState(() {
+                                            isEmojiVisible = !isEmojiVisible;
+                                          });
+                                        },
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 2,
+                                            color: Colors.red), //<-- SEE HERE
+                                        borderRadius: BorderRadius.circular(30.0),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 2,
+                                            color: Colors.red), //<-- SEE HERE
+                                        borderRadius: BorderRadius.circular(30.0),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )), */
                           Padding(
                             padding: const EdgeInsets.only(
                                 right: 10, left: 10, bottom: 10),
@@ -922,110 +829,110 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                         ],
                       ),
                       /*   Container(
-                        height: 70,
-                        color: Colors.white,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 50,
-                              width: _width / 1.3,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
-                                  border: Border.all(
-                                    color: Colors.red,
-                                    width: 2,
-                                  ),
-                                  color: Colors.white),
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: TextField(
-                                  expands: true,
-                                    maxLines: null,
-                                  onTap: () {
-                                    if (isEmojiVisible) {
-                                      setState(() {
-                                        isEmojiVisible = !isEmojiVisible;
-                                      });
-                                    }
-                                  },
-
-                                  controller: addcomment,
-                                  maxLength: 300,
-                                  //
-                                  cursorColor: ColorConstant.primary_color,
-                                  decoration: InputDecoration(
-                                    counterText: "",
-                                    
-                                    border: InputBorder.none,
-                                    hintText: "Add Comment",
-                                    icon: Container(
-                                      child: IconButton(
-                                        icon: Icon(
-                                          isEmojiVisible
-                                              ? Icons.keyboard_alt_outlined
-                                              : Icons.emoji_emotions_outlined,
-                                        ),
-                                        onPressed: () async {
-                                          if (isEmojiVisible) {
-                                            focusNode.requestFocus();
-                                          } else if (isKeyboardVisible) {
-                                            await SystemChannels.textInput
-                                                .invokeMethod('TextInput.hide');
-                                            await Future.delayed(
-                                                Duration(milliseconds: 100));
-                                          }
-                                          if (isKeyboardVisible) {
-                                            FocusScope.of(context).unfocus();
-                                          }
-
+                            height: 70,
+                            color: Colors.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: 50,
+                                  width: _width / 1.3,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25),
+                                      border: Border.all(
+                                        color: Colors.red,
+                                        width: 2,
+                                      ),
+                                      color: Colors.white),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: TextField(
+                                      expands: true,
+                                        maxLines: null,
+                                      onTap: () {
+                                        if (isEmojiVisible) {
                                           setState(() {
                                             isEmojiVisible = !isEmojiVisible;
                                           });
-                                        },
+                                        }
+                                      },
+        
+                                      controller: addcomment,
+                                      maxLength: 300,
+                                      //
+                                      cursorColor: ColorConstant.primary_color,
+                                      decoration: InputDecoration(
+                                        counterText: "",
+                                        
+                                        border: InputBorder.none,
+                                        hintText: "Add Comment",
+                                        icon: Container(
+                                          child: IconButton(
+                                            icon: Icon(
+                                              isEmojiVisible
+                                                  ? Icons.keyboard_alt_outlined
+                                                  : Icons.emoji_emotions_outlined,
+                                            ),
+                                            onPressed: () async {
+                                              if (isEmojiVisible) {
+                                                focusNode.requestFocus();
+                                              } else if (isKeyboardVisible) {
+                                                await SystemChannels.textInput
+                                                    .invokeMethod('TextInput.hide');
+                                                await Future.delayed(
+                                                    Duration(milliseconds: 100));
+                                              }
+                                              if (isKeyboardVisible) {
+                                                FocusScope.of(context).unfocus();
+                                              }
+        
+                                              setState(() {
+                                                isEmojiVisible = !isEmojiVisible;
+                                              });
+                                            },
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                if (addcomment.text.isEmpty) {
-                                  SnackBar snackBar = SnackBar(
-                                    content: Text('Please Add Comment'),
-                                    backgroundColor:
-                                        ColorConstant.primary_color,
-                                  );
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
-                                } else {
-                                  Map<String, dynamic> params = {
-                                    "comment": addcomment.text,
-                                    "postUid": '${widget.postUuID}',
-                                  };
-
-                                  BlocProvider.of<AddcommentCubit>(context)
-                                      .AddPostApiCalling(context, params);
-                                }
-                              },
-                              child: CircleAvatar(
-                                maxRadius: 25,
-                                backgroundColor: ColorConstant.primary_color,
-                                child: Center(
-                                  child: Image.asset(
-                                    ImageConstant.commentarrow,
-                                    height: 18,
-                                  ),
+                                SizedBox(
+                                  width: 8,
                                 ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ), */
+                                GestureDetector(
+                                  onTap: () {
+                                    if (addcomment.text.isEmpty) {
+                                      SnackBar snackBar = SnackBar(
+                                        content: Text('Please Add Comment'),
+                                        backgroundColor:
+                                            ColorConstant.primary_color,
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    } else {
+                                      Map<String, dynamic> params = {
+                                        "comment": addcomment.text,
+                                        "postUid": '${widget.postUuID}',
+                                      };
+        
+                                      BlocProvider.of<AddcommentCubit>(context)
+                                          .AddPostApiCalling(context, params);
+                                    }
+                                  },
+                                  child: CircleAvatar(
+                                    maxRadius: 25,
+                                    backgroundColor: ColorConstant.primary_color,
+                                    child: Center(
+                                      child: Image.asset(
+                                        ImageConstant.commentarrow,
+                                        height: 18,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ), */
                       Offstage(
                         offstage: !isEmojiVisible,
                         child: SizedBox(
@@ -1092,6 +999,9 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
   }
 
   onChangeMethod(String value) {
+    setState(() {
+      addcomment.text = value;
+    });
     if (value.contains('@')) {
       print("if this condison is working-${value}");
       if (value.length >= 3 && value.contains('@')) {
@@ -1117,7 +1027,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
           .GetAllHashtag(context, '10', '#${data1.trim()}');
     } else {
       setState(() {
-        isTagData = false;
+        istageData = false;
         isHeshTegData = false;
       });
     }
