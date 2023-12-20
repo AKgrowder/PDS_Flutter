@@ -355,17 +355,18 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                   ),
                                 )
                               : SizedBox(),
-                          
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Checkbox(
+                                activeColor: ColorConstant.primary_color,
                                 value: this.valuesecond,
                                 onChanged: (bool? value) {
                                   setState(() {
                                     this.valuesecond = value!;
 
                                     if (valuesecond == true) {
-                                      EndDateController.text = "present";
+                                      EndDateController.text = "Present";
                                     } else {
                                       EndDateController.text = "";
                                     }
@@ -375,7 +376,6 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                               Text("Current Working in this Role"),
                             ],
                           ),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
