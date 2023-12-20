@@ -887,14 +887,14 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   decoration: InputDecoration(
                                       filled: true,
                                       fillColor: Color(0x82EFEFEF),
-                                      prefixIcon: IconButton(
+                                      /* prefixIcon: IconButton(
                                         icon: Icon(
                                           isEmojiVisible
                                               ? Icons.keyboard_rounded
                                               : Icons.emoji_emotions_outlined,
                                         ),
                                         onPressed: onClickedEmoji,
-                                      ),
+                                      ), */
                                       hintText: "Add Comment",
                                       enabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(

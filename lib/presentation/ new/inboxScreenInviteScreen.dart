@@ -10,7 +10,6 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pds/API/Bloc/PersonalChatList_Bloc/PersonalChatList_State.dart';
 import 'package:pds/API/Bloc/PersonalChatList_Bloc/PersonalChatList_cubit.dart';
-import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
@@ -53,14 +52,14 @@ class _InviteMeesageState extends State<InviteMeesage> {
   PlatformFile? file12;
   ChooseDocument1? imageDataPost;
 
-  getDocumentSize() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    documentuploadsize = await double.parse(
-        prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
+    getDocumentSize() async {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      documentuploadsize = await double.parse(
+          prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
 
-    finalFileSize = documentuploadsize;
-    setState(() {});
-  }
+      finalFileSize = documentuploadsize;
+      setState(() {});
+    }
 
   @override
   void initState() {
@@ -164,6 +163,11 @@ class _InviteMeesageState extends State<InviteMeesage> {
               UserIndexUUID = state.DMChatList.object;
             }
             if (state is SelectMultipleUsers_ChatLoadestate) {
+              MultiUser = [];
+              _image = null;
+              isDataGet = false;
+              Add_Comment.clear();
+              searchController.clear();
               SnackBar snackBar = SnackBar(
                 content:
                     Text(state.selectMultipleUsersChatModel.object.toString()),
@@ -764,9 +768,38 @@ class _InviteMeesageState extends State<InviteMeesage> {
 
   Future<void> camerapicker() async {
     pickedImageFile = await picker.pickImage(source: ImageSource.camera);
-    
+    if (pickedImageFile != null) {
+      _image = File(pickedImageFile!.path);
+      setState(() {});
+      final int fileSizeInBytes = await _image!.length();
+      if (fileSizeInBytes <= finalFileSize * 1024 * 1024) {
+        BlocProvider.of<PersonalChatListCubit>(context)
+            .UplodeImageAPI(context, File(_image!.path));
+      } else {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text("Max Size ${finalFileSize}MB"),
+            content: Text(
+                "This file size ${value2} ${fileSizeInBytes} Selected Max size ${finalFileSize}MB"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                child: Container(
+                  // color: Colors.green,
+                  padding: const EdgeInsets.all(10),
+                  child: const Text("Okay"),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    }
 
- /*    if (pickedImageFile != null) {
+    /*    if (pickedImageFile != null) {
       if (!_isGifOrSvg(pickedImageFile!.path)) {
         setState(() {
           _image = File(pickedImageFile!.path);

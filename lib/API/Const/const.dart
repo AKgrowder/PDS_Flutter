@@ -49,7 +49,7 @@ class Config {
   static const String loginerror = "Please Login With UserName";
   static const String RateUs = "guest/addRating";
   static const String emailVerifaction = "user/api/send_email_verify";
-  static const String chatImage = "user/send_image_in_user_chat";
+  static const String chatImageRoom = "user/sendImageInChat/";
   static const String unPin = "user/saveRoom";
   static const String unSavePin = "user/unsaveRoom";
   static const String getCountOfSavedRoom = "user/getCountOfSavedRoom";
@@ -126,4 +126,6 @@ class Config {
   static const String userTag = "user/api/get_uuid_by_username";
   static const String selectMultipleUsers_Chat =
       "user/selectMultipleUsers_Chat";
+  static const String chatImageDM = "user/send_image_in_user_chat"; // ankur 
+
 }

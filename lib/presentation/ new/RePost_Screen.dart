@@ -194,7 +194,7 @@ class _RePostScreenState extends State<RePostScreen> {
             'display': '${getAllHashtag?.object?.content?[i].split('#').last}',
           };
           heshTageData.add(dataSetup);
-          if (tageData.isNotEmpty == true) {
+          if (heshTageData.isNotEmpty == true) {
             isHeshTegData = true;
           }
         }
@@ -379,7 +379,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                 width: _width,
                                 child: Column(
                                   children: [
-                                    TextField(),
+                                    
                                     SizedBox(
                                       height: 80,
                                       child: FlutterMentions(

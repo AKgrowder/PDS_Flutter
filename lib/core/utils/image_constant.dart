@@ -236,6 +236,8 @@ class ImageConstant {
   static String check_box ="assets/images/check-box.png";
   static String check ="assets/images/check.png";
   static String chat ="assets/images/chat.png";
+  static String RightArrowgrey ="assets/images/RightArrowgrey.png";
+
 
 
 }
