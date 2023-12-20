@@ -1,25 +1,22 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:linkfy_text/linkfy_text.dart';
-import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_state.dart';
-import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
 import 'package:pds/API/Model/BlogComment_Model/BlogCommentDelete_model.dart';
 import 'package:pds/API/Model/BlogComment_Model/BlogComment_model.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
+import 'package:pds/API/Model/HasTagModel/hasTagModel.dart';
 import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
-import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
+import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
-import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,11 +48,19 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
   String? User_ID1;
   bool isDataGet = false;
   UserTagModel? userTagModel;
+  GlobalKey<FlutterMentionsState> key = GlobalKey<FlutterMentionsState>();
+  List<Map<String, dynamic>> tageData = [];
+  List<Map<String, dynamic>> heshTageData = [];
+  SearchUserForInbox? searchUserForInbox1;
+  HasDataModel? getAllHashtag;
+
   void _goToElement() {
     scroll.animateTo((1000 * 20),
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
   }
 
+  bool istageData = false;
+  bool isHeshTegData = false;
   @override
   void initState() {
     setUserId();
@@ -126,7 +131,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               } else {
                 addcomment.clear();
-
+                key.currentState!.controller!.clear();
                 ObjectBlog object = ObjectBlog.fromJson(
                     state.BlognewCommentsModeldata['object']);
 
@@ -145,6 +150,38 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
             }
             if (state is UserTagBlogLoadedState) {
               userTagModel = await state.userTagModel;
+            }
+            if (state is SearchHistoryDataAddxtends1) {
+              searchUserForInbox1 = state.searchUserForInbox;
+              searchUserForInbox1?.object?.content?.forEach((element) {
+                Map<String, dynamic> dataSetup = {
+                  'id': element.userUid ?? '',
+                  'display': element.userName ?? '',
+                  'photo': element.userProfilePic ?? ''
+                };
+                tageData.add(dataSetup);
+                if (tageData.isNotEmpty == true) {
+                  istageData = true;
+                }
+                print("check All Tag Datat-$tageData");
+              });
+            }
+            if (state is GetAllHashtagState1) {
+              getAllHashtag = state.getAllHashtag;
+              for (int i = 0;
+                  i < (getAllHashtag?.object?.content?.length ?? 0);
+                  i++) {
+                // getAllHashtag?.object?.content?[i].split('#').last;
+                Map<String, dynamic> dataSetup = {
+                  'id': '${i}',
+                  'display':
+                      '${getAllHashtag?.object?.content?[i].split('#').last}',
+                };
+                heshTageData.add(dataSetup);
+                if (heshTageData.isNotEmpty == true) {
+                  isHeshTegData = true;
+                }
+              }
             }
           },
           builder: (
@@ -509,6 +546,133 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                             Row(
                               children: [
                                 Flexible(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 10, bottom: 10),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(30)),
+                                      child: FlutterMentions(
+                                        key: key,
+                                        minLines: 1,
+                                        maxLines: 5,
+                                        onChanged: (value) {
+                                          onChangeMethod(value);
+                                        },
+                                        suggestionPosition:
+                                            SuggestionPosition.Top,
+                                        decoration: InputDecoration(
+                                          hintText: 'Add Comment',
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                width: 2,
+                                                color:
+                                                    Colors.red), //<-- SEE HERE
+                                            borderRadius:
+                                                BorderRadius.circular(30.0),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                width: 2,
+                                                color:
+                                                    Colors.red), //<-- SEE HERE
+                                            borderRadius:
+                                                BorderRadius.circular(30.0),
+                                          ),
+                                        ),
+                                        mentions: [
+                                          Mention(
+                                              trigger: "@",
+                                              style:
+                                                  TextStyle(color: Colors.blue),
+                                              data: tageData,
+                                              matchAll: false,
+                                              disableMarkup: true,
+                                              suggestionBuilder: (tageData) {
+                                                if (istageData) {
+                                                  return Container(
+                                                    margin: EdgeInsets.only(
+                                                        left: 50, bottom: 10),
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        tageData['photo']
+                                                                        .toString()
+                                                                        .isNotEmpty ==
+                                                                    true &&
+                                                                tageData['photo']
+                                                                        .toString() !=
+                                                                    Null
+                                                            ? CircleAvatar(
+                                                                backgroundImage:
+                                                                    AssetImage(
+                                                                        ImageConstant
+                                                                            .tomcruse),
+                                                              )
+                                                            : CircleAvatar(
+                                                                backgroundImage:
+                                                                    NetworkImage(
+                                                                  tageData[
+                                                                      'photo'],
+                                                                ),
+                                                              ),
+                                                        SizedBox(
+                                                          width: 20.0,
+                                                        ),
+                                                        Column(
+                                                          children: <Widget>[
+                                                            Text(
+                                                                '@${tageData['display']}'),
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
+                                                  );
+                                                }
+
+                                                return Container(
+                                                  color: Colors.amber,
+                                                );
+                                              }),
+                                          Mention(
+                                              trigger: "#",
+                                              style:
+                                                  TextStyle(color: Colors.blue),
+                                              data: heshTageData,
+                                              suggestionBuilder:
+                                                  (heshTageData) {
+                                                print(
+                                                    "sdfgfgdgh-$heshTageData");
+                                                if (isHeshTegData) {
+                                                  return Container(
+                                                    height: 50,
+                                                    width: 110,
+                                                    margin: EdgeInsets.only(
+                                                        left: 40, bottom: 10),
+                                                    child: ListTile(
+                                                        leading: CircleAvatar(
+                                                          child: Text('#'),
+                                                        ),
+                                                        title: Text(
+                                                          '${heshTageData['display']}',
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        )),
+                                                  );
+                                                }
+                                                return Container(
+                                                  height: 30,
+                                                  width: 110,
+                                                  color: Colors.green,
+                                                );
+                                              }),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                /*  Flexible(
                                     child: Padding(
                                   padding: const EdgeInsets.only(
                                       left: 10, bottom: 10),
@@ -571,7 +735,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                       ),
                                     ),
                                   ),
-                                )),
+                                )), */
                                 Padding(
                                   padding: const EdgeInsets.only(
                                       right: 10, left: 10, bottom: 10),
@@ -692,6 +856,41 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
         ),
       ),
     );
+  }
+
+  onChangeMethod(String value) {
+    setState(() {
+      addcomment.text = value;
+    });
+    if (value.contains('@')) {
+      print("if this condison is working-${value}");
+      if (value.length >= 3 && value.contains('@')) {
+        print("value check --${value.endsWith(' #')}");
+        if (value.endsWith(' #')) {
+          String data1 = value.split(' #').last.replaceAll('#', '');
+          BlocProvider.of<BlogcommentCubit>(context)
+              .GetAllHashtag(context, '10', '#${data1.trim()}');
+        } else {
+          String data = value.split(' @').last.replaceAll('@', '');
+          BlocProvider.of<BlogcommentCubit>(context)
+              .search_user_for_inbox(context, '${data.trim()}', '1');
+        }
+      } else if (value.endsWith(' #')) {
+        print("ends with value-${value}");
+      } else {
+        print("check lenth else-${value.length}");
+      }
+    } else if (value.contains('#')) {
+      print("check length-${value}");
+      String data1 = value.split(' #').last.replaceAll('#', '');
+      BlocProvider.of<BlogcommentCubit>(context)
+          .GetAllHashtag(context, '10', '#${data1.trim()}');
+    } else {
+      setState(() {
+        istageData = false;
+        isHeshTegData = false;
+      });
+    }
   }
 
   Deletecommentdilog(String commentuuid, int index1) {

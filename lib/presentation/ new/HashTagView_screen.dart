@@ -129,19 +129,19 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
           }
         },
         builder: (context, state) {
-          // if (state is HashTagLoadingState) {
-          //   return Center(
-          //     child: Container(
+          if (state is HashTagLoadingState) {
+            return Center(
+              child: Container(
             
-          //       margin: EdgeInsets.only(bottom: 100),
-          //       child: ClipRRect(
-          //         borderRadius: BorderRadius.circular(20),
-          //         child: Image.asset(ImageConstant.loader,
-          //             fit: BoxFit.cover, height: 100.0, width: 100),
-          //       ),
-          //     ),
-          //   );
-          // }
+                margin: EdgeInsets.only(bottom: 100),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(ImageConstant.loader,
+                      fit: BoxFit.cover, height: 100.0, width: 100),
+                ),
+              ),
+            );
+          }
           return Padding(
             padding:
                 const EdgeInsets.only(top: 10, left: 15, right: 15, bottom: 20),

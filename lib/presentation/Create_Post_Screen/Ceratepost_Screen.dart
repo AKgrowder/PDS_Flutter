@@ -92,6 +92,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   bool istageData = false;
 
   ScrollController scrollController = ScrollController();
+  
   String? data;
 /*   void _onTextChanged() {
     String text = postText.text;

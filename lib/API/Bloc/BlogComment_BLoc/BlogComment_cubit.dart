@@ -16,6 +16,8 @@ class BlogcommentCubit extends Cubit<BlogCommentState> {
       } else {
         if (commentdata.success == true) {
           emit(BlogCommentLoadedState(commentdata));
+        } else {
+          emit(BlogCommentLoadedState(commentdata));
         }
       }
     } catch (e) {
@@ -118,6 +120,36 @@ class BlogcommentCubit extends Cubit<BlogCommentState> {
       }
     } catch (e) {
       emit(BlogCommentErrorState(userTagData));
+    }
+  }
+
+  Future<void> GetAllHashtag(
+      BuildContext context, String pageNumber, String searchHashtag) async {
+    dynamic addPostImageUploded;
+    try {
+      addPostImageUploded = await Repository()
+          .get_all_hashtag(context, pageNumber, searchHashtag);
+
+      if (addPostImageUploded.success == true) {
+        emit(GetAllHashtagState1(addPostImageUploded));
+      }
+    } catch (e) {
+      emit(BlogCommentErrorState(e.toString()));
+    }
+  }
+
+  Future<void> search_user_for_inbox(
+      BuildContext context, String typeWord, String pageNumber) async {
+    dynamic searchHistoryDataAdd;
+    try {
+      searchHistoryDataAdd = await Repository()
+          .search_user_for_inbox(typeWord, pageNumber, context);
+      if (searchHistoryDataAdd.success == true) {
+        emit(SearchHistoryDataAddxtends1(searchHistoryDataAdd));
+      }
+    } catch (e) {
+      print("eeerrror-${e.toString()}");
+      emit(BlogCommentErrorState(e.toString()));
     }
   }
 }
