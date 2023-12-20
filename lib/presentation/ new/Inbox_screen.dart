@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -227,7 +228,7 @@ class _InboxScreenState extends State<InboxScreen> {
   }
 
   intaldatashow() {
-       var _height = MediaQuery.of(context).size.height;
+    var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Expanded(
       child: SingleChildScrollView(
@@ -345,72 +346,85 @@ class _InboxScreenState extends State<InboxScreen> {
                                       ))
                                 ]),
                                 Padding(
-                                  padding: const EdgeInsets.all(6),
+                                  padding: EdgeInsets.only(
+                                    top: 8,
+                                    left: 8,
+                                  ),
                                   child: Column(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        "${PersonalChatListModelData?.object?[index].userName}",
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600),
-                                      ),
                                       Container(
-                                        width: _width / 1.7,
-                                        height: 20,
-                                        // color: Colors.red,
-                                        child: PersonalChatListModelData?.object?[index]
-                                                    .messageType ==
-                                                "IMAGE"
-                                            ? Row(
-                                                children: [
-                                                  CustomImageView(
-                                                      height: 19,
-                                                      width: 19,
-                                                      imagePath: ImageConstant
-                                                          .ChatimageIcon),
-                                                  SizedBox(
-                                                    width: 7,
-                                                  ),
-                                                  Text(
-                                                    "Photo",
-                                                    style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight: FontWeight.w600,
-                                                      color: Colors.grey,
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                            : Text(
-                                                "${PersonalChatListModelData?.object?[index].message}",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
+                                        width: _width / 1.4,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              "${PersonalChatListModelData?.object?[index].userName ?? ""}",
+                                              style: TextStyle(
                                                   fontSize: 15,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.grey,
-                                                ),
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            Spacer(),
+                                            Text(
+                                              customFormat(parsedDateTime),
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.grey,
                                               ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 7),
+                                        child: Container(
+                                          width: _width / 1.7,
+                                          height: 20,
+                                          child: PersonalChatListModelData
+                                                      ?.object?[index]
+                                                      .messageType ==
+                                                  "IMAGE"
+                                              ? Row(
+                                                  children: [
+                                                    CustomImageView(
+                                                        height: 19,
+                                                        width: 19,
+                                                        imagePath: ImageConstant
+                                                            .ChatimageIcon),
+                                                    SizedBox(
+                                                      width: 7,
+                                                    ),
+                                                    Text(
+                                                      "Photo",
+                                                      style: TextStyle(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              : Text(
+                                                  "${PersonalChatListModelData?.object?[index].message}",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                        ),
                                       )
                                     ],
                                   ),
                                 )
                               ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 6),
-                              child: Text(
-                                customFormat(parsedDateTime),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            )
                           ],
                         ),
                       ),
@@ -535,8 +549,8 @@ class _InboxScreenState extends State<InboxScreen> {
     String month = _getMonthName(date.month);
     String year = date.year.toString();
     String time = DateFormat('h:mm a').format(date);
-
-    String formattedDate = '$time';
+    String WeekDay = DateFormat('EEEE').format(date);
+    String formattedDate = '$day $WeekDay $time';
     return formattedDate;
   }
 
