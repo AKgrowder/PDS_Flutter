@@ -1285,15 +1285,38 @@ class Repository {
     }
   }
 
-  chatImage(BuildContext context, String inboxChatUserUid, String userUid,
+  chatImage(BuildContext context, String RoomChatUserUid, String userUid,
       File imageFile) async {
     final response = await apiServices.multipartFileUserprofile(
-        "${Config.chatImage}/${inboxChatUserUid}/${userUid}",
+        "${Config.chatImageRoom}/${RoomChatUserUid}/${userUid}",
         imageFile,
         context,
         imageDataType: "yes");
     var jsonString = json.decode(response.body);
     print('jasonnString$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return jsonString;
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  chatImage1(
+    String inboxChatUserUid,
+    String userUid,
+    File imageFile, BuildContext context) async {
+    final response = await apiServices.multipartFileWithSoket(
+        "${Config.chatImageDM}?inboxChatUserUid=$inboxChatUserUid&userUid=$userUid", imageFile, context);
+    var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
         return jsonString;
@@ -2560,7 +2583,7 @@ class Repository {
     }
   }
 
-   get_UsersChatByUsername(
+  get_UsersChatByUsername(
       String searchUsername, String pageNumber, BuildContext context) async {
     final respone = await apiServices.getApiCallWithToken(
         '${Config.get_UsersChatByUsername}?searchUsername=$searchUsername&pageNumber=$pageNumber&numberOfRecords=20',
@@ -2603,12 +2626,10 @@ class Repository {
         return jsonString;
     }
   }
-  
 
-    UserTag(BuildContext context, String? name) async {
+  UserTag(BuildContext context, String? name) async {
     final responce = await apiServices.getApiCall(
-        '${Config.userTag}?username=${name}',
-        context);
+        '${Config.userTag}?username=${name}', context);
     var jsonString = json.decode(responce.body);
     print('jasonnString$jsonString');
     print('respnse ${responce.statusCode}');
