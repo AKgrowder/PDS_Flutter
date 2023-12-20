@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/ApiService/DMSocket.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dmMessageState.dart';
+import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
@@ -60,6 +63,11 @@ class _DmScreenState extends State<DmScreen> {
   double documentuploadsize = 0;
   FocusNode _focusNode = FocusNode();
   Map<String, dynamic>? mapDataAdd;
+  PlatformFile? file12;
+  double value2 = 0.0;
+  double finalFileSize = 0;
+  ChooseDocument1? imageDataPost;
+
   GetInboxMessagesModel? getInboxMessagesModel;
   final focusNode = FocusNode();
   KeyboardVisibilityController keyboardVisibilityController =
@@ -67,6 +75,14 @@ class _DmScreenState extends State<DmScreen> {
 
   TextEditingController Add_Comment = TextEditingController();
   String formattedDate = DateFormat('dd-MM-yyyy').format(now);
+  getDocumentSize() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    documentuploadsize = await double.parse(
+        prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
+
+    finalFileSize = documentuploadsize;
+    setState(() {});
+  }
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Future<bool> onBackPress() {
@@ -107,8 +123,9 @@ class _DmScreenState extends State<DmScreen> {
         Add_Comment.text = '';
         // });
       } else if (_image != null) {
-        // BlocProvider.of<DmInboxCubit>(context).chatImageMethod(
-        //    ss, context, userId.toString(), _image!);
+        BlocProvider.of<DmInboxCubit>(context).send_image_in_user_chat(context,
+            widget.ChatInboxUid, UserLogin_ID.toString(), File(_image!.path));
+
         SubmitOneTime = true;
       } else {
         if (UserLogin_ID != null) {
@@ -137,6 +154,7 @@ class _DmScreenState extends State<DmScreen> {
   getUserID() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
+    print("UserLogin_ID-${UserLogin_ID}");
   }
 
   getToken() async {
@@ -149,7 +167,7 @@ class _DmScreenState extends State<DmScreen> {
     DMstompClient.activate();
     // Delet_DMstompClient.activate();
 
-    DMstompClient.subscribe(
+  /*   DMstompClient.subscribe(
       destination:
           // "ws://72c1-2405-201-200b-a0cf-210f-e5fe-f229-e899.ngrok.io",
           // "/topic/getDeletedMessage/${widget.Room_ID}",
@@ -177,20 +195,14 @@ class _DmScreenState extends State<DmScreen> {
         BlocProvider.of<DmInboxCubit>(context)
             .DMChatListApiMethod(widget.ChatInboxUid, 1, 20, context);
       },
-    );
-  }
-
-  getDocumentSize() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? a = prefs.getInt(PreferencesKey.mediaSize);
-    documentuploadsize = double.parse("${a}");
-    setState(() {});
+    ); */
   }
 
   @override
   void initState() {
+    getDocumentSize();
     pageNumberMethod();
-    // print('Room UID :-----> ${widget.Room_ID}');
+
     getUserID();
     getToken();
     getDocumentSize();
@@ -215,76 +227,92 @@ class _DmScreenState extends State<DmScreen> {
         child: Scaffold(
             // resizeToAvoidBottomInset: true,
             backgroundColor: theme.colorScheme.onPrimary,
-            appBar: AppBar(
-              backgroundColor: theme.colorScheme.onPrimary,
-              centerTitle: true,
-              elevation: 0,
-              leading: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(
-                  Icons.arrow_back,
-                  color: Colors.grey,
-                ),
-              ),
-              title: Text(
-                "DM",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontFamily: "outfit",
-                    fontSize: 20),
-              ),
-            ),
+          
             body: BlocConsumer<DmInboxCubit, getInboxState>(
                 listener: (context, state) async {
               if (state is getInboxLoadedState) {
                 getInboxMessagesModel = state.getInboxMessagesModel;
               }
+              if (state is AddPostImaegState) {
+                imageDataPost = state.imageDataPost;
+              }
+              if (state is SendImageInUserChatState) {
+                dynamic data = state.chatImageData;
+                print("data -$data");
+                _image = null;
+                mapDataAdd?.clear();
+                mapDataAdd = {
+                  "userUid": data['object']['uid'],
+                  "userChatMessageUid": data['object']['userChatInboxUid'],
+                  "userName": data['object']['userName'],
+                  "userProfilePic": data['object']['userProfilePic'],
+                  "message": data['object']['message'],
+                  "createdDate": data['object']['createdAt'],
+                  "messageType": data['object']['messageType'],
+                  "isDeleted": data['object']['isDeleted']
+                };
+
+                Content content = Content.fromJson(mapDataAdd!);
+                print("Content${content.createdDate}");
+                getInboxMessagesModel?.object?.content?.add(content);
+              }
             }, builder: (context, state) {
               return Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  padding: const EdgeInsets.only(left: 10, right: 10,top:45),
                   child: Container(
-                    decoration: BoxDecoration(
+                   /*  decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         border: Border.all(
-                            color: const Color.fromARGB(101, 158, 158, 158))),
+                            color: const Color.fromARGB(101, 158, 158, 158))), */
                     child: Stack(
                       children: [
                         Column(children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Row(
+                            child:  Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 5.5, right: 5),
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.black,
-                                      maxRadius: 4,
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      height: 30,
+                                      width: 30,
+                                      // color: Colors.red,
+                                      child: Center(
+                                        child: CustomImageView(
+                                          imagePath:
+                                              ImageConstant.RightArrowgrey,
+                                          height: 25,
+                                          width: 25,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  Container(
-                                    width: _width / 1.2,
-                                    child: Text(
-                                      "${widget.UserName}  ",
-                                      style: TextStyle(
-                                        fontFamily: 'outfit',
-                                        fontSize: 15,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w700,
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(left: 10, top: 2),
+                                    child: Container(
+                                      // color: Colors.red,
+                                      width: _width / 1.3,
+                                      child: Text(
+                                        "${widget.UserName}  ",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontSize: 15,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ]),
                           ),
-                          Divider(
-                            color: Color.fromARGB(53, 117, 117, 117),
-                          ),
-                          Padding(
+                     
+                          /* Padding(
                             padding: const EdgeInsets.only(left: 10, right: 10),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -311,7 +339,7 @@ class _DmScreenState extends State<DmScreen> {
                                 ),
                               ],
                             ),
-                          ),
+                          ), */
                           Divider(
                             height: 5,
                             color: Color.fromARGB(53, 117, 117, 117),
@@ -319,7 +347,7 @@ class _DmScreenState extends State<DmScreen> {
                           Expanded(
                             child: Container(
                               child: Padding(
-                                  padding: const EdgeInsets.only(top: 5),
+                                  padding: const EdgeInsets.only(top: 0),
                                   child: getInboxMessagesModel == null
                                       ? SizedBox()
                                       : SingleChildScrollView(
@@ -492,7 +520,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                                 ),
                                                                                 Flexible(
                                                                                   child: Padding(
-                                                                                    padding: const EdgeInsets.only(top: 0,left: 3),
+                                                                                    padding: const EdgeInsets.only(top: 0, left: 3),
                                                                                     child: Container(
                                                                                       decoration: BoxDecoration(color: ColorConstant.ChatBackColor, borderRadius: BorderRadius.circular(5)),
                                                                                       child: Column(
@@ -791,7 +819,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                             ))
                                                                         : Padding(
                                                                             padding:
-                                                                                EdgeInsets.only(right: 16),
+                                                                                EdgeInsets.only(right: 16,top: 10),
                                                                             child:
                                                                                 Align(
                                                                               alignment: Alignment.centerRight,
@@ -914,7 +942,8 @@ class _DmScreenState extends State<DmScreen> {
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            pickProfileImage();
+                                            // pickProfileImage();
+                                            prepareTestPdf(0);
                                           },
                                           child: Image.asset(
                                             "assets/images/paperclip-2.png",
@@ -1027,10 +1056,6 @@ class _DmScreenState extends State<DmScreen> {
                                                                 ['isDeleted']
                                                       };
 
-                                                      print(
-                                                          "Alljasonsdssdsdss-$mapDataAdd");
-                                                      print(
-                                                          "jsonString data-${jsonString['createdAt']}");
                                                       Content content =
                                                           Content.fromJson(
                                                               mapDataAdd!);
@@ -1268,12 +1293,45 @@ class _DmScreenState extends State<DmScreen> {
   Future<void> camerapicker() async {
     pickedImageFile = await picker.pickImage(source: ImageSource.camera);
     if (pickedImageFile != null) {
+      _image = File(pickedImageFile!.path);
+      setState(() {});
+      final int fileSizeInBytes = await _image!.length();
+      if (fileSizeInBytes <= finalFileSize * 1024 * 1024) {
+        BlocProvider.of<DmInboxCubit>(context)
+            .UplodeImageAPI(context, File(_image!.path));
+      } else {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text("Max Size ${finalFileSize}MB"),
+            content: Text(
+                "This file size ${value2} ${fileSizeInBytes} Selected Max size ${finalFileSize}MB"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                child: Container(
+                  // color: Colors.green,
+                  padding: const EdgeInsets.all(10),
+                  child: const Text("Okay"),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+
+    /*    if (pickedImageFile != null) {
       if (!_isGifOrSvg(pickedImageFile!.path)) {
         setState(() {
           _image = File(pickedImageFile!.path);
         });
+          
         final sizeInBytes = await _image!.length();
         final sizeInMB = sizeInBytes / (1024 * 1024);
+
         if (sizeInMB > documentuploadsize) {
           // print('documentuploadsize-$documentuploadsize');
           showDialog(
@@ -1321,7 +1379,166 @@ class _DmScreenState extends State<DmScreen> {
           ),
         );
       }
+    } */
+  }
+
+  prepareTestPdf(
+    int Index,
+  ) async {
+    PlatformFile file;
+
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'png', 'doc', 'jpg'],
+    );
+    {
+      if (result != null) {
+        file = result.files.first;
+
+        if ((file.path?.contains(".mp4") ?? false) ||
+            (file.path?.contains(".mov") ?? false) ||
+            (file.path?.contains(".mp3") ?? false) ||
+            (file.path?.contains(".m4a") ?? false)) {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text(
+                "Selected File Error",
+                textScaleFactor: 1.0,
+              ),
+              content: Text(
+                "Only PDF, PNG, JPG Supported.",
+                textScaleFactor: 1.0,
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: Container(
+                    // color: Colors.green,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("Okay"),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          getFileSize(file.path!, 1, result.files.first, Index);
+        }
+      } else {}
     }
+    return "";
+    // "${fileparth}";
+  }
+
+  getFileSize(
+      String filepath, int decimals, PlatformFile file1, int Index) async {
+    var file = File(filepath);
+    int bytes = await file.length();
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    var i = (log(bytes) / log(1024)).floor();
+    var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
+    print('getFileSizevariable-${file1.path}');
+    value2 = double.parse(STR);
+
+    print("value2-->$value2");
+    switch (i) {
+      case 0:
+        print("Done file size B");
+        switch (Index) {
+          case 1:
+            if (file1.name.isNotEmpty || file1.name.toString() == null) {
+              setState(() {
+                file12 = file1;
+                _image = File(file1.path.toString());
+              });
+            }
+
+            break;
+          default:
+        }
+        print('xfjsdjfjfilenamecheckKB-${file1.path}');
+
+        break;
+      case 1:
+        print("Done file size KB");
+        switch (Index) {
+          case 0:
+            print("file1.name-->${file1.name}");
+            if (file1.name.isNotEmpty || file1.name.toString() == null) {
+              setState(() {
+                file12 = file1;
+                _image = File(file1.path.toString());
+              });
+            }
+
+            break;
+          default:
+        }
+        print('filenamecheckKB-${file1.path}');
+        print("file111.name-->${file1.name}");
+        BlocProvider.of<DmInboxCubit>(context)
+            .UplodeImageAPI(context, File(_image!.path));
+
+        setState(() {});
+
+        break;
+      case 2:
+        print("value2check-->$value2");
+        print("finalFileSize-->${finalFileSize}");
+
+        if (value2 > finalFileSize) {
+          print(
+              "this file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB");
+
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text("Max Size ${finalFileSize}MB"),
+              content: Text(
+                  "This file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB"),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: Container(
+                    // color: Colors.green,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("Okay"),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          print("Done file Size 12MB");
+          print("file1.namedata-->${file1.name}");
+          switch (Index) {
+            case 1:
+              break;
+            default:
+          }
+          print('filecheckPath1111-${file1.name}');
+          print("file222.name-->${file1.name}");
+          setState(() {
+            file12 = file1;
+            _image = File(file1.path.toString());
+          });
+          BlocProvider.of<DmInboxCubit>(context)
+              .UplodeImageAPI(context, File(_image!.path));
+          /*   BlocProvider.of<PersonalChatListCubit>(context)
+              .UplodeImageAPI(context, File(_image!.path)); */
+        }
+
+        break;
+      default:
+    }
+
+    return STR;
   }
 }
 

@@ -1,4 +1,6 @@
+import 'package:pds/API/Model/HasTagModel/hasTagModel.dart';
 import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
+import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 
 import '../../Model/BlogComment_Model/BlogCommentDelete_model.dart';
 import '../../Model/BlogComment_Model/BlogComment_model.dart';
@@ -43,4 +45,14 @@ class PostLikeBlogLoadedState extends BlogCommentState {
 class UserTagBlogLoadedState extends BlogCommentState {
   final UserTagModel userTagModel;
   UserTagBlogLoadedState(this.userTagModel);
+}
+
+class GetAllHashtagState1 extends BlogCommentState {
+  final HasDataModel getAllHashtag;
+  GetAllHashtagState1(this.getAllHashtag);
+}
+
+class SearchHistoryDataAddxtends1 extends BlogCommentState {
+  final SearchUserForInbox searchUserForInbox;
+  SearchHistoryDataAddxtends1(this.searchUserForInbox);
 }

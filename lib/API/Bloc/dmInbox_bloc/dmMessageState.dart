@@ -1,4 +1,5 @@
 
+import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
 
 abstract class getInboxState {}
@@ -17,4 +18,12 @@ class getInboxErrorState extends getInboxState {
   getInboxErrorState(this.error);
 }
 
- 
+ class AddPostImaegState extends getInboxState {
+  final ChooseDocument1 imageDataPost;
+  AddPostImaegState(this.imageDataPost);
+}
+ class SendImageInUserChatState extends getInboxState {
+  final dynamic chatImageData;
+  SendImageInUserChatState(this.chatImageData);
+}
+
