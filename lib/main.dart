@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:pds/API/Bloc/BlogComment_BLoc/BlogComment_cubit.dart';
 import 'package:pds/API/Bloc/RoomExists_bloc/RoomExists_cubit.dart';
 import 'package:pds/API/Bloc/SelectChat_bloc/SelectChat_cubit.dart';
@@ -215,15 +216,17 @@ class MyApp extends StatelessWidget {
           create: (context) => BlogcommentCubit(),
         ),
       ],
-      child: MaterialApp(
-          theme: ThemeData(
-            visualDensity: VisualDensity.standard,
-          ),
-          title: 'pds',
-          debugShowCheckedModeBanner: false,
-          home: SplashScreen()
-          //BottombarPage(buttomIndex: 0),
-          ),
+      child: Portal(
+        child: MaterialApp(
+            theme: ThemeData(
+              visualDensity: VisualDensity.standard,
+            ),
+            title: 'pds',
+            debugShowCheckedModeBanner: false,
+            home: SplashScreen()
+            //BottombarPage(buttomIndex: 0),
+            ),
+      ),
     );
   }
 }

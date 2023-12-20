@@ -58,7 +58,6 @@ class _NewBottomBarState extends State<NewBottomBar> {
   ];
 
   late StreamSubscription _connectionChangeStream;
-  ScrollController scrollController = ScrollController();
 
   bool isOffline = false;
   @override
@@ -263,7 +262,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                           ),
                         ),
                       ),
-                      GestureDetector( 
+                      GestureDetector(
                         onTap: () {
                           setState(() {
                             if (UserLogin_ID != null) {
@@ -319,7 +318,6 @@ class _NewBottomBarState extends State<NewBottomBar> {
                           ),
                         ),
                       ),
-
                       GestureDetector(
                         onTap: () {
                           setState(() {
