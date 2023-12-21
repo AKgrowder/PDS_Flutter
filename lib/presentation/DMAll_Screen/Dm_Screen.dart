@@ -28,6 +28,7 @@ import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import '../../API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
+import 'package:pds/presentation/%20new/profileNew.dart';
 
 class DmScreen extends StatefulWidget {
   String UserName;
@@ -123,10 +124,9 @@ class _DmScreenState extends State<DmScreen> {
         Add_Comment.text = '';
         // });
       } else if (_image != null) {
+        print("check this condiosn");
         BlocProvider.of<DmInboxCubit>(context).send_image_in_user_chat(context,
             widget.ChatInboxUid, UserLogin_ID.toString(), File(_image!.path));
-
-        SubmitOneTime = true;
       } else {
         if (UserLogin_ID != null) {
           Navigator.of(context).push(MaterialPageRoute(
@@ -167,7 +167,7 @@ class _DmScreenState extends State<DmScreen> {
     DMstompClient.activate();
     // Delet_DMstompClient.activate();
 
-  /*   DMstompClient.subscribe(
+    /*   DMstompClient.subscribe(
       destination:
           // "ws://72c1-2405-201-200b-a0cf-210f-e5fe-f229-e899.ngrok.io",
           // "/topic/getDeletedMessage/${widget.Room_ID}",
@@ -227,7 +227,6 @@ class _DmScreenState extends State<DmScreen> {
         child: Scaffold(
             // resizeToAvoidBottomInset: true,
             backgroundColor: theme.colorScheme.onPrimary,
-          
             body: BlocConsumer<DmInboxCubit, getInboxState>(
                 listener: (context, state) async {
               if (state is getInboxLoadedState) {
@@ -253,14 +252,15 @@ class _DmScreenState extends State<DmScreen> {
                 };
 
                 Content content = Content.fromJson(mapDataAdd!);
-                print("Content${content.createdDate}");
+
                 getInboxMessagesModel?.object?.content?.add(content);
+                SubmitOneTime = false;
               }
             }, builder: (context, state) {
               return Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10,top:45),
+                  padding: const EdgeInsets.only(left: 10, right: 10, top: 45),
                   child: Container(
-                   /*  decoration: BoxDecoration(
+                    /*  decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         border: Border.all(
                             color: const Color.fromARGB(101, 158, 158, 158))), */
@@ -269,7 +269,7 @@ class _DmScreenState extends State<DmScreen> {
                         Column(children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child:  Row(
+                            child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -296,9 +296,9 @@ class _DmScreenState extends State<DmScreen> {
                                         const EdgeInsets.only(left: 10, top: 2),
                                     child: Container(
                                       // color: Colors.red,
-                                      width: _width / 1.3,
+                                      width: _width / 1.6,
                                       child: Text(
-                                        "${widget.UserName}  ",
+                                        "${widget.UserName} ",
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                           fontFamily: 'outfit',
@@ -309,9 +309,47 @@ class _DmScreenState extends State<DmScreen> {
                                       ),
                                     ),
                                   ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 5),
+                                    child: GestureDetector(
+                                      onTap: () {},
+                                      child: Container(
+                                        height: 30,
+                                        width: 30,
+                                        // color: Colors.red,
+                                        child: Center(
+                                          child: CustomImageView(
+                                            imagePath:
+                                                ImageConstant.inbox_picture,
+                                            height: 25,
+                                            width: 25,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 7),
+                                    child: GestureDetector(
+                                      onTap: () {},
+                                      child: Container(
+                                        height: 30,
+                                        width: 30,
+                                        // color: Colors.red,
+                                        child: Center(
+                                          child: CustomImageView(
+                                            imagePath:
+                                                ImageConstant.inbox_search,
+                                            height: 25,
+                                            width: 25,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ]),
                           ),
-                     
+
                           /* Padding(
                             padding: const EdgeInsets.only(left: 10, right: 10),
                             child: Row(
@@ -505,18 +543,27 @@ class _DmScreenState extends State<DmScreen> {
                                                                                 // Spacer(),
                                                                                 Padding(
                                                                                   padding: const EdgeInsets.only(left: 3, right: 0),
-                                                                                  child: getInboxMessagesModel?.object?.content?[index].userProfilePic != null && getInboxMessagesModel?.object?.content?[index].userProfilePic != ""
-                                                                                      ? CustomImageView(
-                                                                                          url: "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
-                                                                                          height: 20,
-                                                                                          radius: BorderRadius.circular(20),
-                                                                                          width: 20,
-                                                                                          fit: BoxFit.fill,
-                                                                                        )
-                                                                                      : CustomImageView(
-                                                                                          imagePath: ImageConstant.tomcruse,
-                                                                                          height: 20,
-                                                                                        ),
+                                                                                  child: GestureDetector(
+                                                                                    onTap: () {
+                                                                                      Navigator.push(context, MaterialPageRoute(
+                                                                                        builder: (context) {
+                                                                                          return ProfileScreen(User_ID: getInboxMessagesModel?.object?.content?[index].userUid ?? "", isFollowing: "");
+                                                                                        },
+                                                                                      ));
+                                                                                    },
+                                                                                    child: getInboxMessagesModel?.object?.content?[index].userProfilePic != null && getInboxMessagesModel?.object?.content?[index].userProfilePic != ""
+                                                                                        ? CustomImageView(
+                                                                                            url: "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
+                                                                                            height: 20,
+                                                                                            radius: BorderRadius.circular(20),
+                                                                                            width: 20,
+                                                                                            fit: BoxFit.fill,
+                                                                                          )
+                                                                                        : CustomImageView(
+                                                                                            imagePath: ImageConstant.tomcruse,
+                                                                                            height: 20,
+                                                                                          ),
+                                                                                  ),
                                                                                 ),
                                                                                 Flexible(
                                                                                   child: Padding(
@@ -555,14 +602,44 @@ class _DmScreenState extends State<DmScreen> {
                                                                                 ),
                                                                               ],
                                                                             )
-                                                                          : Padding(
-                                                                              padding: EdgeInsets.only(right: 16),
-                                                                              child: Align(
-                                                                                alignment: Alignment.centerLeft,
-                                                                                child: Container(
-                                                                                  child: AnimatedNetworkImage(imageUrl: "${getInboxMessagesModel?.object?.content?[index].message}"),
+                                                                          : Row(
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              mainAxisAlignment: MainAxisAlignment.end,
+                                                                              children: [
+                                                                                Padding(
+                                                                                  padding: EdgeInsets.only(right: 0, top: 10),
+                                                                                  child: Container(
+                                                                                    child: AnimatedNetworkImage(imageUrl: "${getInboxMessagesModel?.object?.content?[index].message}"),
+                                                                                  ),
                                                                                 ),
-                                                                              ),
+                                                                                GestureDetector(
+                                                                                  onTap: () {
+                                                                                    Navigator.push(context, MaterialPageRoute(
+                                                                                      builder: (context) {
+                                                                                        return ProfileScreen(User_ID: getInboxMessagesModel?.object?.content?[index].userUid ?? "", isFollowing: "");
+                                                                                      },
+                                                                                    ));
+                                                                                  },
+                                                                                  child: getInboxMessagesModel?.object?.content?[index].userProfilePic != null && getInboxMessagesModel?.object?.content?[index].userProfilePic != ""
+                                                                                      ? Padding(
+                                                                                          padding: EdgeInsets.only(top: 10, left: 3),
+                                                                                          child: CustomImageView(
+                                                                                            url: "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
+                                                                                            height: 20,
+                                                                                            radius: BorderRadius.circular(20),
+                                                                                            width: 20,
+                                                                                            fit: BoxFit.fill,
+                                                                                          ),
+                                                                                        )
+                                                                                      : Padding(
+                                                                                          padding: EdgeInsets.only(top: 10, left: 3),
+                                                                                          child: CustomImageView(
+                                                                                            imagePath: ImageConstant.tomcruse,
+                                                                                            height: 20,
+                                                                                          ),
+                                                                                        ),
+                                                                                ),
+                                                                              ],
                                                                             ),
                                                                       /* Divider(
                                                                         color: const Color.fromARGB(
@@ -802,31 +879,70 @@ class _DmScreenState extends State<DmScreen> {
                                                                                 ),
                                                                                 Padding(
                                                                                   padding: const EdgeInsets.only(left: 3, right: 0),
-                                                                                  child: getInboxMessagesModel?.object?.content?[index].userProfilePic != null && getInboxMessagesModel?.object?.content?[index].userProfilePic != ""
-                                                                                      ? CustomImageView(
+                                                                                  child: GestureDetector(
+                                                                                    onTap: () {
+                                                                                      Navigator.push(context, MaterialPageRoute(
+                                                                                        builder: (context) {
+                                                                                          return ProfileScreen(User_ID: getInboxMessagesModel?.object?.content?[index].userUid ?? "", isFollowing: "");
+                                                                                        },
+                                                                                      ));
+                                                                                    },
+                                                                                    child: getInboxMessagesModel?.object?.content?[index].userProfilePic != null && getInboxMessagesModel?.object?.content?[index].userProfilePic != ""
+                                                                                        ? CustomImageView(
+                                                                                            url: "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
+                                                                                            height: 20,
+                                                                                            radius: BorderRadius.circular(20),
+                                                                                            width: 20,
+                                                                                            fit: BoxFit.fill,
+                                                                                          )
+                                                                                        : CustomImageView(
+                                                                                            imagePath: ImageConstant.tomcruse,
+                                                                                            height: 20,
+                                                                                          ),
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ))
+                                                                        : Row(
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.end,
+                                                                            children: [
+                                                                              Padding(
+                                                                                padding: EdgeInsets.only(right: 0, top: 10),
+                                                                                child: Container(
+                                                                                  child: AnimatedNetworkImage(imageUrl: "${getInboxMessagesModel?.object?.content?[index].message}"),
+                                                                                ),
+                                                                              ),
+                                                                              GestureDetector(
+                                                                                onTap: () {
+                                                                                  Navigator.push(context, MaterialPageRoute(
+                                                                                    builder: (context) {
+                                                                                      return ProfileScreen(User_ID: getInboxMessagesModel?.object?.content?[index].userUid ?? "", isFollowing: "");
+                                                                                    },
+                                                                                  ));
+                                                                                },
+                                                                                child: getInboxMessagesModel?.object?.content?[index].userProfilePic != null && getInboxMessagesModel?.object?.content?[index].userProfilePic != ""
+                                                                                    ? Padding(
+                                                                                        padding: EdgeInsets.only(top: 10, left: 3),
+                                                                                        child: CustomImageView(
                                                                                           url: "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
                                                                                           height: 20,
                                                                                           radius: BorderRadius.circular(20),
                                                                                           width: 20,
                                                                                           fit: BoxFit.fill,
-                                                                                        )
-                                                                                      : CustomImageView(
+                                                                                        ),
+                                                                                      )
+                                                                                    : Padding(
+                                                                                        padding: EdgeInsets.only(top: 10, left: 3),
+                                                                                        child: CustomImageView(
                                                                                           imagePath: ImageConstant.tomcruse,
                                                                                           height: 20,
                                                                                         ),
-                                                                                ),
-                                                                              ],
-                                                                            ))
-                                                                        : Padding(
-                                                                            padding:
-                                                                                EdgeInsets.only(right: 16,top: 10),
-                                                                            child:
-                                                                                Align(
-                                                                              alignment: Alignment.centerRight,
-                                                                              child: Container(
-                                                                                child: AnimatedNetworkImage(imageUrl: "${getInboxMessagesModel?.object?.content?[index].message}"),
+                                                                                      ),
                                                                               ),
-                                                                            ),
+                                                                            ],
                                                                           ),
                                                                     /*  Divider(
                                                                       color: const Color
@@ -849,8 +965,8 @@ class _DmScreenState extends State<DmScreen> {
                           _image != null
                               ? Container(
                                   height: 90,
-                                  color:
-                                      const Color.fromARGB(255, 255, 241, 240),
+                                  /* color:
+                                      const Color.fromARGB(255, 255, 241, 240), */
                                   width: _width,
                                   child: Row(
                                     children: [
