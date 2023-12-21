@@ -232,13 +232,11 @@ class ImageConstant {
   static String ChatimageIcon = "assets/images/ChatimageIcon.png";
   static String shareBlack = "assets/images/share.png";
   static String shareWhite = "assets/images/share_white.png";
-  static String profileLock ="assets/images/lock profile.png";
-  static String check_box ="assets/images/check-box.png";
-  static String check ="assets/images/check.png";
-  static String chat ="assets/images/chat.png";
-  static String RightArrowgrey ="assets/images/RightArrowgrey.png";
-
-
-
+  static String profileLock = "assets/images/lock profile.png";
+  static String check_box = "assets/images/check-box.png";
+  static String check = "assets/images/check.png";
+  static String chat = "assets/images/chat.png";
+  static String RightArrowgrey = "assets/images/RightArrowgrey.png";
+static String inbox_search = "assets/images/inboxSearch_icon.png";
+  static String inbox_picture = "assets/images/inboxPicture_icon.png";
 }
- 
