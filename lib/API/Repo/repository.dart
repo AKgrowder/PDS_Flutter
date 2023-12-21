@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:pds/API/Model/GetAllInboxImagesModel/GetAllInboxImagesModel.dart';
 import 'package:pds/API/Model/selectMultipleUsers_ChatModel/selectMultipleUsers_ChatModel.dart';
 import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
 import 'package:pds/API/Model/GetUsersChatByUsernameModel/GetUsersChatByUsernameModel.dart';
@@ -1310,12 +1311,12 @@ class Repository {
     }
   }
 
-  chatImage1(
-    String inboxChatUserUid,
-    String userUid,
-    File imageFile, BuildContext context) async {
+  chatImage1(String inboxChatUserUid, String userUid, File imageFile,
+      BuildContext context) async {
     final response = await apiServices.multipartFileWithSoket(
-        "${Config.chatImageDM}?inboxChatUserUid=$inboxChatUserUid&userUid=$userUid", imageFile, context);
+        "${Config.chatImageDM}?inboxChatUserUid=$inboxChatUserUid&userUid=$userUid",
+        imageFile,
+        context);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
@@ -2636,6 +2637,29 @@ class Repository {
     switch (responce.statusCode) {
       case 200:
         return UserTagModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  get_all_inbox_images(BuildContext context, String userChatInboxUid,String pageNumber) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.get_all_inbox_images}?userChatInboxUid=${userChatInboxUid}&pageNumber=${pageNumber}&numberOfRecords=20',
+        context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return GetAllInboxImages.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
