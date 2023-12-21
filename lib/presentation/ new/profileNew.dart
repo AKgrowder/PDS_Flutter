@@ -261,6 +261,8 @@ class _ProfileScreenState extends State<ProfileScreen>
           return DmScreen(
             UserName: "${NewProfileData?.object?.userName}",
             ChatInboxUid: state.DMChatList.object ?? "",
+            UserImage: "${NewProfileData?.object?.userProfilePic}",
+            
           );
         }));
       }
@@ -3297,18 +3299,28 @@ class _ProfileScreenState extends State<ProfileScreen>
                           fontSize: 12,
                         ),
                       ),
-                      addWorkExperienceModel?.object?[index].startDate !=
+                     /*  addWorkExperienceModel?.object?[index].startDate !=
                                   null &&
                               addWorkExperienceModel?.object?[index].endDate !=
                                   null
-                          ? Text(
-                              '${formattedDateStart} to ${formattedDateEnd}',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 12,
-                              ),
-                            )
-                          : SizedBox(),
+                          ? */ DateFormat('dd-MM-yyyy')
+                                              .format(DateTime.now()) ==
+                                          formattedDateEnd
+                                      ? Text(
+                                          '${formattedDateStart} to Present',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                          ),
+                                        )
+                                      : Text(
+                                          '${formattedDateStart} to ${formattedDateEnd}',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                          ),
+                                        )
+                          /* : SizedBox(), */
                     ],
                   ),
                 );
