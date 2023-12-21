@@ -29,11 +29,17 @@ import 'package:flutter/foundation.dart' as foundation;
 import '../../API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
-
+import 'package:pds/presentation/gallery_All_Image.dart/gallery_All_image.dart';
 class DmScreen extends StatefulWidget {
   String UserName;
   String ChatInboxUid;
-  DmScreen({required this.ChatInboxUid, required this.UserName});
+  String UserImage;
+  // String UserUID;
+  DmScreen(
+      {required this.ChatInboxUid,
+      required this.UserName,
+      // required this.UserUID,
+      required this.UserImage});
 
   @override
   State<DmScreen> createState() => _DmScreenState();
@@ -200,6 +206,7 @@ class _DmScreenState extends State<DmScreen> {
 
   @override
   void initState() {
+     BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
     getDocumentSize();
     pageNumberMethod();
 
@@ -291,28 +298,63 @@ class _DmScreenState extends State<DmScreen> {
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(left: 10, top: 2),
+                                  widget.UserImage != null &&
+                                          widget.UserImage != ""
+                                      ? Container(
+                                        child: CustomImageView(
+                                            url: "${widget.UserImage}",
+                                            height: 30,
+                                            width: 30,
+                                            fit: BoxFit.cover,
+                                            radius: BorderRadius.circular(30),
+                                          ),
+                                      )
+                                      : CustomImageView(
+                                          imagePath: ImageConstant.tomcruse,height: 30,width: 30,),
+                                  // Padding(
+                                  //   padding:
+                                  //       const EdgeInsets.only(left: 10, top: 2),
+                                  //   child: Container(
+                                  //     child: Text(
+                                  //       "${widget.UserName} ",
+                                  //       overflow: TextOverflow.ellipsis,
+                                  //       style: TextStyle(
+                                  //         fontFamily: 'outfit',
+                                  //         fontSize: 15,
+                                  //         color: Colors.black,
+                                  //         fontWeight: FontWeight.w700,
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  Center(
                                     child: Container(
-                                      // color: Colors.red,
-                                      width: _width / 1.6,
-                                      child: Text(
-                                        "${widget.UserName} ",
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontFamily: 'outfit',
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
+                                      height: 29,
+                                      width: 39,
+                                      color: Colors.amber,
                                     ),
                                   ),
+                                  Spacer(),
                                   Padding(
                                     padding: const EdgeInsets.only(right: 5),
                                     child: GestureDetector(
-                                      onTap: () {},
+                                     onTap: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider<DmInboxCubit>(
+                                                  create: (context) =>
+                                                      DmInboxCubit(),
+                                                ),
+                                              ],
+                                              child: GalleryImage(
+                                                userChatInboxUid: widget.ChatInboxUid,
+                                              ));
+                                        }));
+                                        /* Navigator.push(context, MaterialPageRoute(builder: (context)=> GalleryImage())); */
+                                      },
                                       child: Container(
                                         height: 30,
                                         width: 30,
