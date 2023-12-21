@@ -288,6 +288,8 @@ class _InboxScreenState extends State<InboxScreen> {
                               "${PersonalChatListModelData?.object?[index].userName}",
                           ChatInboxUid:
                               "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+                              UserImage: "${PersonalChatListModelData?.object?[index].userProfilePic}",
+                              // UserUID: "${PersonalChatListModelData?.object?[index].}",
                         );
                       })).then((value) =>
                           BlocProvider.of<PersonalChatListCubit>(context)

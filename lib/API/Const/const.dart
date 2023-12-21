@@ -127,5 +127,6 @@ class Config {
   static const String selectMultipleUsers_Chat =
       "user/selectMultipleUsers_Chat";
   static const String chatImageDM = "user/send_image_in_user_chat"; // ankur 
+  static const String get_all_inbox_images = "user/get_all_inbox_images"; 
 
 }

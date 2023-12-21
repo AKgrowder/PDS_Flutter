@@ -539,6 +539,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                       UserName:
                           "${searchUserForInbox1?.object?.content?[index].userName}",
                       ChatInboxUid: UserIndexUUID ?? "",
+                        UserImage: "${searchUserForInbox1?.object?.content?[index].userProfilePic}",
                     );
                   }));
                   // UserIndexUUID = "";
