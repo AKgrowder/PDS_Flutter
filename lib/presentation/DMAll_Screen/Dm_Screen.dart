@@ -311,29 +311,23 @@ class _DmScreenState extends State<DmScreen> {
                                       )
                                       : CustomImageView(
                                           imagePath: ImageConstant.tomcruse,height: 30,width: 30,),
-                                  // Padding(
-                                  //   padding:
-                                  //       const EdgeInsets.only(left: 10, top: 2),
-                                  //   child: Container(
-                                  //     child: Text(
-                                  //       "${widget.UserName} ",
-                                  //       overflow: TextOverflow.ellipsis,
-                                  //       style: TextStyle(
-                                  //         fontFamily: 'outfit',
-                                  //         fontSize: 15,
-                                  //         color: Colors.black,
-                                  //         fontWeight: FontWeight.w700,
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  Center(
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(left: 10, top: 2),
                                     child: Container(
-                                      height: 29,
-                                      width: 39,
-                                      color: Colors.amber,
+                                      child: Text(
+                                        "${widget.UserName} ",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontFamily: 'outfit',
+                                          fontSize: 15,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
                                     ),
                                   ),
+                              
                                   Spacer(),
                                   Padding(
                                     padding: const EdgeInsets.only(right: 5),
