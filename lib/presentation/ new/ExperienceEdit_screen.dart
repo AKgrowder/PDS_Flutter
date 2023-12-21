@@ -135,6 +135,7 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                               top: 20, left: 20, right: 20),
                           child: Container(
                             decoration: BoxDecoration(
+                                // color: Colors.amber,
                                 border: Border.all(color: Colors.grey),
                                 borderRadius: BorderRadius.circular(10)),
                             child: ListTile(
@@ -191,7 +192,13 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                                         ?.object?[index]
                                                         .companyName,
                                                 edit: true,
-                                                endDate: formattedDateEnd,
+                                                endDate:
+                                                    DateFormat('dd-MM-yyyy')
+                                                                .format(DateTime
+                                                                    .now()) ==
+                                                            formattedDateEnd
+                                                        ? "Present"
+                                                        : formattedDateEnd,
                                                 expertise:
                                                     addWorkExperienceModel
                                                         ?.object?[index]
@@ -406,20 +413,32 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                       fontSize: 13,
                                     ),
                                   ),
-                                  addWorkExperienceModel
+                                  /*   addWorkExperienceModel
                                                   ?.object?[index].startDate !=
                                               null &&
                                           addWorkExperienceModel
                                                   ?.object?[index].endDate !=
                                               null
+                                      ? */
+
+                                  DateFormat('dd-MM-yyyy')
+                                              .format(DateTime.now()) ==
+                                          formattedDateEnd
                                       ? Text(
+                                          '${formattedDateStart} to Present',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                          ),
+                                        )
+                                      : Text(
                                           '${formattedDateStart} to ${formattedDateEnd}',
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 13,
                                           ),
                                         )
-                                      : SizedBox(),
+                                  /* : Container(height: 50,width: 20,color: Colors.red,), */
                                 ],
                               ),
                             ),
