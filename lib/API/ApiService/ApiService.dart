@@ -358,14 +358,16 @@ class ApiServices {
     }
   }
 
-  multipartFileWithSoket(String APIurl, File imageFile, BuildContext context,) async {
+  multipartFileWithSoket(
+    String APIurl,
+    File imageFile,
+    BuildContext context,
+  ) async {
     await UpdateBaseURL();
-    final headers1 ={
-      'Authorization' :'Bearer ${Token}'
-    };
+    final headers1 = {'Authorization': 'Bearer ${Token}'};
     final response =
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
-       response.headers.addAll(headers1); 
+    response.headers.addAll(headers1);
     print("API =>******${baseURL + APIurl}");
     if (imageFile != null) {
       response.files
