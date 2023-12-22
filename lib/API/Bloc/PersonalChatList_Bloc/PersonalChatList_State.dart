@@ -1,4 +1,5 @@
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
+import 'package:pds/API/Model/DeleteUserChatModel/DeleteUserChat_Model.dart';
 import 'package:pds/API/Model/GetUsersChatByUsernameModel/GetUsersChatByUsernameModel.dart';
 import 'package:pds/API/Model/OnTimeDMModel/OnTimeDMModel.dart';
 import 'package:pds/API/Model/PersonalChatListModel/PersonalChatList_Model.dart';
@@ -45,4 +46,10 @@ class AddPostImaegState extends PersonalChatListState {
   final ChooseDocument1 imageDataPost;
   AddPostImaegState(this.imageDataPost);
 }
+
+class UserChatDeleteLoaded extends PersonalChatListState {
+  final DeleteUserChatModel DeleteUserChatData;
+  UserChatDeleteLoaded(this.DeleteUserChatData);
+}
+
 

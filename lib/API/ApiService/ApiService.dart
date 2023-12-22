@@ -31,7 +31,7 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.packagingdepot.store/";
           // "https://api.packagingdepot.store/";
-          "http://192.168.29.100:8081/";
+          "http://192.168.29.17:8081/";
     }
 
     print(baseURL);
@@ -68,7 +68,7 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.packagingdepot.store/";
           // "https://api.packagingdepot.store/";
-          "http://192.168.29.100:8081/";
+          "http://192.168.29.17:8081/";
     }
     print("API => ******** ${baseURL + APIurl}");
 
@@ -358,14 +358,16 @@ class ApiServices {
     }
   }
 
-  multipartFileWithSoket(String APIurl, File imageFile, BuildContext context,) async {
+  multipartFileWithSoket(
+    String APIurl,
+    File imageFile,
+    BuildContext context,
+  ) async {
     await UpdateBaseURL();
-    final headers1 ={
-      'Authorization' :'Bearer ${Token}'
-    };
+    final headers1 = {'Authorization': 'Bearer ${Token}'};
     final response =
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
-       response.headers.addAll(headers1); 
+    response.headers.addAll(headers1);
     print("API =>******${baseURL + APIurl}");
     if (imageFile != null) {
       response.files

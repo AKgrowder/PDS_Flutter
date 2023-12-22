@@ -261,6 +261,8 @@ class _ProfileScreenState extends State<ProfileScreen>
           return DmScreen(
             UserName: "${NewProfileData?.object?.userName}",
             ChatInboxUid: state.DMChatList.object ?? "",
+            UserImage: "${NewProfileData?.object?.userProfilePic}",
+            
           );
         }));
       }
@@ -1364,11 +1366,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                               ? NewProfileData?.object?.module == "EMPLOYEE"
                                   ? _height / 3
                                   : NewProfileData?.object?.module == "EXPERT"
-                                      ? _height / 0.8 // 630 old height
+                                      ? _height / 0.65 // 630 old height
                                       : NewProfileData?.object?.module ==
                                               "COMPANY"
                                           ? _height /
-                                              0.8 // 650 old height + 400
+                                              0.7 // 650 old height + 400
                                           : 0
                               : arrNotiyTypeList[1].isSelected == true
                                   ? FinalPostCount * 190
@@ -3297,18 +3299,28 @@ class _ProfileScreenState extends State<ProfileScreen>
                           fontSize: 12,
                         ),
                       ),
-                      addWorkExperienceModel?.object?[index].startDate !=
+                     /*  addWorkExperienceModel?.object?[index].startDate !=
                                   null &&
                               addWorkExperienceModel?.object?[index].endDate !=
                                   null
-                          ? Text(
-                              '${formattedDateStart} to ${formattedDateEnd}',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 12,
-                              ),
-                            )
-                          : SizedBox(),
+                          ? */ DateFormat('dd-MM-yyyy')
+                                              .format(DateTime.now()) ==
+                                          formattedDateEnd
+                                      ? Text(
+                                          '${formattedDateStart} to Present',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                          ),
+                                        )
+                                      : Text(
+                                          '${formattedDateStart} to ${formattedDateEnd}',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                          ),
+                                        )
+                          /* : SizedBox(), */
                     ],
                   ),
                 );

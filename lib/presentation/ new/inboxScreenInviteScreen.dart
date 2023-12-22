@@ -34,6 +34,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
   ScrollController scrollController = ScrollController();
   SearchUserForInbox? searchUserForInbox1;
   List MultiUser = [];
+  List<Map<String, dynamic>> MultiUsermap = [];
   bool isChecked = false;
   bool isEmojiVisible = false;
   bool isKeyboardVisible = false;
@@ -51,15 +52,19 @@ class _InviteMeesageState extends State<InviteMeesage> {
   double value2 = 0.0;
   PlatformFile? file12;
   ChooseDocument1? imageDataPost;
+  final ScrollController _firstController = ScrollController();
+  String? userID;
+  getDocumentSize() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    getDocumentSize() async {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      documentuploadsize = await double.parse(
-          prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
+    documentuploadsize = await double.parse(
+        prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
 
-      finalFileSize = documentuploadsize;
-      setState(() {});
-    }
+    finalFileSize = documentuploadsize;
+    userID = prefs.getString(PreferencesKey.loginUserID);
+    print("userid-chelc-${userID}");
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -148,7 +153,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
             ),
           ),
           title: Text(
-            'Invite Message',
+            'New Message',
             style: TextStyle(color: Colors.black),
           ),
         ),
@@ -157,6 +162,10 @@ class _InviteMeesageState extends State<InviteMeesage> {
             if (state is SearchHistoryDataAddxtends) {
               isDataGet = true;
               searchUserForInbox1 = state.searchUserForInbox;
+              searchUserForInbox1?.object?.content?.forEach((element) {
+                if (userID == element.userUid)
+                  searchUserForInbox1?.object?.content?.remove(element);
+              });
             }
             if (state is DMChatListLoadedState) {
               print(state.DMChatList.object);
@@ -164,6 +173,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
             }
             if (state is SelectMultipleUsers_ChatLoadestate) {
               MultiUser = [];
+              MultiUsermap.clear();
               _image = null;
               isDataGet = false;
               Add_Comment.clear();
@@ -182,6 +192,140 @@ class _InviteMeesageState extends State<InviteMeesage> {
           builder: (context, state) {
             return Column(
               children: [
+                if (MultiUsermap.isNotEmpty)
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    constraints: BoxConstraints(
+                      maxHeight: 100,
+                      minHeight: 50,
+                    ),
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                      color: Colors.grey.withOpacity(0.5),
+                    )),
+                    child: RawScrollbar(
+                      thumbVisibility: true,
+                      thumbColor: Colors.grey,
+                      minOverscrollLength: 2,
+                      minThumbLength: 30,
+                      thickness: 10,
+                      radius: const Radius.circular(5),
+                      controller: _firstController,
+                      child: ScrollConfiguration(
+                        behavior: ScrollConfiguration.of(context)
+                            .copyWith(scrollbars: false),
+                        child: SingleChildScrollView(
+                          controller: _firstController,
+                          // physics: widget.pickedItemsScrollPhysics,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Wrap(
+                              spacing: 5,
+                              runSpacing: 5,
+                              children: MultiUsermap.map((Element) => Container(
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xffED1C25),
+                                      borderRadius: BorderRadius.circular(20),
+                                      border:
+                                          Border.all(color: Colors.grey[400]!),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: FittedBox(
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              Element['username'],
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    MultiUser.forEach(
+                                                        (element) {
+                                                      if (element ==
+                                                          Element['userUid']) {
+                                                        MultiUser.remove(
+                                                            element);
+                                                      }
+                                                    });
+                                                    MultiUsermap.remove(
+                                                        Element);
+                                                    /* if(Element['userUid']) */
+                                                  });
+                                                },
+                                                child: Container(
+                                                    height: 25,
+                                                    width: 25,
+                                                    color: Colors.transparent,
+                                                    child: Icon(
+                                                      Icons.close,
+                                                      color: Colors.white,
+                                                    )))
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )).toList(),
+                              /* children: [
+                                /* ...MultiUsermap.map(
+                                  (e) => TapRegion(
+                                    onTapInside: (event) {
+                                      /*    if (widget.isOverlay) {
+                                        _overlayPortalController.show();
+                                      } */
+                                    },
+                                    child: GestureDetector(
+                                      behavior: HitTestBehavior.opaque,
+                                      onTap: () {
+                                        // _onRemoveItem(e);
+                                      },
+                                      child: IgnorePointer(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                                color: Colors.grey[400]!),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8),
+                                            child: Text('ankur'),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ), */
+                              ], */
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                /* if (MultiUser.isNotEmpty)
+                  Flexible(
+                    child: Container(
+                      child: GridView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemCount: MultiUser.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // Number of columns
+                          mainAxisSpacing: 1, // Vertical spacing between items
+                          crossAxisSpacing:
+                              0, // Horizontal spacing between items
+                        ),
+                        itemBuilder: (context, index) {
+                          return Text(MultiUser[index]);
+                        },
+                      ),
+                    ),
+                  ), */
                 Padding(
                   padding: const EdgeInsets.only(top: 15, left: 16, right: 16),
                   child: Container(
@@ -379,11 +523,13 @@ class _InviteMeesageState extends State<InviteMeesage> {
                             ),
                             GestureDetector(
                               onTap: () async {
+                                print(
+                                    'MultiUserLengthCheck-${MultiUsermap.length}');
                                 if (Add_Comment.text.isNotEmpty) {
-                                  if (Add_Comment.text.length >= 255) {
+                                  if (Add_Comment.text.length >= 1000) {
                                     SnackBar snackBar = SnackBar(
                                       content: Text(
-                                          'One Time Message Lenght only for 255 Your Meassge -> ${Add_Comment.text.length}'),
+                                          'One Time Message Lenght only for 1000 Your Meassge -> ${Add_Comment.text.length}'),
                                       backgroundColor:
                                           ColorConstant.primary_color,
                                     );
@@ -539,6 +685,8 @@ class _InviteMeesageState extends State<InviteMeesage> {
                       UserName:
                           "${searchUserForInbox1?.object?.content?[index].userName}",
                       ChatInboxUid: UserIndexUUID ?? "",
+                      UserImage:
+                          "${searchUserForInbox1?.object?.content?[index].userProfilePic}",
                     );
                   }));
                   // UserIndexUUID = "";
@@ -561,11 +709,19 @@ class _InviteMeesageState extends State<InviteMeesage> {
                               ?.object?.content?[index].userUid)) {
                             MultiUser.remove(searchUserForInbox1
                                 ?.object?.content?[index].userUid);
+                            MultiUsermap.removeAt(index);
                           } else {
                             MultiUser.add(searchUserForInbox1
                                 ?.object?.content?[index].userUid);
+                            Map<String, dynamic> map = {
+                              'userUid': searchUserForInbox1
+                                  ?.object?.content?[index].userUid,
+                              'username': searchUserForInbox1
+                                  ?.object?.content?[index].userName,
+                            };
+                            MultiUsermap.add(map);
                           }
-                          print('MultiUser-$MultiUser');
+
                           setState(() {});
                         },
                         child: Container(

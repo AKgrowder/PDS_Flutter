@@ -118,6 +118,16 @@ class _InboxScreenState extends State<InboxScreen> {
             UserIndexUUID = state.DMChatList.object;
             setState(() {});
           }
+          if (state is UserChatDeleteLoaded) {
+            print(state.DeleteUserChatData.object);
+            if (state.DeleteUserChatData.object ==
+                "Chat Deleted Successfully") {
+              setState(() {
+                BlocProvider.of<PersonalChatListCubit>(context)
+                    .PersonalChatList(context);
+              });
+            }
+          }
           if (state is PersonalChatListLoadingState) {
             Center(
               child: Container(
@@ -240,36 +250,68 @@ class _InboxScreenState extends State<InboxScreen> {
             itemBuilder: (context, index) {
               DateTime parsedDateTime = DateTime.parse(
                   '${PersonalChatListModelData?.object?[index].createdDate ?? ""}');
-              return Slidable(
-                enabled: true,
-                dragStartBehavior: DragStartBehavior.start,
-                endActionPane: ActionPane(
-                    extentRatio: 0.2,
-                    motion: ScrollMotion(),
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          print("tap on search Profile");
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(left: 20, top: 5),
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle, color: Color(0xffFBD8D9)),
-                          child: Center(
-                              child: Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: Image.asset(
-                              ImageConstant.deleteIcon,
-                              color: ColorConstant.primary_color,
-                            ),
-                          )),
+              return Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: Slidable(
+                  enabled: true,
+                  dragStartBehavior: DragStartBehavior.start,
+                  endActionPane: ActionPane(
+                      // dragDismissible: true,
+                      extentRatio: 0.2,
+                      motion: ScrollMotion(),
+                      // dismissible: DismissiblePane(onDismissed: () {
+                      //   setState(() {
+                      //     BlocProvider.of<PersonalChatListCubit>(context)
+                      //         .UserChatDelete(
+                      //             "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+                      //             context);
+                      //   });
+                      //   print("tap on Delete icon 2");
+                      // }),
+                      children: [
+                        SlidableAction(
+                          borderRadius: BorderRadius.circular(10),
+                          onPressed: (context) {
+                            setState(() {
+                              BlocProvider.of<PersonalChatListCubit>(context)
+                                  .UserChatDelete(
+                                      "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+                                      context);
+                            });
+                            print("tap on Delete icon 1");
+                          },
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: ColorConstant.primary_color,
+                          icon: Icons.delete,
+                          // label: '',
                         ),
-                      )
-                    ]),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 15),
+                        /*  GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              BlocProvider.of<PersonalChatListCubit>(context)
+                                  .UserChatDelete(
+                                      "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+                                      context);
+                            });
+                            print("tap on Delete icon 1");
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(left: 20, top: 5),
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle, color: Color(0xffFBD8D9)),
+                            child: Center(
+                                child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Image.asset(
+                                ImageConstant.deleteIcon,
+                                color: ColorConstant.primary_color,
+                              ),
+                            )),
+                          ),
+                        ) */
+                      ]),
                   child: GestureDetector(
                     onTap: () {
                       /* Navigator.push(context,
@@ -288,6 +330,9 @@ class _InboxScreenState extends State<InboxScreen> {
                               "${PersonalChatListModelData?.object?[index].userName}",
                           ChatInboxUid:
                               "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+                          UserImage:
+                              "${PersonalChatListModelData?.object?[index].userProfilePic}",
+                          // UserUID: "${PersonalChatListModelData?.object?[index].}",
                         );
                       })).then((value) =>
                           BlocProvider.of<PersonalChatListCubit>(context)
@@ -550,36 +595,36 @@ class _InboxScreenState extends State<InboxScreen> {
     String year = date.year.toString();
     String time = DateFormat('h:mm a').format(date);
     String WeekDay = DateFormat('EEEE').format(date);
-    String formattedDate = '$day $WeekDay $time';
+    String formattedDate = '$day$month $time';
     return formattedDate;
   }
 
   String _getMonthName(int month) {
     switch (month) {
       case 1:
-        return ' January';
+        return ' th January';
       case 2:
-        return ' February';
+        return 'th February';
       case 3:
-        return ' March';
+        return 'th March';
       case 4:
-        return ' April';
+        return 'th April';
       case 5:
-        return ' May';
+        return 'th May';
       case 6:
-        return ' June';
+        return 'th June';
       case 7:
-        return ' July';
+        return 'th July';
       case 8:
-        return ' August';
+        return 'th August';
       case 9:
-        return ' September';
+        return 'th September';
       case 10:
-        return ' October';
+        return 'th October';
       case 11:
-        return ' November';
+        return 'th November';
       case 12:
-        return ' December';
+        return 'th December';
       default:
         return '';
     }

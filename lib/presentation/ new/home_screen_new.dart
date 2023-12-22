@@ -6,7 +6,6 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:path_provider/path_provider.dart';
@@ -846,6 +845,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   NewApi() async {
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .seetinonExpried(context);
+    Future.delayed(Duration(seconds: 2));
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .SystemConfigHome(context);
     print("1111111111111 :- ${User_ID}");

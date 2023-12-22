@@ -28,6 +28,7 @@ class OpenSavePostImage extends StatefulWidget {
   String? PostopenLink;
   bool? profileTure;
   int? index;
+
   OpenSavePostImage({
     Key? key,
     required this.PostID,
@@ -49,12 +50,14 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
   bool added = false;
   int imageCount = 1;
   UserTagModel? userTagModel;
+
   @override
   void initState() {
     if (widget.PostID == "0") {
       BlocProvider.of<OpenSaveCubit>(context)
           .openSaveImagePostAPI(context, "${widget.PostopenLink}", "");
     } else {
+      print("dfgdfgdgf-");
       BlocProvider.of<OpenSaveCubit>(context)
           .openSaveImagePostAPI(context, "", "${widget.PostID}");
     }
@@ -218,13 +221,26 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                         Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                '${OpenSaveModelData?.object?.postUserName}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontFamily: 'outfit',
-                                  fontWeight: FontWeight.w600,
+                             GestureDetector( onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return ProfileScreen(
+                                  User_ID:
+                                      "${OpenSaveModelData?.object?.userUid}",
+                                  isFollowing:
+                                      OpenSaveModelData?.object?.isFollowing);
+                            }));
+                          },
+                                child: Container(
+                                  child: Text(
+                                    '${OpenSaveModelData?.object?.postUserName}',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontFamily: 'outfit',
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                                 ),
                               ),
                               SizedBox(height: 7),

@@ -1,3 +1,4 @@
+import 'package:pds/API/Model/acceptRejectInvitaionModel/GetAllNotificationModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/acceptRejectInvitaion.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
@@ -36,3 +37,7 @@ class accept_rejectLoadedState extends InvitationState {
 }
 
 
+class GetAllNotificationLoadedState extends InvitationState {
+  final GetAllNotificationModel AllNotificationData;
+  GetAllNotificationLoadedState(this.AllNotificationData);
+}

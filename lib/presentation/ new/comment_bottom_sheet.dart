@@ -18,7 +18,6 @@ import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
-import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -396,13 +395,28 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 // color: Colors.amber,
                                                 child: Row(
                                                   children: [
-                                                    Text(
-                                                      "${addCommentModeldata?.object?[index].userName}",
-                                                      style: TextStyle(
-                                                          fontFamily: 'outfit',
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) {
+                                                    return ProfileScreen(
+                                                        User_ID:
+                                                            "${addCommentModeldata?.object?[index].userUid}",
+                                                        isFollowing:
+                                                            widget.isFoollinng);
+                                                  }));
+                                                },
+                                                      child: Container(
+                                                        child: Text(
+                                                          "${addCommentModeldata?.object?[index].userName}",
+                                                          style: TextStyle(
+                                                              fontFamily: 'outfit',
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight.bold),
+                                                        ),
+                                                      ),
                                                     ),
                                                     SizedBox(
                                                       width: 5,
