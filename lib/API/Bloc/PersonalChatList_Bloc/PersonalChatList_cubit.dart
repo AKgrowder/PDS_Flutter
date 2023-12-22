@@ -66,7 +66,7 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
     try {
       emit(PersonalChatListLoadingState());
       searchHistoryDataAdd = await Repository()
-          .search_user_for_inbox(typeWord, pageNumber, context);
+          .search_user_for_inbox1(typeWord, pageNumber, context);
       if (searchHistoryDataAdd ==
           "Something Went Wrong, Try After Some Time.") {
         emit(PersonalChatListErrorState("${searchHistoryDataAdd}"));
@@ -87,7 +87,7 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
     try {
       emit(PersonalChatListLoadingState());
       searchHistoryDataAddInPagantion = await Repository()
-          .search_user_for_inbox(typeWord, pageNumber, context);
+          .search_user_for_inbox1(typeWord, pageNumber, context);
       if (searchHistoryDataAddInPagantion.success == true) {
         searchHistoryDataAdd.object.content
             .addAll(searchHistoryDataAddInPagantion.object.content);
@@ -160,6 +160,23 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
         getUsersChatByUsernameData.object.totalElements =
             pagantiondata.object.totalElements;
         emit(GetUsersChatByUsernameLoaded(getUsersChatByUsernameData));
+      } else {
+        emit(PersonalChatListErrorState(getUsersChatByUsernameData.message));
+      }
+    } catch (e) {
+      emit(PersonalChatListErrorState(e.toString()));
+    }
+  }
+
+   Future<void> UserChatDelete(
+      String userChatInboxUid, BuildContext context) async {
+    try {
+      emit(PersonalChatListLoadingState());
+      getUsersChatByUsernameData = await Repository()
+          .DeleteUserDelete(userChatInboxUid, context);
+
+      if (getUsersChatByUsernameData.success == true) {
+        emit(UserChatDeleteLoaded(getUsersChatByUsernameData));
       } else {
         emit(PersonalChatListErrorState(getUsersChatByUsernameData.message));
       }

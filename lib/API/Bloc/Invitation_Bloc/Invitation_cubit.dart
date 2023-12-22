@@ -92,4 +92,24 @@ class InvitationCubit extends Cubit<InvitationState> {
       emit(InvitationErrorState(acceptRejectInvitationModel));
     }
   }
+
+   Future<void> AllNotification(
+      BuildContext context) async {
+    dynamic acceptRejectInvitationModel;
+    try {
+      emit(InvitationLoadingState());
+      acceptRejectInvitationModel =
+          await Repository().AllNotificationAPI(context);
+          if (acceptRejectInvitationModel == "Something Went Wrong, Try After Some Time.") {
+        emit(InvitationErrorState("${acceptRejectInvitationModel}"));
+      } else {
+      if (acceptRejectInvitationModel.success == true) {
+        emit(GetAllNotificationLoadedState(acceptRejectInvitationModel));
+      }}
+    } catch (e) {
+      emit(InvitationErrorState(acceptRejectInvitationModel));
+    }
+  }
+
+  
 }

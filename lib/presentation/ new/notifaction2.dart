@@ -5,6 +5,7 @@ import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_state.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Model/InvitationModel/Invitation_Model.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/GetAllNotificationModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
@@ -180,7 +181,9 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                                   SizedBox(
                                     width: 4,
                                   ),
-                                  RequestListModelData?.object?.length == 0 || RequestListModelData?.object?.length ==
+                                  RequestListModelData?.object?.length == 0 ||
+                                          RequestListModelData
+                                                  ?.object?.length ==
                                               null
                                       ? SizedBox()
                                       : Container(
@@ -223,13 +226,13 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                                               null
                                       ? SizedBox()
                                       : Text(
-                                        '${invitationRoomData?.object?.length}',
-                                        style: TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                            fontFamily: "outfit",
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13),
-                                      ),
+                                          '${invitationRoomData?.object?.length}',
+                                          style: TextStyle(
+                                              overflow: TextOverflow.ellipsis,
+                                              fontFamily: "outfit",
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 13),
+                                        ),
                                   SizedBox(
                                     width: 1,
                                   ),
@@ -242,16 +245,19 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                     ),
                     Expanded(
                       child: TabBarView(children: [
-                        Center(
-                            child: Text(
-                          'No Record Available',
-                          style: TextStyle(
-                            fontFamily: 'outfit',
-                            fontSize: 20,
-                            color: Color(0XFFED1C25),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )),
+                        // Center(
+                        //     child: Text(
+                        //   'No Record Available',
+                        //   style: TextStyle(
+                        //     fontFamily: 'outfit',
+                        //     fontSize: 20,
+                        //     color: Color(0XFFED1C25),
+                        //     fontWeight: FontWeight.bold,
+                        //   ),
+                        // )),
+                        SingleChildScrollView(
+                          child: AllNotificationClass(),
+                        ),
                         SingleChildScrollView(
                           child: RequestOrderClass(
                               apiDataGet: apiDataGet,
@@ -274,6 +280,83 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
         },
       ),
     );
+  }
+}
+
+class AllNotificationClass extends StatefulWidget {
+  const AllNotificationClass();
+
+  @override
+  State<AllNotificationClass> createState() => _AllNotificationClassState();
+}
+
+class _AllNotificationClassState extends State<AllNotificationClass> {
+  @override
+  void initState() {
+    BlocProvider.of<InvitationCubit>(context).AllNotification(context);
+    // BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
+    super.initState();
+  }
+
+  GetAllNotificationModel? AllNotificationData;
+  @override
+  Widget build(BuildContext context) {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
+
+    return BlocConsumer<InvitationCubit, InvitationState>(
+        listener: (context, state) {
+      if (state is InvitationErrorState) {
+        if (state.error == "not found") {
+        } else {
+          SnackBar snackBar = SnackBar(
+            content: Text(state.error),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      }
+
+      if (state is InvitationLoadingState) {
+        Center(
+          child: Container(
+            margin: EdgeInsets.only(bottom: 100),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.asset(ImageConstant.loader,
+                  fit: BoxFit.cover, height: 100.0, width: 100),
+            ),
+          ),
+        );
+      }
+
+      if (state is GetAllNotificationLoadedState) {
+        AllNotificationData = state.AllNotificationData;
+      }
+    }, builder: (context, state) {
+      if (state is GetAllNotificationLoadedState) {
+        return ListView.builder(
+            itemCount: AllNotificationData?.object?.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              return Container(
+                height: 50,
+                color: Colors.red[200],
+              );
+            });
+      }
+      return Center(
+        child: Container(
+          margin: EdgeInsets.only(bottom: 100),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.asset(ImageConstant.loader,
+                fit: BoxFit.cover, height: 100.0, width: 100),
+          ),
+        ),
+      );
+    });
   }
 }
 
@@ -813,8 +896,8 @@ class _InviationClassState extends State<InviationClass> {
                                             MaterialPageRoute(
                                           builder: (context) {
                                             return RoomMembersScreen(
-                                              MoveNotification:true,
-                                              RoomOwnerCount: 0,
+                                                MoveNotification: true,
+                                                RoomOwnerCount: 0,
                                                 roomname:
                                                     "${widget.InvitationRoomData?.object?[index].roomQuestion}",
                                                 RoomOwner: false,

@@ -544,7 +544,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                   ),
                                                                 ),
                                                               )
-                                                            :Padding(
+                                                            : Padding(
                                                                 padding:
                                                                     const EdgeInsets
                                                                         .symmetric(),
@@ -577,13 +577,23 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                           ),
                                                                         ),
                                                                         Spacer(),
-                                                                        Text(
-                                                                          "${AllChatmodelData?.object?.messageOutputList?.content?[index].userName}",
-                                                                          style: TextStyle(
-                                                                              fontWeight: FontWeight.w400,
-                                                                              color: Colors.black,
-                                                                              fontFamily: "outfit",
-                                                                              fontSize: 14),
+                                                                        GestureDetector(
+                                                                          onTap:
+                                                                              () {
+                                                                            print("send user id -- ${AllChatmodelData?.object?.messageOutputList?.content?[index].uid}");
+                                                                            Navigator.push(context,
+                                                                                MaterialPageRoute(builder: (context) {
+                                                                              return ProfileScreen(User_ID: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userCode}", isFollowing: "");
+                                                                            }));
+                                                                          },
+                                                                          child:
+                                                                              Container(
+                                                                            child:
+                                                                                Text(
+                                                                              "${AllChatmodelData?.object?.messageOutputList?.content?[index].userName}",
+                                                                              style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontFamily: "outfit", fontSize: 14),
+                                                                            ),
+                                                                          ),
                                                                         ),
                                                                         Padding(
                                                                             padding:

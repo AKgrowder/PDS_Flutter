@@ -162,12 +162,36 @@ class _FollowersState extends State<Followers> {
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(left: 10),
-                                      child: Text(
-                                        "${followersClassModel1?.object?[index].userName}",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontFamily: "outfit",
-                                            fontWeight: FontWeight.bold),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return MultiBlocProvider(
+                                          providers: [
+                                            BlocProvider<NewProfileSCubit>(
+                                              create: (context) =>
+                                                  NewProfileSCubit(),
+                                            ),
+                                          ],
+                                          child: ProfileScreen(
+                                              User_ID: followersClassModel1
+                                                      ?.object?[index].userUid
+                                                      .toString() ??
+                                                  '',
+                                              isFollowing: followersClassModel1
+                                                  ?.object?[index].isFollow
+                                                  .toString()));
+                                    }));
+                                  },
+                                        child: Container(
+                                          child: Text(
+                                            "${followersClassModel1?.object?[index].userName}",
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                fontFamily: "outfit",
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                     SizedBox(
