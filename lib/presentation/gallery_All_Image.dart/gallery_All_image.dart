@@ -46,7 +46,7 @@ class _GalleryImageState extends State<GalleryImage> {
                 margin: EdgeInsets.all(10),
                 child: Image.asset(ImageConstant.backArrow))),
         title: Text(
-          'Image',
+          'Images',
           style: TextStyle(color: Colors.black),
         ),
       ),
@@ -107,14 +107,13 @@ class _GalleryImageState extends State<GalleryImage> {
                                     '${(p0 + 1)}');
                           },
                           items: GridView.builder(
-                            
                             physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3, 
-                              crossAxisSpacing: 8.0, 
-                              mainAxisSpacing: 8.0, 
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 8.0,
+                              mainAxisSpacing: 8.0,
                             ),
                             itemCount: getAllInboxImages?.object?.content
                                 ?.length, // Number of items in the grid
