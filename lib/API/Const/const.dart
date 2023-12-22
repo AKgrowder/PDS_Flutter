@@ -128,5 +128,9 @@ class Config {
       "user/selectMultipleUsers_Chat";
   static const String chatImageDM = "user/send_image_in_user_chat"; // ankur 
   static const String get_all_inbox_images = "user/get_all_inbox_images"; 
+  static const String delete_user_chat = "user/delete_user_chat"; 
+  static const String getAllPostNotifications = "user/api/getAllPostNotifications"; 
+  static const String insearch_user_for_inboxUrl1 = "user/search_user_for_tag";
+
 
 }

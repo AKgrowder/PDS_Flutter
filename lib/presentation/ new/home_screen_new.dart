@@ -41,6 +41,7 @@ import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/RePost_Screen.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
+import 'package:pds/presentation/%20new/VideoFull_Screen.dart';
 import 'package:pds/presentation/%20new/comment_bottom_sheet.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
@@ -225,16 +226,20 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     showMenu(
       context: context,
       position: position,
-      items: AllGuestPostRoomData?.object?.content?[index].postDataType == null
+      items: AllGuestPostRoomData?.object?.content?[index].description != null
           ? <PopupMenuItem<String>>[
               PopupMenuItem<String>(
                 value: 'edit',
                 child: GestureDetector(
                   onTap: () {
+                    print(AllGuestPostRoomData
+                        ?.object?.content?[index].description);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => CreateNewPost(
+                              PostID: AllGuestPostRoomData
+                                  ?.object?.content?[index].postUid,
                               edittextdata: AllGuestPostRoomData
                                   ?.object?.content?[index].description),
                         )).then((value) => Get_UserToken());
@@ -955,6 +960,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   }
 
   @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    _controllers.clear();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
@@ -1047,11 +1061,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               }
 
               if (state is likeBlogLoadedState) {
-                SnackBar snackBar = SnackBar(
-                  content: Text(state.LikeBlogModeData.object.toString()),
-                  backgroundColor: ColorConstant.primary_color,
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                // SnackBar snackBar = SnackBar(
+                //   content: Text(state.LikeBlogModeData.object.toString()),
+                //   backgroundColor: ColorConstant.primary_color,
+                // );
+                // ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 LikeBlogModeData = state.LikeBlogModeData;
               }
               if (state is RePostLoadedState) {
@@ -1297,8 +1311,20 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 AllGuestPostRoomData = state.GetGuestAllPostRoomData;
                 AllGuestPostRoomData?.object?.content?.forEach((element) {
                   if (element.postDataType == 'VIDEO') {
-                    _controllers.add(VideoPlayerController.networkUrl(
-                        Uri.parse('${element.postData?.first}')));
+                    for (int i = 0; i < element.postData!.length; i++) {
+                      _controllers.add(VideoPlayerController.networkUrl(
+                          Uri.parse('${element.postData?[i]}')));
+
+                      _controllers[i]
+                          .initialize()
+                          .then((value) => setState(() {}));
+                      setState(() {
+                        _controllers[i].play();
+                        _controllers[i].pause();
+                        _controllers[i].setLooping(true);
+                      });
+                    }
+                    print("video list -- ${_controllers}");
                   }
                 });
               }
@@ -1968,16 +1994,44 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   CrossAxisAlignment
                                                                       .start,
                                                               children: [
-                                                                Container(
-                                                                  child: Text(
-                                                                    "${AllGuestPostRoomData?.object?.content?[index].postUserName}",
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            20,
-                                                                        fontFamily:
-                                                                            "outfit",
-                                                                        fontWeight:
-                                                                            FontWeight.bold),
+                                                                 GestureDetector(
+                                                                  onTap: () {
+                                                                    if (uuid ==
+                                                                        null) {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .push(
+                                                                              MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                    } else {
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(builder:
+                                                                              (context) {
+                                                                        return MultiBlocProvider(
+                                                                            providers: [
+                                                                              BlocProvider<NewProfileSCubit>(
+                                                                                create: (context) => NewProfileSCubit(),
+                                                                              ),
+                                                                            ],
+                                                                            child:
+                                                                                ProfileScreen(User_ID: "${AllGuestPostRoomData?.object?.content?[index].userUid}", isFollowing: AllGuestPostRoomData?.object?.content?[index].isFollowing));
+                                                                      }));
+                                                                      //
+                                                                    }
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    // color: Colors.amber,
+                                                                    child: Text(
+                                                                      "${AllGuestPostRoomData?.object?.content?[index].postUserName}",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              20,
+                                                                          fontFamily:
+                                                                              "outfit",
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
                                                                   ),
                                                                 ),
                                                                 Text(
@@ -2242,7 +2296,63 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                   )),
                                                                                 ),
                                                                               )
-
+                                                                            /*  : AllGuestPostRoomData?.object?.content?[index].postDataType == "VIDEO"
+                                                                                ? _controllers[index].value.isInitialized
+                                                                                    ? Container(
+                                                                                        height: 200,
+                                                                                        child: Stack(
+                                                                                          children: [
+                                                                                            AspectRatio(
+                                                                                              aspectRatio: _controllers[index].value.aspectRatio,
+                                                                                              child: VideoPlayer(_controllers[index]),
+                                                                                            ),
+                                                                                            Positioned(
+                                                                                              top: 0,
+                                                                                              right: 0,
+                                                                                              child: IconButton(
+                                                                                                icon: Icon(
+                                                                                                  /*  _isFullScreen ? Icons.fullscreen_exit : */ Icons.fullscreen,
+                                                                                                ),
+                                                                                                onPressed: () {
+                                                                                                  Navigator.push(context, MaterialPageRoute(
+                                                                                                    builder: (context) {
+                                                                                                      return VideoFullScreen();
+                                                                                                    },
+                                                                                                  ));
+                                                                                                }, /* _toggleFullScreen */
+                                                                                              ),
+                                                                                            ),
+                                                                                            Positioned.fill(
+                                                                                              child: GestureDetector(
+                                                                                                onTap: () {
+                                                                                                  // _playPause(index);
+                                                                                                  if (_controllers[index].value.isPlaying) {
+                                                                                                    setState(() {
+                                                                                                      _controllers[index].pause();
+                                                                                                    });
+                                                                                                  } else {
+                                                                                                    setState(() {
+                                                                                                      _controllers[index].play();
+                                                                                                    });
+                                                                                                  }
+                                                                                                },
+                                                                                                child: _controllers[index].value.isPlaying
+                                                                                                    ? Icon(
+                                                                                                        Icons.pause_circle_outline,
+                                                                                                        size: 50,
+                                                                                                        color: Colors.white,
+                                                                                                      )
+                                                                                                    : Icon(
+                                                                                                        Icons.play_circle_outline,
+                                                                                                        size: 50,
+                                                                                                        color: Colors.white,
+                                                                                                      ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ],
+                                                                                        ),
+                                                                                      )
+                                                                                    : SizedBox() */
                                                                             //this is the ATTACHMENT
                                                                             : AllGuestPostRoomData?.object?.content?[index].postDataType == "ATTACHMENT"
                                                                                 ? (AllGuestPostRoomData?.object?.content?[index].postData?.isNotEmpty == true)
@@ -2442,14 +2552,32 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           CrossAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                        Container(
+                                                                      GestureDetector(
+                                                                          onTap:
+                                                                              () {
+                                                                            if (uuid ==
+                                                                                null) {
+                                                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                            } else {
+                                                                              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                return MultiBlocProvider(providers: [
+                                                                                  BlocProvider<NewProfileSCubit>(
+                                                                                    create: (context) => NewProfileSCubit(),
+                                                                                  ),
+                                                                                ], child: ProfileScreen(User_ID: "${AllGuestPostRoomData?.object?.content?[index].repostOn?.userUid}", isFollowing: AllGuestPostRoomData?.object?.content?[index].repostOn?.isFollowing));
+                                                                              }));
+                                                                              //
+                                                                            }
+                                                                          },
                                                                           child:
-                                                                              Text(
-                                                                            "${AllGuestPostRoomData?.object?.content?[index].repostOn?.postUserName}",
-                                                                            style: TextStyle(
-                                                                                fontSize: 20,
-                                                                                fontFamily: "outfit",
-                                                                                fontWeight: FontWeight.bold),
+                                                                              Container(
+                                                                            // color:
+                                                                            //     Colors.amber,
+                                                                            child:
+                                                                                Text(
+                                                                              "${AllGuestPostRoomData?.object?.content?[index].repostOn?.postUserName}",
+                                                                              style: TextStyle(fontSize: 20, fontFamily: "outfit", fontWeight: FontWeight.bold),
+                                                                            ),
                                                                           ),
                                                                         ),
                                                                         Text(
@@ -2605,6 +2733,63 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                     )),
                                                                                   ),
                                                                                 )
+                                                                              /*  : AllGuestPostRoomData?.object?.content?[index].postDataType == "VIDEO"
+                                                                                  ? _controllers[index].value.isInitialized
+                                                                                      ? Container(
+                                                                                          height: 200,
+                                                                                          child: Stack(
+                                                                                            children: [
+                                                                                              AspectRatio(
+                                                                                                aspectRatio: _controllers[index].value.aspectRatio,
+                                                                                                child: VideoPlayer(_controllers[index]),
+                                                                                              ),
+                                                                                              Positioned(
+                                                                                                top: 0,
+                                                                                                right: 0,
+                                                                                                child: IconButton(
+                                                                                                  icon: Icon(
+                                                                                                    /*  _isFullScreen ? Icons.fullscreen_exit : */ Icons.fullscreen,
+                                                                                                  ),
+                                                                                                  onPressed: () {
+                                                                                                    Navigator.push(context, MaterialPageRoute(
+                                                                                                      builder: (context) {
+                                                                                                        return VideoFullScreen();
+                                                                                                      },
+                                                                                                    ));
+                                                                                                  }, /* _toggleFullScreen */
+                                                                                                ),
+                                                                                              ),
+                                                                                              Positioned.fill(
+                                                                                                child: GestureDetector(
+                                                                                                  onTap: () {
+                                                                                                    // _playPause(index);
+                                                                                                    if (_controllers[index].value.isPlaying) {
+                                                                                                      setState(() {
+                                                                                                        _controllers[index].pause();
+                                                                                                      });
+                                                                                                    } else {
+                                                                                                      setState(() {
+                                                                                                        _controllers[index].play();
+                                                                                                      });
+                                                                                                    }
+                                                                                                  },
+                                                                                                  child: _controllers[index].value.isPlaying
+                                                                                                      ? Icon(
+                                                                                                          Icons.pause_circle_outline,
+                                                                                                          size: 50,
+                                                                                                          color: Colors.white,
+                                                                                                        )
+                                                                                                      : Icon(
+                                                                                                          Icons.play_circle_outline,
+                                                                                                          size: 50,
+                                                                                                          color: Colors.white,
+                                                                                                        ),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ],
+                                                                                          ),
+                                                                                        )
+                                                                                      : SizedBox() */
                                                                               : AllGuestPostRoomData?.object?.content?[index].repostOn?.postDataType == "ATTACHMENT"
                                                                                   ? Container(
                                                                                       height: 400,
@@ -3218,17 +3403,44 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 // SizedBox(
                                                                 //   height: 6,
                                                                 // ),
-                                                                Container(
-                                                                  // color: Colors.amber,
-                                                                  child: Text(
-                                                                    "${AllGuestPostRoomData?.object?.content?[index].postUserName}",
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            20,
-                                                                        fontFamily:
-                                                                            "outfit",
-                                                                        fontWeight:
-                                                                            FontWeight.bold),
+                                                                 GestureDetector(
+                                                                  onTap: () {
+                                                                    if (uuid ==
+                                                                        null) {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .push(
+                                                                              MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                    } else {
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(builder:
+                                                                              (context) {
+                                                                        return MultiBlocProvider(
+                                                                            providers: [
+                                                                              BlocProvider<NewProfileSCubit>(
+                                                                                create: (context) => NewProfileSCubit(),
+                                                                              ),
+                                                                            ],
+                                                                            child:
+                                                                                ProfileScreen(User_ID: "${AllGuestPostRoomData?.object?.content?[index].userUid}", isFollowing: AllGuestPostRoomData?.object?.content?[index].isFollowing));
+                                                                      }));
+                                                                      //
+                                                                    }
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    // color: Colors.amber,
+                                                                    child: Text(
+                                                                      "${AllGuestPostRoomData?.object?.content?[index].postUserName}",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              20,
+                                                                          fontFamily:
+                                                                              "outfit",
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
                                                                   ),
                                                                 ),
                                                                 //FIndText
@@ -3511,16 +3723,79 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           ),
                                                                         )
                                                                       : AllGuestPostRoomData?.object?.content?[index].postDataType ==
-                                                                              "ATTACHMENT"
-                                                                          ? (AllGuestPostRoomData?.object?.content?[index].postData?.isNotEmpty == true)
-                                                                              ? Container(
-                                                                                  height: 400,
-                                                                                  width: _width,
-                                                                                  child: DocumentViewScreen1(
-                                                                                    path: AllGuestPostRoomData?.object?.content?[index].postData?[0].toString(),
-                                                                                  ))
+                                                                              "VIDEO"
+                                                                          ? _controllers[0].value.isInitialized
+                                                                              ? Padding(
+                                                                                  padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
+                                                                                  child: Container(
+                                                                                    height: 200,
+                                                                                    child: Stack(
+                                                                                      children: [
+                                                                                        AspectRatio(
+                                                                                          aspectRatio: _controllers[0].value.aspectRatio,
+                                                                                          child: VideoPlayer(_controllers[0]),
+                                                                                        ),
+                                                                                        Positioned(
+                                                                                          right: 0,
+                                                                                          bottom: 0,
+                                                                                          child: IconButton(
+                                                                                            color: ColorConstant.primary_color,
+                                                                                            icon: Icon(
+                                                                                              /*  _isFullScreen ? Icons.fullscreen_exit : */ Icons.fullscreen,
+                                                                                            ),
+                                                                                            onPressed: () {
+                                                                                              Navigator.push(context, MaterialPageRoute(
+                                                                                                builder: (context) {
+                                                                                                  return VideoFullScreen(postData: [
+                                                                                                    "${AllGuestPostRoomData?.object?.content?[index].postData?[0]}",
+                                                                                                  ]);
+                                                                                                },
+                                                                                              ));
+                                                                                            }, /* _toggleFullScreen */
+                                                                                          ),
+                                                                                        ),
+                                                                                        Positioned.fill(
+                                                                                          child: GestureDetector(
+                                                                                            onTap: () {
+                                                                                              // _playPause(index);
+                                                                                              if (_controllers[0].value.isPlaying) {
+                                                                                                setState(() {
+                                                                                                  _controllers[0].pause();
+                                                                                                });
+                                                                                              } else {
+                                                                                                setState(() {
+                                                                                                  _controllers[0].play();
+                                                                                                });
+                                                                                              }
+                                                                                            },
+                                                                                            child: _controllers[0].value.isPlaying
+                                                                                                ? Icon(
+                                                                                                    Icons.pause_circle_outline,
+                                                                                                    size: 50,
+                                                                                                    color: Colors.white,
+                                                                                                  )
+                                                                                                : Icon(
+                                                                                                    Icons.play_circle_outline,
+                                                                                                    size: 50,
+                                                                                                    color: Colors.white,
+                                                                                                  ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  ),
+                                                                                )
                                                                               : SizedBox()
-                                                                          : SizedBox())
+                                                                          : AllGuestPostRoomData?.object?.content?[index].postDataType == "ATTACHMENT"
+                                                                              ? (AllGuestPostRoomData?.object?.content?[index].postData?.isNotEmpty == true)
+                                                                                  ? Container(
+                                                                                      height: 400,
+                                                                                      width: _width,
+                                                                                      child: DocumentViewScreen1(
+                                                                                        path: AllGuestPostRoomData?.object?.content?[index].postData?[0].toString(),
+                                                                                      ))
+                                                                                  : SizedBox()
+                                                                              : SizedBox())
                                                                   : Column(
                                                                       children: [
                                                                         Stack(

@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:pds/API/Model/DeleteUserChatModel/DeleteUserChat_Model.dart';
 import 'package:pds/API/Model/GetAllInboxImagesModel/GetAllInboxImagesModel.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/GetAllNotificationModel.dart';
 import 'package:pds/API/Model/selectMultipleUsers_ChatModel/selectMultipleUsers_ChatModel.dart';
 import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
 import 'package:pds/API/Model/GetUsersChatByUsernameModel/GetUsersChatByUsernameModel.dart';
@@ -557,6 +559,30 @@ class Repository {
         return jsonString;
     }
   }
+
+ AllNotificationAPI(
+      BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.getAllPostNotifications}',
+        context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return  GetAllNotificationModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
 
   HashTagBanner(BuildContext context) async {
     final response =
@@ -2312,7 +2338,30 @@ class Repository {
     }
   }
 
-  search_user_for_inbox(
+ search_user_for_inbox(
+      String searchFilter, String pageNumber, BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.insearch_user_for_inboxUrl1}?searchFilter=$searchFilter&numberOfRecords=30&pageNumber=$pageNumber',
+        context);
+    var jsonString = json.decode(response.body);
+    print('jsonString-$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return SearchUserForInbox.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+  
+  search_user_for_inbox1(
       String searchFilter, String pageNumber, BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
         '${Config.search_user_for_inboxUrl}?searchFilter=$searchFilter&numberOfRecords=30&pageNumber=$pageNumber',
@@ -2561,6 +2610,28 @@ class Repository {
     }
   }
 
+  DeleteUserDelete(String userChatInboxUid, BuildContext context) async {
+    final response = await apiServices.deleteApiCallWithToken(
+        "${Config.delete_user_chat}?userChatInboxUid=${userChatInboxUid}",
+        context);
+    print(response);
+    var jsonString = json.decode(response!.body);
+    switch (response.statusCode) {
+      case 200:
+        return DeleteUserChatModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
   BlogLikeList(BuildContext context, String blogID, String? uuID) async {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.blogLikeList}?blogUid=${blogID}&loginUserUid=${uuID}',
@@ -2650,7 +2721,8 @@ class Repository {
     }
   }
 
-  get_all_inbox_images(BuildContext context, String userChatInboxUid,String pageNumber) async {
+  get_all_inbox_images(
+      BuildContext context, String userChatInboxUid, String pageNumber) async {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.get_all_inbox_images}?userChatInboxUid=${userChatInboxUid}&pageNumber=${pageNumber}&numberOfRecords=20',
         context);
