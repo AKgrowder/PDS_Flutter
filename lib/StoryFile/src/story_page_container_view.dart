@@ -203,15 +203,18 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                     SizedBox(
                       width: 12,
                     ),
-                    Text(
-                      '${widget.buttonData.images[0].username}',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontFamily: 'outfit',
-                        fontWeight: FontWeight.w400,
-                        height: 0.08,
-                        letterSpacing: -0.17,
+                    GestureDetector(
+                      onTap: widget.onTap,
+                      child: Text(
+                        '${widget.buttonData.images[0].username}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontFamily: 'outfit',
+                          fontWeight: FontWeight.w400,
+                          height: 0.08,
+                          letterSpacing: -0.17,
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -659,15 +662,18 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                                       SizedBox(
                                                         height: 6,
                                                       ),
-                                                      Text(
-                                                        "${StoryViewListModelData?.object?[index].userName}",
-                                                        style: TextStyle(
-                                                            fontSize: 20,
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                      Container(
+                                                        color: Colors.amber,
+                                                        child: Text(
+                                                          "${StoryViewListModelData?.object?[index].userName}",
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              fontFamily:
+                                                                  "outfit",
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
                                                       ),
                                                       // Text(
                                                       //   customFormat(

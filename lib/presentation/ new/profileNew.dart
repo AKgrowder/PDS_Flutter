@@ -1366,11 +1366,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                               ? NewProfileData?.object?.module == "EMPLOYEE"
                                   ? _height / 3
                                   : NewProfileData?.object?.module == "EXPERT"
-                                      ? _height / 0.8 // 630 old height
+                                      ? _height / 0.65 // 630 old height
                                       : NewProfileData?.object?.module ==
                                               "COMPANY"
                                           ? _height /
-                                              0.8 // 650 old height + 400
+                                              0.7 // 650 old height + 400
                                           : 0
                               : arrNotiyTypeList[1].isSelected == true
                                   ? FinalPostCount * 190

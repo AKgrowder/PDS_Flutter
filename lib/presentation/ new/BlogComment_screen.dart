@@ -311,15 +311,31 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                       // color: Colors.amber,
                                                       child: Row(
                                                         children: [
-                                                          Text(
-                                                            "${blogCommentModel?.object?[index].userName}",
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'outfit',
-                                                                fontSize: 18,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                        Navigator.push(context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                          return ProfileScreen(
+                                                              User_ID:
+                                                                  "${blogCommentModel?.object?[index].userUid}",
+                                                              isFollowing: widget
+                                                                  .isFoollinng);
+                                                        }));
+                                                      },
+                                                            child: Container(/* color: Colors.amber, */
+                                                              child: Text(
+                                                                "${blogCommentModel?.object?[index].userName}",
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'outfit',
+                                                                    fontSize: 18,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ),
                                                           ),
                                                           SizedBox(
                                                             width: 5,
