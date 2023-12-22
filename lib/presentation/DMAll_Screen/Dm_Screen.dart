@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +18,8 @@ import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/profileNew.dart';
+import 'package:pds/presentation/gallery_All_Image.dart/gallery_All_image.dart';
 // import 'package:pds/presentation/%20new/notifaction2.dart';
 import 'package:pds/presentation/view_comments/view_comments_screen.dart';
 import 'package:pds/theme/theme_helper.dart';
@@ -25,11 +29,8 @@ import 'package:pds/widgets/pagenation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
-import 'package:flutter/foundation.dart' as foundation;
 import '../../API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
-import 'package:pds/presentation/%20new/profileNew.dart';
-import 'package:pds/presentation/gallery_All_Image.dart/gallery_All_image.dart';
 class DmScreen extends StatefulWidget {
   String UserName;
   String ChatInboxUid;
@@ -298,7 +299,7 @@ class _DmScreenState extends State<DmScreen> {
                                       ),
                                     ),
                                   ),
-                                  widget.UserImage != null &&
+                                   widget.UserImage != null &&
                                           widget.UserImage != ""
                                       ? Container(
                                         child: CustomImageView(
@@ -1085,7 +1086,7 @@ class _DmScreenState extends State<DmScreen> {
                                             cursorColor: Colors.grey,
                                             decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: "Add Comment",
+                                              hintText: "Type Message",
                                             ),
                                           ),
                                         ),
@@ -1130,10 +1131,10 @@ class _DmScreenState extends State<DmScreen> {
                                     }
                                   } else {
                                     if (Add_Comment.text.isNotEmpty) {
-                                      if (Add_Comment.text.length >= 255) {
+                                      if (Add_Comment.text.length >= 1000) {
                                         SnackBar snackBar = SnackBar(
                                           content: Text(
-                                              'One Time Message Lenght only for 255 Your Meassge -> ${Add_Comment.text.length}'),
+                                              'One Time Message Lenght only for 1000 Your Meassge -> ${Add_Comment.text.length}'),
                                           backgroundColor:
                                               ColorConstant.primary_color,
                                         );

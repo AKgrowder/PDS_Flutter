@@ -1,7 +1,5 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/core/utils/color_constant.dart';
@@ -61,7 +59,7 @@ class _BlogLikeListScreenState extends State<BlogLikeListScreen> {
             ),
           ),
           title: Text(
-            "Post Likes",
+            "Blog Likes",
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -164,12 +162,27 @@ class _BlogLikeListScreenState extends State<BlogLikeListScreen> {
                             SizedBox(
                               height: 6,
                             ),
-                            Text(
-                              "${blogLikeListModel?.object?[index].userName}",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontFamily: "outfit",
-                                  fontWeight: FontWeight.bold),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return ProfileScreen(
+                                    User_ID:
+                                        "${blogLikeListModel?.object?[index].userUid}",
+                                    isFollowing:
+                                        "${blogLikeListModel?.object?[index].isFollowing}",
+                                  );
+                                }));
+                              },
+                              child: Container(
+                                child: Text(
+                                  "${blogLikeListModel?.object?[index].userName}",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontFamily: "outfit",
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
                             ),
                             // Text(
                             //   customFormat(
