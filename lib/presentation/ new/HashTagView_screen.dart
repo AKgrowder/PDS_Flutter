@@ -1,7 +1,6 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hashtagable/widgets/hashtag_text.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
@@ -132,7 +131,6 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
           if (state is HashTagLoadingState) {
             return Center(
               child: Container(
-            
                 margin: EdgeInsets.only(bottom: 100),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
@@ -268,13 +266,46 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                     ImageConstant.tomcruse),
                                               ),
                                       ),
-                                      title: Text(
-                                        "${hashTagViewData?.object?.posts?[index].postUserName}",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontFamily: 'outfit',
-                                          fontWeight: FontWeight.w600,
+                                      title: GestureDetector(
+                                        onTap: () {
+                                          if (uuid == null) {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        RegisterCreateAccountScreen()));
+                                          } else {
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return MultiBlocProvider(
+                                                  providers: [
+                                                    BlocProvider<
+                                                        NewProfileSCubit>(
+                                                      create: (context) =>
+                                                          NewProfileSCubit(),
+                                                    ),
+                                                  ],
+                                                  child: ProfileScreen(
+                                                      User_ID:
+                                                          "${hashTagViewData?.object?.posts?[index].userUid}",
+                                                      isFollowing:
+                                                          hashTagViewData
+                                                              ?.object
+                                                              ?.posts?[index]
+                                                              .isFollowing));
+                                            }));
+                                          }
+                                        },
+                                        child: Container(
+                                          child: Text(
+                                            "${hashTagViewData?.object?.posts?[index].postUserName}",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontFamily: 'outfit',
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                       subtitle: Text(

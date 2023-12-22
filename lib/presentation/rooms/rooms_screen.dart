@@ -2104,8 +2104,25 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                             .tomcruse),
                                                               ),
                                                       ),
-                                                      Text(
-                                                          " ${statusList.first.userName}"),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                            builder: (context) {
+                                                              return ProfileScreen(
+                                                                  User_ID:
+                                                                      "${statusList.first.uuid}",
+                                                                  isFollowing:
+                                                                      "");
+                                                            },
+                                                          ));
+                                                        },
+                                                        child: Container(
+                                                          child: Text(
+                                                              " ${statusList.first.userName}"),
+                                                        ),
+                                                      ),
                                                       Spacer(),
                                                       GestureDetector(
                                                         onTap: () {

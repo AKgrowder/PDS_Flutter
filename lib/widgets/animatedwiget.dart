@@ -39,30 +39,32 @@ class _AnimatedNetworkImageState extends State<AnimatedNetworkImage> {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(15),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return ImageViewScreen(
-              path: widget.imageUrl,
-            );
-          }));
-        },
-        child: Container(
-          height: 90,
-          width: 150,
-          child: AnimatedOpacity(
-            opacity: _opacity,
-            duration: widget.animationDuration,
-            curve: Curves.easeInOut,
-            child: CachedNetworkImage(
-              imageUrl: widget.imageUrl,
-              placeholder: (context, url) => GFLoader(type: GFLoaderType.ios),
-              fit: BoxFit.cover,
-              errorWidget: (context, url, error) {
-                return Icon(Icons.error);
-              },
+    return Scaffold(
+      body: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return ImageViewScreen(
+                path: widget.imageUrl,
+              );
+            }));
+          },
+          child: Container(
+            height: 90,
+            width: 150,
+            child: AnimatedOpacity(
+              opacity: _opacity,
+              duration: widget.animationDuration,
+              curve: Curves.easeInOut,
+              child: CachedNetworkImage(
+                imageUrl: widget.imageUrl,
+                placeholder: (context, url) => GFLoader(type: GFLoaderType.ios),
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) {
+                  return Icon(Icons.error);
+                },
+              ),
             ),
           ),
         ),
