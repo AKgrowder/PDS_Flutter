@@ -22,9 +22,7 @@ import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/example/lib/main.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
 import 'package:pds/widgets/commentPdf.dart';
-import 'package:pds/widgets/pagenation.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:video_player/video_player.dart';
@@ -77,7 +75,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   String? UserProfileImage;
   List<TextSpan> _textSpans = [];
   bool isHeshTegData = false;
-
+  bool isDataSet = true;
   SearchUserForInbox? searchUserForInbox1;
   List<File> galleryFile = [];
   bool isVideodata = false;
@@ -152,6 +150,12 @@ class _CreateNewPostState extends State<CreateNewPost> {
     UserProfileImage = prefs.getString(PreferencesKey.UserProfile);
   }
 
+  void dispose() {
+    postText.dispose(); // Dispose of TextEditingController
+    _focusNode.dispose(); // Dispose of FocusNode
+    super.dispose();
+  }
+
 //Public
 // Following
 //  List<String> postTexHashContrlloer = [];
@@ -215,6 +219,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
         }
       }
       if (state is AddPostLoadedState) {
+        isDataSet = true;
         if (state.addPost.object.toString() ==
             'Comment contains a restricted word') {
         } else {
@@ -234,11 +239,12 @@ class _CreateNewPostState extends State<CreateNewPost> {
           isHeshTegData = false; */
         searchUserForInbox1?.object?.content?.forEach((element) {
           Map<String, dynamic> dataSetup = {
-            'id': element.userUid ?? '',
-            'display': element.userName ?? '',
-            'photo': element.userProfilePic ?? '',
+            'id': element.userUid,
+            'display': element.userName,
+            'photo': element.userProfilePic,
           };
           tageData.add(dataSetup);
+          
           if (tageData.isNotEmpty == true) {
             istageData = true;
           }
@@ -279,14 +285,10 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                   onTap: () {
                                     HasetagList = [];
                                     CreatePostDone = true;
-                                    dataPostFucntion();
-                                   
 
-
-
-
-
-
+                                    if (isDataSet == true) {
+                                      dataPostFucntion();
+                                    }
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -416,7 +418,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                   SizedBox(
                                     height: 80,
                                     child: FlutterMentions(
-                                          defaultText: widget.edittextdata,
+                                      defaultText: widget.edittextdata,
                                       onChanged: (value) {
                                         onChangeMethod(value);
                                       },
@@ -436,6 +438,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                             data: tageData,
                                             suggestionBuilder: (tageData) {
                                               if (istageData) {
+
+                                                print("this is the data-${tageData['photo']}");
                                                 return Container(
                                                   padding: EdgeInsets.all(10.0),
                                                   child: Row(
@@ -446,7 +450,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                                   true &&
                                                               tageData['photo']
                                                                       .toString() !=
-                                                                  Null
+                                                                  null
                                                           ? CircleAvatar(
                                                               backgroundImage:
                                                                   AssetImage(
@@ -1635,7 +1639,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
       });
 
       print(HasetagList?.length);
-      if ((HasetagList?.length)! <= 25) {
+      // if ((HasetagList?.length)! <= 25) {
         /* if (postText.text.length >= 1000) {
           SnackBar snackBar = SnackBar(
             content: Text('Please enter less than 1000 letter!!'),
@@ -1644,6 +1648,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         } else { */
         if (CreatePostDone == true) {
+          setState(() {
+            isDataSet = false;
+          });
           if (postText.text.isNotEmpty && file?.path != null) {
             Map<String, dynamic> param = {
               "description": postText.text,
@@ -1758,14 +1765,14 @@ class _CreateNewPostState extends State<CreateNewPost> {
           }
         }
         /* } */
-      } else {
-        CreatePostDone = false;
+      // } else {
+      /*   CreatePostDone = false;
         SnackBar snackBar = SnackBar(
           content: Text('Please HaseTag less than 25 letter!!'),
           backgroundColor: ColorConstant.primary_color,
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
+      } */
     }
   }
 
