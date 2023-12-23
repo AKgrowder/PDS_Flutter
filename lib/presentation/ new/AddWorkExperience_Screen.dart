@@ -82,6 +82,8 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
     if (widget.typeName != "COMPANY") {
       BlocProvider.of<NewProfileSCubit>(context).fetchExprties(context);
     }
+    print("widget.endDate"+widget.endDate.toString());
+    valuesecond= widget.endDate=="Present";
     BlocProvider.of<NewProfileSCubit>(context).IndustryTypeAPI(context);
     if (widget.edit == true) {
       companyNameController.text = widget.companyName.toString();
@@ -91,6 +93,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
       EndDateController.text = widget.endDate.toString();
       print("startDate${widget.startDate.toString()}");
       print("endDate${widget.endDate.toString()}");
+      
 
       //  widget.typeName != "COMPANY" ? selectedExpertise.expertiseName = widget.expertise : "";
     }
@@ -359,10 +362,10 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Checkbox(
+                              Checkbox( 
                                 activeColor: ColorConstant.primary_color,
                                 value: this.valuesecond,
-                                onChanged: (bool? value) {
+                                onChanged: (bool? value ) {
                                   setState(() {
                                     this.valuesecond = value!;
 
