@@ -65,7 +65,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   String? UserLogin_ID;
   ImagePicker picker = ImagePicker();
   XFile? pickedImageFile;
-  ScrollController scrollController = ScrollController();
+  ScrollController  scrollController = ScrollController();
   ScrollController scrollController1 = ScrollController();
   bool isScroll = false;
   bool AddNewData = false;

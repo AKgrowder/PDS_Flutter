@@ -38,7 +38,7 @@ class BlogCommentBottomSheet extends StatefulWidget {
 class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
   final TextEditingController addcomment = TextEditingController();
   BlogCommentModel? blogCommentModel;
-  final ScrollController scroll = ScrollController();
+  ScrollController scroll = ScrollController();
   DeleteBlogCommentModel? deleteBlogCommentModel;
   GetGuestAllPostModel? AllGuestPostRoomData;
   bool isEmojiVisible = false;
@@ -54,9 +54,9 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
   SearchUserForInbox? searchUserForInbox1;
   HasDataModel? getAllHashtag;
 
-  void _goToElement() {
-    scroll.animateTo((1000 * 20),
-        duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+  void _goToElement(int index) {
+    scroll.animateTo((1000.0 * 100),
+        duration: const Duration(milliseconds: 20), curve: Curves.easeOut);
   }
 
   bool istageData = false;
@@ -137,7 +137,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
 
                 blogCommentModel?.object?.add(object);
 
-                _goToElement();
+                _goToElement(blogCommentModel?.object?.length ?? 0);
               }
             }
             if (state is DeleteBlogcommentLoadedState) {
@@ -155,9 +155,9 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
               searchUserForInbox1 = state.searchUserForInbox;
               searchUserForInbox1?.object?.content?.forEach((element) {
                 Map<String, dynamic> dataSetup = {
-                  'id': element.userUid ?? '',
-                  'display': element.userName ?? '',
-                  'photo': element.userProfilePic ?? ''
+                  'id': element.userUid,
+                  'display': element.userName,
+                  'photo': element.userProfilePic
                 };
                 tageData.add(dataSetup);
                 if (tageData.isNotEmpty == true) {
@@ -214,6 +214,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                 : Stack(
                     children: [
                       SingleChildScrollView(
+                        controller: scroll,
                         physics: BouncingScrollPhysics(),
                         child: Column(
                           children: [
@@ -313,24 +314,28 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                         children: [
                                                           GestureDetector(
                                                             onTap: () {
-                                                        Navigator.push(context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) {
-                                                          return ProfileScreen(
-                                                              User_ID:
-                                                                  "${blogCommentModel?.object?[index].userUid}",
-                                                              isFollowing: widget
-                                                                  .isFoollinng);
-                                                        }));
-                                                      },
-                                                            child: Container(/* color: Colors.amber, */
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) {
+                                                                return ProfileScreen(
+                                                                    User_ID:
+                                                                        "${blogCommentModel?.object?[index].userUid}",
+                                                                    isFollowing:
+                                                                        widget
+                                                                            .isFoollinng);
+                                                              }));
+                                                            },
+                                                            child: Container(
+                                                              /* color: Colors.amber, */
                                                               child: Text(
                                                                 "${blogCommentModel?.object?[index].userName}",
                                                                 style: TextStyle(
                                                                     fontFamily:
                                                                         'outfit',
-                                                                    fontSize: 18,
+                                                                    fontSize:
+                                                                        18,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .bold),
@@ -619,7 +624,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                     true &&
                                                                 tageData['photo']
                                                                         .toString() !=
-                                                                    Null
+                                                                    null
                                                             ? CircleAvatar(
                                                                 backgroundImage:
                                                                     AssetImage(

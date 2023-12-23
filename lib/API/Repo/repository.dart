@@ -2364,7 +2364,7 @@ class Repository {
   search_user_for_inbox1(
       String searchFilter, String pageNumber, BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.search_user_for_inboxUrl}?searchFilter=$searchFilter&numberOfRecords=30&pageNumber=$pageNumber',
+        '${Config.search_user_for_inboxUrl}?searchByUsername=$searchFilter&numberOfRecords=30&pageNumber=$pageNumber',
         context);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
