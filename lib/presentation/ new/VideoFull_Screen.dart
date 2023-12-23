@@ -3,7 +3,7 @@ import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoFullScreen extends StatefulWidget {
-  List<String>? postData;
+  List? postData;
   VideoFullScreen({Key? key, this.postData}) : super(key: key);
 
   @override
@@ -12,8 +12,8 @@ class VideoFullScreen extends StatefulWidget {
 
 class _VideoFullScreenState extends State<VideoFullScreen> {
   VideoPlayerController? _controllers;
-
-  double _currentSliderValue = 0.0;
+  Duration? _startDuration = Duration();
+  Duration? _endDuration = Duration();
   @override
   void initState() {
     // TODO: implement initState
@@ -23,12 +23,29 @@ class _VideoFullScreenState extends State<VideoFullScreen> {
       _controllers =
           VideoPlayerController.networkUrl(Uri.parse('${widget.postData?[i]}'));
 
-      _controllers?.initialize().then((value) => setState(() {}));
+      _controllers?.initialize().then((value) => setState(() {
+            _endDuration = _controllers?.value.duration;
+          }));
       setState(() {
         _controllers?.play();
         _controllers?.pause();
         _controllers?.setLooping(true);
-        _controllers.seekTo(position)
+        _controllers?.videoPlayerOptions?.allowBackgroundPlayback;
+
+        _controllers?.addListener(() => setState(() {
+              if (_controllers?.value.isPlaying ?? false) {
+                setState(() {
+                  _startDuration = _controllers?.value.position;
+                  _endDuration = _controllers?.value.duration;
+                });
+              } else {
+                setState(() {
+                  _startDuration = _controllers?.value.position;
+                  _endDuration = _controllers?.value.duration;
+                  ;
+                });
+              }
+            }));
       });
     }
     print("video list -- ${_controllers}");
@@ -38,6 +55,13 @@ class _VideoFullScreenState extends State<VideoFullScreen> {
   void dispose() {
     _controllers!.dispose();
     super.dispose();
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return '$twoDigitMinutes:$twoDigitSeconds';
   }
 
   @override
@@ -74,17 +98,30 @@ class _VideoFullScreenState extends State<VideoFullScreen> {
                       child: VideoPlayer(_controllers!),
                     )
                   : SizedBox(),
-              // Slider(
-              //   value: _currentSliderValue,
-              //   min: 0.0,
-              //   max: _controllers!.value.duration.inMilliseconds.toDouble(),
-              //   onChanged: (value) {
-              //     final Duration duration = _controllers!.value.duration;
-              //     final newPosition = value * duration.inMilliseconds;
-              //     _controllers!
-              //         .seekTo(Duration(milliseconds: newPosition.toInt()));
-              //   },
-              // ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 10),
+                child: VideoProgressIndicator(
+                  _controllers!,
+                  allowScrubbing: true,
+                  colors: VideoProgressColors(
+                    playedColor: Colors.black,
+                    backgroundColor: Colors.grey,
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${_formatDuration(_startDuration!)}',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  Text(
+                    '${_formatDuration(_endDuration!)}',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
               GestureDetector(
                 onTap: () {
                   // _playPause(index);
