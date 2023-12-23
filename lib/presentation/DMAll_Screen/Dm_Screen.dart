@@ -114,7 +114,7 @@ class _DmScreenState extends State<DmScreen> {
   }
 
   void dispose() {
-    //  DMstompClient.deactivate();
+     DMstompClient.deactivate();
     // Delet_DMstompClient.deactivate();
     super.dispose();
   }

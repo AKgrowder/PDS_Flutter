@@ -340,9 +340,69 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              return Container(
-                height: 50,
-                color: Colors.red[200],
+              return Padding(
+                padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                child: Container(
+                  height: 80,
+                  // color: const Color.fromARGB(255, 232, 207, 207),
+                  decoration: BoxDecoration(
+                      // color: Colors.green[100],
+                      border:
+                          Border.all(color: const Color(0XFFF1F1F1), width: 1),
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5, top: 5),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Container(
+                            height: 10,
+                            width: 10,
+                            decoration: BoxDecoration(
+                              color: ColorConstant.primary_color,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 60,
+                        width: 60,
+                        child: Image.asset(ImageConstant.InviteAcceptepLogo),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "${AllNotificationData?.object?[index].subject}",
+                            style: TextStyle(
+                                fontSize: 17,
+                                fontFamily: "outfit",
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 3,
+                          ),
+                          Text(
+                            "${AllNotificationData?.object?[index].notificationMessage}",
+                            maxLines: 2,
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: "outfit",
+                                fontWeight: FontWeight.normal),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               );
             });
       }
