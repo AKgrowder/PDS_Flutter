@@ -239,4 +239,15 @@ class ImageConstant {
   static String RightArrowgrey = "assets/images/RightArrowgrey.png";
   static String inbox_search = "assets/images/inboxSearch_icon.png";
   static String inbox_picture = "assets/images/inboxPicture_icon.png";
+/// Notification Image icon List  Start
+  static String PaymentNotificationLogo = "assets/images/Payment Notification Logo.png";
+  static String RoomCloseLogo = "assets/images/Room Close Logo.png";
+  static String RoomDeleteLogo = "assets/images/Room Delete Logo.png";
+  static String ExitMemberLogo = "assets/images/Exit Member Logo.png";
+  static String NewUpdateLogo = "assets/images/New Update Logo.png";
+  static String InviteAcceptepLogo = "assets/images/Invite Acceptep Logo.png";
+/// end
+
+
+
 }
