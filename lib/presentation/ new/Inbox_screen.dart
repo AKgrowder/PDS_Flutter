@@ -13,10 +13,12 @@ import 'package:pds/API/Model/PersonalChatListModel/PersonalChatList_Model.dart'
 import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/SelectChatMember.dart';
 import 'package:pds/presentation/%20new/inboxScreenInviteScreen.dart';
 import 'package:pds/presentation/DMAll_Screen/Dm_Screen.dart';
 import 'package:pds/widgets/pagenation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InboxScreen extends StatefulWidget {
   const InboxScreen({Key? key}) : super(key: key);
@@ -35,11 +37,21 @@ class _InboxScreenState extends State<InboxScreen> {
   bool apiData = false;
   FocusNode _focusNode = FocusNode();
   GetUsersChatByUsername? getUsersChatByUsername;
-
+  String? userID;
   @override
   void initState() {
+    getDocumentSize();
     BlocProvider.of<PersonalChatListCubit>(context).PersonalChatList(context);
+
     super.initState();
+  }
+
+  getDocumentSize() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    userID = prefs.getString(PreferencesKey.loginUserID);
+    print("userid-chelc-${userID}");
+    setState(() {});
   }
 
   @override
@@ -144,6 +156,13 @@ class _InboxScreenState extends State<InboxScreen> {
           if (state is GetUsersChatByUsernameLoaded) {
             isDataGet = true;
             getUsersChatByUsername = state.getUsersChatByUsername;
+            if (getUsersChatByUsername?.object?.content?.isNotEmpty == true) {
+              getUsersChatByUsername?.object?.content?.forEach((element) {
+                if (userID == element.userUuid) {
+                  getUsersChatByUsername?.object?.content?.remove(element);
+                }
+              });
+            }
           }
         }, builder: (context, state) {
           return apiData == true
