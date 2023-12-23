@@ -144,9 +144,9 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
               searchUserForInbox1 = state.searchUserForInbox;
               searchUserForInbox1?.object?.content?.forEach((element) {
                 Map<String, dynamic> dataSetup = {
-                  'id': element.userUid ?? '',
-                  'display': element.userName ?? '',
-                  'photo': element.userProfilePic ?? ''
+                  'id': element.userUid,
+                  'display': element.userName,
+                  'photo': element.userProfilePic
                 };
                 tageData.add(dataSetup);
                 if (tageData.isNotEmpty == true) {
@@ -664,7 +664,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                               true &&
                                                           tageData['photo']
                                                                   .toString() !=
-                                                              Null
+                                                              null
                                                       ? CircleAvatar(
                                                           backgroundImage:
                                                               AssetImage(

@@ -2017,40 +2017,45 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   getFileSize(String filepath, int decimals, PlatformFile file1, int Index,
       context) async {
+        CroppedFile? croppedFile;
     var file = File(filepath);
     int bytes = await file.length();
     if (bytes <= 0) return "0 B";
     const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
     var i = (log(bytes) / log(1024)).floor();
     var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
-    print('getFileSizevariable-${file1.path}');
+    print(
+        'getFileSizevariable1-${file1.path?.split('/').last.split('.').last}');
     value2 = double.parse(STR);
+    // if(file1.path?.split('/').last.split('.').last.)
+    if (file1.path?.split('/').last.split('.').last != 'pdf') {
+       croppedFile = await ImageCropper().cropImage(
+        sourcePath: file.path.toString(),
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Cropper',
+              activeControlsWidgetColor: Color(0xffED1C25),
+              toolbarColor: Color(0xffED1C25),
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: 'Cropper',
+          ),
+          WebUiSettings(
+            context: context,
+          ),
+        ],
+      );
+    }
 
-    CroppedFile? croppedFile = await ImageCropper().cropImage(
-      sourcePath: file.path.toString(),
-      aspectRatioPresets: [
-        CropAspectRatioPreset.square,
-        CropAspectRatioPreset.ratio3x2,
-        CropAspectRatioPreset.original,
-        CropAspectRatioPreset.ratio4x3,
-        CropAspectRatioPreset.ratio16x9
-      ],
-      uiSettings: [
-        AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            activeControlsWidgetColor: Color(0xffED1C25),
-            toolbarColor: Color(0xffED1C25),
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false),
-        IOSUiSettings(
-          title: 'Cropper',
-        ),
-        WebUiSettings(
-          context: context,
-        ),
-      ],
-    );
     print(value2);
     switch (i) {
       case 0:
