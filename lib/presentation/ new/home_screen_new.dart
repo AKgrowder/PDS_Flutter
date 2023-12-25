@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chewie/chewie.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -60,6 +61,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
@@ -136,11 +138,36 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   String? IosMainversion;
   bool AutoOpenPostBool = false;
   String? AutoOpenPostID;
-  List<VideoPlayerController> mainPostControllers = [];
-  List<VideoPlayerController> repostControllers = [];
-  List<VideoPlayerController> repostMainControllers = [];
+  List<VideoPlayerController> mainPostControllers = []; //single cotroller
+  List<VideoPlayerController> repostControllers = []; // repost cotrller
+  List<VideoPlayerController> repostMainControllers = []; // repost
 
   UserTagModel? userTagModel;
+  List<ChewieController> chewieController = [];
+  ChewieController? inList;
+  Map<String, bool> _videoVisibility = {};
+
+/*   @override
+  void dispose() {
+    for (var controller inList =   mainPostControllers) {
+      controller.dispose();
+    }
+    mainPostControllers.clear();
+    for (var controller inList =   repostControllers) {
+      controller.dispose();
+    }
+    repostControllers.clear();
+    for (var controller inList =   repostMainControllers) {
+      controller.dispose();
+    }
+    repostMainControllers.clear();
+    for (var controller inList =   chewieController) {
+      controller.dispose();
+    }
+    chewieController.clear();
+
+    super.dispose();
+  } */
 
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -234,9 +261,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               PopupMenuItem<String>(
                 value: 'edit',
                 child: GestureDetector(
-                  onTap: () {
+                         onTap: () {
                     print(AllGuestPostRoomData
                         ?.object?.content?[index].description);
+
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -245,7 +273,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                   ?.object?.content?[index].postUid,
                               edittextdata: AllGuestPostRoomData
                                   ?.object?.content?[index].description),
-                        )).then((value) => Get_UserToken());
+                        )).then((value) {
+                      Get_UserToken();
+                      Navigator.pop(context);
+                    });
                   },
                   child: Container(
                     width: 130,
@@ -963,24 +994,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   }
 
   @override
-  void dispose() {
-    for (var controller in mainPostControllers) {
-      controller.dispose();
-    }
-    mainPostControllers.clear();
-    for (var controller in repostControllers) {
-      controller.dispose();
-    }
-    repostControllers.clear();
-    for (var controller in repostMainControllers) {
-      controller.dispose();
-    }
-    repostMainControllers.clear();
-
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
@@ -997,7 +1010,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 if (uuid != null) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return CreateNewPost();
-                  })).then((value) => Get_UserToken());
+                  })).then((value) {
+                    return Get_UserToken();
+                  });
                 } else {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => RegisterCreateAccountScreen()));
@@ -1324,53 +1339,31 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 }
               }
               if (state is GetGuestAllPostLoadedState) {
+                mainPostControllers.clear();
+                VideoPlayerController _controller =
+                    VideoPlayerController.networkUrl(Uri.parse(''));
                 apiCalingdone = true;
                 AllGuestPostRoomData = state.GetGuestAllPostRoomData;
                 AllGuestPostRoomData?.object?.content?.forEach((element) {
                   if (element.postDataType == 'VIDEO') {
-                    for (int i = 0; i < element.postData!.length; i++) {
-                      mainPostControllers.add(VideoPlayerController.networkUrl(
-                          Uri.parse('${element.postData?[i]}')));
-
-                      mainPostControllers[i]
-                          .initialize()
-                          .then((value) => setState(() {}));
-                      setState(() {
-                        mainPostControllers[i].play();
-                        mainPostControllers[i].pause();
-                        mainPostControllers[i].setLooping(true);
-                      });
-                    }
-                    for (int i = 0; i < element.postData!.length; i++) {
-                      repostControllers.add(VideoPlayerController.networkUrl(
-                          Uri.parse('${element.postData?[i]}')));
-
-                      repostControllers[i]
-                          .initialize()
-                          .then((value) => setState(() {}));
-                      setState(() {
-                        repostControllers[i].play();
-                        repostControllers[i].pause();
-                        repostControllers[i].setLooping(true);
-                      });
-                    }
-                    for (int i = 0; i < element.postData!.length; i++) {
-                      repostMainControllers.add(
-                          VideoPlayerController.networkUrl(
-                              Uri.parse('${element.postData?[i]}')));
-
-                      repostMainControllers[i]
-                          .initialize()
-                          .then((value) => setState(() {}));
-                      setState(() {
-                        repostMainControllers[i].play();
-                        repostMainControllers[i].pause();
-                        repostMainControllers[i].setLooping(true);
-                      });
-                    }
-                    print("video list -- ${repostMainControllers}");
+                    VideoPlayerController _controller =
+                        VideoPlayerController.networkUrl(
+                            Uri.parse(element.postData?.first ?? ''));
+                    inList = ChewieController(
+                      videoPlayerController: _controller,
+                      autoPlay: false,
+                      looping: false,
+                      allowFullScreen: true,
+                      materialProgressColors: ChewieProgressColors(
+                          backgroundColor: Colors.grey,
+                          playedColor: ColorConstant.primary_color),
+                    );
                   }
+
+                  chewieController.add(inList ??
+                      ChewieController(videoPlayerController: _controller));
                 });
+                print("chewieController length -${chewieController.length}");
               }
               if (state is PostLikeLoadedState) {
                 if (state.likePost.object != 'Post Liked Successfully' &&
@@ -2252,7 +2245,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                   print("qqqqqqqqhttps://${link.value}");
                                                                                 } else {
                                                                                   if (Link6 == true) {
-                                                                                    print("yes i am in room");
+                                                                                    print("yes i am inList =   room");
                                                                                     Navigator.push(context, MaterialPageRoute(
                                                                                       builder: (context) {
                                                                                         return NewBottomBar(
@@ -2341,68 +2334,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 ),
                                                                               )
                                                                             : AllGuestPostRoomData?.object?.content?[index].postDataType == "VIDEO"
-                                                                                ? repostControllers[0].value.isInitialized
-                                                                                    ? Padding(
-                                                                                        padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-                                                                                        child: Container(
-                                                                                          height: 200,
-                                                                                          child: Stack(
-                                                                                            children: [
-                                                                                              AspectRatio(
-                                                                                                aspectRatio: repostControllers[0].value.aspectRatio,
-                                                                                                child: VideoPlayer(repostControllers[0]),
-                                                                                              ),
-                                                                                              Positioned(
-                                                                                                right: 0,
-                                                                                                bottom: 0,
-                                                                                                child: IconButton(
-                                                                                                  color: ColorConstant.primary_color,
-                                                                                                  icon: Icon(
-                                                                                                    /*  _isFullScreen ? Icons.fullscreen_exit : */ Icons.fullscreen,
-                                                                                                  ),
-                                                                                                  onPressed: () {
-                                                                                                    Navigator.push(context, MaterialPageRoute(
-                                                                                                      builder: (context) {
-                                                                                                        return VideoFullScreen(
-                                                                                                          postData: AllGuestPostRoomData?.object?.content?[index].postData,
-                                                                                                        );
-                                                                                                      },
-                                                                                                    ));
-                                                                                                  }, /* _toggleFullScreen */
-                                                                                                ),
-                                                                                              ),
-                                                                                              Positioned.fill(
-                                                                                                child: GestureDetector(
-                                                                                                  onTap: () {
-                                                                                                    // _playPause(index);
-                                                                                                    if (repostControllers[0].value.isPlaying) {
-                                                                                                      setState(() {
-                                                                                                        repostControllers[0].pause();
-                                                                                                      });
-                                                                                                    } else {
-                                                                                                      setState(() {
-                                                                                                        repostControllers[0].play();
-                                                                                                      });
-                                                                                                    }
-                                                                                                  },
-                                                                                                  child: repostControllers[0].value.isPlaying
-                                                                                                      ? Icon(
-                                                                                                          Icons.pause_circle_outline,
-                                                                                                          size: 50,
-                                                                                                          color: Colors.white,
-                                                                                                        )
-                                                                                                      : Icon(
-                                                                                                          Icons.play_circle_outline,
-                                                                                                          size: 50,
-                                                                                                          color: Colors.white,
-                                                                                                        ),
-                                                                                                ),
-                                                                                              ),
-                                                                                            ],
-                                                                                          ),
-                                                                                        ),
-                                                                                      )
-                                                                                    : SizedBox()
+                                                                                ? /* repostControllers[0].value.isInitialized
+                                                                                    ?   */
+                                                                                Padding(
+                                                                                    padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
+                                                                                    child: Container(
+                                                                                        height: 250,
+                                                                                        width: _width,
+                                                                                        child: Chewie(
+                                                                                          controller: chewieController[index],
+                                                                                        )),
+                                                                                  )
+                                                                                // : SizedBox()
                                                                                 //this is the ATTACHMENT
                                                                                 : AllGuestPostRoomData?.object?.content?[index].postDataType == "ATTACHMENT"
                                                                                     ? (AllGuestPostRoomData?.object?.content?[index].postData?.isNotEmpty == true)
@@ -2707,7 +2650,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                   print("qqqqqqqqhttps://${link.value}");
                                                                                 } else {
                                                                                   if (Link6 == true) {
-                                                                                    print("yes i am in room");
+                                                                                    print("yes i am inList =   room");
                                                                                     Navigator.push(context, MaterialPageRoute(
                                                                                       builder: (context) {
                                                                                         return NewBottomBar(
@@ -2784,68 +2727,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                   ),
                                                                                 )
                                                                               : AllGuestPostRoomData?.object?.content?[index].repostOn?.postDataType == "VIDEO"
-                                                                                  ? repostMainControllers[0].value.isInitialized
-                                                                                      ? Padding(
-                                                                                          padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-                                                                                          child: Container(
-                                                                                            height: 200,
-                                                                                            child: Stack(
-                                                                                              children: [
-                                                                                                AspectRatio(
-                                                                                                  aspectRatio: repostMainControllers[0].value.aspectRatio,
-                                                                                                  child: VideoPlayer(repostMainControllers[0]),
-                                                                                                ),
-                                                                                                Positioned(
-                                                                                                  right: 0,
-                                                                                                  bottom: 0,
-                                                                                                  child: IconButton(
-                                                                                                    color: ColorConstant.primary_color,
-                                                                                                    icon: Icon(
-                                                                                                      /*  _isFullScreen ? Icons.fullscreen_exit : */ Icons.fullscreen,
-                                                                                                    ),
-                                                                                                    onPressed: () {
-                                                                                                      Navigator.push(context, MaterialPageRoute(
-                                                                                                        builder: (context) {
-                                                                                                          return VideoFullScreen(
-                                                                                                            postData: AllGuestPostRoomData?.object?.content?[index].repostOn?.postData,
-                                                                                                          );
-                                                                                                        },
-                                                                                                      ));
-                                                                                                    }, /* _toggleFullScreen */
-                                                                                                  ),
-                                                                                                ),
-                                                                                                Positioned.fill(
-                                                                                                  child: GestureDetector(
-                                                                                                    onTap: () {
-                                                                                                      // _playPause(index);
-                                                                                                      if (repostMainControllers[0].value.isPlaying) {
-                                                                                                        setState(() {
-                                                                                                          repostMainControllers[0].pause();
-                                                                                                        });
-                                                                                                      } else {
-                                                                                                        setState(() {
-                                                                                                          repostMainControllers[0].play();
-                                                                                                        });
-                                                                                                      }
-                                                                                                    },
-                                                                                                    child: repostMainControllers[0].value.isPlaying
-                                                                                                        ? Icon(
-                                                                                                            Icons.pause_circle_outline,
-                                                                                                            size: 50,
-                                                                                                            color: Colors.white,
-                                                                                                          )
-                                                                                                        : Icon(
-                                                                                                            Icons.play_circle_outline,
-                                                                                                            size: 50,
-                                                                                                            color: Colors.white,
-                                                                                                          ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                              ],
-                                                                                            ),
-                                                                                          ),
-                                                                                        )
-                                                                                      : SizedBox()
+                                                                                  ? /* repostMainControllers[0].value.isInitialized
+                                                                                      ? */
+                                                                                  Padding(
+                                                                                      padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
+                                                                                      child: Container(
+                                                                                          height: 250,
+                                                                                          width: _width,
+                                                                                          child: Chewie(
+                                                                                            controller: chewieController[index],
+                                                                                          )),
+                                                                                    )
+                                                                                  // : SizedBox()
                                                                                   : AllGuestPostRoomData?.object?.content?[index].repostOn?.postDataType == "ATTACHMENT"
                                                                                       ? Container(
                                                                                           height: 400,
@@ -3250,7 +3143,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             // "https://play.google.com/store/apps/details?id=com.pds.app",
                                                                             '${AllGuestPostRoomData?.object?.content?[index].postLink}'
                                                                         /* iosLink:
-                                                      "https://apps.apple.com/in/app/growder-b2b-platform/id6451333863" */
+                                                      "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
                                                                         );
                                                                   }
                                                                 },
@@ -3683,7 +3576,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                   print("qqqqqqqqhttps://${link.value}");
                                                                                 } else {
                                                                                   if (Link6 == true) {
-                                                                                    print("yes i am in room");
+                                                                                    print("yes i am inList =   room");
                                                                                     Navigator.push(context, MaterialPageRoute(
                                                                                       builder: (context) {
                                                                                         return NewBottomBar(
@@ -3780,68 +3673,20 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         )
                                                                       : AllGuestPostRoomData?.object?.content?[index].postDataType ==
                                                                               "VIDEO"
-                                                                          ? mainPostControllers[0].value.isInitialized
-                                                                              ? Padding(
-                                                                                  padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-                                                                                  child: Container(
-                                                                                    height: 200,
-                                                                                    child: Stack(
-                                                                                      children: [
-                                                                                        AspectRatio(
-                                                                                          aspectRatio: mainPostControllers[0].value.aspectRatio,
-                                                                                          child: VideoPlayer(mainPostControllers[0]),
-                                                                                        ),
-                                                                                        Positioned(
-                                                                                          right: 0,
-                                                                                          bottom: 0,
-                                                                                          child: IconButton(
-                                                                                            color: ColorConstant.primary_color,
-                                                                                            icon: Icon(
-                                                                                              /*  _isFullScreen ? Icons.fullscreen_exit : */ Icons.fullscreen,
-                                                                                            ),
-                                                                                            onPressed: () {
-                                                                                              Navigator.push(context, MaterialPageRoute(
-                                                                                                builder: (context) {
-                                                                                                  return VideoFullScreen(
-                                                                                                    postData: AllGuestPostRoomData?.object?.content?[index].postData,
-                                                                                                  );
-                                                                                                },
-                                                                                              ));
-                                                                                            }, /* _toggleFullScreen */
-                                                                                          ),
-                                                                                        ),
-                                                                                        Positioned.fill(
-                                                                                          child: GestureDetector(
-                                                                                            onTap: () {
-                                                                                              // _playPause(index);
-                                                                                              if (mainPostControllers[0].value.isPlaying) {
-                                                                                                setState(() {
-                                                                                                  mainPostControllers[0].pause();
-                                                                                                });
-                                                                                              } else {
-                                                                                                setState(() {
-                                                                                                  mainPostControllers[0].play();
-                                                                                                });
-                                                                                              }
-                                                                                            },
-                                                                                            child: mainPostControllers[0].value.isPlaying
-                                                                                                ? Icon(
-                                                                                                    Icons.pause_circle_outline,
-                                                                                                    size: 50,
-                                                                                                    color: Colors.white,
-                                                                                                  )
-                                                                                                : Icon(
-                                                                                                    Icons.play_circle_outline,
-                                                                                                    size: 50,
-                                                                                                    color: Colors.white,
-                                                                                                  ),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ],
-                                                                                    ),
-                                                                                  ),
-                                                                                )
-                                                                              : SizedBox()
+                                                                          ? /*  mainPostControllers[0].value.isInitialized
+                                                                              ? */
+
+                                                                          Padding(
+                                                                              padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
+                                                                              child: Container(
+                                                                                  height: 250,
+                                                                                  width: _width,
+                                                                                  child: Chewie(
+                                                                                    controller: chewieController[index],
+                                                                                  )),
+                                                                            )
+                                                                          // : SizedBox()
+
                                                                           : AllGuestPostRoomData?.object?.content?[index].postDataType == "ATTACHMENT"
                                                                               ? (AllGuestPostRoomData?.object?.content?[index].postData?.isNotEmpty == true)
                                                                                   ? Container(
@@ -4272,7 +4117,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           // "https://play.google.com/store/apps/details?id=com.pds.app",
                                                                           '${AllGuestPostRoomData?.object?.content?[index].postLink}',
                                                                       /* iosLink:
-                                                      "https://apps.apple.com/in/app/growder-b2b-platform/id6451333863" */
+                                                      "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
                                                                     );
                                                                   }
                                                                 },
@@ -4579,7 +4424,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                           ),
                                                                                           Expanded(
                                                                                             child: Text(
-                                                                                              'Expertise in ${AllExperData?.object?[index].expertise?[0].expertiseName}',
+                                                                                              'Expertise inList =   ${AllExperData?.object?[index].expertise?[0].expertiseName}',
                                                                                               maxLines: 1,
                                                                                               style: TextStyle(fontFamily: "outfit", fontSize: 11, overflow: TextOverflow.ellipsis, color: Colors.white, fontWeight: FontWeight.bold),
                                                                                             ),
@@ -4897,7 +4742,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           GestureDetector(
                                                                             onTap:
                                                                                 () async {
-                                                                              print("opne comment sheet in blogs");
+                                                                              print("opne comment sheet inList =   blogs");
                                                                               BlocProvider.of<BlogcommentCubit>(context).BlogcommentAPI(context, getallBlogModel1?.object?[index1].uid ?? "");
 
                                                                               _settingModalBottomSheetBlog(context, index, _width);
