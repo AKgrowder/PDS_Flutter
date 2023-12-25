@@ -246,6 +246,33 @@ class ImageConstant {
   static String ExitMemberLogo = "assets/images/Exit Member Logo.png";
   static String NewUpdateLogo = "assets/images/New Update Logo.png";
   static String InviteAcceptepLogo = "assets/images/Invite Acceptep Logo.png";
+  static String Like_Post = "assets/images/Like Post.png";
+  static String Comment_Post = "assets/images/Comment Post.png";
+  static String Tag_Comment_Post = "assets/images/Tag Comment Post.png";
+  static String Expert_Accept_Invite = "assets/images/Expert Accept Invite.png";
+  static String Expert_Reject_Invite = "assets/images/Expert Reject Invite.png";
+  static String Follow_Public_Account = "assets/images/Follow Public Account.png";
+  static String Follow_Private_Account_Request = "assets/images/Follow Private Account Request.png";
+  static String Follow_Request_Accept = "assets/images/Follow Request Accept.png";
+  static String Invite_Rejected = "assets/images/Invite Rejected.png";
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+
+
+  
 /// end
 
 
