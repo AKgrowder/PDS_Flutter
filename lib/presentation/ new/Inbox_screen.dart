@@ -132,6 +132,11 @@ class _InboxScreenState extends State<InboxScreen> {
           }
           if (state is UserChatDeleteLoaded) {
             print(state.DeleteUserChatData.object);
+             SnackBar snackBar = SnackBar(
+                    content: Text(state.DeleteUserChatData.object.toString()),
+                    backgroundColor: ColorConstant.primary_color,
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
             if (state.DeleteUserChatData.object ==
                 "Chat Deleted Successfully") {
               setState(() {
@@ -432,7 +437,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                             ),
                                             Spacer(),
                                             Text(
-                                              customFormat(parsedDateTime),
+                                              getTimeDifference(parsedDateTime),
                                               style: TextStyle(
                                                 fontSize: 11,
                                                 fontWeight: FontWeight.w400,
@@ -649,6 +654,34 @@ class _InboxScreenState extends State<InboxScreen> {
     }
   }
 }
+ String getTimeDifference(DateTime dateTime) {
+    final difference = DateTime.now().difference(dateTime);
+    if (difference.inDays > 0) {
+      if (difference.inDays == 1) {
+        return '1 day ago';
+      } else if (difference.inDays < 7) {
+        return '${difference.inDays} days ago';
+      } else {
+        final weeks = (difference.inDays / 7).floor();
+        return '$weeks week${weeks == 1 ? '' : 's'} ago';
+      }
+    } else if (difference.inHours > 0) {
+      if (difference.inHours == 1) {
+        return '1 hour ago';
+      } else {
+        return '${difference.inHours} hours ago';
+      }
+    } else if (difference.inMinutes > 0) {
+      if (difference.inMinutes == 1) {
+        return '1 minute ago';
+      } else {
+        return '${difference.inMinutes} minutes ago';
+      }
+    } else {
+      return 'Just now';
+    }
+  }
+
 
 class InboxScreen1 extends StatelessWidget {
   const InboxScreen1({Key? key}) : super(key: key);
