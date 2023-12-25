@@ -478,6 +478,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                         width: _width / 2.35,
                                         // color: Colors.red,
                                         child: TextField(
+                                          maxLines: null,
                                           controller: Add_Comment,
                                           cursorColor: Colors.grey,
                                           decoration: InputDecoration(

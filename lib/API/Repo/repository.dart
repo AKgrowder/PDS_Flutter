@@ -563,7 +563,7 @@ class Repository {
  AllNotificationAPI(
       BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.getAllPostNotifications}',
+        '${Config.getAllNotifications}',
         context);
     print(response);
     var jsonString = json.decode(response.body);
