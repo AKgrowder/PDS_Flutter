@@ -54,9 +54,10 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
   SearchUserForInbox? searchUserForInbox1;
   HasDataModel? getAllHashtag;
 
-  void _goToElement(int index) {
-    scroll.animateTo((1000.0 * 100),
-        duration: const Duration(milliseconds: 20), curve: Curves.easeOut);
+  void _goToElement() {
+    /* scroll.animateTo((1000.0 * 100),
+        duration: const Duration(milliseconds: 20), curve: Curves.easeOut); */
+        scroll.jumpTo(scroll.position.maxScrollExtent+100);
   }
 
   bool istageData = false;
@@ -137,7 +138,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
 
                 blogCommentModel?.object?.add(object);
 
-                _goToElement(blogCommentModel?.object?.length ?? 0);
+                _goToElement();
               }
             }
             if (state is DeleteBlogcommentLoadedState) {
@@ -224,7 +225,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                 // physics:  NeverScrollableScrollPhysics(),
                                 itemCount: blogCommentModel?.object?.length,
                                 shrinkWrap: true,
-                                controller: scroll,
+                                // controller: scroll,
                                 itemBuilder: (context, index) {
                                   DateTime? parsedDateTime = DateTime.parse(
                                       '${blogCommentModel?.object?[index].createdAt ?? ""}');
