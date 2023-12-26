@@ -30,7 +30,8 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
   TabController? _tabController;
   RequestListModel? RequestListModelData;
   InvitationModel? invitationRoomData;
-
+  GetAllNotificationModel? AllNotificationData;
+  int NotificationCount = 0;
   bool apiDataGet = false;
   bool dataGet = false;
   bool? Show_NoData_Image;
@@ -73,6 +74,15 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
+          }
+          if (state is GetAllNotificationLoadedState) {
+            NotificationCount = 0;
+            AllNotificationData = state.AllNotificationData;
+            AllNotificationData?.object?.forEach((element) async {
+              if (element.isSeen == false) {
+                NotificationCount = NotificationCount + 1;
+              }
+            });
           }
           if (state is InvitationLoadedState) {
             dataGet = true;
@@ -151,7 +161,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Spacer(),
+                                  // Spacer(),
                                   Text(
                                     "All",
                                     textScaleFactor: 1.0,
@@ -160,7 +170,27 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                                         fontFamily: 'Outfit',
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  Spacer(),
+                                  SizedBox(
+                                    width: 4,
+                                  ),
+                                  AllNotificationData?.object?.length == 0 ||
+                                          AllNotificationData?.object?.length ==
+                                              null
+                                      ? SizedBox()
+                                      : Container(
+                                          child: Text(
+                                            '${NotificationCount}',
+                                            style: TextStyle(
+                                                overflow: TextOverflow.ellipsis,
+                                                fontFamily: "outfit",
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13),
+                                          ),
+                                        ),
+                                  SizedBox(
+                                    width: 1,
+                                  ),
+                                  // Spacer(),
                                 ],
                               ),
                             ),
@@ -337,6 +367,10 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
         isdata = true;
         AllNotificationData = state.AllNotificationData;
       }
+
+      if (state is SeenNotificationLoadedState) {
+        BlocProvider.of<InvitationCubit>(context).AllNotification(context);
+      }
     }, builder: (context, state) {
       return isdata == false
           ? Center(
@@ -349,73 +383,111 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                 ),
               ),
             )
-          : ListView.builder(
-              itemCount: AllNotificationData?.object?.length,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                DateTime parsedDateTime = DateTime.parse(
-                    '${AllNotificationData?.object?[index].receivedAt}');
-                return Padding(
-                  padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                  child: GestureDetector(
-                    onTap: () {
-                      AllNotificationData?.object?[index].subject == "TAG_POST" ||
-                              AllNotificationData?.object?[index].subject ==
-                                  "RE_POST"
-                          ? Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => OpenSavePostImage(
-                                        PostID: AllNotificationData
-                                            ?.object?[index].accessCode,
-                                        index: 0,
-                                      )),
-                            )
-                          // print("opne Save Image screen RE_POST & TAG_POST");
+          : AllNotificationData?.object?.isNotEmpty == true
+              ? ListView.builder(
+                  itemCount: AllNotificationData?.object?.length,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    DateTime? parsedDateTime;
+                    if (AllNotificationData?.object?[index].receivedAt !=
+                        null) {
+                      parsedDateTime = DateTime.parse(
+                          '${AllNotificationData?.object?[index].receivedAt ?? ""}');
+                    }
 
-                          : AllNotificationData?.object?[index].subject ==
-                                  "INVITE_ROOM"
-                              ? print("Notification Seen INVITE_ROOM")
-                              : AllNotificationData?.object?[index].subject ==
-                                          "EXPERT_LEFT_ROOM" ||
-                                      AllNotificationData?.object?[index].subject ==
-                                          "MEMBER_LEFT_ROOM" ||
-                                      AllNotificationData?.object?[index].subject ==
-                                          "DELETE_ROOM" ||
-                                      AllNotificationData?.object?[index].subject ==
-                                          "EXPERT_ACCEРТ_INVITE" ||
-                                      AllNotificationData?.object?[index].subject ==
-                                          "EXPERT_REJECT_INVITE"
-                                  ? print(
-                                      "Notification Seen  EXPERT_LEFT_ROOM & MEMBER_LEFT_ROOM & DELETE_ROOM & EXPERT_ACCEРТ_INVITE & EXPERT_REJECT_INVITE")
-                                  : AllNotificationData?.object?[index].subject ==
-                                          "EXPERT_REJECT_INVITE"
-                                      ? print(
-                                          "Seen Notification EXPERT_REJECT_INVITE")
-                                      : AllNotificationData?.object?[index].subject == "LIKE_POST" ||
-                                              AllNotificationData?.object?[index].subject ==
-                                                  "COMMENT_POST" ||
-                                              AllNotificationData?.object?[index].subject ==
-                                                  "TAG_COMMENT_POST"
-                                          ? print(
-                                              "opne Save Image screen LIKE_POST & COMMENT_POST & TAG_COMMENT_POST")
-                                          : AllNotificationData?.object?[index]
-                                                          .subject ==
-                                                      "FOLLOW_PUBLIC_ACCOUNT" ||
-                                                  AllNotificationData
-                                                          ?.object?[index]
-                                                          .subject ==
-                                                      "FOLLOW_PRIVATE_ACCOUNT_REQUEST" ||
-                                                  AllNotificationData
-                                                          ?.object?[index]
-                                                          .subject ==
-                                                      "FOLLOW_REQUEST_ACCEPTED"
-                                              ? print("open User Profile FOLLOW_PUBLIC_ACCOUNT & FOLLOW_PRIVATE_ACCOUNT_REQUEST & FOLLOW_REQUEST_ACCEPTED")
-                                              : print("");
+                    return AllNotificationData?.object?[index].receivedAt !=
+                            null
+                        ? Padding(
+                            padding: const EdgeInsets.only(
+                                top: 16, left: 16, right: 16),
+                            child: GestureDetector(
+                              onTap: () {
+                                AllNotificationData?.object?[index].subject == "TAG_POST" ||
+                                        AllNotificationData?.object?[index].subject ==
+                                            "RE_POST"
+                                    ? Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                OpenSavePostImage(
+                                                  PostID: AllNotificationData
+                                                      ?.object?[index]
+                                                      .accessCode,
+                                                  index: 0,
+                                                )),
+                                      )
+                                    // print("opne Save Image screen RE_POST & TAG_POST");
+
+                                    : AllNotificationData?.object?[index].subject ==
+                                            "INVITE_ROOM"
+                                        ? print("Notification Seen INVITE_ROOM")
+                                        : AllNotificationData?.object?[index].subject == "EXPERT_LEFT_ROOM" ||
+                                                AllNotificationData?.object?[index].subject ==
+                                                    "MEMBER_LEFT_ROOM" ||
+                                                AllNotificationData?.object?[index].subject ==
+                                                    "DELETE_ROOM" ||
+                                                AllNotificationData?.object?[index].subject ==
+                                                    "EXPERT_ACCEРТ_INVITE" ||
+                                                AllNotificationData
+                                                        ?.object?[index]
+                                                        .subject ==
+                                                    "EXPERT_REJECT_INVITE"
+                                            ? print(
+                                                "Notification Seen  EXPERT_LEFT_ROOM & MEMBER_LEFT_ROOM & DELETE_ROOM & EXPERT_ACCEРТ_INVITE & EXPERT_REJECT_INVITE")
+                                            : AllNotificationData?.object?[index].subject ==
+                                                    "EXPERT_REJECT_INVITE"
+                                                ? print(
+                                                    "Seen Notification EXPERT_REJECT_INVITE")
+                                                : AllNotificationData?.object?[index].subject ==
+                                                            "LIKE_POST" ||
+                                                        AllNotificationData
+                                                                ?.object?[index]
+                                                                .subject ==
+                                                            "COMMENT_POST" ||
+                                                        AllNotificationData
+                                                                ?.object?[index]
+                                                                .subject ==
+                                                            "TAG_COMMENT_POST"
+                                                    ? Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                OpenSavePostImage(
+                                                                  PostID: AllNotificationData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .accessCode,
+                                                                  index: 0,
+                                                                  profileTure: AllNotificationData?.object?[index].subject ==
+                                                                              "COMMENT_POST" ||
+                                                                          AllNotificationData?.object?[index].subject ==
+                                                                              "TAG_COMMENT_POST"
+                                                                      ? true
+                                                                      : false,
+                                                                )),
+                                                      )
+                                                    // print("opne Save Image screen LIKE_POST & COMMENT_POST & TAG_COMMENT_POST")
+                                                    : AllNotificationData?.object?[index].subject ==
+                                                                "FOLLOW_PUBLIC_ACCOUNT" ||
+                                                            AllNotificationData?.object?[index].subject ==
+                                                                "FOLLOW_PRIVATE_ACCOUNT_REQUEST" ||
+                                                            AllNotificationData
+                                                                    ?.object?[index]
+                                                                    .subject ==
+                                                                "FOLLOW_REQUEST_ACCEPTED"
+                                                        ? Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                            return ProfileScreen(
+                                                                User_ID:
+                                                                    "${AllNotificationData?.object?[index].accessCode}",
+                                                                isFollowing:
+                                                                    "");
+                                                          }))
+                                                        //  print("open User Profile FOLLOW_PUBLIC_ACCOUNT & FOLLOW_PRIVATE_ACCOUNT_REQUEST & FOLLOW_REQUEST_ACCEPTED")
+                                                        : print("");
 
 //////////////////////////////////////////////////////////////////////////////////////////
-                      /*    AllNotificationData?.object?[index].subject == "TAG_POST" ||
+                                /*    AllNotificationData?.object?[index].subject == "TAG_POST" ||
                             AllNotificationData?.object?[index].subject ==
                                 "RE_POST" ||
                             AllNotificationData?.object?[index].subject ==
@@ -464,161 +536,190 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                                             : SizedBox(); */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-                    },
-                    child: Container(
-                      // height: 90,
-                      // color: const Color.fromARGB(255, 232, 207, 207),
-                      decoration: BoxDecoration(
-                          // color: Colors.green[100],
-                          border: Border.all(
-                              color: const Color(0XFFF1F1F1), width: 1),
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              AllNotificationData?.object?[index].isSeen ==
-                                      false
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 2, right: 3, top: 5),
-                                      child: Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Container(
-                                          height: 10,
-                                          width: 10,
-                                          decoration: BoxDecoration(
-                                            color: ColorConstant.primary_color,
-                                            borderRadius:
-                                                BorderRadius.circular(12),
+
+                                // AllNotificationData?.object?[index].isSeen == true;
+                                BlocProvider.of<InvitationCubit>(context)
+                                    .SeenNotification(context,
+                                        "${AllNotificationData?.object?[index].postNotificationUid}");
+                              },
+                              child: Container(
+                                // height: 90,
+                                // color: const Color.fromARGB(255, 232, 207, 207),
+                                decoration: BoxDecoration(
+                                    // color: Colors.green[100],
+                                    border: Border.all(
+                                        color: const Color(0XFFF1F1F1),
+                                        width: 1),
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        AllNotificationData
+                                                    ?.object?[index].isSeen ==
+                                                false
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 2, right: 3, top: 5),
+                                                child: Align(
+                                                  alignment: Alignment.topLeft,
+                                                  child: Container(
+                                                    height: 10,
+                                                    width: 10,
+                                                    decoration: BoxDecoration(
+                                                      color: ColorConstant
+                                                          .primary_color,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            : Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 2, right: 3, top: 5),
+                                                child: Align(
+                                                  alignment: Alignment.topLeft,
+                                                  child: Container(
+                                                    height: 10,
+                                                    width: 10,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.transparent,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 3),
+                                          child: Container(
+                                            height: 60,
+                                            width: 60,
+                                            child: AllNotificationData?.object?[index].subject == "TAG_POST" ||
+                                                    AllNotificationData
+                                                            ?.object?[index]
+                                                            .subject ==
+                                                        "RE_POST" ||
+                                                    AllNotificationData
+                                                            ?.object?[index]
+                                                            .subject ==
+                                                        "INVITE_ROOM"
+                                                ? Image.asset(ImageConstant
+                                                    .InviteAcceptepLogo)
+                                                : AllNotificationData
+                                                                ?.object?[index]
+                                                                .subject ==
+                                                            "EXPERT_LEFT_ROOM" ||
+                                                        AllNotificationData
+                                                                ?.object?[index]
+                                                                .subject ==
+                                                            "MEMBER_LEFT_ROOM" ||
+                                                        AllNotificationData
+                                                                ?.object?[index]
+                                                                .subject ==
+                                                            "DELETE_ROOM"
+                                                    ? Image.asset(ImageConstant
+                                                        .RoomDeleteLogo)
+                                                    : AllNotificationData
+                                                                ?.object?[index]
+                                                                .subject ==
+                                                            "EXPERT_REJECT_INVITE"
+                                                        ? Image.asset(ImageConstant.Invite_Rejected)
+                                                        : AllNotificationData?.object?[index].subject == "LIKE_POST"
+                                                            ? Image.asset(ImageConstant.Like_Post)
+                                                            : AllNotificationData?.object?[index].subject == "COMMENT_POST"
+                                                                ? Image.asset(ImageConstant.Comment_Post)
+                                                                : AllNotificationData?.object?[index].subject == "TAG_COMMENT_POST"
+                                                                    ? Image.asset(ImageConstant.Tag_Comment_Post)
+                                                                    : AllNotificationData?.object?[index].subject == "EXPERT_ACCEРТ_INVITE"
+                                                                        ? Image.asset(ImageConstant.Expert_Accept_Invite)
+                                                                        : AllNotificationData?.object?[index].subject == "EXPERT_REJECT_INVITE"
+                                                                            ? Image.asset(ImageConstant.Expert_Reject_Invite)
+                                                                            : AllNotificationData?.object?[index].subject == "FOLLOW_PUBLIC_ACCOUNT"
+                                                                                ? Image.asset(ImageConstant.Follow_Public_Account)
+                                                                                : AllNotificationData?.object?[index].subject == "FOLLOW_PRIVATE_ACCOUNT_REQUEST"
+                                                                                    ? Image.asset(ImageConstant.Follow_Private_Account_Request)
+                                                                                    : AllNotificationData?.object?[index].subject == "FOLLOW_REQUEST_ACCEPTED"
+                                                                                        ? Image.asset(ImageConstant.Follow_Request_Accept)
+                                                                                        : SizedBox(),
                                           ),
                                         ),
-                                      ),
-                                    )
-                                  : Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 2, right: 3, top: 5),
-                                      child: Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Container(
-                                          height: 10,
-                                          width: 10,
-                                          decoration: BoxDecoration(
-                                            color: Colors.transparent,
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
+                                        SizedBox(
+                                          width: 5,
                                         ),
-                                      ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              height: 3,
+                                            ),
+                                            Text(
+                                              "${AllNotificationData?.object?[index].title.toString()[0].toUpperCase()}${AllNotificationData?.object?[index].title?.toString().substring(1).toLowerCase()}",
+                                              style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontFamily: "outfit",
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            SizedBox(
+                                              height: 3,
+                                            ),
+                                            Container(
+                                              // color: Colors.green,
+                                              // height: 40,
+                                              width: _width / 1.4,
+                                              child: Text(
+                                                "${AllNotificationData?.object?[index].notificationMessage}",
+                                                // maxLines: 3,
+                                                // overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontFamily: "outfit",
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 3),
-                                child: Container(
-                                  height: 60,
-                                  width: 60,
-                                  child: AllNotificationData?.object?[index].subject ==
-                                              "TAG_POST" ||
-                                          AllNotificationData
-                                                  ?.object?[index].subject ==
-                                              "RE_POST" ||
-                                          AllNotificationData
-                                                  ?.object?[index].subject ==
-                                              "INVITE_ROOM"
-                                      ? Image.asset(
-                                          ImageConstant.InviteAcceptepLogo)
-                                      : AllNotificationData?.object?[index]
-                                                      .subject ==
-                                                  "EXPERT_LEFT_ROOM" ||
-                                              AllNotificationData
-                                                      ?.object?[index]
-                                                      .subject ==
-                                                  "MEMBER_LEFT_ROOM" ||
-                                              AllNotificationData
-                                                      ?.object?[index]
-                                                      .subject ==
-                                                  "DELETE_ROOM"
-                                          ? Image.asset(
-                                              ImageConstant.RoomDeleteLogo)
-                                          : AllNotificationData?.object?[index]
-                                                      .subject ==
-                                                  "EXPERT_REJECT_INVITE"
-                                              ? Image.asset(ImageConstant.Invite_Rejected)
-                                              : AllNotificationData?.object?[index].subject == "LIKE_POST"
-                                                  ? Image.asset(ImageConstant.Like_Post)
-                                                  : AllNotificationData?.object?[index].subject == "COMMENT_POST"
-                                                      ? Image.asset(ImageConstant.Comment_Post)
-                                                      : AllNotificationData?.object?[index].subject == "TAG_COMMENT_POST"
-                                                          ? Image.asset(ImageConstant.Tag_Comment_Post)
-                                                          : AllNotificationData?.object?[index].subject == "EXPERT_ACCEРТ_INVITE"
-                                                              ? Image.asset(ImageConstant.Expert_Accept_Invite)
-                                                              : AllNotificationData?.object?[index].subject == "EXPERT_REJECT_INVITE"
-                                                                  ? Image.asset(ImageConstant.Expert_Reject_Invite)
-                                                                  : AllNotificationData?.object?[index].subject == "FOLLOW_PUBLIC_ACCOUNT"
-                                                                      ? Image.asset(ImageConstant.Follow_Public_Account)
-                                                                      : AllNotificationData?.object?[index].subject == "FOLLOW_PRIVATE_ACCOUNT_REQUEST"
-                                                                          ? Image.asset(ImageConstant.Follow_Private_Account_Request)
-                                                                          : AllNotificationData?.object?[index].subject == "FOLLOW_REQUEST_ACCEPTED"
-                                                                              ? Image.asset(ImageConstant.Follow_Request_Accept)
-                                                                              : SizedBox(),
+                                    Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 5, bottom: 5, right: 2),
+                                        child: Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: Container(
+                                            height: 15,
+                                            // width: 130,
+                                            // color: Colors.red,
+                                            child: Text(
+                                              customFormat1(parsedDateTime ??
+                                                  DateTime.now()),
+                                            ),
+                                          ),
+                                        )),
+                                  ],
                                 ),
                               ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    height: 3,
-                                  ),
-                                  Text(
-                                    "${AllNotificationData?.object?[index].title.toString()[0].toUpperCase()}${AllNotificationData?.object?[index].title?.toString().substring(1).toLowerCase()}",
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        fontFamily: "outfit",
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(
-                                    height: 3,
-                                  ),
-                                  Container(
-                                    // color: Colors.green,
-                                    // height: 40,
-                                    width: _width / 1.4,
-                                    child: Text(
-                                      "${AllNotificationData?.object?[index].notificationMessage}",
-                                      // maxLines: 3,
-                                      // overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontFamily: "outfit",
-                                          fontWeight: FontWeight.normal),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 5, bottom: 5, right: 2),
-                              child: Align(
-                                alignment: Alignment.bottomRight,
-                                child: Container(
-                                  height: 15,
-                                  // width: 130,
-                                  // color: Colors.red,
-                                  child: Text(
-                                    customFormat1(parsedDateTime),
-                                  ),
-                                ),
-                              )),
-                        ],
-                      ),
+                            ),
+                          )
+                        : SizedBox();
+                  })
+              : Center(
+                  child: Text(
+                    "No Now Any Notification",
+                    style: TextStyle(
+                      fontFamily: 'outfit',
+                      fontSize: 20,
+                      color: Color(0XFFED1C25),
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 );
-              });
     });
   }
 }
