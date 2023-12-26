@@ -108,6 +108,10 @@ import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
 import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
 import 'package:pds/API/Model/ViewStoryModel/StoryViewList_Model.dart';
 import 'package:pds/API/Model/storyDeleteModel/storyDeleteModel.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/seenNotificationModel.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount.dart';
+
+
 
 class Repository {
   ApiServices apiServices = ApiServices();
@@ -560,16 +564,14 @@ class Repository {
     }
   }
 
- AllNotificationAPI(
-      BuildContext context) async {
+  AllNotificationAPI(BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.getAllNotifications}',
-        context);
+        '${Config.getAllNotifications}', context);
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
-        return  GetAllNotificationModel.fromJson(jsonString);
+        return GetAllNotificationModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -583,6 +585,50 @@ class Repository {
     }
   }
 
+  SeenNotificationAPI(BuildContext context, String notificationUid) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.SeenNotification}?notificationUid=${notificationUid}',
+        context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return seenNotificationModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  // getAllNoticationsCountAPI(
+  //     BuildContext context) async {
+  //   final response = await apiServices.getApiCallWithToken(
+  //       '${Config.getAllNoticationsCount}',
+  //       context);
+  //   print(response);
+  //   var jsonString = json.decode(response.body);
+  //   switch (response.statusCode) {
+  //     case 200:
+  //       return getAllNotificationCount.fromJson(jsonString);
+  //     case 404:
+  //       return Config.somethingWentWrong;
+  //     case 500:
+  //       return Config.servernotreachable;
+  //     case 400:
+  //       return Config.somethingWentWrong;
+  //     case 701:
+  //       return Config.somethingWentWrong;
+  //     default:
+  //       return jsonString;
+  //   }
+  // }
 
   HashTagBanner(BuildContext context) async {
     final response =
@@ -2338,7 +2384,7 @@ class Repository {
     }
   }
 
- search_user_for_inbox(
+  search_user_for_inbox(
       String searchFilter, String pageNumber, BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
         '${Config.insearch_user_for_inboxUrl1}?searchFilter=$searchFilter&numberOfRecords=30&pageNumber=$pageNumber',
@@ -2360,7 +2406,7 @@ class Repository {
         return jsonString;
     }
   }
-  
+
   search_user_for_inbox1(
       String searchFilter, String pageNumber, BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(

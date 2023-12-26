@@ -797,7 +797,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
   navigationFunction() {
     if (widget.profileTure == true) {
       Future.delayed(
-        Duration(seconds: 2),
+        Duration(seconds: 1),
       ).then((value) {
         BlocProvider.of<AddcommentCubit>(context)
             .Addcomment(context, '${OpenSaveModelData?.object?.postUid}');

@@ -5302,10 +5302,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   }
 
   void _settingModalBottomSheet1(context, index, _width) {
-    void _goToElement() {
+    /* void _goToElement() {
       scroll.animateTo((1000 * 20),
           duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
-    }
+    } */
 
     showModalBottomSheet(
         isScrollControlled: true,
@@ -5343,10 +5343,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   }
 
   void _settingModalBottomSheetBlog(context, index, _width) {
-    void _goToElement() {
-      scroll.animateTo((1000 * 20),
-          duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
-    }
+    
 
     showModalBottomSheet(
             isScrollControlled: true,
