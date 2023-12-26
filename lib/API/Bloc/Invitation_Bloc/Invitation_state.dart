@@ -2,6 +2,7 @@ import 'package:pds/API/Model/acceptRejectInvitaionModel/GetAllNotificationModel
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/acceptRejectInvitaion.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/seenNotificationModel.dart';
 
 import '../../Model/InvitationModel/Invitation_Model.dart';
 
@@ -41,3 +42,9 @@ class GetAllNotificationLoadedState extends InvitationState {
   final GetAllNotificationModel AllNotificationData;
   GetAllNotificationLoadedState(this.AllNotificationData);
 }
+
+class SeenNotificationLoadedState extends InvitationState {
+  final seenNotificationModel SeenNotificationData;
+  SeenNotificationLoadedState(this.SeenNotificationData);
+}
+

@@ -131,6 +131,9 @@ class Config {
   static const String delete_user_chat = "user/delete_user_chat"; 
   static const String getAllNotifications = "user/api/getAllNotifications"; 
   static const String insearch_user_for_inboxUrl1 = "user/search_user_for_tag";
+  static const String SeenNotification = "user/api/notificationSeenByUser";
+  static const String getAllNoticationsCount = "user/api/getAllNotificationsCount";
+
 
 
 }
