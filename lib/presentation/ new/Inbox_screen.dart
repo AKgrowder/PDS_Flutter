@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -401,7 +398,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                           : CustomImageView(
                                               imagePath:
                                                   ImageConstant.tomcruse)),
-                                  Positioned(
+                                  /* Positioned(
                                       bottom: 1,
                                       right: 5,
                                       child: Container(
@@ -412,7 +409,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                             shape: BoxShape.circle,
                                             border: Border.all(
                                                 color: Colors.white, width: 2)),
-                                      ))
+                                      )) */
                                 ]),
                                 Padding(
                                   padding: EdgeInsets.only(
