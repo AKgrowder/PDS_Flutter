@@ -54,9 +54,10 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
   SearchUserForInbox? searchUserForInbox1;
   HasDataModel? getAllHashtag;
 
-  void _goToElement(int index) {
-    scroll.animateTo((1000.0 * 100),
-        duration: const Duration(milliseconds: 20), curve: Curves.easeOut);
+  void _goToElement() {
+    /* scroll.animateTo((1000.0 * 100),
+        duration: const Duration(milliseconds: 20), curve: Curves.easeOut); */
+        scroll.jumpTo(scroll.position.maxScrollExtent+100);
   }
 
   bool istageData = false;
@@ -137,7 +138,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
 
                 blogCommentModel?.object?.add(object);
 
-                _goToElement(blogCommentModel?.object?.length ?? 0);
+                _goToElement();
               }
             }
             if (state is DeleteBlogcommentLoadedState) {
@@ -224,7 +225,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                 // physics:  NeverScrollableScrollPhysics(),
                                 itemCount: blogCommentModel?.object?.length,
                                 shrinkWrap: true,
-                                controller: scroll,
+                                // controller: scroll,
                                 itemBuilder: (context, index) {
                                   DateTime? parsedDateTime = DateTime.parse(
                                       '${blogCommentModel?.object?[index].createdAt ?? ""}');
@@ -492,7 +493,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                           HashTagViewScreen(
                                                                               title: "${link.value}"),
                                                                     ));
-                                                              } else {
+                                                               } else if (link.value!.startsWith('@')) {
                                                                 var name;
                                                                 var tagName;
                                                                 name =
@@ -524,7 +525,9 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                     "tagName -- ${tagName}");
                                                                 print(
                                                                     "user id -- ${userTagModel?.object}");
-                                                              }
+                                                              }else{
+                                                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                }
                                                             }
                                                           },
                                                         )
@@ -618,26 +621,19 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                         left: 50, bottom: 10),
                                                     child: Row(
                                                       children: <Widget>[
-                                                        tageData['photo']
-                                                                        .toString()
-                                                                        .isNotEmpty ==
-                                                                    true &&
-                                                                tageData['photo']
-                                                                        .toString() !=
-                                                                    null
-                                                            ? CircleAvatar(
-                                                                backgroundImage:
-                                                                    AssetImage(
-                                                                        ImageConstant
-                                                                            .tomcruse),
-                                                              )
-                                                            : CircleAvatar(
-                                                                backgroundImage:
-                                                                    NetworkImage(
-                                                                  tageData[
-                                                                      'photo'],
-                                                                ),
-                                                              ),
+                                                        tageData['photo'] != null
+                                                        ? CircleAvatar(
+                                                            backgroundImage:
+                                                                NetworkImage(
+                                                              tageData['photo'],
+                                                            ),
+                                                          )
+                                                        : CircleAvatar(
+                                                            backgroundImage:
+                                                                AssetImage(
+                                                                    ImageConstant
+                                                                        .tomcruse),
+                                                          ),
                                                         SizedBox(
                                                           width: 20.0,
                                                         ),

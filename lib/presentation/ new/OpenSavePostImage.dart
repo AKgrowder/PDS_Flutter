@@ -499,7 +499,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                               HashTagViewScreen(
                                                   title: "${link.value}"),
                                         ));
-                                  } else {
+                                    } else if (link.value!.startsWith('@')) {
                                     var name;
                                     var tagName;
                                     name = SelectedTest;
@@ -517,7 +517,9 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
 
                                     print("tagName -- ${tagName}");
                                     print("user id -- ${userTagModel?.object}");
-                                  }
+                                  }else{
+                                                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                }
                                 }
                               },
                             ), /* Text(
@@ -797,7 +799,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
   navigationFunction() {
     if (widget.profileTure == true) {
       Future.delayed(
-        Duration(seconds: 2),
+        Duration(seconds: 1),
       ).then((value) {
         BlocProvider.of<AddcommentCubit>(context)
             .Addcomment(context, '${OpenSaveModelData?.object?.postUid}');

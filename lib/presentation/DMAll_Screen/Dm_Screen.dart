@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/ApiService/DMSocket.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dmMessageState.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
@@ -28,9 +29,11 @@ import 'package:pds/widgets/custom_image_view.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
+
 class DmScreen extends StatefulWidget {
   String UserName;
   String ChatInboxUid;
@@ -114,9 +117,15 @@ class _DmScreenState extends State<DmScreen> {
   }
 
   void dispose() {
-     DMstompClient.deactivate();
+    DMstompClient.deactivate();
     // Delet_DMstompClient.deactivate();
     super.dispose();
+  }
+
+  String preprocessText(String text) {
+    // Add custom logic to preprocess the text before linkifying
+    // In this example, we exclude patterns that end with '.com'
+    return text.replaceAll(RegExp(r'\b(?:https?://)?\S+\.com\b'), '');
   }
 
   checkGuestUser() async {
@@ -207,7 +216,7 @@ class _DmScreenState extends State<DmScreen> {
 
   @override
   void initState() {
-     BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
+    BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
     getDocumentSize();
     pageNumberMethod();
 
@@ -299,19 +308,22 @@ class _DmScreenState extends State<DmScreen> {
                                       ),
                                     ),
                                   ),
-                                   widget.UserImage != null &&
+                                  widget.UserImage != null &&
                                           widget.UserImage != ""
                                       ? Container(
-                                        child: CustomImageView(
+                                          child: CustomImageView(
                                             url: "${widget.UserImage}",
                                             height: 30,
                                             width: 30,
                                             fit: BoxFit.cover,
                                             radius: BorderRadius.circular(30),
                                           ),
-                                      )
+                                        )
                                       : CustomImageView(
-                                          imagePath: ImageConstant.tomcruse,height: 30,width: 30,),
+                                          imagePath: ImageConstant.tomcruse,
+                                          height: 30,
+                                          width: 30,
+                                        ),
                                   Padding(
                                     padding:
                                         const EdgeInsets.only(left: 10, top: 2),
@@ -328,12 +340,11 @@ class _DmScreenState extends State<DmScreen> {
                                       ),
                                     ),
                                   ),
-                              
                                   Spacer(),
                                   Padding(
                                     padding: const EdgeInsets.only(right: 5),
                                     child: GestureDetector(
-                                     onTap: () {
+                                      onTap: () {
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                                 builder: (context) {
@@ -345,7 +356,8 @@ class _DmScreenState extends State<DmScreen> {
                                                 ),
                                               ],
                                               child: GalleryImage(
-                                                userChatInboxUid: widget.ChatInboxUid,
+                                                userChatInboxUid:
+                                                    widget.ChatInboxUid,
                                               ));
                                         }));
                                         /* Navigator.push(context, MaterialPageRoute(builder: (context)=> GalleryImage())); */
@@ -894,11 +906,40 @@ class _DmScreenState extends State<DmScreen> {
                                                                                         children: [
                                                                                           Padding(
                                                                                             padding: const EdgeInsets.only(left: 3, right: 3),
-                                                                                            child: Text(
-                                                                                              "${getInboxMessagesModel?.object?.content?[index].message ?? ""}",
+                                                                                            /*  child: Text(
+                                                                                              "${getInboxMessagesModel?.object?.content?[index].message ?? ""}", //ankurChek
                                                                                               // maxLines: 3,
                                                                                               textScaleFactor: 1.0,
                                                                                               style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontFamily: "outfit", fontSize: 13),
+                                                                                            ), */
+                                                                                            child: LinkifyText(
+                                                                                              "${getInboxMessagesModel?.object?.content?[index].message ?? ""}",
+                                                                                              linkStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.blue, fontFamily: "outfit", fontSize: 13, decoration: TextDecoration.underline, decorationColor: Colors.blue),
+                                                                                              textStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontFamily: "outfit", fontSize: 13),
+                                                                                              linkTypes: [
+                                                                                                LinkType.url,
+
+                                                                                                // LinkType
+                                                                                                //     .email
+                                                                                              ],
+                                                                                              onTap: (link) {
+                                                                                                var SelectedTest = link.value.toString();
+                                                                                                var Link = SelectedTest.startsWith('https');
+                                                                                                var Link1 = SelectedTest.startsWith('http');
+                                                                                                var Link2 = SelectedTest.startsWith('www');
+                                                                                                var Link3 = SelectedTest.startsWith('WWW');
+                                                                                                var Link4 = SelectedTest.startsWith('HTTPS');
+                                                                                                var Link5 = SelectedTest.startsWith('HTTP');
+                                                                                                var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
+                                                                                                print(SelectedTest.toString());
+                                                                                                if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                                                  print("qqqqqqqqhttps://${link.value}");
+
+                                                                                                  launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                                } else {
+                                                                                                  launchUrl(Uri.parse(link.value.toString()));
+                                                                                                }
+                                                                                              },
                                                                                             ),
                                                                                           ),
                                                                                           Padding(
@@ -918,9 +959,11 @@ class _DmScreenState extends State<DmScreen> {
                                                                                   padding: const EdgeInsets.only(left: 3, right: 0),
                                                                                   child: GestureDetector(
                                                                                     onTap: () {
+                                                                                      print("check And data Get-${getInboxMessagesModel?.object?.content?[index].userUid}");
+
                                                                                       Navigator.push(context, MaterialPageRoute(
                                                                                         builder: (context) {
-                                                                                          return ProfileScreen(User_ID: getInboxMessagesModel?.object?.content?[index].userUid ?? "", isFollowing: "");
+                                                                                          return ProfileScreen(User_ID: UserLogin_ID.toString(), isFollowing: "");
                                                                                         },
                                                                                       ));
                                                                                     },
@@ -1065,7 +1108,7 @@ class _DmScreenState extends State<DmScreen> {
                                       children: [
                                         Container(
                                           // color: Colors.amber,
-                                          child: IconButton(
+                                          /* child: IconButton(
                                             icon: Icon(
                                               isEmojiVisible
                                                   ? Icons.keyboard_rounded
@@ -1073,13 +1116,13 @@ class _DmScreenState extends State<DmScreen> {
                                                       .emoji_emotions_outlined,
                                             ),
                                             onPressed: onClickedEmoji,
-                                          ),
+                                          ), */
                                         ),
                                         SizedBox(
                                           width: 5,
                                         ),
                                         Container(
-                                          width: _width / 2.35,
+                                          width: _width / 1.8,
                                           // color: Colors.red,
                                           child: TextField(
                                             controller: Add_Comment,
@@ -1093,6 +1136,7 @@ class _DmScreenState extends State<DmScreen> {
                                         SizedBox(
                                           width: 5,
                                         ),
+                                        // Spacer(),
                                         GestureDetector(
                                           onTap: () {
                                             // pickProfileImage();
@@ -1134,7 +1178,7 @@ class _DmScreenState extends State<DmScreen> {
                                       if (Add_Comment.text.length >= 1000) {
                                         SnackBar snackBar = SnackBar(
                                           content: Text(
-                                              'One Time Message Lenght only for 1000 Your Meassge -> ${Add_Comment.text.length}'),
+                                              'One Time Message Length only for 1000'),
                                           backgroundColor:
                                               ColorConstant.primary_color,
                                         );
