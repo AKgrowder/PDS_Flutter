@@ -137,7 +137,7 @@ class _BlogLikeListScreenState extends State<BlogLikeListScreen> {
                               );
                             }));
                           },
-                          child: blogLikeListModel?.object?[index].profilePic !=
+                          child: blogLikeListModel?.object?[index].profilePic ==
                                       null ||
                                   blogLikeListModel
                                           ?.object?[index].profilePic !=
