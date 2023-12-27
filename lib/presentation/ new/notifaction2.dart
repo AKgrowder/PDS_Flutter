@@ -179,7 +179,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                                       ? SizedBox()
                                       : Container(
                                           child: Text(
-                                            '${NotificationCount}',
+                                            '${NotificationCount ?? ""}',
                                             style: TextStyle(
                                                 overflow: TextOverflow.ellipsis,
                                                 fontFamily: "outfit",
@@ -475,7 +475,16 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                                             AllNotificationData
                                                                     ?.object?[index]
                                                                     .subject ==
-                                                                "FOLLOW_REQUEST_ACCEPTED"
+                                                                "FOLLOW_REQUEST_ACCEPTED" || AllNotificationData
+                                                                    ?.object?[index]
+                                                                    .subject ==
+                                                                "PROFILE_APPROVED" || AllNotificationData
+                                                                    ?.object?[index]
+                                                                    .subject ==
+                                                                "PROFILE_REJECTED"
+
+
+                                                                
                                                         ? Navigator.push(context, MaterialPageRoute(builder: (context) {
                                                             return ProfileScreen(
                                                                 User_ID:
@@ -607,7 +616,13 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                                     AllNotificationData
                                                             ?.object?[index]
                                                             .subject ==
-                                                        "INVITE_ROOM"
+                                                        "INVITE_ROOM" || AllNotificationData
+                                                                    ?.object?[index]
+                                                                    .subject ==
+                                                                "PROFILE_APPROVED" || AllNotificationData
+                                                                    ?.object?[index]
+                                                                    .subject ==
+                                                                "PROFILE_REJECTED"
                                                 ? Image.asset(ImageConstant
                                                     .InviteAcceptepLogo)
                                                 : AllNotificationData

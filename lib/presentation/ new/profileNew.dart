@@ -181,6 +181,15 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   void initState() {
     _tabController = TabController(length: tabData.length, vsync: this);
+    getAllAPI_Data();
+    getUserSavedData();
+    dataSetup = null;
+    value1 = 0;
+
+    super.initState();
+  }
+
+  getAllAPI_Data() async {
     BlocProvider.of<NewProfileSCubit>(context)
         .NewProfileSAPI(context, widget.User_ID);
     BlocProvider.of<NewProfileSCubit>(context)
@@ -189,11 +198,6 @@ class _ProfileScreenState extends State<ProfileScreen>
         .getAllFollwing(context, widget.User_ID);
     BlocProvider.of<NewProfileSCubit>(context)
         .GetWorkExperienceAPI(context, widget.User_ID);
-    getUserSavedData();
-    dataSetup = null;
-    value1 = 0;
-
-    super.initState();
   }
 
   getUserSavedData() async {
@@ -262,7 +266,6 @@ class _ProfileScreenState extends State<ProfileScreen>
             UserName: "${NewProfileData?.object?.userName}",
             ChatInboxUid: state.DMChatList.object ?? "",
             UserImage: "${NewProfileData?.object?.userProfilePic}",
-            
           );
         }));
       }
@@ -2527,8 +2530,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 imageURL: saveAllBlogModelData
                                         ?.object?[index].image
                                         .toString() ??
-                                    ""),
-                          ));
+                                    "",
+                                ProfileScreenMove: true,
+                                index: index,
+                                saveAllBlogModelData: saveAllBlogModelData),
+                          )).then((value) => getAllAPI_Data());
                     },
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -2615,84 +2621,84 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             color: Colors.grey),
                                       ),
                                       Spacer(),
-                                      GestureDetector(
-                                        onTap: () {
-                                          print("click on Blog like button");
+                                      // GestureDetector(
+                                      //   onTap: () {
+                                      //     print("click on Blog like button");
 
-                                          BlocProvider.of<NewProfileSCubit>(
-                                                  context)
-                                              .ProfileLikeBlog(
-                                                  context,
-                                                  "${User_ID}",
-                                                  "${saveAllBlogModelData?.object?[index].uid}");
-                                          if (saveAllBlogModelData
-                                                  ?.object?[index].isLiked ==
-                                              false) {
-                                            saveAllBlogModelData
-                                                ?.object?[index].isLiked = true;
-                                          } else {
-                                            saveAllBlogModelData?.object?[index]
-                                                .isLiked = false;
-                                          }
-                                        },
-                                        child: saveAllBlogModelData
-                                                    ?.object?[index].isLiked ==
-                                                false
-                                            ? Icon(Icons.favorite_border)
-                                            : Icon(
-                                                Icons.favorite,
-                                                color: Colors.red,
-                                              ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      GestureDetector(
-                                          onTap: () {
-                                            print("Unsave Button");
+                                      //     BlocProvider.of<NewProfileSCubit>(
+                                      //             context)
+                                      //         .ProfileLikeBlog(
+                                      //             context,
+                                      //             "${User_ID}",
+                                      //             "${saveAllBlogModelData?.object?[index].uid}");
+                                      //     if (saveAllBlogModelData
+                                      //             ?.object?[index].isLiked ==
+                                      //         false) {
+                                      //       saveAllBlogModelData
+                                      //           ?.object?[index].isLiked = true;
+                                      //     } else {
+                                      //       saveAllBlogModelData?.object?[index]
+                                      //           .isLiked = false;
+                                      //     }
+                                      //   },
+                                      //   child: saveAllBlogModelData
+                                      //               ?.object?[index].isLiked ==
+                                      //           false
+                                      //       ? Icon(Icons.favorite_border)
+                                      //       : Icon(
+                                      //           Icons.favorite,
+                                      //           color: Colors.red,
+                                      //         ),
+                                      // ),
+                                      // SizedBox(
+                                      //   width: 10,
+                                      // ),
+                                      // GestureDetector(
+                                      //     onTap: () {
+                                      //       print("Unsave Button");
 
-                                            BlocProvider.of<NewProfileSCubit>(
-                                                    context)
-                                                .ProfileSaveBlog(
-                                                    context,
-                                                    "${User_ID}",
-                                                    "${saveAllBlogModelData?.object?[index].uid}");
+                                      //       BlocProvider.of<NewProfileSCubit>(
+                                      //               context)
+                                      //           .ProfileSaveBlog(
+                                      //               context,
+                                      //               "${User_ID}",
+                                      //               "${saveAllBlogModelData?.object?[index].uid}");
 
-                                            if (saveAllBlogModelData
-                                                    ?.object?[index].isSaved ==
-                                                true) {
-                                              saveAllBlogModelData?.object
-                                                  ?.removeAt(index);
-                                              setState(() {
-                                                SaveBlogCount =
-                                                    saveAllBlogModelData
-                                                            ?.object?.length ??
-                                                        0;
-                                              });
-                                            }
-                                          },
-                                          child: Container(
-                                            height: 25,
-                                            width: 25,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                color: Colors.white),
-                                            child: Center(
-                                                child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(5.0),
-                                              child: Image.asset(
-                                                saveAllBlogModelData
-                                                            ?.object?[index]
-                                                            .isSaved ==
-                                                        false
-                                                    ? ImageConstant.savePin
-                                                    : ImageConstant.Savefill,
-                                                width: 12.5,
-                                              ),
-                                            )),
-                                          )),
+                                      //       if (saveAllBlogModelData
+                                      //               ?.object?[index].isSaved ==
+                                      //           true) {
+                                      //         saveAllBlogModelData?.object
+                                      //             ?.removeAt(index);
+                                      //         setState(() {
+                                      //           SaveBlogCount =
+                                      //               saveAllBlogModelData
+                                      //                       ?.object?.length ??
+                                      //                   0;
+                                      //         });
+                                      //       }
+                                      //     },
+                                      //     child: Container(
+                                      //       height: 25,
+                                      //       width: 25,
+                                      //       decoration: BoxDecoration(
+                                      //           borderRadius:
+                                      //               BorderRadius.circular(5),
+                                      //           color: Colors.white),
+                                      //       child: Center(
+                                      //           child: Padding(
+                                      //         padding:
+                                      //             const EdgeInsets.all(5.0),
+                                      //         child: Image.asset(
+                                      //           saveAllBlogModelData
+                                      //                       ?.object?[index]
+                                      //                       .isSaved ==
+                                      //                   false
+                                      //               ? ImageConstant.savePin
+                                      //               : ImageConstant.Savefill,
+                                      //           width: 12.5,
+                                      //         ),
+                                      //       )),
+                                      //     )),
                                     ]),
                               ),
                             ],
@@ -3299,28 +3305,28 @@ class _ProfileScreenState extends State<ProfileScreen>
                           fontSize: 12,
                         ),
                       ),
-                     /*  addWorkExperienceModel?.object?[index].startDate !=
+                      /*  addWorkExperienceModel?.object?[index].startDate !=
                                   null &&
                               addWorkExperienceModel?.object?[index].endDate !=
                                   null
-                          ? */ DateFormat('dd-MM-yyyy')
-                                              .format(DateTime.now()) ==
-                                          formattedDateEnd
-                                      ? Text(
-                                          '${formattedDateStart} to Present',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 13,
-                                          ),
-                                        )
-                                      : Text(
-                                          '${formattedDateStart} to ${formattedDateEnd}',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 13,
-                                          ),
-                                        )
-                          /* : SizedBox(), */
+                          ? */
+                      DateFormat('dd-MM-yyyy').format(DateTime.now()) ==
+                              formattedDateEnd
+                          ? Text(
+                              '${formattedDateStart} to Present',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13,
+                              ),
+                            )
+                          : Text(
+                              '${formattedDateStart} to ${formattedDateEnd}',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13,
+                              ),
+                            )
+                      /* : SizedBox(), */
                     ],
                   ),
                 );
