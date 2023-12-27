@@ -4615,8 +4615,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 "",
                                                                             title: getallBlogModel1?.object?[index1].title.toString() ??
                                                                                 "",
-                                                                            imageURL:
-                                                                                getallBlogModel1?.object?[index1].image.toString() ?? ""),
+                                                                            imageURL: getallBlogModel1?.object?[index1].image.toString() ??
+                                                                                "",
+                                                                            index:
+                                                                                index1,
+                                                                            getallBlogModel1:
+                                                                                getallBlogModel1),
                                                                       ));
                                                                 },
                                                                 child:
