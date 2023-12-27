@@ -130,7 +130,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
 
     finalFileSize = documentuploadsize;
     videoUplodeSize = await double.parse(
-        prefs.getString(PreferencesKey.MaxStoryUploadSizeInMB) ?? "0");
+        prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
     setState(() {});
   }
 
@@ -223,7 +223,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
             'style': TextStyle(color: Colors.blue)
           };
           heshTageData.add(dataSetup);
-          if (tageData.isNotEmpty == true) {
+          if (heshTageData.isNotEmpty == true) {
             isHeshTegData = true;
           }
           print("check heshTageData -$heshTageData");
@@ -489,19 +489,19 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                 padding: EdgeInsets.all(10.0),
                                                 child: Row(
                                                   children: <Widget>[
-                                                      tageData['photo'] != null
-                                                          ? CircleAvatar(
-                                                              backgroundImage:
-                                                                  NetworkImage(
-                                                                tageData['photo'],
-                                                              ),
-                                                            )
-                                                          : CircleAvatar(
-                                                              backgroundImage:
-                                                                  AssetImage(
-                                                                      ImageConstant
-                                                                          .tomcruse),
+                                                    tageData['photo'] != null
+                                                        ? CircleAvatar(
+                                                            backgroundImage:
+                                                                NetworkImage(
+                                                              tageData['photo'],
                                                             ),
+                                                          )
+                                                        : CircleAvatar(
+                                                            backgroundImage:
+                                                                AssetImage(
+                                                                    ImageConstant
+                                                                        .tomcruse),
+                                                          ),
                                                     SizedBox(
                                                       width: 20.0,
                                                     ),
