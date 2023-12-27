@@ -36,6 +36,10 @@ import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_utils.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/fick_players/src/controls/flick_portrait_controls.dart';
+import 'package:pds/fick_players/src/controls/flick_video_with_controls.dart';
+import 'package:pds/fick_players/src/flick_video_player.dart';
+import 'package:pds/fick_players/src/manager/flick_manager.dart';
 import 'package:pds/presentation/%20new/BlogComment_screen.dart';
 import 'package:pds/presentation/%20new/BlogLikeList_screen.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
@@ -140,7 +144,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   List<VideoPlayerController> mainPostControllers = []; //single cotroller
   List<VideoPlayerController> repostControllers = []; // repost cotrller
   List<VideoPlayerController> repostMainControllers = []; // repost
-
+  List<String> videoUrls = [];
   UserTagModel? userTagModel;
   List<ChewieController> chewieController = [];
   ChewieController? inList;
@@ -790,7 +794,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         (route) => false);
   }
 
-   void showDeleteConfirmationDialog(
+  void showDeleteConfirmationDialog(
       BuildContext context, String PostUID, int index) {
     showDialog(
       context: context,
@@ -1382,32 +1386,34 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 }
               }
               if (state is GetGuestAllPostLoadedState) {
-                
                 mainPostControllers.clear();
+                videoUrls.clear();
                 VideoPlayerController _controller =
                     VideoPlayerController.networkUrl(Uri.parse(''));
                 apiCalingdone = true;
                 AllGuestPostRoomData = state.GetGuestAllPostRoomData;
                 AllGuestPostRoomData?.object?.content?.forEach((element) {
                   if (element.postDataType == 'VIDEO') {
-                    VideoPlayerController _controller =
+                    videoUrls.add(element.postData?.first ?? '');
+                    /* VideoPlayerController _controller =
                         VideoPlayerController.networkUrl(
                             Uri.parse(element.postData?.first ?? ''));
                     inList = ChewieController(
                       videoPlayerController: _controller,
                       autoPlay: true,
-                     /*  looping: false,
+                      /*  looping: false,
                       allowFullScreen: true, */
                       materialProgressColors: ChewieProgressColors(
                           backgroundColor: Colors.grey,
                           playedColor: ColorConstant.primary_color),
-                    );
+                    ); */
                   }
+                  videoUrls.add('');
 
-                  chewieController.add(inList ??
-                      ChewieController(videoPlayerController: _controller));
+                  /*  chewieController.add(inList ??
+                      ChewieController(videoPlayerController: _controller)); */
                 });
-                print("chewieController length -${chewieController.length}");
+                /*  print("chewieController length -${chewieController.length}"); */
               }
               if (state is PostLikeLoadedState) {
                 if (state.likePost.object != 'Post Liked Successfully' &&
@@ -2384,12 +2390,19 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                     ?   */
                                                                                 Padding(
                                                                                     padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-                                                                                    child: Container(
-                                                                                        height: 250,
-                                                                                        width: _width,
-                                                                                        child: Chewie(
-                                                                                          controller: chewieController[index],
-                                                                                        )),
+                                                                                    child: Column(
+                                                                                      mainAxisSize: MainAxisSize.min,
+                                                                                      children: [
+                                                                                        /* Container(
+                                                                                            height: 250,
+                                                                                            width: _width,
+                                                                                            child: Chewie(
+                                                                                              controller: chewieController[index],
+                                                                                            )), */
+
+                                                                                        VideoListItem(videoUrl: videoUrls[index], description: AllGuestPostRoomData?.object?.content?[index].description ?? ''),
+                                                                                      ],
+                                                                                    ),
                                                                                   )
                                                                                 // : SizedBox()
                                                                                 //this is the ATTACHMENT
@@ -2777,12 +2790,22 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                       ? */
                                                                                   Padding(
                                                                                       padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-                                                                                      child: Container(
-                                                                                          height: 250,
-                                                                                          width: _width,
-                                                                                          child: Chewie(
-                                                                                            controller: chewieController[index],
-                                                                                          )),
+                                                                                      child: Column(
+                                                                                        mainAxisSize: MainAxisSize.min,
+                                                                                        children: [
+                                                                                          /* Container(
+                                                                                            height: 250,
+                                                                                            width: _width,
+                                                                                            child: Chewie(
+                                                                                              controller: chewieController[index],
+                                                                                            )), */
+
+                                                                                          VideoListItem(
+                                                                                            videoUrl: videoUrls[index],
+                                                                                            description: AllGuestPostRoomData?.object?.content?[index].repostOn?.description ?? '',
+                                                                                          )
+                                                                                        ],
+                                                                                      ),
                                                                                     )
                                                                                   // : SizedBox()
                                                                                   : AllGuestPostRoomData?.object?.content?[index].repostOn?.postDataType == "ATTACHMENT"
@@ -3724,12 +3747,19 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
                                                                           Padding(
                                                                               padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-                                                                              child: Container(
-                                                                                  height: 250,
-                                                                                  width: _width,
-                                                                                  child: Chewie(
-                                                                                    controller: chewieController[index],
-                                                                                  )),
+                                                                              child: Column(
+                                                                                mainAxisSize: MainAxisSize.min,
+                                                                                children: [
+                                                                                  /* Container(
+                                                                                            height: 250,
+                                                                                            width: _width,
+                                                                                            child: Chewie(
+                                                                                              controller: chewieController[index],
+                                                                                            )), */
+
+                                                                                  VideoListItem(videoUrl: videoUrls[index], description: AllGuestPostRoomData?.object?.content?[index].description ?? ''),
+                                                                                ],
+                                                                              ),
                                                                             )
                                                                           // : SizedBox()
 
@@ -4606,21 +4636,20 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   Navigator.push(
                                                                       context,
                                                                       MaterialPageRoute(
-                                                                        builder: (context) => RecentBlogScren(
-                                                                           index:
-                                                                                index1,
-                                                                            getallBlogModel1:
-                                                                                getallBlogModel1,
-                                                                            description1: getallBlogModel1?.object?[index1].description.toString() ??
-                                                                                "",
-                                                                            title: getallBlogModel1?.object?[index1].title.toString() ??
-                                                                                "",
-                                                                            imageURL: getallBlogModel1?.object?[index1].image.toString() ??
-                                                                                "",
-                                                                            index:
-                                                                                index1,
-                                                                            getallBlogModel1:
-                                                                                getallBlogModel1),
+                                                                        builder:
+                                                                            (context) =>
+                                                                                RecentBlogScren(
+                                                                          index:
+                                                                              index1,
+                                                                          getallBlogModel1:
+                                                                              getallBlogModel1,
+                                                                          description1:
+                                                                              getallBlogModel1?.object?[index1].description.toString() ?? "",
+                                                                          title:
+                                                                              getallBlogModel1?.object?[index1].title.toString() ?? "",
+                                                                          imageURL:
+                                                                              getallBlogModel1?.object?[index1].image.toString() ?? "",
+                                                                        ),
                                                                       ));
                                                                 },
                                                                 child:
@@ -5568,6 +5597,55 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       text: "Try This Awesome App \n\n Android :- ${androidLink}",
       //  \n \n iOS :- ${iosLink}",
       sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+    );
+  }
+}
+
+class VideoListItem extends StatefulWidget {
+  final String videoUrl;
+  final String description;
+  VideoListItem({required this.videoUrl, required this.description});
+
+  @override
+  State<VideoListItem> createState() => _VideoListItemState();
+}
+
+class _VideoListItemState extends State<VideoListItem> {
+  @override
+  Widget build(BuildContext context) {
+    print("check viedo -${widget.videoUrl}");
+    final flickManager = FlickManager(
+      videoPlayerController:
+          VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl)),
+      autoPlay: false,
+      // looping: false,
+    );
+
+    return InkWell(
+      onTap: () {
+        print("asdgasgsdgf-${widget.description}");
+
+        print("asdgasgsdgf-${widget.videoUrl}");
+      },
+      child: Card(
+        margin: EdgeInsets.only(
+          left: 20,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              if (widget.videoUrl.isNotEmpty)
+                FlickVideoPlayer(
+                  flickManager: flickManager,
+                  flickVideoWithControls: FlickVideoWithControls(
+                    controls: FlickPortraitControls(),
+                  ),
+                ),
+              // Add other information or controls as needed
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
