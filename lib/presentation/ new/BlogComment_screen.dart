@@ -222,7 +222,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 70),
                               child: ListView.builder(
-                                // physics:  NeverScrollableScrollPhysics(),
+                                physics:  NeverScrollableScrollPhysics(),
                                 itemCount: blogCommentModel?.object?.length,
                                 shrinkWrap: true,
                                 // controller: scroll,
