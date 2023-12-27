@@ -1671,7 +1671,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ? Padding(
                                                     padding:
                                                         const EdgeInsets.only(
-                                                            top: 10),
+                                                            top: 50),
                                                     child: Container(
                                                         height: _height / 2.2,
                                                         decoration: BoxDecoration(
@@ -1695,7 +1695,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ? Padding(
                                                     padding:
                                                         const EdgeInsets.only(
-                                                            top: 10),
+                                                            top: 50),
                                                     child: Container(
                                                         height: _height / 2.2,
                                                         decoration: BoxDecoration(
