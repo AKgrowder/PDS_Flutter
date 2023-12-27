@@ -489,7 +489,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                                         "${link.value}"),
                                                           ));
                                                     }
-                                                  } else {
+                                                   } else if (link.value!.startsWith('@')) {
                                                     var name;
                                                     var tagName;
                                                     name = SelectedTest;
@@ -505,7 +505,9 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                         "tagName -- ${tagName}");
                                                     print(
                                                         "user id -- ${userTagModel?.object}");
-                                                  }
+                                                  }else{
+                                                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                }
                                                 }
                                               },
                                             ),

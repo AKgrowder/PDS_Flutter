@@ -22,6 +22,7 @@ import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/example/lib/main.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
 import 'package:pds/widgets/commentPdf.dart';
+import 'package:pds/widgets/custom_image_view.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -32,8 +33,11 @@ import '../../core/utils/image_constant.dart';
 
 class CreateNewPost extends StatefulWidget {
   String? edittextdata;
+  String? editImage;
   String? PostID;
-  CreateNewPost({key, this.edittextdata, this.PostID});
+  List<String>? mutliplePost;
+  CreateNewPost(
+      {key, this.edittextdata, this.PostID, this.editImage, this.mutliplePost});
 
   @override
   State<CreateNewPost> createState() => _CreateNewPostState();
@@ -132,6 +136,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
 
   @override
   void initState() {
+    print("check data -${widget.editImage}");
     _loading = true;
     postText.text = widget.edittextdata ?? "";
     getDocumentSize();
@@ -272,6 +277,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
       return SafeArea(
           child: Scaffold(
         resizeToAvoidBottomInset: true,
+        backgroundColor: Colors.white,
         body: Container(
           color: Colors.white,
           child: Stack(
@@ -298,32 +304,59 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                 ),
                               ),
                               Spacer(),
-                              GestureDetector(
-                                onTap: () {
-                                  HasetagList = [];
-                                  CreatePostDone = true;
+                              widget.edittextdata != null
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        HasetagList = [];
+                                        CreatePostDone = true;
 
-                                  if (isDataSet == true) {
-                                    dataPostFucntion();
-                                  }
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: primaryColor,
-                                      borderRadius: BorderRadius.circular(14)),
-                                  height: 40,
-                                  width: 70,
-                                  child: Center(
-                                      child: Text(
-                                 widget.edittextdata !=null?  "Save" :"Post",
-                                    style: TextStyle(
-                                      fontFamily: "outfit",
-                                      fontSize: 15,
-                                      color: textColor,
-                                    ),
-                                  )),
-                                ),
-                              )
+                                        dataPostFucntion();
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: primaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(14)),
+                                        height: 40,
+                                        width: 70,
+                                        child: Center(
+                                            child: Text(
+                                          "Save",
+                                          style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 15,
+                                            color: textColor,
+                                          ),
+                                        )),
+                                      ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        HasetagList = [];
+                                        CreatePostDone = true;
+
+                                        if (isDataSet == true) {
+                                          dataPostFucntion();
+                                        }
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: primaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(14)),
+                                        height: 40,
+                                        width: 70,
+                                        child: Center(
+                                            child: Text(
+                                          "Post",
+                                          style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 15,
+                                            color: textColor,
+                                          ),
+                                        )),
+                                      ),
+                                    )
                             ],
                           ),
                         ),
@@ -456,25 +489,19 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                 padding: EdgeInsets.all(10.0),
                                                 child: Row(
                                                   children: <Widget>[
-                                                    tageData['photo']
-                                                                    .toString()
-                                                                    .isNotEmpty ==
-                                                                true &&
-                                                            tageData['photo']
-                                                                    .toString() !=
-                                                                null
-                                                        ? CircleAvatar(
-                                                            backgroundImage:
-                                                                AssetImage(
-                                                                    ImageConstant
-                                                                        .tomcruse),
-                                                          )
-                                                        : CircleAvatar(
-                                                            backgroundImage:
-                                                                NetworkImage(
-                                                              tageData['photo'],
+                                                      tageData['photo'] != null
+                                                          ? CircleAvatar(
+                                                              backgroundImage:
+                                                                  NetworkImage(
+                                                                tageData['photo'],
+                                                              ),
+                                                            )
+                                                          : CircleAvatar(
+                                                              backgroundImage:
+                                                                  AssetImage(
+                                                                      ImageConstant
+                                                                          .tomcruse),
                                                             ),
-                                                          ),
                                                     SizedBox(
                                                       width: 20.0,
                                                     ),
@@ -521,8 +548,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                       ), */
                                                   );
                                             }
-                                            print(
-                                                "suggestionBuilder-$tageData");
+
                                             return Container(
                                               color: Colors.amber,
                                             );
@@ -765,280 +791,361 @@ class _CreateNewPostState extends State<CreateNewPost> {
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Column(
-                  children: [
-                    Spacer(),
-                    Padding(
-                      padding: EdgeInsets.only(left: 16, right: 0),
-                      child: Container(
-                        color: Colors.white,
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              // margin: EdgeInsets.all(8),
-                              height: 90,
-                              width: 90,
-                              child: Center(
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    print("asdfdfgdfg");
-                                    _getImageFromCamera();
-                                  },
-                                  child: Container(
+              widget.edittextdata == null
+                  ? Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Column(
+                        children: [
+                          Spacer(),
+                          Padding(
+                            padding: EdgeInsets.only(left: 16, right: 0),
+                            child: Container(
+                              color: Colors.white,
+                              child: Row(
+                                children: [
+                                  SizedBox(
                                     // margin: EdgeInsets.all(8),
-                                    height: 80,
-                                    width: 80,
-                                    decoration: BoxDecoration(
-                                      // color: Color.fromARGB(255, 0, 0, 0),
-                                      border: Border.all(
-                                          color: Color.fromARGB(
-                                              255, 174, 174, 174),
-                                          width: 2),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
+                                    height: 90,
+                                    width: 90,
                                     child: Center(
-                                      child: Image.asset(
-                                        ImageConstant.Cameraicon,
-                                        height: 30,
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          print("asdfdfgdfg");
+                                          _getImageFromCamera();
+                                        },
+                                        child: Container(
+                                          // margin: EdgeInsets.all(8),
+                                          height: 80,
+                                          width: 80,
+                                          decoration: BoxDecoration(
+                                            // color: Color.fromARGB(255, 0, 0, 0),
+                                            border: Border.all(
+                                                color: Color.fromARGB(
+                                                    255, 174, 174, 174),
+                                                width: 2),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          child: Center(
+                                            child: Image.asset(
+                                              ImageConstant.Cameraicon,
+                                              height: 30,
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              height: 90,
-                              width: _width - 106,
-                              // color: Colors.green,
-                              child: _loading
-                                  ? Center(
-                                      child: Container(
-                                        margin: EdgeInsets.only(bottom: 100),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          child: Image.asset(
-                                              ImageConstant.loader,
-                                              fit: BoxFit.cover,
-                                              height: 100,
-                                              width: 100),
-                                        ),
-                                      ),
-                                    )
-                                  : LayoutBuilder(
-                                      builder: (context, constraints) {
-                                        double gridWidth =
-                                            (constraints.maxWidth - 20) / 3;
-                                        double gridHeight = gridWidth + 33;
-                                        double ratio = gridWidth / gridHeight;
-                                        return Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 5, bottom: 5),
-                                          child: Container(
-                                            // padding: EdgeInsets.all(5),
-                                            child: SizedBox(
-                                              height: 100,
-                                              child: GridView.count(
-                                                crossAxisCount: 1,
-                                                mainAxisSpacing: 5.0,
-                                                crossAxisSpacing: 10.0,
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                children: <Widget>[
-                                                  ...page!.items.map(
-                                                    (medium) => GestureDetector(
-                                                      onTap: () async {
-                                                        medium1 = medium;
-                                                        file =
-                                                            await PhotoGallery
-                                                                .getFile(
-                                                          mediumId: medium1!.id,
-                                                          mediumType:
-                                                              MediumType.image,
-                                                        );
+                                  Container(
+                                    height: 90,
+                                    width: _width - 106,
+                                    // color: Colors.green,
+                                    child: _loading
+                                        ? Center(
+                                            child: Container(
+                                              margin:
+                                                  EdgeInsets.only(bottom: 100),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                child: Image.asset(
+                                                    ImageConstant.loader,
+                                                    fit: BoxFit.cover,
+                                                    height: 100,
+                                                    width: 100),
+                                              ),
+                                            ),
+                                          )
+                                        : LayoutBuilder(
+                                            builder: (context, constraints) {
+                                              double gridWidth =
+                                                  (constraints.maxWidth - 20) /
+                                                      3;
+                                              double gridHeight =
+                                                  gridWidth + 33;
+                                              double ratio =
+                                                  gridWidth / gridHeight;
+                                              return Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 5, bottom: 5),
+                                                child: Container(
+                                                  // padding: EdgeInsets.all(5),
+                                                  child: SizedBox(
+                                                    height: 100,
+                                                    child: GridView.count(
+                                                      crossAxisCount: 1,
+                                                      mainAxisSpacing: 5.0,
+                                                      crossAxisSpacing: 10.0,
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      children: <Widget>[
+                                                        ...page!.items.map(
+                                                          (medium) =>
+                                                              GestureDetector(
+                                                            onTap: () async {
+                                                              medium1 = medium;
+                                                              file =
+                                                                  await PhotoGallery
+                                                                      .getFile(
+                                                                mediumId:
+                                                                    medium1!.id,
+                                                                mediumType:
+                                                                    MediumType
+                                                                        .image,
+                                                              );
 
-                                                        selectImage = true;
+                                                              selectImage =
+                                                                  true;
 
-                                                        file12 = null;
-                                                        pickedImage.isEmpty;
-                                                        setState(() {});
+                                                              file12 = null;
+                                                              pickedImage
+                                                                  .isEmpty;
+                                                              setState(() {});
 
-                                                        CroppedFile?
-                                                            croppedFile =
-                                                            await ImageCropper()
-                                                                .cropImage(
-                                                          sourcePath: file!.path
-                                                              .toString(),
-                                                          aspectRatioPresets: [
-                                                            CropAspectRatioPreset
-                                                                .square,
-                                                            CropAspectRatioPreset
-                                                                .ratio3x2,
-                                                            CropAspectRatioPreset
-                                                                .original,
-                                                            CropAspectRatioPreset
-                                                                .ratio4x3,
-                                                            CropAspectRatioPreset
-                                                                .ratio16x9
-                                                          ],
-                                                          uiSettings: [
-                                                            AndroidUiSettings(
-                                                                toolbarTitle:
-                                                                    'Cropper',
-                                                                activeControlsWidgetColor:
-                                                                    Color(
-                                                                        0xffED1C25),
-                                                                toolbarColor: Color(
-                                                                    0xffED1C25),
-                                                                toolbarWidgetColor:
-                                                                    Colors
-                                                                        .white,
-                                                                initAspectRatio:
-                                                                    CropAspectRatioPreset
-                                                                        .original,
-                                                                lockAspectRatio:
-                                                                    false),
-                                                            IOSUiSettings(
-                                                              title: 'Cropper',
-                                                            ),
-                                                            WebUiSettings(
-                                                              context: context,
-                                                            ),
-                                                          ],
-                                                        );
+                                                              CroppedFile?
+                                                                  croppedFile =
+                                                                  await ImageCropper()
+                                                                      .cropImage(
+                                                                sourcePath: file!
+                                                                    .path
+                                                                    .toString(),
+                                                                aspectRatioPresets: [
+                                                                  CropAspectRatioPreset
+                                                                      .square,
+                                                                  CropAspectRatioPreset
+                                                                      .ratio3x2,
+                                                                  CropAspectRatioPreset
+                                                                      .original,
+                                                                  CropAspectRatioPreset
+                                                                      .ratio4x3,
+                                                                  CropAspectRatioPreset
+                                                                      .ratio16x9
+                                                                ],
+                                                                uiSettings: [
+                                                                  AndroidUiSettings(
+                                                                      toolbarTitle:
+                                                                          'Cropper',
+                                                                      activeControlsWidgetColor:
+                                                                          Color(
+                                                                              0xffED1C25),
+                                                                      toolbarColor:
+                                                                          Color(
+                                                                              0xffED1C25),
+                                                                      toolbarWidgetColor:
+                                                                          Colors
+                                                                              .white,
+                                                                      initAspectRatio:
+                                                                          CropAspectRatioPreset
+                                                                              .original,
+                                                                      lockAspectRatio:
+                                                                          false),
+                                                                  IOSUiSettings(
+                                                                    title:
+                                                                        'Cropper',
+                                                                  ),
+                                                                  WebUiSettings(
+                                                                    context:
+                                                                        context,
+                                                                  ),
+                                                                ],
+                                                              );
 
-                                                        if (croppedFile !=
-                                                            null) {
-                                                          print(
-                                                              'Image cropped and saved at: ${croppedFile.path}');
-                                                          BlocProvider.of<
-                                                                      AddPostCubit>(
-                                                                  context)
-                                                              .UplodeImageAPI(
-                                                                  context,
-                                                                  medium1?.filename ??
-                                                                      '',
-                                                                  croppedFile
-                                                                      .path);
-                                                        } else {
-                                                          BlocProvider.of<
-                                                                      AddPostCubit>(
-                                                                  context)
-                                                              .UplodeImageAPI(
-                                                                  context,
-                                                                  medium1?.filename ??
-                                                                      '',
-                                                                  file?.path ??
-                                                                      '');
-                                                        }
-                                                      },
-                                                      child: Container(
-                                                        height: 100,
-                                                        width: 100,
-                                                        decoration: BoxDecoration(
-                                                            color: Colors
-                                                                .grey[300],
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10)),
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          child: FadeInImage(
-                                                            fit: BoxFit.cover,
-                                                            placeholder:
-                                                                MemoryImage(
-                                                                    kTransparentImage),
-                                                            image:
-                                                                ThumbnailProvider(
-                                                              mediumId:
-                                                                  medium.id,
-                                                              mediumType: medium
-                                                                  .mediumType,
-                                                              highQuality: true,
+                                                              if (croppedFile !=
+                                                                  null) {
+                                                                print(
+                                                                    'Image cropped and saved at: ${croppedFile.path}');
+                                                                BlocProvider.of<
+                                                                            AddPostCubit>(
+                                                                        context)
+                                                                    .UplodeImageAPI(
+                                                                        context,
+                                                                        medium1?.filename ??
+                                                                            '',
+                                                                        croppedFile
+                                                                            .path);
+                                                              } else {
+                                                                BlocProvider.of<
+                                                                            AddPostCubit>(
+                                                                        context)
+                                                                    .UplodeImageAPI(
+                                                                        context,
+                                                                        medium1?.filename ??
+                                                                            '',
+                                                                        file?.path ??
+                                                                            '');
+                                                              }
+                                                            },
+                                                            child: Container(
+                                                              height: 100,
+                                                              width: 100,
+                                                              decoration: BoxDecoration(
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      300],
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10)),
+                                                              child: ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                                child:
+                                                                    FadeInImage(
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  placeholder:
+                                                                      MemoryImage(
+                                                                          kTransparentImage),
+                                                                  image:
+                                                                      ThumbnailProvider(
+                                                                    mediumId:
+                                                                        medium
+                                                                            .id,
+                                                                    mediumType:
+                                                                        medium
+                                                                            .mediumType,
+                                                                    highQuality:
+                                                                        true,
+                                                                  ),
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
-                                                      ),
+                                                      ],
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                            ),
+                                                ),
+                                              );
+                                            },
                                           ),
-                                        );
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          if (widget.edittextdata == null)
+                            Container(
+                              height: 30,
+                              color: Colors.white,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 20, right: 16),
+                                child: Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () async {
+                                        prepareTestPdf(0);
                                       },
+                                      child: Image.asset(
+                                        ImageConstant.aTTACHMENT,
+                                        height: 20,
+                                      ),
                                     ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 30,
-                      color: Colors.white,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20, right: 16),
-                        child: Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                prepareTestPdf(0);
-                              },
-                              child: Image.asset(
-                                ImageConstant.aTTACHMENT,
-                                height: 20,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 30,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                _getImageFromSource();
-                              },
-                              child: Image.asset(
-                                ImageConstant.gallery,
-                                height: 20,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 30,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                getVideo();
-                              },
-                              child: Icon(
-                                Icons.play_circle_outline_sharp,
-                                color: ColorConstant.primary_color,
-                              ),
-                            )
-                            /*   GestureDetector(
+                                    SizedBox(
+                                      width: 30,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        _getImageFromSource();
+                                      },
+                                      child: Image.asset(
+                                        ImageConstant.gallery,
+                                        height: 20,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 30,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        getVideo();
+                                      },
+                                      child: Icon(
+                                        Icons.play_circle_outline_sharp,
+                                        color: ColorConstant.primary_color,
+                                      ),
+                                    )
+                                    /*   GestureDetector(
                                       onTap: () {},
                                       child: Icon(
                                         Icons.videocam,
                                         color: Colors.red,
                                       )), */
 
-                            /*  SizedBox(
+                                    /*  SizedBox(
                                     width: 30,
                                   ),
                                   Image.asset(
                                     ImageConstant.Gif_icon,
                                     height: 20,
                                   ), */
-                          ],
-                        ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              )
+                    )
+                  : Column(
+                      children: [
+                        if (widget.editImage != null)
+                          Container(
+                              margin: EdgeInsets.only(top: 250),
+                              height: 400,
+                              width: _width,
+                              color: Colors.white,
+                              child: CustomImageView(
+                                url: "${widget.editImage}",
+                              )),
+                        if (widget.mutliplePost != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 250),
+                            child: SizedBox(
+                              height: _height / 2,
+                              width: _width,
+                              child: PageView.builder(
+                                onPageChanged: (value) {
+                                  setState(() {
+                                    _currentPages = value;
+                                  });
+                                },
+                                itemCount: widget.mutliplePost?.length,
+                                controller: _pageControllers,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                      // margin: EdgeInsets.only(top: 250),
+                                      child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          '${widget.mutliplePost?[index]}',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ));
+                                },
+                              ),
+                            ),
+                          ),
+                        if (widget.mutliplePost != null)
+                          Container(
+                            height: 20,
+                            child: DotsIndicator(
+                              dotsCount: widget.mutliplePost?.length ?? 0,
+                              position: _currentPages.toDouble(),
+                              decorator: DotsDecorator(
+                                size: const Size(10.0, 7.0),
+                                activeSize: const Size(10.0, 10.0),
+                                spacing:
+                                    const EdgeInsets.symmetric(horizontal: 2),
+                                activeColor: Color(0xffED1C25),
+                                color: Color(0xff6A6A6A),
+                              ),
+                            ),
+                          )
+                      ],
+                    )
             ],
           ),
         ),

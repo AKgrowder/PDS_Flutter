@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +18,6 @@ import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/DMAll_Screen/Dm_Screen.dart';
 import 'package:pds/widgets/pagenation.dart';
-import 'package:flutter/foundation.dart' as foundation;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InviteMeesage extends StatefulWidget {
@@ -460,7 +460,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                   // color: Colors.amber,
                                   child: Row(
                                     children: [
-                                      Container(
+                                     /*  Container(
                                         // color: Colors.amber,
                                         child: IconButton(
                                           icon: Icon(
@@ -470,12 +470,12 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                           ),
                                           onPressed: onClickedEmoji,
                                         ),
-                                      ),
+                                      ), */
                                       SizedBox(
                                         width: 5,
                                       ),
                                       Container(
-                                        width: _width / 2.35,
+                                        width: _width / 1.8,
                                         // color: Colors.red,
                                         child: TextField(
                                           maxLines: null,

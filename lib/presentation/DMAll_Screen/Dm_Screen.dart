@@ -1108,7 +1108,7 @@ class _DmScreenState extends State<DmScreen> {
                                       children: [
                                         Container(
                                           // color: Colors.amber,
-                                          child: IconButton(
+                                          /* child: IconButton(
                                             icon: Icon(
                                               isEmojiVisible
                                                   ? Icons.keyboard_rounded
@@ -1116,13 +1116,13 @@ class _DmScreenState extends State<DmScreen> {
                                                       .emoji_emotions_outlined,
                                             ),
                                             onPressed: onClickedEmoji,
-                                          ),
+                                          ), */
                                         ),
                                         SizedBox(
                                           width: 5,
                                         ),
                                         Container(
-                                          width: _width / 2.35,
+                                          width: _width / 1.8,
                                           // color: Colors.red,
                                           child: TextField(
                                             controller: Add_Comment,
@@ -1136,6 +1136,7 @@ class _DmScreenState extends State<DmScreen> {
                                         SizedBox(
                                           width: 5,
                                         ),
+                                        // Spacer(),
                                         GestureDetector(
                                           onTap: () {
                                             // pickProfileImage();
@@ -1177,7 +1178,7 @@ class _DmScreenState extends State<DmScreen> {
                                       if (Add_Comment.text.length >= 1000) {
                                         SnackBar snackBar = SnackBar(
                                           content: Text(
-                                              'One Time Message Lenght only for 1000 Your Meassge -> ${Add_Comment.text.length}'),
+                                              'One Time Message Length only for 1000'),
                                           backgroundColor:
                                               ColorConstant.primary_color,
                                         );

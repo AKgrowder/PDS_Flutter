@@ -493,7 +493,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                           HashTagViewScreen(
                                                                               title: "${link.value}"),
                                                                     ));
-                                                              } else {
+                                                               } else if (link.value!.startsWith('@')) {
                                                                 var name;
                                                                 var tagName;
                                                                 name =
@@ -525,7 +525,9 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                     "tagName -- ${tagName}");
                                                                 print(
                                                                     "user id -- ${userTagModel?.object}");
-                                                              }
+                                                              }else{
+                                                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                }
                                                             }
                                                           },
                                                         )
@@ -619,26 +621,19 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                         left: 50, bottom: 10),
                                                     child: Row(
                                                       children: <Widget>[
-                                                        tageData['photo']
-                                                                        .toString()
-                                                                        .isNotEmpty ==
-                                                                    true &&
-                                                                tageData['photo']
-                                                                        .toString() !=
-                                                                    null
-                                                            ? CircleAvatar(
-                                                                backgroundImage:
-                                                                    AssetImage(
-                                                                        ImageConstant
-                                                                            .tomcruse),
-                                                              )
-                                                            : CircleAvatar(
-                                                                backgroundImage:
-                                                                    NetworkImage(
-                                                                  tageData[
-                                                                      'photo'],
-                                                                ),
-                                                              ),
+                                                        tageData['photo'] != null
+                                                        ? CircleAvatar(
+                                                            backgroundImage:
+                                                                NetworkImage(
+                                                              tageData['photo'],
+                                                            ),
+                                                          )
+                                                        : CircleAvatar(
+                                                            backgroundImage:
+                                                                AssetImage(
+                                                                    ImageConstant
+                                                                        .tomcruse),
+                                                          ),
                                                         SizedBox(
                                                           width: 20.0,
                                                         ),
