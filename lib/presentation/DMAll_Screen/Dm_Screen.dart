@@ -653,14 +653,8 @@ class _DmScreenState extends State<DmScreen> {
                                                                             )
                                                                           : Row(
                                                                               crossAxisAlignment: CrossAxisAlignment.start,
-                                                                              mainAxisAlignment: MainAxisAlignment.end,
+                                                                              mainAxisAlignment: MainAxisAlignment.start,
                                                                               children: [
-                                                                                Padding(
-                                                                                  padding: EdgeInsets.only(right: 0, top: 10),
-                                                                                  child: Container(
-                                                                                    child: AnimatedNetworkImage(imageUrl: "${getInboxMessagesModel?.object?.content?[index].message}"),
-                                                                                  ),
-                                                                                ),
                                                                                 GestureDetector(
                                                                                   onTap: () {
                                                                                     Navigator.push(context, MaterialPageRoute(
@@ -687,6 +681,14 @@ class _DmScreenState extends State<DmScreen> {
                                                                                             height: 20,
                                                                                           ),
                                                                                         ),
+                                                                                ),
+                                                                                Padding(
+                                                                                  padding: EdgeInsets.only(top: 10, left: 3),
+                                                                                  child: Container(
+                                                                                    height: 100,
+                                                                                    width: 150,
+                                                                                    child: AnimatedNetworkImage(imageUrl: "${getInboxMessagesModel?.object?.content?[index].message}"),
+                                                                                  ),
                                                                                 ),
                                                                               ],
                                                                             ),
@@ -990,8 +992,11 @@ class _DmScreenState extends State<DmScreen> {
                                                                                 MainAxisAlignment.end,
                                                                             children: [
                                                                               Padding(
-                                                                                padding: EdgeInsets.only(right: 0, top: 10),
+                                                                                padding: EdgeInsets.only(top: 10),
                                                                                 child: Container(
+                                                                                  // color: Colors.green,
+                                                                                  height: 100,
+                                                                                  width: 150,
                                                                                   child: AnimatedNetworkImage(imageUrl: "${getInboxMessagesModel?.object?.content?[index].message}"),
                                                                                 ),
                                                                               ),
@@ -999,7 +1004,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                                 onTap: () {
                                                                                   Navigator.push(context, MaterialPageRoute(
                                                                                     builder: (context) {
-                                                                                      return ProfileScreen(User_ID: getInboxMessagesModel?.object?.content?[index].userUid ?? "", isFollowing: "");
+                                                                                      return ProfileScreen(User_ID: userId ?? "", isFollowing: "");
                                                                                     },
                                                                                   ));
                                                                                 },
@@ -1107,8 +1112,8 @@ class _DmScreenState extends State<DmScreen> {
                                     child: Row(
                                       children: [
                                         Container(
-                                          // color: Colors.amber,
-                                          /* child: IconButton(
+                                            // color: Colors.amber,
+                                            /* child: IconButton(
                                             icon: Icon(
                                               isEmojiVisible
                                                   ? Icons.keyboard_rounded
@@ -1117,7 +1122,7 @@ class _DmScreenState extends State<DmScreen> {
                                             ),
                                             onPressed: onClickedEmoji,
                                           ), */
-                                        ),
+                                            ),
                                         SizedBox(
                                           width: 5,
                                         ),

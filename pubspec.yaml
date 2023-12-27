@@ -59,7 +59,12 @@ dependencies:
   flutter_mentions: ^2.0.1
   flutter_typeahead: ^4.8.0
   chewie: ^1.7.4
-  visibility_detector: ^0.4.0+2
+  visibility_detector: ^0.4.0+2 
+  provider: 
+  wakelock: ^0.6.2
+  universal_html: 
+  dio:
+  path_provider: 
   # dio: ^5.3.4
   
   
@@ -71,6 +76,7 @@ dev_dependencies:
 dependency_overrides:
   path_drawing: ^0.5.1
   xml: ^6.0.1
+  win32: ^3.0.0
   
 flutter: 
   uses-material-design: true
