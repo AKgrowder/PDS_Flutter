@@ -261,7 +261,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               PopupMenuItem<String>(
                 value: 'edit',
                 child: GestureDetector(
-                         onTap: () {
+                  onTap: () {
                     print(AllGuestPostRoomData
                         ?.object?.content?[index].description);
 
@@ -4565,8 +4565,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 "",
                                                                             title: getallBlogModel1?.object?[index1].title.toString() ??
                                                                                 "",
-                                                                            imageURL:
-                                                                                getallBlogModel1?.object?[index1].image.toString() ?? ""),
+                                                                            imageURL: getallBlogModel1?.object?[index1].image.toString() ??
+                                                                                "",
+                                                                            index:
+                                                                                index1,
+                                                                            getallBlogModel1:
+                                                                                getallBlogModel1),
                                                                       ));
                                                                 },
                                                                 child:
@@ -5343,8 +5347,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   }
 
   void _settingModalBottomSheetBlog(context, index, _width) {
-    
-
     showModalBottomSheet(
             isScrollControlled: true,
             useSafeArea: true,
