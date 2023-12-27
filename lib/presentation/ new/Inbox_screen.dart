@@ -17,6 +17,8 @@ import 'package:pds/presentation/DMAll_Screen/Dm_Screen.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'newbottembar.dart';
+
 class InboxScreen extends StatefulWidget {
   const InboxScreen({Key? key}) : super(key: key);
 
@@ -35,6 +37,7 @@ class _InboxScreenState extends State<InboxScreen> {
   FocusNode _focusNode = FocusNode();
   GetUsersChatByUsername? getUsersChatByUsername;
   String? userID;
+  TextEditingController searchController = TextEditingController();
   @override
   void initState() {
     getDocumentSize();
@@ -58,204 +61,208 @@ class _InboxScreenState extends State<InboxScreen> {
     super.dispose();
   }
 
-  TextEditingController searchController = TextEditingController();
+  Future<bool> isMethod() async {
+    if (isDataGet == false) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => NewBottomBar(buttomIndex: 0)),
+          (Route<dynamic> route) => false);
+      return true;
+    } else {
+      isDataGet = false;
+      searchController.clear();
+      setState(() {});
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              /*           Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return MultiBlocProvider(
-                                          providers: [
-                                            BlocProvider<MyAccountCubit>(
-                                              create: (context) =>
-                                                  MyAccountCubit(),
-                                            ),
-                                          ],
-                                          child: EditProfileScreen(
-                                            newProfileData: NewProfileData,
-                                          )); */
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return MultiBlocProvider(
-                  providers: [
-                    BlocProvider<PersonalChatListCubit>(
-                      create: (context) => PersonalChatListCubit(),
-                    ),
-                  ],
-                  child: InviteMeesage(),
-                );
-              })).then((value) =>
-                  BlocProvider.of<PersonalChatListCubit>(context)
-                      .PersonalChatList(context));
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: ColorConstant.primary_color,
-              ),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Image.asset(ImageConstant.addIcon),
-                ),
-              ),
-            )),
-        body: BlocConsumer<PersonalChatListCubit, PersonalChatListState>(
-            listener: (context, state) async {
-          if (state is PersonalChatListErrorState) {
-            SnackBar snackBar = SnackBar(
-              content: Text(state.error),
-              backgroundColor: ColorConstant.primary_color,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }
-          if (state is SearchHistoryDataAddxtends) {
-            isDataGet = true;
-            searchUserForInbox1 = state.searchUserForInbox;
-          }
-          if (state is PersonalChatListLoadedState) {
-            apiData = true;
-            PersonalChatListModelData = state.PersonalChatListModelData;
-          }
-          if (state is DMChatListLoadedState) {
-            print(state.DMChatList.object);
-            UserIndexUUID = state.DMChatList.object;
-            setState(() {});
-          }
-          if (state is UserChatDeleteLoaded) {
-            print(state.DeleteUserChatData.object);
-             SnackBar snackBar = SnackBar(
-                    content: Text(state.DeleteUserChatData.object.toString()),
-                    backgroundColor: ColorConstant.primary_color,
+    return WillPopScope(
+      onWillPop: isMethod,
+      child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return MultiBlocProvider(
+                    providers: [
+                      BlocProvider<PersonalChatListCubit>(
+                        create: (context) => PersonalChatListCubit(),
+                      ),
+                    ],
+                    child: InviteMeesage(),
                   );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            if (state.DeleteUserChatData.object ==
-                "Chat Deleted Successfully") {
-              setState(() {
-                BlocProvider.of<PersonalChatListCubit>(context)
-                    .PersonalChatList(context);
-              });
-            }
-          }
-          if (state is PersonalChatListLoadingState) {
-            Center(
+                })).then((value) =>
+                    BlocProvider.of<PersonalChatListCubit>(context)
+                        .PersonalChatList(context));
+              },
               child: Container(
-                margin: EdgeInsets.only(bottom: 100),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.asset(ImageConstant.loader,
-                      fit: BoxFit.cover, height: 100.0, width: 100),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: ColorConstant.primary_color,
                 ),
-              ),
-            );
-          }
-
-          if (state is GetUsersChatByUsernameLoaded) {
-            isDataGet = true;
-            getUsersChatByUsername = state.getUsersChatByUsername;
-            if (getUsersChatByUsername?.object?.content?.isNotEmpty == true) {
-              getUsersChatByUsername?.object?.content?.forEach((element) {
-                if (userID == element.userUuid) {
-                  getUsersChatByUsername?.object?.content?.remove(element);
-                }
-              });
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Image.asset(ImageConstant.addIcon),
+                  ),
+                ),
+              )),
+          body: BlocConsumer<PersonalChatListCubit, PersonalChatListState>(
+              listener: (context, state) async {
+            if (state is PersonalChatListErrorState) {
+              SnackBar snackBar = SnackBar(
+                content: Text(state.error),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-          }
-        }, builder: (context, state) {
-          return apiData == true
-              ? Container(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15, right: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: height * 0.06,
-                          ),
-                          Text(
-                            "Inbox",
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
+            if (state is SearchHistoryDataAddxtends) {
+              isDataGet = true;
+              searchUserForInbox1 = state.searchUserForInbox;
+            }
+            if (state is PersonalChatListLoadedState) {
+              apiData = true;
+              PersonalChatListModelData = state.PersonalChatListModelData;
+            }
+            if (state is DMChatListLoadedState) {
+              print(state.DMChatList.object);
+              UserIndexUUID = state.DMChatList.object;
+              setState(() {});
+            }
+            if (state is UserChatDeleteLoaded) {
+              print(state.DeleteUserChatData.object);
+              SnackBar snackBar = SnackBar(
+                content: Text(state.DeleteUserChatData.object.toString()),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              if (state.DeleteUserChatData.object ==
+                  "Chat Deleted Successfully") {
+                setState(() {
+                  BlocProvider.of<PersonalChatListCubit>(context)
+                      .PersonalChatList(context);
+                });
+              }
+            }
+            if (state is PersonalChatListLoadingState) {
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 100),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(ImageConstant.loader,
+                        fit: BoxFit.cover, height: 100.0, width: 100),
+                  ),
+                ),
+              );
+            }
+
+            if (state is GetUsersChatByUsernameLoaded) {
+              isDataGet = true;
+              getUsersChatByUsername = state.getUsersChatByUsername;
+              if (getUsersChatByUsername?.object?.content?.isNotEmpty == true) {
+                getUsersChatByUsername?.object?.content?.forEach((element) {
+                  if (userID == element.userUuid) {
+                    getUsersChatByUsername?.object?.content?.remove(element);
+                  }
+                });
+              }
+            }
+          }, builder: (context, state) {
+            return apiData == true
+                ? Container(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 15, right: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: height * 0.06,
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 15),
-                            child: Container(
-                              height: 48,
-                              decoration: BoxDecoration(
-                                  color: Color(0xffFBD8D9),
-                                  border: Border.all(
-                                    color: ColorConstant.primary_color,
-                                  ),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: TextFormField(
-                                onChanged: (value) {
-                                  if (value.isNotEmpty) {
-                                    BlocProvider.of<PersonalChatListCubit>(
-                                            context)
-                                        .get_UsersChatByUsernameMethod(
-                                      searchController.text.trim(),
-                                      '1',
-                                      context,
-                                    );
-                                  } else if (value.isEmpty) {
-                                    isDataGet = false;
-                                    setState(() {});
-                                  }
-                                },
-                                focusNode: _focusNode,
-                                controller: searchController,
-                                cursorColor: ColorConstant.primary_color,
-                                decoration: InputDecoration(
-                                    suffixIcon: IconButton(
-                                        onPressed: () {
-                                          searchController.clear();
-                                          isDataGet = false;
-                                          _focusNode.unfocus();
-                                          setState(() {});
-                                        },
-                                        icon: Icon(
-                                          Icons.close,
-                                          color: Colors.black,
-                                        )),
-                                    hintText: "Search....",
-                                    hintStyle: TextStyle(
-                                        color: ColorConstant.primary_color),
-                                    border: InputBorder.none,
-                                    prefixIcon: Icon(
-                                      Icons.search,
-                                      color: ColorConstant.primary_color,
-                                    )),
+                            Text(
+                              "Inbox",
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
                               ),
                             ),
-                          ),
-                          isDataGet == true
-                              ? serInboxdata(width)
-                              : intaldatashow(),
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.only(top: 15),
+                              child: Container(
+                                height: 48,
+                                decoration: BoxDecoration(
+                                    color: Color(0xffFBD8D9),
+                                    border: Border.all(
+                                      color: ColorConstant.primary_color,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: TextFormField(
+                                  onChanged: (value) {
+                                    if (value.isNotEmpty) {
+                                      BlocProvider.of<PersonalChatListCubit>(
+                                              context)
+                                          .get_UsersChatByUsernameMethod(
+                                        searchController.text.trim(),
+                                        '1',
+                                        context,
+                                      );
+                                    } else if (value.isEmpty) {
+                                      isDataGet = false;
+                                      setState(() {});
+                                    }
+                                  },
+                                  focusNode: _focusNode,
+                                  controller: searchController,
+                                  cursorColor: ColorConstant.primary_color,
+                                  decoration: InputDecoration(
+                                      suffixIcon: IconButton(
+                                          onPressed: () {
+                                            searchController.clear();
+                                            isDataGet = false;
+                                            _focusNode.unfocus();
+                                            setState(() {});
+                                          },
+                                          icon: Icon(
+                                            Icons.close,
+                                            color: Colors.black,
+                                          )),
+                                      hintText: "Search....",
+                                      hintStyle: TextStyle(
+                                          color: ColorConstant.primary_color),
+                                      border: InputBorder.none,
+                                      prefixIcon: Icon(
+                                        Icons.search,
+                                        color: ColorConstant.primary_color,
+                                      )),
+                                ),
+                              ),
+                            ),
+                            isDataGet == true
+                                ? serInboxdata(width)
+                                : intaldatashow(),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                )
-              : Center(
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 100),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.asset(ImageConstant.loader,
-                          fit: BoxFit.cover, height: 100.0, width: 100),
+                  )
+                : Center(
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 100),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.asset(ImageConstant.loader,
+                            fit: BoxFit.cover, height: 100.0, width: 100),
+                      ),
                     ),
-                  ),
-                );
-        }));
+                  );
+          })),
+    );
   }
 
   intaldatashow() {
@@ -651,34 +658,34 @@ class _InboxScreenState extends State<InboxScreen> {
     }
   }
 }
- String getTimeDifference(DateTime dateTime) {
-    final difference = DateTime.now().difference(dateTime);
-    if (difference.inDays > 0) {
-      if (difference.inDays == 1) {
-        return '1 day ago';
-      } else if (difference.inDays < 7) {
-        return '${difference.inDays} days ago';
-      } else {
-        final weeks = (difference.inDays / 7).floor();
-        return '$weeks week${weeks == 1 ? '' : 's'} ago';
-      }
-    } else if (difference.inHours > 0) {
-      if (difference.inHours == 1) {
-        return '1 hour ago';
-      } else {
-        return '${difference.inHours} hours ago';
-      }
-    } else if (difference.inMinutes > 0) {
-      if (difference.inMinutes == 1) {
-        return '1 minute ago';
-      } else {
-        return '${difference.inMinutes} minutes ago';
-      }
-    } else {
-      return 'Just now';
-    }
-  }
 
+String getTimeDifference(DateTime dateTime) {
+  final difference = DateTime.now().difference(dateTime);
+  if (difference.inDays > 0) {
+    if (difference.inDays == 1) {
+      return '1 day ago';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays} days ago';
+    } else {
+      final weeks = (difference.inDays / 7).floor();
+      return '$weeks week${weeks == 1 ? '' : 's'} ago';
+    }
+  } else if (difference.inHours > 0) {
+    if (difference.inHours == 1) {
+      return '1 hour ago';
+    } else {
+      return '${difference.inHours} hours ago';
+    }
+  } else if (difference.inMinutes > 0) {
+    if (difference.inMinutes == 1) {
+      return '1 minute ago';
+    } else {
+      return '${difference.inMinutes} minutes ago';
+    }
+  } else {
+    return 'Just now';
+  }
+}
 
 class InboxScreen1 extends StatelessWidget {
   const InboxScreen1({Key? key}) : super(key: key);
