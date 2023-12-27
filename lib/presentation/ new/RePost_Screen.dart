@@ -21,7 +21,6 @@ import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/%20new/VideoFull_Screen.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/example/lib/main.dart';
@@ -132,6 +131,7 @@ class _RePostScreenState extends State<RePostScreen> {
   List<Map<String, dynamic>> heshTageData = [];
   VideoPlayerController? _controller;
   bool istageData = false;
+  bool isrepostDataSet = true;
   bool isHeshTegData = false;
   List<File> galleryFile = [];
   VideoPlayerController? _controllersRepost;
@@ -245,6 +245,7 @@ class _RePostScreenState extends State<RePostScreen> {
         }
       }
       if (state is RePostLoadedState) {
+        isrepostDataSet = true;
         print("lodedSate-->");
         SnackBar snackBar = SnackBar(
           content: Text(state.RePost.object.toString()),
@@ -292,7 +293,9 @@ class _RePostScreenState extends State<RePostScreen> {
                                 onTap: () {
                                   HasetagList = [];
                                   CreatePostDone = true;
-                                  dataPostFucntion();
+                                  if (isrepostDataSet == true) {
+                                    dataPostFucntion();
+                                  }
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -444,7 +447,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                 padding: EdgeInsets.all(10.0),
                                                 child: Row(
                                                   children: <Widget>[
-                                                   tageData['photo'] != null
+                                                    tageData['photo'] != null
                                                         ? CircleAvatar(
                                                             backgroundImage:
                                                                 NetworkImage(
@@ -1843,6 +1846,9 @@ class _RePostScreenState extends State<RePostScreen> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         } else { */
         if (CreatePostDone == true) {
+          setState(() {
+            isrepostDataSet = false;
+          });
           if (postText1.text.isNotEmpty && file?.path != null) {
             Map<String, dynamic> param = {
               "description": postText1.text,
