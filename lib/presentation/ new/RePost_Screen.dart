@@ -444,24 +444,18 @@ class _RePostScreenState extends State<RePostScreen> {
                                                 padding: EdgeInsets.all(10.0),
                                                 child: Row(
                                                   children: <Widget>[
-                                                    tageData['photo']
-                                                                    .toString()
-                                                                    .isNotEmpty ==
-                                                                true &&
-                                                            tageData['photo']
-                                                                    .toString() !=
-                                                                null
+                                                   tageData['photo'] != null
                                                         ? CircleAvatar(
-                                                            backgroundImage:
-                                                                AssetImage(
-                                                                    ImageConstant
-                                                                        .tomcruse),
-                                                          )
-                                                        : CircleAvatar(
                                                             backgroundImage:
                                                                 NetworkImage(
                                                               tageData['photo'],
                                                             ),
+                                                          )
+                                                        : CircleAvatar(
+                                                            backgroundImage:
+                                                                AssetImage(
+                                                                    ImageConstant
+                                                                        .tomcruse),
                                                           ),
                                                     SizedBox(
                                                       width: 20.0,

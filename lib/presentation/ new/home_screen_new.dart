@@ -42,7 +42,6 @@ import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/RePost_Screen.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
-import 'package:pds/presentation/%20new/VideoFull_Screen.dart';
 import 'package:pds/presentation/%20new/comment_bottom_sheet.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
@@ -261,22 +260,66 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               PopupMenuItem<String>(
                 value: 'edit',
                 child: GestureDetector(
-                         onTap: () {
+                  onTap: () {
                     print(AllGuestPostRoomData
                         ?.object?.content?[index].description);
-
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CreateNewPost(
+                    if (AllGuestPostRoomData
+                                ?.object?.content?[index].postDataType ==
+                            "IMAGE" &&
+                        AllGuestPostRoomData
+                                ?.object?.content?[index].postData?.length ==
+                            1) {
+                      print("sdfgsdvfsdfgsdfg");
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CreateNewPost(
                               PostID: AllGuestPostRoomData
                                   ?.object?.content?[index].postUid,
                               edittextdata: AllGuestPostRoomData
-                                  ?.object?.content?[index].description),
-                        )).then((value) {
-                      Get_UserToken();
-                      Navigator.pop(context);
-                    });
+                                  ?.object?.content?[index].description,
+                              editImage: AllGuestPostRoomData
+                                  ?.object?.content?[index].postData?.first,
+                            ),
+                          )).then((value) {
+                        Get_UserToken();
+                        Navigator.pop(context);
+                      });
+                    } else if (AllGuestPostRoomData
+                            ?.object?.content?[index].postDataType ==
+                        "IMAGE") {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CreateNewPost(
+                              PostID: AllGuestPostRoomData
+                                  ?.object?.content?[index].postUid,
+                              edittextdata: AllGuestPostRoomData
+                                  ?.object?.content?[index].description,
+                              mutliplePost: AllGuestPostRoomData
+                                  ?.object?.content?[index].postData,
+                            ),
+                          )).then((value) {
+                        Get_UserToken();
+                        Navigator.pop(context);
+                      });
+                    } else {
+                      print(
+                          "dfhsdfhsdfhsdfh-${AllGuestPostRoomData?.object?.content?[index].postData?.length}");
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CreateNewPost(
+                              PostID: AllGuestPostRoomData
+                                  ?.object?.content?[index].postUid,
+                              edittextdata: AllGuestPostRoomData
+                                  ?.object?.content?[index].description,
+                            ),
+                          )).then((value) {
+                        Get_UserToken();
+                        Navigator.pop(context);
+                      });
+                    }
                   },
                   child: Container(
                     width: 130,
@@ -747,7 +790,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         (route) => false);
   }
 
-  void showDeleteConfirmationDialog(
+   void showDeleteConfirmationDialog(
       BuildContext context, String PostUID, int index) {
     showDialog(
       context: context,
@@ -757,15 +800,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           title: Text('Confirm Delete'),
           titlePadding: EdgeInsets.all(10),
           content: Container(
-            height: 75,
+            height: 100,
             child: Column(
               children: [
                 Text('Are you sure you want to delete this Post?'),
                 SizedBox(
-                  height: 15,
+                  height: 20,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     GestureDetector(
                       onTap: () async {
@@ -1339,6 +1382,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 }
               }
               if (state is GetGuestAllPostLoadedState) {
+                
                 mainPostControllers.clear();
                 VideoPlayerController _controller =
                     VideoPlayerController.networkUrl(Uri.parse(''));
@@ -1351,9 +1395,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                             Uri.parse(element.postData?.first ?? ''));
                     inList = ChewieController(
                       videoPlayerController: _controller,
-                      autoPlay: false,
-                      looping: false,
-                      allowFullScreen: true,
+                      autoPlay: true,
+                     /*  looping: false,
+                      allowFullScreen: true, */
                       materialProgressColors: ChewieProgressColors(
                           backgroundColor: Colors.grey,
                           playedColor: ColorConstant.primary_color),
@@ -2265,7 +2309,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                       MaterialPageRoute(
                                                                                         builder: (context) => HashTagViewScreen(title: "${link.value}"),
                                                                                       ));
-                                                                                } else {
+                                                                                } else if (link.value!.startsWith('@')) {
                                                                                   var name;
                                                                                   var tagName;
                                                                                   name = SelectedTest;
@@ -2278,6 +2322,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
                                                                                   print("tagName -- ${tagName}");
                                                                                   print("user id -- ${userTagModel?.object}");
+                                                                                } else {
+                                                                                  launchUrl(Uri.parse("https://${link.value.toString()}"));
                                                                                 }
                                                                               }
                                                                             }
@@ -2671,7 +2717,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                       MaterialPageRoute(
                                                                                         builder: (context) => HashTagViewScreen(title: "${link.value}"),
                                                                                       ));
-                                                                                } else {
+                                                                                } else if (link.value!.startsWith('@')) {
                                                                                   var name;
                                                                                   var tagName;
                                                                                   name = SelectedTest;
@@ -3596,7 +3642,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                       MaterialPageRoute(
                                                                                         builder: (context) => HashTagViewScreen(title: "${link.value}"),
                                                                                       ));
-                                                                                } else {
+                                                                                } else if (link.value!.startsWith('@')) {
                                                                                   var name;
                                                                                   var tagName;
                                                                                   name = SelectedTest;
@@ -4561,12 +4607,20 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       context,
                                                                       MaterialPageRoute(
                                                                         builder: (context) => RecentBlogScren(
+                                                                           index:
+                                                                                index1,
+                                                                            getallBlogModel1:
+                                                                                getallBlogModel1,
                                                                             description1: getallBlogModel1?.object?[index1].description.toString() ??
                                                                                 "",
                                                                             title: getallBlogModel1?.object?[index1].title.toString() ??
                                                                                 "",
-                                                                            imageURL:
-                                                                                getallBlogModel1?.object?[index1].image.toString() ?? ""),
+                                                                            imageURL: getallBlogModel1?.object?[index1].image.toString() ??
+                                                                                "",
+                                                                            index:
+                                                                                index1,
+                                                                            getallBlogModel1:
+                                                                                getallBlogModel1),
                                                                       ));
                                                                 },
                                                                 child:
@@ -5343,8 +5397,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   }
 
   void _settingModalBottomSheetBlog(context, index, _width) {
-    
-
     showModalBottomSheet(
             isScrollControlled: true,
             useSafeArea: true,
