@@ -338,6 +338,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
               context,
               "${User_ID}",
               "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+        }else{
+          
         }
       }
     }
@@ -987,7 +989,8 @@ class _StoryTimelineState extends State<StoryTimeline> {
 
   @override
   void initState() {
-    _maxAccumulator = widget.buttonData.segmentDuration.inMilliseconds;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _maxAccumulator = widget.buttonData.segmentDuration.inMilliseconds;
     _timer = Timer.periodic(
       Duration(
         milliseconds: widget.durationOfVideo != null
@@ -1002,6 +1005,8 @@ class _StoryTimelineState extends State<StoryTimeline> {
         StoryWatchedContract.onStoryStart) {
       widget.buttonData.markAsWatched();
     }
+    });
+    
   }
 
   void _setTimelineAvailable(bool value) {

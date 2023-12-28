@@ -33,6 +33,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../API/Model/HashTage_Model/HashTagView_model.dart';
 import '../Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
+import 'home_screen_new.dart';
 
 class RePostScreen extends StatefulWidget {
   String? username;
@@ -78,6 +79,7 @@ class _RePostScreenState extends State<RePostScreen> {
 
   @override
   void initState() {
+    print("check Viedo Formated-${widget.postDataType}");
     _loading = true;
     getDocumentSize();
     initAsync();
@@ -263,6 +265,7 @@ class _RePostScreenState extends State<RePostScreen> {
     }, builder: (context, state) {
       return SafeArea(
           child: Scaffold(
+            backgroundColor: Colors.white,
         body: Container(
           color: Colors.white,
           child: Stack(
@@ -863,228 +866,218 @@ class _RePostScreenState extends State<RePostScreen> {
                                             //           )),
                                             // );
                                           },
-                                          child: Container(
-                                            width: _width,
-                                            child: widget.postDataType == null
-                                                ? SizedBox()
-                                                : widget.postData?.length == 1
-                                                    ? widget.postDataType ==
-                                                            "IMAGE"
-                                                        ? Container(
-                                                            width: _width,
-                                                            height: 150,
-                                                            margin:
-                                                                EdgeInsets.only(
-                                                                    left: 16,
-                                                                    top: 15,
-                                                                    right: 16),
-                                                            child: Center(
-                                                                child:
-                                                                    CustomImageView(
-                                                              url:
-                                                                  "${widget.postData?[0]}",
-                                                            )),
-                                                          )
-                                                        // : widget.postDataType ==
-                                                        //         "VIDEO"
-                                                        //     ? _controllersRepost!
-                                                        //             .value
-                                                        //             .isInitialized
-                                                        //         ? Padding(
-                                                        //             padding: const EdgeInsets
-                                                        //                     .only(
-                                                        //                 left:
-                                                        //                     15,
-                                                        //                 right:
-                                                        //                     15,
-                                                        //                 top:
-                                                        //                     15),
-                                                        //             child:
-                                                        //                 Container(
-                                                        //               height:
-                                                        //                   200,
-                                                        //               child:
-                                                        //                   Stack(
-                                                        //                 children: [
-                                                        //                   AspectRatio(
-                                                        //                     aspectRatio:
-                                                        //                         _controllersRepost!.value.aspectRatio,
-                                                        //                     child:
-                                                        //                         VideoPlayer(_controllersRepost!),
-                                                        //                   ),
-                                                        //                   Positioned(
-                                                        //                     right:
-                                                        //                         0,
-                                                        //                     bottom:
-                                                        //                         0,
-                                                        //                     child:
-                                                        //                         IconButton(
-                                                        //                       color: ColorConstant.primary_color,
-                                                        //                       icon: Icon(
-                                                        //                         /*  _isFullScreen ? Icons.fullscreen_exit : */ Icons.fullscreen,
-                                                        //                       ),
-                                                        //                       onPressed: () {
-                                                        //                         Navigator.push(context, MaterialPageRoute(
-                                                        //                           builder: (context) {
-                                                        //                             return VideoFullScreen(
-                                                        //                               postData: widget.postData?[0],
-                                                        //                             );
-                                                        //                           },
-                                                        //                         ));
-                                                        //                       }, /* _toggleFullScreen */
-                                                        //                     ),
-                                                        //                   ),
-                                                        //                   Positioned
-                                                        //                       .fill(
-                                                        //                     child:
-                                                        //                         GestureDetector(
-                                                        //                       onTap: () {
-                                                        //                         // _playPause(index);
-                                                        //                         if (_controllersRepost!.value.isPlaying) {
-                                                        //                           setState(() {
-                                                        //                             _controllersRepost!.pause();
-                                                        //                           });
-                                                        //                         } else {
-                                                        //                           setState(() {
-                                                        //                             _controllersRepost!.play();
-                                                        //                           });
-                                                        //                         }
-                                                        //                       },
-                                                        //                       child: _controllersRepost!.value.isPlaying
-                                                        //                           ? Icon(
-                                                        //                               Icons.pause_circle_outline,
-                                                        //                               size: 50,
-                                                        //                               color: Colors.white,
-                                                        //                             )
-                                                        //                           : Icon(
-                                                        //                               Icons.play_circle_outline,
-                                                        //                               size: 50,
-                                                        //                               color: Colors.white,
-                                                        //                             ),
-                                                        //                     ),
-                                                        //                   ),
-                                                        //                 ],
-                                                        //               ),
-                                                        //             ),
-                                                        //           )
-                                                        //         : SizedBox()
-                                                        : widget.postDataType ==
-                                                                "ATTACHMENT"
-                                                            ? Container(
-                                                                height: 400,
-                                                                width: _width,
-                                                                child:
-                                                                    DocumentViewScreen1(
-                                                                  path: widget
-                                                                      .postData?[0],
-                                                                ))
-                                                            : SizedBox()
-                                                    : Column(
-                                                        children: [
-                                                          Stack(
-                                                            children: [
-                                                              if ((widget
-                                                                      .postData
-                                                                      ?.isNotEmpty ??
-                                                                  false)) ...[
-                                                                SizedBox(
-                                                                  height: 300,
-                                                                  child: PageView
-                                                                      .builder(
-                                                                    onPageChanged:
-                                                                        (page) {
-                                                                      setState(
-                                                                          () {
-                                                                        currentPages[widget.index ??
-                                                                                0] =
-                                                                            page;
-                                                                      });
-                                                                    },
-                                                                    controller:
-                                                                        pageControllers[
-                                                                            widget.index ??
-                                                                                0],
-                                                                    itemCount: widget
-                                                                        .postData
-                                                                        ?.length,
-                                                                    itemBuilder:
-                                                                        (BuildContext
-                                                                                context,
-                                                                            int index1) {
-                                                                      if (widget
-                                                                              .postDataType ==
-                                                                          "IMAGE") {
-                                                                        return Container(
-                                                                          width:
-                                                                              _width,
-                                                                          margin: EdgeInsets.only(
-                                                                              left: 16,
-                                                                              top: 15,
-                                                                              right: 16),
-                                                                          child: Center(
-                                                                              child: CustomImageView(
-                                                                            url:
-                                                                                "${widget.postData?[index1]}",
-                                                                          )),
-                                                                        );
-                                                                      } else if (widget
-                                                                              .postDataType ==
-                                                                          "ATTACHMENT") {
-                                                                        return Container(
-                                                                            height:
-                                                                                400,
-                                                                            width:
-                                                                                _width,
-                                                                            child:
-                                                                                DocumentViewScreen1(
-                                                                              path: widget.postData?[index1].toString(),
-                                                                            ));
-                                                                      }
-                                                                    },
-                                                                  ),
-                                                                ),
-                                                                Positioned(
-                                                                    bottom: 5,
-                                                                    left: 0,
-                                                                    right: 0,
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .only(
+                                          child: widget.postDataType == 'VIDEO'
+                                              ? Padding(
+                                                padding: const EdgeInsets.all(20),
+                                                child: VideoListItem(
+                                                    videoUrl: widget
+                                                        .postData?[0]),
+                                              )
+                                              : Container(
+                                                  width: _width,
+                                                  child: widget.postDataType ==
+                                                          null
+                                                      ? SizedBox()
+                                                      : widget.postData
+                                                                  ?.length ==
+                                                              1
+                                                          ? widget.postDataType ==
+                                                                  "IMAGE"
+                                                              ? Container(
+                                                                  width: _width,
+                                                                  height: 150,
+                                                                  margin: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              16,
                                                                           top:
-                                                                              0),
+                                                                              15,
+                                                                          right:
+                                                                              16),
+                                                                  child: Center(
                                                                       child:
-                                                                          Container(
+                                                                          CustomImageView(
+                                                                    url:
+                                                                        "${widget.postData?[0]}",
+                                                                  )),
+                                                                )
+                                                              // : widget.postDataType ==
+                                                              //         "VIDEO"
+                                                              //     ? _controllersRepost!
+                                                              //             .value
+                                                              //             .isInitialized
+                                                              //         ? Padding(
+                                                              //             padding: const EdgeInsets
+                                                              //                     .only(
+                                                              //                 left:
+                                                              //                     15,
+                                                              //                 right:
+                                                              //                     15,
+                                                              //                 top:
+                                                              //                     15),
+                                                              //             child:
+                                                              //                 Container(
+                                                              //               height:
+                                                              //                   200,
+                                                              //               child:
+                                                              //                   Stack(
+                                                              //                 children: [
+                                                              //                   AspectRatio(
+                                                              //                     aspectRatio:
+                                                              //                         _controllersRepost!.value.aspectRatio,
+                                                              //                     child:
+                                                              //                         VideoPlayer(_controllersRepost!),
+                                                              //                   ),
+                                                              //                   Positioned(
+                                                              //                     right:
+                                                              //                         0,
+                                                              //                     bottom:
+                                                              //                         0,
+                                                              //                     child:
+                                                              //                         IconButton(
+                                                              //                       color: ColorConstant.primary_color,
+                                                              //                       icon: Icon(
+                                                              //                         /*  _isFullScreen ? Icons.fullscreen_exit : */ Icons.fullscreen,
+                                                              //                       ),
+                                                              //                       onPressed: () {
+                                                              //                         Navigator.push(context, MaterialPageRoute(
+                                                              //                           builder: (context) {
+                                                              //                             return VideoFullScreen(
+                                                              //                               postData: widget.postData?[0],
+                                                              //                             );
+                                                              //                           },
+                                                              //                         ));
+                                                              //                       }, /* _toggleFullScreen */
+                                                              //                     ),
+                                                              //                   ),
+                                                              //                   Positioned
+                                                              //                       .fill(
+                                                              //                     child:
+                                                              //                         GestureDetector(
+                                                              //                       onTap: () {
+                                                              //                         // _playPause(index);
+                                                              //                         if (_controllersRepost!.value.isPlaying) {
+                                                              //                           setState(() {
+                                                              //                             _controllersRepost!.pause();
+                                                              //                           });
+                                                              //                         } else {
+                                                              //                           setState(() {
+                                                              //                             _controllersRepost!.play();
+                                                              //                           });
+                                                              //                         }
+                                                              //                       },
+                                                              //                       child: _controllersRepost!.value.isPlaying
+                                                              //                           ? Icon(
+                                                              //                               Icons.pause_circle_outline,
+                                                              //                               size: 50,
+                                                              //                               color: Colors.white,
+                                                              //                             )
+                                                              //                           : Icon(
+                                                              //                               Icons.play_circle_outline,
+                                                              //                               size: 50,
+                                                              //                               color: Colors.white,
+                                                              //                             ),
+                                                              //                     ),
+                                                              //                   ),
+                                                              //                 ],
+                                                              //               ),
+                                                              //             ),
+                                                              //           )
+                                                              //         : SizedBox()
+                                                              : widget.postDataType ==
+                                                                      "ATTACHMENT"
+                                                                  ? Container(
+                                                                      height:
+                                                                          400,
+                                                                      width:
+                                                                          _width,
+                                                                      child:
+                                                                          DocumentViewScreen1(
+                                                                        path: widget
+                                                                            .postData?[0],
+                                                                      ))
+                                                                  : SizedBox()
+                                                          : Column(
+                                                              children: [
+                                                                Stack(
+                                                                  children: [
+                                                                    if ((widget
+                                                                            .postData
+                                                                            ?.isNotEmpty ??
+                                                                        false)) ...[
+                                                                      SizedBox(
                                                                         height:
-                                                                            20,
-                                                                        child:
-                                                                            DotsIndicator(
-                                                                          dotsCount:
-                                                                              widget.postData?.length ?? 1,
-                                                                          position:
-                                                                              currentPages[widget.index ?? 0].toDouble(),
-                                                                          decorator:
-                                                                              DotsDecorator(
-                                                                            size:
-                                                                                const Size(10.0, 7.0),
-                                                                            activeSize:
-                                                                                const Size(10.0, 10.0),
-                                                                            spacing:
-                                                                                const EdgeInsets.symmetric(horizontal: 2),
-                                                                            activeColor:
-                                                                                Color(0xffED1C25),
-                                                                            color:
-                                                                                Color(0xff6A6A6A),
-                                                                          ),
+                                                                            300,
+                                                                        child: PageView
+                                                                            .builder(
+                                                                          onPageChanged:
+                                                                              (page) {
+                                                                            setState(() {
+                                                                              currentPages[widget.index ?? 0] = page;
+                                                                            });
+                                                                          },
+                                                                          controller:
+                                                                              pageControllers[widget.index ?? 0],
+                                                                          itemCount: widget
+                                                                              .postData
+                                                                              ?.length,
+                                                                          itemBuilder:
+                                                                              (BuildContext context, int index1) {
+                                                                            if (widget.postDataType ==
+                                                                                "IMAGE") {
+                                                                              return Container(
+                                                                                width: _width,
+                                                                                margin: EdgeInsets.only(left: 16, top: 15, right: 16),
+                                                                                child: Center(
+                                                                                    child: CustomImageView(
+                                                                                  url: "${widget.postData?[index1]}",
+                                                                                )),
+                                                                              );
+                                                                            } else if (widget.postDataType ==
+                                                                                "ATTACHMENT") {
+                                                                              return Container(
+                                                                                  height: 400,
+                                                                                  width: _width,
+                                                                                  child: DocumentViewScreen1(
+                                                                                    path: widget.postData?[index1].toString(),
+                                                                                  ));
+                                                                            }
+                                                                          },
                                                                         ),
                                                                       ),
-                                                                    ))
-                                                              ]
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                          ),
+                                                                      Positioned(
+                                                                          bottom:
+                                                                              5,
+                                                                          left:
+                                                                              0,
+                                                                          right:
+                                                                              0,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(top: 0),
+                                                                            child:
+                                                                                Container(
+                                                                              height: 20,
+                                                                              child: DotsIndicator(
+                                                                                dotsCount: widget.postData?.length ?? 1,
+                                                                                position: currentPages[widget.index ?? 0].toDouble(),
+                                                                                decorator: DotsDecorator(
+                                                                                  size: const Size(10.0, 7.0),
+                                                                                  activeSize: const Size(10.0, 10.0),
+                                                                                  spacing: const EdgeInsets.symmetric(horizontal: 2),
+                                                                                  activeColor: Color(0xffED1C25),
+                                                                                  color: Color(0xff6A6A6A),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ))
+                                                                    ]
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                ),
                                         ),
                                         SizedBox(
                                           height: 10,
@@ -1102,6 +1095,7 @@ class _RePostScreenState extends State<RePostScreen> {
                   ),
                 ),
               ),
+               if(widget.postDataType != 'VIDEO')
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Column(
@@ -1145,6 +1139,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                 ),
                               ),
                             ),
+                            
                             Container(
                               height: 90,
                               width: _width - 106,
@@ -1256,6 +1251,7 @@ class _RePostScreenState extends State<RePostScreen> {
                         ),
                       ),
                     ),
+                    if(widget.postDataType != 'VIDEO')
                     Container(
                       height: 30,
                       color: Colors.white,
@@ -1935,7 +1931,9 @@ class _RePostScreenState extends State<RePostScreen> {
               };
               BlocProvider.of<RePostCubit>(context)
                   .RePostAPI(context, param, widget.postUid, "");
-            } else if (_controller?.value.isPlaying == true) {
+            }
+            
+            else if (_controller?.value.isPlaying == true) {
               Map<String, dynamic> param = {
                 "postData": imageDataPost?.object?.data,
                 "postDataType": "VIDEO",
