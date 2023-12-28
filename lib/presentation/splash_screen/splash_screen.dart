@@ -183,6 +183,10 @@ class _SplashScreenState extends State<SplashScreen> {
         print(" ApkRouteVersion  ${ApkRouteVersion}");
         prefs.setString(
             PreferencesKey.MaxPostUploadSizeInMB, element.value ?? '');
+      }else if (element.name == "MaxInboxUploadSizeInMB") {
+        print(" ApkRouteVersion  ${ApkRouteVersion}");
+        prefs.setString(
+            PreferencesKey.MaxInboxUploadSizeInMB, element.value ?? '');
       }
 
       /// -----

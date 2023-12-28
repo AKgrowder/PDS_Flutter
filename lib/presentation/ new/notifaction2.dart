@@ -179,7 +179,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                                       ? SizedBox()
                                       : Container(
                                           child: Text(
-                                            '${NotificationCount ?? ""}',
+                                         '${AllNotificationData?.object?.length?? ""}',
                                             style: TextStyle(
                                                 overflow: TextOverflow.ellipsis,
                                                 fontFamily: "outfit",
@@ -323,6 +323,33 @@ class AllNotificationClass extends StatefulWidget {
 }
 
 class _AllNotificationClassState extends State<AllNotificationClass> {
+   String getTimeDifference(DateTime dateTime) {
+    final difference = DateTime.now().difference(dateTime);
+    if (difference.inDays > 0) {
+      if (difference.inDays == 1) {
+        return '1 day ago';
+      } else if (difference.inDays < 7) {
+        return '${difference.inDays} days ago';
+      } else {
+        final weeks = (difference.inDays / 7).floor();
+        return '$weeks week${weeks == 1 ? '' : 's'} ago';
+      }
+    } else if (difference.inHours > 0) {
+      if (difference.inHours == 1) {
+        return '1 hour ago';
+      } else {
+        return '${difference.inHours} hours ago';
+      }
+    } else if (difference.inMinutes > 0) {
+      if (difference.inMinutes == 1) {
+        return '1 minute ago';
+      } else {
+        return '${difference.inMinutes} minutes ago';
+      }
+    } else {
+      return 'Just now';
+    }
+  }
   @override
   void initState() {
     BlocProvider.of<InvitationCubit>(context).AllNotification(context);
@@ -702,7 +729,7 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                         ),
                                       ],
                                     ),
-                                    Padding(
+                                   Padding(
                                         padding: const EdgeInsets.only(
                                             top: 5, bottom: 5, right: 2),
                                         child: Align(
@@ -712,8 +739,11 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                             // width: 130,
                                             // color: Colors.red,
                                             child: Text(
-                                              customFormat1(parsedDateTime ??
-                                                  DateTime.now()),
+                                              getTimeDifference(parsedDateTime!),
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontFamily: "outfit",
+                                              ),
                                             ),
                                           ),
                                         )),
@@ -1771,7 +1801,7 @@ String customFormat1(DateTime date) {
   String year = date.year.toString();
   String time = DateFormat('h:mm a').format(date);
 
-  String formattedDate = '$day$month $year $time';
+  String formattedDate = '$day$month $year | $time';
   return formattedDate;
 }
 
