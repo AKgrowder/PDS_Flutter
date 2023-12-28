@@ -106,7 +106,8 @@ class Config {
   static const String get_all_followings = "user/api/get_all_followings";
   static const String remove_follower = "user/api/remove_follower";
   static const String SelectChatMember = "user/search_user_for_inbox";
-  static const String validateTokenCheck = "auth/auth/validateTokenCheck";
+  static const String validateTokenCheck = "auth/auth/validateTokenCheck"
+  ;
   static const String logOutUserSttionExperied = "auth/auth/isTokenExpired";
   static const String roomExists = "user/api/assignAdminToOtherRoomMember";
   static const String search_user_for_inboxUrl = "user/search_user_for_inbox";

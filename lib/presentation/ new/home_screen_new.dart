@@ -633,7 +633,16 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       } else if (element.name == "MaxPostUploadSizeInMB") {
         prefs.setString(
             PreferencesKey.MaxPostUploadSizeInMB, element.value ?? '');
+      }else if (element.name == "MaxInboxUploadSizeInMB") {
+        prefs.setString(
+            PreferencesKey.MaxInboxUploadSizeInMB, element.value ?? '');
       }
+
+
+
+
+
+
 
       /// -----
 
@@ -1173,7 +1182,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                         false)) {
                   state.getAllStoryModel.object?.forEach((element) {
                     int count = 0;
+
                     element.storyData?.forEach((element) {
+                      print("check count--${element.storySeen}");
                       if (element.storySeen != null) {
                         if (element.storySeen == true) {
                           count++;
@@ -1394,7 +1405,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 AllGuestPostRoomData = state.GetGuestAllPostRoomData;
                 AllGuestPostRoomData?.object?.content?.forEach((element) {
                   if (element.postDataType == 'VIDEO') {
-                    videoUrls.add(element.postData?.first ?? '');
+                    if (element.postData?.isNotEmpty == true) {
+                      videoUrls.add(element.postData?.first ?? '');
+                    }
                     /* VideoPlayerController _controller =
                         VideoPlayerController.networkUrl(
                             Uri.parse(element.postData?.first ?? ''));
@@ -1407,8 +1420,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                           backgroundColor: Colors.grey,
                           playedColor: ColorConstant.primary_color),
                     ); */
+                  } else if (element.repostOn?.postDataType == 'VIDEO') {
+                    videoUrls.add(element.repostOn?.postData?.first ?? '');
+                  } else {
+                    videoUrls.add('');
                   }
-                  videoUrls.add('');
 
                   /*  chewieController.add(inList ??
                       ChewieController(videoPlayerController: _controller)); */
@@ -2400,7 +2416,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                               controller: chewieController[index],
                                                                                             )), */
 
-                                                                                        VideoListItem(videoUrl: videoUrls[index], description: AllGuestPostRoomData?.object?.content?[index].description ?? ''),
+                                                                                        VideoListItem(
+                                                                                          videoUrl: videoUrls[index],
+                                                                                        ),
                                                                                       ],
                                                                                     ),
                                                                                   )
@@ -2793,16 +2811,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                       child: Column(
                                                                                         mainAxisSize: MainAxisSize.min,
                                                                                         children: [
-                                                                                          /* Container(
-                                                                                            height: 250,
-                                                                                            width: _width,
-                                                                                            child: Chewie(
-                                                                                              controller: chewieController[index],
-                                                                                            )), */
-
                                                                                           VideoListItem(
                                                                                             videoUrl: videoUrls[index],
-                                                                                            description: AllGuestPostRoomData?.object?.content?[index].repostOn?.description ?? '',
+                                                                                            discrption: AllGuestPostRoomData?.object?.content?[index].repostOn?.description,
                                                                                           )
                                                                                         ],
                                                                                       ),
@@ -3757,7 +3768,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                               controller: chewieController[index],
                                                                                             )), */
 
-                                                                                  VideoListItem(videoUrl: videoUrls[index], description: AllGuestPostRoomData?.object?.content?[index].description ?? ''),
+                                                                                  VideoListItem(
+                                                                                    videoUrl: videoUrls[index],
+                                                                                  ),
                                                                                 ],
                                                                               ),
                                                                             )
@@ -5603,29 +5616,41 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
 class VideoListItem extends StatefulWidget {
   final String videoUrl;
-  final String description;
-  VideoListItem({required this.videoUrl, required this.description});
+  String? discrption;
+  VideoListItem({required this.videoUrl, this.discrption});
 
   @override
   State<VideoListItem> createState() => _VideoListItemState();
 }
 
 class _VideoListItemState extends State<VideoListItem> {
+  FlickManager? flickManager;
+
+  @override
+  void initState() {
+    super.initState();
+
+    flickManager = FlickManager(
+      autoPlay: false,
+      videoPlayerController: VideoPlayerController.networkUrl(
+        Uri.parse(widget.videoUrl),
+      ),
+    );
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    flickManager!.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    print("check viedo -${widget.videoUrl}");
-    final flickManager = FlickManager(
-      videoPlayerController:
-          VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl)),
-      autoPlay: false,
-      // looping: false,
-    );
-
     return InkWell(
       onTap: () {
-        print("asdgasgsdgf-${widget.description}");
-
         print("asdgasgsdgf-${widget.videoUrl}");
+        print("asdgasgsdgf-${widget.discrption}");
       },
       child: Card(
         margin: EdgeInsets.only(
@@ -5636,7 +5661,12 @@ class _VideoListItemState extends State<VideoListItem> {
             children: [
               if (widget.videoUrl.isNotEmpty)
                 FlickVideoPlayer(
-                  flickManager: flickManager,
+                  preferredDeviceOrientationFullscreen: [
+                    DeviceOrientation.portraitUp,
+                    DeviceOrientation.landscapeLeft,
+                    DeviceOrientation.landscapeRight,
+                  ],
+                  flickManager: flickManager!,
                   flickVideoWithControls: FlickVideoWithControls(
                     controls: FlickPortraitControls(),
                   ),
