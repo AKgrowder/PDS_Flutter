@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pds/API/Bloc/BlogComment_BLoc/BlogComment_cubit.dart';
+import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
@@ -127,6 +128,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   bool isDataget = false;
   DateTime? parsedDateTimeBlogs;
   FocusNode _focusNode = FocusNode();
+  String? AutoSetRoomID;
   String? appApkMinVersion;
   String? appApkLatestVersion;
   String? appApkRouteVersion;
@@ -605,6 +607,35 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         });
   }
 
+  LoginCheck() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    AutoSetRoomID = prefs.getString(PreferencesKey.AutoSetRoomID);
+    if (AutoSetRoomID == "Done") {
+      print("Auto Enter in Room");
+    } else {
+      if (User_ID != null) {
+        print("User is Login!!:-  ${User_ID}");
+
+        BlocProvider.of<GetGuestAllPostCubit>(context)
+            .AutoEnterinRoom(context, AutoSetRoomID ?? "");
+      } /*  else {
+        if (AutoSetRoomID != "Done") {
+          print("User is not Login!!${isLogin}");
+          SnackBar snackBar = SnackBar(
+            content: Text("After that login, you can go to the Room."),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      } */
+    }
+  }
+
+  saveAutoEnterINRoom() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(PreferencesKey.AutoSetRoomID, "Done");
+  }
+
   SetUi() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     systemConfigModel?.object?.forEach((element) async {
@@ -633,16 +664,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       } else if (element.name == "MaxPostUploadSizeInMB") {
         prefs.setString(
             PreferencesKey.MaxPostUploadSizeInMB, element.value ?? '');
-      }else if (element.name == "MaxInboxUploadSizeInMB") {
+      } else if (element.name == "MaxInboxUploadSizeInMB") {
         prefs.setString(
             PreferencesKey.MaxInboxUploadSizeInMB, element.value ?? '');
       }
-
-
-
-
-
-
 
       /// -----
 
@@ -904,8 +929,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       AutoOpenPostID = prefs.getString(PreferencesKey.AutoOpenPostID);
       prefs.setBool(PreferencesKey.AutoOpenPostBool, false);
       prefs.setString(PreferencesKey.AutoOpenPostID, "");
-
-      Navigator.push(
+      BlocProvider.of<GetGuestAllPostCubit>(context)
+          .SharePost(context, AutoOpenPostID ?? "");
+      /*   Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => OpenSavePostImage(
@@ -913,7 +939,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                   PostID: "0",
                   index: 0,
                 )),
-      );
+      ); */
     }
   }
 
@@ -942,6 +968,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     // /user/api/get_all_post
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .GetUserAllPostAPI(context, '1', showAlert: true);
+
     await BlocProvider.of<GetGuestAllPostCubit>(context).get_all_story(
       context,
     );
@@ -950,6 +977,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .FetchAllExpertsAPI(context);
     await BlocProvider.of<GetGuestAllPostCubit>(context).MyAccount(context);
+    LoginCheck();
   }
 
   soicalFunation({String? apiName, int? index}) async {
@@ -1394,6 +1422,36 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                           storyListViewController: ScrollController()));
                     }
                   });
+                }
+              }
+              if (state is AutoEnterinLoadedState) {
+                print("Auto Inter in Room Done");
+                print(state.AutoEnterinData.object);
+                SnackBar snackBar = SnackBar(
+                  content: Text(state.AutoEnterinData.object ?? ""),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                saveAutoEnterINRoom();
+              }
+              if (state is OpenSharePostLoadedState) {
+                if (state.OpenSharePostData.object?.postUid != "" &&
+                    state.OpenSharePostData.object?.postUid != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => OpenSavePostImage(
+                              PostID:
+                                  "${state.OpenSharePostData.object?.postUid}",
+                              index: 0,
+                            )),
+                  );
+                } else {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return ProfileScreen(
+                        User_ID: "${state.OpenSharePostData.object?.userUid}",
+                        isFollowing: "");
+                  }));
                 }
               }
               if (state is GetGuestAllPostLoadedState) {
@@ -2405,7 +2463,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 ? /* repostControllers[0].value.isInitialized
                                                                                     ?   */
                                                                                 Padding(
-                                                                                    padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
+                                                                                    padding: const EdgeInsets.only(right: 20, top: 15),
                                                                                     child: Column(
                                                                                       mainAxisSize: MainAxisSize.min,
                                                                                       children: [
@@ -2807,7 +2865,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                   ? /* repostMainControllers[0].value.isInitialized
                                                                                       ? */
                                                                                   Padding(
-                                                                                      padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
+                                                                                      padding: const EdgeInsets.only( right: 20, top: 15),
                                                                                       child: Column(
                                                                                         mainAxisSize: MainAxisSize.min,
                                                                                         children: [
@@ -3757,7 +3815,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               ? */
 
                                                                           Padding(
-                                                                              padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
+                                                                              padding: const EdgeInsets.only( right: 20, top: 15),
                                                                               child: Column(
                                                                                 mainAxisSize: MainAxisSize.min,
                                                                                 children: [
@@ -4841,7 +4899,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               print("opne comment sheet inList =   blogs");
                                                                               BlocProvider.of<BlogcommentCubit>(context).BlogcommentAPI(context, getallBlogModel1?.object?[index1].uid ?? "");
 
-                                                                              _settingModalBottomSheetBlog(context, index, _width);
+                                                                              _settingModalBottomSheetBlog(context, index1, _width);
                                                                             },
                                                                             child:
                                                                                 Container(

@@ -134,6 +134,7 @@ class Config {
   static const String insearch_user_for_inboxUrl1 = "user/search_user_for_tag";
   static const String SeenNotification = "user/api/notificationSeenByUser";
   static const String getAllNoticationsCount = "user/api/getAllNotificationsCount";
+  static const String getPostUidOrUserUid = "user/api/getPostUidOrUserUid";
 
 
 

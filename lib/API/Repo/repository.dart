@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:pds/API/Model/DeleteUserChatModel/DeleteUserChat_Model.dart';
 import 'package:pds/API/Model/GetAllInboxImagesModel/GetAllInboxImagesModel.dart';
+import 'package:pds/API/Model/GetGuestAllPostModel/ShareAppOpenPostModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/GetAllNotificationModel.dart';
 import 'package:pds/API/Model/selectMultipleUsers_ChatModel/selectMultipleUsers_ChatModel.dart';
 import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
@@ -1455,6 +1456,26 @@ class Repository {
     switch (responce.statusCode) {
       case 200:
         return GetCountOfSavedRoomModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+   AutoOpenPostAPI(BuildContext context, String postLink) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.getPostUidOrUserUid}?postLink=${postLink}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    switch (responce.statusCode) {
+      case 200:
+        return ShareAppOpenPostModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
