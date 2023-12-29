@@ -1548,24 +1548,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         title: 'Pdf',
                                       )));
               },
-                child: Expanded(
-                  child: Container(
-                      height: 50,
-                      // width: _width / 1.6,
-                      decoration: BoxDecoration(
-                          color: Color(0XFFF6F6F6),
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(5),
-                              bottomLeft: Radius.circular(5))),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 15, left: 20),
-                        child: Text(
-                          '${dopcument}',
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      )),
-                ),
+                child: Container(
+                    height: 50,
+                    width: _width / 1.6,
+                    decoration: BoxDecoration(
+                        color: Color(0XFFF6F6F6),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(5),
+                            bottomLeft: Radius.circular(5))),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 15, left: 20),
+                      child: Text(
+                        '${dopcument}',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    )),
               ),
               dopcument == "Upload Document"
                   ? GestureDetector(
@@ -1575,7 +1573,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       },
                       child: Container(
                         height: 50,
-                        // width: _width / 5,
+                        width: _width / 5,
                         decoration: BoxDecoration(
                             color: Color(0XFF777777),
                             borderRadius: BorderRadius.only(
@@ -1599,7 +1597,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     )
                   : Container(
                       height: 50,
-                      // width: _width / 5,
+                      width: _width / 5,
                       decoration: BoxDecoration(
                           color: Color.fromARGB(255, 228, 228, 228),
                           borderRadius: BorderRadius.only(
